@@ -1,4 +1,4 @@
-package com.example.snap_alarm
+package com.example.fortune_alarm
 
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +15,7 @@ import android.content.Intent
 import android.os.PowerManager
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "com.example.snap_alarm/foreground"
+    private val CHANNEL = "com.example.fortune_alarm/foreground"
     private var methodChannel: MethodChannel? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

@@ -398,7 +398,7 @@ class MissionNotifier extends ChangeNotifier {
   Future<void> completeWakeUpMission() async {
     // wakeup 미션 ID는 'wakeup'으로 고정
     if (_todayLog != null && !_todayLog!.completedMissionIds.contains('wakeup')) {
-      await toggleMission('wakeup');
+      await setMissionCompleted('wakeup', true);
     }
   }
 

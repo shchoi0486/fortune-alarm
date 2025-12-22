@@ -41,7 +41,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 // 백그라운드와 통신하기 위한 포트 이름
 const String kAlarmPortName = 'alarm_notification_port';
-const MethodChannel _foregroundChannel = MethodChannel('com.example.snap_alarm/foreground');
+const MethodChannel _foregroundChannel = MethodChannel('com.example.fortune_alarm/foreground');
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

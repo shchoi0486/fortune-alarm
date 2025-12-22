@@ -174,13 +174,13 @@ class NotificationService {
     // 채널 ID를 소리/진동 설정에 따라 다르게 하여 설정을 적용 (Android 특성상 채널 설정 변경 불가하므로)
     // 알람 소리나 진동이 변경되면 새로운 채널을 생성해야 함
     // [수정] channelId 접두어를 v10으로 변경하여 기존 설정 강제 갱신
-    final String channelId = 'snap_alarm_channel_v10_${soundResource}_${isVibrationEnabled ? 'vibe' : 'novibe'}'; 
+    final String channelId = 'fortune_alarm_channel_v10_${soundResource}_${isVibrationEnabled ? 'vibe' : 'novibe'}'; 
     
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '스냅 알람', // 사용자에게 보이는 채널 이름
-      channelDescription: 'SnapAlarm의 알람 채널입니다.',
+      '포춘 알람', // 사용자에게 보이는 채널 이름
+      channelDescription: 'Fortune Alarm의 알람 채널입니다.',
       importance: Importance.max,
       priority: Priority.max,
       sound: RawResourceAndroidNotificationSound(soundResource),

@@ -13,7 +13,7 @@ import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
 import '../../data/models/math_difficulty.dart';
 import '../../data/models/alarm_model.dart';
-import 'package:snap_alarm/providers/alarm_list_provider.dart';
+import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
 
 class MathMissionScreen extends ConsumerStatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snap_alarm/features/mission_camera/mission_camera_screen.dart';
+import 'package:fortune_alarm/features/mission_camera/mission_camera_screen.dart';
 
 void main() {
   test('CameraOverlayPainter.getFrameCenter returns rect center', () {

@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
-import 'package:snap_alarm/providers/alarm_list_provider.dart';
+import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import 'add_alarm_screen.dart';
 import '../../data/models/alarm_model.dart';
 import '../../core/constants/mission_type.dart';

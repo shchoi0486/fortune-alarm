@@ -14,7 +14,7 @@ import '../../core/constants/mission_type.dart';
 import '../../data/models/alarm_model.dart';
 import '../../data/models/math_difficulty.dart';
 import '../../services/alarm_scheduler_service.dart';
-import 'package:snap_alarm/providers/alarm_list_provider.dart';
+import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import '../../widgets/ad_widgets.dart';
 
 class AddAlarmScreen extends ConsumerStatefulWidget {

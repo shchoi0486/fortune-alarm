@@ -14,7 +14,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
 import '../../data/models/alarm_model.dart';
-import 'package:snap_alarm/providers/alarm_list_provider.dart';
+import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
 
 class ShakeMissionScreen extends ConsumerStatefulWidget {

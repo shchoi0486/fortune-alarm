@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'; // Import Cupertino for Wheel Pickers
-import 'package:snap_alarm/features/fortune/saju/models/saju_profile.dart';
+import 'package:fortune_alarm/features/fortune/saju/models/saju_profile.dart';
 import 'tojeong_result_screen.dart';
 import 'services/tojeong_service.dart';
 

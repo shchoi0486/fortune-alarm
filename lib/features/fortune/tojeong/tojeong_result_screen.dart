@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'models/tojeong_result.dart';
-import 'package:snap_alarm/features/fortune/saju/models/saju_profile.dart';
+import 'package:fortune_alarm/features/fortune/saju/models/saju_profile.dart';
 
 class TojeongResultScreen extends StatelessWidget {
   final SajuProfile profile;

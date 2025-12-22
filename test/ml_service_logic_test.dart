@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:snap_alarm/services/ml_service.dart';
+import 'package:fortune_alarm/services/ml_service.dart';
 
 void main() {
   group('MLService logic', () {
