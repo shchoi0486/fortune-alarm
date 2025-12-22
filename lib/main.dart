@@ -28,8 +28,8 @@ import 'services/supplement_alarm_service.dart';
 
 import 'features/alarm/alarm_ringing_screen.dart';
 import 'providers/theme_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'features/mission/supplement/supplement_mission_screen.dart';
 import 'features/mission/supplement/supplement_ringing_screen.dart';
 import 'widgets/fortune_cookie_bar.dart';
@@ -325,10 +325,10 @@ class FortuneAlarmApp extends ConsumerWidget {
     
     return MaterialApp(
       navigatorKey: navigatorKey, // Navigator Key 등록
-      title: 'Fortune Alarm',
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       themeMode: themeMode,
-      // ... (localizations)
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -336,6 +336,17 @@ class FortuneAlarmApp extends ConsumerWidget {
       supportedLocales: const [
         Locale('en', ''), // English
         Locale('ko', ''), // Korean
+        Locale('ja', ''), // Japanese
+        Locale('zh', ''), // Chinese
+        Locale('ru', ''), // Russian
+        Locale('hi', ''), // Hindi
+        Locale('es', ''), // Spanish
+        Locale('pt', ''), // Portuguese
+        Locale('fr', ''), // French
+        Locale('de', ''), // German
+        Locale('ar', ''), // Arabic
+        Locale('vi', ''), // Vietnamese
+        Locale('id', ''), // Indonesian
       ],
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

@@ -1,0 +1,13 @@
+{
+  "@@locale": "ko",
+  "appTitle": "포춘알람",
+  "morningGreeting": "좋은 아침이에요! 행운의 하루를 시작하세요.",
+  "missionWakeUp": "기상 알람 미션",
+  "missionSupplement": "영양제 챙겨 먹기",
+  "missionWater": "물 2L 이상 마시기",
+  "fortuneCookie": "포춘쿠키",
+  "settings": "설정",
+  "alarm": "알람",
+  "calendar": "달력",
+  "mission": "미션"
+}

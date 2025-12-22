@@ -1,0 +1,13 @@
+{
+  "@@locale": "ja",
+  "appTitle": "フォーチュンアラーム",
+  "morningGreeting": "おはようございます！幸運な一日を始めましょう。",
+  "missionWakeUp": "起床ミッション",
+  "missionSupplement": "サプリメントを飲む",
+  "missionWater": "水2L以上飲む",
+  "fortuneCookie": "フォーチュンクッキー",
+  "settings": "設定",
+  "alarm": "アラーム",
+  "calendar": "カレンダー",
+  "mission": "ミッション"
+}

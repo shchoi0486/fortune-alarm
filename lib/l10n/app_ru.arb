@@ -1,0 +1,13 @@
+{
+  "@@locale": "ru",
+  "appTitle": "Удачный Будильник",
+  "morningGreeting": "Доброе утро! Начните свой счастливый день.",
+  "missionWakeUp": "Миссия Пробуждение",
+  "missionSupplement": "Принять витамины",
+  "missionWater": "Выпить 2л воды",
+  "fortuneCookie": "Печенье с предсказанием",
+  "settings": "Настройки",
+  "alarm": "Будильник",
+  "calendar": "Календарь",
+  "mission": "Миссия"
+}

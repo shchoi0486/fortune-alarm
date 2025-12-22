@@ -1,0 +1,16 @@
+{
+  "@@locale": "en",
+  "appTitle": "Fortune Alarm",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "morningGreeting": "Good morning! Start your lucky day.",
+  "missionWakeUp": "Wake-up Mission",
+  "missionSupplement": "Take Supplements",
+  "missionWater": "Drink 2L Water",
+  "fortuneCookie": "Fortune Cookie",
+  "settings": "Settings",
+  "alarm": "Alarm",
+  "calendar": "Calendar",
+  "mission": "Mission"
+}

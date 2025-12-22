@@ -1,0 +1,13 @@
+{
+  "@@locale": "zh",
+  "appTitle": "幸运闹钟",
+  "morningGreeting": "早上好！开启你幸运的一天。",
+  "missionWakeUp": "起床任务",
+  "missionSupplement": "吃营养剂",
+  "missionWater": "喝2升水",
+  "fortuneCookie": "幸运饼干",
+  "settings": "设置",
+  "alarm": "闹钟",
+  "calendar": "日历",
+  "mission": "任务"
+}
