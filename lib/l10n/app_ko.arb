@@ -9,5 +9,10 @@
   "settings": "설정",
   "alarm": "알람",
   "calendar": "달력",
-  "mission": "미션"
+  "mission": "미션",
+  "fortune": "운세",
+  "congratulations": "축하합니다!",
+  "allMissionsCompleted": "오늘의 미션 5개를 모두 달성했습니다.",
+  "rewardReceived": "보상으로 포춘쿠키 1개를 지급합니다! 🥠",
+  "confirm": "확인"
 }

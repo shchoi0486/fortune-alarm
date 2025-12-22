@@ -1,9 +1,6 @@
 {
   "@@locale": "en",
   "appTitle": "Fortune Alarm",
-  "@appTitle": {
-    "description": "The title of the application"
-  },
   "morningGreeting": "Good morning! Start your lucky day.",
   "missionWakeUp": "Wake-up Mission",
   "missionSupplement": "Take Supplements",
@@ -12,5 +9,10 @@
   "settings": "Settings",
   "alarm": "Alarm",
   "calendar": "Calendar",
-  "mission": "Mission"
+  "mission": "Mission",
+  "fortune": "Fortune",
+  "congratulations": "Congratulations!",
+  "allMissionsCompleted": "You have completed all 5 missions for today.",
+  "rewardReceived": "You received 1 Fortune Cookie as a reward! 🥠",
+  "confirm": "Confirm"
 }

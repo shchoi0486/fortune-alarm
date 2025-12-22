@@ -28,8 +28,9 @@ import 'services/supplement_alarm_service.dart';
 
 import 'features/alarm/alarm_ringing_screen.dart';
 import 'providers/theme_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import 'features/mission/supplement/supplement_mission_screen.dart';
 import 'features/mission/supplement/supplement_ringing_screen.dart';
 import 'widgets/fortune_cookie_bar.dart';
@@ -333,21 +334,7 @@ class FortuneAlarmApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en', ''), // English
-        Locale('ko', ''), // Korean
-        Locale('ja', ''), // Japanese
-        Locale('zh', ''), // Chinese
-        Locale('ru', ''), // Russian
-        Locale('hi', ''), // Hindi
-        Locale('es', ''), // Spanish
-        Locale('pt', ''), // Portuguese
-        Locale('fr', ''), // French
-        Locale('de', ''), // German
-        Locale('ar', ''), // Arabic
-        Locale('vi', ''), // Vietnamese
-        Locale('id', ''), // Indonesian
-      ],
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blueAccent,
@@ -535,29 +522,29 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
             surfaceTintColor: Colors.transparent,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: const Column(
+            title: Column(
               children: [
-                Text('🎉', style: TextStyle(fontSize: 40)),
-                SizedBox(height: 10),
-                Text('축하합니다!', style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('🎉', style: TextStyle(fontSize: 40)),
+                const SizedBox(height: 10),
+                Text(AppLocalizations.of(context)!.congratulations, style: const TextStyle(fontWeight: FontWeight.bold)),
               ],
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
-                Text('오늘의 미션 5개를 모두 달성했습니다.', textAlign: TextAlign.center),
-                SizedBox(height: 10),
+              children: [
+                Text(AppLocalizations.of(context)!.allMissionsCompleted, textAlign: TextAlign.center),
+                const SizedBox(height: 10),
                 Text(
-                  '보상으로 포춘쿠키 1개를 지급합니다! 🥠',
+                  AppLocalizations.of(context)!.rewardReceived,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ],
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('확인', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -628,11 +615,11 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               ),
               showUnselectedLabels: true,
               items: [
-                _buildNavItem(Icons.alarm_outlined, Icons.alarm_rounded, '알람', 0),
-                _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, '캘린더', 1),
-                _buildNavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, '운세', 2),
-                _buildNavItem(Icons.task_alt_outlined, Icons.task_alt_rounded, '미션', 3),
-                _buildNavItem(Icons.settings_outlined, Icons.settings_rounded, '설정', 4),
+                _buildNavItem(Icons.alarm_outlined, Icons.alarm_rounded, AppLocalizations.of(context)!.alarm, 0),
+                _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, AppLocalizations.of(context)!.calendar, 1),
+                _buildNavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, AppLocalizations.of(context)!.fortune, 2),
+                _buildNavItem(Icons.task_alt_outlined, Icons.task_alt_rounded, AppLocalizations.of(context)!.mission, 3),
+                _buildNavItem(Icons.settings_outlined, Icons.settings_rounded, AppLocalizations.of(context)!.settings, 4),
               ],
             ),
           ),

@@ -1,13 +1,18 @@
 {
   "@@locale": "ja",
   "appTitle": "フォーチュンアラーム",
-  "morningGreeting": "おはようございます！幸運な一日を始めましょう。",
+  "morningGreeting": "おはようございます！幸運な一日를 시작하세요.",
   "missionWakeUp": "起床ミッション",
-  "missionSupplement": "サプリメントを飲む",
-  "missionWater": "水2L以上飲む",
+  "missionSupplement": "サプリメント",
+  "missionWater": "水2L以上",
   "fortuneCookie": "フォーチュンクッキー",
   "settings": "設定",
   "alarm": "アラーム",
   "calendar": "カレンダー",
-  "mission": "ミッション"
+  "mission": "ミッション",
+  "fortune": "運勢",
+  "congratulations": "おめでとうございます！",
+  "allMissionsCompleted": "今日のミッション5つをすべて達成しました。",
+  "rewardReceived": "報酬としてフォーチュンクッキー1個を支給します！ 🥠",
+  "confirm": "確認"
 }

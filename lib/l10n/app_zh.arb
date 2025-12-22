@@ -3,11 +3,16 @@
   "appTitle": "幸运闹钟",
   "morningGreeting": "早上好！开启你幸运的一天。",
   "missionWakeUp": "起床任务",
-  "missionSupplement": "吃营养剂",
-  "missionWater": "喝2升水",
+  "missionSupplement": "营养补给",
+  "missionWater": "饮水2L以上",
   "fortuneCookie": "幸运饼干",
   "settings": "设置",
   "alarm": "闹钟",
   "calendar": "日历",
-  "mission": "任务"
+  "mission": "任务",
+  "fortune": "运势",
+  "congratulations": "恭喜！",
+  "allMissionsCompleted": "您已完成今天的全部5项任务。",
+  "rewardReceived": "作为奖励，您获得1个幸运饼干！ 🥠",
+  "confirm": "确认"
 }
