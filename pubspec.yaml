@@ -1,0 +1,79 @@
+name: snap_alarm
+description: A new Flutter project for Fortune Alarm.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  
+  # State Management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Local Database
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # AI/ML
+  tflite_flutter: ^0.12.1
+  google_mlkit_face_detection: ^0.13.1
+  
+  # Camera
+  camera: ^0.11.0
+  
+  # Utils
+  intl: ^0.20.2
+  permission_handler: ^12.0.1
+  path_provider: ^2.1.2
+  uuid: ^4.3.3
+  image_picker: ^1.0.7
+  image: ^4.1.7
+  shared_preferences: ^2.5.2
+
+  # Alarm & Notifications
+  flutter_local_notifications: ^19.5.0
+  android_alarm_manager_plus: ^5.0.0
+  
+  # UI
+  cupertino_icons: ^1.0.2
+  google_mlkit_object_detection: ^0.15.0
+
+  # Audio & Vibration
+  flutter_ringtone_player: ^4.0.0
+  vibration: ^3.1.4
+  collection: ^1.18.0
+  audioplayers: ^6.5.1
+  slide_to_act: ^2.0.2
+  timezone: ^0.10.1
+  sensors_plus: ^7.0.0
+  http: ^1.6.0
+  table_calendar: ^3.2.0
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
+  google_mobile_ads: ^7.0.0
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.8
+  riverpod_generator: ^2.4.0
+  hive_generator: ^2.0.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/ml/mobilenet_v1_1.0_224_quant.tflite
+    - assets/ml/labels_mobilenet_quant_v1_224.txt
+    - assets/sounds/
+    - assets/images/
+    - assets/images/tarot/
+    # - assets/ml/efficientnet-lite0.tflite # 모델 파일 다운로드 후 주석 해제 필요
+    # - assets/sounds/transition.mp3 # TODO: create the file or fix the path
