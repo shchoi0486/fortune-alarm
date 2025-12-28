@@ -1153,10 +1153,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ),
               // 스티커 표시 (확장 뷰에서는 우측 상단)
-              if (events.any((e) => e.type == CalendarEventType.memo && e.sticker != null))
+              if (events.any((e) => e.sticker != null && e.sticker != '😐'))
                 Text(
-                  events.firstWhere((e) => e.sticker != null).sticker!,
-                  style: const TextStyle(fontSize: 12),
+                  events.firstWhere((e) => e.sticker != null && e.sticker != '😐').sticker!,
+                  style: const TextStyle(fontSize: 16),
                 ),
             ],
           ),
@@ -1309,21 +1309,23 @@ class _CalendarScreenState extends State<CalendarScreen> {
           
           // 마커 커스텀 (바 형태 + 스티커 표시)
           markerBuilder: (context, day, events) {
+            // 확장 뷰일 때는 하단 마커를 표시하지 않음 (이미 셀 내부에 표시됨)
+            if (isExpanded) return const SizedBox.shrink();
+
             if (events.isNotEmpty) {
-              final memoWithSticker = events.firstWhere(
-                (e) => e.type == CalendarEventType.memo && e.sticker != null,
-                orElse: () => events.first,
-              );
+              // 기분 스티커 (스티커가 있는 경우 표시)
+              final moodEvent = events.firstWhere((e) => e.sticker != null && e.sticker != '😐', orElse: () => events.first);
+              final hasSticker = moodEvent.sticker != null && moodEvent.sticker != '😐';
 
               return Positioned(
                 bottom: 4,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (memoWithSticker.type == CalendarEventType.memo && memoWithSticker.sticker != null)
+                    if (hasSticker)
                       Text(
-                        memoWithSticker.sticker!,
-                        style: const TextStyle(fontSize: 12),
+                        moodEvent.sticker!,
+                        style: const TextStyle(fontSize: 20),
                       ),
                     const SizedBox(height: 2),
                     Row(
@@ -1442,7 +1444,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         title: Row(
           children: [
-            if (event.type == CalendarEventType.memo && event.sticker != null)
+            if (event.sticker != null && event.sticker != '😐')
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(event.sticker!, style: const TextStyle(fontSize: 18)),

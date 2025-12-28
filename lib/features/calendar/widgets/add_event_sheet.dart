@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -81,7 +82,9 @@ class _AddEventSheetState extends State<AddEventSheet> {
   final _titleController = TextEditingController();
   final List<MemoBlock> _memoBlocks = [];
   final LayerLink _iconLayerLink = LayerLink();
+  final LayerLink _moodLayerLink = LayerLink();
   OverlayEntry? _overlayEntry;
+  OverlayEntry? _moodOverlayEntry;
   Color _selectedTitleColor = Colors.black87;
   
   // 메모 확장 데이터
@@ -99,7 +102,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
   // 1. 기본 타입을 일정으로 변경
   CalendarEventType _type = CalendarEventType.event;
   
-  TimeOfDay _selectedTime = TimeOfDay.now();
+  TimeOfDay _selectedTime = const TimeOfDay(hour: 9, minute: 0);
   bool _isAlarmEnabled = false;
   bool _isTimeManuallySet = false;
   bool _showEmojiPicker = false;
@@ -122,6 +125,8 @@ class _AddEventSheetState extends State<AddEventSheet> {
   void dispose() {
     _overlayEntry?.remove();
     _overlayEntry = null;
+    _moodOverlayEntry?.remove();
+    _moodOverlayEntry = null;
     _titleController.dispose();
     for (var block in _memoBlocks) {
       block.dispose();
@@ -162,6 +167,149 @@ class _AddEventSheetState extends State<AddEventSheet> {
   void _removeOverlay() {
     _overlayEntry?.remove();
     _overlayEntry = null;
+    _moodOverlayEntry?.remove();
+    _moodOverlayEntry = null;
+  }
+
+  void _toggleMoodPicker() {
+    if (_moodOverlayEntry != null) {
+      _removeOverlay();
+      return;
+    }
+    
+    // 다른 오버레이가 있다면 닫기
+    if (_overlayEntry != null) {
+      _removeOverlay();
+    }
+    
+    FocusScope.of(context).unfocus();
+    
+    // 약간의 지연을 주어 키보드가 닫히고 레이아웃이 안정된 후 표시
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (!mounted) return;
+      _moodOverlayEntry = _createMoodOverlayEntry();
+      Overlay.of(context).insert(_moodOverlayEntry!);
+    });
+  }
+
+  OverlayEntry _createMoodOverlayEntry() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDark ? const Color(0xFF2C2C2C) : Colors.white;
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final blueTheme = widget.themeColor == Colors.transparent 
+        ? (isDark ? Colors.white : Colors.black) 
+        : widget.themeColor;
+    
+    final moods = [
+      '😐', '😊', '😁', '🥰', '😌',
+      '😖', '😡', '☹️', '😢', '😭'
+    ];
+
+    return OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          Positioned.fill(
+            child: GestureDetector(
+              onTap: _removeOverlay,
+              behavior: HitTestBehavior.translucent,
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+          CompositedTransformFollower(
+            link: _moodLayerLink,
+            showWhenUnlinked: false,
+            targetAnchor: Alignment.bottomRight,
+            followerAnchor: Alignment.topRight,
+            offset: const Offset(0, 8),
+            child: Material(
+              elevation: 8,
+              borderRadius: BorderRadius.circular(20),
+              color: backgroundColor,
+              child: Container(
+                width: 320,
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '오늘 기분은?',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              _selectedSticker = null;
+                            });
+                            _removeOverlay();
+                          },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Opacity(
+                            opacity: 0.3,
+                            child: Text(
+                              '😐',
+                              style: const TextStyle(fontSize: 24),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4), // 여백을 최소한으로 줄임 (12 -> 4)
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 5,
+                        mainAxisSpacing: 8,
+                        crossAxisSpacing: 8,
+                        childAspectRatio: 1.0, // 크기를 줄이므로 1:1 비율로 복구
+                      ),
+                      itemCount: moods.length,
+                      itemBuilder: (context, index) {
+                        final isNoSticker = moods[index] == '😐';
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              _selectedSticker = isNoSticker ? null : moods[index];
+                            });
+                            _removeOverlay();
+                          },
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.02),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            alignment: Alignment.center,
+                            child: Opacity(
+                              opacity: isNoSticker ? 0.3 : 1.0,
+                              child: Text(
+                                moods[index],
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  height: 1.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _toggleRoutinePicker() {
@@ -170,11 +318,19 @@ class _AddEventSheetState extends State<AddEventSheet> {
       return;
     }
     
+    // 다른 오버레이가 있다면 닫기
+    if (_moodOverlayEntry != null) {
+      _removeOverlay();
+    }
+    
     // 키보드가 열려있다면 닫기
     FocusScope.of(context).unfocus();
     
-    _overlayEntry = _createOverlayEntry();
-    Overlay.of(context).insert(_overlayEntry!);
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (!mounted) return;
+      _overlayEntry = _createOverlayEntry();
+      Overlay.of(context).insert(_overlayEntry!);
+    });
   }
 
   OverlayEntry _createOverlayEntry() {
@@ -198,9 +354,9 @@ class _AddEventSheetState extends State<AddEventSheet> {
           CompositedTransformFollower(
             link: _iconLayerLink,
             showWhenUnlinked: false,
-            targetAnchor: Alignment.topRight,
-            followerAnchor: Alignment.bottomRight,
-            offset: const Offset(0, 0),
+            targetAnchor: Alignment.bottomRight,
+            followerAnchor: Alignment.topRight,
+            offset: const Offset(0, 4),
             child: Material(
               elevation: 4,
               borderRadius: BorderRadius.circular(12),
@@ -243,6 +399,178 @@ class _AddEventSheetState extends State<AddEventSheet> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showWheelTimePicker() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final blueTheme = widget.themeColor == Colors.transparent 
+        ? (isDark ? Colors.white : Colors.black) 
+        : widget.themeColor;
+
+    int currentHour = _selectedTime.hour;
+    int currentMinute = _selectedTime.minute;
+    
+    // 12시간 형식 변환
+    bool isPm = currentHour >= 12;
+    int displayHour = currentHour % 12;
+    if (displayHour == 0) displayHour = 12;
+
+    final ampmController = FixedExtentScrollController(initialItem: isPm ? 1 : 0);
+    final hourController = FixedExtentScrollController(initialItem: displayHour - 1);
+    final minuteController = FixedExtentScrollController(initialItem: currentMinute);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: backgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '시간 설정',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // 완료 시점의 값을 적용
+                          int finalHour = displayHour;
+                          if (isPm) {
+                            if (finalHour != 12) finalHour += 12;
+                          } else {
+                            if (finalHour == 12) finalHour = 0;
+                          }
+                          
+                          setState(() {
+                            _selectedTime = TimeOfDay(hour: finalHour, minute: currentMinute);
+                            _isTimeManuallySet = true;
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          '완료',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: blueTheme,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 200,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Center(
+                          child: Container(
+                            height: 50,
+                            width: 280,
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // 오전/오후
+                            SizedBox(
+                              width: 100,
+                              child: CupertinoPicker(
+                                itemExtent: 50,
+                                useMagnifier: true,
+                                magnification: 1.1,
+                                selectionOverlay: const SizedBox(),
+                                scrollController: ampmController,
+                                onSelectedItemChanged: (index) {
+                                  setModalState(() {
+                                    isPm = index == 1;
+                                  });
+                                },
+                                children: [
+                                  Center(child: Text('☀️ 오전', style: TextStyle(color: textColor, fontSize: 18))),
+                                  Center(child: Text('🌙 오후', style: TextStyle(color: textColor, fontSize: 18))),
+                                ],
+                              ),
+                            ),
+                            // 시
+                            SizedBox(
+                              width: 70,
+                              child: CupertinoPicker(
+                                itemExtent: 50,
+                                looping: true,
+                                useMagnifier: true,
+                                magnification: 1.1,
+                                selectionOverlay: const SizedBox(),
+                                scrollController: hourController,
+                                onSelectedItemChanged: (index) {
+                                  setModalState(() {
+                                    displayHour = index + 1;
+                                  });
+                                },
+                                children: List.generate(12, (index) => Center(
+                                  child: Text(
+                                    (index + 1).toString().padLeft(2, '0'),
+                                    style: TextStyle(color: textColor, fontSize: 24, fontWeight: FontWeight.bold),
+                                  ),
+                                )),
+                              ),
+                            ),
+                            Text(':', style: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.bold)),
+                            // 분
+                            SizedBox(
+                              width: 70,
+                              child: CupertinoPicker(
+                                itemExtent: 50,
+                                looping: true,
+                                useMagnifier: true,
+                                magnification: 1.1,
+                                selectionOverlay: const SizedBox(),
+                                scrollController: minuteController,
+                                onSelectedItemChanged: (index) {
+                                  setModalState(() {
+                                    currentMinute = index;
+                                  });
+                                },
+                                children: List.generate(60, (index) => Center(
+                                  child: Text(
+                                    index.toString().padLeft(2, '0'),
+                                    style: TextStyle(color: textColor, fontSize: 24, fontWeight: FontWeight.bold),
+                                  ),
+                                )),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -318,7 +646,12 @@ class _AddEventSheetState extends State<AddEventSheet> {
       _isTimeManuallySet = true;
       _initializeBlocks(widget.event!.content, _imagePaths);
     } else {
-      _selectedTime = TimeOfDay.now();
+      final now = DateTime.now();
+      final isToday = widget.selectedDate.year == now.year &&
+          widget.selectedDate.month == now.month &&
+          widget.selectedDate.day == now.day;
+      
+      _selectedTime = isToday ? TimeOfDay.now() : const TimeOfDay(hour: 9, minute: 0);
       _isTimeManuallySet = false;
       _initializeBlocks('', []);
     }
@@ -666,7 +999,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
         String newText;
         int newCursorPosition;
         
-        if (selection.isValid) {
+        if (selection.isValid && selection.start >= 0 && selection.start <= text.length && selection.end >= 0 && selection.end <= text.length) {
           newText = text.replaceRange(selection.start, selection.end, emoji.emoji);
           newCursorPosition = selection.start + emoji.emoji.length;
         } else {
@@ -858,7 +1191,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
             final controller = currentBlock.controller!;
             final text = controller.text;
             final selection = controller.selection;
-            final int cursorPosition = selection.isValid ? selection.start : text.length;
+            final int cursorPosition = (selection.isValid && selection.start >= 0 && selection.start <= text.length) ? selection.start : text.length;
             
             final beforeText = text.substring(0, cursorPosition);
             final afterText = text.substring(cursorPosition);
@@ -905,15 +1238,27 @@ class _AddEventSheetState extends State<AddEventSheet> {
   }
 
   bool _hasChanges() {
-    // 제목이 비어있지 않거나
-    if (_titleController.text.trim().isNotEmpty) return true;
-    
-    // 메모 블록에 내용이 있거나 (첫 번째 텍스트 블록 제외)
-    if (_memoBlocks.length > 1) return true;
-    if (_memoBlocks.isNotEmpty && _memoBlocks[0].controller != null && _memoBlocks[0].controller!.text.trim().isNotEmpty) return true;
-    
-    // 이미지가 있거나 (이미 _memoBlocks.length > 1에서 체크됨)
-    // 알람 설정이 기본값과 다르거나 (여기서는 단순하게 내용 위주로 체크)
+    // 이미 존재하는 이벤트를 수정 중인 경우
+    if (widget.event != null) {
+      if (_titleController.text != widget.event!.title) return true;
+      if (_type != widget.event!.type) return true;
+      if (_selectedSticker != widget.event!.sticker) return true;
+      if (_isAlarmEnabled != (widget.event!.alarmId != null)) return true;
+      
+      // 메모 블록 내용 비교는 복잡하므로 일단 내용이 있으면 변경된 것으로 간주하거나 
+      // 더 정교하게 비교할 수 있지만, 여기서는 단순하게 처리
+      if (_memoBlocks.length > 1) return true;
+      if (_memoBlocks.isNotEmpty && _memoBlocks[0].controller != null && 
+          _memoBlocks[0].controller!.text != (widget.event!.content)) return true;
+    } else {
+      // 새 이벤트를 작성 중인 경우
+      if (_titleController.text.trim().isNotEmpty) return true;
+      if (_selectedSticker != null) return true;
+      if (_isTimeManuallySet) return true;
+      if (_memoBlocks.length > 1) return true;
+      if (_memoBlocks.isNotEmpty && _memoBlocks[0].controller != null && 
+          _memoBlocks[0].controller!.text.trim().isNotEmpty) return true;
+    }
     
     return false;
   }
@@ -949,6 +1294,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
     final memoBgColor = isDark ? const Color(0xFF1E293B) : const Color(0xFFF0F7FF);
     final defaultBgColor = isDark ? const Color(0xFF121212) : const Color(0xFFF8FAFC);
     final backgroundColor = _type == CalendarEventType.memo ? memoBgColor : defaultBgColor;
+    final bool isBackgroundDark = backgroundColor.computeLuminance() < 0.5;
     
     final textColor = isDark ? Colors.white : Colors.black87;
     final blueTheme = widget.themeColor == Colors.transparent 
@@ -965,12 +1311,23 @@ class _AddEventSheetState extends State<AddEventSheet> {
           Navigator.pop(context);
         }
       },
-      child: Scaffold(
-        backgroundColor: backgroundColor,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isBackgroundDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isBackgroundDark ? Brightness.dark : Brightness.light,
+        ),
+        child: Scaffold(
+          backgroundColor: backgroundColor,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: isBackgroundDark ? Brightness.light : Brightness.dark,
+              statusBarBrightness: isBackgroundDark ? Brightness.dark : Brightness.light,
+            ),
+            leading: IconButton(
             icon: Icon(Icons.arrow_back, color: textColor),
             onPressed: () async {
               if (await _showExitConfirmation()) {
@@ -1004,28 +1361,12 @@ class _AddEventSheetState extends State<AddEventSheet> {
       ),
       body: Column(
         children: [
-          // 날짜 선택기 및 탭
+          // 날짜 선택기 및 탭 (순서 변경: 탭 왼쪽, 날짜 오른쪽)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
               children: [
-                Text(
-                  '${widget.selectedDate.day}',
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: textColor),
-                ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${widget.selectedDate.month}월 ${widget.selectedDate.year}',
-                      style: TextStyle(fontSize: 14, color: (textColor ?? Colors.black).withOpacity(0.6)),
-                    ),
-                  ],
-                ),
-                Icon(Icons.arrow_drop_down, color: (textColor ?? Colors.black).withOpacity(0.6)),
-                const Spacer(),
-                // 탭 버튼을 상단으로 이동하여 공간 확보
+                // 탭 버튼을 왼쪽으로 이동
                 Container(
                   width: 130,
                   padding: const EdgeInsets.all(3),
@@ -1054,6 +1395,26 @@ class _AddEventSheetState extends State<AddEventSheet> {
                     ],
                   ),
                 ),
+                const Spacer(),
+                // 날짜를 오른쪽으로 이동 및 형식 변경
+                 Column(
+                   crossAxisAlignment: CrossAxisAlignment.end,
+                   children: [
+                     Row(
+                       children: [
+                         Text(
+                           '${widget.selectedDate.year}년 ${widget.selectedDate.month}월 ${widget.selectedDate.day}일',
+                           style: TextStyle(
+                             fontSize: 18, 
+                             fontWeight: FontWeight.bold, 
+                             color: textColor
+                           ),
+                         ),
+                         Icon(Icons.arrow_drop_down, color: (textColor ?? Colors.black).withOpacity(0.6)),
+                        ],
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
@@ -1069,22 +1430,78 @@ class _AddEventSheetState extends State<AddEventSheet> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                   if (_type != CalendarEventType.memo) ...[
-                    TextField(
-                      controller: _titleController,
-                      contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: _handleContentInsertion),
-                      decoration: InputDecoration(
-                        hintText: '제목',
-                        hintStyle: TextStyle(color: (textColor ?? Colors.black).withOpacity(0.4), fontSize: 24, fontWeight: FontWeight.bold),
-                        border: InputBorder.none,
-                        suffixIcon: CompositedTransformTarget(
-                          link: _iconLayerLink,
-                          child: IconButton(
-                            icon: Icon(Icons.arrow_drop_down_circle_outlined, color: (textColor ?? Colors.black).withOpacity(0.4)),
-                            onPressed: _toggleRoutinePicker,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _titleController,
+                            contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: _handleContentInsertion),
+                            decoration: InputDecoration(
+                              hintText: '제목',
+                              hintStyle: TextStyle(color: (textColor ?? Colors.black).withOpacity(0.4), fontSize: 20, fontWeight: FontWeight.bold),
+                              border: InputBorder.none,
+                            ),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
                           ),
                         ),
-                      ),
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textColor),
+                        CompositedTransformTarget(
+                           link: _iconLayerLink,
+                           child: GestureDetector(
+                             onTap: _toggleRoutinePicker,
+                             child: Container(
+                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                               decoration: BoxDecoration(
+                                  color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
+                                  borderRadius: BorderRadius.circular(8), // 라운드 값을 줄여 더 사각 형태로 (20 -> 8)
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '루틴 요약', // 간단 일정 -> 루틴 요약
+                                      style: TextStyle(
+                                       fontSize: 13,
+                                       fontWeight: FontWeight.w600,
+                                       color: (textColor ?? Colors.black).withOpacity(0.6),
+                                     ),
+                                   ),
+                                   const SizedBox(width: 4),
+                                   Icon(
+                                     Icons.keyboard_arrow_down_rounded,
+                                     size: 18,
+                                     color: (textColor ?? Colors.black).withOpacity(0.4),
+                                   ),
+                                 ],
+                               ),
+                             ),
+                           ),
+                         ),
+                        const SizedBox(width: 8),
+                        CompositedTransformTarget(
+                          link: _moodLayerLink,
+                          child: GestureDetector(
+                            onTap: _toggleMoodPicker,
+                            child: Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
+                                shape: BoxShape.circle,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                _selectedSticker ?? '😐',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  color: _selectedSticker == null 
+                                      ? (isDark ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.2))
+                                      : null,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 12),
                     // 시간 설정
@@ -1098,18 +1515,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                         children: [
                           Expanded(
                             child: InkWell(
-                              onTap: () async {
-                                final time = await showTimePicker(
-                                  context: context,
-                                  initialTime: _selectedTime,
-                                );
-                                if (time != null) {
-                                  setState(() {
-                                    _selectedTime = time;
-                                    _isTimeManuallySet = true;
-                                  });
-                                }
-                              },
+                              onTap: _showWheelTimePicker,
                               child: Row(
                                 children: [
                                   Icon(Icons.access_time_filled, color: blueTheme, size: 22),
@@ -1166,22 +1572,35 @@ class _AddEventSheetState extends State<AddEventSheet> {
                           controller: _titleController,
                           contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: _handleContentInsertion),
                           decoration: InputDecoration(
-                              hintText: '메모 제목',
-                              hintStyle: TextStyle(color: (textColor ?? Colors.black).withOpacity(0.4), fontSize: 24, fontWeight: FontWeight.bold),
+                              hintText: '제목',
+                              hintStyle: TextStyle(color: (textColor ?? Colors.black).withOpacity(0.4), fontSize: 20, fontWeight: FontWeight.bold),
                               border: InputBorder.none,
                             ),
-                            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textColor),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: _focusForEmoji,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
-                              shape: BoxShape.circle,
+                        CompositedTransformTarget(
+                          link: _moodLayerLink,
+                          child: GestureDetector(
+                            onTap: _toggleMoodPicker,
+                            child: Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
+                                shape: BoxShape.circle,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                _selectedSticker ?? '😐',
+                                style: TextStyle(
+                                  fontSize: 28,
+                                  color: _selectedSticker == null 
+                                      ? (isDark ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.2))
+                                      : null,
+                                ),
+                              ),
                             ),
-                            child: Text(_selectedSticker ?? '😊', style: const TextStyle(fontSize: 28)),
                           ),
                         ),
                       ],
@@ -1240,6 +1659,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
           _buildEmojiPicker(isDark),
         ],
       ),
+    ),
     ),
     );
   }
@@ -1323,15 +1743,25 @@ class _AddEventSheetState extends State<AddEventSheet> {
 
     // 테마 관련 색상 정의
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final blueTheme = widget.themeColor == Colors.transparent 
-        ? (isDark ? Colors.white : Colors.black) 
-        : widget.themeColor;
-    final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
-    final textColor = isDark ? Colors.white : Colors.grey[800];
-    final inputFillColor = isDark ? Colors.grey[800] : Colors.grey[50];
-    final tabBackgroundColor = isDark ? Colors.grey[900] : Colors.grey[100];
-    final dividerColor = isDark ? Colors.grey[700] : Colors.grey[300];
-    final hintColor = isDark ? Colors.grey[500] : Colors.grey;
+    
+     final backgroundColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
+     final bool isBackgroundDark = backgroundColor.computeLuminance() < 0.5;
+
+     // 강제로 라이트 모드 아이콘이 나오도록 설정 (배경이 밝은 경우)
+      final systemUiStyle = SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isBackgroundDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isBackgroundDark ? Brightness.dark : Brightness.light,
+      );
+
+      final blueTheme = widget.themeColor == Colors.transparent 
+          ? (isDark ? Colors.white : Colors.black) 
+          : widget.themeColor;
+      final textColor = isDark ? Colors.white : Colors.grey[800];
+      final inputFillColor = isDark ? Colors.grey[800] : Colors.grey[50];
+      final tabBackgroundColor = isDark ? Colors.grey[900] : Colors.grey[100];
+      final dividerColor = isDark ? Colors.grey[700] : Colors.grey[300];
+      final hintColor = isDark ? Colors.grey[500] : Colors.grey;
 
     return PopScope(
       canPop: false,
@@ -1343,9 +1773,11 @@ class _AddEventSheetState extends State<AddEventSheet> {
           Navigator.pop(context);
         }
       },
-      child: Padding(
-        padding: EdgeInsets.only(bottom: bottomInset),
-        child: Container(
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: systemUiStyle,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: bottomInset),
+          child: Container(
         margin: EdgeInsets.only(
           left: 16, 
           right: 16, 
@@ -1496,18 +1928,23 @@ class _AddEventSheetState extends State<AddEventSheet> {
                 if (_type == CalendarEventType.memo) ...[
                   const SizedBox(width: 8),
                   GestureDetector(
-                    onTap: () => _focusForEmoji(),
+                    onTap: _toggleMoodPicker,
                     child: Container(
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
                         color: inputFillColor,
-                        borderRadius: BorderRadius.circular(12),
+                        shape: BoxShape.circle,
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        _selectedSticker ?? '😊',
-                        style: const TextStyle(fontSize: 24),
+                        _selectedSticker ?? '😐',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: _selectedSticker == null 
+                              ? (isDark ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.2))
+                              : null,
+                        ),
                       ),
                     ),
                   ),
@@ -1673,11 +2110,12 @@ class _AddEventSheetState extends State<AddEventSheet> {
                 ),
               ),
             ),
-              ],
-            ),
-          ),
+          ],
         ),
       ),
+    ),
+    ),
+    ),
     ),
     );
   }
@@ -1919,7 +2357,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
       type: _type,
       alarmId: _isAlarmEnabled ? (widget.event?.alarmId ?? const Uuid().v4()) : null,
       titleColor: _selectedTitleColor.toARGB32(),
-      sticker: _type == CalendarEventType.memo ? _selectedSticker : null,
+      sticker: _selectedSticker,
       images: _type == CalendarEventType.memo ? mergedImages : null,
       drawingData: _type == CalendarEventType.memo ? _drawingData : null,
       isFavorite: _isFavorite,
