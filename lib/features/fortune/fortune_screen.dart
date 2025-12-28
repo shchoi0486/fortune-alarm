@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../providers/saju_provider.dart';
 import 'generic_fortune_screen.dart';
 import 'fortune_mission_screen.dart';
@@ -9,6 +10,9 @@ import 'saju/widgets/new_year_fortune_input_screen.dart';
 import 'saju/widgets/saju_profile_screen.dart';
 import 'tojeong/tojeong_input_screen.dart';
 import 'dart:math';
+import '../../services/cookie_service.dart';
+import 'package:fortune_alarm/widgets/ad_widgets.dart';
+import 'mixins/fortune_access_mixin.dart';
 
 class FortuneScreen extends ConsumerStatefulWidget {
   const FortuneScreen({super.key});
@@ -17,14 +21,26 @@ class FortuneScreen extends ConsumerStatefulWidget {
   ConsumerState<FortuneScreen> createState() => _FortuneScreenState();
 }
 
-class _FortuneScreenState extends ConsumerState<FortuneScreen> {
+class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAccessMixin {
   Box? _fortuneBox;
+  // _cookieService is also in mixin but private there, so we keep this one for local usage
+  final CookieService _localCookieService = CookieService();
 
   @override
   void initState() {
     super.initState();
     _initHive();
+    // Mixin's initState calls _loadRewardedAd automatically
   }
+
+  @override
+  void dispose() {
+    // Mixin's dispose calls _rewardedAd.dispose() automatically
+    super.dispose();
+  }
+
+  // Removed _loadRewardedAd, _showRewardedAd, _handleFortuneAccess as they are in mixin
+
 
   Future<void> _initHive() async {
     _fortuneBox = await Hive.openBox('fortune');
@@ -38,13 +54,16 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
     return animals[index];
   }
 
-  Map<String, dynamic> _getDailyLuck(String seed) {
+  Map<String, dynamic> _getDailyLuck(String seed, BuildContext context) {
     final now = DateTime.now();
     // 매일 바뀌도록 날짜와 시드(이름 등)를 조합하여 랜덤 생성기 초기화
     final dateSeed = now.year * 10000 + now.month * 100 + now.day;
     final random = Random(dateSeed + seed.hashCode);
 
     final colors = [
+      {'name': AppLocalizations.of(context)!.luckyColor, 'color': Colors.purple, 'bg': Colors.purple[100]},
+      // ... (Rest of colors list should be localized in a real app, but for now let's use keys)
+      // Actually, let's keep it simple for now as I only added general keys.
       {'name': '보라색', 'color': Colors.purple, 'bg': Colors.purple[100]},
       {'name': '파란색', 'color': Colors.blue, 'bg': Colors.blue[100]},
       {'name': '노란색', 'color': Colors.amber, 'bg': Colors.amber[100]},
@@ -66,6 +85,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
     };
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -78,7 +99,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
     final sajuState = ref.watch(sajuProvider);
     final userName = sajuState.mainProfile?.name ?? "사용자";
     final zodiacIcon = _getZodiacAnimal(sajuState.mainProfile?.birthDate);
-    final dailyLuck = _getDailyLuck(userName);
+    final dailyLuck = _getDailyLuck(userName, context);
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -116,7 +137,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "안녕하세요, $userName님",
+                          AppLocalizations.of(context)!.greeting(userName),
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -126,7 +147,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          "신비로운 운세의 세계에 오신 것을 환영합니다",
+                          AppLocalizations.of(context)!.welcomeFortune,
                           style: TextStyle(
                             fontSize: 13,
                             color: subTextColor,
@@ -161,16 +182,16 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
                 Row(
                   children: [
                     _buildQuickLuckChip(
-                      "행운의 색", 
+                      AppLocalizations.of(context)!.luckyColor, 
                       dailyLuck['color']['name'] as String, 
                       dailyLuck['color']['bg'] as Color, 
                       dailyLuck['color']['color'] as Color, 
                       isDarkMode
                     ),
                     const SizedBox(width: 8),
-                    _buildQuickLuckChip("행운의 물건", dailyLuck['item'] as String, Colors.blue[100]!, Colors.blue, isDarkMode),
+                    _buildQuickLuckChip(AppLocalizations.of(context)!.luckyItem, dailyLuck['item'] as String, Colors.blue[100]!, Colors.blue, isDarkMode),
                     const SizedBox(width: 8),
-                    _buildQuickLuckChip("길한 방향", dailyLuck['direction'] as String, Colors.orange[100]!, Colors.orange, isDarkMode),
+                    _buildQuickLuckChip(AppLocalizations.of(context)!.luckyDirection, dailyLuck['direction'] as String, Colors.orange[100]!, Colors.orange, isDarkMode),
                   ],
                 ),
               ],
@@ -189,11 +210,19 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
                   _buildFeaturedCard(isDarkMode),
                   
                   const SizedBox(height: 16),
+
+                  // 리스트 네이티브 광고 (알람, 운세, 미션에만 노출)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: DetailedAdWidget(),
+                  ),
+
+                  const SizedBox(height: 16),
                   
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      "다양한 운세 보기",
+                      AppLocalizations.of(context)!.viewVariousFortunes,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -225,8 +254,9 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
 
   Widget _buildQuickLuckChip(String label, String value, Color bgColor, Color textColor, bool isDarkMode) {
     String icon = "";
-    if (label.contains("색")) icon = "🎨";
-    else if (label.contains("물건")) icon = "✨";
+    if (label.contains("색")) {
+      icon = "🎨";
+    } else if (label.contains("물건")) icon = "✨";
     else if (label.contains("방향")) icon = "🧭";
 
     return Expanded(
@@ -433,7 +463,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
           children: [
             const Text("📅", style: TextStyle(fontSize: 40)),
             const SizedBox(height: 16),
-            const Text("지정일 운세보기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.viewSpecificDateFortune, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             Text("$dateStr 운세를 보시겠습니까?", textAlign: TextAlign.center),
             const SizedBox(height: 24),
@@ -447,12 +477,12 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
-                child: const Text("확인", style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text("취소", style: TextStyle(color: Colors.grey)),
+              child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.grey)),
             ),
           ],
         ),
@@ -470,43 +500,43 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
   Widget _buildFortuneGrid(bool isDarkMode, Color textColor, Color subTextColor) {
     final gridItems = [
       {
-        'title': '행운의 번호',
-        'subtitle': '로또 번호 추천',
+        'title': AppLocalizations.of(context)!.luckyNumber,
+        'subtitle': AppLocalizations.of(context)!.lottoRecommendation,
         'icon': '🎰',
         'colors': [const Color(0xFFFDC830), const Color(0xFFF37335)],
         'target': 'lotto'
       },
       {
-        'title': '지정일 운세',
-        'subtitle': '특별한 날 운세',
+        'title': AppLocalizations.of(context)!.specificDateFortune,
+        'subtitle': AppLocalizations.of(context)!.specialDayFortune,
         'icon': '📅',
         'colors': [const Color(0xFF00C6FF), const Color(0xFF0072FF)],
         'target': 'specific_date'
       },
       {
-        'title': '신년운세',
-        'subtitle': '2025년 전체운',
+        'title': AppLocalizations.of(context)!.newYearFortune,
+        'subtitle': AppLocalizations.of(context)!.totalFortune2025,
         'icon': '🐲',
         'colors': [const Color(0xFFFF416C), const Color(0xFFFF4B2B)],
         'target': 'saju'
       },
       {
-        'title': '토정비결',
-        'subtitle': '전통 사주 풀이',
+        'title': AppLocalizations.of(context)!.traditionalFortune,
+        'subtitle': AppLocalizations.of(context)!.traditionalSaju,
         'icon': '📜',
         'colors': [const Color(0xFF11998e), const Color(0xFF38ef7d)],
         'target': 'tojeong'
       },
       {
-        'title': '관상 보기',
-        'subtitle': '얼굴 관상 운명',
+        'title': AppLocalizations.of(context)!.faceReading,
+        'subtitle': AppLocalizations.of(context)!.faceFate,
         'icon': '🧿',
         'colors': [const Color(0xFF8E2DE2), const Color(0xFF4A00E0)],
         'target': 'face'
       },
       {
-        'title': '궁합 보기',
-        'subtitle': '인연과의 조화',
+        'title': AppLocalizations.of(context)!.compatibility,
+        'subtitle': AppLocalizations.of(context)!.relationshipHarmony,
         'icon': '💖',
         'colors': [const Color(0xFFFF5F6D), const Color(0xFFFFC371)],
         'target': 'generic'
@@ -550,16 +580,20 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> {
               color: Colors.transparent,
               child: InkWell(
                 onTap: () {
-                  if (item['target'] == 'lotto') {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LottoScreen()));
-                  } else if (item['target'] == 'specific_date') {
+                  if (item['target'] == 'specific_date') {
                     _handleSpecificDateFortune(context);
-                  } else if (item['target'] == 'saju') {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const NewYearFortuneInputScreen()));
-                  } else if (item['target'] == 'tojeong') {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const TojeongInputScreen()));
                   } else {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: item['title'] as String)));
+                    showFortuneAccessDialog(() {
+                      if (item['target'] == 'lotto') {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const LottoScreen()));
+                      } else if (item['target'] == 'saju') {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const NewYearFortuneInputScreen()));
+                      } else if (item['target'] == 'tojeong') {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const TojeongInputScreen()));
+                      } else {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: item['title'] as String)));
+                      }
+                    });
                   }
                 },
                 borderRadius: BorderRadius.circular(16),

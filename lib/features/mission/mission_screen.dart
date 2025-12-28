@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/mission_provider.dart';
-import '../../widgets/ad_banner_widget.dart';
+import '../../widgets/ad_widgets.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'widgets/mission_tile.dart';
 import 'widgets/add_mission_sheet.dart';
 import 'water/water_mission_screen.dart';
@@ -59,7 +60,7 @@ class MissionScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '오늘의 포춘쿠키 보상',
+                            AppLocalizations.of(context)!.dailyFortuneCookieReward,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -68,11 +69,11 @@ class MissionScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '미션 5개 성공 시 1개, 10개 성공 시 2개 지급!',
+                            AppLocalizations.of(context)!.missionRewardInfo,
                             style: TextStyle(
                               fontSize: 12,
                               color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.8),
-                            ),
+                        ),
                           ),
                         ],
                       ),
@@ -92,9 +93,9 @@ class MissionScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          '오늘의 미션',
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.of(context)!.dailyMission,
+                          style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                           ),
@@ -109,8 +110,8 @@ class MissionScreen extends ConsumerWidget {
                           ),
                           child: Text(
                             missionState.isGoalAchieved 
-                                ? '🎉 ${missionState.completedCount}/5 목표 달성!' 
-                                : '${missionState.completedCount}/5 달성',
+                                ? AppLocalizations.of(context)!.goalAchieved(missionState.completedCount)
+                                : AppLocalizations.of(context)!.missionProgress(missionState.completedCount),
                             style: TextStyle(
                               color: missionState.isGoalAchieved ? Colors.green : Colors.blue,
                               fontWeight: FontWeight.bold,
@@ -163,9 +164,9 @@ class MissionScreen extends ConsumerWidget {
                     child: ExpansionTile(
                       tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                       minTileHeight: 43,
-                      title: const Text(
-                        '나의 미션 기록',
-                        style: TextStyle(
+                      title: Text(
+                        AppLocalizations.of(context)!.myMissionRecord,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
                         ),
@@ -188,22 +189,22 @@ class MissionScreen extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   _StatItem(
-                                    label: '연속 성공',
-                                    value: '${stats['streak']}일',
+                                    label: AppLocalizations.of(context)!.consecutiveSuccess,
+                                    value: AppLocalizations.of(context)!.daysCount(stats['streak']),
                                     icon: Icons.local_fire_department,
                                     color: Colors.orange,
                                   ),
                                   _StatItem(
-                                    label: '성공률(30일)',
+                                    label: AppLocalizations.of(context)!.successRate30Days,
                                     value: '${stats['successRate'].toStringAsFixed(1)}%',
                                     icon: Icons.pie_chart,
                                     color: Colors.blue,
                                   ),
                                   _StatItem(
-                                    label: '총 성공',
-                                    value: '${stats['totalSuccess']}일',
-                                    icon: Icons.emoji_events,
-                                    color: Colors.amber,
+                                    label: AppLocalizations.of(context)!.totalSuccess,
+                                    value: AppLocalizations.of(context)!.daysCount(stats['totalSuccess']),
+                                    icon: Icons.check_circle_outline,
+                                    color: Colors.green,
                                   ),
                                 ],
                               ),
@@ -217,6 +218,14 @@ class MissionScreen extends ConsumerWidget {
               ),
             ),
 
+            // 1.2 광고
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: DetailedAdWidget(),
+              ),
+            ),
+
             // 2. 해야 할 미션 (Pending)
             if (pendingMissions.isNotEmpty) ...[
               SliverPadding(
@@ -226,7 +235,7 @@ class MissionScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        '도전 중 🔥',
+                        AppLocalizations.of(context)!.inProgress,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -258,16 +267,16 @@ class MissionScreen extends ConsumerWidget {
                             builder: (context) => AlertDialog(
                               backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                              title: const Text('미션 초기화', style: TextStyle(fontWeight: FontWeight.bold)),
-                              content: const Text('모든 도전 목록을 초기화하시겠습니까?\n(기본 시스템 미션 제외)'),
+                              title: Text(AppLocalizations.of(context)!.resetMissions, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              content: Text(AppLocalizations.of(context)!.resetMissionsConfirm),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(context, false),
-                                  child: Text('취소', style: TextStyle(color: isDark ? Colors.white70 : Colors.black54)),
+                                  child: Text(AppLocalizations.of(context)!.cancel, style: TextStyle(color: isDark ? Colors.white70 : Colors.black54)),
                                 ),
                                 TextButton(
                                   onPressed: () => Navigator.pop(context, true),
-                                  child: const Text('초기화', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                                  child: Text(AppLocalizations.of(context)!.reset, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
                                 ),
                               ],
                             ),
@@ -278,7 +287,7 @@ class MissionScreen extends ConsumerWidget {
                           }
                         },
                         icon: Icon(Icons.refresh, size: 20, color: isDark ? Colors.white54 : Colors.grey[600]),
-                        tooltip: '초기화',
+                        tooltip: AppLocalizations.of(context)!.resetTooltip,
                         constraints: const BoxConstraints(),
                         padding: const EdgeInsets.all(8),
                       ),
@@ -294,8 +303,8 @@ class MissionScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                             ),
                             builder: (context) => AddMissionSheet(
-                              onAdd: (title, icon, category, {bool? isCustom}) {
-                                ref.read(missionProvider).addMission(title, icon, category, isCustom: isCustom ?? false);
+                              onAdd: (title, icon, category, {bool? isCustom, String? id}) {
+                                ref.read(missionProvider).addMission(title, icon, category, isCustom: isCustom ?? false, id: id);
                               },
                             ),
                           );
@@ -312,9 +321,9 @@ class MissionScreen extends ConsumerWidget {
                             children: [
                               const Icon(Icons.add, size: 16, color: Colors.blue),
                               const SizedBox(width: 4),
-                              const Text(
-                                '미션 추가',
-                                style: TextStyle(
+                              Text(
+                                AppLocalizations.of(context)!.addMission,
+                                style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue,
@@ -360,7 +369,7 @@ class MissionScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        '완료된 미션',
+                        AppLocalizations.of(context)!.completedMissions,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -417,13 +426,6 @@ class MissionScreen extends ConsumerWidget {
           ],
             ),
           ),
-          const SafeArea(
-            top: false,
-            child: SizedBox(
-              width: double.infinity,
-              child: Center(child: AdBannerWidget()),
-            ),
-          ),
         ],
       ),
     );
@@ -442,15 +444,15 @@ class MissionScreen extends ConsumerWidget {
           children: [
             const Text('🥠', style: TextStyle(fontSize: 60)),
             const SizedBox(height: 16),
-            const Text(
-              '축하합니다!',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.congratulations,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            const Text(
-              '오늘의 미션 5개를 완료하여\n포춘쿠키 1개를 획득했습니다!',
+            Text(
+              AppLocalizations.of(context)!.missionRewardEarned,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -466,7 +468,7 @@ class MissionScreen extends ConsumerWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
-                child: const Text('확인', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
           ],

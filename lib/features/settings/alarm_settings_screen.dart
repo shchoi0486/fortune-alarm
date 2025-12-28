@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class AlarmSettingsScreen extends ConsumerStatefulWidget {
   const AlarmSettingsScreen({super.key});
@@ -38,7 +39,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text('알람 설정', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.alarmSettings, style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: backgroundColor,
         elevation: 0,
         centerTitle: true,
@@ -51,25 +52,25 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           _buildSection(
-            '기본 알람 동작',
+            AppLocalizations.of(context)!.defaultAlarmBehavior,
             [
               _buildSliderTile(
-                '기본 알람 음량',
-                '새 알람 생성 시 적용되는 기본 음량입니다.',
+                AppLocalizations.of(context)!.defaultAlarmVolume,
+                AppLocalizations.of(context)!.defaultAlarmVolumeDescription,
                 'default_volume',
                 1.0,
                 isDark,
               ),
               _buildSwitchTile(
-                '점진적 음량 증가',
-                '알람 소리가 서서히 커지도록 설정합니다.',
+                AppLocalizations.of(context)!.gradualVolume,
+                AppLocalizations.of(context)!.gradualVolumeDescription,
                 'default_gradual_volume',
                 false,
                 isDark,
               ),
               _buildSwitchTile(
-                '기본 진동',
-                '새 알람 생성 시 진동을 기본으로 켭니다.',
+                AppLocalizations.of(context)!.defaultVibration,
+                AppLocalizations.of(context)!.defaultVibrationDescription,
                 'default_vibration',
                 true,
                 isDark,
@@ -79,22 +80,22 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
           ),
           const SizedBox(height: 24),
           _buildSection(
-            '다시 울림(스누즈)',
+            AppLocalizations.of(context)!.snoozeSettings,
             [
               _buildDropdownTile(
-                '기본 간격',
+                AppLocalizations.of(context)!.defaultInterval,
                 'default_snooze_interval',
                 5,
                 [1, 3, 5, 10, 15, 30],
-                '분',
+                AppLocalizations.of(context)!.minutes,
                 isDark,
               ),
               _buildDropdownTile(
-                '최대 횟수',
+                AppLocalizations.of(context)!.maxSnoozeCountLabel,
                 'default_max_snooze_count',
                 3,
                 [1, 3, 5, 10],
-                '회',
+                AppLocalizations.of(context)!.times,
                 isDark,
               ),
             ],
@@ -180,7 +181,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
           _settingsBox.put(key, newValue);
         });
       },
-      activeColor: Colors.blueAccent,
+      activeThumbColor: Colors.blueAccent,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     );
   }

@@ -11,8 +11,10 @@ import '../../providers/alarm_list_provider.dart';
 import '../../providers/mission_provider.dart';
 import '../../services/notification_service.dart';
 import '../../services/alarm_scheduler_service.dart';
+import '../../services/ml_service.dart';
 import '../../data/models/alarm_model.dart';
 import '../../core/constants/mission_type.dart';
+import '../../services/camera_service.dart';
 import '../mission_math/math_mission_screen.dart';
 import '../mission_quiz/quiz_mission_screen.dart';
 import '../fortune/fortune_mission_screen.dart';
@@ -20,6 +22,7 @@ import '../mission_shake/shake_mission_screen.dart';
 import '../mission_none/simple_alarm_screen.dart';
 import '../mission_camera/mission_camera_screen.dart';
 import '../mission/supplement/supplement_mission_screen.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class AlarmRingingScreen extends ConsumerStatefulWidget {
   final String alarmId;
@@ -37,12 +40,23 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
   Timer? _timeTimer;
   Timer? _missionTimeoutTimer;
   bool _isLoading = true;
+  bool _isMissionStarted = false;
   
   @override
   void initState() {
     super.initState();
     _loadAlarm();
     
+    // ML 서비스 미리 초기화 (카메라 미션 대비)
+    MLService().initialize().catchError((e) {
+      debugPrint('ML pre-initialization failed: $e');
+    });
+
+    // 카메라 미리 준비 (availableCameras 캐싱)
+    ref.read(cameraControllerProvider.notifier).initializeCamera().catchError((e) {
+      debugPrint('Camera pre-initialization failed: $e');
+    });
+
     // 시간 업데이트
     _timeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) setState(() {});
@@ -66,14 +80,14 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
 
         // 화면이 완전히 빌드된 후 소리를 재생하기 위해 약간의 딜레이를 줍니다.
         Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted) {
+          if (mounted && !_isMissionStarted) {
             _playAlarm();
           }
         });
       } else {
         debugPrint('Error: Alarm with ID ${widget.alarmId} not found!');
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('알람 정보를 불러오지 못했습니다.')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.errorLoadingAlarm)),
         );
         Future.delayed(const Duration(seconds: 2), () {
           if (mounted) Navigator.pop(context);
@@ -115,7 +129,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
   }
 
   Future<void> _playAlarm() async {
-    if (_alarm == null) return;
+    if (_alarm == null || _isMissionStarted) return;
 
     debugPrint('[AlarmRingingScreen] _playAlarm called. sound: ${_alarm!.isSoundEnabled}, volume: ${_alarm!.volume}');
 
@@ -273,10 +287,10 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
 
     if (_alarm == null) {
       // _loadAlarm에서 이미 처리하지만, 만약을 위한 안전장치
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: Colors.red,
         body: Center(
-          child: Text('알람 정보를 찾을 수 없습니다.', style: TextStyle(color: Colors.white, fontSize: 18)),
+          child: Text(AppLocalizations.of(context)!.alarmNotFound, style: const TextStyle(color: Colors.white, fontSize: 18)),
         ),
       );
     }
@@ -320,7 +334,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
                 child: Column(
                   children: [
                     Text(
-                      DateFormat('M월 d일 EEEE', 'ko_KR').format(DateTime.now()),
+                      DateFormat.MMMMEEEEd(Localizations.localeOf(context).toString()).format(DateTime.now()),
                       style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold, shadows: [Shadow(blurRadius: 5, color: Colors.black45)]),
                     ),
                     const SizedBox(height: 10),
@@ -355,7 +369,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
                             if (currentCount < 1) currentCount = 1;
                             if (currentCount > maxCount) currentCount = maxCount;
                             
-                            return "반복 알람 ($currentCount/$maxCount)";
+                            return AppLocalizations.of(context)!.repeatAlarmCount(currentCount, maxCount);
                           })(),
                           style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
                         ),
@@ -414,8 +428,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
                     ),
                     child: Text(
                       _alarm!.missionType == MissionType.none 
-                          ? "알람 끄기"
-                          : "미션 시작", 
+                          ? AppLocalizations.of(context)!.turnOffAlarm
+                          : AppLocalizations.of(context)!.startMission, 
                       style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)
                     ),
                   ),
@@ -424,13 +438,15 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
             ],
           ),
         ),
-        ),
+      ),
       ),
     );
   }
 
   void _startMission() async {
     if (_alarm == null) return;
+    if (_isMissionStarted) return; // Prevent double taps
+    _isMissionStarted = true;
 
     final MissionType type = _alarm!.missionType;
     final List<String>? refPaths = _alarm!.referenceImagePaths;
@@ -473,8 +489,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
 
     debugPrint('[AlarmRingingScreen] Starting mission: $type');
 
-    // 미션 시작 시 알람 소리/진동을 일시 정지합니다.
-    await _stopAlarm();
+    // 미션 시작 시 알람 소리/진동을 중지합니다. (UI 스레드 차단 방지를 위해 await 제거)
+    _stopAlarm();
 
     // [추가] 미션 수행 중에는 자동 스누즈가 울리지 않도록 이미 예약된 스누즈를 취소합니다.
     // 미션 성공 후에 다시 예약할 것입니다.
@@ -500,6 +516,9 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
     );
 
     debugPrint('[AlarmRingingScreen] Mission screen returned result: $result');
+
+    // 미션 화면에서 돌아왔으므로 플래그 해제
+    _isMissionStarted = false;
 
     if (result == 'timeout') {
       // 2분간 활동 없음 -> 다시 알람 울림
@@ -587,6 +606,9 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
           if (mounted) Navigator.pop(context);
         }
       }
+    } else {
+      // 뒤로가기 등으로 미션을 완료하지 않고 돌아온 경우 알람 다시 재생
+      if (mounted) _playAlarm();
     }
   }
 }

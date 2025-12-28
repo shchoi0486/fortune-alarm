@@ -11,10 +11,11 @@ import 'package:vibration/vibration.dart';
 import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
 import '../../data/models/alarm_model.dart';
-import 'package:fortune_alarm/providers/alarm_list_provider.dart';
+import '../../providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
 
 class ShakeMissionScreen extends ConsumerStatefulWidget {
@@ -279,10 +280,10 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
                   children: [
                     const Icon(Icons.vibration, size: 100, color: Colors.white, shadows: [Shadow(blurRadius: 10, color: Colors.black45)]),
                     const SizedBox(height: 30),
-                    const Text(
-                      '핸드폰을 흔들어주세요!',
+                    Text(
+                      AppLocalizations.of(context)!.shakePhone,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 28, 
                         fontWeight: FontWeight.bold, 
                         color: Colors.white,
@@ -357,9 +358,9 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            const Text(
-                              '미션 완료!',
-                              style: TextStyle(
+                            Text(
+                              AppLocalizations.of(context)!.missionComplete,
+                              style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.green,

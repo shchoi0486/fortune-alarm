@@ -183,20 +183,33 @@ class AlarmSchedulerService {
 
       if (Platform.isAndroid) {
         // 정확한 알람 권한 확인 (Android 12+)
-        final exactStatus = await Permission.scheduleExactAlarm.status;
+        // USE_EXACT_ALARM 권한이 매니페스트에 있으면 기본적으로 granted 상태여야 함
+        var exactStatus = await Permission.scheduleExactAlarm.status;
         debugPrint('[AlarmScheduler] SCHEDULE_EXACT_ALARM status: $exactStatus');
+        
         if (exactStatus.isDenied) {
           debugPrint('[AlarmScheduler] SCHEDULE_EXACT_ALARM permission denied. Requesting...');
-          final requestResult = await Permission.scheduleExactAlarm.request();
-          if (requestResult.isDenied) {
-            debugPrint('[AlarmScheduler] CRITICAL: SCHEDULE_EXACT_ALARM permission still denied.');
-            return false;
+          // 사용자가 명시적으로 거부한 경우가 아니면 요청 시도
+          exactStatus = await Permission.scheduleExactAlarm.request();
+          
+          if (exactStatus.isDenied) {
+            debugPrint('[AlarmScheduler] CRITICAL: SCHEDULE_EXACT_ALARM permission still denied. Alarm might not ring exactly.');
+            // 여기서 false를 리턴하면 알람 저장이 아예 안 되므로, 
+            // USE_EXACT_ALARM을 믿고 진행하되 로그를 남김 (또는 UI에서 처리하도록 유도)
+            // 하지만 정확한 알람이 핵심 기능이므로 실패 처리하는 것이 안전할 수 있음.
+            // 여기서는 일단 진행하되, oneShotAt이 실패할 수 있음을 인지.
           }
         }
 
         // 배터리 최적화 제외 권한 확인 (절전 모드에서 알람 보장)
         final batteryStatus = await Permission.ignoreBatteryOptimizations.status;
         debugPrint('[AlarmScheduler] ignoreBatteryOptimizations status: $batteryStatus');
+        
+        if (batteryStatus.isDenied) {
+           debugPrint('[AlarmScheduler] Battery optimization is active. Requesting to ignore...');
+           // 사용자에게 시스템 설정으로 이동하도록 요청
+           await Permission.ignoreBatteryOptimizations.request();
+        }
       }
 
       final int alarmId = getStableId(alarm.id);

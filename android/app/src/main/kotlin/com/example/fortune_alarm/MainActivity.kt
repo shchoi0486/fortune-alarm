@@ -11,6 +11,7 @@ import android.view.WindowManager
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.content.Intent
+import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 
 import android.os.PowerManager
 
@@ -20,6 +21,17 @@ class MainActivity: FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        // 네이티브 광고 팩토리 등록
+        GoogleMobileAdsPlugin.registerNativeAdFactory(
+            flutterEngine, "listTile", ListTileNativeAdFactory(context)
+        )
+        GoogleMobileAdsPlugin.registerNativeAdFactory(
+            flutterEngine, "dialogAd", DialogNativeAdFactory(context)
+        )
+        GoogleMobileAdsPlugin.registerNativeAdFactory(
+            flutterEngine, "textBanner", TextBannerNativeAdFactory(context)
+        )
         
         methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
         methodChannel?.setMethodCallHandler { call, result ->
@@ -36,6 +48,13 @@ class MainActivity: FlutterActivity() {
     override fun onResume() {
         super.onResume()
         configureWindow()
+    }
+
+    override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
+        super.cleanUpFlutterEngine(flutterEngine)
+        GoogleMobileAdsPlugin.unregisterNativeAdFactory(flutterEngine, "listTile")
+        GoogleMobileAdsPlugin.unregisterNativeAdFactory(flutterEngine, "dialogAd")
+        GoogleMobileAdsPlugin.unregisterNativeAdFactory(flutterEngine, "textBanner")
     }
 
     override fun onDestroy() {

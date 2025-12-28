@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:fortune_alarm/l10n/app_localizations.dart';
+
 class Notice {
   final String title;
   final String date;
@@ -13,29 +15,30 @@ class NoticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final notices = [
       Notice(
-        title: '포춘 알람 정식 출시 안내',
+        title: l10n.notice1Title,
         date: '2025.12.21',
-        content: '안녕하세요. 포춘 알람이 정식으로 출시되었습니다.\n\n매일 아침 알람과 함께 오늘의 운세를 확인하고 즐거운 하루를 시작해보세요!\n앞으로 더욱 다양한 기능과 개선된 서비스로 찾아뵙겠습니다.\n\n감사합니다.',
+        content: l10n.notice1Content,
       ),
       Notice(
-        title: '버전 1.0.0 업데이트 소식',
+        title: l10n.notice2Title,
         date: '2025.12.20',
-        content: '버전 1.0.0 업데이트 내용입니다.\n\n1. 영양제 미션 UI 개선\n2. 정확한 알람을 위한 시스템 설정 연동\n3. 다크 모드 지원\n4. 버그 수정 및 안정성 개선\n\n지금 바로 최신 버전을 경험해보세요!',
+        content: l10n.notice2Content,
       ),
       Notice(
-        title: '서비스 이용 약관 개정 안내',
+        title: l10n.notice3Title,
         date: '2025.12.15',
-        content: '서비스 이용 약관이 개정되었습니다.\n\n주요 개정 내용:\n- 개인정보 처리방침 강화\n- 서비스 이용 범위 구체화\n\n자세한 내용은 설정 > 약관 페이지에서 확인하실 수 있습니다.',
+        content: l10n.notice3Content,
       ),
     ];
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text('공지사항', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(l10n.notice, style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8F9FA),
         elevation: 0,
         centerTitle: true,
@@ -129,7 +132,7 @@ class NoticeDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
       appBar: AppBar(
-        title: const Text('공지사항', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.notice, style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -153,9 +156,9 @@ class NoticeDetailScreen extends StatelessWidget {
                       color: Colors.blueAccent.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text(
-                      '공지',
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context)!.noticeLabel,
+                      style: const TextStyle(
                         color: Colors.blueAccent,
                         fontSize: 12,
                         fontWeight: FontWeight.bold,

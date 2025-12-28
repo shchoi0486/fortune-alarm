@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
 import 'package:fortune_alarm/providers/alarm_list_provider.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'add_alarm_screen.dart';
 import '../../data/models/alarm_model.dart';
 import '../../core/constants/mission_type.dart';
@@ -63,9 +64,9 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         if (status.isDenied && mounted) {
            ScaffoldMessenger.of(context).showSnackBar(
              SnackBar(
-               content: const Text('정확한 시간에 알람을 울리려면 "정확한 알람" 권한이 필요합니다.'),
+               content: Text(AppLocalizations.of(context)!.exactAlarmPermissionRequired),
                action: SnackBarAction(
-                 label: '설정',
+                 label: AppLocalizations.of(context)!.settings,
                  onPressed: () => openAppSettings(),
                ),
                duration: const Duration(seconds: 5),
@@ -81,9 +82,9 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
           if (systemAlertWindowStatus.isPermanentlyDenied && mounted) {
              ScaffoldMessenger.of(context).showSnackBar(
                SnackBar(
-                 content: const Text('전체 화면 알림을 위해 "다른 앱 위에 표시" 권한이 필요합니다.'),
+                 content: Text(AppLocalizations.of(context)!.overlayPermissionRequired),
                  action: SnackBarAction(
-                   label: '설정',
+                   label: AppLocalizations.of(context)!.settings,
                    onPressed: () => openAppSettings(),
                  ),
                  duration: const Duration(seconds: 5),
@@ -118,7 +119,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '알람',
+                  AppLocalizations.of(context)!.alarm,
                   style: TextStyle(
                     color: textColor,
                     fontSize: 24,
@@ -150,9 +151,9 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       },
                       itemBuilder: (BuildContext context) {
                         return [
-                          const PopupMenuItem<String>(
+                          PopupMenuItem<String>(
                             value: 'delete_all',
-                            child: Text('모든 알람 삭제'),
+                            child: Text(AppLocalizations.of(context)!.deleteAllAlarms),
                           ),
                         ];
                       },
@@ -163,10 +164,16 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
             ),
           ),
           
+          // Native Ad (Top)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14),
+            child: DetailedAdWidget(),
+          ),
+
           // Next Alarm Banner
           if (nextAlarmStr.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               child: Text(
                 nextAlarmStr,
                 style: TextStyle(
@@ -175,38 +182,56 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
+            )
+          else
+            const SizedBox(height: 16),
           
           Expanded(
             child: alarms.isEmpty
                 ? Column(
-                    children: const [
-                      Spacer(),
+                    children: [
+                      const Spacer(),
                       Center(
                         child: Text(
-                          '등록된 알람이 없습니다.',
-                          style: TextStyle(color: Colors.grey),
+                          AppLocalizations.of(context)!.noAlarms,
+                          style: const TextStyle(color: Colors.grey),
                         ),
                       ),
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: DetailedAdWidget(),
-                      ),
+                      const Spacer(),
+
                       SizedBox(height: 80),
                     ],
                   )
                 : ListView.separated(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
-                    itemCount: alarms.length + 1,
+                    itemCount: alarms.length,
                     separatorBuilder: (context, index) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
-                      if (index == alarms.length) {
-                        return const DetailedAdWidget();
-                      }
+
                       final alarm = alarms[index];
                       return Dismissible(
                         key: Key(alarm.id.toString()),
+                        confirmDismiss: (direction) async {
+                          return await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('알람 삭제'),
+                                content: const Text('정말 삭제하시겠습니까?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).pop(false),
+                                    child: const Text('아니요', style: TextStyle(color: Colors.grey)),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).pop(true),
+                                    child: const Text('예', style: TextStyle(color: Colors.red)),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
                         onDismissed: (direction) {
                           // 알람을 제거하기 전에 스케줄된 알람과 알림을 취소합니다.
                           AlarmSchedulerService.cancelAlarm(alarm); // 스케줄된 알람 취소
@@ -291,14 +316,14 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              DateFormat('M월 d일 (E)', 'ko_KR').format(alarm.time),
+                              DateFormat.MMMEd(Localizations.localeOf(context).toString()).format(alarm.time),
                               style: TextStyle(color: primaryTextColor, fontSize: 13, fontWeight: FontWeight.bold),
                             ),
                           ),
                         const SizedBox(width: 12),
                           if (alarm.snoozeInterval > 0 && alarm.maxSnoozeCount > 0)
                             Text(
-                              '${alarm.snoozeInterval}분, ${alarm.maxSnoozeCount}회',
+                              AppLocalizations.of(context)!.snoozeInfo(alarm.snoozeInterval, alarm.maxSnoozeCount),
                               style: TextStyle(
                                 color: alarm.isEnabled ? secondaryTextColor : disabledColor,
                                 fontSize: 13,
@@ -315,7 +340,9 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        amPmFormat.format(alarm.time) == 'AM' ? '오전' : '오후',
+                        amPmFormat.format(alarm.time) == 'AM' 
+                            ? AppLocalizations.of(context)!.am 
+                            : AppLocalizations.of(context)!.pm,
                         style: TextStyle(
                           color: alarm.isEnabled ? primaryTextColor : disabledColor,
                           fontSize: 18,
@@ -381,7 +408,16 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
 
   Widget _buildDaysRow(List<bool> repeatDays, bool isDark) {
-    final days = ['일', '월', '화', '수', '목', '금', '토'];
+    final l10n = AppLocalizations.of(context)!;
+    final days = [
+      l10n.daySun,
+      l10n.dayMon,
+      l10n.dayTue,
+      l10n.dayWed,
+      l10n.dayThu,
+      l10n.dayFri,
+      l10n.daySat,
+    ];
     // Mapping: UI Index 0(Sun) -> Model Index 6, 1(Mon) -> 0, ...
     
     return Row(
@@ -490,8 +526,8 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     final minutes = difference.inMinutes % 60;
 
     // 0분 0초 ~ 0분 59초 사이인 경우
-    if (hours == 0 && minutes == 0) return '1분 미만 후에 울려요';
-    if (hours > 0) return '$hours시간 $minutes분 후에 울려요';
-    return '$minutes분 후에 울려요';
+    if (hours == 0 && minutes == 0) return AppLocalizations.of(context)!.lessThanAMinuteRemaining;
+    if (hours > 0) return AppLocalizations.of(context)!.hoursMinutesRemaining(hours, minutes);
+    return AppLocalizations.of(context)!.minutesRemaining(minutes);
   }
 }

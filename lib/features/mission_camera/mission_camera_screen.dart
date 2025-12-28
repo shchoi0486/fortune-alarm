@@ -56,6 +56,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
   String _debugLabelText = "";
   bool _isDisposed = false;
   bool _isTransitioning = false; // 미션 성공 후 전환 중인지 여부 (중복 실행 방지)
+  bool _isInitialized = false; // 초기화 완료 여부
   
   // 카메라 관련
 // Field removed as it was unused
@@ -77,31 +78,60 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
     super.initState();
     _isDisposed = false;
     _startInactivityTimer();
+    _initializeAll();
+  }
 
-    // 알람 정보 로드
-    if (widget.alarmId != null) {
-      _loadAlarmInfo();
-    }
+  Future<void> _initializeAll() async {
+    try {
+      // 1. 카메라 초기화부터 시작 (가장 중요한 시각적 요소)
+      await ref.read(cameraControllerProvider.notifier).initializeCamera();
+      
+      if (_isDisposed) return;
 
-    // 사용할 이미지 리스트 구성
-    if (widget.referenceImagePaths != null && widget.referenceImagePaths!.isNotEmpty) {
-      _activeImagePaths = widget.referenceImagePaths!;
-    }
-
-    // 첫 번째 기준 이미지 로드 및 라벨 분석
-    if (_activeImagePaths.isNotEmpty) {
-      _loadCurrentReferenceImage();
-    }
-
-    Future.microtask(() {
-      _mlService.initialize().then((_) {
-        return ref.read(cameraControllerProvider.notifier).initializeCamera();
-      }).then((_) {
-        // 기준 이미지가 있더라도 자동 스트림 시작 (실시간 비교를 위해)
-        _fastStartUntil = DateTime.now().add(const Duration(seconds: 2));
-        _startImageStream();
+      // 2. 카메라가 준비되면 즉시 화면 표시
+      setState(() {
+        _isInitialized = true;
       });
-    });
+
+      // 3. 나머지 무거운 작업들은 백그라운드에서 진행 (UI 스레드 양보)
+      Future.microtask(() async {
+        if (_isDisposed) return;
+
+        await Future.wait([
+          if (widget.alarmId != null) _loadAlarmInfo(),
+          _mlService.initialize(),
+        ]);
+
+        if (_isDisposed) return;
+
+        // 4. 이미지 리스트 구성
+        if (widget.referenceImagePaths != null && widget.referenceImagePaths!.isNotEmpty) {
+          _activeImagePaths = widget.referenceImagePaths!;
+        }
+
+        // 5. 기준 이미지 로드 및 분석 (지연 실행)
+        if (_activeImagePaths.isNotEmpty) {
+          await _loadCurrentReferenceImage();
+        }
+
+        if (_isDisposed) return;
+
+        // 6. 분석 스트림 시작 (UI 안정화 후)
+        _fastStartUntil = DateTime.now().add(const Duration(seconds: 3));
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (!_isDisposed && mounted) {
+            _startImageStream();
+          }
+        });
+      });
+    } catch (e) {
+      debugPrint('Error during initialization: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('초기화 중 오류가 발생했습니다.')),
+        );
+      }
+    }
   }
 
   void _startInactivityTimer() {
@@ -376,20 +406,29 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
         _debugLabelText = "$completedMissionNumber/$totalMissions 성공!";
       });
 
-      // 2. 2.5초 지연 후 다음 미션 시작
-      Future.delayed(const Duration(milliseconds: 2500), () {
+      // 2. 0.5초 지연 후 오버레이 숨기고 다음 미션 준비 (빠른 전환)
+      Future.delayed(const Duration(milliseconds: 500), () {
         if (_isDisposed || !mounted) return;
 
         // 3. 다음 미션으로 상태 변경
         setState(() {
           _showSuccessOverlay = false; // 오버레이 숨김
+          _showCorrectAnimation = false; // 성공 애니메이션 숨김
           _currentSimilarity = 0.0; // 유사도 초기화
           _currentMissionIndex++;
-          _isTransitioning = false; // 전환 완료 후 플래그 해제
         });
         
-        // 4. 다음 기준 이미지 로드
+        // 4. 다음 기준 이미지 로드 (오버레이가 사라진 후 로드 시작)
         _loadCurrentReferenceImage();
+
+        // 5. 전환 완료 플래그 해제 (즉시 해제하여 다음 촬영 가능하도록)
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (mounted) {
+            setState(() {
+              _isTransitioning = false;
+            });
+          }
+        });
       });
       
     } else {
@@ -497,10 +536,10 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
     _timeTimer?.cancel();
     _inactivityTimer?.cancel();
     _audioPlayer.dispose();
-    final controller = ref.read(cameraControllerProvider);
-    if (controller != null && controller.value.isStreamingImages) {
-      controller.stopImageStream();
-    }
+    
+    // 카메라 리소스 해제
+    ref.read(cameraControllerProvider.notifier).disposeCamera();
+    
     _stopAlarm(); // 화면 나갈 때 알람/진동 정지
     super.dispose();
   }
@@ -512,10 +551,19 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
 
     // 알람 데이터/시간 포맷은 현재 화면 표시에서 사용하지 않음
 
-    if (controller == null || !controller.value.isInitialized) {
-      return const Scaffold(
+    if (!_isInitialized || controller == null || !controller.value.isInitialized) {
+      return Scaffold(
         backgroundColor: Colors.black,
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CircularProgressIndicator(color: Colors.white),
+              const SizedBox(height: 20),
+              // Text removed as per user request for smoother transition feel
+            ],
+          ),
+        ),
       );
     }
 
@@ -552,15 +600,17 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
               // 1. 카메라 프리뷰 (지정된 프레임 안에만 보이도록 ClipRRect 사용)
               Positioned.fromRect(
                 rect: CameraOverlayPainter.getFrameRect(layoutSize),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0), // 프레임 모서리를 둥글게
-                  child: SizedBox.expand(
-                    child: FittedBox(
-                      fit: BoxFit.cover,
-                      child: SizedBox(
-                        width: controller.value.previewSize?.height ?? layoutSize.width,
-                        height: controller.value.previewSize?.width ?? layoutSize.height,
-                        child: CameraPreview(controller),
+                child: RepaintBoundary(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0), // 프레임 모서리를 둥글게
+                    child: SizedBox.expand(
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: SizedBox(
+                          width: controller.value.previewSize?.height ?? layoutSize.width,
+                          height: controller.value.previewSize?.width ?? layoutSize.height,
+                          child: CameraPreview(controller),
+                        ),
                       ),
                     ),
                   ),
@@ -568,9 +618,11 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
               ),
 
               Positioned.fill(
-                child: CustomPaint(
-                  painter: CameraOverlayPainter(
-                    similarity: _currentSimilarity, // 유사도 전달
+                child: RepaintBoundary(
+                  child: CustomPaint(
+                    painter: CameraOverlayPainter(
+                      similarity: _currentSimilarity, // 유사도 전달
+                    ),
                   ),
                 ),
               ),
@@ -624,7 +676,6 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
               if (_referenceImage != null)
                 ReferenceImageOverlay(
                   image: FileImage(_referenceImage!),
-                  label: _targetLabels.isNotEmpty ? _targetLabels.first : "목표물",
                   top: 170, // 시계 텍스트와 겹치지 않도록 위치 조정
                 ),
 
@@ -671,140 +722,106 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
                 ),
               ),
 
-              // 6. Success Overlay (중간 미션 성공 및 최종 성공 통합)
-              if (_isMissionSuccess || _showSuccessOverlay)
-                Container(
-                  color: Colors.black.withValues(alpha: 0.7),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.check_circle_outline_rounded,
-                          color: Colors.greenAccent,
-                          size: 120,
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          _isMissionSuccess 
-                              ? "매칭 성공!" 
-                              : "${_currentMissionIndex + 1}/${_activeImagePaths.length} 성공!",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        if (!_isMissionSuccess && _currentMissionIndex < _activeImagePaths.length - 1)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Text(
-                              "다음 미션: ${_currentMissionIndex + 2} / ${_activeImagePaths.length}",
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        if (_isMissionSuccess)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: Text(
-                              "모든 미션 완료!",
-                              style: const TextStyle(
-                                color: Colors.greenAccent,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                shadows: [Shadow(color: Colors.black, blurRadius: 10)],
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-
-              // 성공 애니메이션 오버레이
-              if (_showCorrectAnimation)
+              // 6. 성공 애니메이션 및 정보 오버레이 (통합 버전)
+              if (_showCorrectAnimation || _isMissionSuccess || _showSuccessOverlay)
                 Positioned.fill(
-                  child: AnimatedOpacity(
-                    opacity: _showCorrectAnimation ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 200),
+                  child: Container(
+                    color: Colors.black.withOpacity(0.7),
                     child: Center(
-                      child: TweenAnimationBuilder<double>(
-                        tween: Tween(begin: 0.0, end: 1.0),
-                        duration: const Duration(milliseconds: 400),
-                        curve: Curves.elasticOut,
-                        builder: (context, value, child) {
-                          return Transform.scale(
-                            scale: value,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(20),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 10,
-                                        offset: Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: const Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                    size: 80,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                const Text(
-                                  '미션 완료!',
-                                  style: TextStyle(
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.white,
-                                        blurRadius: 10,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                if (_lastMessage.isNotEmpty) ...[
-                                  const SizedBox(height: 16),
+                      child: AnimatedOpacity(
+                        opacity: _showCorrectAnimation ? 1.0 : 0.0,
+                        duration: const Duration(milliseconds: 200),
+                        child: TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0.0, end: 1.0),
+                          duration: const Duration(milliseconds: 400),
+                          curve: Curves.elasticOut,
+                          builder: (context, value, child) {
+                            return Transform.scale(
+                              scale: value,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.9),
-                                      borderRadius: BorderRadius.circular(30),
+                                    padding: const EdgeInsets.all(20),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.green,
+                                      shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black12,
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 2),
+                                          color: Colors.black26,
+                                          blurRadius: 10,
+                                          offset: Offset(0, 4),
                                         ),
                                       ],
                                     ),
-                                    child: Text(
-                                      _lastMessage,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
+                                    child: const Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 80,
                                     ),
                                   ),
+                                  const SizedBox(height: 24),
+                                  Text(
+                                    _isMissionSuccess ? '매칭 성공!' : '미션 완료!',
+                                    style: const TextStyle(
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black54,
+                                          blurRadius: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // 진행도 표시 (예: 1/2 성공!)
+                                  if (!_isMissionSuccess && _activeImagePaths.isNotEmpty)
+                                    Text(
+                                      "${_currentMissionIndex + 1}/${_activeImagePaths.length} 성공!",
+                                      style: const TextStyle(
+                                        color: Colors.greenAccent,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  
+                                  if (_isMissionSuccess)
+                                    const Text(
+                                      "모든 미션 완료!",
+                                      style: TextStyle(
+                                        color: Colors.greenAccent,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                  if (_lastMessage.isNotEmpty) ...[
+                                    const SizedBox(height: 24),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                                      margin: const EdgeInsets.symmetric(horizontal: 40),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.9),
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      child: Text(
+                                        _lastMessage,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ],
-                              ],
-                            ),
-                          );
-                        },
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -862,7 +879,7 @@ class CameraOverlayPainter extends CustomPainter {
 
     // Center Crosshair (유지)
     final centerPaint = Paint()
-      ..color = frameColor.withValues(alpha: 0.5)
+      ..color = frameColor.withOpacity(0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
       
@@ -881,7 +898,7 @@ class CameraOverlayPainter extends CustomPainter {
 
     // 배경 바
     final bgBarPaint = Paint()
-      ..color = Colors.grey.withValues(alpha: 0.5)
+      ..color = Colors.grey.withOpacity(0.5)
       ..style = PaintingStyle.fill
       ..strokeCap = StrokeCap.round;
     canvas.drawRRect(
@@ -919,13 +936,11 @@ class CameraOverlayPainter extends CustomPainter {
 
 class ReferenceImageOverlay extends StatelessWidget {
   final ImageProvider? image;
-  final String label;
   final double top;
   final double right;
   const ReferenceImageOverlay({
     super.key,
     this.image,
-    this.label = "목표물",
     this.top = 90,
     this.right = 16,
   });
@@ -935,39 +950,21 @@ class ReferenceImageOverlay extends StatelessWidget {
     return Positioned(
       top: top,
       right: right,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Container(
-            key: const Key('reference_image_box'),
-            width: 100,
-            height: 100,
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 3),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: const [
-                BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(0, 4)),
-              ],
-              image: image != null
-                  ? DecorationImage(image: image!, fit: BoxFit.cover)
-                  : null,
-              color: image == null ? Colors.black26 : null,
-            ),
-          ),
-          const SizedBox(height: 5),
-          Container(
-            key: const Key('reference_label_chip'),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.black54,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              label,
-              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
+      child: Container(
+        key: const Key('reference_image_box'),
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white, width: 3),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(0, 4)),
+          ],
+          image: image != null
+              ? DecorationImage(image: image!, fit: BoxFit.cover)
+              : null,
+          color: image == null ? Colors.black26 : null,
+        ),
       ),
     );
   }

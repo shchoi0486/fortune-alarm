@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:audioplayers/audioplayers.dart';
@@ -15,6 +14,9 @@ import '../../data/models/alarm_model.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
 import '../../providers/alarm_list_provider.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
+import '../../core/utils/image_helper.dart';
+import 'mixins/fortune_access_mixin.dart';
 
 class FortuneMissionScreen extends ConsumerStatefulWidget {
   final String? alarmId;
@@ -26,7 +28,7 @@ class FortuneMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<FortuneMissionScreen> createState() => _FortuneMissionScreenState();
 }
 
-class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> with TickerProviderStateMixin {
+class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> with TickerProviderStateMixin, FortuneAccessMixin {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
   Timer? _inactivityTimer;
@@ -50,6 +52,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   final List<GlobalKey> _gridKeys = List.generate(15, (index) => GlobalKey());
   final List<GlobalKey> _slotKeys = List.generate(3, (index) => GlobalKey());
   bool _isAnimating = false;
+  bool _isChecking = false; // 결과 확인 중 상태
   int? _animatingCardIndex; // 현재 이동 중인 카드 인덱스
 
   @override
@@ -201,52 +204,23 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     }
   }
 
-  void _checkResult() {
+  Future<void> _checkResult() async {
+    if (_isChecking) return;
+    
+    setState(() {
+      _isChecking = true;
+    });
+
     _stopAlarm();
     // ref.read(alarmListProvider.notifier).toggleAlarm(widget.alarmId!); // <--- AlarmRingingScreen에서 처리하도록 제거
-    _showAdDialog();
-  }
-
-  void _showAdDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Row(
-          children: [
-            Icon(Icons.stars, color: Colors.amber),
-            SizedBox(width: 10),
-            Text("운세 확인하기"),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              "운세 결과를 확인하고\n숨겨진 선물도 받아 가요!",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.pop(context);
-                _simulateAd();
-              },
-              icon: const Icon(Icons.play_circle_filled),
-              label: const Text("광고 보고 결과 확인"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                foregroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    
+    await showFortuneAccessDialog(_simulateAd);
+    
+    if (mounted) {
+      setState(() {
+        _isChecking = false;
+      });
+    }
   }
 
   void _simulateAd() {
@@ -382,12 +356,17 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
           ),
         );
       } else {
-        bgDecoration = BoxDecoration(
-          image: DecorationImage(
-            image: FileImage(File(_alarm!.backgroundPath!)),
-            fit: BoxFit.cover,
-          ),
-        );
+        final imageProvider = getFileImageProvider(_alarm!.backgroundPath!);
+        if (imageProvider != null) {
+          bgDecoration = BoxDecoration(
+            image: DecorationImage(
+              image: imageProvider,
+              fit: BoxFit.cover,
+            ),
+          );
+        } else {
+          bgDecoration = const BoxDecoration(color: Color(0xFF1A1A2E));
+        }
       }
     } else {
       bgDecoration = const BoxDecoration(color: Color(0xFF1A1A2E)); // Default Dark Blue for Fortune
@@ -433,10 +412,10 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                "점신의 특별한 타로 해석을 경험해보세요.",
+              Text(
+                AppLocalizations.of(context)!.fortuneLoadingMessage,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -471,7 +450,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      "선택한 타로를 분석하고 있어요... ${(_loadingProgress * 100).toInt()}%",
+                      AppLocalizations.of(context)!.fortuneAnalyzing((_loadingProgress * 100).toInt()),
                       style: const TextStyle(color: Colors.white70, fontSize: 14),
                     ),
                   ],
@@ -488,9 +467,9 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     final allSelected = !_selectedSlots.contains(null);
     final usedIndices = _selectedSlots.whereType<int>().toSet();
     
-    String title = "오늘의 기운을 생각하며\n카드 3장을 선택해주세요.";
+    String title = AppLocalizations.of(context)!.fortuneSelectTitle;
     if (widget.targetDate != null) {
-      title = "${widget.targetDate!.month}월 ${widget.targetDate!.day}일의 기운을 생각하며\n카드 3장을 선택해주세요.";
+      title = AppLocalizations.of(context)!.fortuneSelectTitleDate(widget.targetDate!.month, widget.targetDate!.day);
     }
 
     return Stack(
@@ -525,13 +504,13 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                     )
                   ],
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.auto_awesome, color: Colors.amber, size: 18),
-                    SizedBox(width: 8),
+                    const Icon(Icons.auto_awesome, color: Colors.amber, size: 18),
+                    const SizedBox(width: 8),
                     Text(
-                      "2025 신년운세 보기",
-                      style: TextStyle(
+                      AppLocalizations.of(context)!.fortuneNewYearButton,
+                      style: const TextStyle(
                         color: Colors.white, 
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -570,11 +549,11 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildSlot(0, "애정운"),
+                  _buildSlot(0, AppLocalizations.of(context)!.loveFortune),
                   const SizedBox(width: 15),
-                  _buildSlot(1, "재물운"),
+                  _buildSlot(1, AppLocalizations.of(context)!.wealthFortune),
                   const SizedBox(width: 15),
-                  _buildSlot(2, "성공운"),
+                  _buildSlot(2, AppLocalizations.of(context)!.successFortune),
                 ],
               ),
             ),
@@ -666,7 +645,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: allSelected ? _checkResult : null,
+                    onPressed: (allSelected && !_isChecking) ? _checkResult : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFDAA520).withOpacity(0.9), // Dark Gold
                       foregroundColor: Colors.black,
@@ -679,12 +658,20 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                         side: BorderSide(color: const Color(0xFFFFD700).withOpacity(0.5))
                       ),
                     ),
-                    child: Text(
-                      allSelected 
-                          ? "운세 확인하기" 
-                          : (widget.alarmId != null ? "3장을 드래그해서 선택하세요" : "3장을 선택하세요"),
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2),
-                    ),
+                    child: _isChecking 
+                      ? const SizedBox(
+                          width: 24, 
+                          height: 24, 
+                          child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2)
+                        )
+                      : Text(
+                          allSelected 
+                              ? AppLocalizations.of(context)!.fortuneCheckButton 
+                              : (widget.alarmId != null 
+                                  ? AppLocalizations.of(context)!.fortuneDragCards 
+                                  : AppLocalizations.of(context)!.fortuneSelectCards),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2),
+                        ),
                   ),
                 ),
               ),
@@ -732,9 +719,9 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   }
 
   Widget _buildResultScreen() {
-    String title = "오늘의 운세 결과입니다.";
+    String title = AppLocalizations.of(context)!.fortuneResultTitle;
     if (widget.targetDate != null) {
-      title = "${widget.targetDate!.year}년 ${widget.targetDate!.month}월 ${widget.targetDate!.day}일의 운세";
+      title = AppLocalizations.of(context)!.fortuneResultTitleDate(widget.targetDate!.year, widget.targetDate!.month, widget.targetDate!.day);
     }
 
     return SafeArea(
@@ -749,11 +736,11 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
             style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 30),
-          _buildResultCard("애정운", const Color(0xFFE91E63), _loveResult!), // Deep Pink
+          _buildResultCard("love", AppLocalizations.of(context)!.loveFortune, const Color(0xFFE91E63), _loveResult!), // Deep Pink
           const SizedBox(height: 30),
-          _buildResultCard("재물운", const Color(0xFFB45309), _wealthResult!), // Darker Amber/Gold
+          _buildResultCard("wealth", AppLocalizations.of(context)!.wealthFortune, const Color(0xFFB45309), _wealthResult!), // Darker Amber/Gold
           const SizedBox(height: 30),
-          _buildResultCard("성공운", const Color(0xFF2563EB), _successResult!), // Stronger Blue
+          _buildResultCard("success", AppLocalizations.of(context)!.successFortune, const Color(0xFF2563EB), _successResult!), // Stronger Blue
           const SizedBox(height: 50),
           SizedBox(
             width: double.infinity,
@@ -761,10 +748,10 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
             child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
-                      const Color(0xFF334155), // Lighter Slate
-                      const Color(0xFF1E293B), // Darker Slate
+                      Color(0xFF334155), // Lighter Slate
+                      Color(0xFF1E293B), // Darker Slate
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -792,14 +779,14 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                       ),
                     ),
                   ),
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.auto_awesome, size: 20),
-                    SizedBox(width: 10),
+                    const Icon(Icons.auto_awesome, size: 20),
+                    const SizedBox(width: 10),
                     Text(
-                      "오늘 하루 시작하기", 
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)
+                      AppLocalizations.of(context)!.startDayButton, 
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)
                     ),
                   ],
                 ),
@@ -813,14 +800,14 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     );
   }
 
-  Widget _buildResultCard(String title, Color color, TarotCard card) {
+  Widget _buildResultCard(String category, String title, Color color, TarotCard card) {
     String meaning = "";
     String detail = "";
     
-    if (title == "애정운") {
+    if (category == "love") {
       meaning = card.loveMeaning;
       detail = card.loveDetail;
-    } else if (title == "재물운") {
+    } else if (category == "wealth") {
       meaning = card.wealthMeaning;
       detail = card.wealthDetail;
     } else {
@@ -910,13 +897,13 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
           const SizedBox(height: 24),
           
           // 2. 상세 풀이 (카드 설명 -> 상세 해석 순서)
-          const Row(
+          Row(
             children: [
-              Icon(Icons.menu_book, color: Colors.black87, size: 18),
-              SizedBox(width: 8),
+              const Icon(Icons.menu_book, color: Colors.black87, size: 18),
+              const SizedBox(width: 8),
               Text(
-                "상세 풀이",
-                style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.bold),
+                '상세 풀이',
+                style: const TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],
           ),

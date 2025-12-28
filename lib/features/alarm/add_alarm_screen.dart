@@ -10,6 +10,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:vibration/vibration.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../core/constants/mission_type.dart';
 import '../../data/models/alarm_model.dart';
 import '../../data/models/math_difficulty.dart';
@@ -32,6 +33,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   late MissionType _selectedMission;
   late TextEditingController _labelController;
   List<String?> _referenceImagePaths = [null, null, null];
+  List<String> _existingImages = []; // 기존 촬영된 이미지 목록
   final ImagePicker _picker = ImagePicker();
   
   late List<bool> _repeatDays;
@@ -128,6 +130,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     _hourController = FixedExtentScrollController(initialItem: hour - 1);
     _minuteController = FixedExtentScrollController(initialItem: _selectedTime.minute);
     
+    // 기존 이미지 로드
+    _loadExistingImages();
+    
     // 1초마다 남은 시간 업데이트
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) setState(() {});
@@ -145,15 +150,50 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     super.dispose();
   }
 
+  Future<void> _loadExistingImages() async {
+    final alarms = ref.read(alarmListProvider);
+    final Set<String> images = {};
+    for (final alarm in alarms) {
+      if (alarm.referenceImagePaths != null) {
+        for (final path in alarm.referenceImagePaths!) {
+          if (File(path).existsSync()) {
+            images.add(path);
+          }
+        }
+      }
+    }
+    setState(() {
+      _existingImages = images.toList();
+    });
+  }
+
   Future<void> _pickImage(int index, ImageSource source) async {
+    // 권한 확인
+    if (source == ImageSource.gallery) {
+      PermissionStatus status;
+      if (Platform.isAndroid) {
+        status = await Permission.photos.request();
+        if (status.isDenied || status.isPermanentlyDenied) {
+          status = await Permission.storage.request();
+        }
+      } else {
+        status = await Permission.photos.request();
+      }
+
+      if (!status.isGranted && !status.isLimited) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('사진 접근 권한이 필요합니다.')),
+          );
+        }
+        return;
+      }
+    }
+
     final XFile? image = await _picker.pickImage(source: source);
     if (image != null) {
       setState(() {
         _referenceImagePaths[index] = image.path;
-        // 첫 번째 이미지를 대표 이미지로 설정 (하위 호환성)
-        if (index == 0) {
-          // _referenceImagePath = image.path; // Legacy single-image field removed
-        }
       });
     }
   }
@@ -161,28 +201,103 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   void _showImagePickerOptions(int index) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true, // 이미지가 많을 수 있으므로 높이 조절 가능하게
+      backgroundColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('촬영하기'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(index, ImageSource.camera);
-                },
+        return DraggableScrollableSheet(
+          initialChildSize: 0.4,
+          minChildSize: 0.3,
+          maxChildSize: 0.8,
+          expand: false,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 8),
+                    Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[400],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ListTile(
+                      leading: const Icon(Icons.camera_alt, color: Colors.cyan),
+                      title: Text(AppLocalizations.of(context)!.takePhoto, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _pickImage(index, ImageSource.camera);
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.photo_library, color: Colors.cyan),
+                      title: Text(AppLocalizations.of(context)!.selectPhoto, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      onTap: () {
+                        Navigator.pop(context);
+                        _pickImage(index, ImageSource.gallery);
+                      },
+                    ),
+                    if (_existingImages.isNotEmpty) ...[
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "기존 촬영 이미지",
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(height: 12),
+                            GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                              ),
+                              itemCount: _existingImages.length,
+                              itemBuilder: (context, imgIndex) {
+                                final path = _existingImages[imgIndex];
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _referenceImagePaths[index] = path;
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.grey[300]!),
+                                      image: DecorationImage(
+                                        image: FileImage(File(path)),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('선택하기'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickImage(index, ImageSource.gallery);
-                },
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -211,15 +326,15 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("알람 배경화면 선택", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    Text(AppLocalizations.of(context)!.selectAlarmBackground, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                     TextButton(
                       onPressed: () {
                         // 안내 메시지
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('assets/images/ 폴더에 이미지를 넣고 pubspec.yaml에 등록하세요.')),
+                          SnackBar(content: Text(AppLocalizations.of(context)!.addAssetInstructions)),
                         );
                       },
-                      child: const Text("추가 방법", style: TextStyle(fontSize: 12)),
+                      child: Text(AppLocalizations.of(context)!.howToAdd, style: const TextStyle(fontSize: 12)),
                     ),
                   ],
                 ),
@@ -229,7 +344,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                     scrollDirection: Axis.horizontal,
                     children: [
                       // Gallery Option
-                      _buildSpecialOption(Icons.image, "갤러리", _pickBackground),
+                      _buildSpecialOption(Icons.image, AppLocalizations.of(context)!.gallery, _pickBackground),
                       const SizedBox(width: 16),
                       
                       // Colors
@@ -389,11 +504,11 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     final difference = targetTime.difference(now);
     
     if (difference.isNegative || difference.inSeconds <= 0) {
-      return "지금 울려요";
+      return AppLocalizations.of(context)!.ringingNow;
     }
 
     if (difference.inSeconds < 60) {
-      return "1분 미만 후에 울려요";
+      return AppLocalizations.of(context)!.lessThanAMinuteRemaining;
     }
 
     // Round up to the nearest minute for display
@@ -402,13 +517,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     final minutes = totalMinutes % 60;
 
     if (hours > 0) {
-      if (minutes > 0) {
-        return "$hours시간 $minutes분 후에 울려요";
-      } else {
-        return "$hours시간 후에 울려요";
-      }
+      return AppLocalizations.of(context)!.hoursMinutesRemaining(hours, minutes);
     } else {
-      return "$minutes분 후에 울려요";
+      return AppLocalizations.of(context)!.minutesRemaining(minutes);
     }
   }
 
@@ -463,7 +574,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         backgroundColor: isDarkMode ? const Color(0xFF1C1C1E) : const Color(0xFFF8F9FA),
         appBar: AppBar(
           title: Text(
-            '기상 알람',
+            AppLocalizations.of(context)!.wakeUpAlarm,
             style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
           ),
           centerTitle: true,
@@ -483,7 +594,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               children: [
                 const SizedBox(height: 12),
                 _buildSettingSection(
-                  title: "시간 설정",
+                  title: AppLocalizations.of(context)!.setTime,
                   child: Column(
                     children: [
                       _buildCustomTimePicker(),
@@ -506,7 +617,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                 
                 // 반복 요일
                 _buildSettingSection(
-                  title: "반복 요일",
+                  title: AppLocalizations.of(context)!.repeatDays,
                   trailing: Row(
                     children: [
                       SizedBox(
@@ -527,7 +638,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      const Text("매일 반복", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                      Text(AppLocalizations.of(context)!.repeatDaily, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
                     ],
                   ),
                   child: _buildDaySelector(),
@@ -535,17 +646,17 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                 
                 // Snooze Settings
                 _buildSettingSection(
-                  title: "반복 알람 (스누즈)",
+                  title: AppLocalizations.of(context)!.snoozeSettings,
                   child: Row(
                     children: [
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("간격", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                            Text(AppLocalizations.of(context)!.interval, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                             const SizedBox(height: 4),
                             DropdownButtonFormField<int>(
-                              value: _snoozeInterval,
+                              initialValue: _snoozeInterval,
                               isExpanded: true,
                               dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
                               icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black54),
@@ -567,7 +678,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                 ),
                                 isDense: true,
                               ),
-                              items: {0, 3, 5, 10, _snoozeInterval}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? '없음' : '$e분 후', style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.white : Colors.black87, fontWeight: FontWeight.w500)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
+                              items: {0, 3, 5, 10, 30, _snoozeInterval}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.minutesLater(e), style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.white : Colors.black87, fontWeight: FontWeight.w500)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
                               onChanged: (val) {
                                 if (val != null) {
                                   setState(() {
@@ -589,10 +700,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("횟수", style: TextStyle(fontSize: 12, color: Colors.grey)),
+                            Text(AppLocalizations.of(context)!.countLabel, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                             const SizedBox(height: 4),
                             DropdownButtonFormField<int>(
-                              value: _maxSnoozeCount,
+                              initialValue: _maxSnoozeCount,
                               isExpanded: true,
                               dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
                               icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black54),
@@ -614,7 +725,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                 ),
                                 isDense: true,
                               ),
-                              items: {0, 2, 3, 5, 10, _maxSnoozeCount}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? '없음' : '$e회 (총 $e번)', style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.white : Colors.black87, fontWeight: FontWeight.w500)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
+                              items: {0, 2, 3, 5, _maxSnoozeCount}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.timesCount(e), style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.white : Colors.black87, fontWeight: FontWeight.w500)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
                               onChanged: (val) {
                                 if (val != null) {
                                   setState(() {
@@ -637,13 +748,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
                 // 기상 미션
                 _buildSettingSection(
-                  title: "기상 미션",
+                  title: AppLocalizations.of(context)!.wakeUpMission,
                   child: _buildMissionSelector(),
                 ),
 
                 // 알람 소리
                 _buildSettingSection(
-                  title: "알람 소리",
+                  title: AppLocalizations.of(context)!.alarmSound,
                   trailing: Transform.scale(
                     scale: 0.8,
                     child: Switch(
@@ -691,7 +802,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                           ),
                           const SizedBox(height: 4),
                           CheckboxListTile(
-                            title: const Text("점점 커지게", style: TextStyle(fontSize: 13)),
+                            title: Text(AppLocalizations.of(context)!.gradualVolume, style: const TextStyle(fontSize: 13)),
                             value: _isGradualVolume,
                             onChanged: (val) => setState(() => _isGradualVolume = val!),
                             controlAffinity: ListTileControlAffinity.leading,
@@ -708,7 +819,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
                 // 진동
                 _buildSettingSection(
-                  title: "진동",
+                  title: AppLocalizations.of(context)!.vibration,
                   trailing: Transform.scale(
                     scale: 0.8,
                     child: Switch(
@@ -738,16 +849,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
                 // 레이블 및 배경화면
                 _buildSettingSection(
-                  title: "알람 이름 및 배경",
+                  title: AppLocalizations.of(context)!.alarmNameAndBackground,
                   child: Column(
                     children: [
                       TextField(
                         controller: _labelController,
                         style: const TextStyle(fontSize: 14),
                         decoration: InputDecoration(
-                          labelText: '알람 이름',
+                          labelText: AppLocalizations.of(context)!.alarmName,
                           labelStyle: const TextStyle(fontSize: 13),
-                          hintText: '알람 이름을 입력해주세요',
+                          hintText: AppLocalizations.of(context)!.enterAlarmName,
                           hintStyle: const TextStyle(fontSize: 13),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -758,7 +869,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                       ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: const Icon(Icons.wallpaper, size: 20),
-                        title: const Text("알람 배경화면", style: TextStyle(fontSize: 13)),
+                        title: Text(AppLocalizations.of(context)!.selectAlarmBackground, style: const TextStyle(fontSize: 13)),
                         trailing: Container(
                           width: 32,
                           height: 32,
@@ -1006,7 +1117,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
   Widget _buildDaySelector() {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final days = ['일', '월', '화', '수', '목', '금', '토'];
+    final l10n = AppLocalizations.of(context)!;
+    final days = [
+      l10n.daySun,
+      l10n.dayMon,
+      l10n.dayTue,
+      l10n.dayWed,
+      l10n.dayThu,
+      l10n.dayFri,
+      l10n.daySat,
+    ];
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: List.generate(7, (index) {
@@ -1047,6 +1167,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   }
 
   Widget _buildMissionSelector() {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         // Category Buttons (Icons)
@@ -1054,19 +1175,19 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 0),
           child: Row(
             children: [
-              _buildCategoryButton("없음", Icons.alarm_off, 0),
+              _buildCategoryButton(l10n.none, Icons.alarm_off, 0),
               const SizedBox(width: 6),
-              _buildCategoryButton("Snap", Icons.camera_alt, 1),
+              _buildCategoryButton(l10n.missionSnap, Icons.camera_alt, 1),
               const SizedBox(width: 6),
-              _buildCategoryButton("계산", Icons.calculate, 2),
+              _buildCategoryButton(l10n.missionMath, Icons.calculate, 2),
               const SizedBox(width: 6),
-              _buildCategoryButton("퀴즈", Icons.quiz, 3),
+              _buildCategoryButton(l10n.missionQuiz, Icons.quiz, 3),
               const SizedBox(width: 6),
-              _buildCategoryButton("운세", Icons.auto_awesome, 4),
+              _buildCategoryButton(l10n.missionFortune, Icons.auto_awesome, 4),
               const SizedBox(width: 6),
-              _buildCategoryButton("흔들기", Icons.vibration, 5),
+              _buildCategoryButton(l10n.missionShake, Icons.vibration, 5),
               const SizedBox(width: 6),
-              _buildCategoryButton("영양제", Icons.medication, 6),
+              _buildCategoryButton(l10n.missionSupplement, Icons.medication, 6),
             ],
           ),
         ),
@@ -1074,9 +1195,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         
         // Content based on category
         if (_selectedMission == MissionType.none) ...[
-           const Text("미션 없이 알람이 울립니다.", style: TextStyle(color: Colors.grey, fontSize: 13)),
+           Text(l10n.missionNoDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
         ] else if (_selectedMission == MissionType.supplement) ...[
-           const Text("영양제 섭취 확인 화면이 나타납니다.", style: TextStyle(color: Colors.grey, fontSize: 13)),
+           Text(l10n.missionSupplementDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
         ] else if ([
           MissionType.cameraSink,
           MissionType.cameraRefrigerator,
@@ -1084,7 +1205,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           MissionType.cameraOther,
           MissionType.cameraScale
         ].contains(_selectedMission)) ...[
-           const Text("지정된 물체를 순서대로 촬영해야 알람이 꺼집니다.", style: TextStyle(color: Colors.grey, fontSize: 13)),
+           Text(l10n.missionCameraDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
            const SizedBox(height: 16),
            
            // 3 Sequential Image Slots
@@ -1105,7 +1226,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
              ],
            ),
         ] else if (_selectedMission == MissionType.math) ...[
-           const Text("수학 문제를 풀어야 알람이 꺼집니다.", style: TextStyle(color: Colors.grey, fontSize: 13)),
+           Text(l10n.missionMathDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
            const SizedBox(height: 16),
            Row(
              children: [
@@ -1113,10 +1234,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
-                     const Text("난이도", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                     Text(l10n.difficulty, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                      const SizedBox(height: 8),
                      DropdownButtonFormField<MathDifficulty>(
-                       value: [MathDifficulty.easy, MathDifficulty.normal, MathDifficulty.hard].contains(_mathDifficulty) ? _mathDifficulty : MathDifficulty.normal,
+                       initialValue: [MathDifficulty.easy, MathDifficulty.normal, MathDifficulty.hard].contains(_mathDifficulty) ? _mathDifficulty : MathDifficulty.normal,
                        isExpanded: true,
                        dropdownColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2C2C2E) : Colors.white,
                        icon: Icon(Icons.keyboard_arrow_down_rounded, color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black54),
@@ -1138,10 +1259,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                          ),
                          isDense: true,
                        ),
-                       items: const [
-                         DropdownMenuItem(value: MathDifficulty.easy, child: Text("쉬움", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
-                         DropdownMenuItem(value: MathDifficulty.normal, child: Text("보통", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
-                         DropdownMenuItem(value: MathDifficulty.hard, child: Text("어려움", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
+                       items: [
+                         DropdownMenuItem(value: MathDifficulty.easy, child: Text(l10n.difficultyEasy, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
+                         DropdownMenuItem(value: MathDifficulty.normal, child: Text(l10n.difficultyNormal, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
+                         DropdownMenuItem(value: MathDifficulty.hard, child: Text(l10n.difficultyHard, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
                        ],
                        onChanged: (val) {
                          if (val != null) {
@@ -1159,10 +1280,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
-                     const Text("문제 수", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                     Text(l10n.problemCount, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                      const SizedBox(height: 8),
                      DropdownButtonFormField<int>(
-                       value: [1, 3, 5].contains(_mathProblemCount) ? _mathProblemCount : 3,
+                       initialValue: [1, 3, 5].contains(_mathProblemCount) ? _mathProblemCount : 3,
                        isExpanded: true,
                        dropdownColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2C2C2E) : Colors.white,
                        icon: Icon(Icons.keyboard_arrow_down_rounded, color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black54),
@@ -1186,7 +1307,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                        ),
                        items: [1, 3, 5].map((e) => DropdownMenuItem(
                          value: e,
-                         child: Text("$e문제", style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                         child: Text(l10n.problemsCount(e), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
                        )).toList(),
                        onChanged: (val) {
                          if (val != null) {

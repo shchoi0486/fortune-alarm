@@ -9,14 +9,18 @@ final cameraControllerProvider = StateNotifierProvider<CameraServiceNotifier, Ca
 class CameraServiceNotifier extends StateNotifier<CameraController?> {
   CameraServiceNotifier() : super(null);
 
+  static List<CameraDescription>? _cachedCameras;
+
   Future<void> initializeCamera() async {
+    if (state != null && state!.value.isInitialized) return;
+    
     try {
-      final cameras = await availableCameras();
-      if (cameras.isNotEmpty) {
+      _cachedCameras ??= await availableCameras();
+      if (_cachedCameras != null && _cachedCameras!.isNotEmpty) {
         // 기본적으로 첫 번째 카메라(후면) 사용
         final controller = CameraController(
-          cameras[0],
-          ResolutionPreset.medium,
+          _cachedCameras![0],
+          ResolutionPreset.low, // 성능 최적화를 위해 해상도 낮춤 (medium -> low)
           enableAudio: false,
           imageFormatGroup: ImageFormatGroup.yuv420,
         );
@@ -27,6 +31,11 @@ class CameraServiceNotifier extends StateNotifier<CameraController?> {
       // 카메라 초기화 실패 처리
       debugPrint('Camera initialization failed: $e');
     }
+  }
+
+  void disposeCamera() {
+    state?.dispose();
+    state = null;
   }
 
   @override

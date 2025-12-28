@@ -14,5 +14,428 @@
   "congratulations": "Congratulations!",
   "allMissionsCompleted": "You have completed all 5 missions for today.",
   "rewardReceived": "You received 1 Fortune Cookie as a reward! 🥠",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+
+  "exactAlarmPermissionRequired": "The \"Exact Alarm\" permission is required to sound the alarm at the correct time.",
+  "overlayPermissionRequired": "The \"Display over other apps\" permission is required for full-screen notifications.",
+  "deleteAllAlarms": "Delete All Alarms",
+  "noAlarms": "No alarms registered.",
+  "lessThanAMinuteRemaining": "Ringing in less than a minute",
+  "hoursMinutesRemaining": "Ringing in {hours}h {minutes}m",
+  "@hoursMinutesRemaining": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "minutesRemaining": "Ringing in {minutes}m",
+  "@minutesRemaining": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "am": "AM",
+  "pm": "PM",
+
+  "dailyFortuneCookieReward": "Daily Fortune Cookie Reward",
+  "missionRewardInfo": "1 cookie for 5 successful missions, 2 for 10!",
+  "dailyMission": "Daily Mission",
+  "goalAchieved": "🎉 {completed}/5 Goal Achieved!",
+  "@goalAchieved": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "missionProgress": "{completed}/5 Achieved",
+  "@missionProgress": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "myMissionRecord": "My Mission Record",
+  "consecutiveSuccess": "Consecutive",
+  "successRate30Days": "Success Rate (30d)",
+  "totalSuccess": "Total Success",
+  "inProgress": "In Progress 🔥",
+  "resetMissions": "Reset Missions",
+  "resetMissionsConfirm": "Do you want to reset all challenge lists?\n(Excluding basic system missions)",
+  "cancel": "Cancel",
+  "reset": "Reset",
+  "addMission": "Add Mission",
+  "completedMissions": "Completed Missions",
+
+  "greeting": "Hello, {userName}",
+  "@greeting": {
+    "placeholders": {
+      "userName": { "type": "String" }
+    }
+  },
+  "welcomeFortune": "Welcome to the mysterious world of fortune",
+  "luckyColor": "Lucky Color",
+  "luckyItem": "Lucky Item",
+  "luckyDirection": "Lucky Direction",
+  "viewVariousFortunes": "View Various Fortunes",
+  "todaysRecommendation": "Today's Recommendation",
+  "checkTodaysFortune": "Check Today's Fortune",
+  "todaysAdvice": "Today's advice from the mysterious stars",
+  "viewSpecificDateFortune": "View Fortune for Specific Date",
+  "lottoRecommendation": "Lotto Number Recommendation",
+  "luckyNumber": "Lucky Number",
+  "specificDateFortune": "Specific Date Fortune",
+  "specialDayFortune": "Special Day Fortune",
+  "newYearFortune": "New Year Fortune",
+  "totalFortune2025": "2025 Total Fortune",
+  "traditionalFortune": "Traditional Fortune",
+  "traditionalSaju": "Traditional Saju Analysis",
+  "faceReading": "Face Reading",
+  "faceFate": "Face Fate Destiny",
+  "compatibility": "Compatibility",
+  "relationshipHarmony": "Relationship Harmony",
+
+  "general": "General",
+  "darkMode": "Dark Mode",
+  "darkModeDescription": "Set the screen to dark.",
+  "alarmSettings": "Alarm Settings",
+  "information": "Information",
+  "notice": "Notice",
+
+  "weatherConditionSunny": "Sunny",
+  "weatherConditionCloudy": "Cloudy",
+  "weatherConditionFoggy": "Foggy",
+  "weatherConditionRainy": "Rainy",
+  "weatherConditionSnowy": "Snowy",
+  "weatherConditionThunderstorm": "Thunderstorm",
+  "airQualityGood": "Good",
+  "airQualityNormal": "Normal",
+  "airQualityBad": "Bad",
+  "airQualityVeryBad": "Very Bad",
+  "locationUnknown": "Unknown Location",
+  "locationError": "Location Error",
+  "faq": "FAQ",
+  "sendFeedback": "Send Feedback",
+  "feedbackDescription": "Please let us know if you have any inconveniences or features you would like to suggest while using Fortune Alarm.\nYour valuable opinions make a better service.",
+  "reportCopyright": "Report Copyright Infringement",
+  "copyrightDescription": "If you believe that the content in Fortune Alarm infringes on copyright, please report it via email.\nWe will take immediate action after confirmation.",
+  "termsOfService": "Terms of Service",
+  "privacyPolicy": "Privacy Policy",
+  "alarmOptimization": "Alarm Sound Optimization",
+  "allOptimizationsCompleted": "All optimization settings completed",
+  "optimizationNeeded": "Settings are required for accurate alarms.",
+  "optimizationDescription": "Alarms may be delayed or not sound due to Android system settings. Please set all items to allowed.",
+  "allowNotificationPermission": "Allow Notification Permission",
+  "notificationPermissionDescription": "Required to display notifications when an alarm occurs.",
+  "excludeBatteryOptimization": "Exclude Battery Optimization",
+  "batteryOptimizationDescription": "Ensures the alarm sounds immediately even in power saving mode.",
+  "allowExactAlarm": "Allow Exact Alarm",
+  "exactAlarmDescription": "Sounds the alarm on time without being delayed by the system.",
+  "drawOverOtherApps": "Display Over Other Apps",
+  "overlayDescription": "Displays the alarm screen even on the lock screen or while using other apps.",
+  "allSettingsCompleted": "All settings are completed.",
+  "manualSettingsInfo": "You can disable settings directly in Android system settings.",
+
+  "takePhoto": "Take Photo",
+  "selectPhoto": "Select Photo",
+  "selectAlarmBackground": "Select Alarm Background",
+  "howToAdd": "How to Add",
+  "addAssetInstructions": "Put the image in assets/images/ folder and register it in pubspec.yaml.",
+  "gallery": "Gallery",
+  "ringingNow": "Ringing Now",
+  "setTime": "Set Time",
+  "repeatDays": "Repeat Days",
+  "repeatDaily": "Repeat Daily",
+  "snoozeSettings": "Snooze Settings",
+  "interval": "Interval",
+  "wakeUpAlarm": "Wake-up Alarm",
+  "snoozeInfo": "{interval} min, {count} times",
+  "@snoozeInfo": {
+    "placeholders": {
+      "interval": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "daySun": "Sun",
+  "dayMon": "Mon",
+  "dayTue": "Tue",
+  "dayWed": "Wed",
+  "dayThu": "Thu",
+  "dayFri": "Fri",
+  "daySat": "Sat",
+  "missionRewardEarned": "Congratulations! You have completed 5 missions today and earned 1 Fortune Cookie!",
+  "daysCount": "{count} days",
+  "@daysCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "user": "User",
+  "none": "None",
+  "minutesLater": "{minutes} min later",
+  "@minutesLater": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "countLabel": "Count",
+  "timesCount": "{count} times (Total {count})",
+  "@timesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "wakeUpMission": "Wake-up Mission",
+  "alarmSound": "Alarm Sound",
+  "gradualVolume": "Gradual Volume",
+  "vibration": "Vibration",
+  "alarmNameAndBackground": "Alarm Name & Background",
+  "alarmName": "Alarm Name",
+  "enterAlarmName": "Please enter alarm name",
+  "save": "Save",
+  "missionNone": "No Mission",
+  "missionSnap": "Snap",
+  "missionMath": "Math",
+  "missionQuiz": "Quiz",
+  "missionFortune": "Fortune",
+  "missionShake": "Shake",
+  "missionNoDescription": "Alarm will ring without a mission.",
+  "missionSupplementDescription": "Supplement intake confirmation screen will appear.",
+  "missionCameraDescription": "You must take photos of the specified objects in order to turn off the alarm.",
+  "missionMathDescription": "You must solve math problems to turn off the alarm.",
+  "missionQuizDescription": "Quiz mission selected.",
+  "missionFortuneDescription": "Fortune mission selected.",
+  "missionShakeDescription": "You must shake your phone to turn off the alarm.",
+  "difficulty": "Difficulty",
+  "difficultyEasy": "Easy",
+  "difficultyNormal": "Normal",
+  "difficultyHard": "Hard",
+  "problemCount": "Number of Problems",
+  "problemsCount": "{count} Problems",
+  "@problemsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "shakeCount": "Shake Count",
+  "shakeTimes": "{count} times",
+  "@shakeTimes": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "missionNumber": "Mission {number}",
+  "@missionNumber": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "soundBirds": "Bird Sounds",
+  "shakeCountLabel": "Number of Shakes",
+  "missionIndex": "Mission {index}",
+  "@missionIndex": {
+    "placeholders": {
+      "index": { "type": "int" }
+    }
+  },
+  "ringtoneSelect": "Select Ringtone",
+  "vibrationSelect": "Select Vibration Pattern",
+  "defaultRingtone": "Default Ringtone",
+  "classicAlarm": "Classic Alarm",
+  "digitalAlarm": "Digital Alarm",
+  "birdsSound": "Birds Chirping",
+  "wavesSound": "Ocean Waves",
+  "defaultVibration": "Default Vibration",
+  "shortVibration": "Short Repeat",
+  "longVibration": "Long Repeat",
+  "heartbeatVibration": "Heartbeat",
+  "sosVibration": "SOS",
+  "quickVibration": "Quick Beat",
+  "permissionRequired": "Permission Required",
+  "exactAlarmPermissionDesc": "To ring the alarm at the exact time, \"Schedule & Reminders\" permission is required.",
+  "batteryOptimizationPermissionDesc": "Battery optimization must be disabled for the alarm to ring on time.",
+  "overlayPermissionDesc": "To display the mission screen when the alarm goes off, \"Display over other apps\" permission is required.",
+  "cameraMissionFirstImageError": "Please set at least the first mission image.",
+  "cameraMissionSequentialImageError": "Please set mission images in order.",
+  "errorOccurred": "Error occurred: {error}",
+  "@errorOccurred": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "openSettings": "Open Settings",
+  "exactAlarmPermissionFail": "Failed to register alarm. Exact alarm permission is disabled and needs to be set.",
+  "batteryOptimizationPermissionFail": "Failed to register alarm. Battery optimization exception permission is missing and needs to be set.",
+  "overlayPermissionFail": "Failed to register alarm. \"Display over other apps\" permission is missing and needs to be set.",
+  "unknownAlarmError": "Failed to register alarm. An unknown error occurred.",
+  "resetTooltip": "Reset",
+  "errorLoadingAlarm": "Failed to load alarm information.",
+  "alarmNotFound": "Alarm information not found.",
+  "repeatAlarmCount": "Snooze Alarm ({current}/{max})",
+  "@repeatAlarmCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "turnOffAlarm": "Turn Off Alarm",
+  "startMission": "Start Mission",
+  "fortuneTitle": "Check Fortune",
+  "fortuneMessage": "Check your fortune results\nand get hidden gifts!",
+  "fortuneAdButton": "Watch Ad and Check Results",
+  "fortuneLoadingMessage": "Experience the special tarot interpretation of the fortune teller.",
+  "fortuneAnalyzing": "Analyzing your selected tarot... {progress}%",
+  "@fortuneAnalyzing": {
+    "placeholders": {
+      "progress": { "type": "int" }
+    }
+  },
+  "fortuneSelectTitle": "Think about today's energy\nand select 3 cards.",
+  "fortuneSelectTitleDate": "Think about the energy of {month}/{day}\nand select 3 cards.",
+  "@fortuneSelectTitleDate": {
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "fortuneNewYearButton": "View 2025 New Year Fortune",
+  "loveFortune": "Love",
+  "wealthFortune": "Wealth",
+  "successFortune": "Success",
+  "fortuneResultTitle": "Here is your fortune result for today.",
+  "fortuneResultTitleDate": "Fortune for {year}/{month}/{day}",
+  "@fortuneResultTitleDate": {
+    "placeholders": {
+      "year": { "type": "int" },
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "startDayButton": "Start Your Day",
+  "policy": "Terms and Privacy Policy",
+  "support": "Support",
+  "defaultAlarmBehavior": "Default Alarm Behavior",
+  "defaultAlarmVolume": "Default Alarm Volume",
+  "defaultAlarmVolumeDescription": "The default volume applied when creating a new alarm.",
+  "gradualVolumeDescription": "Sets the alarm sound to gradually increase.",
+  "defaultVibration": "Default Vibration",
+  "defaultVibrationDescription": "Enables vibration by default when creating a new alarm.",
+  "defaultInterval": "Default Interval",
+  "maxSnoozeCountLabel": "Max Snooze Count",
+  "minutes": "min",
+  "times": "times",
+  "cupsCount": "({current}/{goal} cups)",
+  "@cupsCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "timesCountProgress": "({current}/{goal} times)",
+  "@timesCountProgress": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "missionGym": "Go to Gym",
+  "missionWorkout": "Home Workout",
+  "missionDiary": "Write Diary",
+  "missionBedMaking": "Make the Bed",
+  "missionStretching": "Stretching",
+  "missionReading": "Reading 10min",
+  "missionPlanning": "Plan the Day",
+  "missionBreakfast": "Eat Breakfast",
+  "missionMeditation": "Meditation 5min",
+  "missionEnglishWords": "Learn 5 Words",
+  "missionVentilation": "Ventilation",
+  "missionCleaning": "Cleaning room",
+  "missionGratitudeDiary": "Gratitude Diary",
+  "faqQuestion1": "Alarms are not ringing.",
+  "faqAnswer1": "Alarms may be delayed or blocked due to the Android system's battery optimization feature. Please set all permissions to 'Allow' in the Settings > Alarm Optimization menu.",
+  "faqQuestion2": "I want to change the mission.",
+  "faqAnswer2": "You can change it to the mission you want (Math, Photo, Shake, etc.) in the mission selection menu after tapping the alarm you want to edit in the alarm list.",
+  "faqQuestion3": "How do I set Dark Mode?",
+  "faqAnswer3": "You can change the screen theme through the Settings > General > Dark Mode toggle.",
+  "faqQuestion4": "How do I collect fortune cookies?",
+  "faqAnswer4": "You can earn fortune cookies every time you dismiss an alarm in the morning or complete a mission. Check your daily fortune with the cookies you've collected!",
+  "faqQuestion5": "Will my data disappear if I delete the app?",
+  "faqAnswer5": "Yes, Fortune Alarm stores data inside the device, so deleting the app will delete all your set alarms and mission records. Please be careful.",
+  "noticeLabel": "Notice",
+  "notice1Title": "Fortune Alarm Official Launch",
+  "notice1Content": "Hello. Fortune Alarm has been officially launched.\\n\\nCheck your daily fortune with your alarm every morning and start a happy day!\\nWe will continue to provide more diverse features and improved services.\\n\\nThank you.",
+  "notice2Title": "Version 1.0.0 Update News",
+  "notice2Content": "Here is the content of the version 1.0.0 update.\\n\\n1. Supplement mission UI improvement\\n2. System setting integration for accurate alarms\\n3. Dark mode support\\n4. Bug fixes and stability improvements\\n\\nExperience the latest version now!",
+  "notice3Title": "Terms of Service Revision Notice",
+  "notice3Content": "The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.",
+  "supportContentTitle": "Inquiry Content",
+  "supportHint": "Please enter the content.",
+  "supportRecipient": "Recipient (Customer Support)",
+  "emailCopied": "Email address copied.",
+  "copyTooltip": "Copy",
+  "supportWorkingDays": "We will try to respond within 24 hours on weekdays.",
+  "supportEmptyError": "Please enter the content.",
+  "supportSubjectPrefix": "Inquiry Title",
+  "supportContentPrefix": "Inquiry Content",
+  "supportCopySuccessTitle": "Inquiry Copied",
+  "supportCopySuccessMessage": "Inquiry content has been copied to clipboard.\\nWould you like to send an email to {email}?",
+  "@supportCopySuccessMessage": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "copyEmailAction": "Copy Email Address",
+  "copyEmailSuccessMessage": "Email address copied. Please paste it in your email app.",
+  "supportSubmitButton": "Copy Inquiry and Send",
+  "shakePhone": "Please shake your phone!",
+  "englishQuizMission": "English Quiz Mission",
+  "quizInstruction": "Tap the word on the left and the meaning on the right in order to match them.",
+  "missionSuccess": "Mission Success!",
+  "goHome": "Go Home",
+  "quizWord1": "Apple",
+  "quizWord1Ans": "apple",
+  "quizWord2": "Banana",
+  "quizWord2Ans": "banana",
+  "quizWord3": "School",
+  "quizWord3Ans": "school",
+  "quizWord4": "Computer",
+  "quizWord4Ans": "computer",
+  "quizWord5": "Water",
+  "quizWord5Ans": "water",
+  "quizWord6": "Friend",
+  "quizWord6Ans": "friend",
+  "quizWord7": "Family",
+  "quizWord7Ans": "family",
+  "quizWord8": "House",
+  "quizWord8Ans": "house",
+  "quizWord9": "Book",
+  "quizWord9Ans": "book",
+  "quizWord10": "Love",
+  "quizWord10Ans": "love",
+  "quizWord11": "Sun",
+  "quizWord11Ans": "sun",
+  "quizWord12": "Moon",
+  "quizWord12Ans": "moon",
+  "quizWord13": "Sea",
+  "quizWord13Ans": "sea",
+  "quizWord14": "Sky",
+  "quizWord14Ans": "sky",
+  "quizWord15": "Tree",
+  "quizWord15Ans": "tree",
+  "missionComplete": "Mission Complete!",
+  "version": "Version {version}",
+  "@version": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "fortuneCheckButton": "Check Fortune",
+  "fortuneSelectCards": "Select 3 cards",
+  "fortuneDragCards": "Drag and select 3 cards",
+  "fortuneDetailTitle": "Detailed Interpretation",
+  "labelFineDust": "Fine Dust",
+  "labelUltraFineDust": "Ultra Fine Dust",
+  "weatherToday": "Today's Weather",
+  "weatherUpdateMessage": "Updating weather information for current location.",
+  "weatherDisclaimer": "Observed data may vary depending on local conditions or reception status.",
+  "weatherSource": "Provided by Meteorological Administration, Korea Environment Corporation",
+  "locationPermissionTitle": "Allow Location Permission",
+  "locationPermissionDesc": "Required to display weather information."
 }

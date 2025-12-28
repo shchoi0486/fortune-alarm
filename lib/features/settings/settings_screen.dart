@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'dart:io';
 import '../../providers/theme_provider.dart';
 import 'notice_screen.dart';
@@ -49,7 +50,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
             child: Text(
-              "설정",
+              AppLocalizations.of(context)!.settings,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -57,10 +58,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
               ),
             ),
           ),
-          _buildSectionHeader("일반"),
+          _buildSectionHeader(AppLocalizations.of(context)!.general),
           SwitchListTile(
-            title: const Text("다크 모드"),
-            subtitle: const Text("화면을 어둡게 설정합니다."),
+            title: Text(AppLocalizations.of(context)!.darkMode),
+            subtitle: Text(AppLocalizations.of(context)!.darkModeDescription),
             value: isDark,
             onChanged: (value) {
               ref.read(themeProvider.notifier).toggleTheme(value);
@@ -69,7 +70,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
           if (Platform.isAndroid)
             _buildOptimizationTile(context),
           ListTile(
-            title: const Text("알람 설정"),
+            title: Text(AppLocalizations.of(context)!.alarmSettings),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
               Navigator.push(
@@ -79,9 +80,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             },
           ),
           
-          _buildSectionHeader("정보"),
+          _buildSectionHeader(AppLocalizations.of(context)!.information),
           ListTile(
-            title: const Text("공지사항"),
+            title: Text(AppLocalizations.of(context)!.notice),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
               Navigator.push(
@@ -91,7 +92,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             },
           ),
           ListTile(
-            title: const Text("자주 묻는 질문"),
+            title: Text(AppLocalizations.of(context)!.faq),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
               Navigator.push(
@@ -101,64 +102,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             },
           ),
           ListTile(
-            title: const Text("의견 보내기"),
+            title: Text(AppLocalizations.of(context)!.support),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SupportScreen(
-                    title: '의견 보내기',
-                    description: '포춘 알람을 사용하시면서 느낀 불편한 점이나 제안하고 싶은 기능이 있다면 언제든 말씀해 주세요.\n여러분의 소중한 의견이 더 나은 서비스를 만듭니다.',
+                  builder: (context) => SupportScreen(
+                    title: AppLocalizations.of(context)!.support,
+                    description: AppLocalizations.of(context)!.feedbackDescription,
                   ),
                 ),
               );
             },
           ),
           ListTile(
-            title: const Text("저작권 침해 신고하기"),
+            title: Text(AppLocalizations.of(context)!.policy),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SupportScreen(
-                    title: '저작권 침해 신고',
-                    description: '포춘 알람 내의 콘텐츠가 저작권을 침해한다고 판단되는 경우, 해당 내용을 이메일로 신고해 주시기 바랍니다.\n확인 후 즉시 조치를 취하도록 하겠습니다.',
+                  builder: (context) => PolicyScreen(
+                    title: AppLocalizations.of(context)!.policy,
+                    content: AppLocalizations.of(context)!.privacyPolicy,
                   ),
                 ),
               );
             },
           ),
           ListTile(
-            title: const Text("이용약관"),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const PolicyScreen(
-                    title: '이용약관',
-                    content: '제 1 조 (목적)\n본 약관은 "포춘 알람"(이하 "서비스")이 제공하는 모든 서비스의 이용조건 및 절차, 이용자와 서비스 운영자의 권리, 의무, 책임사항 등을 규정함을 목적으로 합니다.\n\n제 2 조 (약관의 효력 및 변경)\n1. 본 약관은 서비스 화면에 게시하거나 기타의 방법으로 이용자에게 공지함으로써 효력이 발생합니다.\n2. 운영자는 필요한 경우 관련 법령을 위배하지 않는 범위에서 본 약관을 개정할 수 있습니다.\n\n제 3 조 (서비스의 제공)\n서비스는 알람 설정, 미션 수행, 운세 정보 제공 등을 포함하며, 운영자의 사정에 따라 변경될 수 있습니다.',
-                  ),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text("개인정보 처리방침"),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const PolicyScreen(
-                    title: '개인정보 처리방침',
-                    content: '1. 수집하는 개인정보 항목\n서비스는 원활한 기능 제공을 위해 다음과 같은 정보를 수집할 수 있습니다.\n- 기기 식별 정보 (알람 동기화 및 푸시 알림용)\n- 알람 설정 데이터 (기기 로컬 저장)\n\n2. 개인정보의 수집 및 이용 목적\n수집된 정보는 서비스 제공 및 개선, 고객 응대를 위해서만 사용됩니다.\n\n3. 개인정보의 보유 및 이용 기간\n서비스 탈퇴 시 또는 수집 목적 달성 시 지체 없이 파기합니다.',
-                  ),
-                ),
-              );
-            },
+            title: Text(AppLocalizations.of(context)!.version("1.0.0")),
           ),
           const SizedBox(height: 40),
         ],
@@ -181,6 +155,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
   }
 
   Widget _buildOptimizationTile(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return FutureBuilder<Map<Permission, PermissionStatus>>(
       future: Future.wait([
         Permission.notification.status,
@@ -203,8 +178,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
         final allGranted = isNotificationGranted && isBatteryOptimized && isExactAlarmGranted && isSystemAlertGranted;
 
         return ListTile(
-          title: const Text("알람 울림 최적화"),
-          subtitle: Text(allGranted ? "모든 최적화 설정 완료됨" : "정확한 알람을 위해 설정이 필요합니다."),
+          title: Text(l10n.alarmOptimization),
+          subtitle: Text(allGranted ? l10n.allOptimizationsCompleted : l10n.optimizationNeeded),
           leading: Icon(Icons.rocket_launch, color: allGranted ? Colors.green : Colors.orange),
           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
           onTap: () => _showOptimizationBottomSheet(context),
@@ -282,6 +257,7 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
     
     if (_isLoading) {
       return SizedBox(
@@ -314,7 +290,7 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '알람 울림 최적화',
+                l10n.alarmOptimization,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -327,7 +303,7 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
           ),
           const SizedBox(height: 8),
           Text(
-            '안드로이드 시스템 설정으로 인해 알람이 지연되거나 울리지 않을 수 있습니다. 모든 항목을 허용으로 설정해주세요.',
+            l10n.optimizationDescription,
             style: TextStyle(
               fontSize: 14, 
               color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -335,8 +311,8 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
           ),
           const SizedBox(height: 24),
           _buildPermissionItem(
-            '알림 권한 허용',
-            '알람 발생 시 알림을 띄우기 위해 필요합니다.',
+            l10n.allowNotificationPermission,
+            l10n.notificationPermissionDescription,
             _statuses[Permission.notification]!,
             () async {
               if (isNotificationGranted) {
@@ -353,8 +329,8 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
           ),
           Divider(color: isDark ? Colors.grey[800] : Colors.grey[200]),
           _buildPermissionItem(
-            '배터리 최적화 제외',
-            '절전 모드에서도 알람이 즉시 울리도록 합니다.',
+            l10n.excludeBatteryOptimization,
+            l10n.batteryOptimizationDescription,
             _statuses[Permission.ignoreBatteryOptimizations]!,
             () async {
               if (isBatteryOptimized) {
@@ -368,8 +344,8 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
           ),
           Divider(color: isDark ? Colors.grey[800] : Colors.grey[200]),
           _buildPermissionItem(
-            '정확한 알람 허용',
-            '시스템에 의해 지연되지 않고 정시에 알람을 울립니다.',
+            l10n.allowExactAlarm,
+            l10n.exactAlarmDescription,
             _statuses[Permission.scheduleExactAlarm]!,
             () async {
               if (isExactAlarmGranted) {
@@ -383,8 +359,8 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
           ),
           Divider(color: isDark ? Colors.grey[800] : Colors.grey[200]),
           _buildPermissionItem(
-            '다른 앱 위에 표시',
-            '잠금 화면이나 다른 앱 사용 중에도 알람 화면을 띄웁니다.',
+            l10n.drawOverOtherApps,
+            l10n.overlayDescription,
             _statuses[Permission.systemAlertWindow]!,
             () async {
               if (isSystemAlertGranted) {
@@ -413,7 +389,7 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          '모든 설정이 완료되었습니다.',
+                          l10n.allSettingsCompleted,
                           style: TextStyle(
                             color: isDark ? Colors.green[300] : Colors.green[700],
                             fontSize: 13,
@@ -425,7 +401,7 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '설정 해제는 안드로이드 시스템 설정에서 직접 하실 수 있습니다.',
+                    l10n.manualSettingsInfo,
                     style: TextStyle(
                       color: isDark ? Colors.grey[500] : Colors.grey[600],
                       fontSize: 11,
@@ -470,7 +446,7 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
       trailing: Switch(
         value: isGranted,
         onChanged: (_) => onTap(),
-        activeColor: Colors.green,
+        activeThumbColor: Colors.green,
         activeTrackColor: Colors.green.withOpacity(0.3),
       ),
     );

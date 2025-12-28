@@ -519,7 +519,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                   child: Text(
                                     '$_num1 $_operator $_num2',
                                     style: TextStyle(
-                                      fontSize: 72, // 84 -> 72로 약간 줄임 (오버플로우 방지)
+                                      fontSize: 60, // 72 -> 60으로 더 줄임 (사용자 요청)
                                       fontWeight: FontWeight.bold,
                                       color: textColor,
                                       letterSpacing: -2,
@@ -543,7 +543,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                                 '?',
                                                 key: const ValueKey('empty'),
                                                 style: TextStyle(
-                                                  fontSize: 48, // 52 -> 48
+                                                  fontSize: 40, // 48 -> 40
                                                   fontWeight: FontWeight.w300,
                                                   color: textColor.withOpacity(0.3),
                                                 ),
@@ -553,7 +553,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                               _input,
                                               key: ValueKey(_input),
                                               style: TextStyle(
-                                                fontSize: 52, // 56 -> 52
+                                                fontSize: 44, // 52 -> 44
                                                 fontWeight: FontWeight.bold,
                                                 color: isLightBg ? Colors.blue[800] : Colors.blue[300],
                                                 letterSpacing: 4,

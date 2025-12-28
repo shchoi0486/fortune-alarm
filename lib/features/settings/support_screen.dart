@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:fortune_alarm/l10n/app_localizations.dart';
+
 class SupportScreen extends StatefulWidget {
   final String title;
   final String description;
@@ -28,6 +30,7 @@ class _SupportScreenState extends State<SupportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDark ? const Color(0xFF121212) : const Color(0xFFF8F9FA);
     final cardColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
@@ -63,9 +66,9 @@ class _SupportScreenState extends State<SupportScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            const Text(
-              '문의 내용',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            Text(
+              l10n.supportContentTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const SizedBox(height: 12),
             Container(
@@ -79,9 +82,9 @@ class _SupportScreenState extends State<SupportScreen> {
               child: TextField(
                 controller: _textController,
                 maxLines: 8,
-                decoration: const InputDecoration(
-                  hintText: '내용을 입력해 주세요.',
-                  contentPadding: EdgeInsets.all(16),
+                decoration: InputDecoration(
+                  hintText: l10n.supportHint,
+                  contentPadding: const EdgeInsets.all(16),
                   border: InputBorder.none,
                 ),
                 style: TextStyle(
@@ -102,9 +105,9 @@ class _SupportScreenState extends State<SupportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    '받는 사람 (고객센터)',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  Text(
+                    l10n.supportRecipient,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -123,20 +126,20 @@ class _SupportScreenState extends State<SupportScreen> {
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: widget.email));
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('이메일 주소가 복사되었습니다.'),
-                              duration: Duration(seconds: 2),
+                            SnackBar(
+                              content: Text(l10n.emailCopied),
+                              duration: const Duration(seconds: 2),
                             ),
                           );
                         },
                         icon: const Icon(Icons.copy, size: 20),
-                        tooltip: '복사하기',
+                        tooltip: l10n.copyTooltip,
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '평일 기준 24시간 이내에 답변을 드리도록 노력하겠습니다.',
+                    l10n.supportWorkingDays,
                     style: TextStyle(fontSize: 12, color: Colors.grey[500]),
                   ),
                 ],
@@ -150,34 +153,34 @@ class _SupportScreenState extends State<SupportScreen> {
                 onPressed: () {
                   if (_textController.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('내용을 입력해 주세요.')),
+                      SnackBar(content: Text(l10n.supportEmptyError)),
                     );
                     return;
                   }
                   
                   // 문의하기 로직 (이메일 주소와 내용을 함께 복사)
-                  final fullContent = "문의 제목: ${widget.title}\n\n문의 내용:\n${_textController.text}";
+                  final fullContent = "${l10n.supportSubjectPrefix}: ${widget.title}\n\n${l10n.supportContentPrefix}:\n${_textController.text}";
                   Clipboard.setData(ClipboardData(text: fullContent));
                   
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('문의 내용 복사됨'),
-                      content: Text('문의 내용이 클립보드에 복사되었습니다.\n${widget.email} 로 메일을 보내시겠습니까?'),
+                      title: Text(l10n.supportCopySuccessTitle),
+                      content: Text(l10n.supportCopySuccessMessage(widget.email)),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text('취소'),
+                          child: Text(l10n.cancel),
                         ),
                         TextButton(
                           onPressed: () {
                             Clipboard.setData(ClipboardData(text: widget.email));
                             Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('이메일 주소가 복사되었습니다. 메일 앱에서 붙여넣어 주세요.')),
+                              SnackBar(content: Text(l10n.copyEmailSuccessMessage)),
                             );
                           },
-                          child: const Text('이메일 주소 복사'),
+                          child: Text(l10n.copyEmailAction),
                         ),
                       ],
                     ),
@@ -191,9 +194,9 @@ class _SupportScreenState extends State<SupportScreen> {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
-                  '문의 내용 복사하고 보내기',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                child: Text(
+                  l10n.supportSubmitButton,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/mission_provider.dart';
 import '../providers/weather_provider.dart';
@@ -17,7 +18,7 @@ class FortuneCookieBar extends ConsumerWidget {
     final textColor = isDarkMode ? Colors.white : Colors.black87;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,7 +42,7 @@ class FortuneCookieBar extends ConsumerWidget {
                     size: 24, 
                     color: iconColor
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 4),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -60,13 +61,13 @@ class FortuneCookieBar extends ConsumerWidget {
                             width: 6,
                             height: 6,
                             decoration: BoxDecoration(
-                              color: _getDustColor(weather.fineDustStatus),
+                              color: _getDustColor(weather.fineDustStatusKey),
                               shape: BoxShape.circle,
                             ),
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '미세 ${weather.fineDustStatus}',
+                            '미세 ${_getLocalizedAirQuality(context, weather.fineDustStatusKey)}',
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
@@ -114,12 +115,12 @@ class FortuneCookieBar extends ConsumerWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 8),
               
               // Search Icon
               Icon(Icons.search, size: 24, color: iconColor),
               
-              const SizedBox(width: 16),
+              const SizedBox(width: 8),
               
               // Profile Icon with Notification Dot
               GestureDetector(
@@ -166,12 +167,12 @@ class FortuneCookieBar extends ConsumerWidget {
     }
   }
 
-  Color _getDustColor(String status) {
-    switch (status) {
-      case '좋음': return Colors.green;
-      case '보통': return Colors.blue;
-      case '나쁨': return Colors.orange;
-      case '매우나쁨': return Colors.red;
+  Color _getDustColor(String statusKey) {
+    switch (statusKey) {
+      case 'airQualityGood': return Colors.green;
+      case 'airQualityNormal': return Colors.blue;
+      case 'airQualityBad': return Colors.orange;
+      case 'airQualityVeryBad': return Colors.red;
       default: return Colors.grey;
     }
   }
@@ -206,7 +207,7 @@ class WeatherDetailSheet extends ConsumerWidget {
                     Align(
                       alignment: Alignment.center,
                       child: Text(
-                        '오늘의 날씨',
+                        AppLocalizations.of(context)!.weatherToday,
                         style: TextStyle(
                           fontSize: 20, 
                           fontWeight: FontWeight.bold,
@@ -229,9 +230,9 @@ class WeatherDetailSheet extends ConsumerWidget {
                   ref.invalidate(weatherProvider);
                   // Optional: Show a small snackbar or feedback
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('현재 위치로 날씨 정보를 업데이트합니다.'),
-                      duration: Duration(seconds: 1),
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.weatherUpdateMessage),
+                      duration: const Duration(seconds: 1),
                     ),
                   );
                 },
@@ -245,7 +246,7 @@ class WeatherDetailSheet extends ConsumerWidget {
                       const Icon(Icons.location_on, size: 16, color: Colors.grey),
                       const SizedBox(width: 4),
                       Text(
-                        weather.location,
+                        _getLocalizedLocation(context, weather.location),
                         style: const TextStyle(
                           color: Colors.grey,
                           decoration: TextDecoration.underline,
@@ -292,15 +293,15 @@ class WeatherDetailSheet extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildDustInfo('미세먼지', weather.fineDustStatus),
+                      _buildDustInfo(context, AppLocalizations.of(context)!.labelFineDust, weather.fineDustStatusKey),
                       Container(width: 1, height: 24, color: isDarkMode ? Colors.white24 : Colors.grey[300]),
-                      _buildDustInfo('초미세먼지', weather.ultraFineDustStatus),
+                      _buildDustInfo(context, AppLocalizations.of(context)!.labelUltraFineDust, weather.ultraFineDustStatusKey),
                     ],
                   ),
                 ),
                 const SizedBox(height: 32),
                 Text(
-                  '관측된 자료는 현지 사정이나 수신상태에 의해\n차이가 발생할 수 있습니다.',
+                  AppLocalizations.of(context)!.weatherDisclaimer,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: isDarkMode ? Colors.white38 : Colors.grey, fontSize: 12),
                 ),
@@ -312,7 +313,7 @@ class WeatherDetailSheet extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '기상청, 한국환경공단 제공',
+                    AppLocalizations.of(context)!.weatherSource,
                     style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.white, fontSize: 12),
                   ),
                 ),
@@ -326,17 +327,17 @@ class WeatherDetailSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildDustInfo(String label, String value) {
+  Widget _buildDustInfo(BuildContext context, String label, String statusKey) {
     Color valueColor = Colors.green;
-    if (value == '나쁨') valueColor = Colors.orange;
-    if (value == '매우나쁨') valueColor = Colors.red;
+    if (statusKey == 'airQualityBad') valueColor = Colors.orange;
+    if (statusKey == 'airQualityVeryBad') valueColor = Colors.red;
 
     return Column(
       children: [
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
         const SizedBox(height: 4),
         Text(
-          value,
+          _getLocalizedAirQuality(context, statusKey),
           style: TextStyle(
             color: valueColor,
             fontWeight: FontWeight.bold,
@@ -370,4 +371,35 @@ class WeatherDetailSheet extends ConsumerWidget {
       default: return Colors.blue;
     }
   }
+}
+
+String _getLocalizedCondition(BuildContext context, String condition) {
+  final l10n = AppLocalizations.of(context)!;
+  switch (condition) {
+    case 'Sunny': return l10n.weatherConditionSunny;
+    case 'Cloudy': return l10n.weatherConditionCloudy;
+    case 'Foggy': return l10n.weatherConditionFoggy;
+    case 'Rainy': return l10n.weatherConditionRainy;
+    case 'Snowy': return l10n.weatherConditionSnowy;
+    case 'Thunderstorm': return l10n.weatherConditionThunderstorm;
+    default: return condition;
+  }
+}
+
+String _getLocalizedAirQuality(BuildContext context, String statusKey) {
+  final l10n = AppLocalizations.of(context)!;
+  switch (statusKey) {
+    case 'airQualityGood': return l10n.airQualityGood;
+    case 'airQualityNormal': return l10n.airQualityNormal;
+    case 'airQualityBad': return l10n.airQualityBad;
+    case 'airQualityVeryBad': return l10n.airQualityVeryBad;
+    default: return statusKey;
+  }
+}
+
+String _getLocalizedLocation(BuildContext context, String location) {
+  final l10n = AppLocalizations.of(context)!;
+  if (location == 'locationUnknown') return l10n.locationUnknown;
+  if (location == 'locationError') return l10n.locationError;
+  return location;
 }

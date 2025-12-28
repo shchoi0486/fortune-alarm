@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/constants/cheering_messages.dart';
 import '../../main.dart';
 import '../../providers/mission_provider.dart';
@@ -27,7 +28,7 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
     final String message = cheeringMessages[Random().nextInt(cheeringMessages.length)];
 
     return Scaffold(
-      backgroundColor: Colors.blueAccent,
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -35,38 +36,46 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.check_circle_outline, size: 100, color: Colors.white),
-                const SizedBox(height: 32),
+                const Icon(Icons.check_circle, size: 80, color: Colors.green),
+                const SizedBox(height: 24),
                 const Text(
-                  '미션 성공!',
+                  "오늘의 응원",
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.blueAccent,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 12),
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.blue[50],
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blueAccent.withOpacity(0.1),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
                   ),
                   child: Text(
                     message,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                      height: 1.5,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueGrey,
+                      height: 1.6,
                     ),
                   ),
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 60),
                 SizedBox(
                   width: double.infinity,
-                  height: 56,
+                  height: 60,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pushAndRemoveUntil(
@@ -75,16 +84,17 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blueAccent,
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(18),
                       ),
-                      elevation: 0,
+                      elevation: 4,
+                      shadowColor: Colors.blueAccent.withOpacity(0.5),
                     ),
-                    child: const Text(
-                      '홈으로',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    child: Text(
+                      AppLocalizations.of(context)!.confirm,
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),

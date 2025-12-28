@@ -1,18 +1,404 @@
 {
   "@@locale": "ru",
-  "appTitle": "Удачный Бу디льник",
+  "appTitle": "Fortune Alarm",
   "morningGreeting": "Доброе утро! Начните свой счастливый день.",
   "missionWakeUp": "Миссия Пробуждение",
-  "missionSupplement": "Витамины",
-  "missionWater": "Вода 2л+",
+  "missionSupplement": "Прием витаминов",
+  "missionWater": "Пить более 2 л воды",
   "fortuneCookie": "Печенье с предсказанием",
   "settings": "Настройки",
   "alarm": "Будильник",
   "calendar": "Календарь",
   "mission": "Миссия",
-  "fortune": "Фортуна",
+  "fortune": "Удача",
   "congratulations": "Поздравляем!",
   "allMissionsCompleted": "Вы выполнили все 5 миссий на сегодня.",
-  "rewardReceived": "В награду вы получили 1 печенье с предсказанием! 🥠",
-  "confirm": "ОК"
+  "rewardReceived": "Вы получили 1 печенье с предсказанием в награду! 🥠",
+  "confirm": "ОК",
+
+  "exactAlarmPermissionRequired": "Для срабатывания будильника в точное время требуется разрешение \"Точный будильник\".",
+  "overlayPermissionRequired": "Для полноэкранных уведомлений требуется разрешение \"Отображение поверх других приложений\".",
+  "deleteAllAlarms": "Удалить все будильники",
+  "noAlarms": "Нет зарегистрированных будильников.",
+  "lessThanAMinuteRemaining": "Прозвенит менее чем через минуту",
+  "hoursMinutesRemaining": "Прозвенит через {hours} ч. {minutes} мин.",
+  "@hoursMinutesRemaining": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "minutesRemaining": "Прозвенит через {minutes} мин.",
+  "@minutesRemaining": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "am": "AM",
+  "pm": "PM",
+
+  "dailyFortuneCookieReward": "Ежедневная награда: Печенье",
+  "missionRewardInfo": "1 печенье за 5 миссий, 2 печенья за 10 миссий!",
+  "dailyMission": "Миссия дня",
+  "goalAchieved": "🎉 Цель {completed}/5 достигнута!",
+  "@goalAchieved": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "missionProgress": "Выполнено {completed}/5",
+  "@missionProgress": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "myMissionRecord": "Мои рекорды",
+  "consecutiveSuccess": "Серия побед",
+  "successRate30Days": "Успех (30 дн.)",
+  "totalSuccess": "Всего побед",
+  "inProgress": "В процессе 🔥",
+  "resetMissions": "Сбросить миссии",
+  "resetMissionsConfirm": "Вы уверены, что хотите сбросить список миссий?\n(Системные миссии останутся)",
+  "cancel": "Отмена",
+  "reset": "Сброс",
+  "addMission": "Добавить миссию",
+  "completedMissions": "Завершенные миссии",
+
+  "greeting": "Здравствуйте, {userName}",
+  "@greeting": {
+    "placeholders": {
+      "userName": { "type": "String" }
+    }
+  },
+  "welcomeFortune": "Добро пожаловать в мир таинственных предсказаний",
+  "luckyColor": "Счастливый цвет",
+  "luckyItem": "Счастливый предмет",
+  "luckyDirection": "Благоприятное направление",
+  "viewVariousFortunes": "Разные предсказания",
+  "todaysRecommendation": "Рекомендация дня",
+  "checkTodaysFortune": "Узнать предсказание",
+  "todaysAdvice": "Совет дня от таинственных звезд",
+  "viewSpecificDateFortune": "Предсказание на дату",
+  "lottoRecommendation": "Номера лото",
+  "luckyNumber": "Счастливое число",
+  "specificDateFortune": "Дата предсказания",
+  "specialDayFortune": "Особый день",
+  "newYearFortune": "Новогоднее предсказание",
+  "totalFortune2025": "Прогноз на 2025 год",
+  "traditionalFortune": "Тоджонбигёль",
+  "traditionalSaju": "Традиционное Саджу",
+  "faceReading": "Физиогномика",
+  "faceFate": "Судьба по лицу",
+  "compatibility": "Совместимость",
+  "relationshipHarmony": "Гармония отношений",
+
+  "general": "Общие",
+  "darkMode": "Темная тема",
+  "darkModeDescription": "Использовать темную цветовую схему.",
+  "alarmSettings": "Настройки будильника",
+  "information": "Информация",
+  "notice": "Объявления",
+  "faq": "Часто задаваемые вопросы",
+  "sendFeedback": "Оставить отзыв",
+  "feedbackDescription": "Пожалуйста, поделитесь любыми неудобствами или предложениями по улучшению Fortune Alarm.\nВаше мнение помогает нам стать лучше.",
+  "reportCopyright": "Сообщить о нарушении авторских прав",
+  "copyrightDescription": "Если вы считаете, что контент в Fortune Alarm нарушает авторские права, сообщите об этом по электронной почте.\nМы примем меры незамедлительно.",
+  "termsOfService": "Условия использования",
+  "privacyPolicy": "Политика конфиденциальности",
+  "alarmOptimization": "Оптимизация будильника",
+  "allOptimizationsCompleted": "Все настройки оптимизированы",
+  "optimizationNeeded": "Требуется настройка для точной работы.",
+  "optimizationDescription": "Будильник может задерживаться или не звонить из-за настроек системы Android. Пожалуйста, разрешите все пункты.",
+  "allowNotificationPermission": "Разрешить уведомления",
+  "notificationPermissionDescription": "Необходимо для отображения уведомлений при срабатывании будильника.",
+  "excludeBatteryOptimization": "Исключить из оптимизации батареи",
+  "batteryOptimizationDescription": "Позволяет будильнику звонить вовремя даже в режиме энергосбережения.",
+  "allowExactAlarm": "Разрешить точные будильники",
+  "exactAlarmDescription": "Позволяет будильнику звонить точно в назначенное время.",
+  "drawOverOtherApps": "Отображение поверх других приложений",
+  "overlayDescription": "Позволяет показывать экран будильника поверх других приложений.",
+  "allSettingsCompleted": "Все настройки завершены.",
+  "manualSettingsInfo": "Вы можете изменить эти настройки в системных настройках Android.",
+
+  "takePhoto": "Сделать фото",
+  "selectPhoto": "Выбрать фото",
+  "selectAlarmBackground": "Фон будильника",
+  "howToAdd": "Как добавить",
+  "addAssetInstructions": "Добавьте изображения в папку assets/images/ и зарегистрируйте их в pubspec.yaml.",
+  "gallery": "Галерея",
+  "ringingNow": "Звонит сейчас",
+  "setTime": "Установить время",
+  "repeatDays": "Дни повтора",
+  "repeatDaily": "Ежедневно",
+  "snoozeSettings": "Повтор сигнала (Snooze)",
+  "interval": "Интервал",
+  "wakeUpAlarm": "Будильник",
+  "snoozeInfo": "{interval} мин, {count} раз",
+  "@snoozeInfo": {
+    "placeholders": {
+      "interval": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "daySun": "Вс",
+  "dayMon": "Пн",
+  "dayTue": "Вт",
+  "dayWed": "Ср",
+  "dayThu": "Чт",
+  "dayFri": "Пт",
+  "daySat": "Сб",
+  "missionRewardEarned": "Поздравляем! Вы выполнили 5 миссий сегодня и получили 1 печенье с предсказанием!",
+  "daysCount": "{count} дн.",
+  "@daysCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "user": "Пользователь",
+  "none": "Нет",
+  "minutesLater": "через {minutes} мин.",
+  "@minutesLater": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "countLabel": "Количество",
+  "timesCount": "{count} раз (Всего {count})",
+  "@timesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "wakeUpMission": "Миссия Пробуждение",
+  "alarmSound": "Звук будильника",
+  "gradualVolume": "Постепенное усиление",
+  "vibration": "Вибрация",
+  "alarmNameAndBackground": "Название и фон",
+  "alarmName": "Название будильника",
+  "enterAlarmName": "Введите название будильника",
+  "save": "Сохранить",
+  "missionNone": "Без миссии",
+  "missionSnap": "Snap",
+  "missionMath": "Математика",
+  "missionQuiz": "Викторина",
+  "missionFortune": "Удача",
+  "missionShake": "Тряска",
+  "missionNoDescription": "Будильник прозвенит без миссии.",
+  "missionSupplementDescription": "Появится экран подтверждения приема витаминов.",
+  "missionCameraDescription": "Сфотографируйте указанные предметы по порядку, чтобы выключить будильник.",
+  "missionMathDescription": "Решите математические примеры, чтобы выключить будильник.",
+  "missionQuizDescription": "Выбрана миссия-викторина.",
+  "missionFortuneDescription": "Выбрана миссия-предсказание.",
+  "missionShakeDescription": "Потрясите телефон, чтобы выключить будильник.",
+  "difficulty": "Сложность",
+  "difficultyEasy": "Легко",
+  "difficultyNormal": "Средне",
+  "difficultyHard": "Сложно",
+  "problemCount": "Кол-во задач",
+  "problemsCount": "{count} задач",
+  "@problemsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "shakeCountLabel": "Кол-во встряхиваний",
+  "missionIndex": "Миссия {index}",
+  "@missionIndex": {
+    "placeholders": {
+      "index": { "type": "int" }
+    }
+  },
+  "ringtoneSelect": "Выбор мелодии",
+  "vibrationSelect": "Выбор вибрации",
+  "defaultRingtone": "Мелодия по умолчанию",
+  "classicAlarm": "Классический будильник",
+  "digitalAlarm": "Цифровой будильник",
+  "birdsSound": "Пение птиц",
+  "wavesSound": "Звук волн",
+  "defaultVibration": "Вибрация по умолчанию",
+  "shortVibration": "Короткие импульсы",
+  "longVibration": "Длинные импульсы",
+  "heartbeatVibration": "Сердцебиение",
+  "sosVibration": "SOS",
+  "quickVibration": "Быстрая пульсация",
+  "permissionRequired": "Требуется разрешение",
+  "exactAlarmPermissionDesc": "Для срабатывания будильника точно в срок требуется разрешение \"Расписание и напоминания\".",
+  "batteryOptimizationPermissionDesc": "Для корректной работы будильника необходимо отключить оптимизацию батареи.",
+  "overlayPermissionDesc": "Для отображения экрана миссии требуется разрешение \"Отображение поверх других приложений\".",
+  "cameraMissionFirstImageError": "Пожалуйста, установите хотя бы первое изображение миссии.",
+  "cameraMissionSequentialImageError": "Пожалуйста, устанавливайте изображения миссии по порядку.",
+  "errorOccurred": "Произошла ошибка: {error}",
+  "@errorOccurred": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "openSettings": "Открыть настройки",
+  "exactAlarmPermissionFail": "Ошибка регистрации будильника. Требуется разрешение на точный будильник.",
+  "batteryOptimizationPermissionFail": "Ошибка регистрации будильника. Требуется разрешение на исключение из оптимизации батареи.",
+  "overlayPermissionFail": "Ошибка регистрации будильника. Требуется разрешение на отображение поверх других приложений.",
+  "unknownAlarmError": "Не удалось зарегистрировать будильник. Произошла неизвестная ошибка.",
+  "resetTooltip": "Сброс",
+  "errorLoadingAlarm": "Не удалось загрузить информацию о будильнике.",
+  "alarmNotFound": "Информация о будильнике не найдена.",
+  "repeatAlarmCount": "Повтор будильника ({current}/{max})",
+  "@repeatAlarmCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "turnOffAlarm": "Выключить будильник",
+  "startMission": "Начать миссию",
+  "fortuneTitle": "Проверить удачу",
+  "fortuneMessage": "Проверьте результаты гадания\nи получите скрытые подарки!",
+  "fortuneAdButton": "Посмотреть рекламу и узнать результат",
+  "fortuneLoadingMessage": "Испытайте особое толкование карт таро от предсказателя.",
+  "fortuneAnalyzing": "Анализируем выбранные карты таро... {progress}%",
+  "@fortuneAnalyzing": {
+    "placeholders": {
+      "progress": { "type": "int" }
+    }
+  },
+  "fortuneSelectTitle": "Подумайте о сегодняшней энергии\nи выберите 3 карты.",
+  "fortuneSelectTitleDate": "Подумайте об энергии {day}.{month}\nи выберите 3 карты.",
+  "@fortuneSelectTitleDate": {
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "fortuneNewYearButton": "Посмотреть новогоднее гадание на 2025 год",
+  "loveFortune": "Любовь",
+  "wealthFortune": "Богатство",
+  "successFortune": "Успех",
+  "fortuneResultTitle": "Вот ваш результат гадания на сегодня.",
+  "fortuneResultTitleDate": "Гадание на {day}.{month}.{year}",
+  "@fortuneResultTitleDate": {
+    "placeholders": {
+      "year": { "type": "int" },
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "startDayButton": "Начать свой день",
+  "policy": "Условия и политика конфиденциальности",
+  "support": "Поддержка",
+  "defaultAlarmBehavior": "Поведение будильника по умолчанию",
+  "defaultAlarmVolume": "Громкость по умолчанию",
+  "defaultAlarmVolumeDescription": "Громкость, применяемая при создании нового будильника.",
+  "gradualVolumeDescription": "Постепенное увеличение громкости будильника.",
+  "defaultVibration": "Вибрация по умолчанию",
+  "defaultVibrationDescription": "Включает вибрацию по умолчанию при создании нового будильника.",
+  "defaultInterval": "Интервал по умолчанию",
+  "maxSnoozeCountLabel": "Макс. количество повторов",
+  "minutes": "мин",
+  "times": "раз",
+  "cupsCount": "({current}/{goal} ст.)",
+  "@cupsCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "timesCountProgress": "({current}/{goal} раз)",
+  "@timesCountProgress": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "missionGym": "Сходить в спортзал",
+  "missionWorkout": "Домашняя тренировка",
+  "missionDiary": "Вести дневник",
+  "missionBedMaking": "Заправить постель",
+  "missionStretching": "Растяжка",
+  "missionReading": "Чтение 10 мин",
+  "missionPlanning": "План на день",
+  "missionBreakfast": "Позавтракать",
+  "missionMeditation": "Медитация 5 мин",
+  "missionEnglishWords": "Выучить 5 слов",
+  "missionVentilation": "Проветривание",
+  "missionCleaning": "Уборка комнаты",
+  "missionGratitudeDiary": "Дневник благодарности",
+  "faqQuestion1": "Alarms are not ringing.",
+  "faqAnswer1": "Alarms may be delayed or blocked due to the Android system's battery optimization feature. Please set all permissions to 'Allow' in the Settings > Alarm Optimization menu.",
+  "faqQuestion2": "I want to change the mission.",
+  "faqAnswer2": "You can change it to the mission you want (Math, Photo, Shake, etc.) in the mission selection menu after tapping the alarm you want to edit in the alarm list.",
+  "faqQuestion3": "How do I set Dark Mode?",
+  "faqAnswer3": "You can change the screen theme through the Settings > General > Dark Mode toggle.",
+  "faqQuestion4": "How do I collect fortune cookies?",
+  "faqAnswer4": "You can earn fortune cookies every time you dismiss an alarm in the morning or complete a mission. Check your daily fortune with the cookies you've collected!",
+  "faqQuestion5": "Will my data disappear if I delete the app?",
+  "faqAnswer5": "Yes, Fortune Alarm stores data inside the device, so deleting the app will delete all your set alarms and mission records. Please be careful.",
+  "noticeLabel": "Notice",
+  "notice1Title": "Fortune Alarm Official Launch",
+  "notice1Content": "Hello. Fortune Alarm has been officially launched.\\n\\nCheck your daily fortune with your alarm every morning and start a happy day!\\nWe will continue to provide more diverse features and improved services.\\n\\nThank you.",
+  "notice2Title": "Version 1.0.0 Update News",
+  "notice2Content": "Here is the content of the version 1.0.0 update.\\n\\n1. Supplement mission UI improvement\\n2. System setting integration for accurate alarms\\n3. Dark mode support\\n4. Bug fixes and stability improvements\\n\\nExperience the latest version now!",
+  "notice3Title": "Terms of Service Revision Notice",
+  "notice3Content": "The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.",
+  "supportContentTitle": "Inquiry Content",
+  "supportHint": "Please enter the content.",
+  "supportRecipient": "Recipient (Customer Support)",
+  "emailCopied": "Email address copied.",
+  "copyTooltip": "Copy",
+  "supportWorkingDays": "We will try to respond within 24 hours on weekdays.",
+  "supportEmptyError": "Please enter the content.",
+  "supportSubjectPrefix": "Inquiry Title",
+  "supportContentPrefix": "Inquiry Content",
+  "supportCopySuccessTitle": "Inquiry Copied",
+  "supportCopySuccessMessage": "Inquiry content has been copied to clipboard.\\nWould you like to send an email to {email}?",
+  "@supportCopySuccessMessage": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "copyEmailAction": "Copy Email Address",
+  "copyEmailSuccessMessage": "Email address copied. Please paste it in your email app.",
+  "supportSubmitButton": "Copy Inquiry and Send",
+  "shakePhone": "Пожалуйста, потрясите телефон!",
+  "englishQuizMission": "Английская викторина",
+  "quizInstruction": "Нажимайте на слово слева и его перевод справа, чтобы сопоставить их.",
+  "missionSuccess": "Миссия выполнена!",
+  "goHome": "На главную",
+  "quizWord1": "Яблоко",
+  "quizWord1Ans": "apple",
+  "quizWord2": "Банан",
+  "quizWord2Ans": "banana",
+  "quizWord3": "Школа",
+  "quizWord3Ans": "school",
+  "quizWord4": "Компьютер",
+  "quizWord4Ans": "computer",
+  "quizWord5": "Вода",
+  "quizWord5Ans": "water",
+  "quizWord6": "Друг",
+  "quizWord6Ans": "friend",
+  "quizWord7": "Семья",
+  "quizWord7Ans": "family",
+  "quizWord8": "Дом",
+  "quizWord8Ans": "house",
+  "quizWord9": "Книга",
+  "quizWord9Ans": "book",
+  "quizWord10": "Любовь",
+  "quizWord10Ans": "love",
+  "quizWord11": "Солнце",
+  "quizWord11Ans": "sun",
+  "quizWord12": "Луна",
+  "quizWord12Ans": "moon",
+  "quizWord13": "Море",
+  "quizWord13Ans": "sea",
+  "quizWord14": "Небо",
+  "quizWord14Ans": "sky",
+  "quizWord15": "Дерево",
+  "quizWord15Ans": "tree",
+  "missionComplete": "Миссия завершена!",
+  "version": "Версия {version}",
+  "@version": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "locationPermissionTitle": "Allow Location Permission",
+  "locationPermissionDesc": "Required to display weather information."
 }

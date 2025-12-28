@@ -9,6 +9,14 @@ class CalendarEvent {
   final bool isCompleted; // 루틴용
   final String? alarmId; // 알람 연동용
   final int titleColor; // 제목 색상
+  final String? sticker; // 스티커 (이모지 등)
+  final List<String>? images; // 이미지 경로 리스트
+  final String? drawingData; // 필기 데이터 (JSON 등)
+  final bool isFavorite; // 즐겨찾기 여부
+  final double fontSize; // 글꼴 크기
+  final String? fontFamily; // 글꼴 패밀리
+  final int? fontColor; // 글꼴 색상
+  final int textAlign; // 텍스트 정렬 (TextAlign.index)
 
   CalendarEvent({
     required this.id,
@@ -18,7 +26,15 @@ class CalendarEvent {
     required this.type,
     this.isCompleted = false,
     this.alarmId,
-    this.titleColor = 0xFF000000, // 기본값 검정
+    this.titleColor = 0xFF000000,
+    this.sticker,
+    this.images,
+    this.drawingData,
+    this.isFavorite = false,
+    this.fontSize = 16.0,
+    this.fontFamily,
+    this.fontColor,
+    this.textAlign = 0, // TextAlign.left
   });
 
   CalendarEvent copyWith({
@@ -30,6 +46,14 @@ class CalendarEvent {
     bool? isCompleted,
     String? alarmId,
     int? titleColor,
+    String? sticker,
+    List<String>? images,
+    String? drawingData,
+    bool? isFavorite,
+    double? fontSize,
+    String? fontFamily,
+    int? fontColor,
+    int? textAlign,
   }) {
     return CalendarEvent(
       id: id ?? this.id,
@@ -40,6 +64,14 @@ class CalendarEvent {
       isCompleted: isCompleted ?? this.isCompleted,
       alarmId: alarmId ?? this.alarmId,
       titleColor: titleColor ?? this.titleColor,
+      sticker: sticker ?? this.sticker,
+      images: images ?? this.images,
+      drawingData: drawingData ?? this.drawingData,
+      isFavorite: isFavorite ?? this.isFavorite,
+      fontSize: fontSize ?? this.fontSize,
+      fontFamily: fontFamily ?? this.fontFamily,
+      fontColor: fontColor ?? this.fontColor,
+      textAlign: textAlign ?? this.textAlign,
     );
   }
 
@@ -53,6 +85,14 @@ class CalendarEvent {
       'isCompleted': isCompleted,
       'alarmId': alarmId,
       'titleColor': titleColor,
+      'sticker': sticker,
+      'images': images,
+      'drawingData': drawingData,
+      'isFavorite': isFavorite,
+      'fontSize': fontSize,
+      'fontFamily': fontFamily,
+      'fontColor': fontColor,
+      'textAlign': textAlign,
     };
   }
 
@@ -66,6 +106,14 @@ class CalendarEvent {
       isCompleted: json['isCompleted'] ?? false,
       alarmId: json['alarmId'],
       titleColor: json['titleColor'] ?? 0xFF000000,
+      sticker: json['sticker'],
+      images: json['images'] != null ? List<String>.from(json['images']) : null,
+      drawingData: json['drawingData'],
+      isFavorite: json['isFavorite'] ?? false,
+      fontSize: (json['fontSize'] as num?)?.toDouble() ?? 16.0,
+      fontFamily: json['fontFamily'],
+      fontColor: json['fontColor'],
+      textAlign: json['textAlign'] ?? 0,
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fortune_alarm/features/mission_camera/mission_camera_screen.dart';
 
 void main() {
-  testWidgets('ReferenceImageOverlay is placed at top-right and shows label', (WidgetTester tester) async {
+  testWidgets('ReferenceImageOverlay is placed at top-right', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -22,10 +22,8 @@ void main() {
     );
 
     final imageBoxFinder = find.byKey(const Key('reference_image_box'));
-    final labelChipFinder = find.byKey(const Key('reference_label_chip'));
     expect(imageBoxFinder, findsOneWidget);
-    expect(labelChipFinder, findsOneWidget);
-    expect(find.text('목표물'), findsOneWidget);
+    expect(find.byKey(const Key('reference_label_chip')), findsNothing);
 
     final parentTopLeft = tester.getTopLeft(find.byKey(const Key('overlay_stack')));
     final parentTopRight = tester.getTopRight(find.byKey(const Key('overlay_stack')));

@@ -10,10 +10,12 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:firebase_core/firebase_core.dart'; // Firebase Core 임포트
 import 'features/alarm/alarm_screen.dart';
 import 'features/calendar/calendar_screen.dart';
 import 'services/notification_service.dart';
 import 'services/alarm_scheduler_service.dart';
+import 'services/ad_service.dart'; // 광고 서비스 임포트
 import 'data/models/alarm_model.dart';
 import 'data/models/math_difficulty.dart';
 import 'data/models/mission_model.dart';
@@ -32,8 +34,10 @@ import 'l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'features/mission/supplement/supplement_mission_screen.dart';
-import 'features/mission/supplement/supplement_ringing_screen.dart';
 import 'widgets/fortune_cookie_bar.dart';
+import 'widgets/ad_widgets.dart'; // 광고 위젯 임포트
+import 'widgets/optimization_bottom_sheet.dart';
+import 'providers/weather_provider.dart';
 import 'providers/mission_provider.dart';
 import 'features/mission/supplement/models/supplement_settings.dart';
 import 'features/mission/supplement/models/supplement_log.dart';
@@ -46,6 +50,7 @@ const MethodChannel _foregroundChannel = MethodChannel('com.example.fortune_alar
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  debugPrint('App starting: Initializing services...');
   
   // 시스템 내비게이션 바 색상 설정 (하얀색)
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -55,10 +60,61 @@ void main() async {
     statusBarIconBrightness: Brightness.dark,
   ));
   
-  // Hive 초기화를 위한 경로 설정
-  final appDocumentDir = await getApplicationDocumentsDirectory();
-  await Hive.initFlutter(appDocumentDir.path);
-  
+  try {
+    // Hive 초기화를 위한 경로 설정
+    final appDocumentDir = await getApplicationDocumentsDirectory();
+    await Hive.initFlutter(appDocumentDir.path);
+    debugPrint('Step 1: Hive initialized');
+    
+    _registerAdapters();
+    
+    // 앱 상태 저장을 위한 박스 미리 열기
+    await Hive.openBox('app_state');
+    debugPrint('Step 2: App state box opened');
+
+    // 날짜/시간 포맷팅 초기화
+    await initializeDateFormatting();
+
+    final notificationService = NotificationService();
+    await notificationService.init(
+      _onNotificationTap, 
+      onNotificationResponse: _onNotificationResponse
+    );
+    await AlarmSchedulerService.init();
+    SupplementAlarmService.init(hivePath: appDocumentDir.path);
+    debugPrint('Step 3: Basic services initialized');
+
+    // Firebase 초기화는 앱 시작을 위해 필수적이므로 여기서 대기하되, 오류 발생 시 무시
+    debugPrint('Step 4: Initializing Firebase...');
+    try {
+      await Firebase.initializeApp().timeout(const Duration(seconds: 5));
+      debugPrint('Step 5: Firebase initialized');
+    } catch (e) {
+      debugPrint('Firebase initialization failed or timed out: $e');
+    }
+
+    // AdMob은 배경에서 초기화
+    MobileAds.instance.initialize().then((_) => debugPrint('AdMob initialized in background'));
+
+  } catch (e) {
+    debugPrint('Initialization warning (ignored for startup): $e');
+  }
+
+  // 백그라운드 알람 수신을 위한 포트 등록
+  _registerPort();
+
+  // 권한 요청 제거 (MainScreen에서 처리하여 앱 시작 속도 개선)
+  // await _requestPermissions();
+
+  runApp(
+    const ProviderScope(
+      child: FortuneAlarmApp(),
+    ),
+  );
+}
+
+// 어댑터 등록 로직 분리
+void _registerAdapters() {
   Hive.registerAdapter(MissionTypeAdapter());
   Hive.registerAdapter(AlarmModelAdapter());
   Hive.registerAdapter(MathDifficultyAdapter());
@@ -66,39 +122,8 @@ void main() async {
   Hive.registerAdapter(DailyMissionLogAdapter());
   Hive.registerAdapter(MissionCategoryAdapter());
   
-  // 영양제 관련 어댑터 등록
   if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(SupplementLogAdapter());
   if (!Hive.isAdapterRegistered(9)) Hive.registerAdapter(SupplementSettingsAdapter());
-
-  // 앱 상태 저장을 위한 박스 미리 열기
-  await Hive.openBox('app_state');
-
-  // 날짜/시간 포맷팅 초기화
-  await initializeDateFormatting();
-
-  final notificationService = NotificationService();
-  // 서비스 초기화 (Hive 경로 전달)
-  await notificationService.init(
-    _onNotificationTap, 
-    onNotificationResponse: _onNotificationResponse
-  );
-  await AlarmSchedulerService.init();
-  SupplementAlarmService.init(hivePath: appDocumentDir.path);
-
-  // AdMob 초기화
-  MobileAds.instance.initialize();
-
-  // 백그라운드 알람 수신을 위한 포트 등록 (앱이 실행 중일 때 화면 전환용)
-  _registerPort();
-
-  // 권한 요청
-  await _requestPermissions();
-
-  runApp(
-    const ProviderScope(
-      child: FortuneAlarmApp(),
-    ),
-  );
 }
 
 Future<void> _requestPermissions() async {
@@ -184,7 +209,7 @@ void _handleSupplementAction(String? actionId, String? payload) {
     if (currentState == null) return;
     
     int? alarmId;
-    if (payload != null && payload.startsWith('supplement_')) {
+    if (payload.startsWith('supplement_')) {
       alarmId = int.tryParse(payload.split('_').last);
     }
     alarmId ??= 10000;
@@ -327,6 +352,7 @@ class FortuneAlarmApp extends ConsumerWidget {
     return MaterialApp(
       navigatorKey: navigatorKey, // Navigator Key 등록
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      title: 'Fortune Alarm', // 기본 타이틀 (로컬라이제이션 로딩 전)
       themeMode: themeMode,
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -347,7 +373,7 @@ class FortuneAlarmApp extends ConsumerWidget {
         cardColor: Colors.white,
         navigationBarTheme: NavigationBarThemeData(
           backgroundColor: Colors.white,
-          indicatorColor: Colors.blueAccent.withValues(alpha: 0.1),
+          indicatorColor: Colors.blueAccent.withOpacity(0.1),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Colors.white,
@@ -401,40 +427,62 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   void initState() {
     super.initState();
+    // 앱 시작 시 주요 광고 사전 로드 (최적화)
+    AdService.preloadExitAd();
+    AdService.preloadListAd();
+
     _checkNotificationLaunch();
-    _requestPermissions();
+    // 권한 확인 및 최적화 시트 표시 (필요한 경우)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowPermissions();
+    });
   }
 
-  Future<void> _requestPermissions() async {
-    // 1. 알림 권한 요청
-    if (await Permission.notification.isDenied) {
-      await Permission.notification.request();
-    }
-
-    // 2. 배터리 최적화 예외 요청
-    PermissionStatus batteryStatus = await Permission.ignoreBatteryOptimizations.status;
-    if (batteryStatus.isDenied) {
-      batteryStatus = await Permission.ignoreBatteryOptimizations.request();
-    }
-
-    // 3. 정확한 알람 권한 요청 (Android 12+)
-    if (Platform.isAndroid) {
-      PermissionStatus exactStatus = await Permission.scheduleExactAlarm.status;
-      if (exactStatus.isDenied) {
-        await Permission.scheduleExactAlarm.request();
+  Future<void> _checkAndShowPermissions() async {
+    // iOS는 알림 권한만 요청하고 종료 (최적화 시트 불필요)
+    if (!Platform.isAndroid) {
+      if (await Permission.notification.isDenied) {
+        await Permission.notification.request();
       }
+      return;
     }
 
-    // 4. 다른 앱 위에 표시 권한 요청
-    PermissionStatus systemAlertWindowStatus = await Permission.systemAlertWindow.status;
-    if (systemAlertWindowStatus.isDenied) {
-      systemAlertWindowStatus = await Permission.systemAlertWindow.request();
+    // Android: 모든 권한을 최적화 시트에서 통합 관리
+    // 1. 주요 권한 상태 확인
+    final notificationStatus = await Permission.notification.status;
+    final batteryStatus = await Permission.ignoreBatteryOptimizations.status;
+    final systemAlertWindowStatus = await Permission.systemAlertWindow.status;
+    final locationStatus = await Permission.location.status;
+    
+    // Android 12+ 정확한 알람 권한
+    PermissionStatus? exactStatus;
+    if (Platform.isAndroid) {
+       exactStatus = await Permission.scheduleExactAlarm.status;
     }
 
-    // 5. 위치 권한 요청 (날씨 정보 제공용)
-    PermissionStatus locationStatus = await Permission.location.status;
-    if (locationStatus.isDenied) {
-      await Permission.location.request();
+    bool needsOptimization = false;
+
+    // 배터리 최적화가 되어있지 않거나 (즉, 권한 거부 상태), 
+    // 다른 앱 위에 표시 권한이 없거나,
+    // 위치 권한이 없거나,
+    // 정확한 알람 권한이 없는 경우 시트 표시
+    if (!notificationStatus.isGranted) needsOptimization = true;
+    if (!batteryStatus.isGranted) needsOptimization = true;
+    if (!systemAlertWindowStatus.isGranted) needsOptimization = true;
+    if (!locationStatus.isGranted) needsOptimization = true;
+    if (exactStatus != null && !exactStatus.isGranted) needsOptimization = true;
+
+    if (needsOptimization && mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false, // 사용자가 강제로 닫을 수 없게 함 (선택 사항)
+        builder: (context) => const OptimizationBottomSheet(),
+      ).then((_) {
+        // 설정 완료 후 날씨 정보 새로고침 (위치 권한 획득했을 수 있으므로)
+        if (mounted) {
+           ref.invalidate(weatherProvider);
+        }
+      });
     }
   }
 
@@ -478,7 +526,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     }
   }
 
-  BottomNavigationBarItem _buildNavItem(IconData icon, IconData selectedIcon, String label, int index) {
+  Widget _buildNavItem(IconData icon, IconData selectedIcon, String label, int index) {
     final isSelected = _currentIndex == index;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
@@ -486,26 +534,48 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     final selectedColor = const Color(0xFF3894FF); 
     final unselectedColor = isDark ? const Color(0xFF999999) : const Color(0xFF74777F);
     
-    return BottomNavigationBarItem(
-      icon: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 1.0, end: isSelected ? 1.2 : 1.0),
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOutBack,
-        builder: (context, value, child) {
-          return Transform.scale(
-            scale: value,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Icon(
-                isSelected ? selectedIcon : icon,
-                size: 24,
-                color: isSelected ? selectedColor : unselectedColor,
-              ),
-            ),
-          );
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _currentIndex = index;
+          });
         },
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          padding: const EdgeInsets.only(top: 6, bottom: 2),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 1.0, end: isSelected ? 1.2 : 1.0),
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOutBack,
+                builder: (context, value, child) {
+                  return Transform.scale(
+                    scale: value,
+                    child: Icon(
+                      isSelected ? selectedIcon : icon,
+                      size: 24,
+                      color: isSelected ? selectedColor : unselectedColor,
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: isSelected ? selectedColor : unselectedColor,
+                  letterSpacing: -0.3,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      label: label,
     );
   }
 
@@ -553,7 +623,74 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       }
     });
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
+    return WillPopScope(
+      onWillPop: () async {
+        final shouldExit = await showDialog<bool>(
+          context: context,
+          builder: (context) => Dialog(
+            backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            surfaceTintColor: Colors.transparent,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 상단: 제목
+                  const Text(
+                    '종료하시겠습니까?',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  
+                  // 중단: 버튼 영역 (사용자 요청: "취소 종료를 위에")
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          style: TextButton.styleFrom(
+                            foregroundColor: isDark ? Colors.grey : Colors.black54,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[300]!),
+                            ),
+                          ),
+                          child: Text(AppLocalizations.of(context)!.cancel),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.redAccent,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 20),
+                  
+                  // 하단: 광고 영역 (꽉 차게)
+                  const ExitDialogAdWidget(),
+                ],
+              ),
+            ),
+          ),
+        );
+        return shouldExit ?? false;
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: isDark ? const Color(0xFF121212) : Colors.white,
         systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
@@ -573,59 +710,43 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             Expanded(child: _screens[_currentIndex]),
           ],
         ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF121212) : Colors.white,
-            border: Border(
-              top: BorderSide(
-                color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.withOpacity(0.15),
-                width: 0.8,
+        bottomNavigationBar: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF121212) : Colors.white,
+                border: Border(
+                  top: BorderSide(
+                    color: isDark ? Colors.white12 : const Color(0xFFE0E0E0),
+                    width: 0.5,
+                  ),
+                ),
               ),
-            ),
-            boxShadow: isDark ? [] : [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.02),
-                blurRadius: 8,
-                offset: const Offset(0, -4),
+              child: SafeArea(
+                bottom: false, // 광고가 아래에 있으므로 SafeArea bottom은 false
+                child: Row(
+                  children: [
+                    _buildNavItem(Icons.alarm_outlined, Icons.alarm_rounded, AppLocalizations.of(context)!.alarm, 0),
+                    _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, AppLocalizations.of(context)!.calendar, 1),
+                    _buildNavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, AppLocalizations.of(context)!.fortune, 2),
+                    _buildNavItem(Icons.task_alt_outlined, Icons.task_alt_rounded, AppLocalizations.of(context)!.mission, 3),
+                    _buildNavItem(Icons.settings_outlined, Icons.settings_rounded, AppLocalizations.of(context)!.settings, 4),
+                  ],
+                ),
               ),
-            ],
-          ),
-          child: SafeArea(
-            child: BottomNavigationBar(
-              currentIndex: _currentIndex,
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
-              elevation: 0,
-              selectedItemColor: const Color(0xFF3894FF),
-              unselectedItemColor: isDark ? const Color(0xFF999999) : const Color(0xFF74777F),
-              selectedLabelStyle: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                letterSpacing: -0.3,
-              ),
-              unselectedLabelStyle: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                letterSpacing: -0.3,
-              ),
-              showUnselectedLabels: true,
-              items: [
-                _buildNavItem(Icons.alarm_outlined, Icons.alarm_rounded, AppLocalizations.of(context)!.alarm, 0),
-                _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, AppLocalizations.of(context)!.calendar, 1),
-                _buildNavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, AppLocalizations.of(context)!.fortune, 2),
-                _buildNavItem(Icons.task_alt_outlined, Icons.task_alt_rounded, AppLocalizations.of(context)!.mission, 3),
-                _buildNavItem(Icons.settings_outlined, Icons.settings_rounded, AppLocalizations.of(context)!.settings, 4),
-              ],
-            ),
-          ),
+        ),
+        // 시스템 내비게이션 바(뒤로가기 버튼 등) 위에 광고가 표시되도록 SafeArea 적용
+        // top: false로 설정하여 위쪽 여백은 무시하고 아래쪽(시스템 바)만 고려
+        const SafeArea(
+          top: false,
+          child: BottomBannerAd(),
+        ),
+          ],
         ),
       ),
-    );
+    ),
+  );
   }
 }
 

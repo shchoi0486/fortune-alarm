@@ -24,7 +24,13 @@ class SupplementAlarmService {
     if (Platform.isAndroid) {
       if (await Permission.scheduleExactAlarm.isDenied) {
         debugPrint('[SupplementAlarm] Schedule Exact Alarm permission denied.');
-        return;
+        // 권한 요청 시도
+        await Permission.scheduleExactAlarm.request();
+      }
+      
+      if (await Permission.ignoreBatteryOptimizations.isDenied) {
+        debugPrint('[SupplementAlarm] Requesting ignoreBatteryOptimizations...');
+        await Permission.ignoreBatteryOptimizations.request();
       }
     }
 

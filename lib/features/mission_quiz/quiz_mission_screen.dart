@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:io';
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:vibration/vibration.dart';
 import 'package:collection/collection.dart'; // for firstWhereOrNull
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../l10n/app_localizations.dart';
 import '../../services/notification_service.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../providers/alarm_list_provider.dart';
@@ -37,27 +37,8 @@ class _QuizMissionScreenState extends ConsumerState<QuizMissionScreen> {
   AlarmModel? _alarm;
   bool _isLoading = true;
   
-  // 간단한 영단어 퀴즈 데이터
-  final List<Map<String, String>> _vocabulary = [
-    {'question': '사과', 'answer': 'apple'},
-    {'question': '바나나', 'answer': 'banana'},
-    {'question': '학교', 'answer': 'school'},
-    {'question': '컴퓨터', 'answer': 'computer'},
-    {'question': '물', 'answer': 'water'},
-    {'question': '친구', 'answer': 'friend'},
-    {'question': '가족', 'answer': 'family'},
-    {'question': '집', 'answer': 'house'},
-    {'question': '책', 'answer': 'book'},
-    {'question': '사랑', 'answer': 'love'},
-    {'question': '태양', 'answer': 'sun'},
-    {'question': '달', 'answer': 'moon'},
-    {'question': '바다', 'answer': 'sea'},
-    {'question': '하늘', 'answer': 'sky'},
-    {'question': '나무', 'answer': 'tree'},
-  ];
-
-  late List<QuizItem> _leftItems;
-  late List<QuizItem> _rightItems;
+  List<QuizItem> _leftItems = [];
+  List<QuizItem> _rightItems = [];
   
   // 매칭 정보 (좌측 아이템 ID -> 우측 아이템 ID)
   final Set<int> _matchedIds = {};
@@ -71,9 +52,19 @@ class _QuizMissionScreenState extends ConsumerState<QuizMissionScreen> {
   void initState() {
     super.initState();
     _loadAlarm();
-    _generateQuiz();
+    // _generateQuiz() will be called after initState in the first frame or 
+    // we can call it in didChangeDependencies if we need context.
     _playAlarm();
     _startInactivityTimer();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Context is available here, so we can generate the quiz with l10n
+    if (_leftItems.isEmpty) {
+      _generateQuiz();
+    }
   }
 
   Future<void> _loadAlarm() async {
@@ -98,9 +89,27 @@ class _QuizMissionScreenState extends ConsumerState<QuizMissionScreen> {
   }
 
   void _generateQuiz() {
-    final random = Random();
+    final l10n = AppLocalizations.of(context)!;
+    final List<Map<String, String>> fullVocab = [
+      {'question': l10n.quizWord1, 'answer': l10n.quizWord1Ans},
+      {'question': l10n.quizWord2, 'answer': l10n.quizWord2Ans},
+      {'question': l10n.quizWord3, 'answer': l10n.quizWord3Ans},
+      {'question': l10n.quizWord4, 'answer': l10n.quizWord4Ans},
+      {'question': l10n.quizWord5, 'answer': l10n.quizWord5Ans},
+      {'question': l10n.quizWord6, 'answer': l10n.quizWord6Ans},
+      {'question': l10n.quizWord7, 'answer': l10n.quizWord7Ans},
+      {'question': l10n.quizWord8, 'answer': l10n.quizWord8Ans},
+      {'question': l10n.quizWord9, 'answer': l10n.quizWord9Ans},
+      {'question': l10n.quizWord10, 'answer': l10n.quizWord10Ans},
+      {'question': l10n.quizWord11, 'answer': l10n.quizWord11Ans},
+      {'question': l10n.quizWord12, 'answer': l10n.quizWord12Ans},
+      {'question': l10n.quizWord13, 'answer': l10n.quizWord13Ans},
+      {'question': l10n.quizWord14, 'answer': l10n.quizWord14Ans},
+      {'question': l10n.quizWord15, 'answer': l10n.quizWord15Ans},
+    ];
+
+    final tempVocab = List<Map<String, String>>.from(fullVocab)..shuffle();
     final List<Map<String, String>> selected = [];
-    final tempVocab = List<Map<String, String>>.from(_vocabulary)..shuffle();
     
     for (int i = 0; i < 5; i++) {
       selected.add(tempVocab[i]);
@@ -351,9 +360,9 @@ class _QuizMissionScreenState extends ConsumerState<QuizMissionScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        '영어 퀴즈 미션',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!.englishQuizMission,
+                        style: const TextStyle(
                           fontSize: 24, 
                           fontWeight: FontWeight.bold, 
                           color: Colors.white, 
@@ -367,9 +376,9 @@ class _QuizMissionScreenState extends ConsumerState<QuizMissionScreen> {
                     ],
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    '왼쪽 단어와 오른쪽 뜻을 차례로 눌러 매칭하세요',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.quizInstruction,
+                    style: const TextStyle(
                       fontSize: 18, 
                       color: Colors.white, 
                       fontWeight: FontWeight.w500,

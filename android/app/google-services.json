@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "590471614834",
+    "project_id": "fortune-alarm",
+    "storage_bucket": "fortune-alarm.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:590471614834:android:1d66106bf985b159b5cdeb",
+        "android_client_info": {
+          "package_name": "com.example.fortune_alarm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHGlTytFrwUw9tSh4UTrrOZZ_omvjjYlU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,5 +14,428 @@
   "congratulations": "축하합니다!",
   "allMissionsCompleted": "오늘의 미션 5개를 모두 달성했습니다.",
   "rewardReceived": "보상으로 포춘쿠키 1개를 지급합니다! 🥠",
-  "confirm": "확인"
+  "confirm": "확인",
+
+  "exactAlarmPermissionRequired": "정확한 시간에 알람을 울리려면 \"정확한 알람\" 권한이 필요합니다.",
+  "overlayPermissionRequired": "전체 화면 알림을 위해 \"다른 앱 위에 표시\" 권한이 필요합니다.",
+  "deleteAllAlarms": "모든 알람 삭제",
+  "noAlarms": "등록된 알람이 없습니다.",
+  "lessThanAMinuteRemaining": "1분 미만 후에 울려요",
+  "hoursMinutesRemaining": "{hours}시간 {minutes}분 후에 울려요",
+  "@hoursMinutesRemaining": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "minutesRemaining": "{minutes}분 후에 울려요",
+  "@minutesRemaining": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "am": "오전",
+  "pm": "오후",
+
+  "dailyFortuneCookieReward": "오늘의 포춘쿠키 보상",
+  "missionRewardInfo": "미션 5개 성공 시 1개, 10개 성공 시 2개 지급!",
+  "dailyMission": "오늘의 미션",
+  "goalAchieved": "🎉 {completed}/5 목표 달성!",
+  "@goalAchieved": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "missionProgress": "{completed}/5 달성",
+  "@missionProgress": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "myMissionRecord": "나의 미션 기록",
+  "consecutiveSuccess": "연속 성공",
+  "successRate30Days": "성공률(30일)",
+  "totalSuccess": "총 성공",
+  "inProgress": "도전 중 🔥",
+  "resetMissions": "미션 초기화",
+  "resetMissionsConfirm": "모든 도전 목록을 초기화하시겠습니까?\n(기본 시스템 미션 제외)",
+  "cancel": "취소",
+  "reset": "초기화",
+  "addMission": "미션 추가",
+  "completedMissions": "완료된 미션",
+
+  "greeting": "안녕하세요, {userName}님",
+  "@greeting": {
+    "placeholders": {
+      "userName": { "type": "String" }
+    }
+  },
+  "welcomeFortune": "신비로운 운세의 세계에 오신 것을 환영합니다",
+  "luckyColor": "행운의 색",
+  "luckyItem": "행운의 물건",
+  "luckyDirection": "길한 방향",
+  "viewVariousFortunes": "다양한 운세 보기",
+  "todaysRecommendation": "오늘의 추천",
+  "checkTodaysFortune": "오늘의 운세 확인",
+  "todaysAdvice": "신비로운 별들이 들려주는 오늘의 조언",
+  "viewSpecificDateFortune": "지정일 운세보기",
+  "lottoRecommendation": "로또 번호 추천",
+  "luckyNumber": "행운의 번호",
+  "specificDateFortune": "지정일 운세",
+  "specialDayFortune": "특별한 날 운세",
+  "newYearFortune": "신년운세",
+  "totalFortune2025": "2025년 전체운",
+  "traditionalFortune": "토정비결",
+  "traditionalSaju": "전통 사주 풀이",
+  "faceReading": "관상 보기",
+  "faceFate": "얼굴 관상 운명",
+  "compatibility": "궁합 보기",
+  "relationshipHarmony": "인연과의 조화",
+
+  "general": "일반",
+  "darkMode": "다크 모드",
+  "darkModeDescription": "화면을 어둡게 설정합니다.",
+  "alarmSettings": "알람 설정",
+  "information": "정보",
+  "notice": "공지사항",
+
+  "weatherConditionSunny": "맑음",
+  "weatherConditionCloudy": "흐림",
+  "weatherConditionFoggy": "안개",
+  "weatherConditionRainy": "비",
+  "weatherConditionSnowy": "눈",
+  "weatherConditionThunderstorm": "천둥번개",
+  "airQualityGood": "좋음",
+  "airQualityNormal": "보통",
+  "airQualityBad": "나쁨",
+  "airQualityVeryBad": "매우나쁨",
+  "locationUnknown": "알 수 없는 위치",
+  "locationError": "위치 오류",
+  "faq": "자주 묻는 질문",
+  "sendFeedback": "의견 보내기",
+  "feedbackDescription": "포춘 알람을 사용하시면서 느낀 불편한 점이나 제안하고 싶은 기능이 있다면 언제든 말씀해 주세요.\n여러분의 소중한 의견이 더 나은 서비스를 만듭니다.",
+  "reportCopyright": "저작권 침해 신고하기",
+  "copyrightDescription": "포춘 알람 내의 콘텐츠가 저작권을 침해한다고 판단되는 경우, 해당 내용을 이메일로 신고해 주시기 바랍니다.\n확인 후 즉시 조치를 취하도록 하겠습니다.",
+  "termsOfService": "이용약관",
+  "privacyPolicy": "개인정보 처리방침",
+  "alarmOptimization": "알람 울림 최적화",
+  "allOptimizationsCompleted": "모든 최적화 설정 완료됨",
+  "optimizationNeeded": "정확한 알람을 위해 설정이 필요합니다.",
+  "optimizationDescription": "안드로이드 시스템 설정으로 인해 알람이 지연되거나 울리지 않을 수 있습니다. 모든 항목을 허용으로 설정해주세요.",
+  "allowNotificationPermission": "알림 권한 허용",
+  "notificationPermissionDescription": "알람 발생 시 알림을 띄우기 위해 필요합니다.",
+  "excludeBatteryOptimization": "배터리 최적화 제외",
+  "batteryOptimizationDescription": "절전 모드에서도 알람이 즉시 울리도록 합니다.",
+  "allowExactAlarm": "정확한 알람 허용",
+  "exactAlarmDescription": "시스템에 의해 지연되지 않고 정시에 알람을 울립니다.",
+  "drawOverOtherApps": "다른 앱 위에 표시",
+  "overlayDescription": "잠금 화면이나 다른 앱 사용 중에도 알람 화면을 띄웁니다.",
+  "allSettingsCompleted": "모든 설정이 완료되었습니다.",
+  "manualSettingsInfo": "설정 해제는 안드로이드 시스템 설정에서 직접 하실 수 있습니다.",
+
+  "takePhoto": "촬영하기",
+  "selectPhoto": "선택하기",
+  "selectAlarmBackground": "알람 배경화면 선택",
+  "howToAdd": "추가 방법",
+  "addAssetInstructions": "assets/images/ 폴더에 이미지를 넣고 pubspec.yaml에 등록하세요.",
+  "gallery": "갤러리",
+  "ringingNow": "지금 울려요",
+  "setTime": "시간 설정",
+  "repeatDays": "반복 요일",
+  "repeatDaily": "매일 반복",
+  "snoozeSettings": "반복 알람 (스누즈)",
+  "interval": "간격",
+  "wakeUpAlarm": "기상 알람",
+  "snoozeInfo": "{interval}분, {count}회",
+  "@snoozeInfo": {
+    "placeholders": {
+      "interval": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "daySun": "일",
+  "dayMon": "월",
+  "dayTue": "화",
+  "dayWed": "수",
+  "dayThu": "목",
+  "dayFri": "금",
+  "daySat": "토",
+  "missionRewardEarned": "오늘의 미션 5개를 완료하여\n포춘쿠키 1개를 획득했습니다!",
+  "daysCount": "{count}일",
+  "@daysCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "user": "사용자",
+  "none": "없음",
+  "minutesLater": "{minutes}분 후",
+  "@minutesLater": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "countLabel": "횟수",
+  "timesCount": "{count}회 (총 {count}번)",
+  "@timesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "wakeUpMission": "기상 미션",
+  "alarmSound": "알람 소리",
+  "gradualVolume": "점점 커지게",
+  "vibration": "진동",
+  "alarmNameAndBackground": "알람 이름 및 배경",
+  "alarmName": "알람 이름",
+  "enterAlarmName": "알람 이름을 입력해주세요",
+  "save": "저장",
+  "missionNone": "미션 없음",
+  "missionSnap": "Snap",
+  "missionMath": "계산",
+  "missionQuiz": "퀴즈",
+  "missionFortune": "운세",
+  "missionShake": "흔들기",
+  "missionNoDescription": "미션 없이 알람이 울립니다.",
+  "missionSupplementDescription": "영양제 섭취 확인 화면이 나타납니다.",
+  "missionCameraDescription": "지정된 물체를 순서대로 촬영해야 알람이 꺼집니다.",
+  "missionMathDescription": "수학 문제를 풀어야 알람이 꺼집니다.",
+  "missionQuizDescription": "퀴즈 미션이 선택되었습니다.",
+  "missionFortuneDescription": "운세 미션이 선택되었습니다.",
+  "missionShakeDescription": "핸드폰을 흔들어야 알람이 꺼집니다.",
+  "difficulty": "난이도",
+  "difficultyEasy": "쉬움",
+  "difficultyNormal": "보통",
+  "difficultyHard": "어려움",
+  "problemCount": "문제 수",
+  "problemsCount": "{count}문제",
+  "@problemsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "shakeCount": "흔들기 횟수",
+  "shakeTimes": "{count}회",
+  "@shakeTimes": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "missionNumber": "미션 {number}",
+  "@missionNumber": {
+    "placeholders": {
+      "number": { "type": "int" }
+    }
+  },
+  "soundBirds": "새소리",
+  "shakeCountLabel": "흔들기 횟수",
+  "missionIndex": "미션 {index}",
+  "@missionIndex": {
+    "placeholders": {
+      "index": { "type": "int" }
+    }
+  },
+  "ringtoneSelect": "벨소리 선택",
+  "vibrationSelect": "진동 패턴 선택",
+  "defaultRingtone": "기본 벨소리",
+  "classicAlarm": "클래식 알람",
+  "digitalAlarm": "디지털 알람",
+  "birdsSound": "새소리",
+  "wavesSound": "파도 소리",
+  "defaultVibration": "기본 진동",
+  "shortVibration": "짧게 반복",
+  "longVibration": "길게 반복",
+  "heartbeatVibration": "심장 박동",
+  "sosVibration": "SOS",
+  "quickVibration": "빠른 박동",
+  "permissionRequired": "권한 필요",
+  "exactAlarmPermissionDesc": "알람을 정확한 시간에 울리기 위해 \"스케줄 및 리마인더\" 권한이 필요합니다.",
+  "batteryOptimizationPermissionDesc": "알람이 정시에 울리려면 배터리 최적화를 해제해야 합니다.",
+  "overlayPermissionDesc": "알람 실행 시 미션 화면을 띄우기 위해 \"다른 앱 위에 표시\" 권한이 필요합니다.",
+  "cameraMissionFirstImageError": "적어도 첫 번째 미션 이미지는 설정해주세요.",
+  "cameraMissionSequentialImageError": "미션 이미지를 순서대로 설정해주세요.",
+  "errorOccurred": "오류 발생: {error}",
+  "@errorOccurred": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "openSettings": "설정 열기",
+  "exactAlarmPermissionFail": "알람 등록에 실패했습니다. 정확한 알람 권한이 꺼져있어 설정이 필요합니다.",
+  "batteryOptimizationPermissionFail": "알람 등록에 실패했습니다. 배터리 최적화 예외 권한이 없어 설정이 필요합니다.",
+  "overlayPermissionFail": "알람 등록에 실패했습니다. 다른 앱 위에 표시 권한이 없어 설정이 필요합니다.",
+  "unknownAlarmError": "알람 등록 실패. 알 수 없는 오류가 발생했습니다.",
+  "resetTooltip": "초기화",
+  "errorLoadingAlarm": "알람 정보를 불러오지 못했습니다.",
+  "alarmNotFound": "알람 정보를 찾을 수 없습니다.",
+  "repeatAlarmCount": "반복 알람 ({current}/{max})",
+  "@repeatAlarmCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "turnOffAlarm": "알람 끄기",
+  "startMission": "미션 시작",
+  "fortuneTitle": "운세 확인하기",
+  "fortuneMessage": "운세 결과를 확인하고\n숨겨진 선물도 받아 가요!",
+  "fortuneAdButton": "광고 보고 결과 확인",
+  "fortuneLoadingMessage": "점신의 특별한 타로 해석을 경험해보세요.",
+  "fortuneAnalyzing": "선택한 타로를 분석하고 있어요... {progress}%",
+  "@fortuneAnalyzing": {
+    "placeholders": {
+      "progress": { "type": "int" }
+    }
+  },
+  "fortuneSelectTitle": "오늘의 기운을 생각하며\n카드 3장을 선택해주세요.",
+  "fortuneSelectTitleDate": "{month}월 {day}일의 기운을 생각하며\n카드 3장을 선택해주세요.",
+  "@fortuneSelectTitleDate": {
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "fortuneNewYearButton": "2025 신년운세 보기",
+  "loveFortune": "애정운",
+  "wealthFortune": "재물운",
+  "successFortune": "성공운",
+  "fortuneResultTitle": "오늘의 운세 결과입니다.",
+  "fortuneResultTitleDate": "{year}년 {month}월 {day}일의 운세",
+  "@fortuneResultTitleDate": {
+    "placeholders": {
+      "year": { "type": "int" },
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "startDayButton": "오늘 하루 시작하기",
+  "policy": "이용약관 및 개인정보 처리방침",
+  "support": "문의하기",
+  "defaultAlarmBehavior": "기본 알람 동작",
+  "defaultAlarmVolume": "기본 알람 음량",
+  "defaultAlarmVolumeDescription": "새 알람 생성 시 적용되는 기본 음량입니다.",
+  "gradualVolumeDescription": "알람 소리가 서서히 커지도록 설정합니다.",
+  "defaultVibration": "기본 진동",
+  "defaultVibrationDescription": "새 알람 생성 시 진동을 기본으로 켭니다.",
+  "defaultInterval": "기본 간격",
+  "maxSnoozeCountLabel": "최대 횟수",
+  "minutes": "분",
+  "times": "회",
+  "cupsCount": "({current}잔/{goal}잔)",
+  "@cupsCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "timesCountProgress": "({current}회/{goal}회)",
+  "@timesCountProgress": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "missionGym": "헬스장 가기",
+  "missionWorkout": "홈트레이닝",
+  "missionDiary": "일기 쓰기",
+  "missionBedMaking": "이부자리 정리",
+  "missionStretching": "스트레칭",
+  "missionReading": "독서 10분",
+  "missionPlanning": "오늘의 계획 세우기",
+  "missionBreakfast": "아침 식사 하기",
+  "missionMeditation": "명상 5분",
+  "missionEnglishWords": "영어 단어 5개 외우기",
+  "missionVentilation": "환기 시키기",
+  "missionCleaning": "방 정리하기",
+  "missionGratitudeDiary": "감사 일기 쓰기",
+  "faqQuestion1": "알람이 울리지 않아요.",
+  "faqAnswer1": "안드로이드 시스템의 배터리 최적화 기능으로 인해 알람이 지연되거나 차단될 수 있습니다. 설정 > 알람 울림 최적화 메뉴에서 모든 권한을 허용으로 설정해 주세요.",
+  "faqQuestion2": "미션을 변경하고 싶어요.",
+  "faqAnswer2": "알람 목록에서 수정을 원하는 알람을 탭한 후, 미션 선택 메뉴에서 원하는 미션(수학, 사진, 흔들기 등)으로 변경하실 수 있습니다.",
+  "faqQuestion3": "다크 모드는 어떻게 설정하나요?",
+  "faqAnswer3": "설정 > 일반 > 다크 모드 토글을 통해 화면 테마를 변경하실 수 있습니다.",
+  "faqQuestion4": "포춘쿠키는 어떻게 모으나요?",
+  "faqAnswer4": "매일 아침 알람을 해제하거나, 미션을 완료할 때마다 포춘쿠키를 획득할 수 있습니다. 모은 쿠키로 오늘의 운세를 확인해 보세요!",
+  "faqQuestion5": "앱을 삭제하면 데이터가 사라지나요?",
+  "faqAnswer5": "네, 포춘 알람은 기기 내부에 데이터를 저장하므로 앱 삭제 시 설정한 알람과 미션 기록이 모두 삭제됩니다. 주의해 주세요.",
+  "noticeLabel": "공지",
+  "notice1Title": "포춘 알람 정식 출시 안내",
+  "notice1Content": "안녕하세요. 포춘 알람이 정식으로 출시되었습니다.\\n\\n매일 아침 알람과 함께 오늘의 운세를 확인하고 즐거운 하루를 시작해보세요!\\n앞으로 더욱 다양한 기능과 개선된 서비스로 찾아뵙겠습니다.\\n\\n감사합니다.",
+  "notice2Title": "버전 1.0.0 업데이트 소식",
+  "notice2Content": "버전 1.0.0 업데이트 내용입니다.\\n\\n1. 영양제 미션 UI 개선\\n2. 정확한 알람을 위한 시스템 설정 연동\\n3. 다크 모드 지원\\n4. 버그 수정 및 안정성 개선\\n\\n지금 바로 최신 버전을 경험해보세요!",
+  "notice3Title": "서비스 이용 약관 개정 안내",
+  "notice3Content": "서비스 이용 약관이 개정되었습니다.\\n\\n주요 개정 내용:\\n- 개인정보 처리방침 강화\\n- 서비스 이용 범위 구체화\\n\\n자세한 내용은 설정 > 약관 페이지에서 확인하실 수 있습니다.",
+  "supportContentTitle": "문의 내용",
+  "supportHint": "내용을 입력해 주세요.",
+  "supportRecipient": "받는 사람 (고객센터)",
+  "emailCopied": "이메일 주소가 복사되었습니다.",
+  "copyTooltip": "복사하기",
+  "supportWorkingDays": "평일 기준 24시간 이내에 답변을 드리도록 노력하겠습니다.",
+  "supportEmptyError": "내용을 입력해 주세요.",
+  "supportSubjectPrefix": "문의 제목",
+  "supportContentPrefix": "문의 내용",
+  "supportCopySuccessTitle": "문의 내용 복사됨",
+  "supportCopySuccessMessage": "문의 내용이 클립보드에 복사되었습니다.\\n{email} 로 메일을 보내시겠습니까?",
+  "@supportCopySuccessMessage": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "copyEmailAction": "이메일 주소 복사",
+  "copyEmailSuccessMessage": "이메일 주소가 복사되었습니다. 메일 앱에서 붙여넣어 주세요.",
+  "supportSubmitButton": "문의 내용 복사하고 보내기",
+  "shakePhone": "핸드폰을 흔들어주세요!",
+  "englishQuizMission": "영어 퀴즈 미션",
+  "quizInstruction": "왼쪽 단어와 오른쪽 뜻을 차례로 눌러 매칭하세요",
+  "missionSuccess": "미션 성공!",
+  "goHome": "홈으로",
+  "quizWord1": "사과",
+  "quizWord1Ans": "apple",
+  "quizWord2": "바나나",
+  "quizWord2Ans": "banana",
+  "quizWord3": "학교",
+  "quizWord3Ans": "school",
+  "quizWord4": "컴퓨터",
+  "quizWord4Ans": "computer",
+  "quizWord5": "물",
+  "quizWord5Ans": "water",
+  "quizWord6": "친구",
+  "quizWord6Ans": "friend",
+  "quizWord7": "가족",
+  "quizWord7Ans": "family",
+  "quizWord8": "집",
+  "quizWord8Ans": "house",
+  "quizWord9": "책",
+  "quizWord9Ans": "book",
+  "quizWord10": "사랑",
+  "quizWord10Ans": "love",
+  "quizWord11": "태양",
+  "quizWord11Ans": "sun",
+  "quizWord12": "달",
+  "quizWord12Ans": "moon",
+  "quizWord13": "바다",
+  "quizWord13Ans": "sea",
+  "quizWord14": "하늘",
+  "quizWord14Ans": "sky",
+  "quizWord15": "나무",
+  "quizWord15Ans": "tree",
+  "missionComplete": "미션 완료!",
+  "version": "버전 {version}",
+  "@version": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "fortuneCheckButton": "운세 확인하기",
+  "fortuneSelectCards": "3장을 선택하세요",
+  "fortuneDragCards": "3장을 드래그해서 선택하세요",
+  "fortuneDetailTitle": "상세 풀이",
+  "labelFineDust": "미세먼지",
+  "labelUltraFineDust": "초미세먼지",
+  "weatherToday": "오늘의 날씨",
+  "weatherUpdateMessage": "현재 위치로 날씨 정보를 업데이트합니다.",
+  "weatherDisclaimer": "관측된 자료는 현지 사정이나 수신상태에 의해\n차이가 발생할 수 있습니다.",
+  "weatherSource": "기상청, 한국환경공단 제공",
+  "locationPermissionTitle": "위치 권한 허용",
+  "locationPermissionDesc": "날씨 정보를 표시하기 위해 필요합니다."
 }

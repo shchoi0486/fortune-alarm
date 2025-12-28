@@ -3,7 +3,7 @@
   "appTitle": "幸运闹钟",
   "morningGreeting": "早上好！开启你幸运的一天。",
   "missionWakeUp": "起床任务",
-  "missionSupplement": "营养补给",
+  "missionSupplement": "服用营养品",
   "missionWater": "饮水2L以上",
   "fortuneCookie": "幸运饼干",
   "settings": "设置",
@@ -14,5 +14,392 @@
   "congratulations": "恭喜！",
   "allMissionsCompleted": "您已完成今天的全部5项任务。",
   "rewardReceived": "作为奖励，您获得1个幸运饼干！ 🥠",
-  "confirm": "确认"
+  "confirm": "确认",
+
+  "exactAlarmPermissionRequired": "为了在准确时间响铃，需要“准确闹钟”权限。",
+  "overlayPermissionRequired": "为了显示全屏通知，需要“在其他应用上层显示”权限。",
+  "deleteAllAlarms": "删除所有闹钟",
+  "noAlarms": "没有已注册的闹钟。",
+  "lessThanAMinuteRemaining": "不到1分钟后响铃",
+  "hoursMinutesRemaining": "{hours}小时{minutes}分钟后响铃",
+  "@hoursMinutesRemaining": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "minutesRemaining": "{minutes}分钟后响铃",
+  "@minutesRemaining": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "am": "上午",
+  "pm": "下午",
+
+  "dailyFortuneCookieReward": "今日幸运饼干奖励",
+  "missionRewardInfo": "成功完成5个任务奖励1个，10个奖励2个！",
+  "dailyMission": "今日任务",
+  "goalAchieved": "🎉 已达成 {completed}/5 目标！",
+  "@goalAchieved": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "missionProgress": "已达成 {completed}/5",
+  "@missionProgress": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "myMissionRecord": "我的任务记录",
+  "consecutiveSuccess": "连续成功",
+  "successRate30Days": "成功率(30天)",
+  "totalSuccess": "总成功天数",
+  "inProgress": "进行中 🔥",
+  "resetMissions": "重置任务",
+  "resetMissionsConfirm": "确定要重置所有挑战列表吗？\n（基本系统任务除外）",
+  "cancel": "取消",
+  "reset": "重置",
+  "addMission": "添加任务",
+  "completedMissions": "已完成的任务",
+
+  "greeting": "您好，{userName}",
+  "@greeting": {
+    "placeholders": {
+      "userName": { "type": "String" }
+    }
+  },
+  "welcomeFortune": "欢迎来到神秘的运势世界",
+  "luckyColor": "幸运色",
+  "luckyItem": "幸运物品",
+  "luckyDirection": "吉利方向",
+  "viewVariousFortunes": "查看各种运势",
+  "todaysRecommendation": "今日推荐",
+  "checkTodaysFortune": "查看今日运势",
+  "todaysAdvice": "神秘星辰给出的今日建议",
+  "viewSpecificDateFortune": "查看指定日期运势",
+  "lottoRecommendation": "乐透号码推荐",
+  "luckyNumber": "幸运数字",
+  "specificDateFortune": "指定日期运势",
+  "specialDayFortune": "特别日子运势",
+  "newYearFortune": "新年运势",
+  "totalFortune2025": "2025年整体运势",
+  "traditionalFortune": "传统推算",
+  "traditionalSaju": "传统四柱八字",
+  "faceReading": "看面相",
+  "faceFate": "面相与命运",
+  "compatibility": "查看配对",
+  "relationshipHarmony": "缘分和谐度",
+
+  "general": "常规",
+  "darkMode": "深色模式",
+  "darkModeDescription": "将屏幕设置为深色。",
+  "alarmSettings": "闹钟设置",
+  "information": "信息",
+  "notice": "公告",
+  "faq": "常见问题",
+  "sendFeedback": "发送反馈",
+  "feedbackDescription": "如果您在使用幸运闹钟时遇到任何不便或有建议的功能，请随时告知我们。\n您的宝贵意见将帮助我们提供更好的服务。",
+  "reportCopyright": "报告版权侵权",
+  "copyrightDescription": "如果您认为幸运闹钟内的内容侵犯了版权，请通过电子邮件举报。\n核实后我们将立即采取行动。",
+  "termsOfService": "服务条款",
+  "privacyPolicy": "隐私政策",
+  "alarmOptimization": "闹钟响铃优化",
+  "allOptimizationsCompleted": "所有优化设置已完成",
+  "optimizationNeeded": "为了闹钟准时响铃，需要进行设置。",
+  "optimizationDescription": "由于Android系统设置，闹钟可能会延迟或不响铃。请将所有选项设置为允许。",
+  "allowNotificationPermission": "允许通知权限",
+  "notificationPermissionDescription": "响铃时显示通知所需。",
+  "excludeBatteryOptimization": "电池优化排除",
+  "batteryOptimizationDescription": "确保在省电模式下闹钟也能立即响铃。",
+  "allowExactAlarm": "允许准确闹钟",
+  "exactAlarmDescription": "确保闹钟准时响铃，不受系统延迟影响。",
+  "drawOverOtherApps": "在其他应用上层显示",
+  "overlayDescription": "即使在锁屏或使用其他应用时也能显示闹钟界面。",
+  "allSettingsCompleted": "所有设置已完成。",
+  "manualSettingsInfo": "您可以直接在Android系统设置中取消设置。",
+
+  "takePhoto": "拍照",
+  "selectPhoto": "选择照片",
+  "selectAlarmBackground": "选择闹钟背景",
+  "howToAdd": "添加方法",
+  "addAssetInstructions": "将图片放入 assets/images/ 文件夹并在 pubspec.yaml 中注册。",
+  "gallery": "相册",
+  "ringingNow": "现在响铃",
+  "setTime": "设置时间",
+  "repeatDays": "重复日期",
+  "repeatDaily": "每天重复",
+  "snoozeSettings": "贪睡设置",
+  "interval": "间隔",
+  "wakeUpAlarm": "起床闹钟",
+  "snoozeInfo": "{interval}分钟, {count}次",
+  "@snoozeInfo": {
+    "placeholders": {
+      "interval": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "daySun": "日",
+  "dayMon": "一",
+  "dayTue": "二",
+  "dayWed": "三",
+  "dayThu": "四",
+  "dayFri": "五",
+  "daySat": "六",
+  "missionRewardEarned": "恭喜！您已完成今天的5项任务，获得1个幸运饼干！",
+  "daysCount": "{count}天",
+  "@daysCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "user": "用户",
+  "none": "无",
+  "minutesLater": "{minutes}分钟后",
+  "@minutesLater": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "countLabel": "次数",
+  "timesCount": "{count}次 (共{count}次)",
+  "@timesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "wakeUpMission": "起床任务",
+  "alarmSound": "闹钟声音",
+  "gradualVolume": "音量渐强",
+  "vibration": "震动",
+  "alarmNameAndBackground": "闹钟名称和背景",
+  "alarmName": "闹钟名称",
+  "enterAlarmName": "请输入闹钟名称",
+  "save": "保存",
+  "missionNone": "无任务",
+  "missionSnap": "Snap",
+  "missionMath": "计算",
+  "missionQuiz": "问答",
+  "missionFortune": "运势",
+  "missionShake": "摇晃",
+  "missionNoDescription": "无任务直接响铃。",
+  "missionSupplementDescription": "显示营养品服用确认界面。",
+  "missionCameraDescription": "按顺序拍摄指定物品以关闭闹钟。",
+  "missionMathDescription": "解决数学题以关闭闹钟。",
+  "missionQuizDescription": "已选择问答任务。",
+  "missionFortuneDescription": "已选择运势任务。",
+  "missionShakeDescription": "摇晃手机以关闭闹钟。",
+  "difficulty": "难度",
+  "difficultyEasy": "简单",
+  "difficultyNormal": "普通",
+  "difficultyHard": "困难",
+  "problemCount": "题目数量",
+  "problemsCount": "{count}题",
+  "@problemsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "shakeCountLabel": "摇晃次数",
+  "missionIndex": "任务 {index}",
+  "@missionIndex": {
+    "placeholders": {
+      "index": { "type": "int" }
+    }
+  },
+  "ringtoneSelect": "选择铃声",
+  "vibrationSelect": "选择震动模式",
+  "defaultRingtone": "默认铃声",
+  "classicAlarm": "经典闹钟",
+  "digitalAlarm": "数字闹钟",
+  "birdsSound": "鸟鸣声",
+  "wavesSound": "海浪声",
+  "defaultVibration": "默认震动",
+  "shortVibration": "短促重复",
+  "longVibration": "长震动重复",
+  "heartbeatVibration": "心跳震动",
+  "sosVibration": "SOS",
+  "quickVibration": "快速跳动",
+  "permissionRequired": "需要权限",
+  "exactAlarmPermissionDesc": "为了在准确时间响铃，需要“日程与提醒”权限。",
+  "batteryOptimizationPermissionDesc": "为了确保闹钟准时，需要关闭电池优化。",
+  "overlayPermissionDesc": "为了在响铃时显示任务界面，需要“在其他应用上层显示”权限。",
+  "cameraMissionFirstImageError": "请至少设置第一张任务图片。",
+  "cameraMissionSequentialImageError": "请按顺序设置任务图片。",
+  "errorOccurred": "发生错误: {error}",
+  "@errorOccurred": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "openSettings": "打开设置",
+  "exactAlarmPermissionFail": "闹钟设置失败。需要开启准确闹钟权限。",
+  "batteryOptimizationPermissionFail": "闹钟设置失败。需要关闭电池优化。",
+  "overlayPermissionFail": "闹钟设置失败。需要开启“在其他应用上层显示”权限。",
+  "unknownAlarmError": "闹钟设置失败。发生未知错误。",
+  "resetTooltip": "重置",
+  "errorLoadingAlarm": "无法加载闹钟信息。",
+  "alarmNotFound": "未找到闹钟信息。",
+  "repeatAlarmCount": "重复闹钟 ({current}/{max})",
+  "@repeatAlarmCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "turnOffAlarm": "关闭闹钟",
+  "startMission": "开始任务",
+  "fortuneTitle": "查看运势",
+  "fortuneMessage": "查看您的运势结果\n并获得隐藏的礼物！",
+  "fortuneAdButton": "观看广告并查看结果",
+  "fortuneLoadingMessage": "体验占卜师特别的塔罗牌解读。",
+  "fortuneAnalyzing": "正在分析您选择的塔罗牌... {progress}%",
+  "@fortuneAnalyzing": {
+    "placeholders": {
+      "progress": { "type": "int" }
+    }
+  },
+  "fortuneSelectTitle": "思考今天的能量\n并选择3张牌。",
+  "fortuneSelectTitleDate": "思考 {month}月{day}日的能量\n并选择3张牌。",
+  "@fortuneSelectTitleDate": {
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "fortuneNewYearButton": "查看 2025 年新年运势",
+  "loveFortune": "爱情运",
+  "wealthFortune": "财运",
+  "successFortune": "成功运",
+  "fortuneResultTitle": "这是您今天的运势结果。",
+  "fortuneResultTitleDate": "{year}年{month}月{day}日的运势",
+  "@fortuneResultTitleDate": {
+    "placeholders": {
+      "year": { "type": "int" },
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "startDayButton": "开始新的一天",
+  "fortuneDetailTitle": "详细解读",
+  "policy": "服务条款和隐私政策",
+  "support": "支持",
+  "defaultAlarmBehavior": "默认闹钟行为",
+  "defaultAlarmVolume": "默认闹钟音量",
+  "defaultAlarmVolumeDescription": "创建新闹钟时应用的默认音量。",
+  "gradualVolumeDescription": "设置闹钟声音逐渐增大。",
+  "defaultVibration": "默认振动",
+  "defaultVibrationDescription": "创建新闹钟时默认启用振动。",
+  "defaultInterval": "默认间隔",
+  "maxSnoozeCountLabel": "最大重复次数",
+  "minutes": "分",
+  "times": "次",
+  "cupsCount": "({current}杯/{goal}杯)",
+  "@cupsCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "timesCountProgress": "({current}次/{goal}次)",
+  "@timesCountProgress": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "missionGym": "去健身房",
+  "missionWorkout": "家庭训练",
+  "missionDiary": "写日记",
+  "missionBedMaking": "整理床铺",
+  "missionStretching": "拉伸",
+  "missionReading": "阅读10分钟",
+  "missionPlanning": "制定今日计划",
+  "missionBreakfast": "吃早餐",
+  "missionMeditation": "冥想5分钟",
+  "missionEnglishWords": "背5个单词",
+  "missionVentilation": "通风",
+  "missionCleaning": "打扫房间",
+  "missionGratitudeDiary": "感恩日记",
+  "faqQuestion1": "Alarms are not ringing.",
+  "faqAnswer1": "Alarms may be delayed or blocked due to the Android system's battery optimization feature. Please set all permissions to 'Allow' in the Settings > Alarm Optimization menu.",
+  "faqQuestion2": "I want to change the mission.",
+  "faqAnswer2": "You can change it to the mission you want (Math, Photo, Shake, etc.) in the mission selection menu after tapping the alarm you want to edit in the alarm list.",
+  "faqQuestion3": "How do I set Dark Mode?",
+  "faqAnswer3": "You can change the screen theme through the Settings > General > Dark Mode toggle.",
+  "faqQuestion4": "How do I collect fortune cookies?",
+  "faqAnswer4": "You can earn fortune cookies every time you dismiss an alarm in the morning or complete a mission. Check your daily fortune with the cookies you've collected!",
+  "faqQuestion5": "Will my data disappear if I delete the app?",
+  "faqAnswer5": "Yes, Fortune Alarm stores data inside the device, so deleting the app will delete all your set alarms and mission records. Please be careful.",
+  "noticeLabel": "Notice",
+  "notice1Title": "Fortune Alarm Official Launch",
+  "notice1Content": "Hello. Fortune Alarm has been officially launched.\\n\\nCheck your daily fortune with your alarm every morning and start a happy day!\\nWe will continue to provide more diverse features and improved services.\\n\\nThank you.",
+  "notice2Title": "Version 1.0.0 Update News",
+  "notice2Content": "Here is the content of the version 1.0.0 update.\\n\\n1. Supplement mission UI improvement\\n2. System setting integration for accurate alarms\\n3. Dark mode support\\n4. Bug fixes and stability improvements\\n\\nExperience the latest version now!",
+  "notice3Title": "Terms of Service Revision Notice",
+  "notice3Content": "The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.",
+  "supportContentTitle": "Inquiry Content",
+  "supportHint": "Please enter the content.",
+  "supportRecipient": "Recipient (Customer Support)",
+  "emailCopied": "Email address copied.",
+  "copyTooltip": "Copy",
+  "supportWorkingDays": "We will try to respond within 24 hours on weekdays.",
+  "supportEmptyError": "Please enter the content.",
+  "supportSubjectPrefix": "Inquiry Title",
+  "supportContentPrefix": "Inquiry Content",
+  "supportCopySuccessTitle": "Inquiry Copied",
+  "supportCopySuccessMessage": "Inquiry content has been copied to clipboard.\\nWould you like to send an email to {email}?",
+  "@supportCopySuccessMessage": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "copyEmailAction": "Copy Email Address",
+  "copyEmailSuccessMessage": "Email address copied. Please paste it in your email app.",
+  "supportSubmitButton": "Copy Inquiry and Send",
+  "shakePhone": "请摇晃手机！",
+  "englishQuizMission": "英语问答任务",
+  "quizInstruction": "按顺序点击左侧单词和右侧意思进行匹配。",
+  "missionSuccess": "任务成功！",
+  "goHome": "返回首页",
+  "quizWord1": "苹果",
+  "quizWord1Ans": "apple",
+  "quizWord2": "香蕉",
+  "quizWord2Ans": "banana",
+  "quizWord3": "学校",
+  "quizWord3Ans": "school",
+  "quizWord4": "电脑",
+  "quizWord4Ans": "computer",
+  "quizWord5": "水",
+  "quizWord5Ans": "water",
+  "quizWord6": "朋友",
+  "quizWord6Ans": "friend",
+  "quizWord7": "家人",
+  "quizWord7Ans": "family",
+  "quizWord8": "房子",
+  "quizWord8Ans": "house",
+  "quizWord9": "书",
+  "quizWord9Ans": "book",
+  "quizWord10": "爱",
+  "quizWord10Ans": "love",
+  "quizWord11": "太阳",
+  "quizWord11Ans": "sun",
+  "quizWord12": "月亮",
+  "quizWord12Ans": "moon",
+  "quizWord13": "大海",
+  "quizWord13Ans": "sea",
+  "quizWord14": "天空",
+  "quizWord14Ans": "sky",
+  "quizWord15": "树",
+  "quizWord15Ans": "tree",
+  "missionComplete": "任务完成！",
+  "version": "版本 {version}",
+  "@version": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "locationPermissionTitle": "Allow Location Permission",
+  "locationPermissionDesc": "Required to display weather information."
 }

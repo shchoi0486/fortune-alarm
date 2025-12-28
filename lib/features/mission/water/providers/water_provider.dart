@@ -144,11 +144,9 @@ class WaterNotifier extends StateNotifier<WaterState> {
          // pass
       }
 
-      if (waterMission == null) {
-          waterMission = missionNotifier.missions.firstWhere(
+      waterMission ??= missionNotifier.missions.firstWhere(
             (m) => m.title.contains('물') && m.title.contains('2L'),
           );
-      }
       
        print('Syncing water mission status: ${waterMission.id} -> $isAchieved');
        await missionNotifier.setMissionCompleted(waterMission.id, isAchieved);

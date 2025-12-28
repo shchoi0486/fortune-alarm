@@ -56,9 +56,9 @@ class TojeongResultScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: primaryColor.withValues(alpha: 0.1),
+                        color: primaryColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: primaryColor.withValues(alpha: 0.3)),
+                        border: Border.all(color: primaryColor.withOpacity(0.3)),
                       ),
                       child: Text(
                         "괘: ${result.key}",
@@ -95,7 +95,7 @@ class TojeongResultScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     height: 1.6,
-                    color: textColor.withValues(alpha: 0.9),
+                    color: textColor.withOpacity(0.9),
                   ),
                 ),
               ),
@@ -132,7 +132,7 @@ class TojeongResultScreen extends StatelessWidget {
                           height: 40,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                            color: primaryColor.withValues(alpha: 0.1),
+                            color: primaryColor.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
                           child: Text(
@@ -169,7 +169,7 @@ class TojeongResultScreen extends StatelessWidget {
                                       .trim(),
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: textColor.withValues(alpha: 0.7),
+                                    color: textColor.withOpacity(0.7),
                                     height: 1.4,
                                   ),
                                 ),

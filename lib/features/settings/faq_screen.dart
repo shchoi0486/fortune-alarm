@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:fortune_alarm/l10n/app_localizations.dart';
+
 class FAQItem {
   final String question;
   final String answer;
@@ -12,34 +14,35 @@ class FAQScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final faqs = [
       FAQItem(
-        question: '알람이 울리지 않아요.',
-        answer: '안드로이드 시스템의 배터리 최적화 기능으로 인해 알람이 지연되거나 차단될 수 있습니다. 설정 > 알람 울림 최적화 메뉴에서 모든 권한을 허용으로 설정해 주세요.',
+        question: l10n.faqQuestion1,
+        answer: l10n.faqAnswer1,
       ),
       FAQItem(
-        question: '미션을 변경하고 싶어요.',
-        answer: '알람 목록에서 수정을 원하는 알람을 탭한 후, 미션 선택 메뉴에서 원하는 미션(수학, 사진, 흔들기 등)으로 변경하실 수 있습니다.',
+        question: l10n.faqQuestion2,
+        answer: l10n.faqAnswer2,
       ),
       FAQItem(
-        question: '다크 모드는 어떻게 설정하나요?',
-        answer: '설정 > 일반 > 다크 모드 토글을 통해 화면 테마를 변경하실 수 있습니다.',
+        question: l10n.faqQuestion3,
+        answer: l10n.faqAnswer3,
       ),
       FAQItem(
-        question: '포춘쿠키는 어떻게 모으나요?',
-        answer: '매일 아침 알람을 해제하거나, 미션을 완료할 때마다 포춘쿠키를 획득할 수 있습니다. 모은 쿠키로 오늘의 운세를 확인해 보세요!',
+        question: l10n.faqQuestion4,
+        answer: l10n.faqAnswer4,
       ),
       FAQItem(
-        question: '앱을 삭제하면 데이터가 사라지나요?',
-        answer: '네, 포춘 알람은 기기 내부에 데이터를 저장하므로 앱 삭제 시 설정한 알람과 미션 기록이 모두 삭제됩니다. 주의해 주세요.',
+        question: l10n.faqQuestion5,
+        answer: l10n.faqAnswer5,
       ),
     ];
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text('자주 묻는 질문', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(l10n.faq, style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8F9FA),
         elevation: 0,
         centerTitle: true,

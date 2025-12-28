@@ -1,10 +1,10 @@
 {
   "@@locale": "ja",
   "appTitle": "フォーチュンアラーム",
-  "morningGreeting": "おはようございます！幸運な一日를 시작하세요.",
+  "morningGreeting": "おはようございます！幸運な一日を始めましょう。",
   "missionWakeUp": "起床ミッション",
-  "missionSupplement": "サプリメント",
-  "missionWater": "水2L以上",
+  "missionSupplement": "サプリメント摂取",
+  "missionWater": "水2L以上飲む",
   "fortuneCookie": "フォーチュンクッキー",
   "settings": "設定",
   "alarm": "アラーム",
@@ -14,5 +14,391 @@
   "congratulations": "おめでとうございます！",
   "allMissionsCompleted": "今日のミッション5つをすべて達成しました。",
   "rewardReceived": "報酬としてフォーチュンクッキー1個を支給します！ 🥠",
-  "confirm": "確認"
+  "confirm": "確認",
+
+  "exactAlarmPermissionRequired": "正確な時間にアラームを鳴らすには、「正確なアラーム」権限が必要です。",
+  "overlayPermissionRequired": "全画面通知のために、「他のアプリの上に表示」権限が必要です。",
+  "deleteAllAlarms": "すべてのアラームを削除",
+  "noAlarms": "登録されたアラームがありません。",
+  "lessThanAMinuteRemaining": "1分未満で鳴ります",
+  "hoursMinutesRemaining": "{hours}時間{minutes}分後に鳴ります",
+  "@hoursMinutesRemaining": {
+    "placeholders": {
+      "hours": { "type": "int" },
+      "minutes": { "type": "int" }
+    }
+  },
+  "minutesRemaining": "{minutes}分後に鳴ります",
+  "@minutesRemaining": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "am": "午前",
+  "pm": "午後",
+
+  "dailyFortuneCookieReward": "今日のフォーチュンクッキー報酬",
+  "missionRewardInfo": "ミッション5個成功で1個、10個成功で2個支給！",
+  "dailyMission": "今日のミッション",
+  "goalAchieved": "🎉 {completed}/5 目標達成！",
+  "@goalAchieved": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "missionProgress": "{completed}/5 達成",
+  "@missionProgress": {
+    "placeholders": {
+      "completed": { "type": "int" }
+    }
+  },
+  "myMissionRecord": "マイミッション記録",
+  "consecutiveSuccess": "連続成功",
+  "successRate30Days": "成功率(30日)",
+  "totalSuccess": "総成功",
+  "inProgress": "挑戦中 🔥",
+  "resetMissions": "ミッション初期化",
+  "resetMissionsConfirm": "すべての挑戦リストを初期化しますか？\n（基本システムミッションを除く）",
+  "cancel": "キャンセル",
+  "reset": "初期化",
+  "addMission": "ミッション追加",
+  "completedMissions": "完了したミッション",
+
+  "greeting": "こんにちは、{userName}さん",
+  "@greeting": {
+    "placeholders": {
+      "userName": { "type": "String" }
+    }
+  },
+  "welcomeFortune": "神秘的な運勢の世界へようこそ",
+  "luckyColor": "ラッキーカラー",
+  "luckyItem": "ラッキーアイテム",
+  "luckyDirection": "吉方位",
+  "viewVariousFortunes": "様々な運勢を見る",
+  "todaysRecommendation": "今日のすすめ",
+  "checkTodaysFortune": "今日の運勢を確認",
+  "todaysAdvice": "神秘的な星々が語る今日の助言",
+  "viewSpecificDateFortune": "指定日の運勢を見る",
+  "lottoRecommendation": "ロト番号のおすすめ",
+  "luckyNumber": "ラッキーナンバー",
+  "specificDateFortune": "指定日運勢",
+  "specialDayFortune": "特別な日の運勢",
+  "newYearFortune": "新年の運勢",
+  "totalFortune2025": "2025年全体の運勢",
+  "traditionalFortune": "土亭秘訣",
+  "traditionalSaju": "伝統的な四柱推命",
+  "faceReading": "観相（人相）占い",
+  "faceFate": "顔の観相と運命",
+  "compatibility": "相性占い",
+  "relationshipHarmony": "縁の調和",
+
+  "general": "一般",
+  "darkMode": "ダークモード",
+  "darkModeDescription": "画面を暗く設定します。",
+  "alarmSettings": "アラーム設定",
+  "information": "情報",
+  "notice": "お知らせ",
+  "faq": "よくある質問",
+  "sendFeedback": "フィードバックを送る",
+  "feedbackDescription": "フォーチュンアラームをご利用中に感じた不便な点や提案したい機能があれば、いつでもお知らせください。\n皆様の貴重な意見がより良いサービスを作ります。",
+  "reportCopyright": "著作権侵害を報告する",
+  "copyrightDescription": "フォーチュンアラーム内のコンテンツが著作権を侵害していると思われる場合は、その内容をメールで報告してください。\n確認後、速やかに対応いたします。",
+  "termsOfService": "利用規約",
+  "privacyPolicy": "プライバシーポリシー",
+  "alarmOptimization": "アラーム最適化",
+  "allOptimizationsCompleted": "すべての最適化設定が完了しました",
+  "optimizationNeeded": "正確なアラームのために設定が必要です。",
+  "optimizationDescription": "Androidシステムの設定により、アラームが遅れたり鳴らなかったりすることがあります。すべての項目を「許可」に設定してください。",
+  "allowNotificationPermission": "通知権限を許可",
+  "notificationPermissionDescription": "アラーム発生時に通知を表示するために必要です。",
+  "excludeBatteryOptimization": "電池の最適化から除外",
+  "batteryOptimizationDescription": "省電力モードでもアラームが即座に鳴るようにします。",
+  "allowExactAlarm": "正確なアラームを許可",
+  "exactAlarmDescription": "システムによって遅延されることなく、定刻にアラームを鳴らします。",
+  "drawOverOtherApps": "他のアプリの上に重ねて表示",
+  "overlayDescription": "ロック画面や他のアプリの使用中にもアラーム画面を表示します。",
+  "allSettingsCompleted": "すべての設定が完了しました。",
+  "manualSettingsInfo": "設定の解除は、Androidシステムの設定から直接行うことができます。",
+
+  "takePhoto": "撮影する",
+  "selectPhoto": "選択する",
+  "selectAlarmBackground": "アラーム背景の選択",
+  "howToAdd": "追加方法",
+  "addAssetInstructions": "assets/images/ フォルダに画像を入れ、pubspec.yamlに登録してください。",
+  "gallery": "ギャラリー",
+  "ringingNow": "今鳴っています",
+  "setTime": "時間設定",
+  "repeatDays": "繰り返し曜日",
+  "repeatDaily": "毎日繰り返し",
+  "snoozeSettings": "スヌーズ設定",
+  "interval": "間隔",
+  "wakeUpAlarm": "起床アラーム",
+  "snoozeInfo": "{interval}分, {count}回",
+  "@snoozeInfo": {
+    "placeholders": {
+      "interval": { "type": "int" },
+      "count": { "type": "int" }
+    }
+  },
+  "daySun": "日",
+  "dayMon": "月",
+  "dayTue": "火",
+  "dayWed": "水",
+  "dayThu": "木",
+  "dayFri": "金",
+  "daySat": "土",
+  "missionRewardEarned": "おめでとうございます！今日のミッション5つを完了し、フォーチュンクッキー1個を獲得しました！",
+  "daysCount": "{count}日",
+  "@daysCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "user": "ユーザー",
+  "none": "なし",
+  "minutesLater": "{minutes}分後",
+  "@minutesLater": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "countLabel": "回数",
+  "timesCount": "{count}回 (合計{count}回)",
+  "@timesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "wakeUpMission": "起床ミッション",
+  "alarmSound": "アラーム音",
+  "gradualVolume": "だんだん大きく",
+  "vibration": "バイブレーション",
+  "alarmNameAndBackground": "アラーム名と背景",
+  "alarmName": "アラーム名",
+  "enterAlarmName": "アラーム名を入力してください",
+  "save": "保存",
+  "missionNone": "ミッションなし",
+  "missionSnap": "Snap",
+  "missionMath": "計算",
+  "missionQuiz": "クイズ",
+  "missionFortune": "運勢",
+  "missionShake": "振る",
+  "missionNoDescription": "ミッションなしでアラームが鳴ります。",
+  "missionSupplementDescription": "サプリメント摂取確認画面が表示されます。",
+  "missionCameraDescription": "指定された物体を順番に撮影するとアラームが止まります。",
+  "missionMathDescription": "数学問題を解くとアラームが止まります。",
+  "missionQuizDescription": "クイズミッションが選択されました。",
+  "missionFortuneDescription": "運勢ミッションが選択されました。",
+  "missionShakeDescription": "携帯電話を振るとアラームが止まります。",
+  "difficulty": "難易度",
+  "difficultyEasy": "易しい",
+  "difficultyNormal": "普通",
+  "difficultyHard": "難しい",
+  "problemCount": "問題数",
+  "problemsCount": "{count}問",
+  "@problemsCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "shakeCountLabel": "振る回数",
+  "missionIndex": "ミッション {index}",
+  "@missionIndex": {
+    "placeholders": {
+      "index": { "type": "int" }
+    }
+  },
+  "ringtoneSelect": "ベル音選択",
+  "vibrationSelect": "バイブレーションパターンの選択",
+  "defaultRingtone": "デフォルトの着信音",
+  "classicAlarm": "クラシックアラーム",
+  "digitalAlarm": "デジタルアラーム",
+  "birdsSound": "鳥のさえずり",
+  "wavesSound": "波の音",
+  "defaultVibration": "デフォルトのバイブレーション",
+  "shortVibration": "短い繰り返し",
+  "longVibration": "長い繰り返し",
+  "heartbeatVibration": "心臓の鼓動",
+  "sosVibration": "SOS",
+  "quickVibration": "速い鼓動",
+  "permissionRequired": "権限が必要",
+  "exactAlarmPermissionDesc": "アラームを正確な時間に鳴らすには、「スケジュールとリマインダー」権限が必要です。",
+  "batteryOptimizationPermissionDesc": "アラームを時間通りに鳴らすには、バッテリーの最適化を無効にする必要があります。",
+  "overlayPermissionDesc": "アラーム作動時にミッション画面を表示するには、「他のアプリの上に表示」権限が必要です。",
+  "cameraMissionFirstImageError": "少なくとも最初のミッション画像を設定してください。",
+  "cameraMissionSequentialImageError": "ミッション画像を順番に設定してください。",
+  "errorOccurred": "エラーが発生しました: {error}",
+  "@errorOccurred": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "openSettings": "設定を開く",
+  "exactAlarmPermissionFail": "アラームの登録に失敗しました。正確なアラーム権限が無効になっているため、設定が必要です。",
+  "batteryOptimizationPermissionFail": "アラームの登録に失敗しました。バッテリーの最適化例外権限がないため、設定が必要です。",
+  "overlayPermissionFail": "アラームの登録に失敗しました。「他のアプリの上に表示」権限がないため、設定が必要です。",
+  "unknownAlarmError": "アラームの登録に失敗しました。不明なエラーが発生しました。",
+  "resetTooltip": "初期化",
+  "errorLoadingAlarm": "アラーム情報の読み込みに失敗しました。",
+  "alarmNotFound": "アラーム情報が見つかりません。",
+  "repeatAlarmCount": "繰り返しアラーム ({current}/{max})",
+  "@repeatAlarmCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "turnOffAlarm": "アラームを止める",
+  "startMission": "ミッション開始",
+  "fortuneTitle": "運勢を確認する",
+  "fortuneMessage": "運勢の結果を確認して、\n隠されたプレゼントも手に入れましょう！",
+  "fortuneAdButton": "広告を見て結果を確認",
+  "fortuneLoadingMessage": "占い師の特別なタロット解釈を体験してください。",
+  "fortuneAnalyzing": "選択したタロットを分析しています... {progress}%",
+  "@fortuneAnalyzing": {
+    "placeholders": {
+      "progress": { "type": "int" }
+    }
+  },
+  "fortuneSelectTitle": "今日の運気を感じながら、\nカードを3枚選んでください。",
+  "fortuneSelectTitleDate": "{month}月{day}日の運気を感じながら、\nカードを3枚選んでください。",
+  "@fortuneSelectTitleDate": {
+    "placeholders": {
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "fortuneNewYearButton": "2025年の新正月運勢を見る",
+  "loveFortune": "恋愛運",
+  "wealthFortune": "金運",
+  "successFortune": "成功運",
+  "fortuneResultTitle": "今日の運勢の結果です。",
+  "fortuneResultTitleDate": "{year}年{month}月{day}日の運勢",
+  "@fortuneResultTitleDate": {
+    "placeholders": {
+      "year": { "type": "int" },
+      "month": { "type": "int" },
+      "day": { "type": "int" }
+    }
+  },
+  "startDayButton": "今日一日を始める",
+  "policy": "利用規約とプライバシーポリシー",
+  "support": "サポート",
+  "defaultAlarmBehavior": "デフォルトのアラーム動作",
+  "defaultAlarmVolume": "デフォルトのアラーム音量",
+  "defaultAlarmVolumeDescription": "新しいアラーム作成時に適用されるデフォルトの音量です。",
+  "gradualVolumeDescription": "アラーム音が徐々に大きくなるように設定します。",
+  "defaultVibration": "デフォルトの振動",
+  "defaultVibrationDescription": "新しいアラーム作成時にデフォルトで振動をオンにします。",
+  "defaultInterval": "デフォルトの間隔",
+  "maxSnoozeCountLabel": "最大回数",
+  "minutes": "分",
+  "times": "回",
+  "cupsCount": "({current}杯/{goal}杯)",
+  "@cupsCount": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "timesCountProgress": "({current}回/{goal}回)",
+  "@timesCountProgress": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "goal": { "type": "int" }
+    }
+  },
+  "missionGym": "ジムに行く",
+  "missionWorkout": "ホームトレーニング",
+  "missionDiary": "日記を書く",
+  "missionBedMaking": "布団の整理",
+  "missionStretching": "ストレッチ",
+  "missionReading": "読書10分",
+  "missionPlanning": "今日の計画を立てる",
+  "missionBreakfast": "朝食を食べる",
+  "missionMeditation": "瞑想5分",
+  "missionEnglishWords": "英単語5個覚える",
+  "missionVentilation": "換気をする",
+  "missionCleaning": "部屋の掃除",
+  "missionGratitudeDiary": "感謝日記",
+  "faqQuestion1": "アラームが鳴りません。",
+  "faqAnswer1": "Androidシステムのバッテリー最適化機能により、アラームが遅延したりブロックされたりすることがあります。[設定] > [アラームの最適化]メニューで、すべての権限を「許可」に設定してください。",
+  "faqQuestion2": "ミッションを変更したいです。",
+  "faqAnswer2": "アラームリストで編集したいアラームをタップした後、ミッション選択メニューで希望のミッション（数学、写真、シェイクなど）に変更できます。",
+  "faqQuestion3": "ダークモードの設定方法は？",
+  "faqAnswer3": "[設定] > [全般] > [ダークモード]のトグルから画面テーマを変更できます。",
+  "faqQuestion4": "フォーチュンクッキーはどうやって集めますか？",
+  "faqAnswer4": "毎朝アラームを解除したり、ミッションを完了したりするたびにフォーチュンクッキーを獲得できます。集めたクッキーで今日の運勢をチェックしましょう！",
+  "faqQuestion5": "アプリを削除するとデータは消えますか？",
+  "faqAnswer5": "はい、フォーチュンアラームはデバイス内にデータを保存するため、アプリを削除すると設定したアラームやミッションの記録がすべて削除されます。ご注意ください。",
+  "noticeLabel": "お知らせ",
+  "notice1Title": "フォーチュンアラーム公式リリース",
+  "notice1Content": "こんにちは。フォーチュンアラームが公式にリリースされました。\\n\\n毎朝のアラームと一緒に今日の運勢をチェックして、楽しい一日を始めましょう！\\n今後、より多様な機能と改善されたサービスを提供していきます。\\n\\nありがとうございます。",
+  "notice2Title": "バージョン 1.0.0 アップデートのお知らせ",
+  "notice2Content": "バージョン 1.0.0 のアップデート内容です。\\n\\n1. サプリメントミッションのUI改善\\n2. 正確なアラームのためのシステム設定の統合\\n3. ダークモードのサポート\\n4. バグ修正と安定性の向上\\n\\n今すぐ最新バージョンを体験してください！",
+  "notice3Title": "利用規約改定のお知らせ",
+  "notice3Content": "利用規約が改定されました。\\n\\n主な改定内容：\\n- プライバシーポリシーの強化\\n- サービス利用範囲の具体化\\n\\n詳細は [設定] > [規約] ページで確認できます。",
+  "supportContentTitle": "お問い合わせ内容",
+  "supportHint": "内容を入力してください。",
+  "supportRecipient": "宛先 (カスタマーサポート)",
+  "emailCopied": "メールアドレスがコピーされました。",
+  "copyTooltip": "コピー",
+  "supportWorkingDays": "平日24時間以内に回答できるよう努めます。",
+  "supportEmptyError": "内容を入力してください。",
+  "supportSubjectPrefix": "お問い合わせ件名",
+  "supportContentPrefix": "お問い合わせ内容",
+  "supportCopySuccessTitle": "お問い合わせ内容をコピーしました",
+  "supportCopySuccessMessage": "お問い合わせ内容がクリップボードにコピーされました。\\n{email} 宛にメールを送信しますか？",
+  "@supportCopySuccessMessage": {
+    "placeholders": {
+      "email": { "type": "String" }
+    }
+  },
+  "copyEmailAction": "メールアドレスをコピー",
+  "copyEmailSuccessMessage": "メールアドレスがコピーされました。メールアプリで貼り付けてください。",
+  "supportSubmitButton": "お問い合わせ内容をコピーして送信",
+  "shakePhone": "携帯電話を振ってください！",
+  "englishQuizMission": "英語クイズミッション",
+  "quizInstruction": "左の単語と右の意味を順番にタップして一致させてください。",
+  "missionSuccess": "ミッション成功！",
+  "goHome": "ホームへ",
+  "quizWord1": "りんご",
+  "quizWord1Ans": "apple",
+  "quizWord2": "バナナ",
+  "quizWord2Ans": "banana",
+  "quizWord3": "学校",
+  "quizWord3Ans": "school",
+  "quizWord4": "コンピューター",
+  "quizWord4Ans": "computer",
+  "quizWord5": "水",
+  "quizWord5Ans": "water",
+  "quizWord6": "友達",
+  "quizWord6Ans": "friend",
+  "quizWord7": "家族",
+  "quizWord7Ans": "family",
+  "quizWord8": "家",
+  "quizWord8Ans": "house",
+  "quizWord9": "本",
+  "quizWord9Ans": "book",
+  "quizWord10": "愛",
+  "quizWord10Ans": "love",
+  "quizWord11": "太陽",
+  "quizWord11Ans": "sun",
+  "quizWord12": "月",
+  "quizWord12Ans": "moon",
+  "quizWord13": "海",
+  "quizWord13Ans": "sea",
+  "quizWord14": "空",
+  "quizWord14Ans": "sky",
+  "quizWord15": "木",
+  "quizWord15Ans": "tree",
+  "missionComplete": "ミッション完了！",
+  "version": "バージョン {version}",
+  "@version": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "locationPermissionTitle": "Allow Location Permission",
+  "locationPermissionDesc": "Required to display weather information."
 }

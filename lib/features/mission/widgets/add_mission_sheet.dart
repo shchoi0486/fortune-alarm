@@ -5,7 +5,7 @@ import '../../../data/models/mission_model.dart';
 import '../../../providers/mission_provider.dart';
 
 class AddMissionSheet extends ConsumerStatefulWidget {
-  final Function(String title, String icon, MissionCategory category, {bool? isCustom}) onAdd;
+  final Function(String title, String icon, MissionCategory category, {bool? isCustom, String? id}) onAdd;
 
   const AddMissionSheet({super.key, required this.onAdd});
 
@@ -66,6 +66,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
         mission.icon,
         mission.category,
         isCustom: false,
+        id: mission.id,
       );
       count++;
     }
@@ -91,10 +92,13 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final recommendedMissions = MissionNotifier.defaultMissions;
     final customMissions = ref.watch(missionProvider).customMissions;
+    final allMissions = ref.watch(missionProvider).missions;
+    final existingIds = allMissions.map((m) => m.id).toSet();
     
-    // 시스템 미션(기상 알람)은 제외하고 추천 목록에 표시
+    // 기상 알람 미션 제외하고 추천 목록에 표시
+    // (물 마시기, 영양제 등은 추천 목록에 나와야 함, 이미 추가된 미션은 제외)
     final displayRecommendedMissions = recommendedMissions
-        .where((m) => !m.isSystemMission)
+        .where((m) => m.id != 'wakeup' && !existingIds.contains(m.id))
         .toList();
 
     // 현재 선택된 필터에 따른 추천 미션 목록
@@ -172,68 +176,61 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                 const SizedBox(height: 16),
                 
                 // 카테고리 필터 칩
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      // '전체' 필터
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: ChoiceChip(
-                          label: Text(
-                            '✨ 전체',
-                            style: TextStyle(
-                              color: _selectedCategoryFilter == null ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
-                              fontSize: 13,
-                              fontWeight: _selectedCategoryFilter == null ? FontWeight.bold : FontWeight.normal,
-                            ),
-                          ),
-                          selected: _selectedCategoryFilter == null,
-                          selectedColor: Colors.blueAccent,
-                          backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(
-                              color: _selectedCategoryFilter == null ? Colors.blueAccent : Colors.transparent,
-                            ),
-                          ),
-                          onSelected: (selected) {
-                            if (selected) {
-                              setState(() {
-                                _selectedCategoryFilter = null;
-                              });
-                            }
-                          },
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    // '전체' 필터
+                    ChoiceChip(
+                      label: Text(
+                        '✨ 전체',
+                        style: TextStyle(
+                          color: _selectedCategoryFilter == null ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                          fontSize: 13,
+                          fontWeight: _selectedCategoryFilter == null ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
-                      ...MissionCategory.values.map((category) {
-                        final isSelected = _selectedCategoryFilter == category;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ChoiceChip(
-                            label: Text(
-                              '${_categoryIcons[category]} ${_getCategoryName(category)}',
-                              style: TextStyle(
-                                color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
-                                fontSize: 13,
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                              ),
-                            ),
-                            selected: isSelected,
-                            selectedColor: Colors.blueAccent,
-                            backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
-                            onSelected: (selected) {
-                              if (selected) {
-                                setState(() {
-                                  _selectedCategoryFilter = category;
-                                });
-                              }
-                            },
+                      selected: _selectedCategoryFilter == null,
+                      selectedColor: Colors.blueAccent,
+                      backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(
+                          color: _selectedCategoryFilter == null ? Colors.blueAccent : Colors.transparent,
+                        ),
+                      ),
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(() {
+                            _selectedCategoryFilter = null;
+                          });
+                        }
+                      },
+                    ),
+                    ...MissionCategory.values.map((category) {
+                      final isSelected = _selectedCategoryFilter == category;
+                      return ChoiceChip(
+                        label: Text(
+                          '${_categoryIcons[category]} ${_getCategoryName(category)}',
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
+                            fontSize: 13,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                           ),
-                        );
-                      }),
-                    ],
-                  ),
+                        ),
+                        selected: isSelected,
+                        selectedColor: Colors.blueAccent,
+                        backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() {
+                              _selectedCategoryFilter = category;
+                            });
+                          }
+                        },
+                      );
+                    }),
+                  ],
                 ),
                 
                 const SizedBox(height: 16),

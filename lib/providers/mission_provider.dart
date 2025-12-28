@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../data/models/mission_model.dart';
 import '../data/models/daily_mission_log.dart';
 import '../core/constants/mission_category.dart';
+import '../services/cookie_service.dart';
 
 final missionProvider = ChangeNotifierProvider<MissionNotifier>((ref) {
   return MissionNotifier();
@@ -17,7 +18,7 @@ class MissionNotifier extends ChangeNotifier {
   List<MissionModel> _customMissions = []; // 사용자가 직접 만든 미션 히스토리
   DailyMissionLog? _todayLog;
   bool _isLoading = true;
-  int _fortuneCookieCount = 0;
+  final int _fortuneCookieCount = 0;
   bool _showRewardDialog = false;
 
   List<MissionModel> get missions => _missions;
@@ -98,35 +99,24 @@ class MissionNotifier extends ChangeNotifier {
 
     // 5개 이상이면 목표 달성 (삭제된 미션 제외하고 계산)
     final validMissionIds = _missions.map((m) => m.id).toSet();
-    final validCompletedCount = currentCompleted.where((id) => validMissionIds.contains(id)).length;
-    final isAchieved = validCompletedCount >= 5;
+    final newCompletedCount = currentCompleted.where((id) => validMissionIds.contains(id)).length;
+    bool newIsGoalAchieved = _todayLog!.isGoalAchieved;
 
-    final updatedLog = _todayLog!.copyWith(
+    if (newCompletedCount >= 5 && !newIsGoalAchieved) {
+      newIsGoalAchieved = true;
+      _showRewardDialog = true;
+      // 쿠키 보상 지급 (1개)
+      CookieService().addCookies(1);
+    }
+
+    final newLog = _todayLog!.copyWith(
       completedMissionIds: currentCompleted,
-      isGoalAchieved: isAchieved,
+      isGoalAchieved: newIsGoalAchieved,
     );
 
     final logBox = await Hive.openBox<DailyMissionLog>('mission_logs');
-    await logBox.put(_todayLog!.dateKey, updatedLog);
-    _todayLog = updatedLog;
-
-    // 보상 지급 로직 (목표 달성 시 & 아직 보상 안 받았을 때)
-    if (isAchieved) {
-      final claimedBox = await Hive.openBox<String>('claimed_rewards');
-      final todayKey = _todayLog!.dateKey;
-      
-      if (!claimedBox.values.contains(todayKey)) {
-        // 보상 지급
-        _fortuneCookieCount += 1;
-        await Hive.openBox('user_wallet').then((box) => box.put('fortune_cookie_count', _fortuneCookieCount));
-        
-        // 지급 기록
-        await claimedBox.add(todayKey);
-        
-        // 다이얼로그 트리거
-        _showRewardDialog = true;
-      }
-    }
+    await logBox.put(_todayLog!.dateKey, newLog);
+    _todayLog = newLog;
 
     notifyListeners();
   }
@@ -187,12 +177,14 @@ class MissionNotifier extends ChangeNotifier {
       id: 'supplement',
       title: '영양제 챙겨 먹기',
       icon: '💊',
+      isSystemMission: true,
       category: MissionCategory.health,
     ),
     MissionModel(
       id: 'water_2l',
       title: '물 2L 이상 마시기',
       icon: '🧊',
+      isSystemMission: true,
       category: MissionCategory.health,
     ),
     MissionModel(
@@ -284,6 +276,7 @@ class MissionNotifier extends ChangeNotifier {
 
   Future<void> _ensureDefaultMissions(Box<MissionModel> box) async {
     final existingMissions = box.values.toList();
+    final initialMissionIds = {'wakeup', 'supplement', 'water_2l'};
     
     // 1. 기존 '물 1L' 또는 '기상 알람 미션' 관련 업데이트 (마이그레이션)
     for (var m in existingMissions) {
@@ -293,10 +286,10 @@ class MissionNotifier extends ChangeNotifier {
           title: '물 2L 이상 마시기',
           icon: '🧊',
           category: m.category,
-          isSystemMission: m.isSystemMission,
+          isSystemMission: true,
         );
         await box.put(m.id, updated);
-      } else if (m.id == 'wakeup' || m.title == '기상 알람 미션 성공') {
+      } else if (m.id == 'wakeup' || m.title == '기상 알람 미션 성공' || m.title == '기상 알람 미션') {
         final updated = MissionModel(
           id: 'wakeup',
           title: '기상 알람 미션',
@@ -308,28 +301,57 @@ class MissionNotifier extends ChangeNotifier {
       }
     }
 
-    // 2. 필수 3종 미션 보장 (영양제, 기상, 물 2L)
-    // 사용자가 직접 삭제했을 수도 있지만, 초기 설정 시에는 이 3가지가 기본으로 있어야 함.
-    final mandatoryIds = ['supplement', 'wakeup', 'water_2l'];
+    // 2. 초기 3개 미션 외의 시스템 미션 제거 (사용자 요청: 초기에는 3개만 표시)
+    // 기존에 자동으로 추가되었던 '헬스장 가기' 등의 미션을 제거합니다.
+    final keysToDelete = <String>[];
+    for (var m in box.values) {
+      // 시스템 미션이면서, 기본 미션 목록에 있고, 초기 3개 미션이 아닌 경우 삭제
+      final isDefaultMission = defaultMissions.any((dm) => dm.id == m.id);
+      if (m.isSystemMission && isDefaultMission && !initialMissionIds.contains(m.id)) {
+        keysToDelete.add(m.id);
+      }
+    }
+    if (keysToDelete.isNotEmpty) {
+      await box.deleteAll(keysToDelete);
+    }
+
     final existingIds = box.keys.toSet();
     final existingTitles = box.values.map((m) => m.title).toSet();
 
-    for (var mId in mandatoryIds) {
-      final mission = defaultMissions.firstWhere((m) => m.id == mId);
-      // ID로도 없고 제목으로도 없으면 추가
-      if (!existingIds.contains(mId) && !existingTitles.contains(mission.title)) {
-        await box.put(mId, mission);
+    // 3. 초기 미션 추가 (최초 실행 시에만)
+    // 앱 설정 박스를 열어서 초기 미션 추가 여부를 확인
+    final prefs = await Hive.openBox('app_settings');
+    final bool initialMissionsAdded = prefs.get('initial_missions_added', defaultValue: false);
+
+    if (!initialMissionsAdded) {
+      for (var mission in defaultMissions) {
+        // 초기 미션 목록에 포함된 것만 자동 추가
+        if (initialMissionIds.contains(mission.id)) {
+          if (!existingIds.contains(mission.id) && !existingTitles.contains(mission.title)) {
+            final systemMission = MissionModel(
+              id: mission.id,
+              title: mission.title,
+              icon: mission.icon,
+              category: mission.category,
+              isSystemMission: true,
+            );
+            await box.put(mission.id, systemMission);
+          }
+        }
       }
+      // 초기화 완료 플래그 저장
+      await prefs.put('initial_missions_added', true);
     }
   }
 
   // 미션 추가 (커스텀 미션 포함)
-  Future<void> addMission(String title, String icon, MissionCategory category, {bool isCustom = false}) async {
+  Future<void> addMission(String title, String icon, MissionCategory category, {bool isCustom = false, String? id}) async {
     final newMission = MissionModel(
-      id: const Uuid().v4(),
+      id: id ?? const Uuid().v4(),
       title: title,
       icon: icon,
       category: category,
+      isSystemMission: !isCustom && (id == 'water_2l' || id == 'supplement'),
     );
 
     final box = await Hive.openBox<MissionModel>('missions');
@@ -357,7 +379,8 @@ class MissionNotifier extends ChangeNotifier {
   Future<void> deleteMission(String id) async {
     final box = await Hive.openBox<MissionModel>('missions');
     final mission = box.get(id);
-    if (mission != null && !mission.isSystemMission) {
+    // 기상 알람 미션은 삭제 불가, 그 외(시스템 미션 포함)는 삭제 가능
+    if (mission != null && mission.id != 'wakeup') {
       await box.delete(id);
       _missions = box.values.toList();
       notifyListeners();
@@ -386,9 +409,7 @@ class MissionNotifier extends ChangeNotifier {
 
     final mission = _missions.firstWhere((m) => m.id == missionId);
     // 특수 미션은 토글로 완료 처리 불가 (상세 화면에서만 가능)
-    if (mission.id == 'wakeup') return; // 기상 알람 미션 추가
-    if (mission.title.contains('물') && mission.title.contains('2L')) return;
-    if (mission.title.contains('영양제')) return;
+    if (mission.id == 'wakeup' || mission.id == 'water_2l' || mission.id == 'supplement') return;
 
     final isCompleted = _todayLog!.completedMissionIds.contains(missionId);
     await setMissionCompleted(missionId, !isCompleted);
