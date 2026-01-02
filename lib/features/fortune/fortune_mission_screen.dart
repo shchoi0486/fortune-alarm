@@ -9,7 +9,6 @@ import 'package:vibration/vibration.dart';
 import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'tarot_data.dart'; // 타로 데이터 import
-import 'saju/widgets/new_year_fortune_input_screen.dart';
 import '../../data/models/alarm_model.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
@@ -214,7 +213,10 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     _stopAlarm();
     // ref.read(alarmListProvider.notifier).toggleAlarm(widget.alarmId!); // <--- AlarmRingingScreen에서 처리하도록 제거
     
-    await showFortuneAccessDialog(_simulateAd);
+    await showFortuneAccessDialog(
+      _simulateAd,
+      onDirectAccess: _processResult,
+    );
     
     if (mounted) {
       setState(() {
@@ -277,6 +279,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
 
     int emptyIndex = _selectedSlots.indexOf(null);
     if (emptyIndex != -1) {
+      HapticFeedback.lightImpact();
       _startMovingAnimation(cardIndex, emptyIndex);
     }
   }
@@ -481,6 +484,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
           size: Size.infinite,
         ),
         
+        /*
         // New Year Fortune Button
         Positioned(
           top: 10,
@@ -522,6 +526,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
             ),
           ),
         ),
+        */
 
         // 2. Content
         SafeArea(
@@ -598,40 +603,10 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                       ),
                     );
 
-                  if (widget.alarmId != null) {
-                    return Draggable<int>(
-                      data: index,
-                      feedback: Material(
-                        color: Colors.transparent,
-                        child: Container(
-                          width: 50,
-                          height: 75,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            boxShadow: [
-                              BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 10)
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: CustomPaint(painter: CardBackPainter()),
-                          ),
-                        ),
-                      ),
-                      childWhenDragging: Container(
-                         decoration: BoxDecoration(
-                           color: Colors.black.withOpacity(0.3),
-                           borderRadius: BorderRadius.circular(4),
-                         ),
-                      ),
-                      child: cardWidget,
-                    );
-                  } else {
-                    return GestureDetector(
-                      onTap: () => _handleCardTap(index),
-                      child: cardWidget,
-                    );
-                  }
+                  return GestureDetector(
+                    onTap: () => _handleCardTap(index),
+                    child: cardWidget,
+                  );
                 },
               ),
             ),
@@ -667,9 +642,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                       : Text(
                           allSelected 
                               ? AppLocalizations.of(context)!.fortuneCheckButton 
-                              : (widget.alarmId != null 
-                                  ? AppLocalizations.of(context)!.fortuneDragCards 
-                                  : AppLocalizations.of(context)!.fortuneSelectCards),
+                              : AppLocalizations.of(context)!.fortuneSelectCards,
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2),
                         ),
                   ),
@@ -686,36 +659,15 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   Widget _buildSlot(int slotIndex, String label) {
     bool isFilled = _selectedSlots[slotIndex] != null;
     
-    if (widget.alarmId != null) {
-      return DragTarget<int>(
-        key: _slotKeys[slotIndex],
-        onWillAcceptWithDetails: (data) => true,
-        onAcceptWithDetails: (cardIndex) {
-          setState(() {
-            _selectedSlots[slotIndex] = cardIndex.data;
-          });
-        },
-        builder: (context, candidateData, rejectedData) {
-          bool isHovering = candidateData.isNotEmpty;
-          
-          return MysticDropZone(
-            isFilled: isFilled,
-            isHovering: isHovering,
-            label: label,
-          );
-        },
-      );
-    } else {
-      return GestureDetector(
-        key: _slotKeys[slotIndex],
-        onTap: () => _handleSlotTap(slotIndex),
-        child: MysticDropZone(
-          isFilled: isFilled,
-          isHovering: false,
-          label: label,
-        ),
-      );
-    }
+    return GestureDetector(
+      key: _slotKeys[slotIndex],
+      onTap: () => _handleSlotTap(slotIndex),
+      child: MysticDropZone(
+        isFilled: isFilled,
+        isHovering: false,
+        label: label,
+      ),
+    );
   }
 
   Widget _buildResultScreen() {
@@ -1096,7 +1048,7 @@ class _MovingCardWidgetState extends State<_MovingCardWidget> with SingleTickerP
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700), // Slightly longer for smoother feel
+      duration: const Duration(milliseconds: 350), // Faster animation
     );
 
     _positionAnimation = Tween<Offset>(
@@ -1104,20 +1056,25 @@ class _MovingCardWidgetState extends State<_MovingCardWidget> with SingleTickerP
       end: widget.endPos,
     ).animate(CurvedAnimation(
       parent: _controller, 
-      curve: const Interval(0.0, 1.0, curve: Curves.easeInOutCubic),
+      curve: const Interval(0.0, 1.0, curve: Curves.easeOutCubic),
     ));
 
     _scaleAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween<double>(begin: 1.0, end: 1.2), weight: 30), // Pop up first
-      TweenSequenceItem(tween: Tween<double>(begin: 1.2, end: widget.endSize.width / widget.startSize.width), weight: 70),
-    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic));
+      TweenSequenceItem(tween: Tween<double>(begin: 1.0, end: 1.1), weight: 20), // Slight pop
+      TweenSequenceItem(tween: Tween<double>(begin: 1.1, end: widget.endSize.width / widget.startSize.width), weight: 80),
+    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     _rotationAnimation = Tween<double>(
       begin: 0.0,
-      end: math.pi * 2, 
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.slowMiddle));
+      end: 0.0, // No rotation as requested
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
-    _controller.forward().then((_) => widget.onComplete());
+    _controller.forward().then((_) {
+      // Add sound and haptic feedback on completion
+      SystemSound.play(SystemSoundType.click);
+      HapticFeedback.mediumImpact();
+      widget.onComplete();
+    });
   }
 
   @override

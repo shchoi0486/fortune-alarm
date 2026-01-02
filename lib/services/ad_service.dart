@@ -5,12 +5,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdService {
   // 실제 광고 ID (사용자가 제공한 것)
-  static const String _realBannerAdUnitId = 'ca-app-pub-4511718702168477/9106610425';
-  static const String _realNativeAdUnitId = 'ca-app-pub-4511718702168477/1036548710';
-  static const String _realNativeAdAdvancedUnitId = 'ca-app-pub-4511718702168477/4931561696'; // 네이티브 광고 고급형 추가
-  static const String _realInterstitialAdUnitId = 'ca-app-pub-4511718702168477/7804889628'; // 전면광고 추가
-  static const String _realRewardedAdUnitId = 'ca-app-pub-4511718702168477/9956835275';
-  static const String _realRewardedInterstitialAdUnitId = 'ca-app-pub-4511718702168477/8593257490'; // 보상형 전면
+  static const String _realBannerAdUnitId = 'ca-app-pub-7279511347629270/2023833925';
+  static const String _realNativeAdUnitId = 'ca-app-pub-7279511347629270/9295803377';
+  static const String _realNativeAdAdvancedUnitId = 'ca-app-pub-7279511347629270/9295803377'; // 네이티브 광고 고급형 추가
+  static const String _realInterstitialAdUnitId = 'ca-app-pub-7279511347629270/4802040508'; // 전면광고 추가
+  static const String _realRewardedAdUnitId = 'ca-app-pub-7279511347629270/4530561850';
+  static const String _realRewardedInterstitialAdUnitId = 'ca-app-pub-7279511347629270/3273320503'; // 보상형 전면
   static const String _realAppOpenAdUnitId = 'ca-app-pub-4511718702168477/4090905707'; // 앱 오프닝
   
   // 테스트 광고 ID (Google 제공)
@@ -81,6 +81,127 @@ class AdService {
 
   static NativeAd? _preloadedListAd;
   static Completer<void>? _listAdLoadCompleter;
+
+  // 보상형 및 전면 광고 프리로드 추가
+  static RewardedAd? _preloadedRewardedAd;
+  static Completer<RewardedAd?>? _rewardedAdCompleter;
+  
+  static InterstitialAd? _preloadedInterstitialAd;
+  static Completer<InterstitialAd?>? _interstitialAdCompleter;
+
+  /// 보상형 광고 사전 로드
+  static void preloadRewardedAd() {
+    if (_preloadedRewardedAd != null || (_rewardedAdCompleter != null && !_rewardedAdCompleter!.isCompleted)) return;
+
+    final completer = Completer<RewardedAd?>();
+    _rewardedAdCompleter = completer;
+
+    RewardedAd.load(
+      adUnitId: rewardedAdUnitId,
+      request: const AdRequest(),
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (ad) {
+          debugPrint('Preloaded Rewarded Ad loaded');
+          _preloadedRewardedAd = ad;
+          if (!completer.isCompleted) completer.complete(ad);
+        },
+        onAdFailedToLoad: (error) {
+          debugPrint('Preloaded Rewarded Ad failed: $error');
+          _preloadedRewardedAd = null;
+          if (!completer.isCompleted) completer.complete(null);
+        },
+      ),
+    );
+  }
+
+  /// 전면 광고 사전 로드
+  static void preloadInterstitialAd() {
+    if (_preloadedInterstitialAd != null || (_interstitialAdCompleter != null && !_interstitialAdCompleter!.isCompleted)) return;
+
+    final completer = Completer<InterstitialAd?>();
+    _interstitialAdCompleter = completer;
+
+    InterstitialAd.load(
+      adUnitId: interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          debugPrint('Preloaded Interstitial Ad loaded');
+          _preloadedInterstitialAd = ad;
+          if (!completer.isCompleted) completer.complete(ad);
+        },
+        onAdFailedToLoad: (error) {
+          debugPrint('Preloaded Interstitial Ad failed: $error');
+          _preloadedInterstitialAd = null;
+          if (!completer.isCompleted) completer.complete(null);
+        },
+      ),
+    );
+  }
+
+  /// 사전 로드된 보상형 광고 가져오기 (사용 후 소모됨)
+  /// 로딩 중인 경우 Future를 반환하여 대기 가능하게 함
+  static Future<RewardedAd?> getPreloadedRewardedAd() async {
+    // 1. 이미 로드된 광고가 있으면 즉시 반환
+    if (_preloadedRewardedAd != null) {
+      final ad = _preloadedRewardedAd;
+      _preloadedRewardedAd = null;
+      _rewardedAdCompleter = null;
+      preloadRewardedAd(); // 다음을 위해 로드 시작
+      return ad;
+    }
+
+    // 2. 로딩 중이면 완료될 때까지 대기
+    if (_rewardedAdCompleter != null && !_rewardedAdCompleter!.isCompleted) {
+      final ad = await _rewardedAdCompleter!.future;
+      _preloadedRewardedAd = null;
+      _rewardedAdCompleter = null;
+      preloadRewardedAd();
+      return ad;
+    }
+
+    // 3. 로드된 것도 없고 로딩 중도 아니면 새로 로드 시도
+    preloadRewardedAd();
+    if (_rewardedAdCompleter != null) {
+      final ad = await _rewardedAdCompleter!.future;
+      _preloadedRewardedAd = null;
+      _rewardedAdCompleter = null;
+      preloadRewardedAd();
+      return ad;
+    }
+    
+    return null;
+  }
+
+  /// 사전 로드된 전면 광고 가져오기 (사용 후 소모됨)
+  static Future<InterstitialAd?> getPreloadedInterstitialAd() async {
+    if (_preloadedInterstitialAd != null) {
+      final ad = _preloadedInterstitialAd;
+      _preloadedInterstitialAd = null;
+      _interstitialAdCompleter = null;
+      preloadInterstitialAd();
+      return ad;
+    }
+
+    if (_interstitialAdCompleter != null && !_interstitialAdCompleter!.isCompleted) {
+      final ad = await _interstitialAdCompleter!.future;
+      _preloadedInterstitialAd = null;
+      _interstitialAdCompleter = null;
+      preloadInterstitialAd();
+      return ad;
+    }
+
+    preloadInterstitialAd();
+    if (_interstitialAdCompleter != null) {
+      final ad = await _interstitialAdCompleter!.future;
+      _preloadedInterstitialAd = null;
+      _interstitialAdCompleter = null;
+      preloadInterstitialAd();
+      return ad;
+    }
+
+    return null;
+  }
 
   /// 종료 다이얼로그용 광고 사전 로드
   static void preloadExitAd() {

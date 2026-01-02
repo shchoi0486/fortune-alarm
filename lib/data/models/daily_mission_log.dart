@@ -13,21 +13,27 @@ class DailyMissionLog extends HiveObject {
   @HiveField(2)
   bool isGoalAchieved;
 
+  @HiveField(3)
+  bool? isTenGoalAchieved;
+
   DailyMissionLog({
     required this.dateKey,
     required this.completedMissionIds,
     this.isGoalAchieved = false,
+    this.isTenGoalAchieved,
   });
 
   DailyMissionLog copyWith({
     String? dateKey,
     List<String>? completedMissionIds,
     bool? isGoalAchieved,
+    bool? isTenGoalAchieved,
   }) {
     return DailyMissionLog(
       dateKey: dateKey ?? this.dateKey,
       completedMissionIds: completedMissionIds ?? this.completedMissionIds,
       isGoalAchieved: isGoalAchieved ?? this.isGoalAchieved,
+      isTenGoalAchieved: isTenGoalAchieved ?? this.isTenGoalAchieved,
     );
   }
 }

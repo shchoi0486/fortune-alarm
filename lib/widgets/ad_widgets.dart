@@ -271,13 +271,13 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
           borderRadius: BorderRadius.circular(16), // 둥근 모서리
           border: Border.all(
             color: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!, // 테두리
-            width: 1,
+            width: isDarkMode ? 1 : 0.5,
           ),
-          boxShadow: isDarkMode ? [] : [
+          boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: isDarkMode ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),

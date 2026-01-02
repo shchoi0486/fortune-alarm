@@ -135,7 +135,8 @@
 
   "takePhoto": "Take Photo",
   "selectPhoto": "Select Photo",
-  "selectAlarmBackground": "Select Alarm Background",
+  "selectAlarmBackground": "Alarm Background",
+  "defaultLabel": "Default",
   "howToAdd": "How to Add",
   "addAssetInstructions": "Put the image in assets/images/ folder and register it in pubspec.yaml.",
   "gallery": "Gallery",
@@ -161,6 +162,13 @@
   "dayFri": "Fri",
   "daySat": "Sat",
   "missionRewardEarned": "Congratulations! You have completed 5 missions today and earned 1 Fortune Cookie!",
+  "missionRewardEarnedWithCount": "Congratulations! You completed {missions} missions today and earned {cookies} Fortune Cookie(s)!",
+  "@missionRewardEarnedWithCount": {
+    "placeholders": {
+      "missions": { "type": "int" },
+      "cookies": { "type": "int" }
+    }
+  },
   "daysCount": "{count} days",
   "@daysCount": {
     "placeholders": {
@@ -191,18 +199,86 @@
   "enterAlarmName": "Please enter alarm name",
   "save": "Save",
   "missionNone": "No Mission",
-  "missionSnap": "Snap",
-  "missionMath": "Math",
-  "missionQuiz": "Quiz",
+  "missionSnap": "Object Snap",
+  "missionMath": "Math Problem",
   "missionFortune": "Fortune",
   "missionShake": "Shake",
+  "missionFortuneCatch": "Fortune Catch",
   "missionNoDescription": "Alarm will ring without a mission.",
-  "missionSupplementDescription": "Supplement intake confirmation screen will appear.",
-  "missionCameraDescription": "You must take photos of the specified objects in order to turn off the alarm.",
-  "missionMathDescription": "You must solve math problems to turn off the alarm.",
-  "missionQuizDescription": "Quiz mission selected.",
-  "missionFortuneDescription": "Fortune mission selected.",
+  "missionCameraDescription": "Take a photo of the specified object to dismiss the alarm.",
+  "missionMathDescription": "Solve math problems to wake up your brain.",
+  "missionFortuneDescription": "Dismiss the alarm and check today's fortune.",
   "missionShakeDescription": "You must shake your phone to turn off the alarm.",
+  "missionFortuneCatchDescription": "Catch the moving Fortuni!",
+  "missionWalk": "Walk",
+  "missionWalkDescription": "Walk to turn off the alarm!",
+  "missionFaceDescription": "Keep your face in the frame for 10s.",
+  "walkStepCount": "Target Steps",
+  "walkSteps": "{count} steps",
+  "@walkSteps": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "missionNumberOrder": "Number Order",
+  "missionNumberOrderDescription": "Tap numbers from 1 to 9 in order.",
+  "missionNumberOrderGuide": "Next: {nextNumber}",
+  "@missionNumberOrderGuide": {
+    "placeholders": {
+      "nextNumber": { "type": "int" }
+    }
+  },
+  "missionHiddenButton": "Position Memory",
+  "missionHiddenButtonDescription": "Memorize the lit tiles in order and tap them within 10 seconds.",
+  "missionHiddenButtonDifficulty": "Δ{delta}",
+  "@missionHiddenButtonDifficulty": {
+    "placeholders": {
+      "delta": { "type": "int" }
+    }
+  },
+  "missionTapSprint": "Tap Sprint",
+  "missionTapSprintDescriptionShort": "Tap to fill the meter.",
+  "missionTapSprintDescription": "Tap {goalTaps}+ times to fill the meter.",
+  "@missionTapSprintDescription": {
+    "placeholders": {
+      "goalTaps": { "type": "int" }
+    }
+  },
+  "missionTapSprintTapHere": "Tap",
+  "missionTapSprintHint": "Fills up fast, drains if you pause.",
+  "missionLeftRight": "Left / Right",
+  "missionLeftRightDescriptionShort": "Follow the prompt and pick left or right.",
+  "missionLeftRightDescription": "Get {targetStreak} correct in a row.",
+  "@missionLeftRightDescription": {
+    "placeholders": {
+      "targetStreak": { "type": "int" }
+    }
+  },
+  "missionLeftRightPromptLeft": "Tap LEFT",
+  "missionLeftRightPromptRight": "Tap RIGHT",
+  "left": "Left",
+  "right": "Right",
+  "missionHintInactivity": "If you stop for 2 minutes, it resets.",
+  "fortuneCatchScore": "Score: {score}",
+  "@fortuneCatchScore": {
+    "placeholders": {
+      "score": { "type": "int" }
+    }
+  },
+  "fortuneCatchGoal": "Goal: 100",
+  "fortuneCatchGoalDetail": "(Catches: {count}/{min})",
+  "@fortuneCatchGoalDetail": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "min": { "type": "int" }
+    }
+  },
+  "fortuneCatchCombo": "{combo} Combo!",
+  "@fortuneCatchCombo": {
+    "placeholders": {
+      "combo": { "type": "int" }
+    }
+  },
   "difficulty": "Difficulty",
   "difficultyEasy": "Easy",
   "difficultyNormal": "Normal",

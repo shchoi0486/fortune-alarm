@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 
@@ -12,7 +13,7 @@ class SupportScreen extends StatefulWidget {
     super.key,
     required this.title,
     required this.description,
-    this.email = 'support@snapalarm.com',
+    this.email = 'seriessnap.co@gmail.com',
   });
 
   @override
@@ -150,7 +151,7 @@ class _SupportScreenState extends State<SupportScreen> {
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_textController.text.trim().isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(l10n.supportEmptyError)),
@@ -158,29 +159,51 @@ class _SupportScreenState extends State<SupportScreen> {
                     return;
                   }
                   
-                  // 문의하기 로직 (이메일 주소와 내용을 함께 복사)
+                  // 1. 문의 내용 복사
                   final fullContent = "${l10n.supportSubjectPrefix}: ${widget.title}\n\n${l10n.supportContentPrefix}:\n${_textController.text}";
-                  Clipboard.setData(ClipboardData(text: fullContent));
+                  await Clipboard.setData(ClipboardData(text: fullContent));
                   
+                  // 2. 메일 앱 실행을 위한 URI 생성
+                  final Uri emailLaunchUri = Uri(
+                    scheme: 'mailto',
+                    path: widget.email,
+                    queryParameters: {
+                      'subject': '[포춘알람 문의] ${widget.title}',
+                      'body': '${l10n.supportContentPrefix}:\n\n${_textController.text}',
+                    },
+                  );
+
+                  // 3. 안내 팝업 및 메일 앱 실행
+                  if (!mounted) return;
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text(l10n.supportCopySuccessTitle),
-                      content: Text(l10n.supportCopySuccessMessage(widget.email)),
+                      title: const Text("문의 준비 완료"),
+                      content: Text("문의 내용이 복사되었습니다.\n${widget.email} 로 메일을 보내시겠습니까?"),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
                           child: Text(l10n.cancel),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Clipboard.setData(ClipboardData(text: widget.email));
+                        ElevatedButton(
+                          onPressed: () async {
                             Navigator.pop(context);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(l10n.copyEmailSuccessMessage)),
-                            );
+                            try {
+                              if (await canLaunchUrl(emailLaunchUri)) {
+                                await launchUrl(emailLaunchUri);
+                              } else {
+                                throw 'Could not launch $emailLaunchUri';
+                              }
+                            } catch (e) {
+                              if (!mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('메일 앱을 실행할 수 없습니다. 메일 주소를 복사했습니다.')),
+                              );
+                              await Clipboard.setData(ClipboardData(text: widget.email));
+                            }
                           },
-                          child: Text(l10n.copyEmailAction),
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent, foregroundColor: Colors.white),
+                          child: const Text("메일 앱 열기"),
                         ),
                       ],
                     ),

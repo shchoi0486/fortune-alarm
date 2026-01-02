@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
-import '../../../../data/models/mission_model.dart';
 import '../models/water_log.dart';
 import '../models/water_settings.dart';
 import '../../../../providers/mission_provider.dart';
@@ -70,8 +69,9 @@ class WaterNotifier extends StateNotifier<WaterState> {
     // Load Log
     WaterLog? log = _logBox!.get(todayKey);
     if (log == null) {
-      log = WaterLog(dateKey: todayKey);
-      await _logBox!.put(todayKey, log);
+      final created = WaterLog(dateKey: todayKey);
+      await _logBox!.put(todayKey, created);
+      log = _logBox!.get(todayKey) ?? created;
     }
 
     // Load Settings
@@ -82,7 +82,7 @@ class WaterNotifier extends StateNotifier<WaterState> {
     }
 
     state = WaterState(
-      log: log, 
+      log: log,
       settings: settings, 
       isLoading: false,
       isGoalAchieved: log.isGoalAchieved, // 초기 상태 설정
@@ -93,8 +93,13 @@ class WaterNotifier extends StateNotifier<WaterState> {
   }
 
   Future<void> addWater() async {
-    final newIntake = state.log.currentIntake + state.settings.cupSize;
-    await updateIntake(newIntake);
+    final current = state.log.currentIntake;
+    final cupSize = state.settings.cupSize;
+    final goal = state.settings.dailyGoal;
+
+    final rawNext = current + cupSize;
+    final next = (current < goal && rawNext > goal) ? goal : rawNext;
+    await updateIntake(next);
   }
 
   Future<void> removeWater() async {
@@ -107,52 +112,63 @@ class WaterNotifier extends StateNotifier<WaterState> {
   }
 
   Future<void> updateIntake(int intake) async {
-    final newLog = state.log;
-    newLog.currentIntake = intake;
+    final dailyGoal = state.settings.dailyGoal;
+    final isAchieved = intake >= dailyGoal;
     
-    // Check Goal
-    final wasAchieved = newLog.isGoalAchieved; // Hive 객체에서 읽어옴 (이전 값일 수도 있고 아닐 수도 있음)
-    // 하지만 이미 state.isGoalAchieved에 정확한 이전 상태가 있음.
+    // Create a new log object to avoid mutating the current state object directly
+    final newLog = WaterLog(
+      dateKey: state.log.dateKey,
+      currentIntake: intake,
+      isGoalAchieved: isAchieved,
+    );
     
-    final isAchieved = intake >= state.settings.dailyGoal;
-    newLog.isGoalAchieved = isAchieved;
-    
-    await newLog.save();
-    
-    // Sync with MissionProvider if goal achieved status changed
-    // state.isGoalAchieved(이전상태)와 현재 계산된 isAchieved 비교
-    if (isAchieved != state.isGoalAchieved) {
-       await _syncWaterMissionStatus(isAchieved);
+    // Save to Hive
+    if (_logBox != null) {
+      await _logBox!.put(newLog.dateKey, newLog);
     }
     
+    // Check if achievement status changed
+    final wasAchieved = state.isGoalAchieved;
+    
+    // Update state first so UI reflects the change immediately
     state = state.copyWith(
       log: newLog,
-      isGoalAchieved: isAchieved, // 명시적 업데이트
+      isGoalAchieved: isAchieved,
     );
+
+    // Sync with MissionProvider
+    // Always call sync to ensure MissionProvider state is up to date, 
+    // especially if initial sync failed or mission was reset.
+    await _syncWaterMissionStatus(isAchieved);
   }
   
   Future<void> _syncWaterMissionStatus(bool isAchieved) async {
     final missionNotifier = _ref.read(missionProvider);
     
-    // "물"이 포함된 미션을 찾아서 상태 동기화
     try {
-      // 1. ID로 먼저 찾기 ('water_2l'가 기본 ID)
-      MissionModel? waterMission;
-      try {
-        waterMission = missionNotifier.missions.firstWhere((m) => m.id == 'water_2l');
-      } catch (_) {
-         // pass
+      // 1. Find the actual mission ID from the current mission list.
+      // It could be 'water_2l' or a custom ID if the user added it manually by title.
+      String targetId = 'water_2l';
+      
+      final missions = missionNotifier.missions;
+      final hasFixedId = missions.any((m) => m.id == 'water_2l');
+      
+      if (!hasFixedId) {
+        // If 'water_2l' ID doesn't exist, try to find by title.
+        try {
+          final waterMission = missions.firstWhere(
+            (m) => m.title.contains('물') && (m.title.contains('2L') || m.title.contains('1L')),
+          );
+          targetId = waterMission.id;
+        } catch (_) {
+          // If no mission found by title, stay with 'water_2l' (it might be added later)
+        }
       }
 
-      waterMission ??= missionNotifier.missions.firstWhere(
-            (m) => m.title.contains('물') && m.title.contains('2L'),
-          );
-      
-       print('Syncing water mission status: ${waterMission.id} -> $isAchieved');
-       await missionNotifier.setMissionCompleted(waterMission.id, isAchieved);
-        } catch (e) {
-      // 물 미션이 없을 수 있음
-      print('Water mission not found for sync: $e');
+      await missionNotifier.setMissionCompleted(targetId, isAchieved);
+      print('Syncing water mission status: $targetId -> $isAchieved');
+    } catch (e) {
+      print('Error syncing water mission status: $e');
     }
   }
 

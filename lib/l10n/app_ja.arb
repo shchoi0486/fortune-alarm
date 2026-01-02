@@ -123,6 +123,7 @@
   "takePhoto": "撮影する",
   "selectPhoto": "選択する",
   "selectAlarmBackground": "アラーム背景の選択",
+  "defaultLabel": "デフォルト",
   "howToAdd": "追加方法",
   "addAssetInstructions": "assets/images/ フォルダに画像を入れ、pubspec.yamlに登録してください。",
   "gallery": "ギャラリー",

@@ -26,6 +26,7 @@ import 'core/constants/mission_category.dart';
 import 'features/mission/mission_tab.dart';
 import 'features/settings/settings_screen.dart';
 import 'features/fortune/fortune_screen.dart';
+import 'features/fortune/fortune_pass_screen.dart';
 import 'services/supplement_alarm_service.dart';
 
 import 'features/alarm/alarm_ringing_screen.dart';
@@ -37,16 +38,19 @@ import 'features/mission/supplement/supplement_mission_screen.dart';
 import 'widgets/fortune_cookie_bar.dart';
 import 'widgets/ad_widgets.dart'; // 광고 위젯 임포트
 import 'widgets/optimization_bottom_sheet.dart';
+import 'services/cookie_service.dart';
 import 'providers/weather_provider.dart';
 import 'providers/mission_provider.dart';
 import 'features/mission/supplement/models/supplement_settings.dart';
 import 'features/mission/supplement/models/supplement_log.dart';
+import 'providers/bottom_nav_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final container = ProviderContainer();
 
 // 백그라운드와 통신하기 위한 포트 이름
 const String kAlarmPortName = 'alarm_notification_port';
-const MethodChannel _foregroundChannel = MethodChannel('com.example.fortune_alarm/foreground');
+const MethodChannel _foregroundChannel = MethodChannel('com.seriessnap.fortunealarm/foreground');
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -94,7 +98,13 @@ void main() async {
     }
 
     // AdMob은 배경에서 초기화
-    MobileAds.instance.initialize().then((_) => debugPrint('AdMob initialized in background'));
+    MobileAds.instance.initialize().then((_) {
+      debugPrint('AdMob initialized in background');
+      // 앱 시작 시 광고 사전 로드 시작
+      AdService.preloadRewardedAd();
+      AdService.preloadInterstitialAd();
+      AdService.preloadExitAd();
+    });
 
   } catch (e) {
     debugPrint('Initialization warning (ignored for startup): $e');
@@ -107,8 +117,9 @@ void main() async {
   // await _requestPermissions();
 
   runApp(
-    const ProviderScope(
-      child: FortuneAlarmApp(),
+    UncontrolledProviderScope(
+      container: container,
+      child: const FortuneAlarmApp(),
     ),
   );
 }
@@ -153,6 +164,30 @@ Future<void> _requestPermissions() async {
 
 // ... (existing code)
 
+Future<bool> _shouldSuppressAlarmHandling(String payload) async {
+  try {
+    final box = await Hive.openBox('app_state');
+    final activeBaseId = box.get('active_alarm_mission_base_id') as String?;
+    final startedAtStr = box.get('active_alarm_mission_started_at') as String?;
+    if (activeBaseId == null || startedAtStr == null) return false;
+
+    final startedAt = DateTime.tryParse(startedAtStr);
+    if (startedAt == null) return false;
+
+    final now = DateTime.now();
+    if (now.difference(startedAt) >= const Duration(minutes: 2)) {
+      await box.delete('active_alarm_mission_base_id');
+      await box.delete('active_alarm_mission_started_at');
+      return false;
+    }
+
+    final payloadBaseId = payload.replaceAll('_snooze', '');
+    return payloadBaseId == activeBaseId;
+  } catch (_) {
+    return false;
+  }
+}
+
 // 알림 액션 응답 처리
 Future<void> _onNotificationResponse(NotificationResponse response) async {
   debugPrint('Notification Response: ${response.actionId}, Payload: ${response.payload}');
@@ -161,12 +196,50 @@ Future<void> _onNotificationResponse(NotificationResponse response) async {
     _handleSupplementAction(response.actionId, response.payload);
     return;
   }
+
+  if (response.payload != null && response.payload!.startsWith('mission_')) {
+    _handleMissionAction(response.actionId, response.payload);
+    return;
+  }
+
+  if (response.payload != null && await _shouldSuppressAlarmHandling(response.payload!)) {
+    try {
+      await NotificationService().cancelNotification(AlarmSchedulerService.getStableId(response.payload!));
+    } catch (_) {}
+    return;
+  }
   
   // 기존 알람 처리
   await _onNotificationTap(response.payload);
 }
 
 Map<String, DateTime> _handledSupplementAlarms = {};
+
+void _handleMissionAction(String? actionId, String? payload) {
+  if (payload == null) return;
+  
+  // payload format: mission_{id}
+  final missionId = payload.replaceAll('mission_', '');
+  debugPrint('[Main] Handling mission action: $actionId, missionId: $missionId');
+  
+  if (actionId == 'MISSION_COMPLETE') {
+    // 미션 완료 처리
+    container.read(missionProvider).setMissionCompleted(missionId, true);
+  }
+  
+  // 앱이 열려있거나 열릴 예정이므로 미션 탭으로 이동
+  // 약간의 딜레이를 주어 네비게이터가 준비되도록 함
+  Future.delayed(const Duration(milliseconds: 500), () {
+    // 1. 미션 탭으로 변경 (인덱스 3)
+    container.read(bottomNavProvider.notifier).state = 3;
+    
+    // 2. 만약 현재 화면이 MainScreen이 아니라면 (예: 운세 화면 등), MainScreen으로 돌아옴
+    final currentState = navigatorKey.currentState;
+    if (currentState != null) {
+      currentState.popUntil((route) => route.isFirst);
+    }
+  });
+}
 
 void _handleSupplementAction(String? actionId, String? payload) {
   if (payload == null) return;
@@ -237,6 +310,12 @@ void _registerPort() {
     debugPrint('[MainIsolate] Received message from background: $message');
     // 이제 백그라운드에서 String ID를 직접 전달
     if (message is String) {
+       if (await _shouldSuppressAlarmHandling(message)) {
+         try {
+           await NotificationService().cancelNotification(AlarmSchedulerService.getStableId(message));
+         } catch (_) {}
+         return;
+       }
        await _onNotificationTap(message);
     }
   });
@@ -246,6 +325,13 @@ void _registerPort() {
 Future<void> _onNotificationTap(String? payload) async {
   debugPrint('[Main] _onNotificationTap called with payload: $payload');
   if (payload == null || payload.isEmpty) return;
+
+  if (await _shouldSuppressAlarmHandling(payload)) {
+    try {
+      await NotificationService().cancelNotification(AlarmSchedulerService.getStableId(payload));
+    } catch (_) {}
+    return;
+  }
 
   // 백그라운드에서 앱을 포그라운드로 가져오기 시도 (Android 10+ 대응)
   try {
@@ -262,6 +348,23 @@ Future<void> _onNotificationTap(String? payload) async {
   // 영양제 알림 처리
   if (payload.startsWith('supplement_')) {
     _handleSupplementAction(null, payload);
+    return;
+  }
+
+  // 커스텀 미션 알림 처리
+  if (payload.startsWith('mission_')) {
+    _handleMissionAction(null, payload);
+    return;
+  }
+
+  // 운세 알림 처리
+  if (payload == 'fortune_daily') {
+    final currentState = navigatorKey.currentState;
+    if (currentState != null) {
+      currentState.push(
+        MaterialPageRoute(builder: (context) => const FortuneScreen()),
+      );
+    }
     return;
   }
 
@@ -398,10 +501,90 @@ class FortuneAlarmApp extends ConsumerWidget {
           elevation: 0,
         ),
       ),
-      home: const MainScreen(),
+      home: const SplashScreen(),
       routes: {
         '/supplement': (context) => const SupplementMissionScreen(),
       },
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateToMain();
+  }
+
+  void _navigateToMain() async {
+    // 앱 초기화 시간을 고려하여 1.5초 정도 대기 후 메인 화면으로 이동
+    await Future.delayed(const Duration(milliseconds: 1500));
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainScreen()),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // 배경 이미지 (네이티브 스플래시와 동일하게 설정)
+          Image.asset(
+            'assets/images/alarm_bg.png',
+            fit: BoxFit.cover,
+          ),
+          // 하단 텍스트
+          Positioned(
+            bottom: 80,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                Text(
+                  "FORTUNE ALARM",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: 4.0,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withOpacity(0.5),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  width: 60,
+                  height: 3,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: LinearProgressIndicator(
+                      backgroundColor: Colors.white.withOpacity(0.2),
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -414,8 +597,6 @@ class MainScreen extends ConsumerStatefulWidget {
 }
 
 class _MainScreenState extends ConsumerState<MainScreen> {
-  int _currentIndex = 0;
-  
   final List<Widget> _screens = [
     const AlarmScreen(),
     const CalendarScreen(),
@@ -527,7 +708,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   }
 
   Widget _buildNavItem(IconData icon, IconData selectedIcon, String label, int index) {
-    final isSelected = _currentIndex == index;
+    final currentIndex = ref.watch(bottomNavProvider);
+    final isSelected = currentIndex == index;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
     // 이미지와 유사한 세련된 하늘색 계열
@@ -537,9 +719,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          setState(() {
-            _currentIndex = index;
-          });
+          ref.read(bottomNavProvider.notifier).state = index;
         },
         behavior: HitTestBehavior.opaque,
         child: Container(
@@ -581,11 +761,15 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentIndex = ref.watch(bottomNavProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // 보상 다이얼로그 리스너
     ref.listen(missionProvider.select((s) => s.showRewardDialog), (previous, next) {
       if (next) {
+        final rewardState = ref.read(missionProvider);
+        final missions = rewardState.lastRewardMissions ?? 5;
+        final cookies = rewardState.lastRewardCookies ?? 1;
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -602,12 +786,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(AppLocalizations.of(context)!.allMissionsCompleted, textAlign: TextAlign.center),
-                const SizedBox(height: 10),
                 Text(
-                  AppLocalizations.of(context)!.rewardReceived,
+                  AppLocalizations.of(context)!.missionRewardEarnedWithCount(missions, cookies),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ],
             ),
@@ -707,7 +888,75 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               child: const FortuneCookieBar(),
             ),
             
-            Expanded(child: _screens[_currentIndex]),
+            // 타임 세일 배너
+            StreamBuilder<int>(
+              stream: CookieService().discountTimerStream,
+              builder: (context, snapshot) {
+                final remainingSeconds = snapshot.data ?? 0;
+                if (remainingSeconds <= 0) return const SizedBox.shrink();
+                
+                final minutes = (remainingSeconds / 60).floor();
+                final seconds = remainingSeconds % 60;
+                final timeStr = "${minutes.toString().padLeft(2, '0')} : ${seconds.toString().padLeft(2, '0')}";
+
+                return GestureDetector(
+                  onTap: () {
+                    // 메인 화면의 _currentIndex를 2(포춘)로 변경하고,
+                    // 포춘 화면에서 포춘패스 구독 탭(index 1)으로 이동하도록 처리
+                    ref.read(bottomNavProvider.notifier).state = 2;
+                    // 포춘패스 구독 화면(FortunePassScreen)으로 직접 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const FortunePassScreen(initialTabIndex: 1),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.redAccent, Colors.orangeAccent],
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            timeStr,
+                            style: const TextStyle(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Text(
+                            "50% 할인 기회를 꼭 잡으세요!",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 14),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+            
+            Expanded(child: _screens[currentIndex]),
           ],
         ),
         bottomNavigationBar: Column(
@@ -749,4 +998,3 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   );
   }
 }
-

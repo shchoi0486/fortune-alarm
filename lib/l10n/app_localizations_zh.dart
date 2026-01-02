@@ -334,7 +334,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get selectAlarmBackground => '选择闹钟背景';
 
   @override
-  String get howToAdd => '添加方法';
+  String get defaultLabel => '默认';
+
+  @override
+  String get howToAdd => '如何添加';
 
   @override
   String get addAssetInstructions =>
@@ -394,6 +397,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get missionRewardEarned => '恭喜！您已完成今天的5项任务，获得1个幸运饼干！';
 
   @override
+  String missionRewardEarnedWithCount(int missions, int cookies) {
+    return 'Congratulations! You completed $missions missions today and earned $cookies Fortune Cookie(s)!';
+  }
+
+  @override
   String daysCount(int count) {
     return '$count天';
   }
@@ -451,19 +459,16 @@ class AppLocalizationsZh extends AppLocalizations {
   String get missionMath => '计算';
 
   @override
-  String get missionQuiz => '问答';
-
-  @override
   String get missionFortune => '运势';
 
   @override
   String get missionShake => '摇晃';
 
   @override
-  String get missionNoDescription => '无任务直接响铃。';
+  String get missionFortuneCatch => 'Fortune Catch';
 
   @override
-  String get missionSupplementDescription => '显示营养品服用确认界面。';
+  String get missionNoDescription => '无任务直接响铃。';
 
   @override
   String get missionCameraDescription => '按顺序拍摄指定物品以关闭闹钟。';
@@ -472,13 +477,116 @@ class AppLocalizationsZh extends AppLocalizations {
   String get missionMathDescription => '解决数学题以关闭闹钟。';
 
   @override
-  String get missionQuizDescription => '已选择问答任务。';
-
-  @override
   String get missionFortuneDescription => '已选择运势任务。';
 
   @override
   String get missionShakeDescription => '摇晃手机以关闭闹钟。';
+
+  @override
+  String get missionFortuneCatchDescription => 'Catch the moving Fortuni!';
+
+  @override
+  String get missionWalk => 'Walk';
+
+  @override
+  String get missionWalkDescription => 'Walk to turn off the alarm!';
+
+  @override
+  String get missionFaceDescription => 'Keep your face in the frame for 10s.';
+
+  @override
+  String get walkStepCount => 'Target Steps';
+
+  @override
+  String walkSteps(int count) {
+    return '$count steps';
+  }
+
+  @override
+  String get missionNumberOrder => 'Number Order';
+
+  @override
+  String get missionNumberOrderDescription =>
+      'Tap numbers from 1 to 9 in order.';
+
+  @override
+  String missionNumberOrderGuide(int nextNumber) {
+    return 'Next: $nextNumber';
+  }
+
+  @override
+  String get missionHiddenButton => 'Position Memory';
+
+  @override
+  String get missionHiddenButtonDescription =>
+      'Memorize the lit tiles in order and tap them within 10 seconds.';
+
+  @override
+  String missionHiddenButtonDifficulty(int delta) {
+    return 'Δ$delta';
+  }
+
+  @override
+  String get missionTapSprint => 'Tap Sprint';
+
+  @override
+  String get missionTapSprintDescriptionShort => 'Tap to fill the meter.';
+
+  @override
+  String missionTapSprintDescription(int goalTaps) {
+    return 'Tap $goalTaps+ times to fill the meter.';
+  }
+
+  @override
+  String get missionTapSprintTapHere => 'Tap';
+
+  @override
+  String get missionTapSprintHint => 'Fills up fast, drains if you pause.';
+
+  @override
+  String get missionLeftRight => 'Left / Right';
+
+  @override
+  String get missionLeftRightDescriptionShort =>
+      'Follow the prompt and pick left or right.';
+
+  @override
+  String missionLeftRightDescription(int targetStreak) {
+    return 'Get $targetStreak correct in a row.';
+  }
+
+  @override
+  String get missionLeftRightPromptLeft => 'Tap LEFT';
+
+  @override
+  String get missionLeftRightPromptRight => 'Tap RIGHT';
+
+  @override
+  String get left => 'Left';
+
+  @override
+  String get right => 'Right';
+
+  @override
+  String get missionHintInactivity => 'If you stop for 2 minutes, it resets.';
+
+  @override
+  String fortuneCatchScore(int score) {
+    return 'Score: $score';
+  }
+
+  @override
+  String get fortuneCatchGoal => 'Goal: 100';
+
+  @override
+  String fortuneCatchGoalDetail(int count, int min) {
+    return '(Catches: $count/$min)';
+  }
+
+  @override
+  String fortuneCatchCombo(int combo) {
+    return '$combo Combo!';
+  }
 
   @override
   String get difficulty => '难度';

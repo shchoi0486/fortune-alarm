@@ -16,12 +16,18 @@ import '../../data/models/alarm_model.dart';
 import '../../core/constants/mission_type.dart';
 import '../../services/camera_service.dart';
 import '../mission_math/math_mission_screen.dart';
-import '../mission_quiz/quiz_mission_screen.dart';
 import '../fortune/fortune_mission_screen.dart';
 import '../mission_shake/shake_mission_screen.dart';
 import '../mission_none/simple_alarm_screen.dart';
 import '../mission_camera/mission_camera_screen.dart';
 import '../mission/supplement/supplement_mission_screen.dart';
+import '../mission_fortune_catch/fortune_catch_mission_screen.dart';
+import '../mission_number_order/number_order_mission_screen.dart';
+import '../mission_hidden_button/hidden_button_mission_screen.dart';
+import '../mission_tap_sprint/tap_sprint_mission_screen.dart';
+import '../mission_left_right/left_right_mission_screen.dart';
+import '../mission_walk/walk_mission_screen.dart';
+import '../mission_face/face_detection_mission_screen.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class AlarmRingingScreen extends ConsumerStatefulWidget {
@@ -263,14 +269,27 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
       await _audioPlayer.stop();
       await FlutterRingtonePlayer().stop();
       Vibration.cancel();
-      
-      // 미션이 없는 알람의 경우 여기서 확실히 스케줄링 취소
-      if (_alarm?.missionType == MissionType.none) {
-        final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
-        await NotificationService().cancelNotification(stableId);
-      }
+
+      final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
+      await NotificationService().cancelNotification(stableId);
     } catch (e) {
       debugPrint('Error stopping alarm: $e');
+    }
+  }
+
+  Future<void> _setMissionActive(bool isActive) async {
+    try {
+      final box = await Hive.openBox('app_state');
+      if (isActive) {
+        final baseId = widget.alarmId.replaceAll('_snooze', '');
+        await box.put('active_alarm_mission_base_id', baseId);
+        await box.put('active_alarm_mission_started_at', DateTime.now().toIso8601String());
+      } else {
+        await box.delete('active_alarm_mission_base_id');
+        await box.delete('active_alarm_mission_started_at');
+      }
+    } catch (e) {
+      debugPrint('[AlarmRingingScreen] Failed to update mission state: $e');
     }
   }
 
@@ -316,7 +335,13 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
         );
       }
     } else {
-      bgDecoration = const BoxDecoration(color: Color(0xFFFFD54F)); // Default Yellow
+      // 기본 배경 이미지 설정 (사용자가 제공한 이미지)
+      bgDecoration = const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/alarm_bg.png'),
+          fit: BoxFit.cover,
+        ),
+      );
     }
 
     return PopScope(
@@ -324,59 +349,85 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
       child: Scaffold(
       body: Container(
         decoration: bgDecoration,
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Top: Time
-              Padding(
-                padding: const EdgeInsets.only(top: 60),
-                child: Column(
-                  children: [
-                    Text(
-                      DateFormat.MMMMEEEEd(Localizations.localeOf(context).toString()).format(DateTime.now()),
-                      style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold, shadows: [Shadow(blurRadius: 5, color: Colors.black45)]),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      DateFormat('HH:mm').format(DateTime.now()),
-                      style: const TextStyle(fontSize: 80, color: Colors.white, fontWeight: FontWeight.bold, shadows: [Shadow(blurRadius: 5, color: Colors.black45)]),
-                    ),
-                    const SizedBox(height: 10),
-                    // 스누즈 상태 표시 (반복알람 2/3)
-                    if (_alarm!.snoozeInterval > 0 && _alarm!.maxSnoozeCount > 0)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          (() {
-                            bool isFirstSnooze = !_alarm!.id.endsWith('_snooze');
-                            int maxCount = _alarm!.maxSnoozeCount;
-                            
-                            // remainingSnoozeCount는 다음에 울릴 횟수를 의미하므로,
-                            // 현재 울리고 있는 회차는 (전체 - 남은횟수 + 1)이 아니라 (전체 - 남은횟수)가 될 수 있음
-                            // 로직을 단순화하여 '현재 몇 번째인지'를 정확히 계산
-                            int currentRemaining = isFirstSnooze 
-                                ? maxCount 
-                                : (_alarm!.remainingSnoozeCount > 0 ? _alarm!.remainingSnoozeCount : 0);
-                            
-                            // 현재 회차 = 전체 횟수 - 남은 횟수 + 1
-                            int currentCount = maxCount - currentRemaining + 1;
-                            
-                            if (currentCount < 1) currentCount = 1;
-                            if (currentCount > maxCount) currentCount = maxCount;
-                            
-                            return AppLocalizations.of(context)!.repeatAlarmCount(currentCount, maxCount);
-                          })(),
-                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(0.3),
+                Colors.transparent,
+                Colors.black.withOpacity(0.5),
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Top: App Title, Time, Date
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: Column(
+                    children: [
+                      Text(
+                        "FORTUNE ALARM",
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.white.withOpacity(0.9),
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 2.0,
+                          shadows: const [Shadow(blurRadius: 10, color: Colors.black45, offset: Offset(0, 2))],
                         ),
                       ),
-                  ],
+                      const SizedBox(height: 8),
+                      Text(
+                        DateFormat('h:mm').format(DateTime.now()),
+                        style: const TextStyle(
+                          fontSize: 100,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w300,
+                          height: 1.0,
+                          shadows: [Shadow(blurRadius: 15, color: Colors.black38, offset: Offset(0, 4))],
+                        ),
+                      ),
+                      Text(
+                        DateFormat('EEEE, MMMM d').format(DateTime.now()),
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: Colors.white.withOpacity(0.9),
+                          fontWeight: FontWeight.w400,
+                          shadows: const [Shadow(blurRadius: 8, color: Colors.black38, offset: Offset(0, 2))],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // 스누즈 상태 표시 (반복알람 2/3)
+                      if (_alarm!.snoozeInterval > 0 && _alarm!.maxSnoozeCount > 0)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.white.withOpacity(0.3)),
+                          ),
+                          child: Text(
+                            (() {
+                              bool isFirstSnooze = !_alarm!.id.endsWith('_snooze');
+                              int maxCount = _alarm!.maxSnoozeCount;
+                              int currentRemaining = isFirstSnooze 
+                                  ? maxCount 
+                                  : (_alarm!.remainingSnoozeCount > 0 ? _alarm!.remainingSnoozeCount : 0);
+                              int currentCount = maxCount - currentRemaining + 1;
+                              if (currentCount < 1) currentCount = 1;
+                              if (currentCount > maxCount) currentCount = maxCount;
+                              return AppLocalizations.of(context)!.repeatAlarmCount(currentCount, maxCount);
+                            })(),
+                            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
               
               // Center: Snooze Button Removed as per user request.
               // Snooze is now automatically scheduled upon alarm ringing.
@@ -421,16 +472,29 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _alarm!.missionType == MissionType.none 
-                          ? Colors.grey[800] 
-                          : Colors.redAccent,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                      elevation: 5,
+                          ? Colors.white.withOpacity(0.2)
+                          : Colors.white.withOpacity(0.9),
+                      foregroundColor: _alarm!.missionType == MissionType.none 
+                          ? Colors.white 
+                          : Colors.black87,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        side: BorderSide(
+                          color: Colors.white.withOpacity(0.5),
+                          width: 1,
+                        ),
+                      ),
+                      elevation: 0,
                     ),
                     child: Text(
                       _alarm!.missionType == MissionType.none 
                           ? AppLocalizations.of(context)!.turnOffAlarm
                           : AppLocalizations.of(context)!.startMission, 
-                      style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)
+                      style: TextStyle(
+                        fontSize: 20, 
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      )
                     ),
                   ),
                 ),
@@ -438,6 +502,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
             ],
           ),
         ),
+      ),
       ),
       ),
     );
@@ -456,14 +521,32 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
       case MissionType.math:
         nextScreen = MathMissionScreen(alarmId: widget.alarmId);
         break;
-      case MissionType.quiz:
-        nextScreen = QuizMissionScreen(alarmId: widget.alarmId);
-        break;
       case MissionType.fortune:
         nextScreen = FortuneMissionScreen(alarmId: widget.alarmId);
         break;
       case MissionType.shake:
         nextScreen = ShakeMissionScreen(alarmId: widget.alarmId);
+        break;
+      case MissionType.fortuneCatch:
+        nextScreen = FortuneCatchMissionScreen(alarmId: widget.alarmId);
+        break;
+      case MissionType.numberOrder:
+        nextScreen = NumberOrderMissionScreen(alarmId: widget.alarmId);
+        break;
+      case MissionType.hiddenButton:
+        nextScreen = HiddenButtonMissionScreen(alarmId: widget.alarmId);
+        break;
+      case MissionType.tapSprint:
+        nextScreen = TapSprintMissionScreen(alarmId: widget.alarmId);
+        break;
+      case MissionType.leftRight:
+        nextScreen = LeftRightMissionScreen(alarmId: widget.alarmId);
+        break;
+      case MissionType.walk:
+        nextScreen = WalkMissionScreen(alarmId: widget.alarmId);
+        break;
+      case MissionType.faceDetection:
+        nextScreen = FaceDetectionMissionScreen(alarmId: widget.alarmId);
         break;
       case MissionType.none:
         nextScreen = SimpleAlarmScreen(alarmId: widget.alarmId);
@@ -488,6 +571,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
     }
 
     debugPrint('[AlarmRingingScreen] Starting mission: $type');
+
+    await _setMissionActive(true);
 
     // 미션 시작 시 알람 소리/진동을 중지합니다. (UI 스레드 차단 방지를 위해 await 제거)
     _stopAlarm();
@@ -519,6 +604,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
 
     // 미션 화면에서 돌아왔으므로 플래그 해제
     _isMissionStarted = false;
+    await _setMissionActive(false);
 
     if (result == 'timeout') {
       // 2분간 활동 없음 -> 다시 알람 울림
@@ -597,7 +683,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
             
             // 만약 영양제 미션이었다면 영양제 체크도 함께 완료
             if (_alarm?.missionType == MissionType.supplement) {
-              await ref.read(missionProvider).setMissionCompleted('supplements', true);
+              await ref.read(missionProvider).setMissionCompleted('supplement', true);
             }
           } catch (e) {
             debugPrint('Error completing wakeup mission: $e');

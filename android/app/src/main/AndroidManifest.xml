@@ -64,7 +64,7 @@
         <!-- AdMob App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4511718702168477~4344210660"/>
+            android:value="ca-app-pub-7279511347629270~7938505586"/>
 
         <!-- [2] 알람 매니저 설정 구역 (Service & Receiver) -->
         <!-- 앱이 꺼져도 알람이 울리게 하는 핵심 부품들입니다 -->

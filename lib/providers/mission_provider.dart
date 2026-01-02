@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -8,6 +10,7 @@ import '../data/models/mission_model.dart';
 import '../data/models/daily_mission_log.dart';
 import '../core/constants/mission_category.dart';
 import '../services/cookie_service.dart';
+import '../services/notification_service.dart';
 
 final missionProvider = ChangeNotifierProvider<MissionNotifier>((ref) {
   return MissionNotifier();
@@ -18,8 +21,12 @@ class MissionNotifier extends ChangeNotifier {
   List<MissionModel> _customMissions = []; // 사용자가 직접 만든 미션 히스토리
   DailyMissionLog? _todayLog;
   bool _isLoading = true;
-  final int _fortuneCookieCount = 0;
+  int _fortuneCookieCount = 0;
   bool _showRewardDialog = false;
+  int? _lastRewardMissions;
+  int? _lastRewardCookies;
+  final CookieService _cookieService = CookieService();
+  StreamSubscription<int>? _cookieCountSubscription;
 
   List<MissionModel> get missions => _missions;
   List<MissionModel> get customMissions => _customMissions;
@@ -27,9 +34,13 @@ class MissionNotifier extends ChangeNotifier {
   bool get isLoading => _isLoading;
   int get fortuneCookieCount => _fortuneCookieCount;
   bool get showRewardDialog => _showRewardDialog;
+  int? get lastRewardMissions => _lastRewardMissions;
+  int? get lastRewardCookies => _lastRewardCookies;
 
   void consumeRewardDialogEvent() {
     _showRewardDialog = false;
+    _lastRewardMissions = null;
+    _lastRewardCookies = null;
     notifyListeners();
   }
 
@@ -56,6 +67,21 @@ class MissionNotifier extends ChangeNotifier {
 
   MissionNotifier() {
     _init();
+    _startCookieCountSync();
+  }
+
+  Future<void> _startCookieCountSync() async {
+    try {
+      _fortuneCookieCount = await _cookieService.getCookieCount();
+      notifyListeners();
+    } catch (_) {}
+
+    await _cookieCountSubscription?.cancel();
+    _cookieCountSubscription = _cookieService.cookieCountStream.listen((count) {
+      if (_fortuneCookieCount == count) return;
+      _fortuneCookieCount = count;
+      notifyListeners();
+    });
   }
 
   // 미션 상태 변경 (완료/미완료)
@@ -63,14 +89,14 @@ class MissionNotifier extends ChangeNotifier {
     // _todayLog가 null이면 초기화 대기 (재시도 로직은 호출측에서 처리하거나 여기서 간단히 대기)
     if (_todayLog == null) {
       debugPrint('setMissionCompleted: _todayLog is null, waiting for init...');
-      // 간단한 대기 (완벽하진 않지만)
+      // 최대 3초까지 대기 (Hive 박스 오픈 등이 늦어질 수 있음)
       int retry = 0;
-      while (_isLoading && retry < 10) {
+      while (_isLoading && retry < 30) {
         await Future.delayed(const Duration(milliseconds: 100));
         retry++;
       }
       if (_todayLog == null) {
-         debugPrint('setMissionCompleted: Failed to load todayLog.');
+         debugPrint('setMissionCompleted: Failed to load todayLog after waiting.');
          return;
       }
     }
@@ -97,28 +123,63 @@ class MissionNotifier extends ChangeNotifier {
 
     debugPrint('setMissionCompleted: Updating $missionId to $completed');
 
-    // 5개 이상이면 목표 달성 (삭제된 미션 제외하고 계산)
+    // 1. 먼저 상태와 DB를 업데이트하여 UI가 즉시 반응하게 함
     final validMissionIds = _missions.map((m) => m.id).toSet();
     final newCompletedCount = currentCompleted.where((id) => validMissionIds.contains(id)).length;
-    bool newIsGoalAchieved = _todayLog!.isGoalAchieved;
+    
+    // 보상 조건 확인 (업데이트 전 상태 기준)
+    bool shouldRewardFive = newCompletedCount >= 5 && !(_todayLog!.isGoalAchieved);
+    bool shouldRewardTen = newCompletedCount >= 10 && !(_todayLog!.isTenGoalAchieved ?? false);
 
-    if (newCompletedCount >= 5 && !newIsGoalAchieved) {
-      newIsGoalAchieved = true;
-      _showRewardDialog = true;
-      // 쿠키 보상 지급 (1개)
-      CookieService().addCookies(1);
-    }
+    debugPrint('setMissionCompleted: count=$newCompletedCount, rewardFive=$shouldRewardFive, rewardTen=$shouldRewardTen');
 
+    // 로그 객체 먼저 업데이트 및 저장
     final newLog = _todayLog!.copyWith(
       completedMissionIds: currentCompleted,
-      isGoalAchieved: newIsGoalAchieved,
+      isGoalAchieved: _todayLog!.isGoalAchieved || shouldRewardFive,
+      isTenGoalAchieved: (_todayLog!.isTenGoalAchieved ?? false) || shouldRewardTen,
     );
 
     final logBox = await Hive.openBox<DailyMissionLog>('mission_logs');
     await logBox.put(_todayLog!.dateKey, newLog);
     _todayLog = newLog;
-
+    
+    // UI 즉시 갱신 (미션 이동)
     notifyListeners();
+
+    // 2. 그 다음 보상 처리 (이미 업데이트된 상태이므로 중복 실행 안됨)
+    int rewardCookies = 0;
+    int? rewardMissions;
+
+    if (shouldRewardFive) {
+      rewardCookies += 1;
+      rewardMissions = 5;
+    }
+
+    if (shouldRewardTen) {
+      rewardCookies += 1;
+      rewardMissions = 10;
+    }
+
+    if (rewardCookies > 0 && !_showRewardDialog) {
+      _showRewardDialog = true;
+      _lastRewardMissions = rewardMissions;
+      _lastRewardCookies = rewardCookies;
+      debugPrint('setMissionCompleted: Awarding $rewardCookies cookies for $rewardMissions missions');
+      
+      // 보상 다이얼로그가 뜨기 전에 UI를 먼저 업데이트하여 버튼 연타 방지
+      notifyListeners();
+      
+      await _cookieService.addCookies(rewardCookies);
+      // addCookies 이후에 다시 notify 하여 쿠키 숫자가 실시간 반영되도록 함
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _cookieCountSubscription?.cancel();
+    super.dispose();
   }
 
   Future<void> _init() async {
@@ -174,16 +235,16 @@ class MissionNotifier extends ChangeNotifier {
 
   static final List<MissionModel> defaultMissions = [
     MissionModel(
-      id: 'supplement',
-      title: '영양제 챙겨 먹기',
-      icon: '💊',
+      id: 'water_2l',
+      title: '물 2L 이상 마시기',
+      icon: '🧊',
       isSystemMission: true,
       category: MissionCategory.health,
     ),
     MissionModel(
-      id: 'water_2l',
-      title: '물 2L 이상 마시기',
-      icon: '🧊',
+      id: 'supplement',
+      title: '영양제 챙겨 먹기',
+      icon: '💊',
       isSystemMission: true,
       category: MissionCategory.health,
     ),
@@ -276,7 +337,7 @@ class MissionNotifier extends ChangeNotifier {
 
   Future<void> _ensureDefaultMissions(Box<MissionModel> box) async {
     final existingMissions = box.values.toList();
-    final initialMissionIds = {'wakeup', 'supplement', 'water_2l'};
+    final initialMissionIds = {'wakeup', 'water_2l', 'supplement'};
     
     // 1. 기존 '물 1L' 또는 '기상 알람 미션' 관련 업데이트 (마이그레이션)
     for (var m in existingMissions) {
@@ -318,7 +379,13 @@ class MissionNotifier extends ChangeNotifier {
     final existingIds = box.keys.toSet();
     final existingTitles = box.values.map((m) => m.title).toSet();
 
-    // 3. 초기 미션 추가 (최초 실행 시에만)
+    // 3. '영양제 챙겨 먹기' 미션이 없는 경우 추가 (마이그레이션)
+    if (!existingIds.contains('supplement')) {
+      final supplement = defaultMissions.firstWhere((m) => m.id == 'supplement');
+      await box.put('supplement', supplement);
+    }
+
+    // 4. 초기 미션 추가 (최초 실행 시에만)
     // 앱 설정 박스를 열어서 초기 미션 추가 여부를 확인
     final prefs = await Hive.openBox('app_settings');
     final bool initialMissionsAdded = prefs.get('initial_missions_added', defaultValue: false);
@@ -345,13 +412,20 @@ class MissionNotifier extends ChangeNotifier {
   }
 
   // 미션 추가 (커스텀 미션 포함)
-  Future<void> addMission(String title, String icon, MissionCategory category, {bool isCustom = false, String? id}) async {
+  Future<void> addMission(String title, String icon, MissionCategory category, {
+    bool isCustom = false, 
+    String? id,
+    String? alarmTime,
+    bool isAlarmEnabled = false,
+  }) async {
     final newMission = MissionModel(
       id: id ?? const Uuid().v4(),
       title: title,
       icon: icon,
       category: category,
       isSystemMission: !isCustom && (id == 'water_2l' || id == 'supplement'),
+      alarmTime: alarmTime,
+      isAlarmEnabled: isAlarmEnabled,
     );
 
     final box = await Hive.openBox<MissionModel>('missions');
@@ -359,17 +433,50 @@ class MissionNotifier extends ChangeNotifier {
     
     _missions = box.values.toList();
 
+    // 알림 스케줄링
+    if (isAlarmEnabled && alarmTime != null) {
+      final parts = alarmTime.split(':');
+      final time = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+      await NotificationService().scheduleMissionNotification(
+        missionId: newMission.id,
+        title: title,
+        body: '미션을 수행할 시간입니다!',
+        time: time,
+      );
+    }
+
     // 사용자가 직접 만든 미션인 경우 히스토리에 저장 (중복 체크)
     if (isCustom) {
       final customBox = await Hive.openBox<MissionModel>('custom_missions');
       final exists = customBox.values.any((m) => m.title == title);
       if (!exists) {
         // ID는 새로 생성하거나 기존꺼 사용. 히스토리용이라 별도 저장.
-        // 여기선 같은 객체를 저장하되, 나중에 불러올 때 ID가 겹칠 수 있으니 주의.
-        // 하지만 'missions' 박스와 'custom_missions' 박스는 별개이므로 ID가 같아도 상관 없음.
         await customBox.put(newMission.id, newMission);
         _customMissions = customBox.values.toList();
       }
+    }
+
+    notifyListeners();
+  }
+
+  // 미션 수정
+  Future<void> updateMission(MissionModel mission) async {
+    final box = await Hive.openBox<MissionModel>('missions');
+    await box.put(mission.id, mission);
+    _missions = box.values.toList();
+
+    // 알림 스케줄링 업데이트
+    if (mission.isAlarmEnabled && mission.alarmTime != null) {
+      final parts = mission.alarmTime!.split(':');
+      final time = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+      await NotificationService().scheduleMissionNotification(
+        missionId: mission.id,
+        title: mission.title,
+        body: '미션을 수행할 시간입니다!',
+        time: time,
+      );
+    } else {
+      await NotificationService().cancelMissionNotification(mission.id);
     }
 
     notifyListeners();
@@ -382,6 +489,10 @@ class MissionNotifier extends ChangeNotifier {
     // 기상 알람 미션은 삭제 불가, 그 외(시스템 미션 포함)는 삭제 가능
     if (mission != null && mission.id != 'wakeup') {
       await box.delete(id);
+      
+      // 알림 취소
+      await NotificationService().cancelMissionNotification(id);
+
       _missions = box.values.toList();
       notifyListeners();
     }
@@ -396,6 +507,7 @@ class MissionNotifier extends ChangeNotifier {
         .toList();
     
     for (var key in keysToDelete) {
+      await NotificationService().cancelMissionNotification(key);
       await box.delete(key);
     }
     

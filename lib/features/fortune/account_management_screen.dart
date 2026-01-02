@@ -5,6 +5,7 @@ import '../../providers/saju_provider.dart';
 import '../../providers/mission_provider.dart';
 import 'saju/widgets/saju_profile_screen.dart';
 import 'fortune_pass_screen.dart';
+import '../../services/cookie_service.dart';
 
 class AccountManagementScreen extends ConsumerStatefulWidget {
   const AccountManagementScreen({super.key});
@@ -17,10 +18,23 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
   Box? _fortuneBox;
   int _cookieCount = 0;
 
+  bool _hasActivePass = false;
+
   @override
   void initState() {
     super.initState();
     _initHive();
+    _checkFortunePass();
+  }
+
+  Future<void> _checkFortunePass() async {
+    final cookieService = CookieService();
+    final hasActive = await cookieService.hasActiveFortunePassSubscription();
+    if (mounted) {
+      setState(() {
+        _hasActivePass = hasActive;
+      });
+    }
   }
 
   Future<void> _initHive() async {
@@ -146,7 +160,14 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                         ],
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FortunePassScreen(initialTabIndex: 0),
+                            ),
+                          ).then((_) => _initHive());
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFFF176),
                           foregroundColor: Colors.black,
@@ -154,7 +175,7 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                         ),
-                        child: const Text("모으기", style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: const Text("무료충전", style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -173,10 +194,10 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                           Row(
                             children: [
                               Text(
-                                "$_cookieCount",
+                                _hasActivePass ? "무제한 이용 중" : "무제한 미구독",
                                 style: TextStyle(
-                                  color: textColor,
-                                  fontSize: 24,
+                                  color: _hasActivePass ? Colors.blue[600] : textColor,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -189,8 +210,13 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const FortunePassScreen()),
-                          ).then((_) => _initHive());
+                            MaterialPageRoute(
+                              builder: (context) => const FortunePassScreen(initialTabIndex: 1),
+                            ),
+                          ).then((_) {
+                            _initHive();
+                            _checkFortunePass();
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF2C2C2C),
@@ -199,7 +225,7 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                         ),
-                        child: const Text("충전하기", style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(_hasActivePass ? "구독 관리" : "구독하기", style: const TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),

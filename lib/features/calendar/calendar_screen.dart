@@ -30,7 +30,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   bool _isMemoMode = false;
   
   // 테마 및 UI 상태
-  Color _themeColor = Colors.transparent;
+  Color _themeColor = const Color(0xFFE57373);
   CalendarViewMode _viewMode = CalendarViewMode.month;
   bool _isExpanded = false;
   bool _isViewSelectorOpen = false;
@@ -38,7 +38,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Color _getAccentColor(bool isDark) {
     if (_themeColor == Colors.transparent) {
-      return isDark ? Colors.white : Colors.black;
+      return const Color(0xFFE57373);
     }
     return _themeColor;
   }
@@ -56,8 +56,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   // 세련된 파스텔 및 현대적인 색상 팔레트
   final List<Color> _modernColors = [
-    Colors.transparent, // 기본 (배경 없음)
-    const Color(0xFFE57373), // Soft Red
+    Colors.transparent, // 배경 없음 (시스템 기본)
+    const Color(0xFFE57373), // Soft Red (기본 테마)
     const Color(0xFFF06292), // Soft Pink
     const Color(0xFFBA68C8), // Soft Purple
     const Color(0xFF9575CD), // Soft Deep Purple
@@ -68,10 +68,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
     const Color(0xFF4DB6AC), // Soft Teal
     const Color(0xFF81C784), // Soft Green
     const Color(0xFFAED581), // Soft Light Green
+    const Color(0xFFDCE775), // Soft Lime
+    const Color(0xFFFFF176), // Soft Yellow
+    const Color(0xFFFFD54F), // Soft Amber
+    const Color(0xFFFFB74D), // Soft Orange
     const Color(0xFFFF8A65), // Soft Deep Orange
     const Color(0xFFA1887F), // Soft Brown
     const Color(0xFF90A4AE), // Soft Blue Grey
-    const Color(0xFF00BFA5), // Teal Accent (Original)
   ];
 
   @override
@@ -454,7 +457,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddEventSheet(),
-        backgroundColor: _themeColor == Colors.transparent ? const Color(0xFF00BFA5) : _themeColor,
+        backgroundColor: _themeColor == Colors.transparent ? const Color(0xFFE57373) : _themeColor,
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: const Icon(Icons.add_rounded, color: Colors.white, size: 32),
@@ -563,7 +566,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget _buildInlineColorPalette(bool isDark) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         border: Border(bottom: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[200]!)),
@@ -577,6 +580,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         ),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: _modernColors.map((color) => Padding(
               padding: const EdgeInsets.only(right: 12),

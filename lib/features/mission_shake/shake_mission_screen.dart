@@ -17,6 +17,7 @@ import '../../services/notification_service.dart';
 import '../../data/models/alarm_model.dart';
 import '../../providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
+import '../mission/widgets/mission_success_overlay.dart';
 
 class ShakeMissionScreen extends ConsumerStatefulWidget {
   final String? alarmId;
@@ -40,7 +41,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
   DateTime _lastShakeTime = DateTime.now();
   final double _shakeThreshold = 15.0; // Shake sensitivity
   
-  bool _showCorrectAnimation = false;
+  bool _isSuccess = false;
   String _lastMessage = '';
 
   @override
@@ -215,16 +216,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
     _lastMessage = PositiveMessages.messages[random.nextInt(PositiveMessages.messages.length)];
     
     setState(() {
-      _showCorrectAnimation = true;
-    });
-
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      if (!mounted) return;
-      
-      _stopAlarm();
-      // ref.read(alarmListProvider.notifier).completeAlarm(widget.alarmId!); // <--- AlarmRingingScreen에서 처리하도록 제거
-      debugPrint('[ShakeMissionScreen] Mission success - popping to AlarmRingingScreen');
-      Navigator.of(context).pop(true);
+      _isSuccess = true;
     });
   }
 
@@ -322,88 +314,15 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
           ),
           
           // 성공 애니메이션 오버레이
-          if (_showCorrectAnimation)
+          if (_isSuccess)
             Positioned.fill(
-              child: AnimatedOpacity(
-                opacity: _showCorrectAnimation ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 200),
-                child: Center(
-                  child: TweenAnimationBuilder<double>(
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.elasticOut,
-                    builder: (context, value, child) {
-                      return Transform.scale(
-                        scale: value,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(20),
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 10,
-                                    offset: Offset(0, 4),
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                                size: 80,
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              AppLocalizations.of(context)!.missionComplete,
-                              style: const TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.white,
-                                    blurRadius: 10,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            if (_lastMessage.isNotEmpty) ...[
-                              const SizedBox(height: 16),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.9),
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  _lastMessage,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
+              child: MissionSuccessOverlay(
+                onFinish: () {
+                  if (mounted) {
+                    _stopAlarm();
+                    Navigator.of(context).pop(true);
+                  }
+                },
               ),
             ),
         ],

@@ -109,19 +109,19 @@ class MissionTile extends ConsumerWidget {
     Widget content = Container(
       margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 20),
       decoration: BoxDecoration(
-        color: isCompleted 
-          ? (isDark ? Colors.grey[900]!.withOpacity(0.5) : Colors.grey[50])
-          : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
+        color: isCompleted
+            ? (isDark ? Colors.grey[900]!.withOpacity(0.5) : Colors.grey[50])
+            : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isCompleted 
+          color: isCompleted
               ? (isDark ? Colors.white.withOpacity(0.05) : Colors.grey[200]!)
-              : (isDark ? Colors.white.withOpacity(0.2) : const Color(0xFFE2E8F0)), // 연한 은색(실버/블루그레이) 테두리
-          width: 1.2,
+              : (isDark ? Colors.white.withOpacity(0.2) : const Color(0xFFE2E8F0)),
+          width: isDark ? 1.2 : 0.5,
         ),
-        boxShadow: isDark ? [] : [
+        boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isCompleted ? 0.01 : 0.04),
+            color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

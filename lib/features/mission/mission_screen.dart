@@ -15,13 +15,6 @@ class MissionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final missionState = ref.watch(missionProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // 보상 다이얼로그 리스너
-    ref.listen(missionProvider.select((s) => s.showRewardDialog), (previous, next) {
-      if (next == true) {
-        _showRewardSuccessDialog(context, ref);
-      }
-    });
     
     if (missionState.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -30,9 +23,14 @@ class MissionScreen extends ConsumerWidget {
     final allMissions = missionState.missions;
     final completedIds = missionState.todayLog?.completedMissionIds ?? [];
 
-    // 분류
-    final pendingMissions = allMissions.where((m) => !completedIds.contains(m.id)).toList();
-    final completedMissions = allMissions.where((m) => completedIds.contains(m.id)).toList();
+    // 분류 (유효한 미션만 포함)
+    final validMissionIds = allMissions.map((m) => m.id).toSet();
+    final effectiveCompletedIds = completedIds.where((id) => validMissionIds.contains(id)).toSet();
+
+    debugPrint('MissionScreen: completedCount=${effectiveCompletedIds.length}, isGoalAchieved=${missionState.isGoalAchieved}, cookies=${missionState.fortuneCookieCount}');
+
+    final pendingMissions = allMissions.where((m) => !effectiveCompletedIds.contains(m.id)).toList();
+    final completedMissions = allMissions.where((m) => effectiveCompletedIds.contains(m.id)).toList();
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -303,8 +301,16 @@ class MissionScreen extends ConsumerWidget {
                               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                             ),
                             builder: (context) => AddMissionSheet(
-                              onAdd: (title, icon, category, {bool? isCustom, String? id}) {
-                                ref.read(missionProvider).addMission(title, icon, category, isCustom: isCustom ?? false, id: id);
+                              onAdd: (title, icon, category, {bool? isCustom, String? id, String? alarmTime, bool? isAlarmEnabled}) {
+                                ref.read(missionProvider).addMission(
+                                  title, 
+                                  icon, 
+                                  category, 
+                                  isCustom: isCustom ?? false, 
+                                  id: id,
+                                  alarmTime: alarmTime,
+                                  isAlarmEnabled: isAlarmEnabled ?? false,
+                                );
                               },
                             ),
                           );
@@ -341,18 +347,30 @@ class MissionScreen extends ConsumerWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final mission = pendingMissions[index];
+                    VoidCallback? onTap;
+                    if (mission.id == 'water_2l') {
+                      onTap = () {
+                        Navigator.of(context, rootNavigator: false).push(
+                          MaterialPageRoute(
+                            builder: (_) => const WaterMissionScreen(useSafeAreaTop: false),
+                          ),
+                        );
+                      };
+                    } else if (mission.id == 'supplement') {
+                      onTap = () {
+                        Navigator.of(context, rootNavigator: false).push(
+                          MaterialPageRoute(
+                            builder: (_) => const SupplementMissionScreen(useSafeAreaTop: false),
+                          ),
+                        );
+                      };
+                    }
                     return MissionTile(
                       mission: mission,
                       isCompleted: false,
                       onToggle: () => ref.read(missionProvider).toggleMission(mission.id),
                       onDelete: () => ref.read(missionProvider).deleteMission(mission.id),
-                      onTap: () {
-                        if (mission.title.contains('물')) {
-                          Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (_) => const WaterMissionScreen(useSafeAreaTop: false)));
-                        } else if (mission.title.contains('영양제')) {
-                          Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (_) => const SupplementMissionScreen(useSafeAreaTop: false)));
-                        }
-                      },
+                      onTap: onTap,
                     );
                   },
                   childCount: pendingMissions.length,
@@ -402,18 +420,30 @@ class MissionScreen extends ConsumerWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final mission = completedMissions[index];
+                    VoidCallback? onTap;
+                    if (mission.id == 'water_2l') {
+                      onTap = () {
+                        Navigator.of(context, rootNavigator: false).push(
+                          MaterialPageRoute(
+                            builder: (_) => const WaterMissionScreen(useSafeAreaTop: false),
+                          ),
+                        );
+                      };
+                    } else if (mission.id == 'supplement') {
+                      onTap = () {
+                        Navigator.of(context, rootNavigator: false).push(
+                          MaterialPageRoute(
+                            builder: (_) => const SupplementMissionScreen(useSafeAreaTop: false),
+                          ),
+                        );
+                      };
+                    }
                     return MissionTile(
                       mission: mission,
                       isCompleted: true,
                       onToggle: () => ref.read(missionProvider).toggleMission(mission.id),
                       onDelete: () => ref.read(missionProvider).deleteMission(mission.id),
-                      onTap: () {
-                        if (mission.title.contains('물')) {
-                          Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (_) => const WaterMissionScreen(useSafeAreaTop: false)));
-                        } else if (mission.title.contains('영양제')) {
-                          Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(builder: (_) => const SupplementMissionScreen(useSafeAreaTop: false)));
-                        }
-                      },
+                      onTap: onTap,
                     );
                   },
                   childCount: completedMissions.length,
@@ -427,52 +457,6 @@ class MissionScreen extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showRewardSuccessDialog(BuildContext context, WidgetRef ref) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('🥠', style: TextStyle(fontSize: 60)),
-            const SizedBox(height: 16),
-            Text(
-              AppLocalizations.of(context)!.congratulations,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              AppLocalizations.of(context)!.missionRewardEarned,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  ref.read(missionProvider).consumeRewardDialogEvent();
-                  Navigator.pop(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-                child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(fontWeight: FontWeight.bold)),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

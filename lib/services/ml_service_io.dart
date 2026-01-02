@@ -12,7 +12,6 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 import '../core/constants/mission_type.dart';
 import 'ml_service.dart'; // Import MissionValidationResult
 
-import 'package:flutter/foundation.dart';
 
 // 이미지 디코딩을 위한 최상위 함수 (Isolate에서 실행용)
 img.Image? _decodeImage(Uint8List bytes) {
@@ -24,7 +23,15 @@ class MLService {
   static final MLService _instance = MLService._internal();
   factory MLService() => _instance;
   MLService._internal()
-      : _faceDetector = FaceDetector(options: FaceDetectorOptions()),
+      : _faceDetector = FaceDetector(
+          options: FaceDetectorOptions(
+            performanceMode: FaceDetectorMode.fast,
+            enableLandmarks: true,
+            enableContours: true,
+            enableClassification: true,
+            minFaceSize: 0.15,
+          ),
+        ),
         _objectDetector = ObjectDetector(
           options: ObjectDetectorOptions(
             mode: DetectionMode.stream,
@@ -50,6 +57,11 @@ class MLService {
   int _successStreak = 0;
 
   final ObjectDetector _objectDetector;
+
+  // 얼굴 감지 메서드 (외부 호출용)
+  Future<List<Face>> processFaces(InputImage inputImage) async {
+    return await _faceDetector.processImage(inputImage);
+  }
 
   Future<void> initialize() async {
     if (_isModelLoaded) return;

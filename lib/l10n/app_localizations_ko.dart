@@ -15,7 +15,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get morningGreeting => '좋은 아침이에요! 행운의 하루를 시작하세요.';
 
   @override
-  String get missionWakeUp => '기상 알람 미션';
+  String get missionWakeUp => '기상 미션';
 
   @override
   String get missionSupplement => '영양제 챙겨 먹기';
@@ -336,6 +336,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get selectAlarmBackground => '알람 배경화면 선택';
 
   @override
+  String get defaultLabel => '기본';
+
+  @override
   String get howToAdd => '추가 방법';
 
   @override
@@ -396,6 +399,11 @@ class AppLocalizationsKo extends AppLocalizations {
   String get missionRewardEarned => '오늘의 미션 5개를 완료하여\n포춘쿠키 1개를 획득했습니다!';
 
   @override
+  String missionRewardEarnedWithCount(int missions, int cookies) {
+    return '오늘의 미션 $missions개를 완료하여\n포춘쿠키 $cookies개를 획득했습니다!';
+  }
+
+  @override
   String daysCount(int count) {
     return '$count일';
   }
@@ -447,13 +455,10 @@ class AppLocalizationsKo extends AppLocalizations {
   String get missionNone => '미션 없음';
 
   @override
-  String get missionSnap => 'Snap';
+  String get missionSnap => '사물찍기';
 
   @override
-  String get missionMath => '계산';
-
-  @override
-  String get missionQuiz => '퀴즈';
+  String get missionMath => '계산 문제';
 
   @override
   String get missionFortune => '운세';
@@ -462,25 +467,125 @@ class AppLocalizationsKo extends AppLocalizations {
   String get missionShake => '흔들기';
 
   @override
+  String get missionFortuneCatch => '포츄니를 잡아라';
+
+  @override
   String get missionNoDescription => '미션 없이 알람이 울립니다.';
 
   @override
-  String get missionSupplementDescription => '영양제 섭취 확인 화면이 나타납니다.';
+  String get missionCameraDescription => '지정된 사물을 촬영하여 알람을 해제합니다.';
 
   @override
-  String get missionCameraDescription => '지정된 물체를 순서대로 촬영해야 알람이 꺼집니다.';
+  String get missionMathDescription => '수학 문제를 풀어 뇌를 깨웁니다.';
 
   @override
-  String get missionMathDescription => '수학 문제를 풀어야 알람이 꺼집니다.';
-
-  @override
-  String get missionQuizDescription => '퀴즈 미션이 선택되었습니다.';
-
-  @override
-  String get missionFortuneDescription => '운세 미션이 선택되었습니다.';
+  String get missionFortuneDescription => '알람을 해제하고 오늘의 운세를 확인합니다.';
 
   @override
   String get missionShakeDescription => '핸드폰을 흔들어야 알람이 꺼집니다.';
+
+  @override
+  String get missionFortuneCatchDescription => '포츄니를 터치하여 100점 이상을 획득하세요!';
+
+  @override
+  String get missionWalk => '걷기';
+
+  @override
+  String get missionWalkDescription => '걸어서 알람을 끄세요!';
+
+  @override
+  String get missionFaceDescription => '10초간 화면을 응시하여 관상을 확인하세요.';
+
+  @override
+  String get walkStepCount => '목표 걸음 수';
+
+  @override
+  String walkSteps(int count) {
+    return '$count 걸음';
+  }
+
+  @override
+  String get missionNumberOrder => '숫자 순서';
+
+  @override
+  String get missionNumberOrderDescription => '1부터 9까지 순서대로 터치하세요.';
+
+  @override
+  String missionNumberOrderGuide(int nextNumber) {
+    return '다음: $nextNumber';
+  }
+
+  @override
+  String get missionHiddenButton => '위치 기억';
+
+  @override
+  String get missionHiddenButtonDescription => '밝아지는 칸의 위치를 순서대로 기억하고 터치하세요.';
+
+  @override
+  String missionHiddenButtonDifficulty(int delta) {
+    return 'Δ$delta';
+  }
+
+  @override
+  String get missionTapSprint => '터치 연타';
+
+  @override
+  String get missionTapSprintDescriptionShort => '연타로 게이지를 채우세요.';
+
+  @override
+  String missionTapSprintDescription(int goalTaps) {
+    return '$goalTaps회 이상 터치해 게이지를 채우세요.';
+  }
+
+  @override
+  String get missionTapSprintTapHere => '터치!';
+
+  @override
+  String get missionTapSprintHint => '빠르게 채우고, 잠시 멈추면 조금 줄어들어요.';
+
+  @override
+  String get missionLeftRight => '좌우 선택';
+
+  @override
+  String get missionLeftRightDescriptionShort => '지시에 맞게 좌/우를 선택하세요.';
+
+  @override
+  String missionLeftRightDescription(int targetStreak) {
+    return '$targetStreak회 연속 성공하면 완료돼요.';
+  }
+
+  @override
+  String get missionLeftRightPromptLeft => '왼쪽을 누르세요';
+
+  @override
+  String get missionLeftRightPromptRight => '오른쪽을 누르세요';
+
+  @override
+  String get left => '왼쪽';
+
+  @override
+  String get right => '오른쪽';
+
+  @override
+  String get missionHintInactivity => '2분 동안 입력이 없으면 초기화돼요.';
+
+  @override
+  String fortuneCatchScore(int score) {
+    return '점수: $score';
+  }
+
+  @override
+  String get fortuneCatchGoal => '목표: 100점';
+
+  @override
+  String fortuneCatchGoalDetail(int count, int min) {
+    return '(잡은 횟수: $count/$min)';
+  }
+
+  @override
+  String fortuneCatchCombo(int combo) {
+    return '$combo 콤보!';
+  }
 
   @override
   String get difficulty => '난이도';

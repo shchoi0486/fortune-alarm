@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../services/lotto_service.dart';
+import 'mixins/fortune_access_mixin.dart';
 
 class LottoScreen extends StatefulWidget {
   const LottoScreen({super.key});
@@ -10,7 +11,7 @@ class LottoScreen extends StatefulWidget {
   State<LottoScreen> createState() => _LottoScreenState();
 }
 
-class _LottoScreenState extends State<LottoScreen> {
+class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
   bool _isAnalyzing = false;
   bool _showResult = false;
   String _analysisStatus = "";
@@ -72,7 +73,20 @@ class _LottoScreenState extends State<LottoScreen> {
           });
           await dataFuture;
         }
-        _generateNumbers();
+        
+        if (mounted) {
+          bool accessGranted = false;
+          await showFortuneAccessDialog(() {
+            accessGranted = true;
+            _generateNumbers();
+          });
+          
+          if (!accessGranted && mounted) {
+            setState(() {
+              _isAnalyzing = false;
+            });
+          }
+        }
       }
     });
   }

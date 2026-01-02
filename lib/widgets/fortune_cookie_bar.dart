@@ -94,25 +94,34 @@ class FortuneCookieBar extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               // Fortune Cookie Count Widget - Compact Style
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    const Text('🥠', style: TextStyle(fontSize: 14)),
-                    const SizedBox(width: 4),
-                    Text(
-                      '$count',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: textColor,
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AccountManagementScreen()),
+                  );
+                },
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      const Text('🥠', style: TextStyle(fontSize: 14)),
+                      const SizedBox(width: 4),
+                      Text(
+                        '$count',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: textColor,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -122,7 +131,7 @@ class FortuneCookieBar extends ConsumerWidget {
               
               const SizedBox(width: 8),
               
-              // Profile Icon with Notification Dot
+              // Profile Icon
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -130,23 +139,7 @@ class FortuneCookieBar extends ConsumerWidget {
                     MaterialPageRoute(builder: (context) => const AccountManagementScreen()),
                   );
                 },
-                child: Stack(
-                  children: [
-                    Icon(Icons.person_outline, size: 24, color: iconColor),
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                child: Icon(Icons.person_outline, size: 24, color: iconColor),
               ),
             ],
           ),

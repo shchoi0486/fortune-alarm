@@ -29,8 +29,16 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
     super.dispose();
   }
 
-  void _loadInterstitialAd() {
+  Future<void> _loadInterstitialAd() async {
     if (_isInterstitialAdLoading || _isInterstitialAdLoaded) return;
+
+    // 1. 먼저 AdService에서 사전 로드된 광고가 있는지 확인
+    final preloadedAd = await AdService.getPreloadedInterstitialAd();
+    if (preloadedAd != null) {
+      debugPrint('Using preloaded InterstitialAd from AdService');
+      _setupInterstitialAd(preloadedAd);
+      return;
+    }
 
     _isInterstitialAdLoading = true;
     InterstitialAd.load(
@@ -40,56 +48,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
         onAdLoaded: (ad) {
           debugPrint('InterstitialAd loaded successfully');
           _isInterstitialAdLoading = false;
-          
-          if (!mounted) {
-            ad.dispose();
-            return;
-          }
-
-          // 1. 콜백 설정 (Show 하기 전에 먼저 설정)
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) {
-              debugPrint('InterstitialAd dismissed');
-              ad.dispose();
-              if (mounted) {
-                setState(() {
-                  _interstitialAd = null;
-                  _isInterstitialAdLoaded = false;
-                });
-              }
-              _onAccessGrantedCallback?.call();
-              _onAccessGrantedCallback = null;
-              _loadInterstitialAd(); // 다음을 위해 미리 로드
-            },
-            onAdFailedToShowFullScreenContent: (ad, error) {
-              debugPrint('InterstitialAd failed to show: $error');
-              ad.dispose();
-              if (mounted) {
-                setState(() {
-                  _interstitialAd = null;
-                  _isInterstitialAdLoaded = false;
-                });
-              }
-              _onAccessGrantedCallback?.call(); // 실패해도 일단 권한 부여
-              _onAccessGrantedCallback = null;
-              _loadInterstitialAd();
-            },
-          );
-
-          setState(() {
-            _interstitialAd = ad;
-            _isInterstitialAdLoaded = true;
-          });
-
-          // 2. 전면 광고를 기다리고 있었다면 표시
-          if (_isWaitingForAd && _useInterstitial) {
-            _isWaitingForAd = false;
-            debugPrint('Showing InterstitialAd from waiting state');
-            if (mounted) {
-              Navigator.of(context).pop(); // 로딩 다이얼로그 닫기
-              ad.show();
-            }
-          }
+          _setupInterstitialAd(ad);
         },
         onAdFailedToLoad: (error) {
           _isInterstitialAdLoading = false;
@@ -102,7 +61,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
               _isWaitingForAd = false;
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('광고를 불러오는데 실패했습니다.')),
+                const SnackBar(content: Text('광고 로드에 실패했습니다. 네트워크 연결을 확인하고 다시 시도해주세요.')),
               );
             }
           }
@@ -111,8 +70,68 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
     );
   }
 
-  void _loadRewardedAd() {
+  void _setupInterstitialAd(InterstitialAd ad) {
+    if (!mounted) {
+      ad.dispose();
+      return;
+    }
+
+    // 1. 콜백 설정 (Show 하기 전에 먼저 설정)
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        debugPrint('InterstitialAd dismissed');
+        ad.dispose();
+        if (mounted) {
+          setState(() {
+            _interstitialAd = null;
+            _isInterstitialAdLoaded = false;
+          });
+        }
+        _onAccessGrantedCallback?.call();
+        _onAccessGrantedCallback = null;
+        _loadInterstitialAd(); // 다음을 위해 미리 로드
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        debugPrint('InterstitialAd failed to show: $error');
+        ad.dispose();
+        if (mounted) {
+          setState(() {
+            _interstitialAd = null;
+            _isInterstitialAdLoaded = false;
+          });
+        }
+        _onAccessGrantedCallback?.call(); // 실패해도 일단 권한 부여
+        _onAccessGrantedCallback = null;
+        _loadInterstitialAd();
+      },
+    );
+
+    setState(() {
+      _interstitialAd = ad;
+      _isInterstitialAdLoaded = true;
+    });
+
+    // 2. 전면 광고를 기다리고 있었다면 표시
+    if (_isWaitingForAd && _useInterstitial) {
+      _isWaitingForAd = false;
+      debugPrint('Showing InterstitialAd from waiting state');
+      if (mounted) {
+        Navigator.of(context).pop(); // 로딩 다이얼로그 닫기
+        ad.show();
+      }
+    }
+  }
+
+  Future<void> _loadRewardedAd() async {
     if (_isRewardedAdLoading || _isRewardedAdLoaded) return; // 이미 로딩 중이거나 로드된 경우 중단
+
+    // 1. 먼저 AdService에서 사전 로드된 광고가 있는지 확인
+    final preloadedAd = await AdService.getPreloadedRewardedAd();
+    if (preloadedAd != null) {
+      debugPrint('Using preloaded RewardedAd from AdService');
+      _setupRewardedAd(preloadedAd);
+      return;
+    }
 
     _isRewardedAdLoading = true;
     RewardedAd.load(
@@ -122,65 +141,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
         onAdLoaded: (ad) {
           debugPrint('RewardedAd loaded successfully');
           _isRewardedAdLoading = false;
-          
-          if (!mounted) {
-            ad.dispose();
-            return;
-          }
-
-          // 1. 콜백 설정 (Show 하기 전에 먼저 설정)
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) {
-              debugPrint('RewardedAd dismissed');
-              ad.dispose();
-              if (mounted) {
-                setState(() {
-                  _rewardedAd = null;
-                  _isRewardedAdLoaded = false;
-                });
-              }
-              
-              // If reward was earned, execute callback now (when view is back)
-              if (_rewardEarned) {
-                _rewardEarned = false; // Reset flag
-                _onAccessGrantedCallback?.call();
-                _onAccessGrantedCallback = null;
-              } else {
-                // reward를 못 받았더라도 callback은 초기화해야 함
-                _onAccessGrantedCallback = null;
-              }
-              
-              _loadRewardedAd(); // Preload next one
-            },
-            onAdFailedToShowFullScreenContent: (ad, error) {
-              debugPrint('RewardedAd failed to show: $error');
-              ad.dispose();
-              if (mounted) {
-                setState(() {
-                  _rewardedAd = null;
-                  _isRewardedAdLoaded = false;
-                });
-              }
-              _onAccessGrantedCallback?.call(); // 실패해도 일단 권한 부여
-              _onAccessGrantedCallback = null;
-              _loadRewardedAd();
-            },
-          );
-
-          setState(() {
-            _rewardedAd = ad;
-            _isRewardedAdLoaded = true;
-          });
-
-          // 2. 보상형 광고를 기다리고 있었다면 표시
-          if (_isWaitingForAd && !_useInterstitial) {
-            _isWaitingForAd = false;
-            debugPrint('Showing RewardedAd from waiting state');
-            if (mounted) {
-              Navigator.of(context).pop(); // Close loading dialog
-              _showRewardedAdFromObject(ad); // Use helper to show with reward callback
-            }
-          }
+          _setupRewardedAd(ad);
         },
         onAdFailedToLoad: (error) {
           _isRewardedAdLoading = false; // 로딩 실패
@@ -194,13 +155,74 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
               _isWaitingForAd = false;
               Navigator.of(context).pop(); // Close loading dialog
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('광고를 불러오는데 실패했습니다. 다시 시도해주세요.')),
+                const SnackBar(content: Text('광고 로드에 실패했습니다. 네트워크 연결을 확인하고 다시 시도해주세요.')),
               );
             }
           }
         },
       ),
     );
+  }
+
+  void _setupRewardedAd(RewardedAd ad) {
+    if (!mounted) {
+      ad.dispose();
+      return;
+    }
+
+    // 1. 콜백 설정 (Show 하기 전에 먼저 설정)
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        debugPrint('RewardedAd dismissed');
+        ad.dispose();
+        if (mounted) {
+          setState(() {
+            _rewardedAd = null;
+            _isRewardedAdLoaded = false;
+          });
+        }
+        
+        // If reward was earned, execute callback now (when view is back)
+        if (_rewardEarned) {
+          _rewardEarned = false; // Reset flag
+          _onAccessGrantedCallback?.call();
+          _onAccessGrantedCallback = null;
+        } else {
+          // reward를 못 받았더라도 callback은 초기화해야 함
+          _onAccessGrantedCallback = null;
+        }
+        
+        _loadRewardedAd(); // Preload next one
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        debugPrint('RewardedAd failed to show: $error');
+        ad.dispose();
+        if (mounted) {
+          setState(() {
+            _rewardedAd = null;
+            _isRewardedAdLoaded = false;
+          });
+        }
+        _onAccessGrantedCallback?.call(); // 실패해도 일단 권한 부여
+        _onAccessGrantedCallback = null;
+        _loadRewardedAd();
+      },
+    );
+
+    setState(() {
+      _rewardedAd = ad;
+      _isRewardedAdLoaded = true;
+    });
+
+    // 2. 보상형 광고를 기다리고 있었다면 표시
+    if (_isWaitingForAd && !_useInterstitial) {
+      _isWaitingForAd = false;
+      debugPrint('Showing RewardedAd from waiting state');
+      if (mounted) {
+        Navigator.of(context).pop(); // Close loading dialog
+        _showRewardedAdFromObject(ad); // Use helper to show with reward callback
+      }
+    }
   }
 
   // Helper to show rewarded ad with correct callback
@@ -223,7 +245,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
 
   bool _isWaitingForAd = false;
 
-  void _showInterstitialAd(VoidCallback onAccessGranted) {
+  void showInterstitialAd(VoidCallback onAccessGranted) {
     if (_interstitialAd != null && _isInterstitialAdLoaded) {
       _onAccessGrantedCallback = onAccessGranted;
       _interstitialAd!.show();
@@ -237,7 +259,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
     }
   }
 
-  void _showRewardedAd(VoidCallback onAccessGranted) {
+  void showRewardedAd(VoidCallback onAccessGranted) {
     if (_rewardedAd != null && _isRewardedAdLoaded) {
       _onAccessGrantedCallback = onAccessGranted;
       _showRewardedAdFromObject(_rewardedAd!);
@@ -267,26 +289,47 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
         _isWaitingForAd = false;
         Navigator.of(context).pop(); // Close loading dialog
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('광고를 불러오는 시간이 너무 오래 걸립니다. 네트워크를 확인해주세요.')),
+          const SnackBar(
+            content: Text('네트워크 상태가 불안정하여 광고를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.'),
+            duration: Duration(seconds: 3),
+          ),
         );
       }
     });
   }
 
-  Future<void> showFortuneAccessDialog(VoidCallback onAccessGranted, {bool isInterstitial = false}) async {
+  Future<void> showFortuneAccessDialog(VoidCallback onAccessGranted, {VoidCallback? onDirectAccess, bool isInterstitial = false}) async {
     if (!mounted) return;
     
     _useInterstitial = isInterstitial;
 
-    // Show loading dialog if needed, or just wait with timeout
+    // 1. 병렬로 체크하여 속도 개선 (최대 1.5초 대기)
     try {
-      // 3초 타임아웃 추가 - 네트워크 지연 시 무한 대기 방지
-      await _cookieService.getCookieCount().timeout(
-        const Duration(seconds: 3),
-        onTimeout: () => 0,
-      );
+      final results = await Future.wait([
+        _cookieService.hasActiveFortunePassSubscription().timeout(
+          const Duration(milliseconds: 1500),
+          onTimeout: () => false,
+        ),
+        _cookieService.getCookieCount().timeout(
+          const Duration(milliseconds: 1500),
+          onTimeout: () => 0,
+        ),
+      ]).catchError((e) {
+        debugPrint('Error checking background status: $e');
+        return [false, 0];
+      });
+
+      final hasPass = results[0] as bool;
+      if (hasPass) {
+        if (onDirectAccess != null) {
+          onDirectAccess();
+        } else {
+          onAccessGranted();
+        }
+        return;
+      }
     } catch (e) {
-      debugPrint('Error getting cookie count: $e');
+      debugPrint('Error in showFortuneAccessDialog parallel check: $e');
     }
 
     if (!mounted) return;
@@ -353,9 +396,9 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                     onPressed: () {
                       Navigator.pop(context); // Close dialog
                       if (_useInterstitial) {
-                        _showInterstitialAd(onAccessGranted);
+                        showInterstitialAd(onAccessGranted);
                       } else {
-                        _showRewardedAd(onAccessGranted);
+                        showRewardedAd(onAccessGranted);
                       }
                     },
                     style: ElevatedButton.styleFrom(
@@ -390,7 +433,20 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                   height: 56,
                   child: OutlinedButton(
                     onPressed: () async {
-                      // Check balance first
+                      // 1. Check if user has active fortune pass (unlimited access)
+                      final hasPass = await _cookieService.hasActiveFortunePassSubscription();
+                      if (hasPass) {
+                        if (!mounted) return;
+                        Navigator.pop(context); // Close dialog
+                        if (onDirectAccess != null) {
+                          onDirectAccess();
+                        } else {
+                          onAccessGranted();
+                        }
+                        return;
+                      }
+
+                      // 2. Check cookie balance
                       final count = await _cookieService.getCookieCount();
                       
                       if (!mounted) return;
@@ -411,36 +467,30 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                               ),
                             ),
                             content: Text(
-                              '보유한 포춘쿠키가 부족합니다.\n광고를 보고 무료로 결과를 확인하시겠습니까?',
+                              '보유한 포춘쿠키가 부족합니다.\n미션을 수행하거나 광고를 보고 무료로 충전할 수 있습니다.',
                               style: TextStyle(
-                                color: isDarkMode ? Colors.white70 : Colors.black87,
+                                color: isDarkMode ? Colors.white70 : Colors.black54,
                               ),
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx),
-                                child: const Text('취소', style: TextStyle(color: Colors.grey)),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(ctx); // Close alert
-                                  if (mounted) Navigator.pop(context); // Close main dialog
-                                  _showRewardedAd(onAccessGranted); // Watch ad
-                                },
-                                child: const Text('광고 보고 확인', style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+                                child: const Text('확인'),
                               ),
                             ],
                           ),
                         );
-                      } else {
-                        // Sufficient cookies
-                        if (mounted) Navigator.pop(context);
-                        final success = await _cookieService.useCookies(2);
-                        if (success) {
-                          if (!mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('포춘쿠키 2개를 사용했습니다. 🥠')),
-                          );
+                        return;
+                      }
+
+                      // Deduct cookies and grant access
+                      final success = await _cookieService.useCookies(2);
+                      if (success) {
+                        if (!mounted) return;
+                        Navigator.pop(context); // Close dialog
+                        if (onDirectAccess != null) {
+                          onDirectAccess();
+                        } else {
                           onAccessGranted();
                         }
                       }
@@ -458,7 +508,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset('assets/images/cookie.png', width: 24, height: 24, errorBuilder: (c,o,s) => const Icon(Icons.cookie, size: 24)),
+                        const Icon(Icons.cookie, size: 24, color: Colors.orangeAccent),
                         const SizedBox(width: 8),
                         const Flexible(
                             child: Text(

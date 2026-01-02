@@ -10,6 +10,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:vibration/vibration.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../core/constants/mission_type.dart';
 import '../../data/models/alarm_model.dart';
@@ -34,6 +36,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   late TextEditingController _labelController;
   List<String?> _referenceImagePaths = [null, null, null];
   List<String> _existingImages = []; // 기존 촬영된 이미지 목록
+  bool _isDeleteMode = false;
+  final Set<String> _selectedForDelete = {};
   final ImagePicker _picker = ImagePicker();
   
   late List<bool> _repeatDays;
@@ -53,6 +57,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
   // Shake Mission Settings
   late int _shakeCount;
+  
+  // Walk Mission Settings
+  late int _walkStepCount;
   
   final AudioPlayer _audioPlayer = AudioPlayer();
 
@@ -99,6 +106,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       _mathDifficulty = widget.alarm!.mathDifficulty;
       _mathProblemCount = widget.alarm!.mathProblemCount;
       _shakeCount = widget.alarm!.shakeCount;
+      _walkStepCount = widget.alarm!.walkStepCount;
     } else {
       _selectedTime = DateTime.now().add(const Duration(minutes: 1));
       _selectedMission = MissionType.none;
@@ -111,13 +119,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       _ringtonePath = 'default';
       _vibrationPattern = 'default';
       _isGradualVolume = false;
-      _backgroundPath = null;
+      _backgroundPath = 'assets/images/alarm_bg.png';
       _snoozeInterval = 5; // Default 5 min
       _maxSnoozeCount = 3; // Default 3 times
 
       _mathDifficulty = MathDifficulty.normal;
       _mathProblemCount = 3;
       _shakeCount = 20;
+      _walkStepCount = 20;
     }
 
     // Initialize Picker Controllers
@@ -150,21 +159,46 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     super.dispose();
   }
 
+  bool get _isCameraMission => [
+    MissionType.cameraSink,
+    MissionType.cameraRefrigerator,
+    MissionType.cameraFace,
+    MissionType.cameraOther,
+    MissionType.cameraScale
+  ].contains(_selectedMission);
+
+  Future<Directory> _getMissionImagesDir() async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final missionDir = Directory(path.join(appDir.path, 'mission_images'));
+    if (!await missionDir.exists()) {
+      await missionDir.create(recursive: true);
+    }
+    return missionDir;
+  }
+
   Future<void> _loadExistingImages() async {
-    final alarms = ref.read(alarmListProvider);
-    final Set<String> images = {};
-    for (final alarm in alarms) {
-      if (alarm.referenceImagePaths != null) {
-        for (final path in alarm.referenceImagePaths!) {
-          if (File(path).existsSync()) {
-            images.add(path);
-          }
+    try {
+      final missionDir = await _getMissionImagesDir();
+      final List<FileSystemEntity> files = missionDir.listSync();
+      
+      final List<String> images = [];
+      for (final file in files) {
+        if (file is File && (file.path.endsWith('.jpg') || file.path.endsWith('.png') || file.path.endsWith('.webp'))) {
+          images.add(file.path);
         }
       }
+      
+      // 파일 수정 시간 역순으로 정렬 (최신 사진이 위로)
+      images.sort((a, b) => File(b).lastModifiedSync().compareTo(File(a).lastModifiedSync()));
+
+      if (mounted) {
+        setState(() {
+          _existingImages = images;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading existing images: $e');
     }
-    setState(() {
-      _existingImages = images.toList();
-    });
   }
 
   Future<void> _pickImage(int index, ImageSource source) async {
@@ -192,114 +226,343 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
     final XFile? image = await _picker.pickImage(source: source);
     if (image != null) {
+      String finalPath = image.path;
+      
+      // 카메라로 찍은 경우 전용 폴더로 복사하여 저장
+      if (source == ImageSource.camera) {
+        final missionDir = await _getMissionImagesDir();
+        final fileName = 'mission_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final savedFile = await File(image.path).copy(path.join(missionDir.path, fileName));
+        finalPath = savedFile.path;
+        
+        // 목록 갱신
+        _loadExistingImages();
+      }
+
       setState(() {
-        _referenceImagePaths[index] = image.path;
+        _referenceImagePaths[index] = finalPath;
       });
+    }
+  }
+
+  Future<void> _deleteSelectedImages() async {
+    if (_selectedForDelete.isEmpty) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('이미지 삭제'),
+        content: Text('${_selectedForDelete.length}개의 이미지를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('삭제'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      for (final path in _selectedForDelete) {
+        try {
+          final file = File(path);
+          if (await file.exists()) {
+            await file.delete();
+          }
+          
+          // 현재 선택된 경로에서도 제거
+          for (int i = 0; i < _referenceImagePaths.length; i++) {
+            if (_referenceImagePaths[i] == path) {
+              setState(() {
+                _referenceImagePaths[i] = null;
+              });
+            }
+          }
+        } catch (e) {
+          debugPrint('Error deleting file $path: $e');
+        }
+      }
+      
+      setState(() {
+        _selectedForDelete.clear();
+        _isDeleteMode = false;
+      });
+      _loadExistingImages();
     }
   }
 
   void _showImagePickerOptions(int index) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // 이미지가 많을 수 있으므로 높이 조절 가능하게
+      isScrollControlled: true,
       backgroundColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1C1C1E) : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.4,
-          minChildSize: 0.3,
-          maxChildSize: 0.8,
-          expand: false,
-          builder: (context, scrollController) {
-            return SingleChildScrollView(
-              controller: scrollController,
-              child: SafeArea(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 8),
-                    Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ListTile(
-                      leading: const Icon(Icons.camera_alt, color: Colors.cyan),
-                      title: Text(AppLocalizations.of(context)!.takePhoto, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _pickImage(index, ImageSource.camera);
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.photo_library, color: Colors.cyan),
-                      title: Text(AppLocalizations.of(context)!.selectPhoto, style: const TextStyle(fontWeight: FontWeight.bold)),
-                      onTap: () {
-                        Navigator.pop(context);
-                        _pickImage(index, ImageSource.gallery);
-                      },
-                    ),
-                    if (_existingImages.isNotEmpty) ...[
-                      const Divider(),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "기존 촬영 이미지",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            return DraggableScrollableSheet(
+              initialChildSize: 0.5,
+              minChildSize: 0.3,
+              maxChildSize: 0.9,
+              expand: false,
+              builder: (context, scrollController) {
+                final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+                return SingleChildScrollView(
+                  controller: scrollController,
+                  child: SafeArea(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 8),
+                        Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ListTile(
+                          leading: const Icon(Icons.camera_alt, color: Colors.cyan),
+                          title: Text(AppLocalizations.of(context)!.takePhoto, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          onTap: () {
+                            Navigator.pop(context);
+                            _pickImage(index, ImageSource.camera);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.photo_library, color: Colors.cyan),
+                          title: const Text("기기에서 선택하기", style: TextStyle(fontWeight: FontWeight.bold)),
+                          onTap: () {
+                            Navigator.pop(context);
+                            _pickImage(index, ImageSource.gallery);
+                          },
+                        ),
+                        if (_existingImages.isNotEmpty) ...[
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "기존 촬영 이미지",
+                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                ),
+                                if (_isDeleteMode)
+                                  Row(
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          setSheetState(() {
+                                            _isDeleteMode = false;
+                                            _selectedForDelete.clear();
+                                          });
+                                        },
+                                        child: const Text('취소'),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      ElevatedButton(
+                                        onPressed: _selectedForDelete.isEmpty
+                                            ? null
+                                            : () async {
+                                                await _deleteSelectedImages();
+                                                setSheetState(() {});
+                                              },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                                        ),
+                                        child: Text('${_selectedForDelete.length}개 삭제'),
+                                      ),
+                                    ],
+                                  )
+                                else
+                                  TextButton.icon(
+                                    onPressed: () {
+                                      setSheetState(() {
+                                        _isDeleteMode = true;
+                                      });
+                                    },
+                                    icon: const Icon(Icons.delete_outline, size: 18),
+                                    label: const Text('편집'),
+                                  ),
+                              ],
                             ),
-                            const SizedBox(height: 12),
-                            GridView.builder(
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
+                                crossAxisCount: 5,
+                                crossAxisSpacing: 6,
+                                mainAxisSpacing: 6,
+                                childAspectRatio: 1,
                               ),
                               itemCount: _existingImages.length,
                               itemBuilder: (context, imgIndex) {
                                 final path = _existingImages[imgIndex];
+                                final isSelected = _selectedForDelete.contains(path);
                                 return GestureDetector(
                                   onTap: () {
-                                    setState(() {
-                                      _referenceImagePaths[index] = path;
-                                    });
-                                    Navigator.pop(context);
+                                    if (_isDeleteMode) {
+                                      setSheetState(() {
+                                        if (isSelected) {
+                                          _selectedForDelete.remove(path);
+                                        } else {
+                                          _selectedForDelete.add(path);
+                                        }
+                                      });
+                                    } else {
+                                      setState(() {
+                                        _referenceImagePaths[index] = path;
+                                      });
+                                      Navigator.pop(context);
+                                    }
                                   },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(color: Colors.grey[300]!),
-                                      image: DecorationImage(
-                                        image: FileImage(File(path)),
-                                        fit: BoxFit.cover,
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(
+                                            color: isSelected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                                            width: isSelected ? 2 : 1,
+                                          ),
+                                          image: DecorationImage(
+                                            image: FileImage(File(path)),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      if (_isDeleteMode)
+                                        Positioned(
+                                          top: 2,
+                                          right: 2,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: isSelected ? Colors.cyan : Colors.black45,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(color: Colors.white, width: 1.5),
+                                            ),
+                                            child: Icon(
+                                              isSelected ? Icons.check : Icons.close,
+                                              size: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                 );
                               },
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
+                          ),
+                        ],
+                        const SizedBox(height: 30),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
         );
       },
+    );
+  }
+
+  void _clearReferenceImageAt(int index) {
+    setState(() {
+      _referenceImagePaths[index] = null;
+      for (int i = index + 1; i < _referenceImagePaths.length; i++) {
+        _referenceImagePaths[i] = null;
+      }
+    });
+  }
+
+  Widget _buildCameraMissionImageSlots() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
+    Widget buildSlot(int index) {
+      final path = _referenceImagePaths[index];
+      return GestureDetector(
+        onTap: () {
+          if (index > 0 && _referenceImagePaths[index - 1] == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('미션 이미지를 순서대로 설정해주세요.')),
+            );
+            return;
+          }
+          _showImagePickerOptions(index);
+        },
+        onLongPress: path == null ? null : () => _clearReferenceImageAt(index),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 86,
+              height: 86,
+              decoration: BoxDecoration(
+                color: isDarkMode ? Colors.black26 : Colors.grey[100],
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                image: path == null
+                    ? null
+                    : DecorationImage(
+                        image: FileImage(File(path)),
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              child: path == null
+                  ? Icon(Icons.add_a_photo_outlined, color: isDarkMode ? Colors.white70 : Colors.grey[700])
+                  : null,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '미션 ${index + 1}',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: isDarkMode ? Colors.white70 : Colors.black87,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            buildSlot(0),
+            buildSlot(1),
+            buildSlot(2),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Text(
+          '길게 눌러 삭제할 수 있어요.',
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: isDarkMode ? Colors.white54 : Colors.grey[600],
+          ),
+        ),
+      ],
     );
   }
 
@@ -347,8 +610,12 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                       _buildSpecialOption(Icons.image, AppLocalizations.of(context)!.gallery, _pickBackground),
                       const SizedBox(width: 16),
                       
+                      // Default Asset Option
+                      _buildAssetOption('assets/images/alarm_bg.png', AppLocalizations.of(context)!.defaultLabel),
+                      const SizedBox(width: 16),
+                      
                       // Colors
-                      _buildColorOption(const Color(0xFFFFD54F)), // Yellow (Default)
+                      _buildColorOption(const Color(0xFFFFD54F)), // Yellow
                       const SizedBox(width: 16),
                       _buildColorOption(Colors.grey), // Gray
                       const SizedBox(width: 16),
@@ -401,7 +668,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     );
   }
 
-  Widget _buildAssetOption(String assetPath) {
+  Widget _buildAssetOption(String assetPath, String label) {
     return GestureDetector(
       onTap: () {
         Navigator.pop(context);
@@ -409,19 +676,25 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           _backgroundPath = assetPath;
         });
       },
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
-            image: AssetImage(assetPath),
-            fit: BoxFit.cover,
-            // Fallback if asset doesn't exist yet
-            onError: (exception, stackTrace) => debugPrint('Asset not found: $assetPath'),
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: AssetImage(assetPath),
+                fit: BoxFit.cover,
+                // Fallback if asset doesn't exist yet
+                onError: (exception, stackTrace) => debugPrint('Asset not found: $assetPath'),
+              ),
+              border: Border.all(color: Colors.white, width: 2),
+            ),
           ),
-          border: Border.all(color: Colors.white, width: 2),
-        ),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        ],
       ),
     );
   }
@@ -434,14 +707,20 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           _backgroundPath = 'color:${color.value}';
         });
       },
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 2),
-        ),
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 2),
+            ),
+          ),
+          const SizedBox(height: 4),
+          const Text('', style: TextStyle(fontSize: 10)), // 빈 텍스트로 높이 맞춤
+        ],
       ),
     );
   }
@@ -526,16 +805,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   Widget _buildSettingSection({required String title, required Widget child, Widget? trailing}) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -548,15 +827,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               Text(
                 title,
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: isDarkMode ? Colors.white : Colors.black87,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16,
+                  color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                  letterSpacing: -0.5,
                 ),
               ),
               if (trailing != null) trailing,
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 16),
           child,
         ],
       ),
@@ -614,6 +894,67 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
+
+                // 기상 미션
+                _buildSettingSection(
+                  title: AppLocalizations.of(context)!.wakeUpMission,
+                  child: Column(
+                    children: [
+                      _buildMissionSelector(),
+                      if (_isCameraMission) ...[
+                        const SizedBox(height: 16),
+                        _buildCameraMissionImageSlots(),
+                      ],
+                    ],
+                  ),
+                ),
+
+                if (_selectedMission == MissionType.math) ...[
+                  _buildSettingSection(
+                    title: AppLocalizations.of(context)!.difficulty,
+                    child: _buildMathDifficultySelector(),
+                  ),
+                  _buildSettingSection(
+                    title: AppLocalizations.of(context)!.problemCount,
+                    child: _buildMathProblemCountSelector(),
+                  ),
+                ],
+
+                if (_selectedMission == MissionType.shake)
+                  _buildSettingSection(
+                    title: AppLocalizations.of(context)!.shakeCount,
+                    child: _buildShakeCountSelector(),
+                  ),
+
+                if (_selectedMission == MissionType.numberOrder)
+                  _buildSettingSection(
+                    title: AppLocalizations.of(context)!.problemCount,
+                    child: _buildMathProblemCountSelector(),
+                  ),
+
+                if (_selectedMission == MissionType.hiddenButton)
+                  _buildSettingSection(
+                    title: AppLocalizations.of(context)!.difficulty,
+                    child: _buildMathDifficultySelector(),
+                  ),
+
+                if (_selectedMission == MissionType.tapSprint)
+                  _buildSettingSection(
+                    title: AppLocalizations.of(context)!.shakeCount,
+                    child: _buildShakeCountSelector(),
+                  ),
+
+                if (_selectedMission == MissionType.leftRight)
+                  _buildSettingSection(
+                    title: AppLocalizations.of(context)!.shakeCount,
+                    child: _buildShakeCountSelector(),
+                  ),
+
+                if (_selectedMission == MissionType.walk)
+                  _buildSettingSection(
+                    title: AppLocalizations.of(context)!.walkStepCount,
+                    child: _buildWalkStepCountSelector(),
+                  ),
                 
                 // 반복 요일
                 _buildSettingSection(
@@ -638,7 +979,15 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Text(AppLocalizations.of(context)!.repeatDaily, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                      Text(
+                        AppLocalizations.of(context)!.repeatDaily, 
+                        style: TextStyle(
+                          fontSize: 15, 
+                          fontWeight: FontWeight.w700,
+                          color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                          letterSpacing: -0.5,
+                        ),
+                      ),
                     ],
                   ),
                   child: _buildDaySelector(),
@@ -650,200 +999,249 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(AppLocalizations.of(context)!.interval, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                            const SizedBox(height: 4),
-                            DropdownButtonFormField<int>(
-                              initialValue: _snoozeInterval,
-                              isExpanded: true,
-                              dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
-                              icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black54),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                                filled: true,
-                                fillColor: isDarkMode ? Colors.black26 : Colors.grey[100],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.cyan, width: 1.5),
-                                ),
-                                isDense: true,
+                        child: DropdownButtonFormField<int>(
+                          initialValue: _snoozeInterval,
+                          isExpanded: true,
+                          dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
+                          icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black87),
+                          decoration: InputDecoration(
+                            prefixIcon: Container(
+                              margin: const EdgeInsets.only(left: 14, right: 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.interval,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    width: 1,
+                                    height: 16,
+                                    color: isDarkMode ? Colors.white10 : Colors.grey[300],
+                                  ),
+                                ],
                               ),
-                              items: {0, 3, 5, 10, 30, _snoozeInterval}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.minutesLater(e), style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.white : Colors.black87, fontWeight: FontWeight.w500)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
-                              onChanged: (val) {
-                                if (val != null) {
-                                  setState(() {
-                                    _snoozeInterval = val;
-                                    if (val == 0) {
-                                      _maxSnoozeCount = 0;
-                                    } else if (_maxSnoozeCount == 0) {
-                                      _maxSnoozeCount = 3; // 간격 선택 시 기본 횟수 자동 선택
-                                    }
-                                  });
-                                }
-                              },
                             ),
-                          ],
+                            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                            filled: true,
+                            fillColor: isDarkMode ? Colors.black26 : Colors.grey[50],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(color: Colors.cyan, width: 2),
+                            ),
+                            isDense: true,
+                          ),
+                          items: {0, 3, 5, 10, 30, _snoozeInterval}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.minutesLater(e), style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), fontWeight: FontWeight.w600)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
+                          onChanged: (val) {
+                            if (val != null) {
+                              setState(() {
+                                _snoozeInterval = val;
+                                if (val == 0) {
+                                  _maxSnoozeCount = 0;
+                                } else if (_maxSnoozeCount == 0) {
+                                  _maxSnoozeCount = 3; // 간격 선택 시 기본 횟수 자동 선택
+                                }
+                              });
+                            }
+                          },
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 10),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(AppLocalizations.of(context)!.countLabel, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                            const SizedBox(height: 4),
-                            DropdownButtonFormField<int>(
-                              initialValue: _maxSnoozeCount,
-                              isExpanded: true,
-                              dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
-                              icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black54),
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                                filled: true,
-                                fillColor: isDarkMode ? Colors.black26 : Colors.grey[100],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide.none,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(color: Colors.cyan, width: 1.5),
-                                ),
-                                isDense: true,
+                        child: DropdownButtonFormField<int>(
+                          initialValue: _maxSnoozeCount,
+                          isExpanded: true,
+                          dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
+                          icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black87),
+                          decoration: InputDecoration(
+                            prefixIcon: Container(
+                              margin: const EdgeInsets.only(left: 14, right: 10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.countLabel,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    width: 1,
+                                    height: 16,
+                                    color: isDarkMode ? Colors.white10 : Colors.grey[300],
+                                  ),
+                                ],
                               ),
-                              items: {0, 2, 3, 5, _maxSnoozeCount}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.timesCount(e), style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.white : Colors.black87, fontWeight: FontWeight.w500)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
-                              onChanged: (val) {
-                                if (val != null) {
-                                  setState(() {
-                                    _maxSnoozeCount = val;
-                                    if (val == 0) {
-                                      _snoozeInterval = 0;
-                                    } else if (_snoozeInterval == 0) {
-                                      _snoozeInterval = 5; // 횟수 선택 시 기본 간격 자동 선택
-                                    }
-                                  });
-                                }
-                              },
                             ),
-                          ],
+                            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                            filled: true,
+                            fillColor: isDarkMode ? Colors.black26 : Colors.grey[50],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(color: Colors.cyan, width: 2),
+                            ),
+                            isDense: true,
+                          ),
+                          items: {0, 2, 3, 5, _maxSnoozeCount}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.timesCount(e), style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), fontWeight: FontWeight.w600)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
+                          onChanged: (val) {
+                            if (val != null) {
+                              setState(() {
+                                _maxSnoozeCount = val;
+                                if (val == 0) {
+                                  _snoozeInterval = 0;
+                                } else if (_snoozeInterval == 0) {
+                                  _snoozeInterval = 5; // 횟수 선택 시 기본 간격 자동 선택
+                                }
+                              });
+                            }
+                          },
                         ),
                       ),
                     ],
                   ),
                 ),
 
-                // 기상 미션
+                // 알람 소리 및 진동 통합 섹션
                 _buildSettingSection(
-                  title: AppLocalizations.of(context)!.wakeUpMission,
-                  child: _buildMissionSelector(),
-                ),
-
-                // 알람 소리
-                _buildSettingSection(
-                  title: AppLocalizations.of(context)!.alarmSound,
-                  trailing: Transform.scale(
-                    scale: 0.8,
-                    child: Switch(
-                      value: _isSoundEnabled,
-                      activeThumbColor: Colors.cyan,
-                      onChanged: (val) => setState(() => _isSoundEnabled = val),
-                    ),
-                  ),
-                  child: AnimatedOpacity(
-                    opacity: _isSoundEnabled ? 1.0 : 0.5,
-                    duration: const Duration(milliseconds: 200),
-                    child: IgnorePointer(
-                      ignoring: !_isSoundEnabled,
-                      child: Column(
+                  title: "${AppLocalizations.of(context)!.alarmSound} & ${AppLocalizations.of(context)!.vibration}",
+                  child: Column(
+                    children: [
+                      // 소리 설정 행
+                      Row(
                         children: [
-                          ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            visualDensity: VisualDensity.compact,
-                            leading: const Icon(Icons.music_note, size: 20),
-                            title: Text(_getPayloadTitle(_ringtonePath, isRingtone: true), style: const TextStyle(fontSize: 13)),
-                            trailing: const Icon(Icons.arrow_forward_ios, size: 12),
-                            onTap: () {
-                              _showRingtonePicker();
-                            },
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const Icon(Icons.volume_mute, size: 20),
-                              Expanded(
-                                child: Slider(
-                                  value: _volume,
-                                  activeColor: Colors.cyan,
-                                  inactiveColor: Colors.cyan.withOpacity(0.2),
-                                  onChanged: (val) {
-                                    setState(() => _volume = val);
-                                  },
-                                  onChangeEnd: (val) {
-                                    _playPreviewSound(_ringtonePath);
-                                  },
+                          const Icon(Icons.music_note, size: 22, color: Colors.cyan),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: InkWell(
+                              onTap: _isSoundEnabled ? _showRingtonePicker : null,
+                              child: Opacity(
+                                opacity: _isSoundEnabled ? 1.0 : 0.5,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        _getPayloadTitle(_ringtonePath, isRingtone: true),
+                                        style: TextStyle(
+                                          fontSize: 14, 
+                                          fontWeight: FontWeight.w600,
+                                          color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                                    const SizedBox(width: 4),
+                                  ],
                                 ),
                               ),
-                              const Icon(Icons.volume_up, size: 20),
-                            ],
+                            ),
                           ),
-                          const SizedBox(height: 4),
-                          CheckboxListTile(
-                            title: Text(AppLocalizations.of(context)!.gradualVolume, style: const TextStyle(fontSize: 13)),
-                            value: _isGradualVolume,
-                            onChanged: (val) => setState(() => _isGradualVolume = val!),
-                            controlAffinity: ListTileControlAffinity.leading,
-                            contentPadding: EdgeInsets.zero,
-                            visualDensity: VisualDensity.compact,
-                            activeColor: Colors.cyan,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          Transform.scale(
+                            scale: 0.8,
+                            child: Switch(
+                              value: _isSoundEnabled,
+                              activeThumbColor: Colors.cyan,
+                              onChanged: (val) => setState(() => _isSoundEnabled = val),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ),
-
-                // 진동
-                _buildSettingSection(
-                  title: AppLocalizations.of(context)!.vibration,
-                  trailing: Transform.scale(
-                    scale: 0.8,
-                    child: Switch(
-                      value: _isVibrationEnabled,
-                      activeThumbColor: Colors.cyan,
-                      onChanged: (val) => setState(() => _isVibrationEnabled = val),
-                    ),
-                  ),
-                  child: AnimatedOpacity(
-                    opacity: _isVibrationEnabled ? 1.0 : 0.5,
-                    duration: const Duration(milliseconds: 200),
-                    child: IgnorePointer(
-                      ignoring: !_isVibrationEnabled,
-                      child: ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        visualDensity: VisualDensity.compact,
-                        leading: const Icon(Icons.vibration, size: 20),
-                        title: Text(_getPayloadTitle(_vibrationPattern, isRingtone: false), style: const TextStyle(fontSize: 13)),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 12),
-                        onTap: () {
-                          _showVibrationPicker();
-                        },
+                      if (_isSoundEnabled) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.volume_down, size: 18, color: Colors.grey),
+                            Expanded(
+                              child: SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  trackHeight: 6,
+                                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+                                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
+                                ),
+                                child: Slider(
+                                  value: _volume,
+                                  activeColor: Colors.cyan,
+                                  inactiveColor: Colors.cyan.withOpacity(0.1),
+                                  onChanged: (val) => setState(() => _volume = val),
+                                  onChangeEnd: (val) => _playPreviewSound(_ringtonePath),
+                                ),
+                              ),
+                            ),
+                            const Icon(Icons.volume_up, size: 18, color: Colors.grey),
+                          ],
+                        ),
+                      ],
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8),
+                        child: Divider(height: 1, thickness: 0.5),
                       ),
-                    ),
+                      // 진동 설정 행
+                      Row(
+                        children: [
+                          const Icon(Icons.vibration, size: 22, color: Colors.cyan),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: InkWell(
+                              onTap: _isVibrationEnabled ? _showVibrationPicker : null,
+                              child: Opacity(
+                                opacity: _isVibrationEnabled ? 1.0 : 0.5,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        _getPayloadTitle(_vibrationPattern, isRingtone: false),
+                                        style: TextStyle(
+                                          fontSize: 14, 
+                                          fontWeight: FontWeight.w600,
+                                          color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                                    const SizedBox(width: 4),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Transform.scale(
+                            scale: 0.8,
+                            child: Switch(
+                              value: _isVibrationEnabled,
+                              activeThumbColor: Colors.cyan,
+                              onChanged: (val) => setState(() => _isVibrationEnabled = val),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
 
@@ -854,41 +1252,98 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                     children: [
                       TextField(
                         controller: _labelController,
-                        style: const TextStyle(fontSize: 14),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                        ),
                         decoration: InputDecoration(
                           labelText: AppLocalizations.of(context)!.alarmName,
-                          labelStyle: const TextStyle(fontSize: 13),
+                          labelStyle: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                          ),
                           hintText: AppLocalizations.of(context)!.enterAlarmName,
-                          hintStyle: const TextStyle(fontSize: 13),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                          hintStyle: TextStyle(
+                            fontSize: 14,
+                            color: isDarkMode ? Colors.white24 : Colors.grey[400],
+                          ),
+                          filled: true,
+                          fillColor: isDarkMode ? Colors.black26 : Colors.grey[50],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: const BorderSide(color: Colors.cyan, width: 2),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                           isDense: true,
                         ),
                       ),
                       const SizedBox(height: 16),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: const Icon(Icons.wallpaper, size: 20),
-                        title: Text(AppLocalizations.of(context)!.selectAlarmBackground, style: const TextStyle(fontSize: 13)),
-                        trailing: Container(
-                          width: 32,
-                          height: 32,
+                      InkWell(
+                        onTap: _showBackgroundPicker,
+                        borderRadius: BorderRadius.circular(15),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _backgroundPath == null 
-                                ? const Color(0xFFFFD54F) // Default Yellow to match Ringing screen
-                                : (_backgroundPath!.startsWith('color:') 
-                                    ? Color(int.parse(_backgroundPath!.split(':')[1])) 
-                                    : Colors.transparent),
-                            image: _backgroundPath != null && !_backgroundPath!.startsWith('color:') 
-                                ? (_backgroundPath!.startsWith('assets/')
-                                    ? DecorationImage(image: AssetImage(_backgroundPath!), fit: BoxFit.cover)
-                                    : DecorationImage(image: FileImage(File(_backgroundPath!)), fit: BoxFit.cover))
-                                : null,
-                            border: Border.all(color: Colors.grey[300]!),
+                            color: isDarkMode ? Colors.black26 : Colors.grey[50],
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: isDarkMode ? Colors.white10 : Colors.grey[300]!,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.wallpaper, size: 22, color: Colors.cyan),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  AppLocalizations.of(context)!.selectAlarmBackground,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: _backgroundPath == null 
+                                      ? Colors.grey[200]
+                                      : (_backgroundPath!.startsWith('color:') 
+                                          ? Color(int.parse(_backgroundPath!.split(':')[1])) 
+                                          : Colors.transparent),
+                                  image: _backgroundPath != null && !_backgroundPath!.startsWith('color:') 
+                                      ? (_backgroundPath!.startsWith('assets/')
+                                          ? DecorationImage(image: AssetImage(_backgroundPath!), fit: BoxFit.cover)
+                                          : DecorationImage(image: FileImage(File(_backgroundPath!)), fit: BoxFit.cover))
+                                      : null,
+                                  border: Border.all(color: Colors.white24, width: 2),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                            ],
                           ),
                         ),
-                        onTap: _showBackgroundPicker,
                       ),
                     ],
                   ),
@@ -907,20 +1362,28 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
               child: SizedBox(
                 width: double.infinity,
-                height: 56,
+                height: 58,
                 child: ElevatedButton(
                   onPressed: _isSaving ? null : _saveAlarm,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: Colors.cyan[600],
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(18),
                     ),
                     elevation: 4,
+                    shadowColor: Colors.cyan.withOpacity(0.4),
                   ),
                   child: _isSaving
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text("저장", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                        )
+                      : Text(
+                          AppLocalizations.of(context)!.save, 
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, letterSpacing: -0.5),
+                        ),
                 ),
               ),
             ),
@@ -1130,8 +1593,6 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: List.generate(7, (index) {
-        // UI index 0(Sun) -> Model index 6
-        // UI index 1(Mon) -> Model index 0
         final modelIndex = (index + 6) % 7;
         final isSelected = _repeatDays[modelIndex];
         return GestureDetector(
@@ -1141,23 +1602,31 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
             });
           },
           child: Container(
-            width: 36,
-            height: 36,
+            width: 40,
+            height: 40,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isSelected ? Colors.cyan : Colors.transparent,
+              color: isSelected ? Colors.cyan : (isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[50]),
               border: Border.all(
-                color: isSelected ? Colors.cyan : (isDarkMode ? Colors.grey[700]! : Colors.grey),
+                color: isSelected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[300]!),
                 width: 1.5,
               ),
+              boxShadow: isSelected ? [
+                BoxShadow(
+                  color: Colors.cyan.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                )
+              ] : null,
             ),
             child: Text(
               days[index],
               style: TextStyle(
-                color: isSelected ? Colors.white : (isDarkMode ? Colors.grey[400] : Colors.grey[700]),
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
+                color: isSelected ? Colors.white : (isDarkMode ? Colors.grey[400] : const Color(0xFF1D1D1F)),
+                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
+                fontSize: 14,
+                letterSpacing: -0.5,
               ),
             ),
           ),
@@ -1166,308 +1635,666 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     );
   }
 
+  IconData _getMissionIcon(MissionType type) {
+    switch (type) {
+      case MissionType.math: return Icons.calculate_outlined;
+      case MissionType.shake: return Icons.vibration;
+      case MissionType.fortune: return Icons.auto_awesome_outlined;
+      case MissionType.walk: return Icons.directions_walk;
+      case MissionType.faceDetection: return Icons.face_retouching_natural;
+      case MissionType.tapSprint: return Icons.touch_app;
+      case MissionType.hiddenButton: return Icons.visibility;
+      case MissionType.numberOrder: return Icons.filter_9_plus;
+      case MissionType.leftRight: return Icons.bolt;
+      case MissionType.none: return Icons.not_interested;
+      default: return Icons.alarm;
+    }
+  }
+
   Widget _buildMissionSelector() {
-    final l10n = AppLocalizations.of(context)!;
-    return Column(
-      children: [
-        // Category Buttons (Icons)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0),
-          child: Row(
-            children: [
-              _buildCategoryButton(l10n.none, Icons.alarm_off, 0),
-              const SizedBox(width: 6),
-              _buildCategoryButton(l10n.missionSnap, Icons.camera_alt, 1),
-              const SizedBox(width: 6),
-              _buildCategoryButton(l10n.missionMath, Icons.calculate, 2),
-              const SizedBox(width: 6),
-              _buildCategoryButton(l10n.missionQuiz, Icons.quiz, 3),
-              const SizedBox(width: 6),
-              _buildCategoryButton(l10n.missionFortune, Icons.auto_awesome, 4),
-              const SizedBox(width: 6),
-              _buildCategoryButton(l10n.missionShake, Icons.vibration, 5),
-              const SizedBox(width: 6),
-              _buildCategoryButton(l10n.missionSupplement, Icons.medication, 6),
-            ],
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
+    return InkWell(
+      onTap: _showMissionPicker,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: isDarkMode ? Colors.black26 : Colors.grey[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDarkMode ? Colors.white10 : Colors.grey[200]!,
           ),
         ),
-        const SizedBox(height: 12),
-        
-        // Content based on category
-        if (_selectedMission == MissionType.none) ...[
-           Text(l10n.missionNoDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-        ] else if (_selectedMission == MissionType.supplement) ...[
-           Text(l10n.missionSupplementDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-        ] else if ([
-          MissionType.cameraSink,
-          MissionType.cameraRefrigerator,
-          MissionType.cameraFace,
-          MissionType.cameraOther,
-          MissionType.cameraScale
-        ].contains(_selectedMission)) ...[
-           Text(l10n.missionCameraDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-           const SizedBox(height: 16),
-           
-           // 3 Sequential Image Slots
-           Row(
-             mainAxisAlignment: MainAxisAlignment.center,
-             children: [
-               _buildImageSlot(0),
-               const Padding(
-                 padding: EdgeInsets.symmetric(horizontal: 8),
-                 child: Icon(Icons.arrow_forward, color: Colors.grey, size: 20),
-               ),
-               _buildImageSlot(1),
-               const Padding(
-                 padding: EdgeInsets.symmetric(horizontal: 8),
-                 child: Icon(Icons.arrow_forward, color: Colors.grey, size: 20),
-               ),
-               _buildImageSlot(2),
-             ],
-           ),
-        ] else if (_selectedMission == MissionType.math) ...[
-           Text(l10n.missionMathDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-           const SizedBox(height: 16),
-           Row(
-             children: [
-               Expanded(
-                 child: Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Text(l10n.difficulty, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                     const SizedBox(height: 8),
-                     DropdownButtonFormField<MathDifficulty>(
-                       initialValue: [MathDifficulty.easy, MathDifficulty.normal, MathDifficulty.hard].contains(_mathDifficulty) ? _mathDifficulty : MathDifficulty.normal,
-                       isExpanded: true,
-                       dropdownColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2C2C2E) : Colors.white,
-                       icon: Icon(Icons.keyboard_arrow_down_rounded, color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black54),
-                       decoration: InputDecoration(
-                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                         filled: true,
-                        fillColor: Theme.of(context).brightness == Brightness.dark ? Colors.black26 : Colors.grey[100],
-                         border: OutlineInputBorder(
-                           borderRadius: BorderRadius.circular(12),
-                           borderSide: BorderSide.none,
-                         ),
-                         enabledBorder: OutlineInputBorder(
-                           borderRadius: BorderRadius.circular(12),
-                           borderSide: BorderSide.none,
-                         ),
-                         focusedBorder: OutlineInputBorder(
-                           borderRadius: BorderRadius.circular(12),
-                           borderSide: const BorderSide(color: Colors.cyan, width: 1.5),
-                         ),
-                         isDense: true,
-                       ),
-                       items: [
-                         DropdownMenuItem(value: MathDifficulty.easy, child: Text(l10n.difficultyEasy, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
-                         DropdownMenuItem(value: MathDifficulty.normal, child: Text(l10n.difficultyNormal, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
-                         DropdownMenuItem(value: MathDifficulty.hard, child: Text(l10n.difficultyHard, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500))),
-                       ],
-                       onChanged: (val) {
-                         if (val != null) {
-                           setState(() {
-                             _mathDifficulty = val;
-                           });
-                         }
-                       },
-                     ),
-                   ],
-                 ),
-               ),
-               const SizedBox(width: 12),
-               Expanded(
-                 child: Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Text(l10n.problemCount, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                     const SizedBox(height: 8),
-                     DropdownButtonFormField<int>(
-                       initialValue: [1, 3, 5].contains(_mathProblemCount) ? _mathProblemCount : 3,
-                       isExpanded: true,
-                       dropdownColor: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2C2C2E) : Colors.white,
-                       icon: Icon(Icons.keyboard_arrow_down_rounded, color: Theme.of(context).brightness == Brightness.dark ? Colors.white70 : Colors.black54),
-                       decoration: InputDecoration(
-                         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                         filled: true,
-                        fillColor: Theme.of(context).brightness == Brightness.dark ? Colors.black26 : Colors.grey[100],
-                         border: OutlineInputBorder(
-                           borderRadius: BorderRadius.circular(12),
-                           borderSide: BorderSide.none,
-                         ),
-                         enabledBorder: OutlineInputBorder(
-                           borderRadius: BorderRadius.circular(12),
-                           borderSide: BorderSide.none,
-                         ),
-                         focusedBorder: OutlineInputBorder(
-                           borderRadius: BorderRadius.circular(12),
-                           borderSide: const BorderSide(color: Colors.cyan, width: 1.5),
-                         ),
-                         isDense: true,
-                       ),
-                       items: [1, 3, 5].map((e) => DropdownMenuItem(
-                         value: e,
-                         child: Text(l10n.problemsCount(e), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
-                       )).toList(),
-                       onChanged: (val) {
-                         if (val != null) {
-                           setState(() {
-                             _mathProblemCount = val;
-                           });
-                         }
-                       },
-                     ),
-                   ],
-                 ),
-               ),
-             ],
-           ),
-        ] else if (_selectedMission == MissionType.quiz) ...[
-           const Text("퀴즈 미션이 선택되었습니다.", style: TextStyle(color: Colors.grey, fontSize: 13)),
-        ] else if (_selectedMission == MissionType.fortune) ...[
-           const Text("운세 미션이 선택되었습니다.", style: TextStyle(color: Colors.grey, fontSize: 13)),
-        ] else if (_selectedMission == MissionType.shake) ...[
-           const Text("핸드폰을 흔들어야 알람이 꺼집니다.", style: TextStyle(color: Colors.grey, fontSize: 13)),
-           const SizedBox(height: 16),
-           Column(
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-               Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 children: [
-                   const Text("흔들기 횟수", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                   Text("$_shakeCount회", style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.cyan, fontSize: 13)),
-                 ],
-               ),
-               Slider(
-                 value: _shakeCount.toDouble(),
-                 min: 5,
-                 max: 100,
-                 divisions: 19,
-                 label: "$_shakeCount",
-                 activeColor: Colors.cyan,
-                 inactiveColor: Colors.cyan.withOpacity(0.2),
-                 onChanged: (val) {
-                   setState(() {
-                     _shakeCount = val.toInt();
-                   });
-                 },
-               ),
-             ],
-           ),
-        ],
+        child: Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.mission,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _getMissionTitle(_selectedMission),
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.cyan[700],
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: -0.3,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            if (!_isCameraMission)
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: Colors.cyan.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: _selectedMission == MissionType.fortuneCatch
+                      ? ClipOval(
+                          child: Image.asset(
+                            'assets/icon/fortuni1_trans.webp',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) => Icon(Icons.face, color: Colors.cyan, size: 18),
+                          ),
+                        )
+                      : Icon(
+                          _getMissionIcon(_selectedMission),
+                          color: Colors.cyan,
+                          size: 18,
+                        ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMathDifficultySelector() {
+    final l10n = AppLocalizations.of(context)!;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    Widget buildItem(MathDifficulty value, String label, String detail) {
+      final selected = _mathDifficulty == value;
+      final bg = selected
+          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          : (isDarkMode ? Colors.black26 : Colors.grey[50]);
+      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => setState(() => _mathDifficulty = value),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 160),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: border),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                    letterSpacing: -0.2,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  detail,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: isDarkMode ? Colors.white70 : Colors.grey[700],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        buildItem(MathDifficulty.easy, l10n.difficultyEasy, '3'),
+        const SizedBox(width: 10),
+        buildItem(MathDifficulty.normal, l10n.difficultyNormal, '4'),
+        const SizedBox(width: 10),
+        buildItem(MathDifficulty.hard, l10n.difficultyHard, '5'),
       ],
     );
   }
 
-  Widget _buildImageSlot(int index) {
+  Widget _buildMathProblemCountSelector() {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final path = _referenceImagePaths[index];
-    return GestureDetector(
-      onTap: () => _showImagePickerOptions(index),
-      child: Container(
-        width: 80,
-        height: 80,
-        decoration: BoxDecoration(
-          color: isDarkMode ? Colors.grey[850] : Colors.grey[200],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isDarkMode ? Colors.grey[800]! : Colors.grey[400]!),
-          image: path != null
-              ? DecorationImage(image: FileImage(File(path)), fit: BoxFit.cover)
-              : null,
+
+    Widget buildItem(int value, String label) {
+      final selected = _mathProblemCount == value;
+      final bg = selected
+          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          : (isDarkMode ? Colors.black26 : Colors.grey[50]);
+      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => setState(() => _mathProblemCount = value),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 160),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: border),
+            ),
+            child: Center(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                  letterSpacing: -0.2,
+                ),
+              ),
+            ),
+          ),
         ),
-        child: path == null
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+      );
+    }
+
+    return Row(
+      children: [
+        buildItem(3, l10n.problemsCount(3)),
+        const SizedBox(width: 10),
+        buildItem(5, l10n.problemsCount(5)),
+        const SizedBox(width: 10),
+        buildItem(7, l10n.problemsCount(7)),
+      ],
+    );
+  }
+
+  Widget _buildShakeCountSelector() {
+    final l10n = AppLocalizations.of(context)!;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    Widget buildItem(int value, String label) {
+      final selected = _shakeCount == value;
+      final bg = selected
+          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          : (isDarkMode ? Colors.black26 : Colors.grey[50]);
+      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => setState(() => _shakeCount = value),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 160),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: border),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.vibration,
+                  size: 20,
+                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white70 : Colors.grey[600]),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        buildItem(20, l10n.shakeTimes(20)),
+        const SizedBox(width: 10),
+        buildItem(50, l10n.shakeTimes(50)),
+        const SizedBox(width: 10),
+        buildItem(100, l10n.shakeTimes(100)),
+      ],
+    );
+  }
+
+  Widget _buildWalkStepCountSelector() {
+    final l10n = AppLocalizations.of(context)!;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    Widget buildItem(int value, String label) {
+      final selected = _walkStepCount == value;
+      final bg = selected
+          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          : (isDarkMode ? Colors.black26 : Colors.grey[50]);
+      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => setState(() => _walkStepCount = value),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 160),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: border),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.directions_walk,
+                  size: 20,
+                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white70 : Colors.grey[600]),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        buildItem(10, l10n.walkSteps(10)),
+        const SizedBox(width: 10),
+        buildItem(20, l10n.walkSteps(20)),
+        const SizedBox(width: 10),
+        buildItem(30, l10n.walkSteps(30)),
+      ],
+    );
+  }
+
+  void _showMissionPicker() {
+    final l10n = AppLocalizations.of(context)!;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: BoxDecoration(
+          color: isDarkMode ? const Color(0xFF1C1C1E) : Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[400],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Text(
+                "알람 해제 미션을 선택해주세요.",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: isDarkMode ? Colors.white : Colors.black87,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  Icon(Icons.camera_alt, size: 28, color: isDarkMode ? Colors.grey[600] : Colors.grey),
-                  const SizedBox(height: 4),
-                  Text("미션 ${index + 1}", style: TextStyle(color: isDarkMode ? Colors.grey[600] : Colors.grey, fontSize: 12)),
+                  _buildMissionPickerItem(l10n.none, l10n.missionNoDescription, MissionType.none, Icons.alarm_off),
+                  _buildMissionPickerItem(l10n.missionMath, l10n.missionMathDescription, MissionType.math, Icons.calculate),
+                  _buildMissionPickerItem(l10n.missionShake, l10n.missionShakeDescription, MissionType.shake, Icons.vibration),
+                  _buildMissionPickerItem(l10n.missionFortune, l10n.missionFortuneDescription, MissionType.fortune, Icons.auto_awesome),
+                  _buildMissionPickerItem(l10n.faceReading, l10n.missionFaceDescription, MissionType.faceDetection, Icons.face_retouching_natural),
+                  _buildMissionPickerItem(l10n.missionSnap, l10n.missionCameraDescription, MissionType.cameraOther, Icons.camera_alt),
+                  _buildMissionPickerItem(l10n.missionFortuneCatch, l10n.missionFortuneCatchDescription, MissionType.fortuneCatch, Icons.face),
+                  _buildMissionPickerItem(l10n.missionWalk, l10n.missionWalkDescription, MissionType.walk, Icons.directions_walk),
+                  _buildMissionPickerItem(l10n.missionNumberOrder, l10n.missionNumberOrderDescription, MissionType.numberOrder, Icons.filter_9_plus),
+                  _buildMissionPickerItem(l10n.missionHiddenButton, l10n.missionHiddenButtonDescription, MissionType.hiddenButton, Icons.visibility),
+                  _buildMissionPickerItem(l10n.missionTapSprint, l10n.missionTapSprintDescriptionShort, MissionType.tapSprint, Icons.touch_app),
+                  _buildMissionPickerItem(l10n.missionLeftRight, l10n.missionLeftRightDescriptionShort, MissionType.leftRight, Icons.bolt),
+                  const SizedBox(height: 20),
                 ],
-              )
-            : null,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildCategoryButton(String label, IconData icon, int index) {
+  Widget _buildMissionPickerItem(String title, String description, MissionType type, IconData fallbackIcon) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    // Determine if this button is selected based on _selectedMission
     bool isSelected = false;
-    if (index == 0) {
+    if (type == MissionType.none) {
       isSelected = _selectedMission == MissionType.none;
-    } else if (index == 1) {
+    } else if (type == MissionType.cameraOther) {
       isSelected = [MissionType.cameraSink, MissionType.cameraRefrigerator, MissionType.cameraFace, MissionType.cameraOther, MissionType.cameraScale].contains(_selectedMission);
-    } else if (index == 2) {
-      isSelected = _selectedMission == MissionType.math;
-    } else if (index == 3) {
-      isSelected = _selectedMission == MissionType.quiz;
-    } else if (index == 4) {
-      isSelected = _selectedMission == MissionType.fortune;
-    } else if (index == 5) {
-      isSelected = _selectedMission == MissionType.shake;
-    } else if (index == 6) {
-      isSelected = _selectedMission == MissionType.supplement;
+    } else {
+      isSelected = _selectedMission == type;
     }
 
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            if (index == 0) {
-              _selectedMission = MissionType.none;
-            } else if (index == 1) {
-              _selectedMission = MissionType.cameraOther; // Default to generic camera
-            } else if (index == 2) {
-              _selectedMission = MissionType.math;
-            } else if (index == 3) {
-              _selectedMission = MissionType.quiz;
-            } else if (index == 4) {
-              _selectedMission = MissionType.fortune;
-            } else if (index == 5) {
-              _selectedMission = MissionType.shake;
-            } else if (index == 6) {
-              _selectedMission = MissionType.supplement;
-            }
-          });
-        },
-        child: Container(
-          height: 56,
+    // 미션별 아이콘 최적화 (컬러풀한 스타일)
+    Widget missionIcon;
+    
+    switch (type) {
+      case MissionType.none:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: isSelected 
-                ? Colors.cyan.withOpacity(0.1) 
-                : (isDarkMode ? Colors.grey[850] : Colors.transparent),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isSelected ? Colors.cyan : (isDarkMode ? Colors.grey[800]! : Colors.grey[300]!),
-              width: 1.5,
+            color: Colors.blueGrey[50],
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.not_interested, color: Colors.blueGrey, size: 22),
+        );
+        break;
+      case MissionType.math:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.orangeAccent, Colors.deepOrange],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.calculate, color: Colors.white, size: 22),
+        );
+        break;
+      case MissionType.walk:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.greenAccent, Colors.teal],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.directions_walk, color: Colors.white, size: 22),
+        );
+        break;
+      case MissionType.shake:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.lightBlueAccent, Colors.blueAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.vibration, color: Colors.white, size: 22),
+        );
+        break;
+      case MissionType.fortune:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.purpleAccent, Colors.deepPurple],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.auto_awesome, color: Colors.white, size: 22),
+        );
+        break;
+      case MissionType.cameraOther:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.greenAccent, Colors.green],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.camera_alt, color: Colors.white, size: 22),
+        );
+        break;
+      case MissionType.faceDetection:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.pinkAccent, Colors.deepPurpleAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.face_retouching_natural, color: Colors.white, size: 22),
+        );
+        break;
+      case MissionType.fortuneCatch:
+        missionIcon = Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.amber.withOpacity(0.3), width: 1),
+            shape: BoxShape.circle,
+          ),
+          child: ClipOval(
+            child: Image.asset(
+              'assets/icon/fortuni1_trans.webp',
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const Icon(Icons.face, color: Colors.amber, size: 24),
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: isSelected ? Colors.cyan : (isDarkMode ? Colors.grey[400] : Colors.grey[600]),
-                size: 20,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: TextStyle(
-                  color: isSelected ? Colors.cyan : (isDarkMode ? Colors.grey[400] : Colors.grey[600]),
-                  fontSize: 11,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+        );
+        break;
+      case MissionType.numberOrder:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.cyanAccent, Colors.cyan],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
           ),
+          child: const Icon(Icons.filter_9_plus, color: Colors.white, size: 22),
+        );
+        break;
+      case MissionType.hiddenButton:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF7F7FD5), Color(0xFF86A8E7), Color(0xFF91EAE4)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.visibility, color: Colors.white, size: 22),
+        );
+        break;
+      case MissionType.tapSprint:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.pinkAccent, Colors.deepPurpleAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.touch_app, color: Colors.white, size: 22),
+        );
+        break;
+      case MissionType.leftRight:
+        missionIcon = Container(
+          padding: const EdgeInsets.all(4),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFFFFC371), Color(0xFFFF5F6D)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(Icons.bolt, color: Colors.white, size: 22),
+        );
+        break;
+      default:
+        missionIcon = Icon(fallbackIcon, color: isDarkMode ? Colors.white70 : Colors.black54, size: 24);
+    }
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedMission = type;
+        });
+        Navigator.pop(context);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? (isDarkMode ? Colors.cyan.withValues(alpha: 0.2) : Colors.cyan.withValues(alpha: 0.1))
+              : (isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey[100]),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? Colors.cyan : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: isDarkMode ? Colors.black26 : Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  if (!isDarkMode)
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                ],
+              ),
+              child: Center(child: missionIcon),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    description,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              const Icon(Icons.check_circle, color: Colors.cyan, size: 20),
+          ],
         ),
       ),
     );
+  }
+
+  String _getMissionTitle(MissionType type) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (type) {
+      case MissionType.none: return l10n.none;
+      case MissionType.cameraSink:
+      case MissionType.cameraRefrigerator:
+      case MissionType.cameraFace:
+      case MissionType.cameraScale:
+      case MissionType.cameraOther: return l10n.missionSnap;
+      case MissionType.math: return l10n.missionMath;
+      case MissionType.walk: return l10n.missionWalk;
+      case MissionType.fortune: return l10n.missionFortune;
+      case MissionType.shake: return l10n.missionShake;
+      case MissionType.fortuneCatch: return l10n.missionFortuneCatch;
+      case MissionType.numberOrder: return l10n.missionNumberOrder;
+      case MissionType.hiddenButton: return l10n.missionHiddenButton;
+      case MissionType.tapSprint: return l10n.missionTapSprint;
+      case MissionType.leftRight: return l10n.missionLeftRight;
+      case MissionType.faceDetection: return l10n.faceReading;
+      default: return l10n.mission;
+    }
   }
 
   String _getPayloadTitle(String key, {required bool isRingtone}) {
@@ -1511,6 +2338,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         debugPrint('Error playing preview: $e');
       }
     }
+
+    // 7초 후 자동 정지
+    Future.delayed(const Duration(seconds: 7), () {
+      if (mounted) {
+        _audioPlayer.stop();
+        FlutterRingtonePlayer().stop();
+      }
+    });
   }
 
   void _playPreviewVibration(String pattern) async {
@@ -1752,6 +2587,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         mathDifficulty: _mathDifficulty,
         mathProblemCount: _mathProblemCount,
         shakeCount: _shakeCount,
+        walkStepCount: _walkStepCount,
       );
 
       bool scheduled = true;

@@ -123,6 +123,7 @@
   "takePhoto": "Сделать фото",
   "selectPhoto": "Выбрать фото",
   "selectAlarmBackground": "Фон будильника",
+  "defaultLabel": "По умолчанию",
   "howToAdd": "Как добавить",
   "addAssetInstructions": "Добавьте изображения в папку assets/images/ и зарегистрируйте их в pubspec.yaml.",
   "gallery": "Галерея",

@@ -1,6 +1,12 @@
-import 'package:flutter/foundation.dart';
+import 'dart:ui';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -10,8 +16,19 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  Future<void> init(Future<void> Function(String?)? onNotificationTap, {Future<void> Function(NotificationResponse)? onNotificationResponse}) async {
+  Future<void> init(
+    Future<void> Function(String?)? onNotificationTap, {
+    Future<void> Function(NotificationResponse)? onNotificationResponse,
+    bool isBackground = false,
+  }) async {
     tz.initializeTimeZones();
+
+    try {
+      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(timeZoneName));
+    } catch (e) {
+      debugPrint('Failed to get local timezone: $e');
+    }
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -40,28 +57,53 @@ class NotificationService {
       },
     );
 
-    // 앱이 알림으로 인해 실행되었는지 확인 (종료된 상태에서 실행 시)
-    // main.dart의 _checkNotificationLaunch에서 중복 처리 방지와 함께 수행하므로 
-    // 여기서는 자동 실행 로직을 제거합니다.
-    /*
-    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
-        await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    
-    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-      final response = notificationAppLaunchDetails!.notificationResponse;
-      if (response != null) {
-        debugPrint('[NotificationService] App launched via notification: ${response.payload}');
-        // 약간의 딜레이 후 처리 (앱 초기화 대기)
-        Future.delayed(const Duration(milliseconds: 500), () async {
-          if (onNotificationResponse != null) {
-            await onNotificationResponse(response);
-          } else if (onNotificationTap != null) {
-            await onNotificationTap(response.payload);
-          }
-        });
+    // Android 13 이상 알림 권한 요청 (백그라운드가 아닐 때만)
+    if (!isBackground) {
+      final platform = flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      if (platform != null) {
+        await platform.requestNotificationsPermission();
       }
     }
-    */
+  }
+
+  Future<void> _updateAndCacheTimezone() async {
+    try {
+      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(timeZoneName));
+      
+      // Hive에 저장 (앱 상태 박스가 열려있는지 확인)
+      if (Hive.isBoxOpen('app_state')) {
+        await Hive.box('app_state').put('local_timezone', timeZoneName);
+      } else {
+        final box = await Hive.openBox('app_state');
+        await box.put('local_timezone', timeZoneName);
+      }
+      debugPrint('Timezone updated and cached: $timeZoneName');
+    } catch (e) {
+      debugPrint('Error updating timezone: $e');
+    }
+  }
+
+  Future<void> _loadCachedTimezone() async {
+    try {
+      String? timeZoneName;
+      if (Hive.isBoxOpen('app_state')) {
+        timeZoneName = Hive.box('app_state').get('local_timezone');
+      } else {
+        final box = await Hive.openBox('app_state');
+        timeZoneName = box.get('local_timezone');
+      }
+
+      if (timeZoneName != null) {
+        tz.setLocalLocation(tz.getLocation(timeZoneName));
+        debugPrint('Cached timezone loaded: $timeZoneName');
+      } else {
+        debugPrint('No cached timezone found. Using default.');
+      }
+    } catch (e) {
+      debugPrint('Error loading cached timezone: $e');
+    }
   }
 
   // 영양제 알림 전용 (액션 버튼 포함)
@@ -210,5 +252,166 @@ class NotificationService {
 
   Future<void> cancelNotification(int id) async {
     await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  static const int _fortunePassReminderId = 910001;
+  static const int _dailyFortuneNotificationId = 910002;
+
+  Future<void> scheduleDailyFortuneNotification({
+    required DateTime time,
+    required String title,
+    required String body,
+  }) async {
+    await cancelNotification(_dailyFortuneNotificationId);
+
+    final now = DateTime.now();
+    var scheduledDate = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
+    const androidDetails = AndroidNotificationDetails(
+      'daily_fortune_notification',
+      'Today\'s Fortune',
+      channelDescription: 'Daily reminder to check your fortune',
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
+    );
+
+    const notificationDetails = NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      _dailyFortuneNotificationId,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at the same time
+      payload: 'fortune_daily',
+    );
+  }
+
+  Future<void> cancelDailyFortuneNotification() async {
+    await cancelNotification(_dailyFortuneNotificationId);
+  }
+
+  Future<void> scheduleFortunePassExpiryReminder({required DateTime activeUntilLocal}) async {
+    final now = DateTime.now();
+    final remindAt = activeUntilLocal.subtract(const Duration(hours: 24));
+
+    await cancelNotification(_fortunePassReminderId);
+    if (!remindAt.isAfter(now.add(const Duration(minutes: 1)))) {
+      return;
+    }
+
+    final lang = PlatformDispatcher.instance.locale.languageCode;
+    final title = _fortunePassReminderTitle(lang);
+    final body = _fortunePassReminderBody(lang);
+
+    const androidDetails = AndroidNotificationDetails(
+      'fortune_pass_reminder',
+      'Fortune Pass',
+      channelDescription: 'Fortune Pass reminder notifications',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+
+    const notificationDetails = NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      _fortunePassReminderId,
+      title,
+      body,
+      tz.TZDateTime.from(remindAt, tz.local),
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: null,
+    );
+  }
+
+  String _fortunePassReminderTitle(String lang) {
+    switch (lang) {
+      case 'ko':
+        return '포춘패스 만료 예정';
+      case 'ja':
+        return 'フォーチュンパスの期限が近いです';
+      case 'zh':
+        return 'Fortune Pass 即将到期';
+      default:
+        return 'Fortune Pass Expiring Soon';
+    }
+  }
+
+  String _fortunePassReminderBody(String lang) {
+    switch (lang) {
+      case 'ko':
+        return '내일 포춘패스가 만료됩니다. 혜택을 계속 받으시려면 갱신해주세요!';
+      case 'ja':
+        return '明日フォーチュンパスの期限が切れます。特典を継続するには更新してください！';
+      case 'zh':
+        return '您的 Fortune Pass 将于明天到期。请续订以继续享受优惠！';
+      default:
+        return 'Your Fortune Pass expires tomorrow. Renew now to keep your benefits!';
+    }
+  }
+
+  // 커스텀 미션 알림
+  Future<void> scheduleMissionNotification({
+    required String missionId,
+    required String title,
+    required String body,
+    required TimeOfDay time,
+  }) async {
+    final int notificationId = missionId.hashCode;
+    await cancelNotification(notificationId);
+
+    final now = DateTime.now();
+    var scheduledDate = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
+    const androidDetails = AndroidNotificationDetails(
+      'mission_notification_channel',
+      'Mission Reminder',
+      channelDescription: 'Reminders for your custom missions',
+      importance: Importance.high,
+      priority: Priority.high,
+      sound: RawResourceAndroidNotificationSound('alarm_sound'),
+      playSound: true,
+      enableVibration: true,
+      actions: <AndroidNotificationAction>[
+        AndroidNotificationAction(
+          'MISSION_COMPLETE',
+          '지금 할게요',
+          showsUserInterface: true,
+          cancelNotification: true,
+        ),
+        AndroidNotificationAction(
+          'MISSION_LATER',
+          '나중에 할게요',
+          showsUserInterface: true,
+          cancelNotification: true,
+        ),
+      ],
+    );
+
+    const notificationDetails = NotificationDetails(android: androidDetails);
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      notificationId,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time, // Repeat daily
+      payload: 'mission_$missionId',
+    );
+  }
+
+  Future<void> cancelMissionNotification(String missionId) async {
+    await cancelNotification(missionId.hashCode);
   }
 }

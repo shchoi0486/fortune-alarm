@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart'; // Import Cupertino for Wheel Pickers
 import 'package:fortune_alarm/features/fortune/saju/models/saju_profile.dart';
 import 'tojeong_result_screen.dart';
 import 'services/tojeong_service.dart';
+import '../mixins/fortune_access_mixin.dart';
 
 class TojeongInputScreen extends StatefulWidget {
   const TojeongInputScreen({super.key});
@@ -11,7 +12,7 @@ class TojeongInputScreen extends StatefulWidget {
   State<TojeongInputScreen> createState() => _TojeongInputScreenState();
 }
 
-class _TojeongInputScreenState extends State<TojeongInputScreen> {
+class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAccessMixin {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   
@@ -115,16 +116,18 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> {
 
   void _analyzeProfile(SajuProfile profile) {
     final result = TojeongService.calculate(profile, _targetYear);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TojeongResultScreen(
-          profile: profile, 
-          targetYear: _targetYear,
-          result: result,
+    showFortuneAccessDialog(() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TojeongResultScreen(
+            profile: profile, 
+            targetYear: _targetYear,
+            result: result,
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Future<void> _confirmDelete(SajuProfile profile) async {

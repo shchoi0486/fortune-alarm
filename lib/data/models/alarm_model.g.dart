@@ -38,13 +38,14 @@ class AlarmModelAdapter extends TypeAdapter<AlarmModel> {
       mathDifficulty: fields[19] as MathDifficulty,
       mathProblemCount: fields[20] as int,
       shakeCount: fields[21] == null ? 50 : fields[21] as int,
+      walkStepCount: fields[22] == null ? 20 : fields[22] as int,
     )..referenceImagePath = fields[5] as String?;
   }
 
   @override
   void write(BinaryWriter writer, AlarmModel obj) {
     writer
-      ..writeByte(22)
+      ..writeByte(23)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -88,7 +89,9 @@ class AlarmModelAdapter extends TypeAdapter<AlarmModel> {
       ..writeByte(20)
       ..write(obj.mathProblemCount)
       ..writeByte(21)
-      ..write(obj.shakeCount);
+      ..write(obj.shakeCount)
+      ..writeByte(22)
+      ..write(obj.walkStepCount);
   }
 
   @override

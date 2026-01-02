@@ -24,6 +24,7 @@ import '../../services/notification_service.dart';
 import '../../providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
 import '../alarm/add_alarm_screen.dart';
+import '../mission/widgets/mission_success_overlay.dart';
 
 class MissionCameraScreen extends ConsumerStatefulWidget {
   final MissionType missionType;
@@ -62,6 +63,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
 // Field removed as it was unused
   DateTime _lastComparisonTime = DateTime.now();
   bool _isMissionSuccess = false;
+  bool _isSuccess = false; // Add for standardized overlay
   int _currentMissionIndex = 0;
   List<String> _activeImagePaths = [];
   DateTime? _fastStartUntil;
@@ -439,59 +441,9 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
       
       setState(() {
         _isMissionSuccess = true;
+        _isSuccess = true;
         _debugLabelText = "$totalMissions/$totalMissions 성공! 매칭 성공!";
         _currentSimilarity = 1.0;
-        _showSuccessOverlay = true;
-      });
-
-      Future.delayed(const Duration(milliseconds: 2000), () async {
-        if (mounted) {
-          // 성공 애니메이션/오버레이를 충분히 보여준 후 알람 정지
-          _stopAlarm();
-          
-          // [추가] 사용자 경험 개선: 스누즈 안내
-          if (widget.alarmId != null && _alarm != null) {
-             final bool hasMoreSnooze = _alarm!.snoozeInterval > 0 && 
-                                      (_alarm!.remainingSnoozeCount > 1 || 
-                                      (!_alarm!.id.endsWith('_snooze') && _alarm!.maxSnoozeCount > 0));
-             
-             if (hasMoreSnooze) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('미션 성공! 하지만 설정에 따라 ${_alarm!.snoozeInterval}분 뒤 다시 울립니다.'),
-                    duration: const Duration(seconds: 3),
-                  ),
-                );
-             }
-          }
-
-          // ref.read(alarmListProvider.notifier).completeAlarm(widget.alarmId!); // <--- AlarmRingingScreen에서 처리하도록 제거
-
-          try {
-            // 카메라 스트림 명시적 중지 (크래시 방지)
-            final controller = ref.read(cameraControllerProvider);
-            if (controller != null && controller.value.isStreamingImages) {
-              await controller.stopImageStream();
-            }
-          } catch (e) {
-            debugPrint('Error stopping camera stream on success: $e');
-          }
-
-          if (!mounted) return;
-          
-          // 알람 해제 모드인 경우 성공 화면으로 이동
-          if (widget.alarmId != null) {
-            debugPrint('[MissionCameraScreen] Mission success - popping to AlarmRingingScreen');
-            // 미션 성공 결과를 AlarmRingingScreen으로 전달
-            Navigator.of(context).pop(true);
-          } else {
-            // 미션 테스트/설정 모드인 경우 알람 설정 화면으로 이동
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) => const AddAlarmScreen()),
-              (route) => false,
-            );
-          }
-        }
       });
     }
   }
@@ -588,12 +540,12 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
       onPointerDown: (_) => _resetInactivityTimer(),
       child: Scaffold(
         body: LayoutBuilder(
-        builder: (context, constraints) {
-          final layoutSize = constraints.biggest;
-          
-          return Stack(
-            fit: StackFit.expand,
-            children: [
+          builder: (context, constraints) {
+            final layoutSize = constraints.biggest;
+
+            return Stack(
+              fit: StackFit.expand,
+              children: [
               // 0. Background (Alarm Theme)
               Container(decoration: bgDecoration),
 
@@ -722,8 +674,8 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
                 ),
               ),
 
-              // 6. 성공 애니메이션 및 정보 오버레이 (통합 버전)
-              if (_showCorrectAnimation || _isMissionSuccess || _showSuccessOverlay)
+              // 6. 중간 성공 애니메이션 및 정보 오버레이 (최종 성공 시에는 MissionSuccessOverlay가 담당)
+              if ((_showCorrectAnimation || _showSuccessOverlay) && !_isSuccess)
                 Positioned.fill(
                   child: Container(
                     color: Colors.black.withOpacity(0.7),
@@ -826,11 +778,57 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
                     ),
                   ),
                 ),
-            ],
-          );
-        }
+                if (_isSuccess)
+                  Positioned.fill(
+                  child: MissionSuccessOverlay(
+                    onFinish: () async {
+                      if (mounted) {
+                        _stopAlarm();
+
+                        // [추가] 사용자 경험 개선: 스누즈 안내
+                        if (widget.alarmId != null && _alarm != null) {
+                          final bool hasMoreSnooze = _alarm!.snoozeInterval > 0 &&
+                              (_alarm!.remainingSnoozeCount > 1 ||
+                                  (!_alarm!.id.endsWith('_snooze') && _alarm!.maxSnoozeCount > 0));
+
+                          if (hasMoreSnooze) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('미션 성공! 하지만 설정에 따라 ${_alarm!.snoozeInterval}분 뒤 다시 울립니다.'),
+                                duration: const Duration(seconds: 3),
+                              ),
+                            );
+                          }
+                        }
+
+                        try {
+                          final controller = ref.read(cameraControllerProvider);
+                          if (controller != null && controller.value.isStreamingImages) {
+                            await controller.stopImageStream();
+                          }
+                        } catch (e) {
+                          debugPrint('Error stopping camera stream on success: $e');
+                        }
+
+                        if (!mounted) return;
+
+                        if (widget.alarmId != null) {
+                          Navigator.of(context).pop(true);
+                        } else {
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => const AddAlarmScreen()),
+                            (route) => false,
+                          );
+                        }
+                      }
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
-    ),
     );
   }
 }

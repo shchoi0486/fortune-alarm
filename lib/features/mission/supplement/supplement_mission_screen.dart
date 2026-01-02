@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'providers/supplement_provider.dart';
+import '../widgets/mission_success_overlay.dart';
 import 'widgets/pill_box_widget.dart';
 import 'supplement_alarm_screen.dart';
 import 'supplement_record_screen.dart';
 import 'supplement_ringing_screen.dart';
-import 'dart:async';
 import '../../../services/supplement_alarm_service.dart';
 
 class SupplementMissionScreen extends ConsumerStatefulWidget {
@@ -18,6 +18,8 @@ class SupplementMissionScreen extends ConsumerStatefulWidget {
 }
 
 class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScreen> {
+  bool _isSuccess = false;
+
   @override
   void initState() {
     super.initState();
@@ -165,7 +167,9 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
 
     ref.listen(supplementProvider, (previous, next) {
       if (previous != null && !previous.isGoalAchieved && next.isGoalAchieved) {
-        _showSuccessDialog();
+        setState(() {
+          _isSuccess = true;
+        });
       }
     });
 
@@ -183,205 +187,162 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SafeArea(
-          top: widget.useSafeAreaTop,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 34,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 16),
-                        child: GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          behavior: HitTestBehavior.opaque,
-                          child: const Padding(
-                            padding: EdgeInsets.all(4.0),
-                            child: Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            SafeArea(
+              top: widget.useSafeAreaTop,
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 34,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              behavior: HitTestBehavior.opaque,
+                              child: const Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        const Text(
+                          '영양제',
+                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ],
                     ),
-                    const Text(
-                      '영양제',
-                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                        child: IntrinsicHeight(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 10),
-                              Text(
-                                '$currentCount회 섭취',
-                                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '목표: 하루 $dailyGoal회',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.orange[700],
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 50),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                                child: PillBoxWidget(
-                                  currentCount: currentCount,
-                                  dailyGoal: dailyGoal,
-                                  onTake: () => notifier.takeSupplement(),
-                                  onRemove: () => notifier.removeSupplement(),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return SingleChildScrollView(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                            child: IntrinsicHeight(
+                              child: Column(
                                 children: [
-                                  _ControlButton(
-                                    icon: Icons.remove,
-                                    onPressed: () => notifier.removeSupplement(),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    '$currentCount회 섭취',
+                                    style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                                   ),
-                                  const SizedBox(width: 30),
-                                  GestureDetector(
-                                    onTap: () => notifier.takeSupplement(),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange[50],
-                                        shape: BoxShape.circle,
-                                        border: Border.all(color: Colors.orange[200]!),
-                                      ),
-                                      child: Icon(Icons.medication, size: 40, color: Colors.orange[700]),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '목표: 하루 $dailyGoal회',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.orange[700],
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  const SizedBox(width: 30),
-                                  _ControlButton(
-                                    icon: Icons.add,
-                                    onPressed: () => notifier.takeSupplement(),
+                                  const SizedBox(height: 50),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                                    child: PillBoxWidget(
+                                      currentCount: currentCount,
+                                      dailyGoal: dailyGoal,
+                                      onTake: () => notifier.takeSupplement(),
+                                      onRemove: () => notifier.removeSupplement(),
+                                    ),
                                   ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _ControlButton(
+                                        icon: Icons.remove,
+                                        onPressed: () => notifier.removeSupplement(),
+                                      ),
+                                      const SizedBox(width: 30),
+                                      GestureDetector(
+                                        onTap: () => notifier.takeSupplement(),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: Colors.orange[50],
+                                            shape: BoxShape.circle,
+                                            border: Border.all(color: Colors.orange[200]!),
+                                          ),
+                                          child: Icon(Icons.medication, size: 40, color: Colors.orange[700]),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 30),
+                                      _ControlButton(
+                                        icon: Icons.add,
+                                        onPressed: () => notifier.takeSupplement(),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  const Text(
+                                    '영양제를 챙겨 드셨나요?',
+                                    style: TextStyle(color: Colors.grey, fontSize: 13),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  const Spacer(),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    child: Column(
+                                      children: [
+                                        _MenuItem(
+                                          title: '미션 기록 보기',
+                                          icon: Icons.bar_chart_rounded,
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplementRecordScreen()));
+                                          },
+                                        ),
+                                        const SizedBox(height: 10),
+                                        _MenuItem(
+                                          title: '섭취 목표 설정',
+                                          value: '$dailyGoal회',
+                                          icon: Icons.edit_note,
+                                          onTap: () => _showGoalDialog(dailyGoal),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        _MenuItem(
+                                          title: '알림',
+                                          icon: Icons.notifications_none_rounded,
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplementAlarmScreen()));
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 30),
                                 ],
                               ),
-                              const SizedBox(height: 8),
-                              const Text(
-                                '영양제를 챙겨 드셨나요?',
-                                style: TextStyle(color: Colors.grey, fontSize: 13),
-                              ),
-                              const SizedBox(height: 20),
-                              const Spacer(),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20),
-                                child: Column(
-                                  children: [
-                                    _MenuItem(
-                                      title: '미션 기록 보기',
-                                      icon: Icons.bar_chart_rounded,
-                                      onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplementRecordScreen()));
-                                      },
-                                    ),
-                                    const SizedBox(height: 10),
-                                    _MenuItem(
-                                      title: '섭취 목표 설정',
-                                      value: '$dailyGoal회',
-                                      icon: Icons.edit_note,
-                                      onTap: () => _showGoalDialog(dailyGoal),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    _MenuItem(
-                                      title: '알림',
-                                      icon: Icons.notifications_none_rounded,
-                                      onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplementAlarmScreen()));
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 30),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    );
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (_isSuccess)
+              Positioned.fill(
+                child: MissionSuccessOverlay(
+                  onFinish: () {
+                    if (mounted && Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
                   },
                 ),
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );
-  }
-
-  void _showSuccessDialog() {
-    Timer? autoCloseTimer;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) {
-        autoCloseTimer = Timer(const Duration(seconds: 3), () {
-          if (dialogContext.mounted && Navigator.canPop(dialogContext)) {
-            Navigator.pop(dialogContext);
-          }
-        });
-
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.check_circle, color: Colors.orange[700], size: 80),
-                const SizedBox(height: 20),
-                const Text(
-                  '건강을 챙기셨네요!',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  '오늘의 목표를 달성했습니다.',
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pop(dialogContext),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: const Text('확인'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    ).then((_) {
-      autoCloseTimer?.cancel();
-      if (mounted && Navigator.canPop(context)) {
-        Navigator.pop(context);
-      }
-    });
   }
 
   void _showGoalDialog(int currentGoal) {

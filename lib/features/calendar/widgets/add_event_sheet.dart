@@ -70,7 +70,7 @@ class AddEventSheet extends StatefulWidget {
     required this.selectedDate,
     required this.onSave,
     this.event,
-    this.themeColor = const Color(0xFF2979FF),
+    this.themeColor = const Color(0xFFE57373),
     this.isFullScreen = false,
   });
 
@@ -1249,7 +1249,9 @@ class _AddEventSheetState extends State<AddEventSheet> {
       // 더 정교하게 비교할 수 있지만, 여기서는 단순하게 처리
       if (_memoBlocks.length > 1) return true;
       if (_memoBlocks.isNotEmpty && _memoBlocks[0].controller != null && 
-          _memoBlocks[0].controller!.text != (widget.event!.content)) return true;
+          _memoBlocks[0].controller!.text != (widget.event!.content)) {
+        return true;
+      }
     } else {
       // 새 이벤트를 작성 중인 경우
       if (_titleController.text.trim().isNotEmpty) return true;
@@ -1257,7 +1259,9 @@ class _AddEventSheetState extends State<AddEventSheet> {
       if (_isTimeManuallySet) return true;
       if (_memoBlocks.length > 1) return true;
       if (_memoBlocks.isNotEmpty && _memoBlocks[0].controller != null && 
-          _memoBlocks[0].controller!.text.trim().isNotEmpty) return true;
+          _memoBlocks[0].controller!.text.trim().isNotEmpty) {
+        return true;
+      }
     }
     
     return false;
@@ -2389,6 +2393,10 @@ class _AddEventSheetState extends State<AddEventSheet> {
       const Color(0xFF4DB6AC), // Soft Teal
       const Color(0xFF81C784), // Soft Green
       const Color(0xFFAED581), // Soft Light Green
+      const Color(0xFFDCE775), // Soft Lime
+      const Color(0xFFFFF176), // Soft Yellow
+      const Color(0xFFFFD54F), // Soft Amber
+      const Color(0xFFFFB74D), // Soft Orange
       const Color(0xFFFF8A65), // Soft Deep Orange
       const Color(0xFFA1887F), // Soft Brown
       const Color(0xFF90A4AE), // Soft Blue Grey

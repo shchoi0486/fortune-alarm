@@ -348,11 +348,14 @@ class AppLocalizationsHi extends AppLocalizations {
   String get selectAlarmBackground => 'अलार्म बैकग्राउंड चुनें';
 
   @override
+  String get defaultLabel => 'डिफ़ॉल्ट';
+
+  @override
   String get howToAdd => 'कैसे जोड़ें';
 
   @override
   String get addAssetInstructions =>
-      'assets/images/ फ़ोल्डर में इमेज डालें और pubspec.yaml में पंजीकृत करें।';
+      'assets/images/ फोल्डर में इमेज डालें और pubspec.yaml में रजिस्टर करें।';
 
   @override
   String get gallery => 'गैलरी';
@@ -407,6 +410,11 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get missionRewardEarned =>
       'बधाई हो! आपने आज 5 मिशन पूरे कर लिए हैं और 1 फॉर्च्यून कुकी जीती है!';
+
+  @override
+  String missionRewardEarnedWithCount(int missions, int cookies) {
+    return 'Congratulations! You completed $missions missions today and earned $cookies Fortune Cookie(s)!';
+  }
 
   @override
   String daysCount(int count) {
@@ -466,20 +474,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get missionMath => 'गणित';
 
   @override
-  String get missionQuiz => 'प्रश्नोत्तरी';
-
-  @override
   String get missionFortune => 'भाग्य';
 
   @override
   String get missionShake => 'हिलाना';
 
   @override
-  String get missionNoDescription => 'बिना किसी मिशन के अलार्म बजेगा।';
+  String get missionFortuneCatch => 'Fortune Catch';
 
   @override
-  String get missionSupplementDescription =>
-      'सप्लीमेंट सेवन पुष्टिकरण स्क्रीन दिखाई देगी।';
+  String get missionNoDescription => 'बिना किसी मिशन के अलार्म बजेगा।';
 
   @override
   String get missionCameraDescription =>
@@ -490,13 +494,116 @@ class AppLocalizationsHi extends AppLocalizations {
       'अलार्म बंद करने के लिए गणित की समस्याओं को हल करें।';
 
   @override
-  String get missionQuizDescription => 'प्रश्नोत्तरी मिशन चुना गया है।';
-
-  @override
   String get missionFortuneDescription => 'भाग्य मिशन चुना गया है।';
 
   @override
   String get missionShakeDescription => 'अलार्म बंद करने के लिए फोन को हिलाएं।';
+
+  @override
+  String get missionFortuneCatchDescription => 'Catch the moving Fortuni!';
+
+  @override
+  String get missionWalk => 'Walk';
+
+  @override
+  String get missionWalkDescription => 'Walk to turn off the alarm!';
+
+  @override
+  String get missionFaceDescription => 'Keep your face in the frame for 10s.';
+
+  @override
+  String get walkStepCount => 'Target Steps';
+
+  @override
+  String walkSteps(int count) {
+    return '$count steps';
+  }
+
+  @override
+  String get missionNumberOrder => 'Number Order';
+
+  @override
+  String get missionNumberOrderDescription =>
+      'Tap numbers from 1 to 9 in order.';
+
+  @override
+  String missionNumberOrderGuide(int nextNumber) {
+    return 'Next: $nextNumber';
+  }
+
+  @override
+  String get missionHiddenButton => 'Position Memory';
+
+  @override
+  String get missionHiddenButtonDescription =>
+      'Memorize the lit tiles in order and tap them within 10 seconds.';
+
+  @override
+  String missionHiddenButtonDifficulty(int delta) {
+    return 'Δ$delta';
+  }
+
+  @override
+  String get missionTapSprint => 'Tap Sprint';
+
+  @override
+  String get missionTapSprintDescriptionShort => 'Tap to fill the meter.';
+
+  @override
+  String missionTapSprintDescription(int goalTaps) {
+    return 'Tap $goalTaps+ times to fill the meter.';
+  }
+
+  @override
+  String get missionTapSprintTapHere => 'Tap';
+
+  @override
+  String get missionTapSprintHint => 'Fills up fast, drains if you pause.';
+
+  @override
+  String get missionLeftRight => 'Left / Right';
+
+  @override
+  String get missionLeftRightDescriptionShort =>
+      'Follow the prompt and pick left or right.';
+
+  @override
+  String missionLeftRightDescription(int targetStreak) {
+    return 'Get $targetStreak correct in a row.';
+  }
+
+  @override
+  String get missionLeftRightPromptLeft => 'Tap LEFT';
+
+  @override
+  String get missionLeftRightPromptRight => 'Tap RIGHT';
+
+  @override
+  String get left => 'Left';
+
+  @override
+  String get right => 'Right';
+
+  @override
+  String get missionHintInactivity => 'If you stop for 2 minutes, it resets.';
+
+  @override
+  String fortuneCatchScore(int score) {
+    return 'Score: $score';
+  }
+
+  @override
+  String get fortuneCatchGoal => 'Goal: 100';
+
+  @override
+  String fortuneCatchGoalDetail(int count, int min) {
+    return '(Catches: $count/$min)';
+  }
+
+  @override
+  String fortuneCatchCombo(int combo) {
+    return '$combo Combo!';
+  }
 
   @override
   String get difficulty => 'कठिनाई';

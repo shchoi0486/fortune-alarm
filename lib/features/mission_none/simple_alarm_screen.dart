@@ -13,6 +13,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../../providers/alarm_list_provider.dart';
 import '../../services/notification_service.dart';
 import '../../data/models/alarm_model.dart';
+import '../mission/widgets/mission_success_overlay.dart';
 
 class SimpleAlarmScreen extends ConsumerStatefulWidget {
   final String? alarmId;
@@ -30,6 +31,7 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
   DateTime _now = DateTime.now();
   AlarmModel? _alarm;
   bool _isLoading = true;
+  bool _isSuccess = false;
 
   @override
   void initState() {
@@ -174,6 +176,14 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
   }
 
   void _handleDismiss() {
+    if (mounted) {
+      setState(() {
+        _isSuccess = true;
+      });
+    }
+  }
+
+  void _onFinish() {
     _stopAlarm();
     if (widget.alarmId != null) {
       ref.read(alarmListProvider.notifier).toggleAlarm(widget.alarmId!);
@@ -217,92 +227,102 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
     }
 
     return Scaffold(
-      body: Container(
-        decoration: bgDecoration,
-        width: double.infinity,
-        height: double.infinity,
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              Text(
-                DateFormat('h:mm').format(_now),
-                style: const TextStyle(
-                  fontSize: 80,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  shadows: [Shadow(blurRadius: 10, color: Colors.black54)],
-                ),
-              ),
-              Text(
-                DateFormat('a', 'ko_KR').format(_now) == 'AM' ? '오전' : '오후',
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  shadows: [Shadow(blurRadius: 5, color: Colors.black45)],
-                ),
-              ),
-              const SizedBox(height: 40),
-              const Icon(
-                Icons.alarm,
-                size: 60,
-                color: Colors.white,
-                shadows: [Shadow(blurRadius: 10, color: Colors.black45)],
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                '일어날 시간입니다!',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  shadows: [Shadow(blurRadius: 10, color: Colors.black45)],
-                ),
-              ),
-              const Spacer(),
-              // 알람 끄기 버튼 추가 (사용자 요청: 버튼 터치로도 끄기)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: TextButton(
-                  onPressed: _handleDismiss,
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.black.withOpacity(0.3),
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                    side: BorderSide(color: Colors.white.withOpacity(0.5)),
+      body: Stack(
+        children: [
+          Container(
+            decoration: bgDecoration,
+            width: double.infinity,
+            height: double.infinity,
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  Text(
+                    DateFormat('h:mm').format(_now),
+                    style: const TextStyle(
+                      fontSize: 80,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [Shadow(blurRadius: 10, color: Colors.black54)],
+                    ),
                   ),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.close, color: Colors.white),
-                      SizedBox(width: 8),
-                      Text("알람 끄기", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                    ],
+                  Text(
+                    DateFormat('a', 'ko_KR').format(_now) == 'AM' ? '오전' : '오후',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      shadows: [Shadow(blurRadius: 5, color: Colors.black45)],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 40),
+                  const Icon(
+                    Icons.alarm,
+                    size: 60,
+                    color: Colors.white,
+                    shadows: [Shadow(blurRadius: 10, color: Colors.black45)],
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    '일어날 시간입니다!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [Shadow(blurRadius: 10, color: Colors.black45)],
+                    ),
+                  ),
+                  const Spacer(),
+                  // 알람 끄기 버튼 추가 (사용자 요청: 버튼 터치로도 끄기)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: TextButton(
+                      onPressed: _handleDismiss,
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.black.withOpacity(0.3),
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        side: BorderSide(color: Colors.white.withOpacity(0.5)),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.close, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text("알람 끄기", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
+                    child: SlideAction(
+                      borderRadius: 24,
+                      elevation: 0,
+                      innerColor: Colors.white,
+                      outerColor: Colors.white.withOpacity(0.2),
+                      sliderButtonIcon: const Icon(Icons.arrow_forward, color: Colors.black),
+                      text: '밀어서 끄기',
+                      textStyle: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                      onSubmit: () {
+                         _handleDismiss();
+                         return null;
+                      },
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
-                child: SlideAction(
-                  borderRadius: 24,
-                  elevation: 0,
-                  innerColor: Colors.white,
-                  outerColor: Colors.white.withOpacity(0.2),
-                  sliderButtonIcon: const Icon(Icons.arrow_forward, color: Colors.black),
-                  text: '밀어서 끄기',
-                  textStyle: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-                  onSubmit: () {
-                     _handleDismiss();
-                     return null;
-                  },
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          if (_isSuccess)
+            Positioned.fill(
+              child: MissionSuccessOverlay(
+                onFinish: _onFinish,
+              ),
+            ),
+        ],
       ),
     );
   }

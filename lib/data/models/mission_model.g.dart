@@ -22,13 +22,15 @@ class MissionModelAdapter extends TypeAdapter<MissionModel> {
       icon: fields[2] as String,
       isSystemMission: fields[3] as bool,
       category: fields[4] as MissionCategory,
+      alarmTime: fields[5] as String?,
+      isAlarmEnabled: fields[6] as bool? ?? false,
     );
   }
 
   @override
   void write(BinaryWriter writer, MissionModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +40,11 @@ class MissionModelAdapter extends TypeAdapter<MissionModel> {
       ..writeByte(3)
       ..write(obj.isSystemMission)
       ..writeByte(4)
-      ..write(obj.category);
+      ..write(obj.category)
+      ..writeByte(5)
+      ..write(obj.alarmTime)
+      ..writeByte(6)
+      ..write(obj.isAlarmEnabled);
   }
 
   @override

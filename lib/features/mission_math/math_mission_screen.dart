@@ -15,6 +15,7 @@ import '../../data/models/math_difficulty.dart';
 import '../../data/models/alarm_model.dart';
 import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
+import '../mission/widgets/mission_success_overlay.dart';
 
 class MathMissionScreen extends ConsumerStatefulWidget {
   final String? alarmId;
@@ -37,6 +38,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   String _feedback = '문제를 풀어주세요.';
   
   bool _showCorrectAnimation = false;
+  bool _isSuccess = false;
   bool _isLastProblem = false;
   String _lastMessage = '';
   
@@ -375,11 +377,10 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
 
   void _handleSuccess() {
     _stopAlarm();
-    // ref.read(alarmListProvider.notifier).completeAlarm(widget.alarmId!); // <--- AlarmRingingScreen에서 처리하도록 제거
     if (mounted) {
-      debugPrint('[MathMissionScreen] Mission success - popping to AlarmRingingScreen');
-      // 미션 성공 결과를 AlarmRingingScreen으로 전달
-      Navigator.of(context).pop(true);
+      setState(() {
+        _isSuccess = true;
+      });
     }
   }
 
@@ -753,6 +754,15 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                 ),
               ),
             ),
+
+            if (_isSuccess)
+              MissionSuccessOverlay(
+                onFinish: () {
+                  if (mounted) {
+                    Navigator.of(context).pop(true);
+                  }
+                },
+              ),
         ],
       ),
     ),

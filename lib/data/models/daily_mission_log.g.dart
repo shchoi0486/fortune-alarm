@@ -20,19 +20,22 @@ class DailyMissionLogAdapter extends TypeAdapter<DailyMissionLog> {
       dateKey: fields[0] as String,
       completedMissionIds: (fields[1] as List).cast<String>(),
       isGoalAchieved: fields[2] as bool,
+      isTenGoalAchieved: fields[3] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, DailyMissionLog obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.dateKey)
       ..writeByte(1)
       ..write(obj.completedMissionIds)
       ..writeByte(2)
-      ..write(obj.isGoalAchieved);
+      ..write(obj.isGoalAchieved)
+      ..writeByte(3)
+      ..write(obj.isTenGoalAchieved);
   }
 
   @override

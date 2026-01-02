@@ -20,12 +20,20 @@ class MissionModel extends HiveObject {
   @HiveField(4)
   MissionCategory category;
 
+  @HiveField(5)
+  String? alarmTime;
+
+  @HiveField(6)
+  bool isAlarmEnabled;
+
   MissionModel({
     required this.id,
     required this.title,
     required this.icon,
     this.isSystemMission = false,
     this.category = MissionCategory.other,
+    this.alarmTime,
+    this.isAlarmEnabled = false,
   });
 
   MissionModel copyWith({
@@ -34,6 +42,8 @@ class MissionModel extends HiveObject {
     String? icon,
     bool? isSystemMission,
     MissionCategory? category,
+    String? alarmTime,
+    bool? isAlarmEnabled,
   }) {
     return MissionModel(
       id: id ?? this.id,
@@ -41,6 +51,8 @@ class MissionModel extends HiveObject {
       icon: icon ?? this.icon,
       isSystemMission: isSystemMission ?? this.isSystemMission,
       category: category ?? this.category,
+      alarmTime: alarmTime ?? this.alarmTime,
+      isAlarmEnabled: isAlarmEnabled ?? this.isAlarmEnabled,
     );
   }
 }

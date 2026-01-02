@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
-import '../../../../data/models/mission_model.dart';
 import '../models/supplement_log.dart';
 import '../models/supplement_settings.dart';
 import '../../../../providers/mission_provider.dart';
@@ -199,44 +198,55 @@ class SupplementNotifier extends StateNotifier<SupplementState> {
   Future<void> updateCount(int count) async {
     if (state.isLoading) return;
     
-    final newLog = state.log;
-    newLog.currentCount = count;
+    final dailyGoal = state.settings.dailyGoal;
+    final isAchieved = count >= dailyGoal;
     
-    final wasAchieved = newLog.isGoalAchieved;
-    final isAchieved = count >= state.settings.dailyGoal;
-    newLog.isGoalAchieved = isAchieved;
+    // Create a new log object to avoid mutating the current state object directly
+    final newLog = SupplementLog(
+      dateKey: state.log.dateKey,
+      currentCount: count,
+      isGoalAchieved: isAchieved,
+    );
     
-    if (newLog.isInBox) {
-      await newLog.save();
-    } else {
-      await _logBox?.put(newLog.dateKey, newLog);
+    // Save to Hive
+    if (_logBox != null) {
+      await _logBox!.put(newLog.dateKey, newLog);
     }
     
-    if (isAchieved != wasAchieved) {
-       await _syncSupplementMissionStatus(isAchieved);
-    }
-    
-    state = state.copyWith(log: newLog, isGoalAchieved: isAchieved);
+    state = state.copyWith(
+      log: newLog,
+      isGoalAchieved: isAchieved,
+    );
+
+    // Sync with MissionProvider
+    await _syncSupplementMissionStatus(isAchieved);
   }
 
   Future<void> _syncSupplementMissionStatus(bool isAchieved) async {
     final missionNotifier = _ref.read(missionProvider);
     try {
-      // 1. ID로 먼저 찾기 ('supplement'는 기본 영양제 미션 ID)
-      MissionModel? mission;
-      try {
-        mission = missionNotifier.missions.firstWhere((m) => m.id == 'supplement');
-      } catch (_) {
-        // ID로 못 찾으면 제목으로 찾기
-        mission = missionNotifier.missions.firstWhere(
-          (m) => m.title.contains('영양제'),
-        );
-      }
+      // 1. Find the actual mission ID from the current mission list.
+      String targetId = 'supplement';
       
-      // mission is guaranteed to be non-null here due to try/catch structure
-      await missionNotifier.setMissionCompleted(mission.id, isAchieved);
+      final missions = missionNotifier.missions;
+      final hasFixedId = missions.any((m) => m.id == 'supplement');
+      
+      if (!hasFixedId) {
+        // If 'supplement' ID doesn't exist, try to find by title.
+        try {
+          final mission = missions.firstWhere(
+            (m) => m.title.contains('영양제'),
+          );
+          targetId = mission.id;
+        } catch (_) {
+          // Stay with 'supplement'
+        }
+      }
+
+      await missionNotifier.setMissionCompleted(targetId, isAchieved);
+      print('Syncing supplement mission status: $targetId -> $isAchieved');
     } catch (e) {
-      // print('Supplement mission not found for sync: $e');
+      print('Error syncing supplement mission status: $e');
     }
   }
 }

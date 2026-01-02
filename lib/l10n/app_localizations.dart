@@ -727,8 +727,14 @@ abstract class AppLocalizations {
   /// No description provided for @selectAlarmBackground.
   ///
   /// In en, this message translates to:
-  /// **'Select Alarm Background'**
+  /// **'Alarm Background'**
   String get selectAlarmBackground;
+
+  /// No description provided for @defaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get defaultLabel;
 
   /// No description provided for @howToAdd.
   ///
@@ -844,6 +850,12 @@ abstract class AppLocalizations {
   /// **'Congratulations! You have completed 5 missions today and earned 1 Fortune Cookie!'**
   String get missionRewardEarned;
 
+  /// No description provided for @missionRewardEarnedWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations! You completed {missions} missions today and earned {cookies} Fortune Cookie(s)!'**
+  String missionRewardEarnedWithCount(int missions, int cookies);
+
   /// No description provided for @daysCount.
   ///
   /// In en, this message translates to:
@@ -937,20 +949,14 @@ abstract class AppLocalizations {
   /// No description provided for @missionSnap.
   ///
   /// In en, this message translates to:
-  /// **'Snap'**
+  /// **'Object Snap'**
   String get missionSnap;
 
   /// No description provided for @missionMath.
   ///
   /// In en, this message translates to:
-  /// **'Math'**
+  /// **'Math Problem'**
   String get missionMath;
-
-  /// No description provided for @missionQuiz.
-  ///
-  /// In en, this message translates to:
-  /// **'Quiz'**
-  String get missionQuiz;
 
   /// No description provided for @missionFortune.
   ///
@@ -964,40 +970,34 @@ abstract class AppLocalizations {
   /// **'Shake'**
   String get missionShake;
 
+  /// No description provided for @missionFortuneCatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune Catch'**
+  String get missionFortuneCatch;
+
   /// No description provided for @missionNoDescription.
   ///
   /// In en, this message translates to:
   /// **'Alarm will ring without a mission.'**
   String get missionNoDescription;
 
-  /// No description provided for @missionSupplementDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Supplement intake confirmation screen will appear.'**
-  String get missionSupplementDescription;
-
   /// No description provided for @missionCameraDescription.
   ///
   /// In en, this message translates to:
-  /// **'You must take photos of the specified objects in order to turn off the alarm.'**
+  /// **'Take a photo of the specified object to dismiss the alarm.'**
   String get missionCameraDescription;
 
   /// No description provided for @missionMathDescription.
   ///
   /// In en, this message translates to:
-  /// **'You must solve math problems to turn off the alarm.'**
+  /// **'Solve math problems to wake up your brain.'**
   String get missionMathDescription;
-
-  /// No description provided for @missionQuizDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Quiz mission selected.'**
-  String get missionQuizDescription;
 
   /// No description provided for @missionFortuneDescription.
   ///
   /// In en, this message translates to:
-  /// **'Fortune mission selected.'**
+  /// **'Dismiss the alarm and check today\'s fortune.'**
   String get missionFortuneDescription;
 
   /// No description provided for @missionShakeDescription.
@@ -1005,6 +1005,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You must shake your phone to turn off the alarm.'**
   String get missionShakeDescription;
+
+  /// No description provided for @missionFortuneCatchDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch the moving Fortuni!'**
+  String get missionFortuneCatchDescription;
+
+  /// No description provided for @missionWalk.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk'**
+  String get missionWalk;
+
+  /// No description provided for @missionWalkDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk to turn off the alarm!'**
+  String get missionWalkDescription;
+
+  /// No description provided for @missionFaceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your face in the frame for 10s.'**
+  String get missionFaceDescription;
+
+  /// No description provided for @walkStepCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Steps'**
+  String get walkStepCount;
+
+  /// No description provided for @walkSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} steps'**
+  String walkSteps(int count);
+
+  /// No description provided for @missionNumberOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Number Order'**
+  String get missionNumberOrder;
+
+  /// No description provided for @missionNumberOrderDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap numbers from 1 to 9 in order.'**
+  String get missionNumberOrderDescription;
+
+  /// No description provided for @missionNumberOrderGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {nextNumber}'**
+  String missionNumberOrderGuide(int nextNumber);
+
+  /// No description provided for @missionHiddenButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Position Memory'**
+  String get missionHiddenButton;
+
+  /// No description provided for @missionHiddenButtonDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Memorize the lit tiles in order and tap them within 10 seconds.'**
+  String get missionHiddenButtonDescription;
+
+  /// No description provided for @missionHiddenButtonDifficulty.
+  ///
+  /// In en, this message translates to:
+  /// **'Δ{delta}'**
+  String missionHiddenButtonDifficulty(int delta);
+
+  /// No description provided for @missionTapSprint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap Sprint'**
+  String get missionTapSprint;
+
+  /// No description provided for @missionTapSprintDescriptionShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to fill the meter.'**
+  String get missionTapSprintDescriptionShort;
+
+  /// No description provided for @missionTapSprintDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap {goalTaps}+ times to fill the meter.'**
+  String missionTapSprintDescription(int goalTaps);
+
+  /// No description provided for @missionTapSprintTapHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap'**
+  String get missionTapSprintTapHere;
+
+  /// No description provided for @missionTapSprintHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Fills up fast, drains if you pause.'**
+  String get missionTapSprintHint;
+
+  /// No description provided for @missionLeftRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Left / Right'**
+  String get missionLeftRight;
+
+  /// No description provided for @missionLeftRightDescriptionShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow the prompt and pick left or right.'**
+  String get missionLeftRightDescriptionShort;
+
+  /// No description provided for @missionLeftRightDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Get {targetStreak} correct in a row.'**
+  String missionLeftRightDescription(int targetStreak);
+
+  /// No description provided for @missionLeftRightPromptLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap LEFT'**
+  String get missionLeftRightPromptLeft;
+
+  /// No description provided for @missionLeftRightPromptRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap RIGHT'**
+  String get missionLeftRightPromptRight;
+
+  /// No description provided for @left.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get left;
+
+  /// No description provided for @right.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get right;
+
+  /// No description provided for @missionHintInactivity.
+  ///
+  /// In en, this message translates to:
+  /// **'If you stop for 2 minutes, it resets.'**
+  String get missionHintInactivity;
+
+  /// No description provided for @fortuneCatchScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Score: {score}'**
+  String fortuneCatchScore(int score);
+
+  /// No description provided for @fortuneCatchGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal: 100'**
+  String get fortuneCatchGoal;
+
+  /// No description provided for @fortuneCatchGoalDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'(Catches: {count}/{min})'**
+  String fortuneCatchGoalDetail(int count, int min);
+
+  /// No description provided for @fortuneCatchCombo.
+  ///
+  /// In en, this message translates to:
+  /// **'{combo} Combo!'**
+  String fortuneCatchCombo(int combo);
 
   /// No description provided for @difficulty.
   ///

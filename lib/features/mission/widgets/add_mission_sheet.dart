@@ -5,7 +5,7 @@ import '../../../data/models/mission_model.dart';
 import '../../../providers/mission_provider.dart';
 
 class AddMissionSheet extends ConsumerStatefulWidget {
-  final Function(String title, String icon, MissionCategory category, {bool? isCustom, String? id}) onAdd;
+  final Function(String title, String icon, MissionCategory category, {bool? isCustom, String? id, String? alarmTime, bool? isAlarmEnabled}) onAdd;
 
   const AddMissionSheet({super.key, required this.onAdd});
 
@@ -23,6 +23,9 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
   
   // 선택된 내가 만든 미션들
   final Set<MissionModel> _selectedCustomMissions = {};
+
+  bool _isAlarmEnabled = false;
+  TimeOfDay _alarmTime = const TimeOfDay(hour: 9, minute: 0);
 
   // 카테고리별 기본 아이콘 매핑
   final Map<MissionCategory, String> _categoryIcons = {
@@ -55,6 +58,8 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
         _categoryIcons[_selectedCategory]!,
         _selectedCategory,
         isCustom: true, // 직접 입력은 커스텀 미션
+        alarmTime: _isAlarmEnabled ? '${_alarmTime.hour}:${_alarmTime.minute}' : null,
+        isAlarmEnabled: _isAlarmEnabled,
       );
       count++;
     }
@@ -480,6 +485,89 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                   ),
                 ),
                 
+                const SizedBox(height: 24),
+                // 알림 설정
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.grey[800] : Colors.grey[100],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(Icons.notifications_outlined, size: 20),
+                              SizedBox(width: 8),
+                              Text('알림 받기', style: TextStyle(fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          Switch(
+                            value: _isAlarmEnabled,
+                            onChanged: (value) {
+                              setState(() {
+                                _isAlarmEnabled = value;
+                              });
+                            },
+                            activeColor: Colors.blueAccent,
+                          ),
+                        ],
+                      ),
+                      if (_isAlarmEnabled) ...[
+                        const Divider(height: 24),
+                        InkWell(
+                          onTap: () async {
+                            final TimeOfDay? picked = await showTimePicker(
+                              context: context,
+                              initialTime: _alarmTime,
+                              builder: (context, child) {
+                                return Theme(
+                                  data: isDark ? ThemeData.dark() : ThemeData.light().copyWith(
+                                    colorScheme: const ColorScheme.light(primary: Colors.blueAccent),
+                                  ),
+                                  child: child!,
+                                );
+                              },
+                            );
+                            if (picked != null && picked != _alarmTime) {
+                              setState(() {
+                                _alarmTime = picked;
+                              });
+                            }
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('알림 시간', style: TextStyle(fontSize: 14)),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                decoration: BoxDecoration(
+                                  color: isDark ? Colors.grey[700] : Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: isDark ? Colors.grey[600]! : Colors.grey[300]!,
+                                  ),
+                                ),
+                                child: Text(
+                                  '${_alarmTime.hour.toString().padLeft(2, '0')}:${_alarmTime.minute.toString().padLeft(2, '0')}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blueAccent,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+
                 // 하단 여백 확보
                 SizedBox(height: MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom + 100),
               ],

@@ -10,9 +10,11 @@ import 'saju/widgets/new_year_fortune_input_screen.dart';
 import 'saju/widgets/saju_profile_screen.dart';
 import 'tojeong/tojeong_input_screen.dart';
 import 'dart:math';
-import '../../services/cookie_service.dart';
+import 'package:fortune_alarm/services/cookie_service.dart';
 import 'package:fortune_alarm/widgets/ad_widgets.dart';
 import 'mixins/fortune_access_mixin.dart';
+
+import '../mission_face/face_detection_mission_screen.dart';
 
 class FortuneScreen extends ConsumerStatefulWidget {
   const FortuneScreen({super.key});
@@ -30,7 +32,6 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
   void initState() {
     super.initState();
     _initHive();
-    // Mixin's initState calls _loadRewardedAd automatically
   }
 
   @override
@@ -582,18 +583,16 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                 onTap: () {
                   if (item['target'] == 'specific_date') {
                     _handleSpecificDateFortune(context);
+                  } else if (item['target'] == 'lotto') {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LottoScreen()));
+                  } else if (item['target'] == 'saju') {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const NewYearFortuneInputScreen()));
+                  } else if (item['target'] == 'tojeong') {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const TojeongInputScreen()));
+                  } else if (item['target'] == 'face') {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const FaceDetectionMissionScreen()));
                   } else {
-                    showFortuneAccessDialog(() {
-                      if (item['target'] == 'lotto') {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const LottoScreen()));
-                      } else if (item['target'] == 'saju') {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const NewYearFortuneInputScreen()));
-                      } else if (item['target'] == 'tojeong') {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const TojeongInputScreen()));
-                      } else {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: item['title'] as String)));
-                      }
-                    });
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: item['title'] as String)));
                   }
                 },
                 borderRadius: BorderRadius.circular(16),

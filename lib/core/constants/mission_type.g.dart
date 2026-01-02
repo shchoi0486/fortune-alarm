@@ -23,8 +23,6 @@ class MissionTypeAdapter extends TypeAdapter<MissionType> {
         return MissionType.cameraFace;
       case 4:
         return MissionType.math;
-      case 5:
-        return MissionType.quiz;
       case 6:
         return MissionType.fortune;
       case 7:
@@ -35,6 +33,20 @@ class MissionTypeAdapter extends TypeAdapter<MissionType> {
         return MissionType.shake;
       case 10:
         return MissionType.supplement;
+      case 11:
+        return MissionType.fortuneCatch;
+      case 12:
+        return MissionType.numberOrder;
+      case 13:
+        return MissionType.hiddenButton;
+      case 15:
+        return MissionType.tapSprint;
+      case 16:
+        return MissionType.leftRight;
+      case 17:
+        return MissionType.walk;
+      case 18:
+        return MissionType.faceDetection;
       default:
         return MissionType.none;
     }
@@ -58,9 +70,6 @@ class MissionTypeAdapter extends TypeAdapter<MissionType> {
       case MissionType.math:
         writer.writeByte(4);
         break;
-      case MissionType.quiz:
-        writer.writeByte(5);
-        break;
       case MissionType.fortune:
         writer.writeByte(6);
         break;
@@ -75,6 +84,27 @@ class MissionTypeAdapter extends TypeAdapter<MissionType> {
         break;
       case MissionType.supplement:
         writer.writeByte(10);
+        break;
+      case MissionType.fortuneCatch:
+        writer.writeByte(11);
+        break;
+      case MissionType.numberOrder:
+        writer.writeByte(12);
+        break;
+      case MissionType.hiddenButton:
+        writer.writeByte(13);
+        break;
+      case MissionType.tapSprint:
+        writer.writeByte(15);
+        break;
+      case MissionType.leftRight:
+        writer.writeByte(16);
+        break;
+      case MissionType.walk:
+        writer.writeByte(17);
+        break;
+      case MissionType.faceDetection:
+        writer.writeByte(18);
         break;
     }
   }

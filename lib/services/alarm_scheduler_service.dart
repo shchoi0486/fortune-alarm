@@ -49,7 +49,7 @@ Future<void> alarmCallback(int id) async {
       debugPrint('[AlarmScheduler] Hive Init Note: $e');
     }
     
-    await notificationService.init(null);
+    await notificationService.init(null, isBackground: true);
     debugPrint('[AlarmScheduler] NotificationService Initialized.');
 
     // 3. 알람 데이터 가져오기
@@ -94,26 +94,50 @@ Future<void> alarmCallback(int id) async {
       body = '미션을 수행하고 알람을 끄세요!';
     }
 
-    // 포그라운드 신호 먼저 시도
-    final SendPort? uiSendPort = IsolateNameServer.lookupPortByName(kAlarmPortName);
-    if (uiSendPort != null) {
-      debugPrint('[AlarmScheduler] Sending signal to Foreground UI Isolate.');
-      uiSendPort.send(payload);
+    bool suppressRinging = false;
+    try {
+      final stateBox = await Hive.openBox('app_state');
+      final activeBaseId = stateBox.get('active_alarm_mission_base_id') as String?;
+      final startedAtStr = stateBox.get('active_alarm_mission_started_at') as String?;
+      if (activeBaseId != null && startedAtStr != null) {
+        final startedAt = DateTime.tryParse(startedAtStr);
+        if (startedAt != null) {
+          final now = DateTime.now();
+          if (now.difference(startedAt) < const Duration(minutes: 2)) {
+            final baseId = alarm.id.replaceAll('_snooze', '');
+            suppressRinging = baseId == activeBaseId;
+          } else {
+            await stateBox.delete('active_alarm_mission_base_id');
+            await stateBox.delete('active_alarm_mission_started_at');
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('[AlarmScheduler] Mission state check failed: $e');
     }
 
-    // 알림 표시 (fullScreenIntent가 앱을 깨움)
-    debugPrint('[AlarmScheduler] Showing Alarm Notification...');
-    await notificationService.showAlarmNotification(
-      id: id,
-      title: '스냅 알람',
-      body: body,
-      payload: payload,
-      soundName: alarm.ringtonePath,
-      vibrationPattern: alarm.vibrationPattern,
-      isGradualVolume: alarm.isGradualVolume,
-      isVibrationEnabled: alarm.isVibrationEnabled,
-    );
-    debugPrint('[AlarmScheduler] Notification displayed successfully.');
+    if (!suppressRinging) {
+      final SendPort? uiSendPort = IsolateNameServer.lookupPortByName(kAlarmPortName);
+      if (uiSendPort != null) {
+        debugPrint('[AlarmScheduler] Sending signal to Foreground UI Isolate.');
+        uiSendPort.send(payload);
+      }
+
+      debugPrint('[AlarmScheduler] Showing Alarm Notification...');
+      await notificationService.showAlarmNotification(
+        id: id,
+        title: '스냅 알람',
+        body: body,
+        payload: payload,
+        soundName: alarm.ringtonePath,
+        vibrationPattern: alarm.vibrationPattern,
+        isGradualVolume: alarm.isGradualVolume,
+        isVibrationEnabled: alarm.isVibrationEnabled,
+      );
+      debugPrint('[AlarmScheduler] Notification displayed successfully.');
+    } else {
+      debugPrint('[AlarmScheduler] Suppressing ringing due to active mission.');
+    }
 
     // 6. 다음 알람 예약 (반복 알람인 경우)
     if (alarm.repeatDays.any((d) => d)) {
@@ -295,6 +319,7 @@ class AlarmSchedulerService {
       label: isFirstSnooze ? '[스누즈] ${alarm.label}' : alarm.label, // 이미 붙어있으면 유지
       remainingSnoozeCount: newRemainingCount,
       isEnabled: true, // [중요] 스누즈 알람은 무조건 활성화 상태로 예약 (이전 알람이 비활성화되었을 수 있음)
+      referenceImagePaths: alarm.referenceImagePaths, // [추가] 미션 이미지 경로 복사
     );
 
     debugPrint('[AlarmScheduler] Snoozing alarm $originalId as $snoozeId for ${alarm.snoozeInterval} minutes. Remaining: $newRemainingCount');

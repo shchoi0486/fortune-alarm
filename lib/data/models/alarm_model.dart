@@ -50,6 +50,8 @@ class AlarmModel extends HiveObject {
   int mathProblemCount;
   @HiveField(21, defaultValue: 50)
   int shakeCount;
+  @HiveField(22, defaultValue: 20)
+  int walkStepCount;
 
   AlarmModel({
     required this.id,
@@ -73,6 +75,7 @@ class AlarmModel extends HiveObject {
     this.mathDifficulty = MathDifficulty.normal,
     this.mathProblemCount = 3,
     this.shakeCount = 50,
+    this.walkStepCount = 20,
   });
 
   AlarmModel copyWith({
@@ -97,6 +100,7 @@ class AlarmModel extends HiveObject {
     MathDifficulty? mathDifficulty,
     int? mathProblemCount,
     int? shakeCount,
+    int? walkStepCount,
   }) {
     return AlarmModel(
       id: id ?? this.id,
@@ -120,6 +124,7 @@ class AlarmModel extends HiveObject {
       mathDifficulty: mathDifficulty ?? this.mathDifficulty,
       mathProblemCount: mathProblemCount ?? this.mathProblemCount,
       shakeCount: shakeCount ?? this.shakeCount,
+      walkStepCount: walkStepCount ?? this.walkStepCount,
     );
   }
 }

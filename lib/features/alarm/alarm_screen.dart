@@ -275,10 +275,20 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     final amPmFormat = DateFormat('a'); // AM/PM
     
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = isDark ? const Color(0xFF1C1C1E) : Colors.grey[100]; // 라이트 모드 카드 색상
+    
+    // 활성화 여부에 따른 배경색 및 테두리 설정
+    final cardColor = alarm.isEnabled 
+        ? (isDark ? const Color(0xFF1C1C1E) : Colors.white) 
+        : (isDark ? const Color(0xFF0A0A0B) : const Color(0xFFF0F0F2)); // 조금 더 어두운 톤으로 조정
+    
+    final borderColor = alarm.isEnabled
+        ? (isDark ? Colors.grey[800]! : const Color(0xFFD1D1D6))
+        : (isDark ? Colors.grey[900]! : const Color(0xFFE2E2E7)); // 비활성 시 테두리도 미세하게 조정
+    
     final primaryTextColor = isDark ? Colors.white : Colors.black;
     final secondaryTextColor = isDark ? Colors.white70 : Colors.black87;
-    final disabledColor = Colors.grey;
+    // 비활성 시에도 정보가 잘 보이도록 적절한 명도의 회색 사용
+    final disabledTextColor = isDark ? Colors.white54 : Colors.black54;
 
     return GestureDetector(
       onTap: () {
@@ -294,9 +304,22 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         decoration: BoxDecoration(
           color: cardColor, 
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: borderColor, 
+            width: isDark ? 1.0 : 0.5,
+          ), 
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        child: Row(
-          children: [
+        child: Opacity(
+          opacity: alarm.isEnabled ? 1.0 : 0.85, // 0.85로 높여 가독성 확보
+          child: Row(
+            children: [
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -325,7 +348,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                             Text(
                               AppLocalizations.of(context)!.snoozeInfo(alarm.snoozeInterval, alarm.maxSnoozeCount),
                               style: TextStyle(
-                                color: alarm.isEnabled ? secondaryTextColor : disabledColor,
+                                color: alarm.isEnabled ? secondaryTextColor : disabledTextColor,
                                 fontSize: 13,
                               ),
                             ),
@@ -344,7 +367,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                             ? AppLocalizations.of(context)!.am 
                             : AppLocalizations.of(context)!.pm,
                         style: TextStyle(
-                          color: alarm.isEnabled ? primaryTextColor : disabledColor,
+                          color: alarm.isEnabled ? primaryTextColor : disabledTextColor,
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                         ),
@@ -353,7 +376,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       Text(
                         timeFormat.format(alarm.time),
                         style: TextStyle(
-                          color: alarm.isEnabled ? primaryTextColor : disabledColor,
+                          color: alarm.isEnabled ? primaryTextColor : disabledTextColor,
                           fontSize: 42,
                           fontWeight: FontWeight.w500,
                         ),
@@ -364,7 +387,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                           offset: const Offset(0, 4), // Adjust vertical position
                           child: Icon(
                             _getMissionIcon(alarm.missionType),
-                            color: alarm.isEnabled ? Colors.cyan : disabledColor,
+                            color: alarm.isEnabled ? Colors.cyan : disabledTextColor.withOpacity(0.7),
                             size: 24,
                           ),
                         ),
@@ -378,7 +401,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                       child: Text(
                         alarm.label,
                         style: TextStyle(
-                          color: alarm.isEnabled ? (isDark ? Colors.grey[400] : Colors.grey[600]) : (isDark ? Colors.grey[700] : Colors.grey[400]),
+                          color: alarm.isEnabled ? (isDark ? Colors.grey[400] : Colors.grey[600]) : disabledTextColor.withOpacity(0.5),
                           fontSize: 13,
                         ),
                       ),
@@ -402,8 +425,9 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
 
 
@@ -443,12 +467,24 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     switch (type) {
       case MissionType.math:
         return Icons.calculate;
-      case MissionType.quiz:
-        return Icons.quiz;
       case MissionType.fortune:
         return Icons.auto_awesome;
       case MissionType.shake:
         return Icons.vibration;
+      case MissionType.fortuneCatch:
+        return Icons.catching_pokemon; // Or any suitable icon
+      case MissionType.numberOrder:
+        return Icons.filter_9_plus;
+      case MissionType.hiddenButton:
+        return Icons.visibility;
+      case MissionType.tapSprint:
+        return Icons.touch_app;
+      case MissionType.leftRight:
+        return Icons.bolt;
+      case MissionType.walk:
+        return Icons.directions_walk;
+      case MissionType.faceDetection:
+        return Icons.face_retouching_natural;
       case MissionType.cameraSink:
       case MissionType.cameraRefrigerator:
       case MissionType.cameraFace:

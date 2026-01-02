@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'; // Import Cupertino for Wheel Pickers
 import '../models/saju_profile.dart';
 import 'new_year_fortune_result_screen.dart';
+import '../../mixins/fortune_access_mixin.dart';
 
 class NewYearFortuneInputScreen extends StatefulWidget {
   const NewYearFortuneInputScreen({super.key});
@@ -10,7 +11,7 @@ class NewYearFortuneInputScreen extends StatefulWidget {
   State<NewYearFortuneInputScreen> createState() => _NewYearFortuneInputScreenState();
 }
 
-class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> {
+class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> with FortuneAccessMixin {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   
@@ -108,15 +109,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> {
       });
 
       if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NewYearFortuneResultScreen(
-              profile: newProfile, 
-              targetYear: _targetYear
-            ),
-          ),
-        );
+        _analyzeProfile(newProfile);
       }
     }
   }
@@ -127,15 +120,17 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> {
   }
 
   void _analyzeProfile(SajuProfile profile) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NewYearFortuneResultScreen(
-          profile: profile, 
-          targetYear: _targetYear
+    showFortuneAccessDialog(() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NewYearFortuneResultScreen(
+            profile: profile, 
+            targetYear: _targetYear
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Future<void> _confirmDelete(SajuProfile profile) async {
