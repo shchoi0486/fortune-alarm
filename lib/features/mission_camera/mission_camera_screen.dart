@@ -699,7 +699,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
                             Icon(Icons.touch_app_rounded, color: Colors.white, size: 16),
                             SizedBox(width: 6),
                             Text(
-                              "비상",
+                              "탈출",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
