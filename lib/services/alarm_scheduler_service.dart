@@ -202,8 +202,8 @@ class AlarmSchedulerService {
       debugPrint('[AlarmScheduler] Time: ${alarm.time}');
       
       // 1. 기존 알람 취소 (중복 예약 방지)
-      // 스누즈는 유지함 (메인 알람 예약 시 스누즈를 건드릴 필요가 없음)
-      await cancelAlarm(alarm, cancelMain: false, cancelSnooze: false); 
+      // 스누즈도 취소함 (메인 알람 예약 시 스누즈를 건드릴 필요가 없음)
+      await cancelAlarm(alarm, cancelMain: true, cancelSnooze: true ); 
 
       if (Platform.isAndroid) {
         // 정확한 알람 권한 확인 (Android 12+)

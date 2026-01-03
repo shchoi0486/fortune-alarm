@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -7,6 +9,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:vibration/vibration.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 import '../../providers/alarm_list_provider.dart';
 import '../../providers/mission_provider.dart';
 import '../../services/notification_service.dart';
@@ -30,6 +34,8 @@ import '../mission_walk/walk_mission_screen.dart';
 import '../mission_face/face_detection_mission_screen.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 
+import 'package:flutter/services.dart' show rootBundle;
+
 class AlarmRingingScreen extends ConsumerStatefulWidget {
   final String alarmId;
 
@@ -41,6 +47,7 @@ class AlarmRingingScreen extends ConsumerStatefulWidget {
 
 class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
   AlarmModel? _alarm;
+  BoxDecoration? _selectedBgDecoration;
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
   Timer? _timeTimer;
@@ -70,16 +77,31 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
   }
 
   Future<void> _loadAlarm() async {
+    debugPrint('[AlarmRingingScreen] Loading alarm with ID: ${widget.alarmId}');
     final alarmBox = await Hive.openBox<AlarmModel>('alarms');
     final alarm = alarmBox.get(widget.alarmId);
+    
+    if (alarm != null) {
+      debugPrint('[AlarmRingingScreen] Loaded alarm: ${alarm.id}, Ringtone: ${alarm.ringtonePath}');
+    } else {
+      debugPrint('[AlarmRingingScreen] Alarm not found for ID: ${widget.alarmId}');
+    }
 
     if (mounted) {
       setState(() {
         _alarm = alarm;
-        _isLoading = false;
       });
 
       if (_alarm != null) {
+        // 배경 초기화 (랜덤 배경 등)
+        await _initializeBackground();
+
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+
         // [수정] 스누즈 중복 예약 방지 ("알람 좀비" 현상 해결)
         // 미션 성공 시점에만 스누즈를 예약하도록 변경하여, 알람이 울리자마자 예약되는 것을 방지합니다.
         // _scheduleNextSnoozeIfNeeded();
@@ -124,6 +146,101 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
     await AlarmSchedulerService.snoozeAlarm(_alarm!);
   }
 
+  Future<Directory> _getBackgroundImagesDir() async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final bgDir = Directory(path.join(appDir.path, 'background_images'));
+    if (!await bgDir.exists()) {
+      await bgDir.create(recursive: true);
+    }
+    return bgDir;
+  }
+
+  Future<void> _initializeBackground() async {
+    if (_alarm == null) return;
+
+    BoxDecoration newDecoration;
+
+    if (_alarm!.backgroundPath == 'random_background') {
+      final random = math.Random();
+      final List<String> options = [
+        'assets/images/alarm_bg.png',
+        'assets/images/alarm_bg_all.png',
+        'assets/images/alarm_bg_dog.png',
+        'assets/images/alarm_bg_panda.png',
+        'assets/images/alarm_bg_tiger.png',
+        'assets/images/alarm_bg_moon.jpg',
+        'assets/images/alarm_bg_snow.jpg',
+        'assets/images/alarm_bg_rabit.png',
+      ];
+      
+      // Load user images
+      try {
+        final bgDir = await _getBackgroundImagesDir();
+        if (await bgDir.exists()) {
+          final userImages = bgDir.listSync()
+              .whereType<File>()
+              .map((f) => f.path)
+              .where((p) => p.toLowerCase().endsWith('.jpg') || p.toLowerCase().endsWith('.png') || p.toLowerCase().endsWith('.jpeg'))
+              .toList();
+          options.addAll(userImages);
+        }
+      } catch (e) {
+        debugPrint('Error loading user images: $e');
+      }
+
+      final selectedPath = options[random.nextInt(options.length)];
+      
+      if (selectedPath.startsWith('assets/')) {
+        newDecoration = BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(selectedPath),
+            fit: BoxFit.cover,
+          ),
+        );
+      } else {
+        newDecoration = BoxDecoration(
+          image: DecorationImage(
+            image: FileImage(File(selectedPath)),
+            fit: BoxFit.cover,
+          ),
+        );
+      }
+    } else if (_alarm!.backgroundPath != null) {
+      if (_alarm!.backgroundPath!.startsWith('color:')) {
+        int colorValue = int.parse(_alarm!.backgroundPath!.split(':')[1]);
+        newDecoration = BoxDecoration(color: Color(colorValue));
+      } else if (_alarm!.backgroundPath!.startsWith('assets/')) {
+        newDecoration = BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(_alarm!.backgroundPath!),
+            fit: BoxFit.cover,
+          ),
+        );
+      } else {
+        newDecoration = BoxDecoration(
+          image: DecorationImage(
+            image: FileImage(File(_alarm!.backgroundPath!)),
+            fit: BoxFit.cover,
+          ),
+        );
+      }
+    } else {
+      // 기본 배경 이미지
+      newDecoration = const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/alarm_bg.png'),
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
+    if (mounted) {
+      setState(() {
+        _selectedBgDecoration = newDecoration;
+      });
+    }
+  }
+
   @override
   void dispose() {
     _stopAlarm(); // 화면이 사라질 때 모든 알람 관련 동작을 중지합니다.
@@ -149,6 +266,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
 
       if (_alarm!.isSoundEnabled) {
         String path = _alarm!.ringtonePath ?? 'default';
+        // 만약 예전 데이터가 남아있어서 하이픈이 포함되어 있다면 언더바로 교체
+        debugPrint('[AlarmRingingScreen] Final ringtone path: $path');
         
         // 'default' 벨소리인 경우 FlutterRingtonePlayer를 우선 사용 (시스템 기본 알람음)
         if (path == 'default' || path.isEmpty) {
@@ -161,31 +280,58 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
         } else {
           // 커스텀 사운드는 AudioPlayer 사용
           String ext = 'ogg';
+          path = path.trim(); // 공백 제거 안전장치
           debugPrint('[AlarmRingingScreen] Playing custom sound: assets/sounds/$path.$ext');
           
           try {
-            // AudioContext 설정 (알람 스트림 사용)
-            await _audioPlayer.setAudioContext(AudioContext(
-              android: AudioContextAndroid(
-                isSpeakerphoneOn: true,
-                stayAwake: true,
-                contentType: AndroidContentType.sonification,
-                usageType: AndroidUsageType.alarm,
-                audioFocus: AndroidAudioFocus.gain,
-              ),
-              iOS: AudioContextIOS(
-                category: AVAudioSessionCategory.playback,
-                options: {
-                  AVAudioSessionOptions.duckOthers,
-                  AVAudioSessionOptions.mixWithOthers,
-                  AVAudioSessionOptions.defaultToSpeaker,
-                },
-              ),
-            ));
+            // 플랫폼별 AudioContext 설정
+            if (Platform.isAndroid) {
+              // Android 전용 설정
+              await _audioPlayer.setAudioContext(AudioContext(
+                android: AudioContextAndroid(
+                  isSpeakerphoneOn: true,
+                  stayAwake: true,
+                  contentType: AndroidContentType.sonification,
+                  usageType: AndroidUsageType.alarm,
+                  audioFocus: AndroidAudioFocus.gain,
+                ),
+              ));
+            } else if (Platform.isIOS) {
+              // iOS/macOS 전용 설정
+              await _audioPlayer.setAudioContext(AudioContext(
+                iOS: AudioContextIOS(
+                  category: AVAudioSessionCategory.playback,
+                  options: {
+                    AVAudioSessionOptions.duckOthers,
+                    AVAudioSessionOptions.mixWithOthers,
+                    AVAudioSessionOptions.defaultToSpeaker,
+                  },
+                ),
+              ));
+            }
 
             await _audioPlayer.stop();
             await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-            await _audioPlayer.setSource(AssetSource('sounds/$path.$ext'));
+            
+            // assets/sounds/ 디렉토리 내의 파일을 AssetSource로 설정
+            // ringtonePath가 파일명(확장자 제외)이라고 가정
+            try {
+               debugPrint('[AlarmRingingScreen] Attempting to set AssetSource: sounds/$path.ogg');
+               await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
+            } catch (e) {
+              debugPrint('[AlarmRingingScreen] AssetSource failed for $path.ogg: $e. Attempting BytesSource fallback.');
+              
+              try {
+                // AssetSource가 실패하면 직접 바이트로 로드하여 재생 시도 (경로 문제 해결 가능성)
+                final ByteData data = await rootBundle.load('assets/sounds/$path.ogg');
+                final Uint8List bytes = data.buffer.asUint8List();
+                await _audioPlayer.setSource(BytesSource(bytes));
+                debugPrint('[AlarmRingingScreen] BytesSource set successfully for $path.ogg');
+              } catch (bytesError) {
+                 debugPrint('[AlarmRingingScreen] BytesSource fallback failed for $path.ogg: $bytesError');
+                 rethrow; // Trigger outer catch for default fallback
+              }
+            }
             
             double targetVolume = _alarm!.volume;
             if (targetVolume <= 0) targetVolume = 0.5;
@@ -194,13 +340,15 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
             await _audioPlayer.setVolume(initialVolume);
             
             await _audioPlayer.resume();
-            debugPrint('[AlarmRingingScreen] AudioPlayer resume() success');
+            debugPrint('[AlarmRingingScreen] AudioPlayer resume() success for $path');
             
             if (_alarm!.isGradualVolume) {
               _startVolumeFadeIn(targetVolume);
             }
           } catch (ae) {
-            debugPrint('[AlarmRingingScreen] AudioPlayer error: $ae. Falling back to FlutterRingtonePlayer.');
+            debugPrint('[AlarmRingingScreen] AudioPlayer error for $path: $ae. Falling back to system default alarm.');
+            
+            // 커스텀 벨소리 재생 실패 시 바로 시스템 기본 알람음 사용
             await FlutterRingtonePlayer().playAlarm(
               looping: true, 
               volume: _alarm!.volume, 
@@ -315,7 +463,9 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
     }
 
     BoxDecoration bgDecoration;
-    if (_alarm!.backgroundPath != null) {
+    if (_selectedBgDecoration != null) {
+      bgDecoration = _selectedBgDecoration!;
+    } else if (_alarm!.backgroundPath != null) {
       if (_alarm!.backgroundPath!.startsWith('color:')) {
         int colorValue = int.parse(_alarm!.backgroundPath!.split(':')[1]);
         bgDecoration = BoxDecoration(color: Color(colorValue));

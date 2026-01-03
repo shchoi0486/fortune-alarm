@@ -93,6 +93,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
 
   void _onKeyTap(String key) {
     _resetInactivityTimer(); // 입력 시 타이머 리셋
+    HapticFeedback.lightImpact(); // 터치 시 햅틱 추가
     setState(() {
       if (key == 'C') {
         _input = '';
@@ -243,29 +244,8 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     if (alarm == null) return;
 
     try {
-      if (alarm.isSoundEnabled) {
-        if (alarm.ringtonePath == 'default') {
-           await FlutterRingtonePlayer().playAlarm(
-             looping: true, 
-             volume: alarm.isGradualVolume ? 0.1 : alarm.volume, 
-             asAlarm: true
-           );
-        } else {
-           String path = alarm.ringtonePath ?? 'alarm_sound';
-           String ext = 'ogg';
-           
-           await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-           await _audioPlayer.setSource(AssetSource('sounds/$path.$ext'));
-           
-           double initialVolume = alarm.isGradualVolume ? 0.1 : alarm.volume;
-           await _audioPlayer.setVolume(initialVolume);
-           await _audioPlayer.resume();
-           
-           if (alarm.isGradualVolume) {
-             _startVolumeFadeIn(alarm.volume);
-           }
-        }
-      }
+      // 미션 수행 화면에서는 알람 소리 재생하지 않음
+      // 알람 소리는 알람 울림 스크린(alarm_ringing_screen.dart)에서만 재생
 
       if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
          _playVibration(alarm.vibrationPattern);

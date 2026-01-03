@@ -88,6 +88,7 @@
   "traditionalFortune": "Traditional Fortune",
   "traditionalSaju": "Traditional Saju Analysis",
   "faceReading": "Face Reading",
+  "missionFaceReading": "Face Reading Mission",
   "faceFate": "Face Fate Destiny",
   "compatibility": "Compatibility",
   "relationshipHarmony": "Relationship Harmony",
@@ -184,7 +185,7 @@
     }
   },
   "countLabel": "Count",
-  "timesCount": "{count} times (Total {count})",
+  "timesCount": "Total {count} times",
   "@timesCount": {
     "placeholders": {
       "count": { "type": "int" }

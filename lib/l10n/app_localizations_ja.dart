@@ -197,6 +197,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get faceReading => '観相（人相）占い';
 
   @override
+  String get missionFaceReading => 'Face Reading Mission';
+
+  @override
   String get faceFate => '顔の観相と運命';
 
   @override

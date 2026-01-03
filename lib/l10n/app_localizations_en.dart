@@ -201,6 +201,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faceReading => 'Face Reading';
 
   @override
+  String get missionFaceReading => 'Face Reading Mission';
+
+  @override
   String get faceFate => 'Face Fate Destiny';
 
   @override
@@ -433,7 +436,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String timesCount(int count) {
-    return '$count times (Total $count)';
+    return 'Total $count times';
   }
 
   @override

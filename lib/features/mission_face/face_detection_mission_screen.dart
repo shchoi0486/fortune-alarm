@@ -163,6 +163,10 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   void _onFaceDetected() {
     if (_isFaceDetected) return; // 이미 감지 상태면 리턴
     
+    try {
+      HapticFeedback.mediumImpact();
+    } catch (_) {}
+
     setState(() {
       _isFaceDetected = true;
     });
@@ -187,6 +191,10 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
 
   void _onFaceLost() {
     if (!_isFaceDetected) return; // 이미 미감지 상태면 리턴
+
+    try {
+      HapticFeedback.selectionClick();
+    } catch (_) {}
 
     setState(() {
       _isFaceDetected = false;
@@ -285,29 +293,8 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
     if (alarm == null) return;
 
     try {
-      if (alarm.isSoundEnabled) {
-        if (alarm.ringtonePath == 'default') {
-           await FlutterRingtonePlayer().playAlarm(
-             looping: true, 
-             volume: alarm.isGradualVolume ? 0.1 : alarm.volume, 
-             asAlarm: true
-           );
-        } else {
-           String path = alarm.ringtonePath ?? 'alarm_sound';
-           String ext = 'ogg';
-           
-           await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-           await _audioPlayer.setSource(AssetSource('sounds/$path.$ext'));
-           
-           double initialVolume = alarm.isGradualVolume ? 0.1 : alarm.volume;
-           await _audioPlayer.setVolume(initialVolume);
-           await _audioPlayer.resume();
-           
-           if (alarm.isGradualVolume) {
-             _startVolumeFadeIn(alarm.volume);
-           }
-        }
-      }
+      // 미션 수행 화면에서는 알람 소리 재생하지 않음
+      // 알람 소리는 알람 울림 스크린(alarm_ringing_screen.dart)에서만 재생
 
       if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
          _playVibration(alarm.vibrationPattern);

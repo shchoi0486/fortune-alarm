@@ -202,6 +202,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get faceReading => 'चेहरा पढ़ना';
 
   @override
+  String get missionFaceReading => 'Face Reading Mission';
+
+  @override
   String get faceFate => 'चेहरा भाग्य भाग्य';
 
   @override

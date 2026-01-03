@@ -196,6 +196,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get faceReading => '看面相';
 
   @override
+  String get missionFaceReading => 'Face Reading Mission';
+
+  @override
   String get faceFate => '面相与命运';
 
   @override

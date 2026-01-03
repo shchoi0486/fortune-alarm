@@ -4,6 +4,7 @@ import 'dart:math'; // Random
 import 'package:audioplayers/audioplayers.dart'; // AudioPlayer
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // SystemNavigator
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -445,11 +446,15 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
         _debugLabelText = "$totalMissions/$totalMissions 성공! 매칭 성공!";
         _currentSimilarity = 1.0;
       });
+      try {
+        HapticFeedback.heavyImpact();
+      } catch (_) {}
     }
   }
 
   Future<void> _playTransitionSound() async {
      try {
+       HapticFeedback.mediumImpact();
        await FlutterRingtonePlayer().playNotification();
      } catch (e) {
        // Ignore

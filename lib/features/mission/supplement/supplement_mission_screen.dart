@@ -249,8 +249,14 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                     child: PillBoxWidget(
                                       currentCount: currentCount,
                                       dailyGoal: dailyGoal,
-                                      onTake: () => notifier.takeSupplement(),
-                                      onRemove: () => notifier.removeSupplement(),
+                                      onTake: () {
+                                        HapticFeedback.mediumImpact();
+                                        notifier.takeSupplement();
+                                      },
+                                      onRemove: () {
+                                        HapticFeedback.lightImpact();
+                                        notifier.removeSupplement();
+                                      },
                                     ),
                                   ),
                                   const SizedBox(height: 10),
@@ -259,11 +265,17 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                     children: [
                                       _ControlButton(
                                         icon: Icons.remove,
-                                        onPressed: () => notifier.removeSupplement(),
+                                        onPressed: () {
+                                          HapticFeedback.lightImpact();
+                                          notifier.removeSupplement();
+                                        },
                                       ),
                                       const SizedBox(width: 30),
                                       GestureDetector(
-                                        onTap: () => notifier.takeSupplement(),
+                                        onTap: () {
+                                          HapticFeedback.mediumImpact();
+                                          notifier.takeSupplement();
+                                        },
                                         child: Container(
                                           padding: const EdgeInsets.all(16),
                                           decoration: BoxDecoration(
@@ -277,7 +289,10 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                       const SizedBox(width: 30),
                                       _ControlButton(
                                         icon: Icons.add,
-                                        onPressed: () => notifier.takeSupplement(),
+                                        onPressed: () {
+                                          HapticFeedback.mediumImpact();
+                                          notifier.takeSupplement();
+                                        },
                                       ),
                                     ],
                                   ),

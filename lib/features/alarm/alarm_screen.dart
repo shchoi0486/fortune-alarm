@@ -480,7 +480,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
       case MissionType.tapSprint:
         return Icons.touch_app;
       case MissionType.leftRight:
-        return Icons.bolt;
+        return Icons.compare_arrows;
       case MissionType.walk:
         return Icons.directions_walk;
       case MissionType.faceDetection:

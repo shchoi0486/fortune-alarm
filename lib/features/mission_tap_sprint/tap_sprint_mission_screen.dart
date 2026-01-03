@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vibration/vibration.dart';
@@ -31,6 +33,22 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
   double _meter = 0;
   bool _pulse = false;
   bool _isSuccess = false;
+
+  final List<_TapEffectData> _effects = [];
+  final Random _random = Random();
+
+  static const List<String> _characters = [
+    'assets/icon/fortuni1_trans.webp',
+    'assets/icon/fortuni2_trans.webp',
+    'assets/icon/fortuni3_angry_trans.webp',
+    'assets/icon/fortuni4_joyful_trans.webp',
+    'assets/icon/fortuni5_shame_trans.webp',
+    'assets/icon/fortuni6_angry2_trans.webp',
+    'assets/icon/rabit.webp',
+    'assets/icon/panda.webp',
+    'assets/icon/dog.webp',
+    'assets/icon/tiger.webp',
+  ];
 
   @override
   void initState() {
@@ -93,8 +111,13 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
         );
       }
     }
+    // 기본 배경을 더 선명하고 밝은 그라데이션으로 변경
     return const BoxDecoration(
-      image: DecorationImage(image: AssetImage('assets/images/alarm_bg.png'), fit: BoxFit.cover),
+      gradient: LinearGradient(
+        colors: [Color(0xFF6DD5FA), Color(0xFF2980B9), Color(0xFFFFFFFF)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
     );
   }
 
@@ -118,22 +141,51 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
     });
   }
 
-  void _onTap() async {
+  void _onTapDown(TapDownDetails details) async {
     _resetInactivityTimer();
     if (_isSuccess) return;
+    HapticFeedback.mediumImpact();
     final now = DateTime.now();
     final goal = _alarm?.shakeCount ?? widget.goalTaps;
+
+    // 터치 간격에 따른 크기 결정 (연타 속도가 빠를수록 큰 캐릭터)
+    final interval = now.difference(_lastTapAt).inMilliseconds;
+    double intensityScale;
+    if (interval < 150) {
+      intensityScale = 2.0; // 큰 크기 (상향)
+    } else if (interval < 300) {
+      intensityScale = 1.6; // 중간 크기 (상향)
+    } else {
+      intensityScale = 1.2; // 작은 크기 (상향)
+    }
+
+    final effect = _TapEffectData(
+      id: DateTime.now().microsecondsSinceEpoch,
+      position: details.localPosition,
+      assetPath: _characters[_random.nextInt(_characters.length)],
+      baseScale: intensityScale,
+    );
+
     setState(() {
       _lastTapAt = now;
       _meter = (_meter + 1).clamp(0, goal.toDouble());
       _pulse = !_pulse;
+      _effects.add(effect);
     });
+
     if (_meter >= goal) {
       await _vibrateSuccess();
       setState(() {
         _isSuccess = true;
       });
     }
+  }
+
+  void _removeEffect(int id) {
+    if (!mounted) return;
+    setState(() {
+      _effects.removeWhere((e) => e.id == id);
+    });
   }
 
   @override
@@ -155,8 +207,8 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(isDarkMode ? 0.55 : 0.45),
-                  Colors.black.withOpacity(isDarkMode ? 0.74 : 0.64),
+                  Colors.white.withOpacity(isDarkMode ? 0.1 : 0.3),
+                  Colors.black.withOpacity(isDarkMode ? 0.4 : 0.2),
                 ],
               ),
             ),
@@ -168,9 +220,16 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                     child: Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: Colors.white.withOpacity(0.18)),
+                        color: Colors.white.withOpacity(0.5), // 투명도를 높여 배경을 더 밝게 (좌우 선택 미션과 통일)
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: [
@@ -197,15 +256,16 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w900,
-                                    color: Colors.white,
+                                    color: Color(0xFF2C3E50), // 어두운 색으로 변경하여 가독성 확보
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   l10n.missionTapSprintDescription(goal),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12,
-                                    color: Colors.white.withOpacity(0.85),
+                                    color: Color(0xFF34495E), // 어두운 색으로 변경
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -214,13 +274,16 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.12),
+                              color: const Color(0xFF2C3E50).withOpacity(0.1), // 텍스트와 어울리는 배경
                               borderRadius: BorderRadius.circular(999),
-                              border: Border.all(color: Colors.white.withOpacity(0.18)),
+                              border: Border.all(color: const Color(0xFF2C3E50).withOpacity(0.2)),
                             ),
                             child: Text(
                               '${_meter.toInt()}/$goal',
-                              style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xFF2C3E50), // 어두운 색으로 변경
+                              ),
                             ),
                           ),
                         ],
@@ -232,14 +295,22 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                       padding: const EdgeInsets.fromLTRB(18, 10, 18, 18),
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: _onTap,
+                        onTapDown: _onTapDown,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(18),
-                            border: Border.all(color: Colors.white.withOpacity(0.12)),
+                            color: Colors.white.withOpacity(0.2), // 배경이 덜 보이도록 불투명도 증가
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                blurRadius: 15,
+                                spreadRadius: 5,
+                              ),
+                            ],
                           ),
                           child: Stack(
+                            clipBehavior: Clip.none,
                             children: [
                               Align(
                                 alignment: Alignment.topCenter,
@@ -251,8 +322,8 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                                       height: 18,
                                       child: LinearProgressIndicator(
                                         value: value,
-                                        backgroundColor: Colors.white.withOpacity(0.12),
-                                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.cyanAccent),
+                                        backgroundColor: const Color(0xFF2C3E50).withOpacity(0.1),
+                                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF16A085)),
                                       ),
                                     ),
                                   ),
@@ -266,9 +337,9 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                                     width: 200,
                                     padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.12),
+                                      color: Colors.white.withOpacity(0.5), // 더 선명하게
                                       borderRadius: BorderRadius.circular(22),
-                                      border: Border.all(color: Colors.white.withOpacity(0.18)),
+                                      border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
                                     ),
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
@@ -276,16 +347,20 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                                         Text(
                                           l10n.missionTapSprintTapHere,
                                           style: const TextStyle(
-                                            fontSize: 20,
+                                            fontSize: 22, // 살짝 키움
                                             fontWeight: FontWeight.w900,
-                                            color: Colors.white,
+                                            color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(height: 6),
                                         Text(
                                           l10n.missionTapSprintHint,
-                                          style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.8)),
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            color: Color(0xFF34495E),
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                           textAlign: TextAlign.center,
                                         ),
                                       ],
@@ -293,6 +368,13 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                                   ),
                                 ),
                               ),
+                              ..._effects.map((effect) => TapEffectWidget(
+                                key: ValueKey(effect.id),
+                                position: effect.position,
+                                assetPath: effect.assetPath,
+                                baseScale: effect.baseScale,
+                                onComplete: () => _removeEffect(effect.id),
+                              )),
                               if (_isLoading) const Center(child: CircularProgressIndicator(color: Colors.white)),
                                if (_isSuccess)
                                  Positioned.fill(
@@ -325,4 +407,131 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
     );
   }
 }
+
+class _TapEffectData {
+  final int id;
+  final Offset position;
+  final String assetPath;
+  final double baseScale;
+
+  _TapEffectData({
+    required this.id,
+    required this.position,
+    required this.assetPath,
+    required this.baseScale,
+  });
+}
+
+class TapEffectWidget extends StatefulWidget {
+  final Offset position;
+  final String assetPath;
+  final double baseScale;
+  final VoidCallback onComplete;
+
+  const TapEffectWidget({
+    super.key,
+    required this.position,
+    required this.assetPath,
+    required this.baseScale,
+    required this.onComplete,
+  });
+
+  @override
+  State<TapEffectWidget> createState() => _TapEffectWidgetState();
+}
+
+class _TapEffectWidgetState extends State<TapEffectWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scale;
+  late Animation<double> _rotation;
+  late Animation<Offset> _movement;
+  late Animation<double> _opacity;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+
+    final random = Random();
+    final angle = random.nextDouble() * 2 * pi;
+    final distance = 40.0 + random.nextDouble() * 40.0;
+    
+    // 커졌다가 다시 작아지는 애니메이션 (초기 크기를 0.25부터 시작하여 자연스럽게)
+    _scale = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween(begin: 0.25, end: widget.baseScale * 1.2)
+            .chain(CurveTween(curve: Curves.easeOutBack)), 
+        weight: 35
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: widget.baseScale * 1.2, end: widget.baseScale * 0.5)
+            .chain(CurveTween(curve: Curves.easeIn)), 
+        weight: 65
+      ),
+    ]).animate(_controller);
+
+    _rotation = Tween<double>(
+      begin: (random.nextDouble() - 0.5) * 0.5,
+      end: (random.nextDouble() - 0.5) * 4.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _movement = Tween<Offset>(
+      begin: Offset.zero,
+      end: Offset(cos(angle) * distance, sin(angle) * distance),
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
+    _opacity = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.0), weight: 60),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.0), weight: 40),
+    ]).animate(_controller);
+
+    _controller.forward().then((_) {
+      if (mounted) widget.onComplete();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: widget.position.dx - 45,
+      top: widget.position.dy - 45,
+      child: IgnorePointer(
+        child: FadeTransition(
+          opacity: _opacity,
+          child: AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: _movement.value,
+                child: Transform.rotate(
+                  angle: _rotation.value,
+                  child: Transform.scale(
+                    scale: _scale.value,
+                    child: child,
+                  ),
+                ),
+              );
+            },
+            child: Image.asset(
+              widget.assetPath,
+              width: 90,
+              height: 90,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 

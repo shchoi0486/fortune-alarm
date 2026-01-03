@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vibration/vibration.dart';
@@ -21,7 +22,7 @@ class LeftRightMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<LeftRightMissionScreen> createState() => _LeftRightMissionScreenState();
 }
 
-class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen> {
+class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen> with TickerProviderStateMixin {
   final Random _random = Random();
 
   AlarmModel? _alarm;
@@ -34,17 +35,58 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
   bool _wrongFlash = false;
   bool _isSuccess = false;
 
+  late AnimationController _characterController;
+  late Animation<double> _characterMove;
+  late Animation<double> _characterJump;
+  late Animation<double> _characterRotate;
+  late Animation<double> _characterScale;
+  
+  String _currentCharacter = 'assets/icon/fortuni1_trans.webp';
+  static const List<String> _characters = [
+    'assets/icon/fortuni1_trans.webp',
+    'assets/icon/fortuni4_joyful_trans.webp',
+    'assets/icon/rabit.webp',
+    'assets/icon/panda.webp',
+    'assets/icon/dog.webp',
+  ];
+
   @override
   void initState() {
     super.initState();
     _expectLeft = _random.nextBool();
     _loadAlarm();
     _startInactivityTimer();
+
+    _characterController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+
+    _characterMove = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: 20.0).chain(CurveTween(curve: Curves.easeOut)), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 20.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn)), weight: 50),
+    ]).animate(_characterController);
+
+    _characterJump = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -15.0).chain(CurveTween(curve: Curves.easeOut)), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: -15.0, end: 0.0).chain(CurveTween(curve: Curves.bounceOut)), weight: 50),
+    ]).animate(_characterController);
+
+    _characterRotate = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.1).chain(CurveTween(curve: Curves.easeInOut)), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: -0.1, end: 0.0).chain(CurveTween(curve: Curves.easeInOut)), weight: 50),
+    ]).animate(_characterController);
+
+    _characterScale = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.05), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.05, end: 1.0), weight: 50),
+    ]).animate(_characterController);
   }
 
   @override
   void dispose() {
     _inactivityTimer?.cancel();
+    _characterController.dispose();
     super.dispose();
   }
 
@@ -94,8 +136,13 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
         );
       }
     }
+    // 기본 배경을 더 선명하고 밝은 오렌지-옐로우 그라데이션으로 변경
     return const BoxDecoration(
-      image: DecorationImage(image: AssetImage('assets/images/alarm_bg.png'), fit: BoxFit.cover),
+      gradient: LinearGradient(
+        colors: [Color(0xFFFDC830), Color(0xFFF37335), Color(0xFFFFFFFF)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
     );
   }
 
@@ -109,10 +156,13 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
 
   void _nextPrompt() {
     _expectLeft = _random.nextBool();
+    _currentCharacter = _characters[_random.nextInt(_characters.length)];
   }
 
   void _onTap(bool isLeft) async {
     _resetInactivityTimer();
+    HapticFeedback.lightImpact();
+    
     final goal = _alarm?.shakeCount ?? widget.targetStreak;
     final correct = isLeft == _expectLeft;
     if (correct) {
@@ -162,8 +212,8 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(isDarkMode ? 0.55 : 0.45),
-                  Colors.black.withOpacity(isDarkMode ? 0.74 : 0.64),
+                  Colors.white.withOpacity(isDarkMode ? 0.1 : 0.25),
+                  Colors.black.withOpacity(isDarkMode ? 0.35 : 0.15),
                 ],
               ),
             ),
@@ -175,9 +225,16 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                     child: Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: Colors.white.withOpacity(0.18)),
+                        color: Colors.white.withOpacity(0.5), // 투명도를 높여 배경을 더 밝게 (가독성 확보)
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: [
@@ -192,7 +249,7 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                               ),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.bolt, color: Colors.white),
+                            child: const Icon(Icons.compare_arrows, color: Colors.white),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -204,13 +261,17 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w900,
-                                    color: Colors.white,
+                                    color: Color(0xFF2C3E50), // 어두운 색으로 변경하여 가독성 확보
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   l10n.missionLeftRightDescription(goal),
-                                  style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.85)),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF34495E), // 어두운 색으로 변경
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ],
                             ),
@@ -218,13 +279,16 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.12),
+                              color: const Color(0xFF2C3E50).withOpacity(0.1), // 텍스트와 어울리는 배경
                               borderRadius: BorderRadius.circular(999),
-                              border: Border.all(color: Colors.white.withOpacity(0.18)),
+                              border: Border.all(color: const Color(0xFF2C3E50).withOpacity(0.2)),
                             ),
                             child: Text(
                               '$_streak/$goal',
-                              style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: Color(0xFF2C3E50), // 어두운 색으로 변경
+                              ),
                             ),
                           ),
                         ],
@@ -238,20 +302,27 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.08),
-                              borderRadius: BorderRadius.circular(18),
-                              border: Border.all(color: Colors.white.withOpacity(0.12)),
+                              color: Colors.white.withOpacity(0.35), // 배경이 덜 보이도록 불투명도 증가
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.08),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
                             ),
                             child: Column(
                               children: [
-                                const SizedBox(height: 22),
+                                const SizedBox(height: 50),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                                   margin: const EdgeInsets.symmetric(horizontal: 18),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.12),
-                                    borderRadius: BorderRadius.circular(18),
-                                    border: Border.all(color: Colors.white.withOpacity(0.18)),
+                                    color: Colors.white.withOpacity(0.5), // 더 선명하게
+                                    borderRadius: BorderRadius.circular(22),
+                                    border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
                                   ),
                                   child: Row(
                                     children: [
@@ -259,14 +330,45 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                                         child: Text(
                                           _expectLeft ? l10n.missionLeftRightPromptLeft : l10n.missionLeftRightPromptRight,
                                           style: const TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 22,
                                             fontWeight: FontWeight.w900,
-                                            color: Colors.white,
+                                            color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
                                           ),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ],
+                                  ),
+                                ),
+                                const Spacer(),
+                                AnimatedBuilder(
+                                  animation: _characterController,
+                                  builder: (context, child) {
+                                    return Transform.translate(
+                                      offset: Offset(
+                                        _expectLeft ? -_characterMove.value : _characterMove.value,
+                                        _characterJump.value,
+                                      ),
+                                      child: Transform.rotate(
+                                        angle: _expectLeft ? _characterRotate.value : -_characterRotate.value,
+                                        child: Transform.scale(
+                                          scale: _characterScale.value,
+                                          child: child,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Transform.scale(
+                                      scaleX: _expectLeft ? 1.0 : -1.0,
+                                      child: Image.asset(
+                                        _currentCharacter,
+                                        width: 180,
+                                        height: 180,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 const Spacer(),
@@ -278,19 +380,16 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                                         child: GestureDetector(
                                           onTap: () => _onTap(true),
                                           child: Container(
-                                            height: 70,
+                                            height: 75,
                                             decoration: BoxDecoration(
-                                              gradient: const LinearGradient(
-                                                colors: [Color(0xFF00C6FF), Color(0xFF0072FF)],
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
-                                              ),
-                                              borderRadius: BorderRadius.circular(18),
+                                              color: Colors.white.withOpacity(0.5), // 상단 박스와 동일하게
+                                              borderRadius: BorderRadius.circular(22),
+                                              border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.black.withOpacity(0.18),
-                                                  blurRadius: 14,
-                                                  offset: const Offset(0, 8),
+                                                  color: Colors.black.withOpacity(0.1),
+                                                  blurRadius: 10,
+                                                  offset: const Offset(0, 4),
                                                 ),
                                               ],
                                             ),
@@ -298,33 +397,30 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                                               child: Text(
                                                 l10n.left,
                                                 style: const TextStyle(
-                                                  fontSize: 18,
+                                                  fontSize: 19,
                                                   fontWeight: FontWeight.w900,
-                                                  color: Colors.white,
+                                                  color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 14),
+                                      const SizedBox(width: 16),
                                       Expanded(
                                         child: GestureDetector(
                                           onTap: () => _onTap(false),
                                           child: Container(
-                                            height: 70,
+                                            height: 75,
                                             decoration: BoxDecoration(
-                                              gradient: const LinearGradient(
-                                                colors: [Color(0xFFB721FF), Color(0xFF21D4FD)],
-                                                begin: Alignment.topLeft,
-                                                end: Alignment.bottomRight,
-                                              ),
-                                              borderRadius: BorderRadius.circular(18),
+                                              color: Colors.white.withOpacity(0.5), // 상단 박스와 동일하게
+                                              borderRadius: BorderRadius.circular(22),
+                                              border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
                                               boxShadow: [
                                                 BoxShadow(
-                                                  color: Colors.black.withOpacity(0.18),
-                                                  blurRadius: 14,
-                                                  offset: const Offset(0, 8),
+                                                  color: Colors.black.withOpacity(0.1),
+                                                  blurRadius: 10,
+                                                  offset: const Offset(0, 4),
                                                 ),
                                               ],
                                             ),
@@ -332,9 +428,9 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                                               child: Text(
                                                 l10n.right,
                                                 style: const TextStyle(
-                                                  fontSize: 18,
+                                                  fontSize: 19,
                                                   fontWeight: FontWeight.w900,
-                                                  color: Colors.white,
+                                                  color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
                                                 ),
                                               ),
                                             ),
@@ -384,3 +480,4 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
     );
   }
 }
+

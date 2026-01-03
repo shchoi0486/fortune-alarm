@@ -202,6 +202,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get faceReading => 'Физиогномика';
 
   @override
+  String get missionFaceReading => 'Face Reading Mission';
+
+  @override
   String get faceFate => 'Судьба по лицу';
 
   @override

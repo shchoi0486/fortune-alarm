@@ -122,8 +122,8 @@ class NotificationService {
     }
 
     // 채널 ID를 소리/진동 설정에 따라 다르게 함 (설정 변경 시 새로운 채널이 생성되도록 함)
-    // [수정] channelId 접두어를 v11으로 변경하여 기존 설정 강제 갱신
-    final String channelId = 'supplement_channel_v11_${soundResource}_${isVibrationEnabled ? 'vibe' : 'novibe'}';
+    // [수정] channelId 접두어를 v13으로 변경하여 기존 설정 강제 갱신
+    final String channelId = 'supplement_channel_v13_${soundResource}_${isVibrationEnabled ? 'vibe' : 'novibe'}';
 
     debugPrint('[NotificationService] Showing notification. ID: $id, Channel: $channelId, Sound: $soundResource');
 
@@ -205,17 +205,17 @@ class NotificationService {
         vibration = Int64List.fromList([0, 2000, 1000, 2000, 1000, 2000]);
     }
 
-    // 소리 설정 (기본값: alarm_sound)
-    // 확장자 제거 (Android 리소스 이름 규칙)
+    // 확장자 제거 및 하이픈을 언더바로 변경 (Android 리소스 이름 규칙)
     String soundResource = (soundName != null && soundName != 'default') ? soundName : 'alarm_sound';
     if (soundResource.contains('.')) {
       soundResource = soundResource.split('.').first;
     }
+    soundResource = soundResource.replaceAll('-', '_');
     
     // 채널 ID를 소리/진동 설정에 따라 다르게 하여 설정을 적용 (Android 특성상 채널 설정 변경 불가하므로)
     // 알람 소리나 진동이 변경되면 새로운 채널을 생성해야 함
-    // [수정] channelId 접두어를 v11으로 변경하여 기존 설정 강제 갱신
-    final String channelId = 'fortune_alarm_channel_v11_${soundResource}_${isVibrationEnabled ? 'vibe' : 'novibe'}'; 
+    // [수정] channelId 접두어를 v13으로 변경하여 기존 설정 강제 갱신
+    final String channelId = 'fortune_alarm_channel_v13_${soundResource}_${isVibrationEnabled ? 'vibe' : 'novibe'}'; 
     
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(

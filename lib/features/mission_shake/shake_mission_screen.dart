@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -105,6 +106,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
         // Debounce shakes to prevent multiple counts for a single motion
         if (now.difference(_lastShakeTime).inMilliseconds > 500) {
           _lastShakeTime = now;
+          HapticFeedback.mediumImpact(); // 흔들림 감지 시 햅틱 추가
           setState(() {
             _currentShakeCount++;
           });
@@ -126,29 +128,8 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
     if (alarm == null) return;
 
     try {
-      if (alarm.isSoundEnabled) {
-        if (alarm.ringtonePath == 'default') {
-           await FlutterRingtonePlayer().playAlarm(
-             looping: true, 
-             volume: alarm.isGradualVolume ? 0.1 : alarm.volume, 
-             asAlarm: true
-           );
-        } else {
-           String path = alarm.ringtonePath ?? 'alarm_sound';
-           String ext = 'ogg';
-           
-           await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-           await _audioPlayer.setSource(AssetSource('sounds/$path.$ext'));
-           
-           double initialVolume = alarm.isGradualVolume ? 0.1 : alarm.volume;
-           await _audioPlayer.setVolume(initialVolume);
-           await _audioPlayer.resume();
-           
-           if (alarm.isGradualVolume) {
-             _startVolumeFadeIn(alarm.volume);
-           }
-        }
-      }
+      // 미션 수행 화면에서는 알람 소리 재생하지 않음
+      // 알람 소리는 알람 울림 스크린(alarm_ringing_screen.dart)에서만 재생
 
       if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
          _playVibration(alarm.vibrationPattern);

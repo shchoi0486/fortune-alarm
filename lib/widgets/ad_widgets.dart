@@ -78,8 +78,9 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
     final backgroundColor = isDarkMode ? const Color(0xFF121212) : Colors.white;
 
     // 네이티브 광고는 높이를 직접 지정해야 함 (텍스트 한 줄 + 패딩 고려하여 약 50~60dp)
-    // 사용자 피드백: 여백이 너무 많음 -> 높이를 45.0으로 축소
-    const double height = 45.0;
+    // 사용자 피드백: 여백이 너무 많음 -> 높이를 45.0으로 축소했으나, 
+    // 광고 validator(dismiss) 창이 내비게이션 바를 침범하는 문제로 인해 50.0으로 재조정 및 패딩 추가
+    const double height = 50.0;
 
     // 1. 로드 실패 시 에러 표시 및 재시도
     if (_errorMessage != null) {
@@ -87,7 +88,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
         color: backgroundColor,
         width: double.infinity,
         height: height,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         alignment: Alignment.center,
         child: GestureDetector(
           onTap: _loadAd,
@@ -118,6 +119,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
         color: backgroundColor,
         width: double.infinity,
         height: height,
+        padding: const EdgeInsets.symmetric(vertical: 4),
         alignment: Alignment.center,
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -149,6 +151,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
       color: backgroundColor,
       width: double.infinity,
       height: height,
+      padding: const EdgeInsets.symmetric(vertical: 4),
       alignment: Alignment.center,
       child: AdWidget(ad: _nativeAd!),
     );

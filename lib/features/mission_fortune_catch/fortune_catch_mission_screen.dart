@@ -373,14 +373,14 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
     }
 
     if (char.isFake && char.points < 0) {
-      HapticFeedback.heavyImpact();
+      HapticFeedback.vibrate(); // 더 강한 진동
       if (_hasVibrator == true) {
-        Vibration.vibrate(pattern: [0, 45, 35, 55]);
+        Vibration.vibrate(pattern: [0, 50, 40, 60]);
       }
       _playSfx('sounds/alarm_sound.ogg', volume: 0.16, maxDuration: const Duration(milliseconds: 200));
       _showFeedback('감점 ${char.points}점', Colors.redAccent);
     } else {
-      HapticFeedback.lightImpact();
+      HapticFeedback.mediumImpact(); // light -> medium으로 강화
       if (char.points == 0) {
         _playSfx('sounds/birds.ogg', volume: 0.12, maxDuration: const Duration(milliseconds: 140));
       } else {

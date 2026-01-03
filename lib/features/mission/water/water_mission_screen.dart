@@ -30,6 +30,9 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
       if (previous != null && !previous.isGoalAchieved && next.isGoalAchieved) {
         if (!_isSuccess) {
           debugPrint('Water mission goal achieved! Showing success overlay.');
+          try {
+            HapticFeedback.heavyImpact();
+          } catch (_) {}
           setState(() {
             _isSuccess = true;
           });
@@ -140,11 +143,21 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
                                   children: [
                                     IconButton(
                                       icon: const Icon(Icons.remove, size: 28),
-                                      onPressed: () => waterNotifier.removeWater(),
+                                      onPressed: () {
+                                        try {
+                                          HapticFeedback.lightImpact();
+                                        } catch (_) {}
+                                        waterNotifier.removeWater();
+                                      },
                                     ),
                                     const SizedBox(width: 20),
                                     GestureDetector(
-                                       onTap: () => waterNotifier.addWater(),
+                                       onTap: () {
+                                         try {
+                                           HapticFeedback.mediumImpact();
+                                         } catch (_) {}
+                                         waterNotifier.addWater();
+                                       },
                                        child: Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                                         child: const Icon(Icons.local_drink, size: 40, color: Color(0xFF4FC3F7)),
@@ -153,7 +166,12 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
                                     const SizedBox(width: 20),
                                     IconButton(
                                       icon: const Icon(Icons.add, size: 28),
-                                      onPressed: () => waterNotifier.addWater(),
+                                      onPressed: () {
+                                        try {
+                                          HapticFeedback.mediumImpact();
+                                        } catch (_) {}
+                                        waterNotifier.addWater();
+                                      },
                                     ),
                                   ],
                                 ),

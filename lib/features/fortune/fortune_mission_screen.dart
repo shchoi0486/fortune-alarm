@@ -258,6 +258,9 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   }
 
   void _processResult() {
+    try {
+      HapticFeedback.heavyImpact();
+    } catch (_) {}
     setState(() {
       _loveResult = TarotRepository.drawCard(category: "love", date: widget.targetDate);
       _wealthResult = TarotRepository.drawCard(category: "wealth", date: widget.targetDate);
@@ -279,7 +282,9 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
 
     int emptyIndex = _selectedSlots.indexOf(null);
     if (emptyIndex != -1) {
-      HapticFeedback.lightImpact();
+      try {
+        HapticFeedback.mediumImpact();
+      } catch (_) {}
       _startMovingAnimation(cardIndex, emptyIndex);
     }
   }
@@ -331,6 +336,9 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
 
   void _handleSlotTap(int slotIndex) {
     if (_selectedSlots[slotIndex] != null) {
+      try {
+        HapticFeedback.lightImpact();
+      } catch (_) {}
       setState(() {
         _selectedSlots[slotIndex] = null;
       });
@@ -622,15 +630,15 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                   child: ElevatedButton(
                     onPressed: (allSelected && !_isChecking) ? _checkResult : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFDAA520).withOpacity(0.9), // Dark Gold
+                      backgroundColor: Colors.amber, 
                       foregroundColor: Colors.black,
                       disabledBackgroundColor: Colors.grey.withOpacity(0.3),
                       disabledForegroundColor: Colors.white30,
                       elevation: 10,
-                      shadowColor: const Color(0xFFFFD700).withOpacity(0.5),
+                      shadowColor: Colors.amber.withOpacity(0.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
-                        side: BorderSide(color: const Color(0xFFFFD700).withOpacity(0.5))
+                        side: BorderSide(color: Colors.amber.withOpacity(0.5))
                       ),
                     ),
                     child: _isChecking 
@@ -676,79 +684,93 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
       title = AppLocalizations.of(context)!.fortuneResultTitleDate(widget.targetDate!.year, widget.targetDate!.month, widget.targetDate!.day);
     }
 
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          Text(
-            title,
-            style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 30),
-          _buildResultCard("love", AppLocalizations.of(context)!.loveFortune, const Color(0xFFE91E63), _loveResult!), // Deep Pink
-          const SizedBox(height: 30),
-          _buildResultCard("wealth", AppLocalizations.of(context)!.wealthFortune, const Color(0xFFB45309), _wealthResult!), // Darker Amber/Gold
-          const SizedBox(height: 30),
-          _buildResultCard("success", AppLocalizations.of(context)!.successFortune, const Color(0xFF2563EB), _successResult!), // Stronger Blue
-          const SizedBox(height: 50),
-          SizedBox(
-            width: double.infinity,
-            height: 64,
-            child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF334155), // Lighter Slate
-                      Color(0xFF1E293B), // Darker Slate
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        CustomPaint(
+          painter: MysticBackgroundPainter(),
+          size: Size.infinite,
+        ),
+        SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white, 
+                    fontSize: 24, 
+                    fontWeight: FontWeight.bold,
+                    shadows: [Shadow(color: Colors.black, blurRadius: 10)]
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFFFD700).withOpacity(0.2),
-                      blurRadius: 15,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
                 ),
-                child: ElevatedButton(
-                  onPressed: _handleClose,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent, // Use Container gradient
-                    shadowColor: Colors.transparent,
-                    foregroundColor: const Color(0xFFFFD700), // Gold Text
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
+                const SizedBox(height: 30),
+                _buildResultCard("love", AppLocalizations.of(context)!.loveFortune, const Color(0xFFE91E63), _loveResult!), // Deep Pink
+                const SizedBox(height: 30),
+                _buildResultCard("wealth", AppLocalizations.of(context)!.wealthFortune, const Color(0xFFB45309), _wealthResult!), // Darker Amber/Gold
+                const SizedBox(height: 30),
+                _buildResultCard("success", AppLocalizations.of(context)!.successFortune, const Color(0xFF2563EB), _successResult!), // Stronger Blue
+                const SizedBox(height: 50),
+                SizedBox(
+                  width: double.infinity,
+                  height: 64,
+                  child: Container(
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      side: BorderSide(
-                        color: const Color(0xFFFFD700).withOpacity(0.6),
-                        width: 1.5,
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF334155), // Lighter Slate
+                          Color(0xFF1E293B), // Darker Slate
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFFFD700).withOpacity(0.2),
+                          blurRadius: 15,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      onPressed: _handleClose,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent, // Use Container gradient
+                        shadowColor: Colors.transparent,
+                        foregroundColor: const Color(0xFFFFD700), // Gold Text
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          side: BorderSide(
+                            color: const Color(0xFFFFD700).withOpacity(0.6),
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.auto_awesome, size: 20),
+                          const SizedBox(width: 10),
+                          Text(
+                            AppLocalizations.of(context)!.startDayButton, 
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.auto_awesome, size: 20),
-                    const SizedBox(width: 10),
-                    Text(
-                      AppLocalizations.of(context)!.startDayButton, 
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)
-                    ),
-                  ],
                 ),
-              ),
+                const SizedBox(height: 30),
+              ],
             ),
           ),
-          const SizedBox(height: 30),
-        ],
-      ),
-      ),
+        ),
+      ],
     );
   }
 

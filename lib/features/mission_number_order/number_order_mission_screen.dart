@@ -75,7 +75,7 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
 
   Future<void> _vibrateCorrect() async {
     try {
-      HapticFeedback.lightImpact();
+      HapticFeedback.mediumImpact(); // light -> medium
       if (await Vibration.hasVibrator() == true) {
         Vibration.vibrate(duration: 50);
       }
@@ -95,8 +95,7 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
     _resetInactivityTimer();
     if (_disabledNumbers.contains(n)) return;
 
-    final baseGoal = _alarm?.mathProblemCount ?? 5;
-    final goal = baseGoal * 2;
+    const goal = 10;
 
     if (n == _nextNumber) {
       await _vibrateCorrect();
@@ -205,8 +204,7 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
 
     final List<Offset> placedCenters = [];
 
-    final baseGoal = _alarm?.mathProblemCount ?? 5;
-    final goal = baseGoal * 2;
+    const goal = 10;
 
     for (int n = 1; n < goal; n++) {
       Offset? pos;

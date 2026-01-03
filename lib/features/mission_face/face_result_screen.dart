@@ -63,7 +63,8 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         noseAnalysis: "코 윤곽이 안정적으로 잡히면 재물운 해석의 정확도가 올라갑니다.",
         mouthAnalysis: "입 주변 윤곽이 뚜렷할수록 말운·대인운 해석이 구체화됩니다.",
         overallAdvice: "조명을 밝게 하고 정면을 바라보면 분석 품질이 좋아집니다.",
-        overallAnalysis: "이번 결과는 얼굴 윤곽/표정 측정이 충분하지 않아 기본 해석으로 표시됩니다.\n정면 응시와 조명 상태가 좋아지면, 얼굴형·눈 뜸·코 윤곽·입 벌림 등 지표가 더 안정적으로 측정됩니다.\n다시 시도하면 점수 분포와 문장이 더 구체적으로 바뀝니다.",
+        overallAnalysis: "이번 결과는 얼굴 윤곽/표정 측정이 충분하지 않아 기본 해석으로 표시됩니다.\n정면 응시와 조명 상태가 좋아지면, 눈 뜸·코 윤곽·입 주변 지표가 더 안정적으로 측정됩니다.\n다시 시도하면 점수 분포와 문장이 더 구체적으로 바뀝니다.",
+        dailyFortune: "오늘은 평온한 마음으로 하루를 시작하기 좋은 날입니다.\n거울 속 미소로 긍정적인 기운을 채워보세요.\n작은 여유가 뜻밖의 행운을 불러옵니다.",
       );
     }
 
@@ -110,10 +111,32 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     );
 
     final total = clampScore((wealth * 0.27) + (love * 0.23) + (career * 0.30) + (health * 0.20));
-    final title = _titleFromScores(faceShape: faceShape, wealth: wealth, love: love, career: career, health: health);
+    final title = _titleFromScores(wealth: wealth, love: love, career: career, health: health);
+
+    final scoreMap = {
+      "재물": wealth,
+      "인연": love,
+      "직업": career,
+      "건강": health,
+    };
+    final sorted = scoreMap.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    final topKey = sorted.first.key;
+    final bottomKey = sorted.last.key;
+
+    final dailyFortune = _generateDailyFortune(
+      topKey: topKey,
+      bottomKey: bottomKey,
+      smile: smile,
+      eyeOpen: eyeOpen,
+      wealth: wealth,
+      love: love,
+      career: career,
+      health: health,
+    );
 
     final overallAnalysis = _overallAnalysisText(
-      faceShape: faceShape,
+      topKey: topKey,
+      bottomKey: bottomKey,
       wealth: wealth,
       love: love,
       career: career,
@@ -133,11 +156,98 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
       careerScore: career,
       healthScore: health,
       eyeAnalysis: _eyeAnalysisText(eyeOpen: eyeOpen, yawAbs: yawAbs, rollAbs: rollAbs, smile: smile),
-      noseAnalysis: _noseAnalysisText(noseWidth: noseWidth, noseLength: noseLength, faceShape: faceShape),
-      mouthAnalysis: _mouthAnalysisText(mouthOpen: mouthOpen, smile: smile, faceShape: faceShape),
+      noseAnalysis: _noseAnalysisText(noseWidth: noseWidth, noseLength: noseLength),
+      mouthAnalysis: _mouthAnalysisText(mouthOpen: mouthOpen, smile: smile),
       overallAdvice: _adviceText(wealth: wealth, love: love, career: career, health: health),
       overallAnalysis: overallAnalysis,
+      dailyFortune: dailyFortune,
     );
+  }
+
+  String _generateDailyFortune({
+    required String topKey,
+    required String bottomKey,
+    required double smile,
+    required double eyeOpen,
+    required int wealth,
+    required int love,
+    required int career,
+    required int health,
+  }) {
+    final now = DateTime.now();
+    final daySeed = now.day + now.month + now.year;
+    final toneIndex = (daySeed + (smile * 100).toInt() + (eyeOpen * 100).toInt()) % 3;
+    final tipIndex = (daySeed + wealth + love + career + health) % 4;
+
+    String headline = "오늘은 $topKey 운이 들어오는 날입니다. $bottomKey 쪽은 한 번 더 조심하세요.";
+
+    String mid;
+    if (topKey == "재물") {
+      final options = [
+        "작은 정리와 확인이 돈의 흐름을 더 크게 만들어줍니다.",
+        "급할수록 계산을 한 번 더 하면 이득이 남습니다.",
+        "알뜰하게 챙긴 한 가지가 예상 밖의 성과로 이어집니다.",
+      ];
+      mid = options[toneIndex];
+    } else if (topKey == "인연") {
+      final options = [
+        "먼저 한마디 건네면 관계가 부드럽게 풀립니다.",
+        "진심을 짧게 전하는 것이 오해를 줄여줍니다.",
+        "작은 배려가 귀인의 기운을 끌어옵니다.",
+      ];
+      mid = options[toneIndex];
+    } else if (topKey == "직업") {
+      final options = [
+        "우선순위를 좁히면 집중력이 성과로 바뀝니다.",
+        "결정은 간단히, 실행은 꾸준히가 통하는 날입니다.",
+        "오늘은 맡은 일을 끝까지 마무리하는 힘이 큽니다.",
+      ];
+      mid = options[toneIndex];
+    } else {
+      final options = [
+        "리듬을 고르면 컨디션이 금방 회복됩니다.",
+        "무리하지 않고 템포를 지키면 하루가 편안해집니다.",
+        "작은 휴식이 집중력과 기분을 함께 끌어올립니다.",
+      ];
+      mid = options[toneIndex];
+    }
+
+    String tip;
+    if (bottomKey == "재물") {
+      final options = [
+        "지출·구독·결제는 ‘지금’보다 ‘내일’ 한 번 더 확인하세요.",
+        "약속 없는 소비는 피하고, 필요한 것만 담는 게 이득입니다.",
+        "금전 관련 대화는 기록을 남기면 불필요한 손해를 막습니다.",
+        "작은 금액이라도 새는 구멍이 없는지 체크해보세요.",
+      ];
+      tip = options[tipIndex];
+    } else if (bottomKey == "인연") {
+      final options = [
+        "말투가 날카로워지기 쉬우니 ‘한 박자 쉬고’ 답하세요.",
+        "오해가 생기면 길게 설명보다 짧게 확인이 더 좋습니다.",
+        "오늘은 약속 시간을 지키는 것만으로도 신뢰가 쌓입니다.",
+        "대화는 결론부터 말하면 감정 소모가 줄어듭니다.",
+      ];
+      tip = options[tipIndex];
+    } else if (bottomKey == "직업") {
+      final options = [
+        "일을 벌리기보다 ‘하나를 끝내는 것’이 운을 키웁니다.",
+        "완벽보다 마감이 먼저입니다. 오늘은 80%에서 확정하세요.",
+        "미루고 있던 한 가지를 정리하면 머리가 맑아집니다.",
+        "내가 할 일과 남의 일을 분리하면 스트레스가 줄어듭니다.",
+      ];
+      tip = options[tipIndex];
+    } else {
+      final options = [
+        "수면·과식·카페인 과다만 피하면 컨디션이 안정됩니다.",
+        "목·어깨 긴장을 풀어주면 하루 피로가 확 줄어듭니다.",
+        "짧은 산책이 생각을 정리해주고 기운을 환기합니다.",
+        "물 한 잔, 스트레칭 1분이 운의 바닥을 받칩니다.",
+      ];
+      tip = options[tipIndex];
+    }
+
+    return "$headline\n$mid\n$tip";
   }
 
   double _wealthDeltaFromNose({required double? noseWidth, required double? noseLength}) {
@@ -187,7 +297,6 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
   }
 
   String _titleFromScores({
-    required String faceShape,
     required int wealth,
     required int love,
     required int career,
@@ -203,10 +312,10 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     final sorted = scores.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
     final topType = sorted.first.key;
     
-    if (topType == "재물운") return "$faceShape · 재물운 중심의 상";
-    if (topType == "인연운") return "$faceShape · 인연운이 강한 상";
-    if (topType == "직업운") return "$faceShape · 직업운이 돋보이는 상";
-    return "$faceShape · 기운이 안정된 상";
+    if (topType == "재물운") return "재물운 중심의 상";
+    if (topType == "인연운") return "인연운이 강한 상";
+    if (topType == "직업운") return "직업운이 돋보이는 상";
+    return "기운이 안정된 상";
   }
 
   String _eyeAnalysisText({required double eyeOpen, required double yawAbs, required double rollAbs, required double smile}) {
@@ -247,7 +356,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     return "$eyeTypeDesc $expressionDesc $postureAdvice";
   }
 
-  String _noseAnalysisText({required double? noseWidth, required double? noseLength, required String faceShape}) {
+  String _noseAnalysisText({required double? noseWidth, required double? noseLength}) {
     if (noseWidth == null && noseLength == null) {
       return "코 윤곽 측정이 충분하지 않아, 코에 대한 해석은 절제해 표시합니다.";
     }
@@ -263,19 +372,10 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
       noseDesc = "코의 비율이 적당하고 균형이 잡혀 있어, 들어오는 재물을 안정적으로 유지하는 힘이 있습니다.";
     }
 
-    String harmonyDesc;
-    if (faceShape == "둥근형" || faceShape == "타원형") {
-      harmonyDesc = "부드러운 얼굴형이 코의 기운을 잘 감싸주고 있어, 재물운이 더욱 원만하게 흐릅니다.";
-    } else if (faceShape == "각진형" || faceShape == "V라인형") {
-      harmonyDesc = "뚜렷한 얼굴 윤곽이 코의 기운을 받쳐주어, 재물에 대한 결단력과 추진력이 배가됩니다.";
-    } else {
-      harmonyDesc = "얼굴형과의 조화가 좋아 재물운의 흐름이 막힘없이 시원합니다.";
-    }
-
-    return "$noseDesc $harmonyDesc";
+    return noseDesc;
   }
 
-  String _mouthAnalysisText({required double mouthOpen, required double smile, required String faceShape}) {
+  String _mouthAnalysisText({required double mouthOpen, required double smile}) {
     String mouthDesc;
     if (mouthOpen < 0.03) {
       if (smile >= 0.55) {
@@ -290,19 +390,12 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
          mouthDesc = "입이 살짝 벌어져 있어 개방적이고 솔직한 성격이 보이지만, 때로는 말실수를 조심해야 합니다.";
       }
     }
-
-    String shapeHarmony;
-    if (faceShape == "V라인형" || faceShape == "긴형") {
-       shapeHarmony = "샤프한 턱선과 어우러져 세련된 화술과 설득력이 돋보이는 날입니다.";
-    } else {
-       shapeHarmony = "안정적인 하관이 입의 기운을 받쳐주어, 말에 무게가 실리고 신뢰를 얻습니다.";
-    }
-
-    return "$mouthDesc $shapeHarmony";
+    return mouthDesc;
   }
 
   String _overallAnalysisText({
-    required String faceShape,
+    required String topKey,
+    required String bottomKey,
     required int wealth,
     required int love,
     required int career,
@@ -313,33 +406,152 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     required double? noseWidth,
     required double? noseLength,
   }) {
-    // 가장 높은 운세 찾기
-    final scores = {
-      "재물": wealth,
-      "인연": love,
-      "직업": career,
-      "건강": health,
-    };
-    final top = (scores.entries.toList()..sort((a, b) => b.value.compareTo(a.value))).first.key;
+    final headline = "오늘의 중심은 $topKey, 조심할 포인트는 $bottomKey 입니다.";
 
-    final eyeTone = eyeOpen >= 0.65 ? "또렷한 눈 기운" : (eyeOpen <= 0.40 ? "차분한 눈 기운" : "균형 잡힌 눈 기운");
-    final smileTone = smile >= 0.55 ? "표정이 밝게 열리는 날" : "표정이 절제되는 날";
-    final mouthTone = mouthOpen < 0.03 ? "말은 신중하게 정리" : "말이 먼저 나가기 쉬움";
-    final noseTone = (noseWidth == null && noseLength == null)
-        ? "코 윤곽은 측정값이 부족"
-        : (noseWidth ?? 0.25) >= 0.28
-            ? "재물창고 기운이 넓게 잡힘"
-            : "관리형 재물운 흐름";
+    final top = topKey;
+    String vibeDesc;
+    if (top == "재물") {
+      vibeDesc = (noseWidth ?? 0.25) >= 0.28 
+          ? "특히 오늘은 재백궁(코)의 기운이 좋아 금전적인 이득을 기대해볼 만합니다."
+          : "오늘은 실속을 챙기며 재물을 차곡차곡 모으기에 적합한 흐름입니다.";
+    } else if (top == "인연") {
+      vibeDesc = smile >= 0.5 
+          ? "밝은 미소가 도화의 기운을 증폭시켜, 새로운 인연이나 귀인을 만날 수 있습니다."
+          : "차분한 태도가 신뢰를 주어, 깊이 있는 관계를 형성하기 좋은 날입니다.";
+    } else if (top == "직업") {
+      vibeDesc = eyeOpen >= 0.55
+          ? "눈빛에 서린 총기가 판단력을 높여주니, 중요한 결정을 내리기에 최적입니다."
+          : "묵묵히 자리를 지키는 끈기가 인정받아, 성과로 이어지는 하루입니다.";
+    } else { // 건강
+      vibeDesc = "신체의 리듬이 안정적이니, 새로운 활력을 충전하고 내실을 다지기 좋습니다.";
+    }
 
-    return "얼굴형은 $faceShape로 분류되며, 오늘은 $top 쪽 기운이 상대적으로 두드러집니다.\n$eyeTone과 함께 $smileTone이라 사람과 일의 흐름이 결정되는 속도가 빨라질 수 있습니다.\n$mouthTone을 의식하면 실수를 줄이고, $noseTone을 살리면 작은 기회가 큰 성과로 이어집니다.";
+    // 3. 행동 가이드 (6줄 제한을 위해 간결하게)
+    String actionDesc;
+    if (mouthOpen < 0.05) {
+      actionDesc = "입을 다문 신중함이 실수를 막아줍니다. 말보다는 행동으로 보여주면 결과가 따릅니다.";
+    } else {
+      actionDesc = "적극적인 표현이 행운을 부릅니다. 자신감 있게 의견을 개진하면 좋은 반응을 얻습니다.";
+    }
+
+    return "$headline\n$vibeDesc\n$actionDesc";
+  }
+
+  Widget _buildHighlightedText(String text, {required TextStyle baseStyle, bool isPrimary = true}) {
+    final lines = text.split('\n');
+    if (lines.isEmpty) return const SizedBox.shrink();
+
+    final accentColor = isPrimary ? Colors.deepPurple[700] : Colors.black87;
+    final warningColor = isPrimary ? Colors.red[700] : Colors.black87;
+
+    final List<Widget> widgets = [];
+
+    for (int i = 0; i < lines.length; i++) {
+      final line = lines[i].trim();
+      if (line.isEmpty) continue;
+
+      // 1. 첫 번째 문장(요약/헤드라인) 처리
+      if (i == 0) {
+        final isWarning = line.contains('조심') || line.contains('주의') || line.contains('실수');
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Text(
+              line,
+              style: baseStyle.copyWith(
+                fontWeight: FontWeight.bold,
+                color: isWarning ? warningColor : accentColor,
+                fontSize: baseStyle.fontSize! + (isPrimary ? 1 : 0.5),
+              ),
+            ),
+          ),
+        );
+      } else {
+        // 2. 나머지 문장들은 핵심 단어만 '굵게' 표시
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6.0),
+            child: _buildLineWithBoldOnly(line, baseStyle),
+          ),
+        );
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: widgets,
+    );
+  }
+
+  Widget _buildLineWithBoldOnly(String line, TextStyle baseStyle) {
+    final boldRegex = RegExp(r'(재물|금전|지출|결제|계약|정리|투자|인연|대인|소통|연락|약속|말투|오해|직업|일|결정|성과|집중|우선순위|마감|건강|휴식|수면|컨디션|무리|산책|스트레칭|행운|기회|좋은|조심|주의|경계|실수)');
+    
+    int index = 0;
+    final spans = <TextSpan>[];
+
+    while (index < line.length) {
+      final match = boldRegex.firstMatch(line.substring(index));
+      if (match == null) {
+        spans.add(TextSpan(text: line.substring(index), style: baseStyle));
+        break;
+      }
+
+      final start = index + match.start;
+      if (start > index) {
+        spans.add(TextSpan(text: line.substring(index, start), style: baseStyle));
+      }
+
+      final matchText = match.group(0) ?? '';
+      spans.add(TextSpan(
+        text: matchText, 
+        style: baseStyle.copyWith(fontWeight: FontWeight.bold, color: Colors.black87),
+      ));
+      index = start + matchText.length;
+    }
+
+    return RichText(
+      text: TextSpan(style: baseStyle, children: spans),
+    );
   }
 
   String _adviceText({required int wealth, required int love, required int career, required int health}) {
+    final now = DateTime.now();
+    final daySeed = now.day + now.month + now.year;
+    
     final minScore = [wealth, love, career, health].reduce((a, b) => a < b ? a : b);
-    if (minScore == health) return "컨디션 관리가 운의 바닥을 받칩니다. 오늘은 무리한 일정부터 정리하세요.";
-    if (minScore == wealth) return "돈은 들어오는 만큼 새기 쉽습니다. 지출·계약은 한 번 더 확인하세요.";
-    if (minScore == love) return "말투 한 번, 표정 한 번이 인연운을 좌우합니다. 먼저 부드럽게 시작하세요.";
-    return "목표를 넓히기보다 '하나를 확실히' 잡는 날입니다. 우선순위를 줄이세요.";
+    final variantIndex = (daySeed + minScore) % 3;
+
+    if (minScore == health) {
+      final options = [
+        "컨디션 관리가 운의 바닥을 받칩니다. 오늘은 무리한 일정부터 정리하세요.",
+        "몸의 신호에 귀를 기울이세요. 짧은 휴식이 더 큰 성과를 가져옵니다.",
+        "충분한 수면과 수분 섭취만으로도 오늘의 운기가 맑아집니다.",
+      ];
+      return options[variantIndex];
+    }
+    if (minScore == wealth) {
+      final options = [
+        "돈은 들어오는 만큼 새기 쉽습니다. 지출·계약은 한 번 더 확인하세요.",
+        "작은 지출을 줄이는 것이 큰 재물을 모으는 시작입니다.",
+        "금전적인 결정은 내일로 미루는 것이 이득이 될 수 있습니다.",
+      ];
+      return options[variantIndex];
+    }
+    if (minScore == love) {
+      final options = [
+        "말투 한 번, 표정 한 번이 인연운을 좌우합니다. 먼저 부드럽게 시작하세요.",
+        "경청하는 자세가 상대방의 마음을 여는 열쇠가 됩니다.",
+        "가까운 사람일수록 예의를 지키는 것이 운을 지키는 길입니다.",
+      ];
+      return options[variantIndex];
+    }
+    
+    final options = [
+      "목표를 넓히기보다 '하나를 확실히' 잡는 날입니다. 우선순위를 줄이세요.",
+      "서두르지 마세요. 차근차근 진행하는 것이 가장 빠른 길입니다.",
+      "주변의 조언을 참고하되, 최종 결정은 본인의 직관을 믿으세요.",
+    ];
+    return options[variantIndex];
   }
 
   void _unlockWithAd() {
@@ -469,7 +681,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             child: ElevatedButton.icon(
               onPressed: _unlockWithAd,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFDAA520),
+                backgroundColor: Colors.amber,
                 foregroundColor: Colors.black,
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -566,7 +778,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             size: 20,
           ),
           const SizedBox(width: 8),
-          Text(text, style: const TextStyle(color: Colors.black54)),
+          Text(text, style: const TextStyle(color: Colors.black54, fontSize: 15)),
         ],
       ),
     );
@@ -574,12 +786,13 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
 
   Widget _buildResultView() {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Center(
               child: Container(
                 padding: const EdgeInsets.all(4),
@@ -591,36 +804,39 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                   ),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.face_retouching_natural, size: 40, color: Colors.white),
+                child: const Icon(Icons.face_retouching_natural, size: 36, color: Colors.white),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             const Text(
               "오늘의 관상 분석",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w600, letterSpacing: 1.2),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             Text(
               _result.title,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black87),
+              style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black87, letterSpacing: -0.5),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.black87,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 4)),
+                  ],
                 ),
                 child: Text(
                   "총점 ${_result.totalScore}점",
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 36),
             
             // 4대 운세 그래프
             _buildLuckBar("💰 재물운", _result.wealthScore, Colors.amber),
@@ -629,73 +845,131 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             _buildLuckBar("💪 건강운", _result.healthScore, Colors.green),
             
             const SizedBox(height: 32),
-            const Divider(height: 40, thickness: 1),
-            const Text(
-              "종합 분석",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.blueGrey[50],
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.blueGrey.withOpacity(0.2)),
-              ),
-              child: Text(
-                _result.overallAnalysis,
-                style: const TextStyle(
-                  fontSize: 14, 
-                  height: 1.6, 
-                  color: Colors.black87,
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              "상세 분석",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            _buildFeatureItem("👁️ 눈 (통찰력)", _result.eyeAnalysis),
-            _buildFeatureItem("👃 코 (재물복)", _result.noseAnalysis),
-            _buildFeatureItem("👄 입 (말년운)", _result.mouthAnalysis),
-
-            const SizedBox(height: 24),
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F5F7),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                color: const Color(0xFFF8F9FD),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.deepPurpleAccent.withOpacity(0.08)),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+                ],
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("💡 오늘의 조언", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.purple)),
-                  const SizedBox(height: 8),
-                  Text(
-                    _result.overallAdvice,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurpleAccent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(Icons.auto_awesome, color: Colors.deepPurpleAccent, size: 18),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        "오늘의 관상 운세",
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black87),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildHighlightedText(
+                    _result.dailyFortune,
+                    baseStyle: const TextStyle(fontSize: 15, height: 1.6, color: Colors.black87),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: _onComplete,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                elevation: 0,
+
+            const SizedBox(height: 32),
+            const Divider(height: 1, thickness: 1, color: Color(0xFFEEEEEE)),
+            const SizedBox(height: 32),
+            const Text(
+              "종합 분석",
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black87),
+            ),
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.blueGrey[50]!.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.blueGrey.withOpacity(0.1)),
               ),
-              child: const Text(
-                "기상 완료!",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              child: _buildHighlightedText(
+                _result.overallAnalysis,
+                baseStyle: const TextStyle(fontSize: 15, height: 1.65, color: Colors.black87),
+                isPrimary: false,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 32),
+            const Text(
+              "상세 분석",
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black87),
+            ),
+            const SizedBox(height: 14),
+            _buildFeatureItem("👁️ 눈 (통찰력)", _result.eyeAnalysis),
+            _buildFeatureItem("👃 코 (재물복)", _result.noseAnalysis),
+            _buildFeatureItem("👄 입 (말년운)", _result.mouthAnalysis),
+
+            const SizedBox(height: 36),
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.purple.withOpacity(0.05), Colors.deepPurpleAccent.withOpacity(0.05)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.purple.withOpacity(0.1)),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.lightbulb_outline, color: Colors.purple[400], size: 20),
+                      const SizedBox(width: 8),
+                      Text(
+                        "오늘의 조언",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.purple[700]),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    _result.overallAdvice,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15, height: 1.55, color: Colors.black87.withOpacity(0.8), fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+            SizedBox(
+              width: double.infinity,
+              height: 58,
+              child: ElevatedButton(
+                onPressed: _onComplete,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 2,
+                  shadowColor: Colors.purple.withOpacity(0.3),
+                ),
+                child: const Text(
+                  "기상 완료!",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
           ],
         ),
       ),
@@ -707,7 +981,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         children: [
-          SizedBox(width: 80, child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold))),
+          SizedBox(width: 80, child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
@@ -725,7 +999,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             child: Text(
               "$score", 
               textAlign: TextAlign.end,
-              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 15),
             )
           ),
         ],
@@ -735,19 +1009,30 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
 
   Widget _buildFeatureItem(String label, String desc) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: Row(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                const SizedBox(height: 4),
-                Text(desc, style: TextStyle(color: Colors.grey[700], fontSize: 13, height: 1.4)),
-              ],
-            ),
+          Row(
+            children: [
+              Text(
+                label, 
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold, 
+                  fontSize: 16, 
+                  color: Colors.black87,
+                )
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            desc, 
+            style: TextStyle(
+              color: Colors.black87.withOpacity(0.75), 
+              fontSize: 15, 
+              height: 1.55,
+            )
           ),
         ],
       ),
@@ -792,6 +1077,7 @@ class FaceReadingResult {
   final String overallAdvice;
 
   final String overallAnalysis; // 종합 분석 내용 추가
+  final String dailyFortune; // 오늘의 관상 운세 추가
 
   FaceReadingResult({
     required this.title,
@@ -805,5 +1091,6 @@ class FaceReadingResult {
     required this.mouthAnalysis,
     required this.overallAdvice,
     required this.overallAnalysis,
+    required this.dailyFortune,
   });
 }

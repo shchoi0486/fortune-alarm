@@ -402,7 +402,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFFD700), // Gold
+                      backgroundColor: Colors.amber, 
                       foregroundColor: Colors.black87,
                       elevation: 0,
                       shape: RoundedRectangleBorder(

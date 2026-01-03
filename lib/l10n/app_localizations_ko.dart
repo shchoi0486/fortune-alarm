@@ -198,6 +198,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get faceReading => '관상 보기';
 
   @override
+  String get missionFaceReading => '관상 미션';
+
+  @override
   String get faceFate => '얼굴 관상 운명';
 
   @override
@@ -424,7 +427,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String timesCount(int count) {
-    return '$count회 (총 $count번)';
+    return '총 $count회';
   }
 
   @override
@@ -461,13 +464,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get missionMath => '계산 문제';
 
   @override
-  String get missionFortune => '운세';
+  String get missionFortune => '운세 미션';
 
   @override
   String get missionShake => '흔들기';
 
   @override
-  String get missionFortuneCatch => '포츄니를 잡아라';
+  String get missionFortuneCatch => '포츄니 잡기';
 
   @override
   String get missionNoDescription => '미션 없이 알람이 울립니다.';

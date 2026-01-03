@@ -460,6 +460,12 @@ abstract class AppLocalizations {
   /// **'Face Reading'**
   String get faceReading;
 
+  /// No description provided for @missionFaceReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Face Reading Mission'**
+  String get missionFaceReading;
+
   /// No description provided for @faceFate.
   ///
   /// In en, this message translates to:
@@ -889,7 +895,7 @@ abstract class AppLocalizations {
   /// No description provided for @timesCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} times (Total {count})'**
+  /// **'Total {count} times'**
   String timesCount(int count);
 
   /// No description provided for @wakeUpMission.

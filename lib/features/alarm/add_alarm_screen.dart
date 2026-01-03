@@ -36,6 +36,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   late TextEditingController _labelController;
   List<String?> _referenceImagePaths = [null, null, null];
   List<String> _existingImages = []; // 기존 촬영된 이미지 목록
+  List<String> _userBackgroundImages = []; // 사용자 업로드 배경 이미지 목록
   bool _isDeleteMode = false;
   final Set<String> _selectedForDelete = {};
   final ImagePicker _picker = ImagePicker();
@@ -58,6 +59,12 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   // Shake Mission Settings
   late int _shakeCount;
   
+  // Left Right Mission Settings
+  late int _leftRightStreak;
+
+  // Tap Sprint Mission Settings
+  late int _tapSprintGoal;
+
   // Walk Mission Settings
   late int _walkStepCount;
   
@@ -106,6 +113,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       _mathDifficulty = widget.alarm!.mathDifficulty;
       _mathProblemCount = widget.alarm!.mathProblemCount;
       _shakeCount = widget.alarm!.shakeCount;
+      _leftRightStreak = widget.alarm!.missionType == MissionType.leftRight ? widget.alarm!.shakeCount : 5;
+      _tapSprintGoal = widget.alarm!.missionType == MissionType.tapSprint ? widget.alarm!.shakeCount : 20;
       _walkStepCount = widget.alarm!.walkStepCount;
     } else {
       _selectedTime = DateTime.now().add(const Duration(minutes: 1));
@@ -126,6 +135,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       _mathDifficulty = MathDifficulty.normal;
       _mathProblemCount = 3;
       _shakeCount = 20;
+      _leftRightStreak = 5;
+      _tapSprintGoal = 20;
       _walkStepCount = 20;
     }
 
@@ -141,6 +152,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     
     // 기존 이미지 로드
     _loadExistingImages();
+    _loadUserBackgrounds();
     
     // 1초마다 남은 시간 업데이트
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -198,6 +210,40 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       }
     } catch (e) {
       debugPrint('Error loading existing images: $e');
+    }
+  }
+
+  Future<Directory> _getBackgroundImagesDir() async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final bgDir = Directory(path.join(appDir.path, 'background_images'));
+    if (!await bgDir.exists()) {
+      await bgDir.create(recursive: true);
+    }
+    return bgDir;
+  }
+
+  Future<void> _loadUserBackgrounds() async {
+    try {
+      final bgDir = await _getBackgroundImagesDir();
+      if (!await bgDir.exists()) return;
+      
+      final List<FileSystemEntity> files = bgDir.listSync();
+      final List<String> images = [];
+      for (final file in files) {
+        if (file is File && (file.path.endsWith('.jpg') || file.path.endsWith('.png') || file.path.endsWith('.webp') || file.path.endsWith('.jpeg'))) {
+          images.add(file.path);
+        }
+      }
+      
+      images.sort((a, b) => File(b).lastModifiedSync().compareTo(File(a).lastModifiedSync()));
+
+      if (mounted) {
+        setState(() {
+          _userBackgroundImages = images;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading user backgrounds: $e');
     }
   }
 
@@ -569,11 +615,46 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   Future<void> _pickBackground() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
+      final bgDir = await _getBackgroundImagesDir();
+      final fileName = 'bg_${DateTime.now().millisecondsSinceEpoch}${path.extension(image.path)}';
+      final savedFile = await File(image.path).copy(path.join(bgDir.path, fileName));
+      
+      await _loadUserBackgrounds();
+      
       setState(() {
-        _backgroundPath = image.path;
+        _backgroundPath = savedFile.path;
       });
     }
   }
+
+  Future<void> _deleteUserBackground(String filePath, {VoidCallback? onDeleted}) async {
+     try {
+       final file = File(filePath);
+       if (await file.exists()) {
+         await file.delete();
+       }
+       
+       if (_backgroundPath == filePath) {
+         setState(() {
+           _backgroundPath = 'assets/images/alarm_bg.png';
+         });
+       }
+       
+       await _loadUserBackgrounds();
+       
+       if (onDeleted != null) {
+         onDeleted();
+       }
+       
+       if (mounted) {
+         ScaffoldMessenger.of(context).showSnackBar(
+           const SnackBar(content: Text('배경화면이 삭제되었습니다.')),
+         );
+       }
+     } catch (e) {
+       debugPrint('Error deleting user background: $e');
+     }
+   }
 
   void _showBackgroundPicker() {
     showModalBottomSheet(
@@ -590,53 +671,135 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(AppLocalizations.of(context)!.selectAlarmBackground, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                    TextButton(
-                      onPressed: () {
-                        // 안내 메시지
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(AppLocalizations.of(context)!.addAssetInstructions)),
-                        );
-                      },
-                      child: Text(AppLocalizations.of(context)!.howToAdd, style: const TextStyle(fontSize: 12)),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 12),
                 Expanded(
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      // Gallery Option
-                      _buildSpecialOption(Icons.image, AppLocalizations.of(context)!.gallery, _pickBackground),
-                      const SizedBox(width: 16),
-                      
-                      // Default Asset Option
-                      _buildAssetOption('assets/images/alarm_bg.png', AppLocalizations.of(context)!.defaultLabel),
-                      const SizedBox(width: 16),
-                      
-                      // Colors
-                      _buildColorOption(const Color(0xFFFFD54F)), // Yellow
-                      const SizedBox(width: 16),
-                      _buildColorOption(Colors.grey), // Gray
-                      const SizedBox(width: 16),
-                      _buildColorOption(const Color(0xFFFFC1CC)), // Pastel Pink
-                      const SizedBox(width: 16),
-                      _buildColorOption(const Color(0xFFAEC6CF)), // Pastel Blue
-                      const SizedBox(width: 16),
-                      _buildColorOption(const Color(0xFF77DD77)), // Pastel Green
-                      const SizedBox(width: 16),
-                      _buildColorOption(const Color(0xFFB39EB5)), // Pastel Purple
-                      const SizedBox(width: 16),
-                      _buildColorOption(const Color(0xFFFFB347)), // Pastel Orange
-                      const SizedBox(width: 16),
-                      _buildColorOption(Colors.white),
-                      const SizedBox(width: 16),
-                      _buildColorOption(Colors.black),
-                    ],
+                  child: StatefulBuilder(
+                    builder: (context, setSheetState) {
+                      return ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          // Gallery Option
+                          _buildSpecialOption(Icons.image, AppLocalizations.of(context)!.gallery, _pickBackground),
+                          const SizedBox(width: 16),
+
+                          // User Uploaded Images
+                          ..._userBackgroundImages.map((path) => Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: _buildUserFileOption(path, onDeleted: () {
+                              setSheetState(() {});
+                            }),
+                          )),
+
+                          // Random Option
+                          _buildSpecialOption(Icons.shuffle, '랜덤', () {
+                            setState(() {
+                              _backgroundPath = 'random_background';
+                            });
+                          }),
+                          const SizedBox(width: 16),
+                          
+                          // Default Asset Option
+                          _buildAssetOption('assets/images/alarm_bg.png', AppLocalizations.of(context)!.defaultLabel),
+                          const SizedBox(width: 16),
+
+                          // New Image Assets
+                          _buildAssetOption('assets/images/alarm_bg_all.png', '포츄니친구들'),
+                          const SizedBox(width: 16),
+                          _buildAssetOption('assets/images/alarm_bg_dog.png', '몽츄니'),
+                          const SizedBox(width: 16),
+                          _buildAssetOption('assets/images/alarm_bg_panda.png', '판츄니'),
+                          const SizedBox(width: 16),
+                          _buildAssetOption('assets/images/alarm_bg_rabit.png', '토춘이'),
+                          const SizedBox(width: 16),
+                          _buildAssetOption('assets/images/alarm_bg_tiger.png', '호츄니'),
+                          const SizedBox(width: 16),
+                          _buildAssetOption('assets/images/alarm_bg_moon.jpg', '달'),
+                          const SizedBox(width: 16),
+                          _buildAssetOption('assets/images/alarm_bg_snow.jpg', '눈'),
+                          const SizedBox(width: 16),
+                          
+                          // Solid Color Option
+                          _buildSpecialOption(Icons.color_lens, '단색', _showColorPicker),
+                        ],
+                      );
+                    }
                   ),
                 ),
               ],
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showColorPicker() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final List<Color> colors = [
+      const Color(0xFFFFD54F), // Yellow
+      const Color(0xFFFFB347), // Orange
+      const Color(0xFFFFC1CC), // Pastel Pink
+      const Color(0xFF77DD77), // Pastel Green
+      const Color(0xFFB39EB5), // Pastel Purple
+      const Color(0xFFAEC6CF), // Pastel Blue
+      Colors.grey,
+      Colors.white,
+      Colors.black,
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text("단색 선택", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 100,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: colors.length,
+                  separatorBuilder: (context, index) => const SizedBox(width: 15),
+                  itemBuilder: (context, index) {
+                    final color = colors[index];
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _backgroundPath = 'color:${color.value}';
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: color,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
           ),
         );
       },
@@ -659,10 +822,22 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.grey[300]!),
             ),
-            child: Icon(icon, color: Colors.grey[700]),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, color: Colors.grey[700], size: label == '랜덤' ? 20 : 24),
+                if (label == '랜덤')
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
         ],
       ),
     );
@@ -683,19 +858,67 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
             height: 60,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
+              border: Border.all(
+                color: _backgroundPath == assetPath ? Colors.cyan : Colors.transparent,
+                width: 2,
+              ),
               image: DecorationImage(
                 image: AssetImage(assetPath),
                 fit: BoxFit.cover,
-                // Fallback if asset doesn't exist yet
-                onError: (exception, stackTrace) => debugPrint('Asset not found: $assetPath'),
               ),
-              border: Border.all(color: Colors.white, width: 2),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
         ],
       ),
+    );
+  }
+
+  Widget _buildUserFileOption(String filePath, {VoidCallback? onDeleted}) {
+    return Column(
+      children: [
+        Stack(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+                setState(() {
+                  _backgroundPath = filePath;
+                });
+              },
+              child: Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: FileImage(File(filePath)),
+                    fit: BoxFit.cover,
+                  ),
+                  border: Border.all(
+                    color: _backgroundPath == filePath ? Colors.cyan : Colors.white,
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              right: 0,
+              top: 0,
+              child: GestureDetector(
+                onTap: () => _deleteUserBackground(filePath, onDeleted: onDeleted),
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.close, size: 12, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -940,14 +1163,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
                 if (_selectedMission == MissionType.tapSprint)
                   _buildSettingSection(
-                    title: AppLocalizations.of(context)!.shakeCount,
-                    child: _buildShakeCountSelector(),
+                    title: AppLocalizations.of(context)!.countLabel,
+                    child: _buildTapSprintCountSelector(),
                   ),
 
                 if (_selectedMission == MissionType.leftRight)
                   _buildSettingSection(
-                    title: AppLocalizations.of(context)!.shakeCount,
-                    child: _buildShakeCountSelector(),
+                    title: AppLocalizations.of(context)!.problemCount,
+                    child: _buildLeftRightCountSelector(),
                   ),
 
                 if (_selectedMission == MissionType.walk)
@@ -1317,27 +1540,38 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                               Container(
                                 width: 32,
                                 height: 32,
+                                alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: _backgroundPath == null 
-                                      ? Colors.grey[200]
+                                  color: (_backgroundPath == null || _backgroundPath == 'random_background')
+                                      ? (isDarkMode ? Colors.white10 : Colors.grey[200])
                                       : (_backgroundPath!.startsWith('color:') 
                                           ? Color(int.parse(_backgroundPath!.split(':')[1])) 
                                           : Colors.transparent),
-                                  image: _backgroundPath != null && !_backgroundPath!.startsWith('color:') 
+                                  image: (_backgroundPath != null && !_backgroundPath!.startsWith('color:') && _backgroundPath != 'random_background')
                                       ? (_backgroundPath!.startsWith('assets/')
                                           ? DecorationImage(image: AssetImage(_backgroundPath!), fit: BoxFit.cover)
                                           : DecorationImage(image: FileImage(File(_backgroundPath!)), fit: BoxFit.cover))
                                       : null,
-                                  border: Border.all(color: Colors.white24, width: 2),
+                                  border: Border.all(
+                                    color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                                    width: 1,
+                                  ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
+                                      color: Colors.black.withOpacity(0.05),
                                       blurRadius: 4,
                                       offset: const Offset(0, 2),
                                     ),
                                   ],
                                 ),
+                                child: _backgroundPath == 'random_background'
+                                    ? Icon(
+                                        Icons.shuffle, 
+                                        size: 14, 
+                                        color: isDarkMode ? Colors.white70 : Colors.grey[600]
+                                      )
+                                    : null,
                               ),
                               const SizedBox(width: 4),
                               const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
@@ -1645,7 +1879,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       case MissionType.tapSprint: return Icons.touch_app;
       case MissionType.hiddenButton: return Icons.visibility;
       case MissionType.numberOrder: return Icons.filter_9_plus;
-      case MissionType.leftRight: return Icons.bolt;
+      case MissionType.leftRight: return Icons.compare_arrows;
       case MissionType.none: return Icons.not_interested;
       default: return Icons.alarm;
     }
@@ -1895,6 +2129,122 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     );
   }
 
+  Widget _buildLeftRightCountSelector() {
+    final l10n = AppLocalizations.of(context)!;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    Widget buildItem(int value, String label) {
+      final selected = _leftRightStreak == value;
+      final bg = selected
+          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          : (isDarkMode ? Colors.black26 : Colors.grey[50]);
+      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => setState(() => _leftRightStreak = value),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 160),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: border),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.compare_arrows,
+                  size: 20,
+                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white70 : Colors.grey[600]),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        buildItem(5, l10n.shakeTimes(5)),
+        const SizedBox(width: 10),
+        buildItem(10, l10n.shakeTimes(10)),
+        const SizedBox(width: 10),
+        buildItem(15, l10n.shakeTimes(15)),
+      ],
+    );
+  }
+
+  Widget _buildTapSprintCountSelector() {
+    final l10n = AppLocalizations.of(context)!;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    Widget buildItem(int value, String label) {
+      final selected = _tapSprintGoal == value;
+      final bg = selected
+          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          : (isDarkMode ? Colors.black26 : Colors.grey[50]);
+      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => setState(() => _tapSprintGoal = value),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 160),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: border),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.touch_app,
+                  size: 20,
+                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white70 : Colors.grey[600]),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      children: [
+        buildItem(20, l10n.shakeTimes(20)),
+        const SizedBox(width: 10),
+        buildItem(50, l10n.shakeTimes(50)),
+        const SizedBox(width: 10),
+        buildItem(100, l10n.shakeTimes(100)),
+      ],
+    );
+  }
+
   Widget _buildWalkStepCountSelector() {
     final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -1999,7 +2349,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   _buildMissionPickerItem(l10n.missionMath, l10n.missionMathDescription, MissionType.math, Icons.calculate),
                   _buildMissionPickerItem(l10n.missionShake, l10n.missionShakeDescription, MissionType.shake, Icons.vibration),
                   _buildMissionPickerItem(l10n.missionFortune, l10n.missionFortuneDescription, MissionType.fortune, Icons.auto_awesome),
-                  _buildMissionPickerItem(l10n.faceReading, l10n.missionFaceDescription, MissionType.faceDetection, Icons.face_retouching_natural),
+                  _buildMissionPickerItem(l10n.missionFaceReading, l10n.missionFaceDescription, MissionType.faceDetection, Icons.face_retouching_natural),
                   _buildMissionPickerItem(l10n.missionSnap, l10n.missionCameraDescription, MissionType.cameraOther, Icons.camera_alt),
                   _buildMissionPickerItem(l10n.missionFortuneCatch, l10n.missionFortuneCatchDescription, MissionType.fortuneCatch, Icons.face),
                   _buildMissionPickerItem(l10n.missionWalk, l10n.missionWalkDescription, MissionType.walk, Icons.directions_walk),
@@ -2194,7 +2544,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
             ),
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.bolt, color: Colors.white, size: 22),
+          child: const Icon(Icons.compare_arrows, color: Colors.white, size: 22),
         );
         break;
       default:
@@ -2292,7 +2642,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       case MissionType.hiddenButton: return l10n.missionHiddenButton;
       case MissionType.tapSprint: return l10n.missionTapSprint;
       case MissionType.leftRight: return l10n.missionLeftRight;
-      case MissionType.faceDetection: return l10n.faceReading;
+      case MissionType.faceDetection: return l10n.missionFaceReading;
       default: return l10n.mission;
     }
   }
@@ -2302,9 +2652,19 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       switch (key) {
         case 'default': return '기본 벨소리';
         case 'alarm_sound': return '클래식 알람';
-        case 'morning': return '디지털 알람'; // Replaced name for morning.ogg
+        case 'morning': return '디지털 알람';
         case 'birds': return '새소리';
         case 'waves': return '파도 소리';
+        case 'cuckoo_cuckoo_clock': return '뻐꾸기 시계';
+        case 'discreet': return '차분한 알람';
+        case 'door_knock': return '노크 소리';
+        case 'early_sunrise': return '이른 일출';
+        case 'good_morning': return '굿모닝';
+        case 'in_a_hurry': return '서둘러요';
+        case 'loving_you': return '러빙 유';
+        case 'siren_air_raid': return '사이렌';
+        case 'swinging': return '스윙';
+        case 'telephone_busy_signal': return '전화 신호음';
         default: return '기본 벨소리';
       }
     } else {
@@ -2377,22 +2737,68 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   void _showRingtonePicker() {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
-            return ListView(
-              shrinkWrap: true,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text("벨소리 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ),
-                _buildPickerItem("기본 벨소리", 'default', true, setModalState),
-                _buildPickerItem("클래식 알람", 'alarm_sound', true, setModalState),
-                _buildPickerItem("디지털 알람", 'morning', true, setModalState),
-                _buildPickerItem("새소리", 'birds', true, setModalState),
-                _buildPickerItem("파도 소리", 'waves', true, setModalState),
-              ],
+            final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+            return Container(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.6,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    child: Row(
+                      children: [
+                        const Expanded(
+                          child: Text(
+                            "벨소리 선택",
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(
+                            '완료',
+                            style: TextStyle(
+                              color: isDarkMode ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        _buildPickerItem("기본 벨소리", 'default', true, setModalState),
+                        _buildPickerItem("이른 일출", 'early_sunrise', true, setModalState),
+                        _buildPickerItem("굿모닝", 'good_morning', true, setModalState),
+                        _buildPickerItem("서둘러요", 'in_a_hurry', true, setModalState),
+                        _buildPickerItem("러빙 유", 'loving_you', true, setModalState),
+                        _buildPickerItem("사이렌", 'siren_air_raid', true, setModalState),
+                        _buildPickerItem("스윙", 'swinging', true, setModalState),
+                        _buildPickerItem("전화 신호음", 'telephone_busy_signal', true, setModalState),
+                        _buildPickerItem("파도 소리", 'waves', true, setModalState),
+                        _buildPickerItem("클래식 알람", 'alarm_sound', true, setModalState),
+                        _buildPickerItem("디지털 알람", 'morning', true, setModalState),
+                        _buildPickerItem("차분한 알람", 'discreet', true, setModalState),
+                        _buildPickerItem("노크 소리", 'door_knock', true, setModalState),
+                        _buildPickerItem("뻐꾸기 시계", 'cuckoo_cuckoo_clock', true, setModalState),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         );
@@ -2517,6 +2923,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     setState(() => _isSaving = true);
 
     try {
+      debugPrint('[AddAlarmScreen] Saving alarm. ringtonePath=$_ringtonePath, vibrationPattern=$_vibrationPattern');
       final now = DateTime.now();
       DateTime alarmTime = DateTime(
         now.year,
@@ -2567,6 +2974,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         }
       }
 
+      int finalShakeCount = _shakeCount;
+      if (_selectedMission == MissionType.leftRight) {
+        finalShakeCount = _leftRightStreak;
+      } else if (_selectedMission == MissionType.tapSprint) {
+        finalShakeCount = _tapSprintGoal;
+      }
+
       final alarm = AlarmModel(
         id: widget.alarm?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
         time: alarmTime,
@@ -2586,9 +3000,12 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         maxSnoozeCount: _maxSnoozeCount,
         mathDifficulty: _mathDifficulty,
         mathProblemCount: _mathProblemCount,
-        shakeCount: _shakeCount,
+        shakeCount: finalShakeCount,
         walkStepCount: _walkStepCount,
       );
+      
+      debugPrint('[AddAlarmScreen] Created alarm model: ID=${alarm.id}, Ringtone=${alarm.ringtonePath}');
+
 
       bool scheduled = true;
       if (alarm.isEnabled) {

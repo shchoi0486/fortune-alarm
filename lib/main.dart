@@ -984,13 +984,22 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   ],
                 ),
               ),
-        ),
-        // 시스템 내비게이션 바(뒤로가기 버튼 등) 위에 광고가 표시되도록 SafeArea 적용
-        // top: false로 설정하여 위쪽 여백은 무시하고 아래쪽(시스템 바)만 고려
-        const SafeArea(
-          top: false,
-          child: BottomBannerAd(),
-        ),
+          ),
+          // 광고와 내비게이션 바 사이의 미세한 경계 및 여백
+          Divider(
+            height: 1,
+            thickness: 0.5,
+            color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
+          ),
+          // 시스템 내비게이션 바(뒤로가기 버튼 등) 위에 광고가 표시되도록 SafeArea 적용
+          // top: false로 설정하여 위쪽 여백은 무시하고 아래쪽(시스템 바)만 고려
+          // minimum 패딩을 추가하여 광고 dismiss 창 등이 내비게이션 바를 침범하지 않도록 함
+          const SafeArea(
+            top: false,
+            bottom: true,
+            minimum: EdgeInsets.only(bottom: 4.0),
+            child: BottomBannerAd(),
+          ),
           ],
         ),
       ),

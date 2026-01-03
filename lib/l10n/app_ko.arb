@@ -88,6 +88,7 @@
   "traditionalFortune": "토정비결",
   "traditionalSaju": "전통 사주 풀이",
   "faceReading": "관상 보기",
+  "missionFaceReading": "관상 미션",
   "faceFate": "얼굴 관상 운명",
   "compatibility": "궁합 보기",
   "relationshipHarmony": "인연과의 조화",
@@ -184,7 +185,7 @@
     }
   },
   "countLabel": "횟수",
-  "timesCount": "{count}회 (총 {count}번)",
+  "timesCount": "총 {count}회",
   "@timesCount": {
     "placeholders": {
       "count": { "type": "int" }
@@ -201,9 +202,9 @@
   "missionNone": "미션 없음",
   "missionSnap": "사물찍기",
   "missionMath": "계산 문제",
-  "missionFortune": "운세",
+  "missionFortune": "운세 미션",
   "missionShake": "흔들기",
-  "missionFortuneCatch": "포츄니를 잡아라",
+  "missionFortuneCatch": "포츄니 잡기",
   "missionNoDescription": "미션 없이 알람이 울립니다.",
   "missionCameraDescription": "지정된 사물을 촬영하여 알람을 해제합니다.",
   "missionMathDescription": "수학 문제를 풀어 뇌를 깨웁니다.",

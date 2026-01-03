@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -153,6 +154,10 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
           _lastStepTime = now;
           _resetInactivityTimer();
           
+          try {
+            HapticFeedback.mediumImpact();
+          } catch (_) {}
+
           setState(() {
             _currentStepCount++;
           });

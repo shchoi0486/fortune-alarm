@@ -165,7 +165,7 @@ class _HiddenButtonMissionScreenState extends ConsumerState<HiddenButtonMissionS
 
   void _playSuccessFeedback() {
     try {
-      HapticFeedback.lightImpact();
+      HapticFeedback.mediumImpact();
     } catch (_) {}
   }
 

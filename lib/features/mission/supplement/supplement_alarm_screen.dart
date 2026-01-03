@@ -289,6 +289,16 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
       case 'morning': return '디지털 알람';
       case 'birds': return '새소리';
       case 'waves': return '파도 소리';
+      case 'cuckoo_cuckoo_clock': return '뻐꾸기 시계';
+      case 'discreet': return '차분한 알람';
+      case 'door_knock': return '노크 소리';
+      case 'early_sunrise': return '이른 일출';
+      case 'good_morning': return '굿모닝';
+      case 'in_a_hurry': return '서둘러요';
+      case 'loving_you': return '러빙 유';
+      case 'siren_air_raid': return '사이렌';
+      case 'swinging': return '스윙';
+      case 'telephone_busy_signal': return '전화 신호음';
       default: return '기본 벨소리';
     }
   }
