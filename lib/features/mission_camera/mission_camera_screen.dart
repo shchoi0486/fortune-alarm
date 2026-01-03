@@ -26,6 +26,7 @@ import '../../providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
 import '../alarm/add_alarm_screen.dart';
 import '../mission/widgets/mission_success_overlay.dart';
+import '../mission_tap_sprint/tap_sprint_mission_screen.dart';
 
 class MissionCameraScreen extends ConsumerStatefulWidget {
   final MissionType missionType;
@@ -635,6 +636,83 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
                   image: FileImage(_referenceImage!),
                   top: 170, // 시계 텍스트와 겹치지 않도록 위치 조정
                 ),
+
+              // [추가] 비상 버튼 (카메라 인식 불가 시 대체 미션)
+              Positioned(
+                top: 0,
+                right: 16,
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: GestureDetector(
+                      onTap: () async {
+                        if (widget.alarmId != null) {
+                           // 카메라 일시 중지 (리소스 절약)
+                           try {
+                             final controller = ref.read(cameraControllerProvider);
+                             if (controller != null && controller.value.isStreamingImages) {
+                               await controller.stopImageStream();
+                             }
+                           } catch (e) {
+                             debugPrint('Error pausing camera stream: $e');
+                           }
+
+                           if (!mounted) return;
+
+                           // 대체 미션: 터치 연타 100회
+                           final result = await Navigator.of(context).push(
+                             MaterialPageRoute(
+                               builder: (_) => TapSprintMissionScreen(
+                                 alarmId: widget.alarmId,
+                                 goalTaps: 100,
+                               ),
+                             ),
+                           );
+
+                           if (!mounted) return;
+
+                           // 미션 성공 또는 타임아웃 시 현재 화면도 종료하여 알람 끄기
+                           if (result == true || result == 'timeout') {
+                             Navigator.of(context).pop(result);
+                           }
+                           // 만약 뒤로가기로 돌아왔다면 카메라는 다시 활성화되어야 함 (현재 구조상 자동 재개 여부는 provider 상태에 따름)
+                           // 필요 시 여기서 재초기화 로직을 호출할 수 있음.
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFF5252), // 선명한 빨강
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white.withOpacity(0.8), width: 1.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.touch_app_rounded, color: Colors.white, size: 16),
+                            SizedBox(width: 6),
+                            Text(
+                              "비상",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
 
               // 4. Bottom: Instruction & Debug Info
               Positioned(
