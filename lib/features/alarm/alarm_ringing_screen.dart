@@ -243,10 +243,17 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
 
   @override
   void dispose() {
+    debugPrint('[AlarmRingingScreen] Dispose called. Cleaning up...');
     _stopAlarm(); // 화면이 사라질 때 모든 알람 관련 동작을 중지합니다.
     _volumeTimer?.cancel();
     _timeTimer?.cancel();
     _missionTimeoutTimer?.cancel();
+    
+    // 정상적으로 화면이 종료될 때 안전 장치 해제
+    if (_alarm != null) {
+      AlarmSchedulerService.cancelSafetyAlarm(_alarm!.id);
+    }
+
     _audioPlayer.dispose();
     super.dispose();
   }

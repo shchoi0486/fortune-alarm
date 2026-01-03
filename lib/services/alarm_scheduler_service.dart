@@ -81,9 +81,9 @@ Future<void> alarmCallback(int id) async {
     final difference = now.difference(alarm.time);
     debugPrint('[AlarmScheduler] Current Time: $now, Scheduled Time: ${alarm.time}, Difference: ${difference.inSeconds}s');
 
-    // 너무 늦게 울리는 경우 (15분 이상 늦게 울리면 무시 - 기존 10분에서 15분으로 완화)
-    if (difference.inMinutes > 15) {
-      debugPrint('[AlarmScheduler] Too late (>15m). Skipping.');
+    // 너무 늦게 울리는 경우 (90분 이상 늦게 울리면 무시 - Deep Sleep 이슈 대응)
+    if (difference.inMinutes > 90) {
+      debugPrint('[AlarmScheduler] Too late (>90m). Skipping.');
       return;
     }
 
@@ -92,6 +92,20 @@ Future<void> alarmCallback(int id) async {
     String body = '일어날 시간입니다!';
     if (alarm.missionType != MissionType.none) {
       body = '미션을 수행하고 알람을 끄세요!';
+    }
+    
+    // 안전 장치 알람인 경우 메시지 변경 및 이전 알림 정리
+    if (alarm.id.endsWith('_safety')) {
+      body = '알람이 강제로 종료되었습니다! 미션을 완료해주세요.';
+      // 이전 알림(메인 알람) 제거 시도
+      try {
+        final originalId = alarm.id.replaceAll('_safety', '');
+        final originalStableId = AlarmSchedulerService.getStableId(originalId);
+        await notificationService.cancelNotification(originalStableId);
+        debugPrint('[AlarmScheduler] Cancelled original notification for Safety Alarm: $originalId');
+      } catch (e) {
+        debugPrint('[AlarmScheduler] Failed to cancel original notification: $e');
+      }
     }
 
     bool suppressRinging = false;
@@ -192,6 +206,56 @@ class AlarmSchedulerService {
        h -= 0x100000000;
     }
     return h;
+  }
+
+  /// 안전 장치 알람 예약 (앱 강제 종료 대응)
+  static Future<void> scheduleSafetyAlarm(AlarmModel alarm) async {
+    final safetyId = '${alarm.id}_safety';
+    debugPrint('[AlarmScheduler] Scheduling Safety Alarm: $safetyId');
+    
+    // 1분 뒤에 울리는 안전 알람 생성
+    final safetyTime = DateTime.now().add(const Duration(minutes: 1));
+    final safetyAlarm = alarm.copyWith(
+      id: safetyId,
+      time: safetyTime,
+      label: '알람이 강제로 종료되었습니다!',
+      isEnabled: true,
+    );
+
+    // Hive에 임시 저장
+    final box = await Hive.openBox<AlarmModel>('alarms');
+    await box.put(safetyId, safetyAlarm);
+    
+    // 스케줄링 (기존 scheduleAlarm 사용)
+    // 주의: 여기서 scheduleAlarm을 호출하면 cancelAlarm이 호출되어 
+    // 기존 알람(만약 같은 ID라면)이 취소될 수 있으므로 ID가 달라야 함.
+    // _safety 접미사로 구분되므로 안전함.
+    
+    // AndroidAlarmManager 직접 호출 (scheduleAlarm은 권한 체크 등 오버헤드가 있으므로)
+    final int stableId = getStableId(safetyId);
+    await AndroidAlarmManager.oneShotAt(
+      safetyTime,
+      stableId,
+      alarmCallback,
+      exact: true,
+      wakeup: true,
+      alarmClock: true,
+      rescheduleOnReboot: true,
+      allowWhileIdle: true,
+    );
+  }
+
+  /// 안전 장치 알람 취소
+  static Future<void> cancelSafetyAlarm(String originalId) async {
+    final safetyId = '${originalId}_safety';
+    debugPrint('[AlarmScheduler] Cancelling Safety Alarm: $safetyId');
+    
+    final int stableId = getStableId(safetyId);
+    await AndroidAlarmManager.cancel(stableId);
+    
+    // Hive에서 제거
+    final box = await Hive.openBox<AlarmModel>('alarms');
+    await box.delete(safetyId);
   }
 
   @pragma('vm:entry-point')
