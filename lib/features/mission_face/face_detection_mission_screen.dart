@@ -28,7 +28,7 @@ class FaceDetectionMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<FaceDetectionMissionScreen> createState() => _FaceDetectionMissionScreenState();
 }
 
-class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissionScreen> {
+class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissionScreen> with SingleTickerProviderStateMixin {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
   final MLService _mlService = MLService();
@@ -36,17 +36,26 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   bool _isCameraInitialized = false;
   bool _isProcessing = false;
   
+  late AnimationController _scanController;
+  
   Timer? _timer;
   int _elapsedMilliseconds = 0;
   final int _targetMilliseconds = 10000; // 10초
   bool _isFaceDetected = false;
   bool _isSuccess = false;
   CameraDescription? _camera;
+  Face? _detectedFace;
+  Size? _lastImageSize;
+  InputImageRotation? _lastRotation;
   final _FaceAnalysisAccumulator _analysisAccumulator = _FaceAnalysisAccumulator();
 
   @override
   void initState() {
     super.initState();
+    _scanController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
     _stopAlarm(); // Start mission in silence as requested
     _initializeCamera();
   }
@@ -114,9 +123,23 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
           final bArea = b.boundingBox.width * b.boundingBox.height;
           return aArea >= bArea ? a : b;
         });
+        
+        if (mounted) {
+          setState(() {
+            _detectedFace = mainFace;
+            _lastImageSize = inputImage.metadata!.size;
+            _lastRotation = inputImage.metadata!.rotation;
+          });
+        }
+        
         _analysisAccumulator.addFace(mainFace);
         _onFaceDetected();
       } else {
+        if (mounted && _detectedFace != null) {
+          setState(() {
+            _detectedFace = null;
+          });
+        }
         _analysisAccumulator.reset();
         _onFaceLost();
       }
@@ -165,6 +188,7 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
     
     try {
       HapticFeedback.mediumImpact();
+      _playSfx('ui_click.ogg'); // 감지 시작 시 가벼운 효과음
     } catch (_) {}
 
     setState(() {
@@ -204,11 +228,25 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
     _analysisAccumulator.reset();
   }
 
+  Future<void> _playSfx(String assetPath) async {
+    try {
+      await _audioPlayer.play(AssetSource('sounds/$assetPath'));
+    } catch (e) {
+      debugPrint('Error playing SFX: $e');
+    }
+  }
+
   Future<void> _onSuccess() async {
     if (_isSuccess) return;
     _isSuccess = true;
     _timer?.cancel();
     _controller?.stopImageStream();
+    
+    // 성공 피드백
+    try {
+      HapticFeedback.heavyImpact();
+      await _playSfx('ui_success.ogg'); // 성공 시 밝은 효과음
+    } catch (_) {}
     
     // 알람 소리 및 알림 확실하게 종료 (await 사용)
     await _stopAlarm();
@@ -360,9 +398,11 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
 
   @override
   void dispose() {
+    _scanController.dispose();
     _stopAlarm();
     _timer?.cancel();
     _controller?.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -387,11 +427,20 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
           CameraPreview(_controller!),
           
           // Guide Overlay
-          CustomPaint(
-            painter: FaceGuidePainter(
-              isFaceDetected: _isFaceDetected,
-              progress: progress,
-            ),
+          AnimatedBuilder(
+            animation: _scanController,
+            builder: (context, child) {
+              return CustomPaint(
+                painter: FaceGuidePainter(
+                  isFaceDetected: _isFaceDetected,
+                  progress: progress,
+                  detectedFace: _detectedFace,
+                  imageSize: _lastImageSize,
+                  rotation: _lastRotation,
+                  scanAnimationValue: _scanController.value,
+                ),
+              );
+            },
           ),
           
           // Text Instructions
@@ -448,8 +497,19 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
 class FaceGuidePainter extends CustomPainter {
   final bool isFaceDetected;
   final double progress;
+  final Face? detectedFace;
+  final Size? imageSize;
+  final InputImageRotation? rotation;
+  final double scanAnimationValue;
 
-  FaceGuidePainter({required this.isFaceDetected, required this.progress});
+  FaceGuidePainter({
+    required this.isFaceDetected, 
+    required this.progress,
+    this.detectedFace,
+    this.imageSize,
+    this.rotation,
+    required this.scanAnimationValue,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -457,7 +517,7 @@ class FaceGuidePainter extends CustomPainter {
     
     // Face shape dimensions (Oval)
     final faceWidth = size.width * 0.7;
-    final faceHeight = size.width * 0.95; // More oval shape (height > width)
+    final faceHeight = size.width * 0.95; 
     
     final faceRect = Rect.fromCenter(
       center: center, 
@@ -487,7 +547,7 @@ class FaceGuidePainter extends CustomPainter {
     final paint = Paint()
       ..color = isFaceDetected ? Colors.greenAccent : Colors.white.withOpacity(0.5)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0;
+      ..strokeWidth = 3.0;
 
     canvas.drawOval(faceRect, paint);
 
@@ -496,43 +556,202 @@ class FaceGuidePainter extends CustomPainter {
       final progressPaint = Paint()
         ..color = Colors.blueAccent
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 8.0
+        ..strokeWidth = 6.0
         ..strokeCap = StrokeCap.round;
       
       canvas.drawArc(
         faceRect,
-        -math.pi / 2, // 12시 방향부터 시작
+        -math.pi / 2, 
         2 * math.pi * progress,
         false,
         progressPaint,
       );
     }
     
-    // 얼굴 감지 시 얼굴 영역에 그물망 효과 (아이언맨 HUD 느낌)
+    // 얼굴 감지 시 HUD 효과
     if (isFaceDetected) {
-      final gridPaint = Paint()
-        ..color = Colors.greenAccent.withOpacity(0.2)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.0;
-        
-      // 간단한 그리드 그리기 (클리핑 필요)
-      canvas.save();
-      canvas.clipPath(holePath);
+      _drawHUD(canvas, size, faceRect, holePath);
       
-      const step = 40.0;
-      for (double x = faceRect.left; x <= faceRect.right; x += step) {
-        canvas.drawLine(Offset(x, faceRect.top), Offset(x, faceRect.bottom), gridPaint);
+      if (detectedFace != null && imageSize != null && rotation != null) {
+        _drawFaceLandmarks(canvas, size, faceRect);
       }
-      for (double y = faceRect.top; y <= faceRect.bottom; y += step) {
+    }
+  }
+
+  void _drawHUD(Canvas canvas, Size size, Rect faceRect, Path holePath) {
+    // 1. 더 촘촘한 그리드
+    final gridPaint = Paint()
+      ..color = Colors.greenAccent.withOpacity(0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.7;
+      
+    canvas.save();
+    canvas.clipPath(holePath);
+    
+    const step = 20.0; // 더 촘촘하게 수정
+    for (double x = faceRect.left; x <= faceRect.right; x += step) {
+      canvas.drawLine(Offset(x, faceRect.top), Offset(x, faceRect.bottom), gridPaint);
+    }
+    
+    final scanY = faceRect.top + (faceRect.height * scanAnimationValue);
+    
+    for (double y = faceRect.top; y <= faceRect.bottom; y += step) {
+      // 스캔 라인 근처의 그리드 선은 더 밝게 표시
+      final distanceFromScan = (y - scanY).abs();
+      if (distanceFromScan < 40) {
+        final highlightPaint = Paint()
+          ..color = Colors.greenAccent.withOpacity(0.6 * (1 - distanceFromScan / 40))
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.2;
+        canvas.drawLine(Offset(faceRect.left, y), Offset(faceRect.right, y), highlightPaint);
+      } else {
         canvas.drawLine(Offset(faceRect.left, y), Offset(faceRect.right, y), gridPaint);
       }
-      canvas.restore();
     }
+
+    // 2. 스캐닝 라인 애니메이션
+    final scanPaint = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Colors.greenAccent.withOpacity(0),
+          Colors.greenAccent.withOpacity(0.7),
+          Colors.greenAccent.withOpacity(0),
+        ],
+      ).createShader(Rect.fromLTWH(faceRect.left, scanY - 30, faceRect.width, 60));
+
+    canvas.drawRect(
+      Rect.fromLTWH(faceRect.left, scanY - 2, faceRect.width, 4),
+      Paint()..color = Colors.greenAccent.withOpacity(0.9),
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(faceRect.left, scanY - 20, faceRect.width, 40),
+      scanPaint,
+    );
+    
+    canvas.restore();
+
+    // 3. 모서리 가이드 (Corner Brackets)
+    final bracketPaint = Paint()
+      ..color = Colors.greenAccent
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.0;
+    
+    const bracketSize = 20.0;
+    // Top Left
+    canvas.drawPath(Path()
+      ..moveTo(faceRect.left, faceRect.top + bracketSize)
+      ..lineTo(faceRect.left, faceRect.top)
+      ..lineTo(faceRect.left + bracketSize, faceRect.top), bracketPaint);
+    // Top Right
+    canvas.drawPath(Path()
+      ..moveTo(faceRect.right - bracketSize, faceRect.top)
+      ..lineTo(faceRect.right, faceRect.top)
+      ..lineTo(faceRect.right, faceRect.top + bracketSize), bracketPaint);
+    // Bottom Left
+    canvas.drawPath(Path()
+      ..moveTo(faceRect.left, faceRect.bottom - bracketSize)
+      ..lineTo(faceRect.left, faceRect.bottom)
+      ..lineTo(faceRect.left + bracketSize, faceRect.bottom), bracketPaint);
+    // Bottom Right
+    canvas.drawPath(Path()
+      ..moveTo(faceRect.right - bracketSize, faceRect.bottom)
+      ..lineTo(faceRect.right, faceRect.bottom)
+      ..lineTo(faceRect.right, faceRect.bottom - bracketSize), bracketPaint);
+  }
+
+  void _drawFaceLandmarks(Canvas canvas, Size size, Rect faceRect) {
+    if (detectedFace == null || imageSize == null || rotation == null) return;
+
+    // 카메라 이미지 좌표를 화면 좌표로 변환하기 위한 스케일 계산
+    // 전면 카메라의 경우 가로세로가 뒤집혀 있을 수 있음 (90, 270도)
+    final bool isPortrait = rotation == InputImageRotation.rotation90deg || 
+                           rotation == InputImageRotation.rotation270deg;
+    
+    final double srcWidth = isPortrait ? imageSize!.height : imageSize!.width;
+    final double srcHeight = isPortrait ? imageSize!.width : imageSize!.height;
+    
+    final double scaleX = size.width / srcWidth;
+    final double scaleY = size.height / srcHeight;
+
+    Offset mapPoint(Offset point) {
+      double x = point.dx * scaleX;
+      double y = point.dy * scaleY;
+      
+      // 전면 카메라 좌우 반전 처리
+      x = size.width - x;
+      
+      return Offset(x, y);
+    }
+
+    final leftEye = detectedFace!.landmarks[FaceLandmarkType.leftEye]?.position;
+    final rightEye = detectedFace!.landmarks[FaceLandmarkType.rightEye]?.position;
+    final nose = detectedFace!.landmarks[FaceLandmarkType.noseBase]?.position;
+    final mouth = detectedFace!.landmarks[FaceLandmarkType.bottomMouth]?.position;
+
+    if (leftEye == null || rightEye == null || nose == null || mouth == null) return;
+
+    final landmarks = {
+      'EYE_L': mapPoint(Offset(leftEye.x.toDouble(), leftEye.y.toDouble())),
+      'EYE_R': mapPoint(Offset(rightEye.x.toDouble(), rightEye.y.toDouble())),
+      'NOSE': mapPoint(Offset(nose.x.toDouble(), nose.y.toDouble())),
+      'MOUTH': mapPoint(Offset(mouth.x.toDouble(), mouth.y.toDouble())),
+    };
+
+    final linePaint = Paint()
+      ..color = Colors.greenAccent.withOpacity(0.6)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2;
+
+    final pointPaint = Paint()
+      ..color = Colors.greenAccent.withOpacity(0.9)
+      ..style = PaintingStyle.fill;
+
+    // 1. 부위 간 연결선 (Wireframe Mesh)
+    final meshPath = Path();
+    meshPath.moveTo(landmarks['EYE_L']!.dx, landmarks['EYE_L']!.dy);
+    meshPath.lineTo(landmarks['EYE_R']!.dx, landmarks['EYE_R']!.dy);
+    meshPath.lineTo(landmarks['MOUTH']!.dx, landmarks['MOUTH']!.dy);
+    meshPath.close();
+    
+    meshPath.moveTo(landmarks['EYE_L']!.dx, landmarks['EYE_L']!.dy);
+    meshPath.lineTo(landmarks['NOSE']!.dx, landmarks['NOSE']!.dy);
+    meshPath.lineTo(landmarks['EYE_R']!.dx, landmarks['EYE_R']!.dy);
+    
+    meshPath.moveTo(landmarks['NOSE']!.dx, landmarks['NOSE']!.dy);
+    meshPath.lineTo(landmarks['MOUTH']!.dx, landmarks['MOUTH']!.dy);
+    
+    canvas.drawPath(meshPath, linePaint);
+
+    // 2. 각 부위별 테크니컬 라벨
+    landmarks.forEach((key, point) {
+      canvas.drawRect(Rect.fromCenter(center: point, width: 5, height: 5), pointPaint);
+      
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: '$key\n${point.dx.toInt()},${point.dy.toInt()}',
+          style: TextStyle(
+            color: Colors.greenAccent.withOpacity(0.9),
+            fontSize: 9,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'monospace',
+            backgroundColor: Colors.black.withOpacity(0.3),
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(point.dx + 8, point.dy - 12));
+    });
   }
 
   @override
   bool shouldRepaint(FaceGuidePainter oldDelegate) {
-    return oldDelegate.isFaceDetected != isFaceDetected || oldDelegate.progress != progress;
+    return oldDelegate.isFaceDetected != isFaceDetected || 
+           oldDelegate.progress != progress ||
+           oldDelegate.scanAnimationValue != scanAnimationValue ||
+           oldDelegate.detectedFace != detectedFace;
   }
 }
 

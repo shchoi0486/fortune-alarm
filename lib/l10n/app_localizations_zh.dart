@@ -184,7 +184,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get newYearFortune => '新年运势';
 
   @override
-  String get totalFortune2025 => '2025年整体运势';
+  String get totalFortune2026 => '2026年整体运势';
 
   @override
   String get traditionalFortune => '传统推算';
@@ -196,7 +196,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get faceReading => '看面相';
 
   @override
-  String get missionFaceReading => 'Face Reading Mission';
+  String get missionFaceReading => '面相任务';
 
   @override
   String get faceFate => '面相与命运';
@@ -226,40 +226,40 @@ class AppLocalizationsZh extends AppLocalizations {
   String get notice => '公告';
 
   @override
-  String get weatherConditionSunny => 'Sunny';
+  String get weatherConditionSunny => '晴';
 
   @override
-  String get weatherConditionCloudy => 'Cloudy';
+  String get weatherConditionCloudy => '多云';
 
   @override
-  String get weatherConditionFoggy => 'Foggy';
+  String get weatherConditionFoggy => '雾';
 
   @override
-  String get weatherConditionRainy => 'Rainy';
+  String get weatherConditionRainy => '雨';
 
   @override
-  String get weatherConditionSnowy => 'Snowy';
+  String get weatherConditionSnowy => '雪';
 
   @override
-  String get weatherConditionThunderstorm => 'Thunderstorm';
+  String get weatherConditionThunderstorm => '雷暴';
 
   @override
-  String get airQualityGood => 'Good';
+  String get airQualityGood => '优';
 
   @override
-  String get airQualityNormal => 'Normal';
+  String get airQualityNormal => '良';
 
   @override
-  String get airQualityBad => 'Bad';
+  String get airQualityBad => '差';
 
   @override
-  String get airQualityVeryBad => 'Very Bad';
+  String get airQualityVeryBad => '很差';
 
   @override
-  String get locationUnknown => 'Unknown Location';
+  String get locationUnknown => '未知位置';
 
   @override
-  String get locationError => 'Location Error';
+  String get locationError => '定位错误';
 
   @override
   String get faq => '常见问题';
@@ -401,7 +401,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String missionRewardEarnedWithCount(int missions, int cookies) {
-    return 'Congratulations! You completed $missions missions today and earned $cookies Fortune Cookie(s)!';
+    return '恭喜！今天完成了$missions个任务，获得$cookies个幸运饼干！';
   }
 
   @override
@@ -468,7 +468,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get missionShake => '摇晃';
 
   @override
-  String get missionFortuneCatch => 'Fortune Catch';
+  String get missionFortuneCatch => '运势捕捉';
 
   @override
   String get missionNoDescription => '无任务直接响铃。';
@@ -486,43 +486,41 @@ class AppLocalizationsZh extends AppLocalizations {
   String get missionShakeDescription => '摇晃手机以关闭闹钟。';
 
   @override
-  String get missionFortuneCatchDescription => 'Catch the moving Fortuni!';
+  String get missionFortuneCatchDescription => '抓住移动的 Fortuni！';
 
   @override
-  String get missionWalk => 'Walk';
+  String get missionWalk => '走路';
 
   @override
-  String get missionWalkDescription => 'Walk to turn off the alarm!';
+  String get missionWalkDescription => '走路即可关闭闹钟！';
 
   @override
-  String get missionFaceDescription => 'Keep your face in the frame for 10s.';
+  String get missionFaceDescription => '将脸保持在画面中10秒。';
 
   @override
-  String get walkStepCount => 'Target Steps';
+  String get walkStepCount => '目标步数';
 
   @override
   String walkSteps(int count) {
-    return '$count steps';
+    return '$count步';
   }
 
   @override
-  String get missionNumberOrder => 'Number Order';
+  String get missionNumberOrder => '数字顺序';
 
   @override
-  String get missionNumberOrderDescription =>
-      'Tap numbers from 1 to 9 in order.';
+  String get missionNumberOrderDescription => '按顺序点击1到9。';
 
   @override
   String missionNumberOrderGuide(int nextNumber) {
-    return 'Next: $nextNumber';
+    return '下一个：$nextNumber';
   }
 
   @override
-  String get missionHiddenButton => 'Position Memory';
+  String get missionHiddenButton => '位置记忆';
 
   @override
-  String get missionHiddenButtonDescription =>
-      'Memorize the lit tiles in order and tap them within 10 seconds.';
+  String get missionHiddenButtonDescription => '按顺序记住亮起的方块，并在10秒内点击它们。';
 
   @override
   String missionHiddenButtonDifficulty(int delta) {
@@ -530,65 +528,64 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get missionTapSprint => 'Tap Sprint';
+  String get missionTapSprint => '连点冲刺';
 
   @override
-  String get missionTapSprintDescriptionShort => 'Tap to fill the meter.';
+  String get missionTapSprintDescriptionShort => '连点填满进度条。';
 
   @override
   String missionTapSprintDescription(int goalTaps) {
-    return 'Tap $goalTaps+ times to fill the meter.';
+    return '点击$goalTaps次以上填满进度条。';
   }
 
   @override
-  String get missionTapSprintTapHere => 'Tap';
+  String get missionTapSprintTapHere => '点击';
 
   @override
-  String get missionTapSprintHint => 'Fills up fast, drains if you pause.';
+  String get missionTapSprintHint => '快速增长，停下会下降。';
 
   @override
-  String get missionLeftRight => 'Left / Right';
+  String get missionLeftRight => '左 / 右';
 
   @override
-  String get missionLeftRightDescriptionShort =>
-      'Follow the prompt and pick left or right.';
+  String get missionLeftRightDescriptionShort => '按提示选择左或右。';
 
   @override
   String missionLeftRightDescription(int targetStreak) {
-    return 'Get $targetStreak correct in a row.';
+    return '连续答对$targetStreak次。';
   }
 
   @override
-  String get missionLeftRightPromptLeft => 'Tap LEFT';
+  String get missionLeftRightPromptLeft => '点击左边';
 
   @override
-  String get missionLeftRightPromptRight => 'Tap RIGHT';
+  String get missionLeftRightPromptRight => '点击右边';
 
   @override
-  String get left => 'Left';
+  String get left => '左';
 
   @override
-  String get right => 'Right';
+  String get right => '右';
 
   @override
-  String get missionHintInactivity => 'If you stop for 2 minutes, it resets.';
+  String get missionHintInactivity => '停止2分钟会重置。';
 
   @override
   String fortuneCatchScore(int score) {
-    return 'Score: $score';
+    return '得分：$score';
   }
 
   @override
-  String get fortuneCatchGoal => 'Goal: 100';
+  String get fortuneCatchGoal => '目标：100';
 
   @override
   String fortuneCatchGoalDetail(int count, int min) {
-    return '(Catches: $count/$min)';
+    return '（捕捉：$count/$min）';
   }
 
   @override
   String fortuneCatchCombo(int combo) {
-    return '$combo Combo!';
+    return '$combo 连击！';
   }
 
   @override
@@ -612,20 +609,20 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get shakeCount => 'Shake Count';
+  String get shakeCount => '摇动次数';
 
   @override
   String shakeTimes(int count) {
-    return '$count times';
+    return '$count次';
   }
 
   @override
   String missionNumber(int number) {
-    return 'Mission $number';
+    return '任务 $number';
   }
 
   @override
-  String get soundBirds => 'Bird Sounds';
+  String get soundBirds => '鸟鸣声';
 
   @override
   String get shakeCountLabel => '摇晃次数';
@@ -758,7 +755,7 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get fortuneNewYearButton => '查看 2025 年新年运势';
+  String get fortuneNewYearButton => '查看 2026 年新年运势';
 
   @override
   String get loveFortune => '爱情运';
@@ -863,109 +860,103 @@ class AppLocalizationsZh extends AppLocalizations {
   String get missionGratitudeDiary => '感恩日记';
 
   @override
-  String get faqQuestion1 => 'Alarms are not ringing.';
+  String get faqQuestion1 => '闹钟没有响。';
 
   @override
   String get faqAnswer1 =>
-      'Alarms may be delayed or blocked due to the Android system\'s battery optimization feature. Please set all permissions to \'Allow\' in the Settings > Alarm Optimization menu.';
+      '由于Android系统的电池优化功能，闹钟可能会延迟或被阻止。请在 设置 > 闹钟优化 菜单中将所有权限设置为\'允许\'。';
 
   @override
-  String get faqQuestion2 => 'I want to change the mission.';
+  String get faqQuestion2 => '我想更改任务。';
 
   @override
-  String get faqAnswer2 =>
-      'You can change it to the mission you want (Math, Photo, Shake, etc.) in the mission selection menu after tapping the alarm you want to edit in the alarm list.';
+  String get faqAnswer2 => '点击闹钟列表中您想要编辑的闹钟，然后在任务选择菜单中将其更改为您想要的任务（数学、拍照、摇晃等）。';
 
   @override
-  String get faqQuestion3 => 'How do I set Dark Mode?';
+  String get faqQuestion3 => '如何设置深色模式？';
 
   @override
-  String get faqAnswer3 =>
-      'You can change the screen theme through the Settings > General > Dark Mode toggle.';
+  String get faqAnswer3 => '您可以通过 设置 > 常规 > 深色模式 开关更改屏幕主题。';
 
   @override
-  String get faqQuestion4 => 'How do I collect fortune cookies?';
+  String get faqQuestion4 => '如何收集幸运饼干？';
 
   @override
-  String get faqAnswer4 =>
-      'You can earn fortune cookies every time you dismiss an alarm in the morning or complete a mission. Check your daily fortune with the cookies you\'ve collected!';
+  String get faqAnswer4 => '每天早上关闭闹钟或完成任务时都可以获得幸运饼干。用收集的饼干查看您的每日运势！';
 
   @override
-  String get faqQuestion5 => 'Will my data disappear if I delete the app?';
+  String get faqQuestion5 => '如果删除应用，我的数据会消失吗？';
 
   @override
-  String get faqAnswer5 =>
-      'Yes, Fortune Alarm stores data inside the device, so deleting the app will delete all your set alarms and mission records. Please be careful.';
+  String get faqAnswer5 => '是的，幸运闹钟将数据存储在设备内部，因此删除应用将删除您所有的闹钟设置和任务记录。请小心。';
 
   @override
-  String get noticeLabel => 'Notice';
+  String get noticeLabel => '公告';
 
   @override
-  String get notice1Title => 'Fortune Alarm Official Launch';
+  String get notice1Title => '幸运闹钟正式上线';
 
   @override
   String get notice1Content =>
-      'Hello. Fortune Alarm has been officially launched.\\n\\nCheck your daily fortune with your alarm every morning and start a happy day!\\nWe will continue to provide more diverse features and improved services.\\n\\nThank you.';
+      '您好。幸运闹钟已正式上线。\n\n每天早上用闹钟查看您的每日运势，开启快乐的一天！\n我们将继续提供更多样化的功能和改进的服务。\n\n谢谢。';
 
   @override
-  String get notice2Title => 'Version 1.0.0 Update News';
+  String get notice2Title => '版本 1.0.0 更新新闻';
 
   @override
   String get notice2Content =>
-      'Here is the content of the version 1.0.0 update.\\n\\n1. Supplement mission UI improvement\\n2. System setting integration for accurate alarms\\n3. Dark mode support\\n4. Bug fixes and stability improvements\\n\\nExperience the latest version now!';
+      '以下是版本 1.0.0 更新的内容。\n\n1. 营养品任务界面改进\n2. 精确闹钟的系统设置集成\n3. 深色模式支持\n4. 错误修复和稳定性改进\n\n立即体验最新版本！';
 
   @override
-  String get notice3Title => 'Terms of Service Revision Notice';
+  String get notice3Title => '服务条款修订通知';
 
   @override
   String get notice3Content =>
-      'The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.';
+      '服务条款已修订。\n\n主要修订：\n- 加强隐私政策\n- 指定服务使用范围\n\n详情可在 设置 > 条款 页面查看。';
 
   @override
-  String get supportContentTitle => 'Inquiry Content';
+  String get supportContentTitle => '咨询内容';
 
   @override
-  String get supportHint => 'Please enter the content.';
+  String get supportHint => '请输入内容。';
 
   @override
-  String get supportRecipient => 'Recipient (Customer Support)';
+  String get supportRecipient => '收件人 (客户支持)';
 
   @override
-  String get emailCopied => 'Email address copied.';
+  String get emailCopied => '电子邮件地址已复制。';
 
   @override
-  String get copyTooltip => 'Copy';
+  String get copyTooltip => '复制';
 
   @override
-  String get supportWorkingDays =>
-      'We will try to respond within 24 hours on weekdays.';
+  String get supportWorkingDays => '我们将尝试在工作日24小时内回复。';
 
   @override
-  String get supportEmptyError => 'Please enter the content.';
+  String get supportEmptyError => '请输入内容。';
 
   @override
-  String get supportSubjectPrefix => 'Inquiry Title';
+  String get supportSubjectPrefix => '咨询标题';
 
   @override
-  String get supportContentPrefix => 'Inquiry Content';
+  String get supportContentPrefix => '咨询内容';
 
   @override
-  String get supportCopySuccessTitle => 'Inquiry Copied';
+  String get supportCopySuccessTitle => '咨询已复制';
 
   @override
   String supportCopySuccessMessage(String email) {
-    return 'Inquiry content has been copied to clipboard.\\nWould you like to send an email to $email?';
+    return '咨询内容已复制到剪贴板。\n您想发送邮件给 $email 吗？';
   }
 
   @override
-  String get copyEmailAction => 'Copy Email Address';
+  String get copyEmailAction => '复制电子邮件地址';
 
   @override
-  String get copyEmailSuccessMessage =>
-      'Email address copied. Please paste it in your email app.';
+  String get copyEmailSuccessMessage => '电子邮件地址已复制。请将其粘贴到您的邮件应用中。';
 
   @override
-  String get supportSubmitButton => 'Copy Inquiry and Send';
+  String get supportSubmitButton => '复制咨询并发送';
 
   @override
   String get shakePhone => '请摇晃手机！';
@@ -1081,42 +1072,38 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get fortuneCheckButton => 'Check Fortune';
+  String get fortuneCheckButton => '查看运势';
 
   @override
-  String get fortuneSelectCards => 'Select 3 cards';
+  String get fortuneSelectCards => '选择3张牌';
 
   @override
-  String get fortuneDragCards => 'Drag and select 3 cards';
+  String get fortuneDragCards => '拖动并选择3张牌';
 
   @override
   String get fortuneDetailTitle => '详细解读';
 
   @override
-  String get labelFineDust => 'Fine Dust';
+  String get labelFineDust => 'PM10';
 
   @override
-  String get labelUltraFineDust => 'Ultra Fine Dust';
+  String get labelUltraFineDust => 'PM2.5';
 
   @override
-  String get weatherToday => 'Today\'s Weather';
+  String get weatherToday => '今日天气';
 
   @override
-  String get weatherUpdateMessage =>
-      'Updating weather information for current location.';
+  String get weatherUpdateMessage => '正在更新当前位置的天气信息。';
 
   @override
-  String get weatherDisclaimer =>
-      'Observed data may vary depending on local conditions or reception status.';
+  String get weatherDisclaimer => '观测数据可能因当地条件或信号接收情况而有所不同。';
 
   @override
-  String get weatherSource =>
-      'Provided by Meteorological Administration, Korea Environment Corporation';
+  String get weatherSource => '数据来源：气象厅、韩国环境公团';
 
   @override
-  String get locationPermissionTitle => 'Allow Location Permission';
+  String get locationPermissionTitle => '允许位置权限';
 
   @override
-  String get locationPermissionDesc =>
-      'Required to display weather information.';
+  String get locationPermissionDesc => '显示天气信息所需。';
 }

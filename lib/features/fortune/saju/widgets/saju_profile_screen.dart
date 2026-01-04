@@ -77,8 +77,8 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
                 controller: _nameController,
                 style: TextStyle(color: textColor, fontSize: 18),
                 decoration: InputDecoration(
-                  hintText: "성호",
-                  hintStyle: TextStyle(color: Colors.grey[400]),
+                  hintText: "이름을 입력해주세요",
+                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey[300]!)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: textColor)),
                   suffixIcon: IconButton(
@@ -270,31 +270,39 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
     await showModalBottomSheet(
       context: context,
       backgroundColor: backgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (BuildContext builder) {
         return Container(
-          height: 300,
-          color: backgroundColor,
+          height: 240, // 300에서 240으로 축소하여 약 5개 항목만 보이도록 조정
+          color: Colors.transparent,
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CupertinoButton(
-                    child: const Text('취소', style: TextStyle(color: Colors.red)),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  Text("생년월일 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
-                  CupertinoButton(
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.1))),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                      child: const Text('취소', style: TextStyle(color: Colors.red, fontSize: 16)),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Text("생년월일 선택", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+                    CupertinoButton(
+                      child: const Text('확인', style: TextStyle(color: Colors.blue, fontSize: 16)),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child: CupertinoTheme(
                   data: CupertinoThemeData(
                     textTheme: CupertinoTextThemeData(
-                      dateTimePickerTextStyle: TextStyle(color: textColor, fontSize: 20),
+                      dateTimePickerTextStyle: TextStyle(color: textColor, fontSize: 18), // 폰트 크기 살짝 조정
                     ),
                   ),
                   child: CupertinoDatePicker(
@@ -302,6 +310,7 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
                     initialDateTime: _birthDate,
                     minimumDate: DateTime(1900),
                     maximumDate: DateTime.now(),
+                    itemExtent: 40, // 항목 간격을 넓혀서 더 명확하게 5개 위주로 보이게 함
                     onDateTimeChanged: (DateTime newDate) {
                       setState(() => _birthDate = newDate);
                     },
@@ -316,13 +325,67 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
   }
 
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDarkMode ? const Color(0xFF2C2C2C) : Colors.white;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+    
+    // Convert TimeOfDay to DateTime for initial value
+    final now = DateTime.now();
+    final initialDateTime = DateTime(now.year, now.month, now.day, _birthTime?.hour ?? 0, _birthTime?.minute ?? 0);
+
+    await showModalBottomSheet(
       context: context,
-      initialTime: _birthTime ?? const TimeOfDay(hour: 0, minute: 0),
+      backgroundColor: backgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext builder) {
+        return Container(
+          height: 240,
+          color: Colors.transparent,
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.1))),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                      child: const Text('취소', style: TextStyle(color: Colors.red, fontSize: 16)),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Text("태어난 시간 선택", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+                    CupertinoButton(
+                      child: const Text('확인', style: TextStyle(color: Colors.blue, fontSize: 16)),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: CupertinoTheme(
+                  data: CupertinoThemeData(
+                    textTheme: CupertinoTextThemeData(
+                      dateTimePickerTextStyle: TextStyle(color: textColor, fontSize: 18),
+                    ),
+                  ),
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.time,
+                    initialDateTime: initialDateTime,
+                    itemExtent: 40,
+                    onDateTimeChanged: (DateTime newDate) {
+                      setState(() => _birthTime = TimeOfDay.fromDateTime(newDate));
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
-    if (picked != null) {
-      setState(() => _birthTime = picked);
-    }
   }
 
   void _saveProfile() {

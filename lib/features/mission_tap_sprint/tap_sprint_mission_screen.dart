@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vibration/vibration.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../../data/models/alarm_model.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
@@ -14,9 +15,9 @@ import '../mission/widgets/mission_success_overlay.dart';
 
 class TapSprintMissionScreen extends ConsumerStatefulWidget {
   final String? alarmId;
-  final int goalTaps;
+  final int? goalTaps;
 
-  const TapSprintMissionScreen({super.key, this.alarmId, this.goalTaps = 30});
+  const TapSprintMissionScreen({super.key, this.alarmId, this.goalTaps});
 
   @override
   ConsumerState<TapSprintMissionScreen> createState() => _TapSprintMissionScreenState();
@@ -33,6 +34,8 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
   double _meter = 0;
   bool _pulse = false;
   bool _isSuccess = false;
+
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   final List<_TapEffectData> _effects = [];
   final Random _random = Random();
@@ -62,7 +65,21 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
   void dispose() {
     _decayTimer?.cancel();
     _inactivityTimer?.cancel();
+    _audioPlayer.dispose();
     super.dispose();
+  }
+
+  Future<void> _playSfx(String assetPath, {double volume = 0.5, Duration? maxDuration}) async {
+    try {
+      final player = AudioPlayer();
+      await player.play(AssetSource(assetPath), volume: volume);
+      if (maxDuration != null) {
+        Future.delayed(maxDuration, () => player.stop());
+      }
+      player.onPlayerComplete.listen((_) => player.dispose());
+    } catch (e) {
+      debugPrint('Error playing SFX: $assetPath - $e');
+    }
   }
 
   Future<void> _loadAlarm() async {
@@ -126,6 +143,7 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
       if (await Vibration.hasVibrator() == true) {
         Vibration.vibrate(pattern: [0, 60, 40, 60, 40, 120]);
       }
+      await _playSfx('sounds/ui_success.ogg', volume: 0.5);
     } catch (_) {}
   }
 
@@ -135,7 +153,7 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
     final idleMs = now.difference(_lastTapAt).inMilliseconds;
     if (idleMs < 700) return;
     if (_meter <= 0) return;
-    final goal = _alarm?.shakeCount ?? widget.goalTaps;
+    final goal = widget.goalTaps ?? (_alarm?.shakeCount ?? 30);
     setState(() {
       _meter = (_meter - 0.22).clamp(0, goal.toDouble());
     });
@@ -144,26 +162,32 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
   void _onTapDown(TapDownDetails details) async {
     _resetInactivityTimer();
     if (_isSuccess) return;
-    HapticFeedback.mediumImpact();
+    
     final now = DateTime.now();
-    final goal = _alarm?.shakeCount ?? widget.goalTaps;
+    final goal = widget.goalTaps ?? (_alarm?.shakeCount ?? 30);
 
     // 터치 간격에 따른 크기 결정 (연타 속도가 빠를수록 큰 캐릭터)
-    final interval = now.difference(_lastTapAt).inMilliseconds;
-    double intensityScale;
-    if (interval < 150) {
-      intensityScale = 2.0; // 큰 크기 (상향)
-    } else if (interval < 300) {
-      intensityScale = 1.6; // 중간 크기 (상향)
+    final double scale;
+    final ms = now.difference(_lastTapAt).inMilliseconds;
+    if (ms < 150) {
+      scale = 1.35;
+      HapticFeedback.heavyImpact();
+      _playSfx('sounds/ui_click.ogg', volume: 0.15, maxDuration: const Duration(milliseconds: 200));
+    } else if (ms < 300) {
+      scale = 1.15;
+      HapticFeedback.mediumImpact();
+      _playSfx('sounds/ui_click.ogg', volume: 0.1, maxDuration: const Duration(milliseconds: 200));
     } else {
-      intensityScale = 1.2; // 작은 크기 (상향)
+      scale = 1.0;
+      HapticFeedback.lightImpact();
+      _playSfx('sounds/ui_click.ogg', volume: 0.05, maxDuration: const Duration(milliseconds: 200));
     }
 
     final effect = _TapEffectData(
       id: DateTime.now().microsecondsSinceEpoch,
       position: details.localPosition,
       assetPath: _characters[_random.nextInt(_characters.length)],
-      baseScale: intensityScale,
+      baseScale: scale,
     );
 
     setState(() {
@@ -193,7 +217,7 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
     final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    final goal = _alarm?.shakeCount ?? widget.goalTaps;
+    final goal = widget.goalTaps ?? (_alarm?.shakeCount ?? 30);
     final value = (_meter / goal).clamp(0.0, 1.0);
 
     return PopScope(

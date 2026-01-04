@@ -190,7 +190,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get newYearFortune => 'नया साल भाग्य';
 
   @override
-  String get totalFortune2025 => '2025 का कुल भाग्य';
+  String get totalFortune2026 => '2026 का कुल भाग्य';
 
   @override
   String get traditionalFortune => 'पारंपरिक भाग्य';
@@ -202,7 +202,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get faceReading => 'चेहरा पढ़ना';
 
   @override
-  String get missionFaceReading => 'Face Reading Mission';
+  String get missionFaceReading => 'चेहरा पढ़ने का मिशन';
 
   @override
   String get faceFate => 'चेहरा भाग्य भाग्य';
@@ -288,7 +288,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get termsOfService => 'सेवा की शर्तें';
 
   @override
-  String get privacyPolicy => 'गोपनीयता नीति';
+  String get privacyPolicy =>
+      'सेवा की शर्तें और गोपनीयता नीति\n\n1. सामान्य प्रावधान\n\nअनुच्छेद 1 (उद्देश्य)\nइन शर्तों का उद्देश्य \'फॉर्च्यून अलार्म\' (इसके बाद \'सेवा\' कहा जाएगा) द्वारा प्रदान की जाने वाली सेवा के उपयोग की शर्तों और प्रक्रियाओं, और उपयोगकर्ताओं और डेवलपर के अधिकारों, दायित्वों और जिम्मेदारियों को निर्धारित करना है।\n\nअनुच्छेद 2 (शर्तों की परिभाषा)\n1. \'उपयोगकर्ता\' उस व्यक्ति को संदर्भित करता है जो ऐप इंस्टॉल करता है और सेवा का उपयोग करता है।\n2. \'सेवा\' अलार्म, भाग्य, मौसम और मिशन जैसे कार्यों को संदर्भित करती है जो ऐप के माध्यम से प्रदान किए जाते हैं।\n\n2. सेवा का उपयोग\n\nअनुच्छेद 3 (सेवा प्रावधान)\n1. यह सेवा अलार्म, मिशन, आज का भाग्य और मौसम की जानकारी जैसे कार्य नि:शुल्क प्रदान करती है।\n2. मौसम की जानकारी के लिए स्थान डेटा का उपयोग किया जाता है, और यह डेटा सर्वर पर संग्रहीत नहीं होता है।\n\nअनुच्छेद 4 (विज्ञापन)\nसेवा के संचालन के लिए ऐप के भीतर विज्ञापन प्रदर्शित किए जा सकते हैं।\n\n3. व्यक्तिगत जानकारी सुरक्षा\n\nअनुच्छेद 5 (व्यक्तिगत जानकारी का संग्रह और उपयोग)\n1. यह ऐप सदस्यता पंजीकरण की आवश्यकता नहीं है और सर्वर पर व्यक्तिगत जानकारी संग्रहीत नहीं करता है।\n2. सभी डेटा (अलार्म सेटिंग्स, मिशन रिकॉर्ड, आदि) उपयोगकर्ता के डिवाइस पर स्थानीय रूप से संग्रहीत किए जाते हैं।\n3. ऐप को हटाने पर, सभी संग्रहीत डेटा भी हटा दिए जाएंगे और उन्हें पुनर्प्राप्त नहीं किया जा सकता है।\n\nअनुच्छेद 6 (अनुमतियाँ)\nसेवा का उपयोग करने के लिए निम्नलिखित अनुमतियों की आवश्यकता हो सकती है:\n- अलार्म और रिमाइंडर: सटीक समय पर अलार्म बजाने के लिए उपयोग किया जाता है।\n- अन्य ऐप्स के ऊपर दिखाएं: अलार्म स्क्रीन प्रदर्शित करने के लिए उपयोग किया जाता है।\n- स्थान: मौसम की जानकारी प्रदान करने के लिए उपयोग किया जाता है।\n- बैटरी अनुकूलन को अनदेखा करें: अलार्म के विश्वसनीय संचालन के लिए उपयोग किया जाता है।\n\n4. दायित्व और क्षतिपूर्ति\n\nअनुच्छेद 7 (प्रतिबंध)\nडेवलपर सेवा के उपयोग से होने वाले किसी भी नुकसान के लिए जिम्मेदार नहीं है (अलार्म विफलता, डेटा हानि, आदि)। उपयोगकर्ता डेटा बैकअप और प्रबंधन के लिए जिम्मेदार है।\n\n5. अन्य\n\nअनुच्छेद 8 (संपर्क)\nसेवा के बारे में पूछताछ के लिए, कृपया नीचे दिए गए ईमेल पर संपर्क करें।\nईमेल: support@fortunealarm.com';
 
   @override
   String get alarmOptimization => 'अलार्म ऑप्टिमाइज़ेशन';
@@ -416,7 +417,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String missionRewardEarnedWithCount(int missions, int cookies) {
-    return 'Congratulations! You completed $missions missions today and earned $cookies Fortune Cookie(s)!';
+    return 'बधाई हो! आज आपने $missions मिशन पूरे किए और $cookies फॉर्च्यून कुकी(ज़) कमाई!';
   }
 
   @override
@@ -459,7 +460,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get alarmNameAndBackground => 'अलार्म नाम और बैकग्राउंड';
 
   @override
-  String get alarmName => 'अल람 नाम';
+  String get alarmName => 'अलार्म नाम';
 
   @override
   String get enterAlarmName => 'कृपया अलार्म नाम दर्ज करें';
@@ -483,7 +484,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get missionShake => 'हिलाना';
 
   @override
-  String get missionFortuneCatch => 'Fortune Catch';
+  String get missionFortuneCatch => 'फॉर्च्यून कैच';
 
   @override
   String get missionNoDescription => 'बिना किसी मिशन के अलार्म बजेगा।';
@@ -503,43 +504,42 @@ class AppLocalizationsHi extends AppLocalizations {
   String get missionShakeDescription => 'अलार्म बंद करने के लिए फोन को हिलाएं।';
 
   @override
-  String get missionFortuneCatchDescription => 'Catch the moving Fortuni!';
+  String get missionFortuneCatchDescription => 'चलती Fortuni को पकड़ें!';
 
   @override
-  String get missionWalk => 'Walk';
+  String get missionWalk => 'चलना';
 
   @override
-  String get missionWalkDescription => 'Walk to turn off the alarm!';
+  String get missionWalkDescription => 'अलार्म बंद करने के लिए चलें!';
 
   @override
-  String get missionFaceDescription => 'Keep your face in the frame for 10s.';
+  String get missionFaceDescription => '10 सेकंड तक चेहरा फ्रेम में रखें।';
 
   @override
-  String get walkStepCount => 'Target Steps';
+  String get walkStepCount => 'लक्ष्य कदम';
 
   @override
   String walkSteps(int count) {
-    return '$count steps';
+    return '$count कदम';
   }
 
   @override
-  String get missionNumberOrder => 'Number Order';
+  String get missionNumberOrder => 'संख्या क्रम';
 
   @override
-  String get missionNumberOrderDescription =>
-      'Tap numbers from 1 to 9 in order.';
+  String get missionNumberOrderDescription => '1 से 9 तक क्रम से टैप करें।';
 
   @override
   String missionNumberOrderGuide(int nextNumber) {
-    return 'Next: $nextNumber';
+    return 'अगला: $nextNumber';
   }
 
   @override
-  String get missionHiddenButton => 'Position Memory';
+  String get missionHiddenButton => 'स्थिति याद';
 
   @override
   String get missionHiddenButtonDescription =>
-      'Memorize the lit tiles in order and tap them within 10 seconds.';
+      'चमकते टाइल्स को क्रम से याद करें और 10 सेकंड में टैप करें।';
 
   @override
   String missionHiddenButtonDifficulty(int delta) {
@@ -547,65 +547,65 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get missionTapSprint => 'Tap Sprint';
+  String get missionTapSprint => 'टैप स्प्रिंट';
 
   @override
-  String get missionTapSprintDescriptionShort => 'Tap to fill the meter.';
+  String get missionTapSprintDescriptionShort => 'मीटर भरने के लिए टैप करें।';
 
   @override
   String missionTapSprintDescription(int goalTaps) {
-    return 'Tap $goalTaps+ times to fill the meter.';
+    return 'मीटर भरने के लिए $goalTaps+ बार टैप करें।';
   }
 
   @override
-  String get missionTapSprintTapHere => 'Tap';
+  String get missionTapSprintTapHere => 'टैप';
 
   @override
-  String get missionTapSprintHint => 'Fills up fast, drains if you pause.';
+  String get missionTapSprintHint => 'तेज़ी से भरता है, रुकने पर घटता है।';
 
   @override
-  String get missionLeftRight => 'Left / Right';
+  String get missionLeftRight => 'बायाँ / दायाँ';
 
   @override
   String get missionLeftRightDescriptionShort =>
-      'Follow the prompt and pick left or right.';
+      'संकेत के अनुसार बायाँ या दायाँ चुनें।';
 
   @override
   String missionLeftRightDescription(int targetStreak) {
-    return 'Get $targetStreak correct in a row.';
+    return 'लगातार $targetStreak सही करें।';
   }
 
   @override
-  String get missionLeftRightPromptLeft => 'Tap LEFT';
+  String get missionLeftRightPromptLeft => 'बायाँ टैप करें';
 
   @override
-  String get missionLeftRightPromptRight => 'Tap RIGHT';
+  String get missionLeftRightPromptRight => 'दायाँ टैप करें';
 
   @override
-  String get left => 'Left';
+  String get left => 'बायाँ';
 
   @override
-  String get right => 'Right';
+  String get right => 'दायाँ';
 
   @override
-  String get missionHintInactivity => 'If you stop for 2 minutes, it resets.';
+  String get missionHintInactivity => '2 मिनट रुकने पर रीसेट हो जाएगा।';
 
   @override
   String fortuneCatchScore(int score) {
-    return 'Score: $score';
+    return 'स्कोर: $score';
   }
 
   @override
-  String get fortuneCatchGoal => 'Goal: 100';
+  String get fortuneCatchGoal => 'लक्ष्य: 100';
 
   @override
   String fortuneCatchGoalDetail(int count, int min) {
-    return '(Catches: $count/$min)';
+    return '(पकड़: $count/$min)';
   }
 
   @override
   String fortuneCatchCombo(int combo) {
-    return '$combo Combo!';
+    return '$combo कॉम्बो!';
   }
 
   @override
@@ -629,20 +629,20 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get shakeCount => 'Shake Count';
+  String get shakeCount => 'शेक गिनती';
 
   @override
   String shakeTimes(int count) {
-    return '$count times';
+    return '$count बार';
   }
 
   @override
   String missionNumber(int number) {
-    return 'Mission $number';
+    return 'मिशन $number';
   }
 
   @override
-  String get soundBirds => 'Bird Sounds';
+  String get soundBirds => 'पक्षियों की आवाज़';
 
   @override
   String get shakeCountLabel => 'हिलाने की संख्या';
@@ -787,7 +787,7 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get fortuneNewYearButton => '2025 नव वर्ष भाग्य देखें';
+  String get fortuneNewYearButton => '2026 नव वर्ष भाग्य देखें';
 
   @override
   String get loveFortune => 'प्रेम';
@@ -895,109 +895,109 @@ class AppLocalizationsHi extends AppLocalizations {
   String get missionGratitudeDiary => 'कृतज्ञता डायरी';
 
   @override
-  String get faqQuestion1 => 'Alarms are not ringing.';
+  String get faqQuestion1 => 'अलार्म नहीं बज रहे हैं।';
 
   @override
   String get faqAnswer1 =>
-      'Alarms may be delayed or blocked due to the Android system\'s battery optimization feature. Please set all permissions to \'Allow\' in the Settings > Alarm Optimization menu.';
+      'एंड्रॉइड सिस्टम की बैटरी ऑप्टिमाइज़ेशन सुविधा के कारण अलार्म में देरी हो सकती है या वे अवरुद्ध हो सकते हैं। कृपया सेटिंग्स > अलार्म ऑप्टिमाइज़ेशन मेनू में सभी अनुमतियों को \'अनुमति दें\' पर सेट करें।';
 
   @override
-  String get faqQuestion2 => 'I want to change the mission.';
+  String get faqQuestion2 => 'मैं मिशन बदलना चाहता हूं।';
 
   @override
   String get faqAnswer2 =>
-      'You can change it to the mission you want (Math, Photo, Shake, etc.) in the mission selection menu after tapping the alarm you want to edit in the alarm list.';
+      'आप अलार्म सूची में उस अलार्म पर टैप करके जिसे आप संपादित करना चाहते हैं, मिशन चयन मेनू में इसे अपनी पसंद के मिशन (गणित, फोटो, हिलाना, आदि) में बदल सकते हैं।';
 
   @override
-  String get faqQuestion3 => 'How do I set Dark Mode?';
+  String get faqQuestion3 => 'मैं डार्क मोड कैसे सेट करूं?';
 
   @override
   String get faqAnswer3 =>
-      'You can change the screen theme through the Settings > General > Dark Mode toggle.';
+      'आप सेटिंग्स > सामान्य > डार्क मोड टॉगल के माध्यम से स्क्रीन थीम बदल सकते हैं।';
 
   @override
-  String get faqQuestion4 => 'How do I collect fortune cookies?';
+  String get faqQuestion4 => 'मैं फॉर्च्यून कुकीज़ कैसे एकत्र करूं?';
 
   @override
   String get faqAnswer4 =>
-      'You can earn fortune cookies every time you dismiss an alarm in the morning or complete a mission. Check your daily fortune with the cookies you\'ve collected!';
+      'हर बार जब आप सुबह अलार्म बंद करते हैं या कोई मिशन पूरा करते हैं तो आप फॉर्च्यून कुकीज़ कमा सकते हैं। अपने द्वारा एकत्र की गई कुकीज़ के साथ अपने दैनिक भाग्य की जाँच करें!';
 
   @override
-  String get faqQuestion5 => 'Will my data disappear if I delete the app?';
+  String get faqQuestion5 => 'क्या ऐप हटाने पर मेरा डेटा गायब हो जाएगा?';
 
   @override
   String get faqAnswer5 =>
-      'Yes, Fortune Alarm stores data inside the device, so deleting the app will delete all your set alarms and mission records. Please be careful.';
+      'हां, फॉर्च्यून अलार्म डिवाइस के अंदर डेटा स्टोर करता है, इसलिए ऐप को हटाने से आपके सभी सेट किए गए अलार्म और मिशन रिकॉर्ड डिलीट हो जाएंगे। कृपया सावधान रहें।';
 
   @override
-  String get noticeLabel => 'Notice';
+  String get noticeLabel => 'सूचना';
 
   @override
-  String get notice1Title => 'Fortune Alarm Official Launch';
+  String get notice1Title => 'फॉर्च्यून अलार्म आधिकारिक लॉन्च';
 
   @override
   String get notice1Content =>
-      'Hello. Fortune Alarm has been officially launched.\\n\\nCheck your daily fortune with your alarm every morning and start a happy day!\\nWe will continue to provide more diverse features and improved services.\\n\\nThank you.';
+      'नमस्ते। फॉर्च्यून अलार्म आधिकारिक तौर पर लॉन्च किया गया है।\n\nहर सुबह अपने अलार्म के साथ अपने दैनिक भाग्य की जाँच करें और एक खुशहाल दिन की शुरुआत करें!\nहम अधिक विविध सुविधाएँ और बेहतर सेवाएँ प्रदान करना जारी रखेंगे।\n\nधन्यवाद।';
 
   @override
-  String get notice2Title => 'Version 1.0.0 Update News';
+  String get notice2Title => 'संस्करण 1.0.0 अपडेट समाचार';
 
   @override
   String get notice2Content =>
-      'Here is the content of the version 1.0.0 update.\\n\\n1. Supplement mission UI improvement\\n2. System setting integration for accurate alarms\\n3. Dark mode support\\n4. Bug fixes and stability improvements\\n\\nExperience the latest version now!';
+      'यहाँ संस्करण 1.0.0 अपडेट की सामग्री है।\n\n1. सप्लीमेंट मिशन UI सुधार\n2. सटीक अलार्म के लिए सिस्टम सेटिंग एकीकरण\n3. डार्क मोड समर्थन\n4. बग फिक्स और स्थिरता में सुधार\n\nअब नवीनतम संस्करण का अनुभव करें!';
 
   @override
-  String get notice3Title => 'Terms of Service Revision Notice';
+  String get notice3Title => 'सेवा की शर्तें संशोधन सूचना';
 
   @override
   String get notice3Content =>
-      'The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.';
+      'सेवा की शर्तों को संशोधित किया गया है।\n\nप्रमुख संशोधन:\n- गोपनीयता नीति को मजबूत किया गया\n- सेवा उपयोग का दायरा निर्दिष्ट किया गया\n\nविवरण सेटिंग्स > शर्तें पृष्ठ पर पाए जा सकते हैं।';
 
   @override
-  String get supportContentTitle => 'Inquiry Content';
+  String get supportContentTitle => 'पूछताछ सामग्री';
 
   @override
-  String get supportHint => 'Please enter the content.';
+  String get supportHint => 'कृपया सामग्री दर्ज करें।';
 
   @override
-  String get supportRecipient => 'Recipient (Customer Support)';
+  String get supportRecipient => 'प्राप्तकर्ता (ग्राहक सहायता)';
 
   @override
-  String get emailCopied => 'Email address copied.';
+  String get emailCopied => 'ईमेल पता कॉपी किया गया।';
 
   @override
-  String get copyTooltip => 'Copy';
+  String get copyTooltip => 'कॉपी';
 
   @override
   String get supportWorkingDays =>
-      'We will try to respond within 24 hours on weekdays.';
+      'हम सप्ताह के दिनों में 24 घंटे के भीतर जवाब देने की कोशिश करेंगे।';
 
   @override
-  String get supportEmptyError => 'Please enter the content.';
+  String get supportEmptyError => 'कृपया सामग्री दर्ज करें।';
 
   @override
-  String get supportSubjectPrefix => 'Inquiry Title';
+  String get supportSubjectPrefix => 'पूछताछ शीर्षक';
 
   @override
-  String get supportContentPrefix => 'Inquiry Content';
+  String get supportContentPrefix => 'पूछताछ सामग्री';
 
   @override
-  String get supportCopySuccessTitle => 'Inquiry Copied';
+  String get supportCopySuccessTitle => 'पूछताछ कॉपी की गई';
 
   @override
   String supportCopySuccessMessage(String email) {
-    return 'Inquiry content has been copied to clipboard.\\nWould you like to send an email to $email?';
+    return 'पूछताछ सामग्री क्लिपबोर्ड पर कॉपी कर दी गई है।\nक्या आप $email पर ईमेल भेजना चाहेंगे?';
   }
 
   @override
-  String get copyEmailAction => 'Copy Email Address';
+  String get copyEmailAction => 'ईमेल पता कॉपी करें';
 
   @override
   String get copyEmailSuccessMessage =>
-      'Email address copied. Please paste it in your email app.';
+      'ईमेल पता कॉपी किया गया। कृपया इसे अपने ईमेल ऐप में पेस्ट करें।';
 
   @override
-  String get supportSubmitButton => 'Copy Inquiry and Send';
+  String get supportSubmitButton => 'पूछताछ कॉपी करें और भेजें';
 
   @override
   String get shakePhone => 'कृपया फोन को हिलाएं!';
@@ -1114,16 +1114,16 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get fortuneCheckButton => 'Check Fortune';
+  String get fortuneCheckButton => 'भाग्य देखें';
 
   @override
-  String get fortuneSelectCards => 'Select 3 cards';
+  String get fortuneSelectCards => '3 कार्ड चुनें';
 
   @override
-  String get fortuneDragCards => 'Drag and select 3 cards';
+  String get fortuneDragCards => 'ड्रैग करके 3 कार्ड चुनें';
 
   @override
-  String get fortuneDetailTitle => 'Detailed Interpretation';
+  String get fortuneDetailTitle => 'विस्तृत व्याख्या';
 
   @override
   String get labelFineDust => 'बारीक धूल';

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
@@ -8,6 +10,7 @@ import 'fortune_mission_screen.dart';
 import 'lotto_screen.dart';
 import 'saju/widgets/new_year_fortune_input_screen.dart';
 import 'saju/widgets/saju_profile_screen.dart';
+import 'saju/widgets/compatibility_input_screen.dart';
 import 'tojeong/tojeong_input_screen.dart';
 import 'dart:math';
 import 'package:fortune_alarm/services/cookie_service.dart';
@@ -48,7 +51,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
   }
 
   String _getZodiacAnimal(DateTime? birthDate) {
-    if (birthDate == null) return '🐷';
+    if (birthDate == null) return 'assets/icon/fortuni1_trans.webp';
     final animals = ['🐭', '🐮', '🐯', '🐰', '🐲', '🐍', '🐴', '🐑', '🐵', '🐔', '🐶', '🐷'];
     // 띠 계산 공식: (연도 - 4) % 12
     final index = (birthDate.year - 4) % 12;
@@ -63,8 +66,6 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
 
     final colors = [
       {'name': AppLocalizations.of(context)!.luckyColor, 'color': Colors.purple, 'bg': Colors.purple[100]},
-      // ... (Rest of colors list should be localized in a real app, but for now let's use keys)
-      // Actually, let's keep it simple for now as I only added general keys.
       {'name': '보라색', 'color': Colors.purple, 'bg': Colors.purple[100]},
       {'name': '파란색', 'color': Colors.blue, 'bg': Colors.blue[100]},
       {'name': '노란색', 'color': Colors.amber, 'bg': Colors.amber[100]},
@@ -98,7 +99,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
     final dividerColor = isDarkMode ? Colors.grey[800] : (isDarkMode ? Colors.grey[800] : const Color(0xFFF2F4F6));
 
     final sajuState = ref.watch(sajuProvider);
-    final userName = sajuState.mainProfile?.name ?? "사용자";
+    final isNameMissing = sajuState.mainProfile == null || sajuState.mainProfile!.name.isEmpty;
+    final userName = isNameMissing ? "이름을 입력해주세요" : sajuState.mainProfile!.name;
     final zodiacIcon = _getZodiacAnimal(sajuState.mainProfile?.birthDate);
     final dailyLuck = _getDailyLuck(userName, context);
 
@@ -138,12 +140,19 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          AppLocalizations.of(context)!.greeting(userName),
+                          isNameMissing 
+                            ? "이름을 입력해주세요"
+                            : AppLocalizations.of(context)!.greeting(
+                                userName.length > 2 
+                                  ? userName.substring(1) 
+                                  : userName
+                              ),
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: isNameMissing ? 22 : 24, // 크기 살짝 조정
                             fontWeight: FontWeight.bold,
                             color: textColor,
                             letterSpacing: -0.5,
+                            height: 1.2,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -158,23 +167,34 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                     ),
                     GestureDetector(
                       onTap: () {
+                        HapticFeedback.selectionClick();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => const SajuProfileScreen()),
                         );
                       },
                       child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.amber.withOpacity(0.5), width: 2),
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.amber.withOpacity(0.5), width: 2),
+                          ),
+                          child: CircleAvatar(
+                            radius: 28, // 22에서 28로 확대
+                            backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[100],
+                            child: zodiacIcon.startsWith('assets/') 
+                              ? ClipOval(
+                                  child: Image.asset(
+                                    zodiacIcon,
+                                    fit: BoxFit.cover,
+                                    width: 56, // radius * 2
+                                    height: 56,
+                                    alignment: const Alignment(0, -0.5), // 약간 위쪽(상반신) 강조
+                                  ),
+                                )
+                              : Text(zodiacIcon, style: const TextStyle(fontSize: 28)), // 이모지도 크게
+                          ),
                         ),
-                        child: CircleAvatar(
-                          radius: 22,
-                          backgroundColor: isDarkMode ? Colors.grey[800] : Colors.grey[100],
-                          child: Text(zodiacIcon, style: const TextStyle(fontSize: 24)),
-                        ),
-                      ),
                     ),
                   ],
                 ),
@@ -260,6 +280,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
     } else if (label.contains("물건")) icon = "✨";
     else if (label.contains("방향")) icon = "🧭";
 
+    final isWhite = value == "하얀색";
+
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
@@ -267,8 +289,10 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
           color: isDarkMode ? Colors.white.withOpacity(0.05) : bgColor.withOpacity(0.15),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDarkMode ? Colors.white.withOpacity(0.1) : bgColor.withOpacity(0.3),
-            width: 1,
+            color: isDarkMode 
+                ? Colors.white.withOpacity(0.1) 
+                : (isWhite ? const Color(0xFFCBD5E1) : bgColor.withOpacity(0.3)),
+            width: isWhite ? 1.5 : 1,
           ),
         ),
         child: Column(
@@ -328,6 +352,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
+            HapticFeedback.mediumImpact();
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FortuneMissionScreen()),
@@ -431,21 +456,79 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
   }
 
   Future<void> _handleSpecificDateFortune(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
+    DateTime tempDate = DateTime.now().add(const Duration(days: 1));
+
+    final DateTime? pickedDate = await showModalBottomSheet<DateTime>(
       context: context,
-      initialDate: DateTime.now().add(const Duration(days: 1)),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Colors.blueAccent,
-              onPrimary: Colors.white,
-              onSurface: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
-            ),
+      backgroundColor: backgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          height: 240,
+          padding: const EdgeInsets.only(top: 6.0),
+          child: Column(
+            children: [
+              Container(
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: isDarkMode ? Colors.white12 : Colors.black12,
+                      width: 0.5,
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        AppLocalizations.of(context)!.cancel,
+                        style: TextStyle(
+                          color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, tempDate),
+                      child: Text(
+                        AppLocalizations.of(context)!.confirm,
+                        style: const TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: CupertinoTheme(
+                  data: CupertinoThemeData(
+                    brightness: isDarkMode ? Brightness.dark : Brightness.light,
+                  ),
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: tempDate,
+                    minimumDate: DateTime.now(),
+                    maximumDate: DateTime.now().add(const Duration(days: 365)),
+                    itemExtent: 40,
+                    onDateTimeChanged: (DateTime newDate) {
+                      tempDate = newDate;
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-          child: child!,
         );
       },
     );
@@ -516,7 +599,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
       },
       {
         'title': AppLocalizations.of(context)!.newYearFortune,
-        'subtitle': AppLocalizations.of(context)!.totalFortune2025,
+        'subtitle': AppLocalizations.of(context)!.totalFortune2026,
         'icon': '🐲',
         'colors': [const Color(0xFFFF416C), const Color(0xFFFF4B2B)],
         'target': 'saju'
@@ -540,7 +623,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         'subtitle': AppLocalizations.of(context)!.relationshipHarmony,
         'icon': '💖',
         'colors': [const Color(0xFFFF5F6D), const Color(0xFFFFC371)],
-        'target': 'generic'
+        'target': 'compatibility'
       },
     ];
 
@@ -581,6 +664,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
               color: Colors.transparent,
               child: InkWell(
                 onTap: () {
+                  HapticFeedback.selectionClick();
                   if (item['target'] == 'specific_date') {
                     _handleSpecificDateFortune(context);
                   } else if (item['target'] == 'lotto') {
@@ -591,6 +675,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const TojeongInputScreen()));
                   } else if (item['target'] == 'face') {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const FaceDetectionMissionScreen()));
+                  } else if (item['target'] == 'compatibility') {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const CompatibilityInputScreen()));
                   } else {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: item['title'] as String)));
                   }
@@ -690,10 +776,10 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
               letterSpacing: -0.8,
             ),
           ),
-          const SizedBox(height: 20),
-          _buildListItem("💎", "프리미엄 운세", "더 깊이 있는 사주 풀이", textColor, subTextColor),
-          _buildListItem("🌟", "천생연분 찾기", "나의 진정한 인연은 어디에?", textColor, subTextColor),
-          _buildListItem("🧿", "액운 방지 부적", "부정적인 기운을 막아주는 비법", textColor, subTextColor),
+          const SizedBox(height: 18),
+          _buildListItem("💭", "꿈해몽 분석", "꿈에 담긴 신비로운 의미 풀이", textColor, subTextColor),
+          _buildListItem("💘", "천생연분 찾기", "나의 진정한 인연은 어디에?", textColor, subTextColor),
+          _buildListItem("📜", "액운 방지 부적", "부정적인 기운을 막아주는 비법", textColor, subTextColor),
         ],
       ),
     );
@@ -704,19 +790,19 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
     final bgColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16.0),
+      margin: const EdgeInsets.only(bottom: 14.0),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[100]!,
-          width: 1,
+          color: isDarkMode ? Colors.white.withOpacity(0.12) : const Color(0xFFE2E8F0),
+          width: 1.2,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.2 : 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(isDarkMode ? 0.3 : 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -724,25 +810,26 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
+            HapticFeedback.selectionClick();
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: title)),
             );
           },
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(22),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
             child: Row(
               children: [
                 Container(
-                  width: 52,
-                  height: 52,
+                  width: 48,
+                  height: 48,
                   decoration: BoxDecoration(
                     color: isDarkMode ? Colors.grey[800]!.withOpacity(0.5) : Colors.grey[50],
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Center(
-                    child: Text(emoji, style: const TextStyle(fontSize: 26)),
+                    child: Text(emoji, style: const TextStyle(fontSize: 24)),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -759,7 +846,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                           letterSpacing: -0.3,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 3),
                       Text(
                         subtitle,
                         style: TextStyle(
@@ -771,12 +858,12 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(7),
                   decoration: BoxDecoration(
                     color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[50],
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.arrow_forward_ios, color: subTextColor.withOpacity(0.4), size: 12),
+                  child: Icon(Icons.arrow_forward_ios, color: subTextColor.withOpacity(0.4), size: 11),
                 ),
               ],
             ),

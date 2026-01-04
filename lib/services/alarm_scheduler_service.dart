@@ -12,178 +12,264 @@ import '../data/models/math_difficulty.dart';
 import '../core/constants/mission_type.dart';
 import 'notification_service.dart';
 
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:path_provider/path_provider.dart';
 
 // 백그라운드 포트 이름 (main.dart와 동일해야 함)
 const String kAlarmPortName = 'alarm_notification_port';
 
 @pragma('vm:entry-point')
-Future<void> alarmCallback(int id) async {
-  // 1. Flutter 엔진 초기화 보장
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  debugPrint('[AlarmScheduler] --- Alarm Callback Start ---');
-  debugPrint('[AlarmScheduler] ID (hashCode) received: $id');
+void startCallback() {
+  // Foreground Task가 시작될 때 호출되는 콜백
+  FlutterForegroundTask.setTaskHandler(AlarmTaskHandler());
+}
 
-  // 날짜/시간 포맷팅 초기화 (백그라운드 실행용)
+class AlarmTaskHandler extends TaskHandler {
+  @override
+  Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
+    // Task가 시작될 때 수행할 작업 (예: 알람 소리 재생, 진동 등)
+    // 여기서는 UI를 띄우거나 필요한 리소스를 초기화할 수 있음
+    debugPrint('[AlarmTaskHandler] onStart: $timestamp');
+  }
+
+  @override
+  Future<void> onRepeatEvent(DateTime timestamp) async {
+    // 주기적으로 수행할 작업 (필요한 경우)
+    // 여기서는 단순히 유지
+  }
+
+  @override
+  Future<void> onDestroy(DateTime timestamp, bool isServiceStopped) async {
+    // Task가 종료될 때 정리 작업
+    debugPrint('[AlarmTaskHandler] onDestroy: $timestamp');
+  }
+
+  @override
+  void onNotificationPressed() {
+    // 알림을 눌렀을 때 앱을 실행
+    FlutterForegroundTask.launchApp();
+  }
+
+  // 최신 버전에서는 onNotificationDismissed도 구현해야 할 수 있음 (선택 사항)
+  @override
+  void onNotificationDismissed() {
+    debugPrint('[AlarmTaskHandler] onNotificationDismissed');
+  }
+}
+
+@pragma('vm:entry-point')
+Future<void> alarmCallback(int id) async {
+  // 1. Flutter 엔진 및 기본 서비스 초기화 (최우선 순위)
+  WidgetsFlutterBinding.ensureInitialized();
+  debugPrint('[AlarmScheduler] --- Alarm Callback Start ---');
+  debugPrint('[AlarmScheduler] ID received: $id');
+
+  // 즉시 알림 서비스 초기화 (Hive보다 먼저)
+  final notificationService = NotificationService();
+  try {
+    await notificationService.init(null, isBackground: true);
+    debugPrint('[AlarmScheduler] NotificationService Initialized Early.');
+    
+    // [핵심] 무엇이든 간에 일단 알람을 울려서 깨운다.
+    // 상세 정보는 나중에 로드해서 업데이트하더라도, 소리와 진동은 즉시 시작해야 함.
+    await notificationService.showAlarmNotification(
+      id: id,
+      title: '스냅 알람',
+      body: '알람을 확인하세요!', // 기본 메시지
+      payload: 'loading_$id', // 로딩 중임을 표시
+      soundName: 'morning', // 기본 사운드 (안전장치)
+      isVibrationEnabled: true,
+    );
+    debugPrint('[AlarmScheduler] IMMEDIATE ALARM FIRED (Fail-safe).');
+  } catch (e) {
+    debugPrint('[AlarmScheduler] CRITICAL: Failed to fire immediate alarm: $e');
+  }
+
+  // 날짜/시간 포맷팅 초기화
   await initializeDateFormatting();
 
-  final notificationService = NotificationService();
-  Box<AlarmModel>? box;
-
+  // 2. Foreground Service 시작 (앱 유지력 강화)
   try {
-    // 2. Hive 및 서비스 초기화
+    if (await FlutterForegroundTask.isRunningService) {
+      await FlutterForegroundTask.restartService();
+    } else {
+      await FlutterForegroundTask.startService(
+        serviceId: 256,
+        notificationTitle: '스냅 알람',
+        notificationText: '알람이 울리고 있습니다!',
+        notificationIcon: NotificationIcon(
+          metaDataName: 'com.seriessnap.fortunealarm.notification_icon',
+          backgroundColor: const Color(0xFF5C6BC0),
+        ),
+        callback: startCallback,
+      );
+    }
+    debugPrint('[AlarmScheduler] Foreground Service Started.');
+    
+    // 서비스가 시작된 후 앱 실행 시도 (전체 화면 알람을 위해)
+    // 서비스가 활성화된 상태에서 launchApp()이 더 잘 작동함
+    _launchAppWithRetry();
+  } catch (e) {
+    debugPrint('[AlarmScheduler] Foreground Service Start Failed: $e');
+  }
+
+  // 3. Hive 및 데이터 로드
+  Box<AlarmModel>? box;
+  try {
     final directory = await getApplicationDocumentsDirectory();
     final path = directory.path;
-    
     debugPrint('[AlarmScheduler] Isolate Hive Path: $path');
     
-    // Hive 초기화 (이미 초기화되어 있을 수 있으므로 예외 처리)
+    // Hive 초기화 (안전하게)
     try {
-      await Hive.initFlutter(path);
-      
-      if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(AlarmModelAdapter());
-      if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(MissionTypeAdapter());
-      if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
+      if (!Hive.isBoxOpen('alarms')) {
+        await Hive.initFlutter(path);
+        if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(AlarmModelAdapter());
+        if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(MissionTypeAdapter());
+        if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
+      }
     } catch (e) {
-      debugPrint('[AlarmScheduler] Hive Init Note: $e');
+      debugPrint('[AlarmScheduler] Hive Init Error: $e');
     }
-    
-    await notificationService.init(null, isBackground: true);
-    debugPrint('[AlarmScheduler] NotificationService Initialized.');
 
-    // 3. 알람 데이터 가져오기
-    box = await Hive.openBox<AlarmModel>('alarms');
-    debugPrint('[AlarmScheduler] Hive Box Opened. Searching for ID: $id');
-
+    // 알람 데이터 검색
     AlarmModel? alarm;
-    for (final a in box.values) {
-      if (AlarmSchedulerService.getStableId(a.id) == id) {
-        alarm = a;
-        break;
-      }
-    }
-
-    if (alarm == null) {
-      debugPrint('[AlarmScheduler] ERROR: Alarm not found in Hive for ID: $id');
-      return;
-    }
-
-    if (!alarm.isEnabled) {
-      debugPrint('[AlarmScheduler] Alarm is disabled. Skipping.');
-      return;
-    }
-    
-    debugPrint('[AlarmScheduler] Found Alarm: ${alarm.id}, Scheduled Time: ${alarm.time}');
-
-    // 4. 시간 검증 (Android 알람 오작동 및 중복 방지)
-    final now = DateTime.now();
-    final difference = now.difference(alarm.time);
-    debugPrint('[AlarmScheduler] Current Time: $now, Scheduled Time: ${alarm.time}, Difference: ${difference.inSeconds}s');
-
-    // 너무 늦게 울리는 경우 (90분 이상 늦게 울리면 무시 - Deep Sleep 이슈 대응)
-    if (difference.inMinutes > 90) {
-      debugPrint('[AlarmScheduler] Too late (>90m). Skipping.');
-      return;
-    }
-
-    // 5. 알림 및 UI 신호
-    String payload = alarm.id;
-    String body = '일어날 시간입니다!';
-    if (alarm.missionType != MissionType.none) {
-      body = '미션을 수행하고 알람을 끄세요!';
-    }
-    
-    // 안전 장치 알람인 경우 메시지 변경 및 이전 알림 정리
-    if (alarm.id.endsWith('_safety')) {
-      body = '알람이 강제로 종료되었습니다! 미션을 완료해주세요.';
-      // 이전 알림(메인 알람) 제거 시도
-      try {
-        final originalId = alarm.id.replaceAll('_safety', '');
-        final originalStableId = AlarmSchedulerService.getStableId(originalId);
-        await notificationService.cancelNotification(originalStableId);
-        debugPrint('[AlarmScheduler] Cancelled original notification for Safety Alarm: $originalId');
-      } catch (e) {
-        debugPrint('[AlarmScheduler] Failed to cancel original notification: $e');
-      }
-    }
-
-    bool suppressRinging = false;
     try {
-      final stateBox = await Hive.openBox('app_state');
-      final activeBaseId = stateBox.get('active_alarm_mission_base_id') as String?;
-      final startedAtStr = stateBox.get('active_alarm_mission_started_at') as String?;
-      if (activeBaseId != null && startedAtStr != null) {
-        final startedAt = DateTime.tryParse(startedAtStr);
-        if (startedAt != null) {
-          final now = DateTime.now();
-          if (now.difference(startedAt) < const Duration(minutes: 2)) {
-            final baseId = alarm.id.replaceAll('_snooze', '');
-            suppressRinging = baseId == activeBaseId;
-          } else {
-            await stateBox.delete('active_alarm_mission_base_id');
-            await stateBox.delete('active_alarm_mission_started_at');
-          }
+      box = await Hive.openBox<AlarmModel>('alarms');
+      for (final a in box.values) {
+        if (AlarmSchedulerService.getStableId(a.id) == id) {
+          alarm = a;
+          break;
         }
       }
     } catch (e) {
-      debugPrint('[AlarmScheduler] Mission state check failed: $e');
+      debugPrint('[AlarmScheduler] Error opening Hive box: $e');
     }
 
-    if (!suppressRinging) {
-      final SendPort? uiSendPort = IsolateNameServer.lookupPortByName(kAlarmPortName);
-      if (uiSendPort != null) {
-        debugPrint('[AlarmScheduler] Sending signal to Foreground UI Isolate.');
-        uiSendPort.send(payload);
+    // 4. 알람 상세 정보로 알림 업데이트 (데이터 로드 성공 시)
+    if (alarm != null && alarm.isEnabled) {
+      debugPrint('[AlarmScheduler] Found Alarm: ${alarm.id}, Updating Notification...');
+      
+      // 시간 검증
+      final now = DateTime.now();
+      final difference = now.difference(alarm.time);
+      if (difference.inMinutes > 90) {
+        debugPrint('[AlarmScheduler] Too late (>90m). Cancelling.');
+        await notificationService.cancelNotification(id); // 늦었으면 취소
+        return;
       }
 
-      debugPrint('[AlarmScheduler] Showing Alarm Notification...');
-      await notificationService.showAlarmNotification(
-        id: id,
-        title: '스냅 알람',
-        body: body,
-        payload: payload,
-        soundName: alarm.ringtonePath,
-        vibrationPattern: alarm.vibrationPattern,
-        isGradualVolume: alarm.isGradualVolume,
-        isVibrationEnabled: alarm.isVibrationEnabled,
-      );
-      debugPrint('[AlarmScheduler] Notification displayed successfully.');
-    } else {
-      debugPrint('[AlarmScheduler] Suppressing ringing due to active mission.');
-    }
-
-    // 6. 다음 알람 예약 (반복 알람인 경우)
-    if (alarm.repeatDays.any((d) => d)) {
-      debugPrint('[AlarmScheduler] Rescheduling next repeat...');
-      
-      // 시스템이 알람 시간보다 약간 일찍(예: 1초 전) 깨운 경우, 
-      // now를 기준으로 다음 시간을 계산하면 '오늘'로 다시 잡히는 문제가 발생할 수 있음.
-      // 따라서 기준 시간을 max(now, scheduledTime)으로 설정하여, 무조건 현재 스케줄 이후의 시간을 찾도록 함.
-      DateTime referenceTime = DateTime.now();
-      if (referenceTime.isBefore(alarm.time)) {
-        referenceTime = alarm.time;
+      String payload = alarm.id;
+      String body = '일어날 시간입니다!';
+      if (alarm.missionType != MissionType.none) {
+        body = '미션을 수행하고 알람을 끄세요!';
       }
       
-      final nextTime = AlarmSchedulerService._calculateNextTime(alarm.time, alarm.repeatDays, referenceTime: referenceTime);
-      final nextAlarm = alarm.copyWith(time: nextTime);
-      await box.put(nextAlarm.id, nextAlarm);
-      await AlarmSchedulerService.scheduleAlarm(nextAlarm);
+      if (alarm.id.endsWith('_safety')) {
+        body = '알람이 강제로 종료되었습니다! 미션을 완료해주세요.';
+      }
+
+      // 미션 상태 체크 (중복 실행 방지)
+      bool suppressRinging = false;
+      try {
+        final stateBox = await Hive.openBox('app_state');
+        final activeBaseId = stateBox.get('active_alarm_mission_base_id') as String?;
+        final startedAtStr = stateBox.get('active_alarm_mission_started_at') as String?;
+        if (activeBaseId != null && startedAtStr != null) {
+          final startedAt = DateTime.tryParse(startedAtStr);
+          if (startedAt != null && DateTime.now().difference(startedAt) < const Duration(minutes: 2)) {
+             final baseId = alarm.id.replaceAll('_snooze', '');
+             suppressRinging = baseId == activeBaseId;
+          } else {
+             await stateBox.delete('active_alarm_mission_base_id');
+             await stateBox.delete('active_alarm_mission_started_at');
+          }
+        }
+      } catch (e) {
+        debugPrint('[AlarmScheduler] Mission state check failed: $e');
+      }
+
+      if (!suppressRinging) {
+        try {
+          final stateBox = await Hive.openBox('app_state');
+          await stateBox.put('pending_alarm_payload', payload);
+          await stateBox.put('pending_alarm_set_at', DateTime.now().toIso8601String());
+          await stateBox.flush(); // [중요] 즉시 파일에 쓰기 보장
+          debugPrint('[AlarmScheduler] Pending alarm flag stored and flushed for payload: $payload');
+          
+          // 페이로드 저장 후 다시 한 번 앱 실행 시도 (확실하게 하기 위해)
+          _launchAppWithRetry();
+        } catch (e) {
+          debugPrint('[AlarmScheduler] Failed to store pending alarm flag: $e');
+        }
+        // 기존 즉시 알림 취소 (중복 방지)
+        await notificationService.cancelNotification(id);
+        
+        // UI Isolate로 신호 전송
+        final SendPort? uiSendPort = IsolateNameServer.lookupPortByName(kAlarmPortName);
+        uiSendPort?.send(payload);
+
+        // 설정된 알람 정보로 새 알림 생성
+        await notificationService.showAlarmNotification(
+          id: id,
+          title: '스냅 알람',
+          body: body,
+          payload: payload,
+          soundName: alarm.ringtonePath,
+          vibrationPattern: alarm.vibrationPattern,
+          isGradualVolume: alarm.isGradualVolume,
+          isVibrationEnabled: alarm.isVibrationEnabled,
+        );
+        debugPrint('[AlarmScheduler] Notification CREATED with real data (Sound: ${alarm.ringtonePath}, Vibration: ${alarm.isVibrationEnabled}).');
+      } else {
+        debugPrint('[AlarmScheduler] Suppressing ringing due to active mission.');
+        await notificationService.cancelNotification(id); // 억제해야 하면 기존 알림 취소
+      }
+
+      // 다음 알람 예약
+      if (alarm.repeatDays.any((d) => d)) {
+        debugPrint('[AlarmScheduler] Rescheduling next repeat...');
+        DateTime referenceTime = DateTime.now();
+        if (referenceTime.isBefore(alarm.time)) referenceTime = alarm.time;
+        final nextTime = AlarmSchedulerService._calculateNextTime(alarm.time, alarm.repeatDays, referenceTime: referenceTime);
+        final nextAlarm = alarm.copyWith(time: nextTime);
+        await box?.put(nextAlarm.id, nextAlarm);
+        await AlarmSchedulerService.scheduleAlarm(nextAlarm);
+      } else {
+        final updatedAlarm = alarm.copyWith(isEnabled: false);
+        await box?.put(updatedAlarm.id, updatedAlarm);
+      }
     } else {
-      // 일회성 알람은 비활성화
-      debugPrint('[AlarmScheduler] Deactivating one-time alarm.');
-      final updatedAlarm = alarm.copyWith(isEnabled: false);
-      await box.put(updatedAlarm.id, updatedAlarm);
+      debugPrint('[AlarmScheduler] Alarm not found or disabled. Keeping fallback notification.');
+      // 데이터가 없어도 폴백 알림은 유지됨 (사용자가 깨야 하므로)
     }
 
   } catch (e, stackTrace) {
     debugPrint('[AlarmScheduler] FATAL in alarmCallback: $e');
     debugPrint(stackTrace.toString());
   } finally {
-    if (box != null && box.isOpen) {
-      await box.close();
+    if (box != null && box.isOpen) await box.close();
+  debugPrint('[AlarmScheduler] --- Alarm Callback End ---');
+  }
+}
+
+/// 앱 실행 시도 (실패 시 재시도 로직 포함)
+@pragma('vm:entry-point')
+Future<void> _launchAppWithRetry() async {
+  int retries = 0;
+  bool success = false;
+  
+  while (!success && retries < 5) {
+    try {
+      debugPrint('[AlarmScheduler] Attempting to launch app via FlutterForegroundTask.launchApp() (Retry: $retries)...');
+      FlutterForegroundTask.launchApp();
+      success = true;
+      debugPrint('[AlarmScheduler] launchApp() call sent successfully.');
+    } catch (e) {
+      retries++;
+      debugPrint('[AlarmScheduler] launchApp() failed: $e. Retrying in 500ms...');
+      await Future.delayed(const Duration(milliseconds: 500));
     }
-    debugPrint('[AlarmScheduler] --- Alarm Callback End ---');
   }
 }
 

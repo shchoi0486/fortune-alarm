@@ -43,13 +43,19 @@ class SajuProfile {
     
     // Also update list
     List<SajuProfile> profiles = await loadProfiles();
-    // Check if profile already exists (simple duplicate check by name)
-    int index = profiles.indexWhere((p) => p.name == profile.name);
+    // Check if profile already exists (simple duplicate check by name and birthdate)
+    int index = profiles.indexWhere((p) => p.name == profile.name && p.birthDate.year == profile.birthDate.year && p.birthDate.month == profile.birthDate.month && p.birthDate.day == profile.birthDate.day);
     if (index >= 0) {
       profiles[index] = profile;
     } else {
-      profiles.add(profile);
+      profiles.insert(0, profile); // Add to beginning
     }
+    
+    // Limit to last 10 profiles
+    if (profiles.length > 10) {
+      profiles = profiles.sublist(0, 10);
+    }
+    
     await saveProfiles(profiles);
   }
 
@@ -90,7 +96,12 @@ class SajuProfile {
   
   static Future<void> deleteProfile(SajuProfile profile) async {
     List<SajuProfile> profiles = await loadProfiles();
-    profiles.removeWhere((p) => p.name == profile.name && p.birthDate == profile.birthDate);
+    profiles.removeWhere((p) => 
+      p.name == profile.name && 
+      p.birthDate.year == profile.birthDate.year && 
+      p.birthDate.month == profile.birthDate.month && 
+      p.birthDate.day == profile.birthDate.day
+    );
     await saveProfiles(profiles);
   }
 

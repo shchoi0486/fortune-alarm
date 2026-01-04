@@ -33,24 +33,25 @@ enum Cheongan {
 }
 
 enum Jiji {
-  ja("자", "子", Ohaeng.water, "쥐"),
-  chuk("축", "丑", Ohaeng.earth, "소"),
-  in_("인", "寅", Ohaeng.wood, "호랑이"), // in is a keyword, so using in_
-  myo("묘", "卯", Ohaeng.wood, "토끼"),
-  jin("진", "辰", Ohaeng.earth, "용"),
-  sa("사", "巳", Ohaeng.fire, "뱀"),
-  o("오", "午", Ohaeng.fire, "말"),
-  mi("미", "未", Ohaeng.earth, "양"),
-  sin("신", "申", Ohaeng.metal, "원숭이"),
-  yu("유", "酉", Ohaeng.metal, "닭"),
-  sul("술", "戌", Ohaeng.earth, "개"),
-  hae("해", "亥", Ohaeng.water, "돼지");
+  ja("자", "子", Ohaeng.water, "쥐", "🐭"),
+  chuk("축", "丑", Ohaeng.earth, "소", "🐮"),
+  in_("인", "寅", Ohaeng.wood, "호랑이", "🐯"), // in is a keyword, so using in_
+  myo("묘", "卯", Ohaeng.wood, "토끼", "🐰"),
+  jin("진", "辰", Ohaeng.earth, "용", "🐲"),
+  sa("사", "巳", Ohaeng.fire, "뱀", "🐍"),
+  o("오", "午", Ohaeng.fire, "말", "🐴"),
+  mi("미", "未", Ohaeng.earth, "양", "🐑"),
+  sin("신", "申", Ohaeng.metal, "원숭이", "🐵"),
+  yu("유", "酉", Ohaeng.metal, "닭", "🐔"),
+  sul("술", "戌", Ohaeng.earth, "개", "🐶"),
+  hae("해", "亥", Ohaeng.water, "돼지", "🐷");
 
   final String koreanName;
   final String hanja;
   final Ohaeng ohaeng;
   final String animal;
-  const Jiji(this.koreanName, this.hanja, this.ohaeng, this.animal);
+  final String icon;
+  const Jiji(this.koreanName, this.hanja, this.ohaeng, this.animal, this.icon);
 }
 
 class Ganji {

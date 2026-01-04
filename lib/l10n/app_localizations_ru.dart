@@ -190,7 +190,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get newYearFortune => 'Новогоднее предсказание';
 
   @override
-  String get totalFortune2025 => 'Прогноз на 2025 год';
+  String get totalFortune2026 => 'Прогноз на 2026 год';
 
   @override
   String get traditionalFortune => 'Тоджонбигёль';
@@ -202,7 +202,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get faceReading => 'Физиогномика';
 
   @override
-  String get missionFaceReading => 'Face Reading Mission';
+  String get missionFaceReading => 'Миссия по физиогномике';
 
   @override
   String get faceFate => 'Судьба по лицу';
@@ -232,40 +232,40 @@ class AppLocalizationsRu extends AppLocalizations {
   String get notice => 'Объявления';
 
   @override
-  String get weatherConditionSunny => 'Sunny';
+  String get weatherConditionSunny => 'Ясно';
 
   @override
-  String get weatherConditionCloudy => 'Cloudy';
+  String get weatherConditionCloudy => 'Облачно';
 
   @override
-  String get weatherConditionFoggy => 'Foggy';
+  String get weatherConditionFoggy => 'Туман';
 
   @override
-  String get weatherConditionRainy => 'Rainy';
+  String get weatherConditionRainy => 'Дождь';
 
   @override
-  String get weatherConditionSnowy => 'Snowy';
+  String get weatherConditionSnowy => 'Снег';
 
   @override
-  String get weatherConditionThunderstorm => 'Thunderstorm';
+  String get weatherConditionThunderstorm => 'Гроза';
 
   @override
-  String get airQualityGood => 'Good';
+  String get airQualityGood => 'Хорошо';
 
   @override
-  String get airQualityNormal => 'Normal';
+  String get airQualityNormal => 'Нормально';
 
   @override
-  String get airQualityBad => 'Bad';
+  String get airQualityBad => 'Плохо';
 
   @override
-  String get airQualityVeryBad => 'Very Bad';
+  String get airQualityVeryBad => 'Очень плохо';
 
   @override
-  String get locationUnknown => 'Unknown Location';
+  String get locationUnknown => 'Неизвестное местоположение';
 
   @override
-  String get locationError => 'Location Error';
+  String get locationError => 'Ошибка местоположения';
 
   @override
   String get faq => 'Часто задаваемые вопросы';
@@ -413,7 +413,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String missionRewardEarnedWithCount(int missions, int cookies) {
-    return 'Congratulations! You completed $missions missions today and earned $cookies Fortune Cookie(s)!';
+    return 'Поздравляем! Сегодня вы выполнили $missions миссий и получили $cookies печенье(я) удачи!';
   }
 
   @override
@@ -480,7 +480,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get missionShake => 'Тряска';
 
   @override
-  String get missionFortuneCatch => 'Fortune Catch';
+  String get missionFortuneCatch => 'Лови Фортуни';
 
   @override
   String get missionNoDescription => 'Будильник прозвенит без миссии.';
@@ -501,43 +501,43 @@ class AppLocalizationsRu extends AppLocalizations {
       'Потрясите телефон, чтобы выключить будильник.';
 
   @override
-  String get missionFortuneCatchDescription => 'Catch the moving Fortuni!';
+  String get missionFortuneCatchDescription => 'Поймайте движущегося Фортуни!';
 
   @override
-  String get missionWalk => 'Walk';
+  String get missionWalk => 'Ходьба';
 
   @override
-  String get missionWalkDescription => 'Walk to turn off the alarm!';
+  String get missionWalkDescription => 'Пройдитесь, чтобы выключить будильник!';
 
   @override
-  String get missionFaceDescription => 'Keep your face in the frame for 10s.';
+  String get missionFaceDescription => 'Держите лицо в рамке 10 секунд.';
 
   @override
-  String get walkStepCount => 'Target Steps';
+  String get walkStepCount => 'Целевое количество шагов';
 
   @override
   String walkSteps(int count) {
-    return '$count steps';
+    return '$count шагов';
   }
 
   @override
-  String get missionNumberOrder => 'Number Order';
+  String get missionNumberOrder => 'Порядок чисел';
 
   @override
   String get missionNumberOrderDescription =>
-      'Tap numbers from 1 to 9 in order.';
+      'Нажимайте числа от 1 до 9 по порядку.';
 
   @override
   String missionNumberOrderGuide(int nextNumber) {
-    return 'Next: $nextNumber';
+    return 'Далее: $nextNumber';
   }
 
   @override
-  String get missionHiddenButton => 'Position Memory';
+  String get missionHiddenButton => 'Запомни позиции';
 
   @override
   String get missionHiddenButtonDescription =>
-      'Memorize the lit tiles in order and tap them within 10 seconds.';
+      'Запомните подсвеченные плитки по порядку и нажмите их за 10 секунд.';
 
   @override
   String missionHiddenButtonDifficulty(int delta) {
@@ -545,65 +545,68 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get missionTapSprint => 'Tap Sprint';
+  String get missionTapSprint => 'Спринт тапами';
 
   @override
-  String get missionTapSprintDescriptionShort => 'Tap to fill the meter.';
+  String get missionTapSprintDescriptionShort =>
+      'Тапайте, чтобы заполнить шкалу.';
 
   @override
   String missionTapSprintDescription(int goalTaps) {
-    return 'Tap $goalTaps+ times to fill the meter.';
+    return 'Тапните $goalTaps+ раз, чтобы заполнить шкалу.';
   }
 
   @override
-  String get missionTapSprintTapHere => 'Tap';
+  String get missionTapSprintTapHere => 'Тап';
 
   @override
-  String get missionTapSprintHint => 'Fills up fast, drains if you pause.';
+  String get missionTapSprintHint =>
+      'Быстро заполняется, но уменьшается при паузе.';
 
   @override
-  String get missionLeftRight => 'Left / Right';
+  String get missionLeftRight => 'Лево / Право';
 
   @override
   String get missionLeftRightDescriptionShort =>
-      'Follow the prompt and pick left or right.';
+      'Следуйте подсказке и выбирайте лево или право.';
 
   @override
   String missionLeftRightDescription(int targetStreak) {
-    return 'Get $targetStreak correct in a row.';
+    return '$targetStreak правильных подряд.';
   }
 
   @override
-  String get missionLeftRightPromptLeft => 'Tap LEFT';
+  String get missionLeftRightPromptLeft => 'Нажмите ЛЕВО';
 
   @override
-  String get missionLeftRightPromptRight => 'Tap RIGHT';
+  String get missionLeftRightPromptRight => 'Нажмите ПРАВО';
 
   @override
-  String get left => 'Left';
+  String get left => 'Лево';
 
   @override
-  String get right => 'Right';
+  String get right => 'Право';
 
   @override
-  String get missionHintInactivity => 'If you stop for 2 minutes, it resets.';
+  String get missionHintInactivity =>
+      'Если остановиться на 2 минуты, сбросится.';
 
   @override
   String fortuneCatchScore(int score) {
-    return 'Score: $score';
+    return 'Счет: $score';
   }
 
   @override
-  String get fortuneCatchGoal => 'Goal: 100';
+  String get fortuneCatchGoal => 'Цель: 100';
 
   @override
   String fortuneCatchGoalDetail(int count, int min) {
-    return '(Catches: $count/$min)';
+    return '(Поймано: $count/$min)';
   }
 
   @override
   String fortuneCatchCombo(int combo) {
-    return '$combo Combo!';
+    return 'Комбо x$combo!';
   }
 
   @override
@@ -627,20 +630,20 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get shakeCount => 'Shake Count';
+  String get shakeCount => 'Количество встряхиваний';
 
   @override
   String shakeTimes(int count) {
-    return '$count times';
+    return '$count раз(а)';
   }
 
   @override
   String missionNumber(int number) {
-    return 'Mission $number';
+    return 'Миссия $number';
   }
 
   @override
-  String get soundBirds => 'Bird Sounds';
+  String get soundBirds => 'Звуки птиц';
 
   @override
   String get shakeCountLabel => 'Кол-во встряхиваний';
@@ -787,7 +790,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get fortuneNewYearButton =>
-      'Посмотреть новогоднее гадание на 2025 год';
+      'Посмотреть новогоднее гадание на 2026 год';
 
   @override
   String get loveFortune => 'Любовь';
@@ -895,109 +898,109 @@ class AppLocalizationsRu extends AppLocalizations {
   String get missionGratitudeDiary => 'Дневник благодарности';
 
   @override
-  String get faqQuestion1 => 'Alarms are not ringing.';
+  String get faqQuestion1 => 'Будильник не звонит.';
 
   @override
   String get faqAnswer1 =>
-      'Alarms may be delayed or blocked due to the Android system\'s battery optimization feature. Please set all permissions to \'Allow\' in the Settings > Alarm Optimization menu.';
+      'Будильники могут задерживаться или блокироваться из-за функции оптимизации батареи системы Android. Пожалуйста, установите все разрешения на \'Разрешить\' в меню Настройки > Оптимизация будильника.';
 
   @override
-  String get faqQuestion2 => 'I want to change the mission.';
+  String get faqQuestion2 => 'Я хочу изменить миссию.';
 
   @override
   String get faqAnswer2 =>
-      'You can change it to the mission you want (Math, Photo, Shake, etc.) in the mission selection menu after tapping the alarm you want to edit in the alarm list.';
+      'Вы можете изменить миссию на желаемую (Математика, Фото, Тряска и т. д.) в меню выбора миссии, нажав на будильник, который вы хотите изменить в списке будильников.';
 
   @override
-  String get faqQuestion3 => 'How do I set Dark Mode?';
+  String get faqQuestion3 => 'Как установить темную тему?';
 
   @override
   String get faqAnswer3 =>
-      'You can change the screen theme through the Settings > General > Dark Mode toggle.';
+      'Вы можете изменить тему экрана с помощью переключателя Настройки > Общие > Темная тема.';
 
   @override
-  String get faqQuestion4 => 'How do I collect fortune cookies?';
+  String get faqQuestion4 => 'Как собирать печенье с предсказаниями?';
 
   @override
   String get faqAnswer4 =>
-      'You can earn fortune cookies every time you dismiss an alarm in the morning or complete a mission. Check your daily fortune with the cookies you\'ve collected!';
+      'Вы можете зарабатывать печенье с предсказаниями каждый раз, когда выключаете будильник утром или выполняете миссию. Проверяйте свою удачу на день с помощью собранного печенья!';
 
   @override
-  String get faqQuestion5 => 'Will my data disappear if I delete the app?';
+  String get faqQuestion5 => 'Исчезнут ли мои данные, если я удалю приложение?';
 
   @override
   String get faqAnswer5 =>
-      'Yes, Fortune Alarm stores data inside the device, so deleting the app will delete all your set alarms and mission records. Please be careful.';
+      'Да, Fortune Alarm хранит данные внутри устройства, поэтому удаление приложения приведет к удалению всех ваших установленных будильников и записей миссий. Пожалуйста, будьте осторожны.';
 
   @override
-  String get noticeLabel => 'Notice';
+  String get noticeLabel => 'Объявления';
 
   @override
-  String get notice1Title => 'Fortune Alarm Official Launch';
+  String get notice1Title => 'Официальный запуск Fortune Alarm';
 
   @override
   String get notice1Content =>
-      'Hello. Fortune Alarm has been officially launched.\\n\\nCheck your daily fortune with your alarm every morning and start a happy day!\\nWe will continue to provide more diverse features and improved services.\\n\\nThank you.';
+      'Здравствуйте. Fortune Alarm был официально запущен.\n\nПроверяйте свою удачу на день с будильником каждое утро и начинайте счастливый день!\nМы продолжим предоставлять более разнообразные функции и улучшенные услуги.\n\nСпасибо.';
 
   @override
-  String get notice2Title => 'Version 1.0.0 Update News';
+  String get notice2Title => 'Новости обновления версии 1.0.0';
 
   @override
   String get notice2Content =>
-      'Here is the content of the version 1.0.0 update.\\n\\n1. Supplement mission UI improvement\\n2. System setting integration for accurate alarms\\n3. Dark mode support\\n4. Bug fixes and stability improvements\\n\\nExperience the latest version now!';
+      'Вот содержание обновления версии 1.0.0.\n\n1. Улучшение интерфейса миссии с витаминами\n2. Интеграция системных настроек для точных будильников\n3. Поддержка темной темы\n4. Исправления ошибок и улучшения стабильности\n\nИспытайте последнюю версию прямо сейчас!';
 
   @override
-  String get notice3Title => 'Terms of Service Revision Notice';
+  String get notice3Title => 'Уведомление об изменении Условий использования';
 
   @override
   String get notice3Content =>
-      'The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.';
+      'Условия использования были пересмотрены.\n\nОсновные изменения:\n- Усиленная Политика конфиденциальности\n- Уточнен объем использования сервиса\n\nПодробности можно найти на странице Настройки > Условия.';
 
   @override
-  String get supportContentTitle => 'Inquiry Content';
+  String get supportContentTitle => 'Содержание запроса';
 
   @override
-  String get supportHint => 'Please enter the content.';
+  String get supportHint => 'Пожалуйста, введите содержание.';
 
   @override
-  String get supportRecipient => 'Recipient (Customer Support)';
+  String get supportRecipient => 'Получатель (Служба поддержки)';
 
   @override
-  String get emailCopied => 'Email address copied.';
+  String get emailCopied => 'Адрес электронной почты скопирован.';
 
   @override
-  String get copyTooltip => 'Copy';
+  String get copyTooltip => 'Копировать';
 
   @override
   String get supportWorkingDays =>
-      'We will try to respond within 24 hours on weekdays.';
+      'Мы постараемся ответить в течение 24 часов в будние дни.';
 
   @override
-  String get supportEmptyError => 'Please enter the content.';
+  String get supportEmptyError => 'Пожалуйста, введите содержание.';
 
   @override
-  String get supportSubjectPrefix => 'Inquiry Title';
+  String get supportSubjectPrefix => 'Заголовок запроса';
 
   @override
-  String get supportContentPrefix => 'Inquiry Content';
+  String get supportContentPrefix => 'Содержание запроса';
 
   @override
-  String get supportCopySuccessTitle => 'Inquiry Copied';
+  String get supportCopySuccessTitle => 'Запрос скопирован';
 
   @override
   String supportCopySuccessMessage(String email) {
-    return 'Inquiry content has been copied to clipboard.\\nWould you like to send an email to $email?';
+    return 'Содержание запроса скопировано в буфер обмена.\nХотите отправить письмо на $email?';
   }
 
   @override
-  String get copyEmailAction => 'Copy Email Address';
+  String get copyEmailAction => 'Копировать адрес эл. почты';
 
   @override
   String get copyEmailSuccessMessage =>
-      'Email address copied. Please paste it in your email app.';
+      'Адрес электронной почты скопирован. Пожалуйста, вставьте его в ваше почтовое приложение.';
 
   @override
-  String get supportSubmitButton => 'Copy Inquiry and Send';
+  String get supportSubmitButton => 'Копировать запрос и отправить';
 
   @override
   String get shakePhone => 'Пожалуйста, потрясите телефон!';
@@ -1114,42 +1117,42 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get fortuneCheckButton => 'Check Fortune';
+  String get fortuneCheckButton => 'Узнать предсказание';
 
   @override
-  String get fortuneSelectCards => 'Select 3 cards';
+  String get fortuneSelectCards => 'Выберите 3 карты';
 
   @override
-  String get fortuneDragCards => 'Drag and select 3 cards';
+  String get fortuneDragCards => 'Перетащите и выберите 3 карты';
 
   @override
-  String get fortuneDetailTitle => 'Detailed Interpretation';
+  String get fortuneDetailTitle => 'Подробное толкование';
 
   @override
-  String get labelFineDust => 'Fine Dust';
+  String get labelFineDust => 'Мелкая пыль';
 
   @override
-  String get labelUltraFineDust => 'Ultra Fine Dust';
+  String get labelUltraFineDust => 'Ультрамелкая пыль';
 
   @override
-  String get weatherToday => 'Today\'s Weather';
+  String get weatherToday => 'Погода сегодня';
 
   @override
   String get weatherUpdateMessage =>
-      'Updating weather information for current location.';
+      'Обновляем погоду для текущего местоположения.';
 
   @override
   String get weatherDisclaimer =>
-      'Observed data may vary depending on local conditions or reception status.';
+      'Данные наблюдений могут отличаться в зависимости от местных условий или качества приема.';
 
   @override
   String get weatherSource =>
-      'Provided by Meteorological Administration, Korea Environment Corporation';
+      'Источник: Метеорологическая администрация, Корейская корпорация окружающей среды';
 
   @override
-  String get locationPermissionTitle => 'Allow Location Permission';
+  String get locationPermissionTitle => 'Разрешить доступ к местоположению';
 
   @override
   String get locationPermissionDesc =>
-      'Required to display weather information.';
+      'Необходимо для отображения информации о погоде.';
 }

@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'dart:io';
-import 'package:hive_flutter/hive_flutter.dart';
 import '../../providers/theme_provider.dart';
-import '../../services/notification_service.dart';
 import 'notice_screen.dart';
 import 'faq_screen.dart';
 import 'support_screen.dart';
@@ -20,48 +18,16 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBindingObserver {
-  bool _dailyFortuneEnabled = false;
-  TimeOfDay _dailyFortuneTime = const TimeOfDay(hour: 8, minute: 0);
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _loadFortuneSettings();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  Future<void> _loadFortuneSettings() async {
-    final box = await Hive.openBox('app_state');
-    if (mounted) {
-      setState(() {
-        _dailyFortuneEnabled = box.get('daily_fortune_enabled', defaultValue: false);
-        final timeStr = box.get('daily_fortune_time', defaultValue: '08:00');
-        final parts = timeStr.split(':');
-        _dailyFortuneTime = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-      });
-    }
-  }
-
-  Future<void> _saveFortuneSettings() async {
-    final box = await Hive.openBox('app_state');
-    await box.put('daily_fortune_enabled', _dailyFortuneEnabled);
-    await box.put('daily_fortune_time', '${_dailyFortuneTime.hour}:${_dailyFortuneTime.minute}');
-
-    if (_dailyFortuneEnabled) {
-      await NotificationService().scheduleDailyFortuneNotification(
-        time: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _dailyFortuneTime.hour, _dailyFortuneTime.minute),
-        title: "오늘의 운세",
-        body: "오늘의 운세를 확인하고 하루를 시작하세요!",
-      );
-    } else {
-      await NotificationService().cancelDailyFortuneNotification();
-    }
   }
 
   @override
@@ -93,50 +59,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             ),
           ),
           
-          _buildSectionHeader("운세 알림 설정"),
-          SwitchListTile(
-            title: const Text("오늘의 운세 알림"),
-            subtitle: const Text("매일 정해진 시간에 운세를 확인하라는 알림을 받습니다."),
-            value: _dailyFortuneEnabled,
-            onChanged: (value) {
-              setState(() {
-                _dailyFortuneEnabled = value;
-              });
-              _saveFortuneSettings();
-            },
-          ),
-          if (_dailyFortuneEnabled)
-            ListTile(
-              title: const Text("알림 시간"),
-              trailing: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: isDark ? Colors.grey[800] : Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  "${_dailyFortuneTime.hour.toString().padLeft(2, '0')}:${_dailyFortuneTime.minute.toString().padLeft(2, '0')}",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
-                  ),
-                ),
-              ),
-              onTap: () async {
-                final TimeOfDay? picked = await showTimePicker(
-                  context: context,
-                  initialTime: _dailyFortuneTime,
-                );
-                if (picked != null && picked != _dailyFortuneTime) {
-                  setState(() {
-                    _dailyFortuneTime = picked;
-                  });
-                  _saveFortuneSettings();
-                }
-              },
-            ),
-
           _buildSectionHeader(AppLocalizations.of(context)!.general),
           SwitchListTile(
             title: Text(AppLocalizations.of(context)!.darkMode),
@@ -158,7 +80,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
               );
             },
           ),
-          
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(thickness: 1),
+          ),
           _buildSectionHeader(AppLocalizations.of(context)!.information),
           ListTile(
             title: Text(AppLocalizations.of(context)!.notice),

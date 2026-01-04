@@ -107,6 +107,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
         if (now.difference(_lastShakeTime).inMilliseconds > 500) {
           _lastShakeTime = now;
           HapticFeedback.mediumImpact(); // 흔들림 감지 시 햅틱 추가
+          _playSfx('sounds/ui_click.ogg', volume: 0.05, maxDuration: const Duration(milliseconds: 200));
           setState(() {
             _currentShakeCount++;
           });
@@ -191,11 +192,32 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
     }
   }
 
-  void _handleSuccess() {
+  Future<void> _playSfx(String assetPath, {double volume = 0.5, Duration? maxDuration}) async {
+    try {
+      final player = AudioPlayer();
+      await player.play(AssetSource(assetPath), volume: volume);
+      if (maxDuration != null) {
+        Future.delayed(maxDuration, () => player.stop());
+      }
+      player.onPlayerComplete.listen((_) => player.dispose());
+    } catch (e) {
+      debugPrint('Error playing SFX: $assetPath - $e');
+    }
+  }
+
+  void _handleSuccess() async {
     // 흔들기 미션은 단일 성공이므로 바로 성공 애니메이션
     final random = Random();
     _lastMessage = PositiveMessages.messages[random.nextInt(PositiveMessages.messages.length)];
     
+    try {
+      HapticFeedback.heavyImpact();
+      if (await Vibration.hasVibrator() == true) {
+        Vibration.vibrate(pattern: [0, 100, 50, 100]);
+      }
+      await _playSfx('sounds/ui_success.ogg', volume: 0.5);
+    } catch (_) {}
+
     setState(() {
       _isSuccess = true;
     });

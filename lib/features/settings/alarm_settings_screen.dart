@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import '../../services/notification_service.dart';
 
 class AlarmSettingsScreen extends ConsumerStatefulWidget {
   const AlarmSettingsScreen({super.key});
@@ -25,6 +26,37 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  Future<void> _saveFortuneSettings() async {
+    final enabled = _settingsBox.get('daily_fortune_enabled', defaultValue: true);
+    
+    if (enabled) {
+      final time1Str = _settingsBox.get('daily_fortune_time1', defaultValue: '08:00');
+      final time2Str = _settingsBox.get('daily_fortune_time2', defaultValue: '13:00');
+      
+      final parts1 = time1Str.split(':');
+      final time1 = TimeOfDay(hour: int.parse(parts1[0]), minute: int.parse(parts1[1]));
+      
+      final parts2 = time2Str.split(':');
+      final time2 = TimeOfDay(hour: int.parse(parts2[0]), minute: int.parse(parts2[1]));
+
+      await NotificationService().scheduleDailyFortuneNotification(
+        id: 40001,
+        time: time1,
+        title: "오늘의 운세 (오전)",
+        body: "오늘의 운세를 확인하고 활기차게 시작해 보세요!",
+      );
+      
+      await NotificationService().scheduleDailyFortuneNotification(
+        id: 40002,
+        time: time2,
+        title: "오늘의 운세 (오후)",
+        body: "오후의 운세는 어떨까요? 지금 바로 확인해 보세요!",
+      );
+    } else {
+      await NotificationService().cancelAllFortuneNotifications();
+    }
   }
 
   @override
@@ -101,8 +133,74 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
             ],
             isDark,
           ),
+          const SizedBox(height: 24),
+          _buildSection(
+            "오늘의 운세 알림",
+            [
+              _buildSwitchTile(
+                "알림 활성화",
+                "지정한 시간에 오늘의 운세를 알려드립니다.",
+                'daily_fortune_enabled',
+                true,
+                isDark,
+                onChanged: (_) => _saveFortuneSettings(),
+              ),
+              if (_settingsBox.get('daily_fortune_enabled', defaultValue: true)) ...[
+                _buildTimeTile(
+                  "오전 알림 시간",
+                  'daily_fortune_time1',
+                  '08:00',
+                  isDark,
+                ),
+                _buildTimeTile(
+                  "오후 알림 시간",
+                  'daily_fortune_time2',
+                  '13:00',
+                  isDark,
+                ),
+              ],
+            ],
+            isDark,
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTimeTile(String title, String key, String defaultValue, bool isDark) {
+    final timeStr = _settingsBox.get(key, defaultValue: defaultValue);
+    final parts = timeStr.split(':');
+    final time = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+
+    return ListTile(
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: isDark ? Colors.grey[800] : Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: isDark ? Colors.white : Colors.black87,
+          ),
+        ),
+      ),
+      onTap: () async {
+        final TimeOfDay? picked = await showTimePicker(
+          context: context,
+          initialTime: time,
+        );
+        if (picked != null) {
+          setState(() {
+            _settingsBox.put(key, "${picked.hour}:${picked.minute}");
+          });
+          _saveFortuneSettings();
+        }
+      },
     );
   }
 
@@ -170,7 +268,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
     );
   }
 
-  Widget _buildSwitchTile(String title, String subtitle, String key, bool defaultValue, bool isDark) {
+  Widget _buildSwitchTile(String title, String subtitle, String key, bool defaultValue, bool isDark, {ValueChanged<bool>? onChanged}) {
     bool value = _settingsBox.get(key, defaultValue: defaultValue);
     return SwitchListTile(
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
@@ -180,6 +278,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
         setState(() {
           _settingsBox.put(key, newValue);
         });
+        if (onChanged != null) onChanged(newValue);
       },
       activeThumbColor: Colors.blueAccent,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),

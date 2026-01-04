@@ -80,54 +80,72 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
     
     final allGranted = isNotificationGranted && isBatteryOptimized && isExactAlarmGranted && isSystemAlertGranted && isLocationGranted;
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 400),
-        decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Fixed Header
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+    return WillPopScope(
+      onWillPop: () async => allGranted, // 모든 권한 허용 전에는 뒤로가기 버튼으로 못 닫음
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Fixed Header
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.alarmOptimization,
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : Colors.black,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        if (allGranted)
+                          const Icon(Icons.check_circle, color: Colors.green, size: 24)
+                        else
+                          Icon(Icons.info_outline_rounded, color: isDark ? Colors.blue[300] : Colors.blue[600], size: 24),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      allGranted 
+                        ? l10n.optimizationDescription 
+                        : '정확한 시간에 알람을 울리기 위해 권한 설정이 필요합니다.',
+                      style: TextStyle(
+                        fontSize: 15,
+                        height: 1.4,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                    if (!allGranted) ...[
+                      const SizedBox(height: 4),
                       Text(
-                        l10n.alarmOptimization,
+                        '안정적인 서비스 이용을 위해 모든 항목을 허용으로 설정해 주세요.',
                         style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black,
-                          letterSpacing: -0.5,
+                          fontSize: 13,
+                          height: 1.4,
+                          color: isDark ? Colors.grey[400] : Colors.grey[600],
                         ),
                       ),
-                      if (allGranted)
-                        const Icon(Icons.check_circle, color: Colors.green, size: 24),
                     ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    l10n.optimizationDescription,
-                    style: TextStyle(
-                      fontSize: 13,
-                      height: 1.4,
-                      color: isDark ? Colors.grey[400] : Colors.grey[600],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            
-            // Scrollable Content
+              
+              // Scrollable Content
             Flexible(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -154,10 +172,14 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                       value: isBatteryOptimized,
                       onChanged: (value) async {
                         if (value) {
-                          await Permission.ignoreBatteryOptimizations.request();
+                          final status = await Permission.ignoreBatteryOptimizations.request();
+                          // 요청이 거절되거나 시스템 정책상 바로 허용되지 않는 경우 설정 화면으로 이동
+                          if (!status.isGranted) {
+                            await openAppSettings();
+                          }
                           _refreshStatuses();
                         } else {
-                          openAppSettings();
+                          await openAppSettings();
                         }
                       },
                     ),
@@ -209,10 +231,12 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: allGranted ? () => Navigator.pop(context) : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF3894FF),
+                    backgroundColor: allGranted ? const Color(0xFF3894FF) : Colors.grey[400],
                     foregroundColor: Colors.white,
+                    disabledBackgroundColor: isDark ? Colors.grey[800] : Colors.grey[300],
+                    disabledForegroundColor: isDark ? Colors.grey[600] : Colors.grey[500],
                     elevation: 0,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
@@ -220,7 +244,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     ),
                   ),
                   child: Text(
-                    l10n.confirm,
+                    allGranted ? l10n.confirm : '모든 항목을 허용해주세요',
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -229,8 +253,9 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSwitchTile({
     required BuildContext context,

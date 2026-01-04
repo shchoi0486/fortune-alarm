@@ -20,7 +20,9 @@ class LottoService {
   // Fetch data for a specific round
   static Future<Map<String, dynamic>?> fetchLottoData(int round) async {
     try {
-      final response = await http.get(Uri.parse('$_baseUrl&drwNo=$round'));
+      final response = await http.get(
+        Uri.parse('$_baseUrl&drwNo=$round')
+      ).timeout(const Duration(seconds: 2)); // Reduced timeout from 5s to 2s
       
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -29,7 +31,7 @@ class LottoService {
         }
       }
     } catch (e) {
-      print('Error fetching lotto data for round $round: $e');
+      // Silently fail for individual rounds to avoid cluttering logs
     }
     return null;
   }
@@ -37,36 +39,34 @@ class LottoService {
   // Fetch recent N rounds and analyze frequency
   static Future<Map<int, int>> analyzeRecentRounds(int count) async {
     final int latestRound = getLatestRound();
-    // Start from the latest completed round (yesterday or earlier to be safe, though API usually updates quickly)
-    // To be safe, we can try fetching latestRound. If it fails (not drawn yet), we fall back.
-    // For simplicity, we'll request latestRound down to latestRound - count.
     
-    final List<Future<Map<String, dynamic>?>> futures = [];
-    
-    // Use a small offset if today is Saturday (draw day) and it's before draw time (20:35), 
-    // but the API handles non-existing rounds gracefully usually (or we just get fail).
-    // Let's just try the calculated latest round.
-    
-    for (int i = 0; i < count; i++) {
-      futures.add(fetchLottoData(latestRound - i));
-    }
-
-    final List<Map<String, dynamic>?> results = await Future.wait(futures);
-    
+    // Create frequency map
     final Map<int, int> frequencyMap = {};
-    // Initialize map
     for (int i = 1; i <= 45; i++) {
       frequencyMap[i] = 0;
     }
 
-    for (var data in results) {
-      if (data != null) {
-        for (int i = 1; i <= 6; i++) {
-          final int number = data['drwtNo$i'];
-          frequencyMap[number] = (frequencyMap[number] ?? 0) + 1;
+    // Fetch in smaller batches to avoid being blocked or hitting OS limits
+    const int batchSize = 5;
+    for (int i = 0; i < count; i += batchSize) {
+      final List<Future<Map<String, dynamic>?>> batchFutures = [];
+      for (int j = i; j < i + batchSize && j < count; j++) {
+        batchFutures.add(fetchLottoData(latestRound - j));
+      }
+
+      final List<Map<String, dynamic>?> results = await Future.wait(batchFutures);
+      
+      for (var data in results) {
+        if (data != null) {
+          for (int k = 1; k <= 6; k++) {
+            final dynamic val = data['drwtNo$k'];
+            // Handle both string and int from API
+            final int? num = int.tryParse(val.toString());
+            if (num != null && num >= 1 && num <= 45) {
+              frequencyMap[num] = (frequencyMap[num] ?? 0) + 1;
+            }
+          }
         }
-        // Bonus number analysis can be separate or included. 
-        // Usually "hot numbers" refer to main numbers. We'll stick to main numbers for weight.
       }
     }
 

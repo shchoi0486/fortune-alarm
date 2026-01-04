@@ -269,11 +269,15 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
               Positioned(
                 right: 20,
                 bottom: 20,
-                child: FloatingActionButton.extended(
-                  onPressed: () => _showCustomTimePicker(context, ref, settings.reminderTimes),
-                  backgroundColor: Colors.orange[700],
-                  icon: const Icon(Icons.add_alarm, color: Colors.white),
-                  label: const Text('시간 추가', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                child: FloatingActionButton(
+                  onPressed: () =>
+                      _showCustomTimePicker(context, ref, settings.reminderTimes),
+                  backgroundColor: const Color(0xFFE57373),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  child:
+                      const Icon(Icons.add_rounded, color: Colors.white, size: 32),
                 ),
               ),
           ],

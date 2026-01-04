@@ -99,7 +99,7 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
 
     if (n == _nextNumber) {
       await _vibrateCorrect();
-      _playSfx('sounds/birds.ogg', volume: 0.22, maxDuration: const Duration(milliseconds: 180));
+      _playSfx('sounds/ui_click.ogg', volume: 0.22, maxDuration: const Duration(milliseconds: 180));
       
       setState(() {
         _disabledNumbers.add(n);
@@ -110,7 +110,11 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
       });
       
       if (_nextNumber == goal && mounted) {
-        await _playSfx('sounds/morning.ogg', volume: 0.24, maxDuration: const Duration(milliseconds: 520));
+        HapticFeedback.heavyImpact();
+        if (await Vibration.hasVibrator() == true) {
+          Vibration.vibrate(duration: 200);
+        }
+        await _playSfx('sounds/ui_success.ogg', volume: 0.5);
         setState(() {
           _isSuccess = true;
         });

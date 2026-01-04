@@ -9,7 +9,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:firebase_core/firebase_core.dart'; // Firebase Core 임포트
 import 'features/alarm/alarm_screen.dart';
 import 'features/calendar/calendar_screen.dart';
@@ -28,6 +27,7 @@ import 'features/settings/settings_screen.dart';
 import 'features/fortune/fortune_screen.dart';
 import 'features/fortune/fortune_pass_screen.dart';
 import 'services/supplement_alarm_service.dart';
+import 'services/routine_alarm_service.dart';
 
 import 'features/alarm/alarm_ringing_screen.dart';
 import 'providers/theme_provider.dart';
@@ -35,10 +35,12 @@ import 'l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'features/mission/supplement/supplement_mission_screen.dart';
+import 'features/mission/water/water_mission_screen.dart';
 import 'widgets/fortune_cookie_bar.dart';
 import 'widgets/ad_widgets.dart'; // 광고 위젯 임포트
 import 'widgets/optimization_bottom_sheet.dart';
 import 'services/cookie_service.dart';
+import 'services/sharing_service.dart';
 import 'providers/weather_provider.dart';
 import 'providers/mission_provider.dart';
 import 'features/mission/supplement/models/supplement_settings.dart';
@@ -54,7 +56,10 @@ const MethodChannel _foregroundChannel = MethodChannel('com.seriessnap.fortuneal
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharingService.init();
   debugPrint('App starting: Initializing services...');
+  
+
   
   // 시스템 내비게이션 바 색상 설정 (하얀색)
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -81,11 +86,13 @@ void main() async {
 
     final notificationService = NotificationService();
     await notificationService.init(
-      _onNotificationTap, 
+      (id, title, body, payload) => _onNotificationTap(payload),
       onNotificationResponse: _onNotificationResponse
     );
+    await notificationService.scheduleDefaultFortuneNotifications();
     await AlarmSchedulerService.init();
     SupplementAlarmService.init(hivePath: appDocumentDir.path);
+    await RoutineAlarmService.scheduleDailyReminders();
     debugPrint('Step 3: Basic services initialized');
 
     // Firebase 초기화는 앱 시작을 위해 필수적이므로 여기서 대기하되, 오류 발생 시 무시
@@ -97,13 +104,9 @@ void main() async {
       debugPrint('Firebase initialization failed or timed out: $e');
     }
 
-    // AdMob은 배경에서 초기화
-    MobileAds.instance.initialize().then((_) {
-      debugPrint('AdMob initialized in background');
-      // 앱 시작 시 광고 사전 로드 시작
-      AdService.preloadRewardedAd();
-      AdService.preloadInterstitialAd();
-      AdService.preloadExitAd();
+    // AdMob 초기화 및 사전 로드
+    AdService.init().then((_) {
+      debugPrint('AdMob initialized and preloading started');
     });
 
   } catch (e) {
@@ -181,8 +184,22 @@ Future<bool> _shouldSuppressAlarmHandling(String payload) async {
       return false;
     }
 
-    final payloadBaseId = payload.replaceAll('_snooze', '');
-    return payloadBaseId == activeBaseId;
+    String cleanPayload = payload.replaceAll('_snooze', '');
+    if (cleanPayload.startsWith('loading_')) {
+      // loading_ 접두사가 있으면 실제 ID로 변환 시도
+      final stableId = int.tryParse(cleanPayload.replaceFirst('loading_', ''));
+      if (stableId != null) {
+         // stableId와 매칭되는 실제 알람 ID 찾기
+         final alarmBox = Hive.isBoxOpen('alarms') ? Hive.box<AlarmModel>('alarms') : await Hive.openBox<AlarmModel>('alarms');
+         for (final a in alarmBox.values) {
+           if (AlarmSchedulerService.getStableId(a.id) == stableId) {
+             cleanPayload = a.id;
+             break;
+           }
+         }
+      }
+    }
+    return cleanPayload == activeBaseId;
   } catch (_) {
     return false;
   }
@@ -197,6 +214,11 @@ Future<void> _onNotificationResponse(NotificationResponse response) async {
     return;
   }
 
+  if (response.payload != null && response.payload!.startsWith('water_')) {
+    _handleWaterAction(response.actionId, response.payload);
+    return;
+  }
+
   if (response.payload != null && response.payload!.startsWith('mission_')) {
     _handleMissionAction(response.actionId, response.payload);
     return;
@@ -204,7 +226,15 @@ Future<void> _onNotificationResponse(NotificationResponse response) async {
 
   if (response.payload != null && await _shouldSuppressAlarmHandling(response.payload!)) {
     try {
-      await NotificationService().cancelNotification(AlarmSchedulerService.getStableId(response.payload!));
+      final p = response.payload!;
+      if (p.startsWith('loading_')) {
+        final stableId = int.tryParse(p.replaceFirst('loading_', ''));
+        if (stableId != null) {
+          await NotificationService().cancelNotification(stableId);
+        }
+      } else {
+        await NotificationService().cancelNotification(AlarmSchedulerService.getStableId(p));
+      }
     } catch (_) {}
     return;
   }
@@ -298,6 +328,20 @@ void _handleSupplementAction(String? actionId, String? payload) {
   });
 }
 
+void _handleWaterAction(String? actionId, String? payload) {
+  if (payload == null) return;
+  
+  debugPrint('[Main] Handling water action: $actionId, payload: $payload');
+  
+  Future.delayed(const Duration(milliseconds: 500), () {
+    final currentState = navigatorKey.currentState;
+    if (currentState == null) return;
+    
+    // 물 마시기 미션 화면으로 이동
+    currentState.pushNamedAndRemoveUntil('/water', (route) => route.isFirst);
+  });
+}
+
 
 bool _initialNotificationHandled = false;
 
@@ -321,14 +365,21 @@ void _registerPort() {
   });
 }
 
-// 알림 클릭 시 실행될 콜백
+  // 알림 클릭 시 실행될 콜백
 Future<void> _onNotificationTap(String? payload) async {
   debugPrint('[Main] _onNotificationTap called with payload: $payload');
   if (payload == null || payload.isEmpty) return;
 
   if (await _shouldSuppressAlarmHandling(payload)) {
     try {
-      await NotificationService().cancelNotification(AlarmSchedulerService.getStableId(payload));
+      if (payload.startsWith('loading_')) {
+        final stableId = int.tryParse(payload.replaceFirst('loading_', ''));
+        if (stableId != null) {
+          await NotificationService().cancelNotification(stableId);
+        }
+      } else {
+        await NotificationService().cancelNotification(AlarmSchedulerService.getStableId(payload));
+      }
     } catch (_) {}
     return;
   }
@@ -351,6 +402,12 @@ Future<void> _onNotificationTap(String? payload) async {
     return;
   }
 
+  // 물 마시기 알림 처리
+  if (payload.startsWith('water_')) {
+    _handleWaterAction(null, payload);
+    return;
+  }
+
   // 커스텀 미션 알림 처리
   if (payload.startsWith('mission_')) {
     _handleMissionAction(null, payload);
@@ -358,7 +415,7 @@ Future<void> _onNotificationTap(String? payload) async {
   }
 
   // 운세 알림 처리
-  if (payload == 'fortune_daily') {
+  if (payload.startsWith('fortune_daily')) {
     final currentState = navigatorKey.currentState;
     if (currentState != null) {
       currentState.push(
@@ -368,23 +425,58 @@ Future<void> _onNotificationTap(String? payload) async {
     return;
   }
 
-  final box = await Hive.openBox<AlarmModel>('alarms');
-  AlarmModel? alarm = box.get(payload);
+  // 데일리 루틴 알림 처리
+  if (payload == 'routine_daily') {
+    // 미션 탭으로 이동 (인덱스 3)
+    container.read(bottomNavProvider.notifier).state = 3;
+    final currentState = navigatorKey.currentState;
+    if (currentState != null) {
+      currentState.popUntil((route) => route.isFirst);
+    }
+    return;
+  }
 
-  if (alarm == null) {
-    debugPrint('[Main] Alarm with ID $payload not found in Hive. Searching all values...');
-    // ID로 직접 못 찾을 경우 전체 탐색 (드문 경우 대비)
-    for (var a in box.values) {
-      if (a.id == payload) {
-        alarm = a;
-        break;
+  Box<AlarmModel> box;
+  if (Hive.isBoxOpen('alarms')) {
+    box = Hive.box<AlarmModel>('alarms');
+  } else {
+    box = await Hive.openBox<AlarmModel>('alarms');
+  }
+
+  AlarmModel? alarm;
+  String actualPayload = payload;
+
+  if (payload.startsWith('loading_')) {
+    final stableIdStr = payload.replaceFirst('loading_', '');
+    final stableId = int.tryParse(stableIdStr);
+    debugPrint('[Main] Handling loading payload. Stable ID: $stableIdStr');
+
+    if (stableId != null) {
+      for (final a in box.values) {
+        if (AlarmSchedulerService.getStableId(a.id) == stableId) {
+          alarm = a;
+          actualPayload = a.id;
+          break;
+        }
       }
     }
-    
+  } else {
+    alarm = box.get(actualPayload);
+
     if (alarm == null) {
-      debugPrint('[Main] Alarm not found even after full search. Ignoring tap.');
-      return;
+      debugPrint('[Main] Alarm with ID $actualPayload not found in Hive. Searching all values...');
+      for (final a in box.values) {
+        if (a.id == actualPayload) {
+          alarm = a;
+          break;
+        }
+      }
     }
+  }
+
+  if (alarm == null) {
+    debugPrint('[Main] Alarm not found for payload $payload. Ignoring tap.');
+    return;
   }
 
   // --- 버그 수정: 오래된 알림이 앱 실행 시 울리는 현상 방지 ---
@@ -434,9 +526,10 @@ Future<void> _onNotificationTap(String? payload) async {
   }
 
   if (navigatorKey.currentState != null) {
+    debugPrint('[Main] Navigating to AlarmRingingScreen with ID: $actualPayload');
     navigatorKey.currentState?.pushAndRemoveUntil(
       MaterialPageRoute(
-        builder: (context) => AlarmRingingScreen(alarmId: payload),
+        builder: (context) => AlarmRingingScreen(alarmId: actualPayload),
       ),
       (route) => route.isFirst,
     );
@@ -504,6 +597,7 @@ class FortuneAlarmApp extends ConsumerWidget {
       home: const SplashScreen(),
       routes: {
         '/supplement': (context) => const SupplementMissionScreen(),
+        '/water': (context) => const WaterMissionScreen(),
       },
     );
   }
@@ -524,9 +618,31 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToMain() async {
-    // 앱 초기화 시간을 고려하여 1.5초 정도 대기 후 메인 화면으로 이동
-    await Future.delayed(const Duration(milliseconds: 1500));
+    debugPrint('[Main] SplashScreen: Checking for pending alarm...');
+    
+    // 1. 펜딩 알람이 있는지 확인
+    try {
+      if (Hive.isBoxOpen('app_state')) {
+        await Hive.box('app_state').close();
+      }
+      final appStateBox = await Hive.openBox('app_state');
+      final hasPending = appStateBox.containsKey('pending_alarm_payload');
+      
+      if (hasPending) {
+        debugPrint('[Main] SplashScreen: Pending alarm detected. Moving to MainScreen immediately.');
+        // 펜딩 알람이 있으면 최소 대기 후 바로 이동하여 MainScreen의 initState가 처리하도록 함
+        await Future.delayed(const Duration(milliseconds: 300));
+      } else {
+        // 일반적인 상황에서는 1.5초 대기
+        await Future.delayed(const Duration(milliseconds: 1500));
+      }
+    } catch (e) {
+      debugPrint('[Main] SplashScreen error checking pending: $e');
+      await Future.delayed(const Duration(milliseconds: 1000));
+    }
+
     if (mounted) {
+      debugPrint('[Main] SplashScreen: Navigating to MainScreen...');
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const MainScreen()),
@@ -613,6 +729,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     AdService.preloadListAd();
 
     _checkNotificationLaunch();
+    _checkPendingAlarmFlag();
     // 권한 확인 및 최적화 시트 표시 (필요한 경우)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowPermissions();
@@ -704,6 +821,78 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           }
         });
       }
+    }
+  }
+
+  Future<void> _checkPendingAlarmFlag() async {
+    debugPrint('[Main] _checkPendingAlarmFlag started.');
+    try {
+      // 최신 데이터를 위해 박스를 닫고 다시 엽니다 (백그라운드 isolate와의 동기화 보장)
+      if (Hive.isBoxOpen('app_state')) {
+        debugPrint('[Main] app_state box is open. Closing to ensure fresh data...');
+        await Hive.box('app_state').close();
+      }
+      
+      final appStateBox = await Hive.openBox('app_state');
+      debugPrint('[Main] app_state box re-opened.');
+      
+      final payload = appStateBox.get('pending_alarm_payload');
+      final setAtStr = appStateBox.get('pending_alarm_set_at');
+      
+      debugPrint('[Main] Pending check - Payload: $payload, SetAt: $setAtStr');
+      
+      if (payload == null || setAtStr == null) {
+        debugPrint('[Main] No pending alarm flag found in Hive.');
+        return;
+      }
+      
+      final payloadStr = payload.toString();
+      final setAt = DateTime.tryParse(setAtStr.toString());
+      if (setAt == null) {
+        debugPrint('[Main] Invalid setAt format: $setAtStr');
+        return;
+      }
+      
+      // 최근 10분 내 플래그만 유효하게 처리 (시간 범위를 30분으로 확장하여 더 안정적으로 포착)
+      final now = DateTime.now();
+      final diff = now.difference(setAt);
+      debugPrint('[Main] Pending alarm age: ${diff.inSeconds}s (Now: $now, SetAt: $setAt)');
+      
+      if (diff > const Duration(minutes: 30)) {
+        debugPrint('[Main] Pending alarm too old (>30m). Clearing.');
+        await appStateBox.delete('pending_alarm_payload');
+        await appStateBox.delete('pending_alarm_set_at');
+        return;
+      }
+      
+      _initialNotificationHandled = true;
+      debugPrint('[Main] VALID pending alarm found: $payloadStr. Navigating immediately...');
+
+      // 처리 후 즉시 플래그 제거하여 중복 방지
+      await appStateBox.delete('pending_alarm_payload');
+      await appStateBox.delete('pending_alarm_set_at');
+      await appStateBox.flush();
+      
+      // 네비게이터가 준비될 때까지 대기 (타임아웃 및 재시도 횟수 증가)
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        int retries = 0;
+        while (navigatorKey.currentState == null && retries < 30) {
+           debugPrint('[Main] Waiting for Navigator... ($retries/30)');
+           await Future.delayed(const Duration(milliseconds: 100));
+           retries++;
+        }
+        
+        if (navigatorKey.currentState != null) {
+           debugPrint('[Main] Navigator READY. Calling _onNotificationTap($payloadStr)');
+           // _onNotificationTap 내부에서도 Navigator 대기 로직이 있으므로 안전함
+           _onNotificationTap(payloadStr);
+        } else {
+           debugPrint('[Main] FATAL: NavigatorState is null after 3 seconds. Trying direct context navigation if possible...');
+        }
+      });
+    } catch (e, stack) {
+      debugPrint('[Main] Error in _checkPendingAlarmFlag: $e');
+      debugPrint(stack.toString());
     }
   }
 

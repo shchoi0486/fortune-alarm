@@ -82,12 +82,18 @@ class AdService {
   static NativeAd? _preloadedListAd;
   static Completer<void>? _listAdLoadCompleter;
 
-  // 보상형 및 전면 광고 프리로드 추가
+  // 보상형 광고 프리로드 추가
   static RewardedAd? _preloadedRewardedAd;
   static Completer<RewardedAd?>? _rewardedAdCompleter;
   
-  static InterstitialAd? _preloadedInterstitialAd;
-  static Completer<InterstitialAd?>? _interstitialAdCompleter;
+  /// 광고 시스템 초기화 및 초기 프리로드 시작
+  static Future<void> init() async {
+    await MobileAds.instance.initialize();
+    // 초기 광고들 프리로드 시작
+    preloadRewardedAd();
+    preloadExitAd();
+    preloadListAd();
+  }
 
   /// 보상형 광고 사전 로드
   static void preloadRewardedAd() {
@@ -109,99 +115,60 @@ class AdService {
           debugPrint('Preloaded Rewarded Ad failed: $error');
           _preloadedRewardedAd = null;
           if (!completer.isCompleted) completer.complete(null);
+          // 실패 시 잠시 후 다시 시도 (지수 백오프 대신 단순 지연)
+          Future.delayed(const Duration(seconds: 10), () => preloadRewardedAd());
         },
       ),
     );
   }
 
-  /// 전면 광고 사전 로드
-  static void preloadInterstitialAd() {
-    if (_preloadedInterstitialAd != null || (_interstitialAdCompleter != null && !_interstitialAdCompleter!.isCompleted)) return;
-
-    final completer = Completer<InterstitialAd?>();
-    _interstitialAdCompleter = completer;
-
-    InterstitialAd.load(
-      adUnitId: interstitialAdUnitId,
-      request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          debugPrint('Preloaded Interstitial Ad loaded');
-          _preloadedInterstitialAd = ad;
-          if (!completer.isCompleted) completer.complete(ad);
-        },
-        onAdFailedToLoad: (error) {
-          debugPrint('Preloaded Interstitial Ad failed: $error');
-          _preloadedInterstitialAd = null;
-          if (!completer.isCompleted) completer.complete(null);
-        },
-      ),
-    );
-  }
+  /// 전면 광고 사전 로드 제거 (정책 준수)
 
   /// 사전 로드된 보상형 광고 가져오기 (사용 후 소모됨)
   /// 로딩 중인 경우 Future를 반환하여 대기 가능하게 함
   static Future<RewardedAd?> getPreloadedRewardedAd() async {
-    // 1. 이미 로드된 광고가 있으면 즉시 반환
-    if (_preloadedRewardedAd != null) {
-      final ad = _preloadedRewardedAd;
-      _preloadedRewardedAd = null;
-      _rewardedAdCompleter = null;
-      preloadRewardedAd(); // 다음을 위해 로드 시작
-      return ad;
-    }
+    try {
+      // 1. 이미 로드된 광고가 있으면 즉시 반환
+      if (_preloadedRewardedAd != null) {
+        final ad = _preloadedRewardedAd;
+        _preloadedRewardedAd = null;
+        _rewardedAdCompleter = null;
+        preloadRewardedAd(); // 다음을 위해 로드 시작
+        return ad;
+      }
 
-    // 2. 로딩 중이면 완료될 때까지 대기
-    if (_rewardedAdCompleter != null && !_rewardedAdCompleter!.isCompleted) {
-      final ad = await _rewardedAdCompleter!.future;
-      _preloadedRewardedAd = null;
-      _rewardedAdCompleter = null;
-      preloadRewardedAd();
-      return ad;
-    }
+      // 2. 로딩 중이면 완료될 때까지 대기 (최대 3초만 대기)
+      if (_rewardedAdCompleter != null && !_rewardedAdCompleter!.isCompleted) {
+        final ad = await _rewardedAdCompleter!.future.timeout(
+          const Duration(seconds: 3),
+          onTimeout: () => null,
+        );
+        _preloadedRewardedAd = null;
+        _rewardedAdCompleter = null;
+        preloadRewardedAd();
+        return ad;
+      }
 
-    // 3. 로드된 것도 없고 로딩 중도 아니면 새로 로드 시도
-    preloadRewardedAd();
-    if (_rewardedAdCompleter != null) {
-      final ad = await _rewardedAdCompleter!.future;
-      _preloadedRewardedAd = null;
-      _rewardedAdCompleter = null;
+      // 3. 로드된 것도 없고 로딩 중도 아니면 새로 로드 시도
       preloadRewardedAd();
-      return ad;
+      if (_rewardedAdCompleter != null) {
+        final ad = await _rewardedAdCompleter!.future.timeout(
+          const Duration(seconds: 3),
+          onTimeout: () => null,
+        );
+        _preloadedRewardedAd = null;
+        _rewardedAdCompleter = null;
+        preloadRewardedAd();
+        return ad;
+      }
+    } catch (e) {
+      debugPrint('Error in getPreloadedRewardedAd: $e');
     }
     
     return null;
   }
 
-  /// 사전 로드된 전면 광고 가져오기 (사용 후 소모됨)
-  static Future<InterstitialAd?> getPreloadedInterstitialAd() async {
-    if (_preloadedInterstitialAd != null) {
-      final ad = _preloadedInterstitialAd;
-      _preloadedInterstitialAd = null;
-      _interstitialAdCompleter = null;
-      preloadInterstitialAd();
-      return ad;
-    }
-
-    if (_interstitialAdCompleter != null && !_interstitialAdCompleter!.isCompleted) {
-      final ad = await _interstitialAdCompleter!.future;
-      _preloadedInterstitialAd = null;
-      _interstitialAdCompleter = null;
-      preloadInterstitialAd();
-      return ad;
-    }
-
-    preloadInterstitialAd();
-    if (_interstitialAdCompleter != null) {
-      final ad = await _interstitialAdCompleter!.future;
-      _preloadedInterstitialAd = null;
-      _interstitialAdCompleter = null;
-      preloadInterstitialAd();
-      return ad;
-    }
-
-    return null;
-  }
+  // 전면 광고 가져오기 메서드 제거 (정책 준수를 위해 사용하지 않음)
 
   /// 종료 다이얼로그용 광고 사전 로드
   static void preloadExitAd() {

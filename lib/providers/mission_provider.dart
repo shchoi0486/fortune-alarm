@@ -498,20 +498,55 @@ class MissionNotifier extends ChangeNotifier {
     }
   }
 
-  // 모든 미션 초기화 (System 미션 제외)
+  // 모든 미션 초기화 및 기본 미션 설정
   Future<void> resetAllMissions() async {
+    // 1. 미션 목록 초기화 및 기본 미션 추가
     final box = await Hive.openBox<MissionModel>('missions');
-    final keysToDelete = box.values
-        .where((m) => !m.isSystemMission)
-        .map((m) => m.id)
-        .toList();
+    await box.clear();
     
-    for (var key in keysToDelete) {
-      await NotificationService().cancelMissionNotification(key);
-      await box.delete(key);
+    // 기본 미션 리스트
+    final defaultMissions = [
+      MissionModel(
+        id: 'supplement',
+        title: '영양제 챙겨 먹기',
+        icon: '💊',
+        isSystemMission: true,
+        category: MissionCategory.health,
+      ),
+      MissionModel(
+        id: 'wakeup',
+        title: '기상 알람 미션',
+        icon: '⏰',
+        isSystemMission: true,
+        category: MissionCategory.routine,
+      ),
+      MissionModel(
+        id: 'water_2l',
+        title: '물 2L 이상 마시기',
+        icon: '🧊',
+        isSystemMission: true,
+        category: MissionCategory.health,
+      ),
+    ];
+
+    for (var m in defaultMissions) {
+      await box.put(m.id, m);
+    }
+    _missions = box.values.toList();
+
+    // 2. 오늘 로그 초기화
+    if (_todayLog != null) {
+      final newLog = _todayLog!.copyWith(
+        completedMissionIds: [],
+        isGoalAchieved: false,
+        isTenGoalAchieved: false,
+      );
+
+      final logBox = await Hive.openBox<DailyMissionLog>('mission_logs');
+      await logBox.put(_todayLog!.dateKey, newLog);
+      _todayLog = newLog;
     }
     
-    _missions = box.values.toList();
     notifyListeners();
   }
 

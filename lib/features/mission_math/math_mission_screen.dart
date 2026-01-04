@@ -34,6 +34,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   late int _num2;
   late String _operator;
   late int _answer;
+  String? _expression; // (12+3) x 5 형태의 복합 수식을 저장하기 위한 변수
   String _input = '';
   String _feedback = '문제를 풀어주세요.';
   
@@ -143,8 +144,15 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   void _generateProblem() {
     final random = Random();
     
-    // 1자리(1~9) 또는 2자리(10~99) 숫자 생성 헬퍼 함수
-    int getRandomNum() => random.nextBool() ? random.nextInt(9) + 1 : random.nextInt(90) + 10;
+    // 1자리(1~9) 숫자 생성
+    int getSingleDigit() => random.nextInt(9) + 1;
+    // 2자리(10~99) 숫자 생성
+    int getDoubleDigit() => random.nextInt(90) + 10;
+    
+    // 1자리 또는 2자리 숫자 생성 헬퍼 함수
+    int getRandomNum() => random.nextBool() ? getSingleDigit() : getDoubleDigit();
+
+    _expression = null; // 초기화
 
     switch (_difficulty) {
       case MathDifficulty.easy:
@@ -196,7 +204,6 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
           _operator = '+';
           _num1 = getRandomNum();
           _num2 = getRandomNum();
-          // 큰 숫자가 먼저 나오도록 정렬
           if (_num1 < _num2) {
             final temp = _num1;
             _num1 = _num2;
@@ -207,24 +214,32 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
           _operator = '-';
           _num1 = getRandomNum();
           _num2 = getRandomNum();
-          
           if (_num1 < _num2) {
             final temp = _num1;
             _num1 = _num2;
             _num2 = temp;
           }
           _answer = _num1 - _num2;
-        } else { // x
+        } else { // x (사용자 요청: 다양한 곱셈 및 복합 수식 조합)
           _operator = 'x';
-          _num1 = getRandomNum();
-          _num2 = getRandomNum();
-          // 큰 숫자가 먼저 나오도록 정렬
-          if (_num1 < _num2) {
-            final temp = _num1;
-            _num1 = _num2;
-            _num2 = temp;
+          bool useComplex = random.nextBool(); // 50% 확률로 복합 수식 생성
+          
+          if (useComplex) {
+            // (1~2자리 + 1~2자리) x 1자리
+            int a = getRandomNum();
+            int b = getRandomNum();
+            int c = getSingleDigit();
+            _num1 = a + b; // 내부 계산용
+            _num2 = c;     // 내부 계산용
+            _answer = _num1 * _num2;
+            _expression = '($a + $b) x $c';
+          } else {
+            // 1~2자리 x 1자리
+            _num1 = getRandomNum();
+            _num2 = getSingleDigit();
+            _answer = _num1 * _num2;
+            _expression = '$_num1 x $_num2';
           }
-          _answer = _num1 * _num2;
         }
         break;
     }
@@ -312,6 +327,9 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
       
       final isLast = _solvedCount >= _targetCount;
       
+      // 정답 피드백
+      _playCorrectFeedback(isLast);
+
       // 정답 애니메이션 시작
       setState(() {
         _showCorrectAnimation = true;
@@ -347,11 +365,53 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
       });
     } else {
       if (!isAuto) {
+        _playWrongFeedback();
         setState(() {
           _feedback = '틀렸습니다. 다시 시도하세요.';
           _input = '';
         });
       }
+    }
+  }
+
+  Future<void> _playCorrectFeedback(bool isLast) async {
+    try {
+      if (isLast) {
+        HapticFeedback.heavyImpact();
+        if (await Vibration.hasVibrator() == true) {
+          Vibration.vibrate(pattern: [0, 100, 50, 100]);
+        }
+        await _playSfx('sounds/ui_success.ogg', volume: 0.5);
+      } else {
+        HapticFeedback.mediumImpact();
+        if (await Vibration.hasVibrator() == true) {
+          Vibration.vibrate(duration: 50);
+        }
+        await _playSfx('sounds/ui_click.ogg', volume: 0.2);
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _playWrongFeedback() async {
+    try {
+      HapticFeedback.vibrate();
+      if (await Vibration.hasVibrator() == true) {
+        Vibration.vibrate(pattern: [0, 150, 50, 150]);
+      }
+      await _playSfx('sounds/ui_click.ogg', volume: 0.2, maxDuration: const Duration(milliseconds: 500));
+    } catch (_) {}
+  }
+
+  Future<void> _playSfx(String assetPath, {double volume = 0.5, Duration? maxDuration}) async {
+    try {
+      final player = AudioPlayer();
+      await player.play(AssetSource(assetPath), volume: volume);
+      if (maxDuration != null) {
+        Future.delayed(maxDuration, () => player.stop());
+      }
+      player.onPlayerComplete.listen((_) => player.dispose());
+    } catch (e) {
+      debugPrint('Error playing SFX: $assetPath - $e');
     }
   }
 
@@ -408,7 +468,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     }
 
     // 밝은 배경일 경우 검은색 텍스트, 어두운 배경일 경우 흰색 텍스트
-    final Color textColor = isLightBg ? Colors.black87 : Colors.white;
+    final Color textColor = isLightBg ? Colors.black : Colors.white;
     final Color hintColor = isLightBg ? Colors.black38 : Colors.white24;
     final Color shadowColor = isLightBg ? Colors.white.withOpacity(0.5) : Colors.black26;
 
@@ -498,12 +558,19 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                 FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    '$_num1 $_operator $_num2',
+                                    _expression ?? '$_num1 $_operator $_num2',
                                     style: TextStyle(
-                                      fontSize: 60, // 72 -> 60으로 더 줄임 (사용자 요청)
-                                      fontWeight: FontWeight.bold,
+                                      fontSize: 72, // 84 -> 72로 다시 줄임
+                                      fontWeight: FontWeight.w800, // w900 -> w800
                                       color: textColor,
                                       letterSpacing: -2,
+                                      shadows: [
+                                        Shadow(
+                                          color: isLightBg ? Colors.white.withOpacity(0.8) : Colors.black.withOpacity(0.3),
+                                          offset: const Offset(0, 2),
+                                          blurRadius: 4,
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -524,8 +591,8 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                                 '?',
                                                 key: const ValueKey('empty'),
                                                 style: TextStyle(
-                                                  fontSize: 40, // 48 -> 40
-                                                  fontWeight: FontWeight.w300,
+                                                  fontSize: 48, // 40 -> 48
+                                                  fontWeight: FontWeight.w400,
                                                   color: textColor.withOpacity(0.3),
                                                 ),
                                               ),
@@ -534,9 +601,9 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                               _input,
                                               key: ValueKey(_input),
                                               style: TextStyle(
-                                                fontSize: 44, // 52 -> 44
-                                                fontWeight: FontWeight.bold,
-                                                color: isLightBg ? Colors.blue[800] : Colors.blue[300],
+                                                fontSize: 56, // 44 -> 56
+                                                fontWeight: FontWeight.w800, // w900 -> w800
+                                                color: isLightBg ? Colors.blue[900] : Colors.blue[300],
                                                 letterSpacing: 4,
                                               ),
                                             ),
@@ -574,11 +641,11 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                     key: ValueKey(_feedback),
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                      fontSize: 15, // 16 -> 15
+                                      fontSize: 18, // 15 -> 18로 키움
                                       color: _feedback.startsWith('정답') 
                                           ? Colors.green[700] 
-                                          : (_feedback == '문제를 풀어주세요.' ? (isLightBg ? Colors.black54 : Colors.white70) : Colors.redAccent),
-                                      fontWeight: FontWeight.w600,
+                                          : (_feedback == '문제를 풀어주세요.' ? (isLightBg ? Colors.black : Colors.white) : Colors.redAccent),
+                                      fontWeight: FontWeight.w800, // 더 두껍게
                                     ),
                                   ),
                                 ),
@@ -635,12 +702,16 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                             _buildKey('5'),
                             _buildKey('6'),
                             _buildKey('7'),
-                            _buildKey('8'),
-                            _buildKey('9'),
-                            _buildKey('C', color: Colors.red[50]!, textColor: Colors.redAccent),
-                            _buildKey('0'),
-                            _buildKey('DEL', color: Colors.blue[50]!, textColor: Colors.blueAccent),
-                          ],
+                                    _buildKey('8'),
+                                    _buildKey('9'),
+                                    _buildKey('C', color: Colors.red[50]!, textColor: Colors.redAccent),
+                                    _buildKey('0'),
+                                    _buildKey('DEL', 
+                                      color: Colors.blue[50]!, 
+                                      textColor: Colors.blueAccent,
+                                      icon: Icons.backspace_rounded,
+                                    ),
+                                  ],
                         ),
                       ],
                     ),
@@ -687,7 +758,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                             ),
                             const SizedBox(height: 20),
                             Text(
-                              _isLastProblem ? '미션 완료!' : '정답!',
+                              '정답!',
                               style: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
@@ -700,32 +771,6 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                 ],
                               ),
                             ),
-                            if (_isLastProblem && _lastMessage.isNotEmpty) ...[
-                              const SizedBox(height: 16),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.9),
-                                  borderRadius: BorderRadius.circular(30),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Text(
-                                  _lastMessage,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ),
-                            ],
                           ],
                         ),
                       );
@@ -749,7 +794,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   );
 }
 
-  Widget _buildKey(String label, {Color color = const Color(0xFFF5F5F5), Color textColor = Colors.black87}) {
+  Widget _buildKey(String label, {Color color = const Color(0xFFF5F5F5), Color textColor = Colors.black87, IconData? icon}) {
     return InkWell(
       onTap: () => _onKeyTap(label),
       borderRadius: BorderRadius.circular(16),
@@ -766,14 +811,16 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
             ),
           ],
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: textColor,
-          ),
-        ),
+        child: icon != null 
+          ? Icon(icon, color: textColor, size: 28)
+          : Text(
+              label,
+              style: TextStyle(
+                fontSize: 30, // 24 -> 30
+                fontWeight: FontWeight.w800, // w900 -> w800로 줄임
+                color: textColor,
+              ),
+            ),
       ),
     );
   }

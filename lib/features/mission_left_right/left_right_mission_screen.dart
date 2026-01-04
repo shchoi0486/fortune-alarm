@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vibration/vibration.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../../data/models/alarm_model.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
@@ -24,6 +25,7 @@ class LeftRightMissionScreen extends ConsumerStatefulWidget {
 
 class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen> with TickerProviderStateMixin {
   final Random _random = Random();
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   AlarmModel? _alarm;
   bool _isLoading = true;
@@ -87,6 +89,7 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
   void dispose() {
     _inactivityTimer?.cancel();
     _characterController.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -159,27 +162,43 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
     _currentCharacter = _characters[_random.nextInt(_characters.length)];
   }
 
+  Future<void> _playSfx(String assetPath) async {
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource('sounds/$assetPath'));
+    } catch (e) {
+      debugPrint('Error playing SFX: $e');
+    }
+  }
+
   void _onTap(bool isLeft) async {
     _resetInactivityTimer();
-    HapticFeedback.lightImpact();
     
     final goal = _alarm?.shakeCount ?? widget.targetStreak;
     final correct = isLeft == _expectLeft;
     if (correct) {
+      HapticFeedback.mediumImpact();
+      _playSfx('ui_click.ogg');
       setState(() {
         _streak++;
         _wrongFlash = false;
       });
       if (_streak >= goal && mounted) {
-      setState(() {
-        _isSuccess = true;
-      });
-      return;
-    }
+        HapticFeedback.heavyImpact();
+        _playSfx('ui_success.ogg');
+        if (await Vibration.hasVibrator() == true) {
+          Vibration.vibrate(pattern: [0, 100, 50, 100]);
+        }
+        setState(() {
+          _isSuccess = true;
+        });
+        return;
+      }
       setState(_nextPrompt);
       return;
     }
 
+    _playSfx('alarm_sound.ogg');
     await _vibrateWrong();
     if (!mounted) return;
     setState(() {

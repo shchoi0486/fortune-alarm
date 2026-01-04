@@ -90,6 +90,29 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     });
   }
 
+  @override
+  void dispose() {
+    _frameTimer?.cancel();
+    _animationController.dispose();
+    _waddleController.dispose();
+    _accelerometerSubscription?.cancel();
+    _gyroSubscription?.cancel();
+    _volumeTimer?.cancel();
+    _inactivityTimer?.cancel();
+    _audioPlayer.dispose();
+    _stopAlarm();
+    super.dispose();
+  }
+
+  Future<void> _playSfx(String assetPath) async {
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource('sounds/$assetPath'));
+    } catch (e) {
+      debugPrint('Error playing SFX: $e');
+    }
+  }
+
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 3), () {
@@ -155,7 +178,8 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
           _resetInactivityTimer();
           
           try {
-            HapticFeedback.mediumImpact();
+            HapticFeedback.selectionClick();
+            _playSfx('ui_click.ogg');
           } catch (_) {}
 
           setState(() {
@@ -197,20 +221,6 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     } catch (e) {
       debugPrint('Error stopping alarm: $e');
     }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    _waddleController.dispose();
-    _frameTimer?.cancel();
-    _volumeTimer?.cancel();
-    _inactivityTimer?.cancel();
-    _audioPlayer.dispose();
-    _accelerometerSubscription?.cancel();
-    _gyroSubscription?.cancel();
-    _stopAlarm();
-    super.dispose();
   }
 
   @override

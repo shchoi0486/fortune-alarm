@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../models/water_log.dart';
 import '../models/water_settings.dart';
 import '../../../../providers/mission_provider.dart';
+import '../../../../services/water_alarm_service.dart';
 
 // State class for Water Provider
 class WaterState {
@@ -202,7 +203,7 @@ class WaterNotifier extends StateNotifier<WaterState> {
   }
   
   void _scheduleAlarms() {
-    // TODO: Implement actual notification scheduling
+    WaterAlarmService.scheduleAlarms(state.settings);
     print("Scheduling water alarms: ${state.settings.isAlarmEnabled}");
   }
 }

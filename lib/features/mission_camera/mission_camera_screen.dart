@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:async';
-import 'dart:math'; // Random
+import 'dart:math' as math; // Random
 import 'package:audioplayers/audioplayers.dart'; // AudioPlayer
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
@@ -329,15 +329,15 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
             fastStart: _fastStartUntil != null && DateTime.now().isBefore(_fastStartUntil!),
           );
 
-          if (mounted) {
-            setState(() {
-              // EMA 스무딩 적용 (alpha = 0.3)
-              // 급격한 변화를 줄이고 부드럽게 게이지가 차오르도록 함
-              if (_currentSimilarity == 0.0 && result.similarity > 0) {
-                 _currentSimilarity = result.similarity; // 첫 인식 시 바로 적용
-              } else {
-                 _currentSimilarity = (_currentSimilarity * 0.7) + (result.similarity * 0.3);
-              }
+              if (mounted) {
+                setState(() {
+                  // EMA 스무딩 계수 조정 (0.5 -> 0.4)
+                  // 사용자의 피드백에 따라 반응성을 0.4로 미세 조정
+                  if (_currentSimilarity == 0.0 && result.similarity > 0) {
+                     _currentSimilarity = result.similarity;
+                  } else {
+                     _currentSimilarity = (_currentSimilarity * 0.6) + (result.similarity * 0.4);
+                  }
 
               // 무언가 인식되고 있다면 (유사도 30% 이상) 활동 중인 것으로 간주하여 타이머 리셋
               if (result.similarity > 0.3) {
@@ -386,7 +386,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
     if (_isDisposed || !mounted || _isTransitioning) return;
 
     // 성공 애니메이션 설정
-    final random = Random();
+    final random = math.Random();
     _lastMessage = PositiveMessages.messages[random.nextInt(PositiveMessages.messages.length)];
 
     setState(() {
@@ -449,14 +449,28 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
       });
       try {
         HapticFeedback.heavyImpact();
+        _playSfx('ui_success.ogg');
+        if (Platform.isAndroid || Platform.isIOS) {
+          Vibration.vibrate(pattern: [0, 100, 50, 100]);
+        }
       } catch (_) {}
+    }
+  }
+
+  Future<void> _playSfx(String assetPath) async {
+    try {
+      final player = AudioPlayer();
+      await player.play(AssetSource('sounds/$assetPath'));
+      player.onPlayerComplete.listen((_) => player.dispose());
+    } catch (e) {
+      debugPrint('Error playing SFX: $e');
     }
   }
 
   Future<void> _playTransitionSound() async {
      try {
        HapticFeedback.mediumImpact();
-       await FlutterRingtonePlayer().playNotification();
+       _playSfx('ui_click.ogg');
      } catch (e) {
        // Ignore
      }
@@ -935,13 +949,18 @@ class CameraOverlayPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // 유사도에 따라 색상 보간 (빨강 -> 노랑 -> 초록)
+    // 보정된 유사도(adjustedSimilarity)를 사용하여 낮은 점수에서도 노란색/초록색이 더 빨리 나타나게 함
+    final adjustedSimilarity = math.pow(similarity, 0.7).toDouble(); // 0.7 제곱근을 취해 값의 상승폭을 키움
+    
     Color frameColor;
-    if (similarity < 0.5) {
-      frameColor = Color.lerp(Colors.redAccent, Colors.yellowAccent, similarity * 2)!;
-    } else if (similarity < 0.8) {
-      frameColor = Color.lerp(Colors.yellowAccent, Colors.greenAccent, (similarity - 0.5) * 3.3)!;
+    if (adjustedSimilarity < 0.4) {
+      frameColor = Color.lerp(Colors.redAccent, Colors.orangeAccent, adjustedSimilarity * 2.5)!;
+    } else if (adjustedSimilarity < 0.7) {
+      frameColor = Color.lerp(Colors.orangeAccent, Colors.yellowAccent, (adjustedSimilarity - 0.4) * 3.3)!;
+    } else if (adjustedSimilarity < 0.9) {
+      frameColor = Color.lerp(Colors.yellowAccent, Colors.greenAccent, (adjustedSimilarity - 0.7) * 5.0)!;
     } else {
-      frameColor = Color.lerp(Colors.greenAccent, Colors.cyanAccent, (similarity - 0.8) * 5)!;
+      frameColor = Colors.greenAccent;
     }
 
     final paint = Paint()

@@ -1,6 +1,6 @@
 class TojeongService {
-  // 2025 Eulsa Year Constants
-  // Taese for 2025 is Eulsa (Snake).
+  // 2026 Byeong-O Year Constants
+  // Taese for 2026 is Byeong-O (Horse).
   // Calculation constants are often kept secret or vary by school.
   // We use a simplified modulo model for the app.
   static const int _taeseConstant = 1;
@@ -9,19 +9,19 @@ class TojeongService {
   // Input: Birth Year, Lunar Month, Lunar Day
   static Map<String, int> calculateGua(int birthYear, int lunarMonth, int lunarDay) {
     // 1. Upper Gua (Sang-Gwae)
-    // Age = 2025 - birthYear + 1
-    int age = 2025 - birthYear + 1;
+    // Age = 2026 - birthYear + 1
+    int age = 2026 - birthYear + 1;
     int upper = (age + _taeseConstant) % 8;
     if (upper == 0) upper = 8;
 
     // 2. Middle Gua (Jung-Gwae)
-    // Wolgeon Constant for 2025 (Estimated: (Month + 3) % 6)
+    // Wolgeon Constant for 2026 (Estimated: (Month + 3) % 6)
     int wolgeonConstant = 3; 
     int middle = (lunarMonth + wolgeonConstant) % 6;
     if (middle == 0) middle = 6;
 
     // 3. Lower Gua (Ha-Gwae)
-    // Iljin Constant for 2025
+    // Iljin Constant for 2026
     int iljinConstant;
     int mod3 = lunarMonth % 3;
     if (mod3 == 1) {

@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:vibration/vibration.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../services/lotto_service.dart';
+import '../../services/sharing_service.dart';
 import 'mixins/fortune_access_mixin.dart';
 
 class LottoScreen extends StatefulWidget {
@@ -12,6 +16,7 @@ class LottoScreen extends StatefulWidget {
 }
 
 class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
+  final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isAnalyzing = false;
   bool _showResult = false;
   String _analysisStatus = "";
@@ -37,10 +42,19 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
       _progressValue = 0.0;
     });
 
-    // Start fetching real data in background
-    final dataFuture = LottoService.analyzeRecentRounds(30).then((map) {
+    // Start fetching real data in background (Optimized: 10 rounds, 3s timeout)
+    final dataFuture = LottoService.analyzeRecentRounds(10).timeout(
+      const Duration(seconds: 3),
+      onTimeout: () {
+        debugPrint('Lotto analysis timed out, using default weights');
+        return <int, int>{};
+      },
+    ).then((map) {
       _frequencyMap = map;
       _isDataLoaded = true;
+    }).catchError((e) {
+      debugPrint('Error in lotto analysis: $e');
+      _isDataLoaded = true; 
     });
 
     // UI Simulation Steps
@@ -63,25 +77,31 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
           _analysisStatus = steps[stepIndex];
           _progressValue = (stepIndex + 1) / steps.length;
         });
+        HapticFeedback.lightImpact();
         stepIndex++;
       } else {
         timer.cancel();
-        // Wait for data if not ready
+        // Wait at most 1 more second if data is not ready after animation
         if (!_isDataLoaded) {
           setState(() {
             _analysisStatus = "데이터 최종 처리 중...";
           });
-          await dataFuture;
+          try {
+            await Future.any([
+              dataFuture,
+              Future.delayed(const Duration(seconds: 1)),
+            ]);
+          } catch (e) {
+            debugPrint('Error waiting for dataFuture: $e');
+          }
         }
         
         if (mounted) {
-          bool accessGranted = false;
-          await showFortuneAccessDialog(() {
-            accessGranted = true;
+          final success = await showFortuneAccessDialog(() {
             _generateNumbers();
           });
           
-          if (!accessGranted && mounted) {
+          if (!success && mounted) {
             setState(() {
               _isAnalyzing = false;
             });
@@ -152,11 +172,25 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
       });
     }
 
+    // 결과 생성 피드백 추가
+    _playSuccessFeedback();
+
     setState(() {
       _generatedNumbers = results;
       _isAnalyzing = false;
       _showResult = true;
     });
+  }
+
+  Future<void> _playSuccessFeedback() async {
+    try {
+      HapticFeedback.heavyImpact();
+      if (await Vibration.hasVibrator() == true) {
+        Vibration.vibrate(pattern: [0, 100, 50, 100]);
+      }
+      // 효과음 제거 요청으로 주석 처리
+      // await _audioPlayer.play(AssetSource('sounds/ui_tada.mp3'), volume: 0.5);
+    } catch (_) {}
   }
 
   Color _getNumberColor(int number) {
@@ -165,6 +199,12 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
     if (number <= 30) return const Color(0xFFE53935); // Red
     if (number <= 40) return const Color(0xFF757575); // Grey
     return const Color(0xFF43A047); // Green
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   @override
@@ -255,7 +295,10 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: _startAnalysis,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    _startAnalysis();
+                  },
                   borderRadius: BorderRadius.circular(16),
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -344,13 +387,15 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
   }
 
   Widget _buildResultView(bool isDarkMode, Color textColor, Color subTextColor) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Text(
-              "행운의 번호 생성 완료",
+    return SafeArea(
+      bottom: true,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Text(
+                "행운의 번호 생성 완료",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textColor),
             ),
             const SizedBox(height: 8),
@@ -384,6 +429,42 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
+                onPressed: () {
+                  SharingService.showShareOptions(
+                     context: context,
+                     title: '오늘의 행운 번호',
+                     description: '포춘알람이 분석한 이번 주 행운의 번호입니다.',
+                     results: Map.fromEntries(
+                       _generatedNumbers.asMap().entries.map(
+                         (e) => MapEntry(
+                           '세트 ${String.fromCharCode(65 + e.key)}',
+                           (e.value['numbers'] as List<int>).join(", "),
+                         ),
+                       ),
+                     ),
+                   );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFEE500),
+                  foregroundColor: Colors.black,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.share, size: 20),
+                    SizedBox(width: 10),
+                    Text("결과 공유하기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
                 onPressed: _startAnalysis,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: _primaryColor,
@@ -395,11 +476,13 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildLottoRow(int index, Map<String, dynamic> data, bool isDarkMode) {
     final List<int> numbers = data['numbers'] as List<int>;

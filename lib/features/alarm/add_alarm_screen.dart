@@ -1135,11 +1135,29 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                 if (_selectedMission == MissionType.math) ...[
                   _buildSettingSection(
                     title: AppLocalizations.of(context)!.difficulty,
-                    child: _buildMathDifficultySelector(),
-                  ),
-                  _buildSettingSection(
-                    title: AppLocalizations.of(context)!.problemCount,
-                    child: _buildMathProblemCountSelector(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildMathDifficultySelector(),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Divider(height: 1, thickness: 0.5),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Text(
+                            AppLocalizations.of(context)!.problemCount,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16,
+                              color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                        ),
+                        _buildMathProblemCountSelector(),
+                      ],
+                    ),
                   ),
                 ],
 
@@ -1179,10 +1197,11 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                     child: _buildWalkStepCountSelector(),
                   ),
                 
-                // 반복 요일
+                // 반복 및 스누즈 설정 통합
                 _buildSettingSection(
                   title: AppLocalizations.of(context)!.repeatDays,
                   trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       SizedBox(
                         height: 24,
@@ -1205,146 +1224,162 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                       Text(
                         AppLocalizations.of(context)!.repeatDaily, 
                         style: TextStyle(
-                          fontSize: 15, 
+                          fontSize: 14, 
                           fontWeight: FontWeight.w700,
-                          color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                          color: isDarkMode ? Colors.white70 : Colors.black54,
                           letterSpacing: -0.5,
                         ),
                       ),
                     ],
                   ),
-                  child: _buildDaySelector(),
-                ),
-                
-                // Snooze Settings
-                _buildSettingSection(
-                  title: AppLocalizations.of(context)!.snoozeSettings,
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: DropdownButtonFormField<int>(
-                          initialValue: _snoozeInterval,
-                          isExpanded: true,
-                          dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
-                          icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black87),
-                          decoration: InputDecoration(
-                            prefixIcon: Container(
-                              margin: const EdgeInsets.only(left: 14, right: 10),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.interval,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700,
-                                      color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Container(
-                                    width: 1,
-                                    height: 16,
-                                    color: isDarkMode ? Colors.white10 : Colors.grey[300],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-                            contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                            filled: true,
-                            fillColor: isDarkMode ? Colors.black26 : Colors.grey[50],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.cyan, width: 2),
-                            ),
-                            isDense: true,
+                      _buildDaySelector(),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        child: Divider(height: 1, thickness: 0.5),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Text(
+                          AppLocalizations.of(context)!.snoozeSettings,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16,
+                            color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                            letterSpacing: -0.5,
                           ),
-                          items: {0, 3, 5, 10, 30, _snoozeInterval}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.minutesLater(e), style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), fontWeight: FontWeight.w600)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
-                          onChanged: (val) {
-                            if (val != null) {
-                              setState(() {
-                                _snoozeInterval = val;
-                                if (val == 0) {
-                                  _maxSnoozeCount = 0;
-                                } else if (_maxSnoozeCount == 0) {
-                                  _maxSnoozeCount = 3; // 간격 선택 시 기본 횟수 자동 선택
-                                }
-                              });
-                            }
-                          },
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: DropdownButtonFormField<int>(
-                          initialValue: _maxSnoozeCount,
-                          isExpanded: true,
-                          dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
-                          icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black87),
-                          decoration: InputDecoration(
-                            prefixIcon: Container(
-                              margin: const EdgeInsets.only(left: 14, right: 10),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!.countLabel,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700,
-                                      color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
-                                    ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: DropdownButtonFormField<int>(
+                              initialValue: _snoozeInterval,
+                              isExpanded: true,
+                              dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
+                              icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black87),
+                              decoration: InputDecoration(
+                                prefixIcon: Container(
+                                  margin: const EdgeInsets.only(left: 14, right: 10),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!.interval,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                          color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        width: 1,
+                                        height: 16,
+                                        color: isDarkMode ? Colors.white10 : Colors.grey[300],
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 8),
-                                  Container(
-                                    width: 1,
-                                    height: 16,
-                                    color: isDarkMode ? Colors.white10 : Colors.grey[300],
-                                  ),
-                                ],
+                                ),
+                                prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                                filled: true,
+                                fillColor: isDarkMode ? Colors.black26 : Colors.grey[50],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(color: Colors.cyan, width: 2),
+                                ),
+                                isDense: true,
                               ),
-                            ),
-                            prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
-                            contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-                            filled: true,
-                            fillColor: isDarkMode ? Colors.black26 : Colors.grey[50],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.cyan, width: 2),
-                            ),
-                            isDense: true,
-                          ),
-                          items: {0, 2, 3, 5, _maxSnoozeCount}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.timesCount(e), style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), fontWeight: FontWeight.w600)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
-                          onChanged: (val) {
-                            if (val != null) {
-                              setState(() {
-                                _maxSnoozeCount = val;
-                                if (val == 0) {
-                                  _snoozeInterval = 0;
-                                } else if (_snoozeInterval == 0) {
-                                  _snoozeInterval = 5; // 횟수 선택 시 기본 간격 자동 선택
+                              items: {0, 3, 5, 10, 30, _snoozeInterval}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.minutesLater(e), style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), fontWeight: FontWeight.w600)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
+                              onChanged: (val) {
+                                if (val != null) {
+                                  setState(() {
+                                    _snoozeInterval = val;
+                                    if (val == 0) {
+                                      _maxSnoozeCount = 0;
+                                    } else if (_maxSnoozeCount == 0) {
+                                      _maxSnoozeCount = 3; // 간격 선택 시 기본 횟수 자동 선택
+                                    }
+                                  });
                                 }
-                              });
-                            }
-                          },
-                        ),
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: DropdownButtonFormField<int>(
+                              initialValue: _maxSnoozeCount,
+                              isExpanded: true,
+                              dropdownColor: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
+                              icon: Icon(Icons.keyboard_arrow_down_rounded, color: isDarkMode ? Colors.white70 : Colors.black87),
+                              decoration: InputDecoration(
+                                prefixIcon: Container(
+                                  margin: const EdgeInsets.only(left: 14, right: 10),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!.countLabel,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                          color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        width: 1,
+                                        height: 16,
+                                        color: isDarkMode ? Colors.white10 : Colors.grey[300],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                                contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                                filled: true,
+                                fillColor: isDarkMode ? Colors.black26 : Colors.grey[50],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(color: isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: const BorderSide(color: Colors.cyan, width: 2),
+                                ),
+                                isDense: true,
+                              ),
+                              items: {0, 2, 3, 5, _maxSnoozeCount}.map((e) => DropdownMenuItem(value: e, child: Text(e == 0 ? AppLocalizations.of(context)!.none : AppLocalizations.of(context)!.timesCount(e), style: TextStyle(fontSize: 14, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), fontWeight: FontWeight.w600)))).toList()..sort((a, b) => a.value!.compareTo(b.value!)),
+                              onChanged: (val) {
+                                if (val != null) {
+                                  setState(() {
+                                    _maxSnoozeCount = val;
+                                    if (val == 0) {
+                                      _snoozeInterval = 0;
+                                    } else if (_snoozeInterval == 0) {
+                                      _snoozeInterval = 5; // 횟수 선택 시 기본 간격 자동 선택
+                                    }
+                                  });
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -1983,28 +2018,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: border),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
-                    letterSpacing: -0.2,
-                  ),
+            child: Center(
+              child: Text(
+                "$label($detail)",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                  letterSpacing: -0.5,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  detail,
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: isDarkMode ? Colors.white70 : Colors.grey[700],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

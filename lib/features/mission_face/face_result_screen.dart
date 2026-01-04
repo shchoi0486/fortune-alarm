@@ -4,6 +4,7 @@ import 'package:fortune_alarm/services/cookie_service.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import '../../services/notification_service.dart';
 import '../../services/alarm_scheduler_service.dart';
+import '../../services/sharing_service.dart';
 
 class FaceResultScreen extends StatefulWidget {
   final String? alarmId;
@@ -179,35 +180,44 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     final toneIndex = (daySeed + (smile * 100).toInt() + (eyeOpen * 100).toInt()) % 3;
     final tipIndex = (daySeed + wealth + love + career + health) % 4;
 
-    String headline = "오늘은 $topKey 운이 들어오는 날입니다. $bottomKey 쪽은 한 번 더 조심하세요.";
+    String faceVibe = "";
+    if (smile >= 0.6) {
+      faceVibe = "입가에 머문 밝은 미소가 주변에 긍정적인 에너지를 전파하네요. ";
+    } else if (eyeOpen >= 0.6) {
+      faceVibe = "초롱초롱하게 빛나는 눈빛에서 오늘 하루를 이끌어갈 강한 의지가 느껴집니다. ";
+    } else {
+      faceVibe = "전체적으로 평온하고 안정된 얼굴의 기운이 마음의 여유를 가져다줍니다. ";
+    }
+
+    String headline = "$faceVibe오늘은 $topKey 운이 들어오는 날입니다. $bottomKey 쪽은 한 번 더 조심하세요.";
 
     String mid;
     if (topKey == "재물") {
       final options = [
-        "작은 정리와 확인이 돈의 흐름을 더 크게 만들어줍니다.",
-        "급할수록 계산을 한 번 더 하면 이득이 남습니다.",
-        "알뜰하게 챙긴 한 가지가 예상 밖의 성과로 이어집니다.",
+        "콧망울의 기운이 단단하니, 작은 정리와 확인이 돈의 흐름을 더 크게 만들어줍니다.",
+        "재백궁(코)에 힘이 실리는 날입니다. 급할수록 계산을 한 번 더 하면 이득이 남습니다.",
+        "얼굴의 중심인 코의 기운이 좋아 알뜰하게 챙긴 한 가지가 예상 밖의 성과로 이어집니다.",
       ];
       mid = options[toneIndex];
     } else if (topKey == "인연") {
       final options = [
-        "먼저 한마디 건네면 관계가 부드럽게 풀립니다.",
-        "진심을 짧게 전하는 것이 오해를 줄여줍니다.",
-        "작은 배려가 귀인의 기운을 끌어옵니다.",
+        "입꼬리의 기운이 부드러우니, 먼저 한마디 건네면 관계가 풀립니다.",
+        "말을 담는 입매가 정갈합니다. 진심을 짧게 전하는 것이 오해를 줄여줍니다.",
+        "밝은 안색이 귀인의 기운을 끌어옵니다. 작은 배려가 큰 인연으로 돌아옵니다.",
       ];
       mid = options[toneIndex];
     } else if (topKey == "직업") {
       final options = [
-        "우선순위를 좁히면 집중력이 성과로 바뀝니다.",
-        "결정은 간단히, 실행은 꾸준히가 통하는 날입니다.",
-        "오늘은 맡은 일을 끝까지 마무리하는 힘이 큽니다.",
+        "눈빛의 총기가 예리하니, 우선순위를 좁히면 집중력이 성과로 바뀝니다.",
+        "관찰력이 돋보이는 눈매입니다. 결정은 간단히, 실행은 꾸준히가 통하는 날입니다.",
+        "이마와 눈의 기운이 맑아 오늘은 맡은 일을 끝까지 마무리하는 힘이 큽니다.",
       ];
       mid = options[toneIndex];
     } else {
       final options = [
-        "리듬을 고르면 컨디션이 금방 회복됩니다.",
-        "무리하지 않고 템포를 지키면 하루가 편안해집니다.",
-        "작은 휴식이 집중력과 기분을 함께 끌어올립니다.",
+        "전체적인 안색이 안정적이니, 리듬을 고르면 컨디션이 금방 회복됩니다.",
+        "얼굴의 활력이 돋보입니다. 무리하지 않고 템포를 지키면 하루가 편안해집니다.",
+        "눈과 피부의 기운이 맑아 작은 휴식이 집중력과 기분을 함께 끌어올립니다.",
       ];
       mid = options[toneIndex];
     }
@@ -412,26 +422,26 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     String vibeDesc;
     if (top == "재물") {
       vibeDesc = (noseWidth ?? 0.25) >= 0.28 
-          ? "특히 오늘은 재백궁(코)의 기운이 좋아 금전적인 이득을 기대해볼 만합니다."
-          : "오늘은 실속을 챙기며 재물을 차곡차곡 모으기에 적합한 흐름입니다.";
+          ? "재백궁(코)의 기운이 두툼하게 살아있어 금전적인 기회를 포착하기에 아주 좋은 안색입니다."
+          : "얼굴의 중심인 코 주변의 기운이 차분하여 실속을 챙기며 재물을 차곡차곡 모으기에 적합한 흐름입니다.";
     } else if (top == "인연") {
       vibeDesc = smile >= 0.5 
-          ? "밝은 미소가 도화의 기운을 증폭시켜, 새로운 인연이나 귀인을 만날 수 있습니다."
-          : "차분한 태도가 신뢰를 주어, 깊이 있는 관계를 형성하기 좋은 날입니다.";
+          ? "입꼬리에서 시작된 밝은 미소가 도화의 기운을 증폭시켜, 주변에 사람이 모이고 귀인을 만날 수 있는 상입니다."
+          : "눈매의 진중함이 상대에게 깊은 신뢰를 주어, 가벼운 만남보다 깊이 있는 관계를 형성하기 좋은 날입니다.";
     } else if (top == "직업") {
       vibeDesc = eyeOpen >= 0.55
-          ? "눈빛에 서린 총기가 판단력을 높여주니, 중요한 결정을 내리기에 최적입니다."
-          : "묵묵히 자리를 지키는 끈기가 인정받아, 성과로 이어지는 하루입니다.";
+          ? "눈빛에 서린 총명한 기운이 판단력을 높여주니, 복잡한 업무나 중요한 결정을 내리기에 최적의 상태입니다."
+          : "하관의 안정적인 기운이 끈기를 뒷받침해주어, 묵묵히 자리를 지키는 노력이 큰 성과로 이어지는 하루입니다.";
     } else { // 건강
-      vibeDesc = "신체의 리듬이 안정적이니, 새로운 활력을 충전하고 내실을 다지기 좋습니다.";
+      vibeDesc = "얼굴 전체에 도는 생기와 맑은 안색이 신체의 리듬이 안정적임을 보여주니, 활력을 충전하기 좋습니다.";
     }
 
-    // 3. 행동 가이드 (6줄 제한을 위해 간결하게)
+    // 3. 행동 가이드
     String actionDesc;
     if (mouthOpen < 0.05) {
-      actionDesc = "입을 다문 신중함이 실수를 막아줍니다. 말보다는 행동으로 보여주면 결과가 따릅니다.";
+      actionDesc = "입을 다문 신중한 모습에서 말년의 복이 느껴집니다. 오늘은 말보다는 행동으로 실천할 때 행운이 따릅니다.";
     } else {
-      actionDesc = "적극적인 표현이 행운을 부릅니다. 자신감 있게 의견을 개진하면 좋은 반응을 얻습니다.";
+      actionDesc = "시원하게 열린 입매가 긍정적인 기운을 부릅니다. 자신감 있는 목소리로 의견을 개진하면 좋은 반응을 얻습니다.";
     }
 
     return "$headline\n$vibeDesc\n$actionDesc";
@@ -455,13 +465,14 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         final isWarning = line.contains('조심') || line.contains('주의') || line.contains('실수');
         widgets.add(
           Padding(
-            padding: const EdgeInsets.only(bottom: 12.0),
+            padding: const EdgeInsets.only(bottom: 14.0), // 헤드라인 아래 간격 약간 확대
             child: Text(
               line,
               style: baseStyle.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isWarning ? warningColor : accentColor,
-                fontSize: baseStyle.fontSize! + (isPrimary ? 1 : 0.5),
+                fontSize: baseStyle.fontSize! + 0.5, // 너무 크게 차이나지 않게 조정 (기존 1 -> 0.5)
+                height: 1.4,
               ),
             ),
           ),
@@ -470,7 +481,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         // 2. 나머지 문장들은 핵심 단어만 '굵게' 표시
         widgets.add(
           Padding(
-            padding: const EdgeInsets.only(bottom: 6.0),
+            padding: const EdgeInsets.only(bottom: 8.0), // 줄 간격 일관성 있게 조정
             child: _buildLineWithBoldOnly(line, baseStyle),
           ),
         );
@@ -484,7 +495,8 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
   }
 
   Widget _buildLineWithBoldOnly(String line, TextStyle baseStyle) {
-    final boldRegex = RegExp(r'(재물|금전|지출|결제|계약|정리|투자|인연|대인|소통|연락|약속|말투|오해|직업|일|결정|성과|집중|우선순위|마감|건강|휴식|수면|컨디션|무리|산책|스트레칭|행운|기회|좋은|조심|주의|경계|실수)');
+    // 강조할 핵심 단어 목록 (관상 관련 키워드 추가)
+    final boldRegex = RegExp(r'(재물|금전|지출|구독|결제|계약|정리|투자|인연|대인|소통|연락|약속|말투|오해|직업|내일|지금|일|결정|성과|집중|우선순위|마감|건강|휴식|수면|컨디션|무리|산책|스트레칭|행운|기회|좋은|조심|주의|경계|실수|눈빛|미소|입매|콧망울|안색|기운|활력|총기|재백궁|도화|복|신뢰|카리스마)');
     
     int index = 0;
     final spans = <TextSpan>[];
@@ -498,19 +510,25 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
 
       final start = index + match.start;
       if (start > index) {
+        // 띄어쓰기 유지를 위해 trim하지 않고 원문 그대로 사용
         spans.add(TextSpan(text: line.substring(index, start), style: baseStyle));
       }
 
       final matchText = match.group(0) ?? '';
       spans.add(TextSpan(
         text: matchText, 
-        style: baseStyle.copyWith(fontWeight: FontWeight.bold, color: Colors.black87),
+        style: baseStyle.copyWith(
+          fontWeight: FontWeight.bold, 
+          color: Colors.black.withOpacity(0.9), // 약간 더 진하게
+        ),
       ));
       index = start + matchText.length;
     }
 
-    return RichText(
-      text: TextSpan(style: baseStyle, children: spans),
+    return Text.rich(
+      TextSpan(children: spans),
+      style: baseStyle,
+      softWrap: true,
     );
   }
 
@@ -845,6 +863,9 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             _buildLuckBar("💪 건강운", _result.healthScore, Colors.green),
             
             const SizedBox(height: 32),
+            const Divider(height: 1, thickness: 1, color: Color(0xFFEEEEEE)),
+            const SizedBox(height: 32),
+            
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -885,7 +906,15 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             ),
 
             const SizedBox(height: 32),
-            const Divider(height: 1, thickness: 1, color: Color(0xFFEEEEEE)),
+            const Text(
+              "상세 분석",
+              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black87),
+            ),
+            const SizedBox(height: 14),
+            _buildFeatureItem("👁️ 눈 (통찰력)", _result.eyeAnalysis),
+            _buildFeatureItem("👃 코 (재물복)", _result.noseAnalysis),
+            _buildFeatureItem("👄 입 (말년운)", _result.mouthAnalysis),
+
             const SizedBox(height: 32),
             const Text(
               "종합 분석",
@@ -905,15 +934,6 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                 isPrimary: false,
               ),
             ),
-            const SizedBox(height: 32),
-            const Text(
-              "상세 분석",
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black87),
-            ),
-            const SizedBox(height: 14),
-            _buildFeatureItem("👁️ 눈 (통찰력)", _result.eyeAnalysis),
-            _buildFeatureItem("👃 코 (재물복)", _result.noseAnalysis),
-            _buildFeatureItem("👄 입 (말년운)", _result.mouthAnalysis),
 
             const SizedBox(height: 36),
             Container(
@@ -950,23 +970,66 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
               ),
             ),
             const SizedBox(height: 40),
-            SizedBox(
-              width: double.infinity,
-              height: 58,
-              child: ElevatedButton(
-                onPressed: _onComplete,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  elevation: 2,
-                  shadowColor: Colors.purple.withOpacity(0.3),
-                ),
-                child: const Text(
-                  "기상 완료!",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+            SafeArea(
+              top: false,
+              child: Column(
+                children: [
+                  // 공유하기 버튼 추가
+                  SizedBox(
+                    width: double.infinity,
+                    height: 58,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        SharingService.showShareOptions(
+                          context: context,
+                          title: '오늘의 관상 결과',
+                          description: 'AI 관상 분석 결과입니다.\n${_result.title}',
+                          results: {
+                            '종합 점수': '${_result.totalScore}점',
+                            '재물운': '${_result.wealthScore}점',
+                            '애정운': '${_result.loveScore}점',
+                            '직업운': '${_result.careerScore}점',
+                            '건강운': '${_result.healthScore}점',
+                          },
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFEE500),
+                        foregroundColor: Colors.black,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.share, size: 20),
+                          SizedBox(width: 10),
+                          Text("결과 공유하기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 58,
+                    child: ElevatedButton(
+                      onPressed: _onComplete,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        elevation: 2,
+                        shadowColor: Colors.purple.withOpacity(0.3),
+                      ),
+                      child: Text(
+                        widget.alarmId != null ? "기상 완료!" : "확인",
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 30),

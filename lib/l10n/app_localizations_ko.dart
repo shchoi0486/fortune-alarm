@@ -186,7 +186,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get newYearFortune => '신년운세';
 
   @override
-  String get totalFortune2025 => '2025년 전체운';
+  String get totalFortune2026 => '2026년 전체운';
 
   @override
   String get traditionalFortune => '토정비결';
@@ -284,7 +284,8 @@ class AppLocalizationsKo extends AppLocalizations {
   String get termsOfService => '이용약관';
 
   @override
-  String get privacyPolicy => '개인정보 처리방침';
+  String get privacyPolicy =>
+      '서비스 이용약관 및 개인정보 처리방침\n\n1. 총칙\n\n제1조 (목적)\n본 약관은 \'포춘 알람\'(이하 \'서비스\')이 제공하는 서비스의 이용조건 및 절차, 이용자와 개발자의 권리, 의무 및 책임사항 등 기타 필요한 사항을 규정함을 목적으로 합니다.\n\n제2조 (개인정보 처리방침)\n\n1. 개인정보 수집 항목 및 방법\n본 서비스는 회원가입 없이 이용 가능하며, 별도의 서버에 이용자의 개인정보를 저장하거나 수집하지 않습니다.\n단, 서비스 이용 과정에서 아래와 같은 정보가 생성되어 기기 내에 저장될 수 있습니다.\n- 알람 설정 정보, 미션 수행 기록, 포춘쿠키 획득 내역 등\n\n2. 기기 권한 사용 안내\n서비스 제공을 위해 다음의 권한을 최소한으로 사용합니다.\n- 알림 (필수): 알람 실행 및 포춘쿠키 알림을 위해 사용합니다.\n- 정확한 알람 및 배터리 최적화 제외 (필수): 절전 모드에서도 알람이 정시에 울리도록 보장하기 위해 사용합니다.\n- 다른 앱 위에 표시 (필수): 잠금 화면이나 다른 앱 사용 중에도 알람 화면을 띄우기 위해 사용합니다.\n- 카메라 (선택): \'사물 찍기\' 미션 수행 시에만 사용되며, 촬영된 이미지는 서버로 전송되지 않고 기기 내에서만 처리됩니다.\n\n3. 광고 서비스 및 데이터 처리\n본 서비스는 무료 제공을 위해 Google AdMob을 이용하여 광고를 송출합니다.\nGoogle은 광고 맞춤 설정을 위해 광고 식별자(ADID) 등 일부 비식별 정보를 수집할 수 있습니다.\n- Google 개인정보 처리방침: https://policies.google.com/privacy\n\n제3조 (데이터의 저장 및 삭제)\n본 서비스는 이용자의 기기에 데이터를 저장하는 로컬 방식의 앱입니다.\n앱을 삭제할 경우 기기에 저장된 모든 데이터(알람, 미션 기록 등)는 즉시 삭제되며 복구할 수 없습니다.\n\n제4조 (면책 조항)\n1. 본 서비스에서 제공하는 운세 정보는 재미를 위한 참고용이며, 그 정확성이나 신뢰성을 보증하지 않습니다.\n2. 기기의 설정 변경(알림 끄기, 배터리 최적화 등)이나 시스템 오류로 인해 알람이 울리지 않는 경우에 대해 개발자는 책임을 지지 않습니다.\n\n제5조 (문의처)\n서비스 이용 중 불편 사항이나 문의가 있으실 경우 아래 이메일로 연락 주시기 바랍니다.\n이메일: seriessnap.co@gmail.com';
 
   @override
   String get alarmOptimization => '알람 울림 최적화';
@@ -763,7 +764,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get fortuneNewYearButton => '2025 신년운세 보기';
+  String get fortuneNewYearButton => '2026 신년운세 보기';
 
   @override
   String get loveFortune => '애정운';

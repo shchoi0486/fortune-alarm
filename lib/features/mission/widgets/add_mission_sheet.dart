@@ -115,11 +115,28 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                           _selectedRecommendedMissions.isNotEmpty ||
                           _selectedCustomMissions.isNotEmpty;
 
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.85,
-      decoration: BoxDecoration(
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        // 시스템 뒤로가기 버튼 등으로 인해 팝이 시도될 때의 처리가 필요하다면 여기서 수행
+      },
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.70,
+        decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(
+          color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.08),
+          width: 0.8,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -485,10 +502,10 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                   ),
                 ),
                 
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 // 알림 설정
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   decoration: BoxDecoration(
                     color: isDark ? Colors.grey[800] : Colors.grey[100],
                     borderRadius: BorderRadius.circular(16),
@@ -505,19 +522,23 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                               Text('알림 받기', style: TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
-                          Switch(
-                            value: _isAlarmEnabled,
-                            onChanged: (value) {
-                              setState(() {
-                                _isAlarmEnabled = value;
-                              });
-                            },
-                            activeColor: Colors.blueAccent,
+                          Transform.scale(
+                            scale: 0.85,
+                            child: Switch(
+                              value: _isAlarmEnabled,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isAlarmEnabled = value;
+                                });
+                              },
+                              activeColor: Colors.blueAccent,
+                            ),
                           ),
                         ],
                       ),
                       if (_isAlarmEnabled) ...[
-                        const Divider(height: 24),
+                        const Divider(height: 1, thickness: 0.5),
+                        const SizedBox(height: 8),
                         InkWell(
                           onTap: () async {
                             final TimeOfDay? picked = await showTimePicker(
@@ -538,31 +559,35 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                               });
                             }
                           },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('알림 시간', style: TextStyle(fontSize: 14)),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: isDark ? Colors.grey[700] : Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: isDark ? Colors.grey[600]! : Colors.grey[300]!,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('알림 시간', style: TextStyle(fontSize: 14)),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: isDark ? Colors.grey[700] : Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: isDark ? Colors.white10 : Colors.grey[300]!,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    _alarmTime.format(context),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueAccent,
+                                    ),
                                   ),
                                 ),
-                                child: Text(
-                                  '${_alarmTime.hour.toString().padLeft(2, '0')}:${_alarmTime.minute.toString().padLeft(2, '0')}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blueAccent,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
+                        const SizedBox(height: 8),
                       ],
                     ],
                   ),
@@ -575,7 +600,8 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
           ),
         ],
       ),
-    );
+    ),
+  );
   }
 
   String _getCategoryName(MissionCategory category) {

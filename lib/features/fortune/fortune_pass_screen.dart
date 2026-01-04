@@ -484,12 +484,15 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
             ],
           ),
         ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            _buildFreeChargeTab(isDark, cardColor, borderColor, textColor, subTextColor),
-            _buildSubscriptionTab(isDark, cardColor, borderColor, textColor, subTextColor),
-          ],
+        body: SafeArea(
+          bottom: true,
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildFreeChargeTab(isDark, cardColor, borderColor, textColor, subTextColor),
+              _buildSubscriptionTab(isDark, cardColor, borderColor, textColor, subTextColor),
+            ],
+          ),
         ),
       ),
     );

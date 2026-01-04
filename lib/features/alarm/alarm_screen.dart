@@ -129,7 +129,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.add, color: textColor),
+                      icon: Icon(Icons.add_rounded, color: textColor),
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       onPressed: () {
@@ -258,14 +258,16 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: const Color(0xFFE57373),
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const AddAlarmScreen()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add_rounded, color: Colors.white, size: 32),
       ),
     );
   }

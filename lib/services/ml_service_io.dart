@@ -408,16 +408,16 @@ class MLService {
 
           // 개선된 성공 조건 (하이브리드 점수 기반):
           // 1. 라벨 일치
-          // 2. 최종 점수가 0.60 이상 (기준 추가 완화: 0.65 -> 0.60) - 약간 떨어져서 찍는 경우 대응
-          // 3. 최종 점수가 0.70 이상이면 라벨 불일치 무시 (기준 추가 완화: 0.75 -> 0.70)
-          // 4. 색상 유사도가 매우 높고(0.85 이상) 형태 유사도도 어느정도(0.5 이상) 있으면 성공
+          // 2. 최종 점수가 0.55 이상 (기준 추가 완화: 0.60 -> 0.55) - 인식 난이도 하향
+          // 3. 최종 점수가 0.65 이상이면 라벨 불일치 무시 (기준 추가 완화: 0.70 -> 0.65)
+          // 4. 색상 유사도가 매우 높고(0.80 이상) 형태 유사도도 어느정도(0.45 이상) 있으면 성공
           
-          final bool highColorMatch = (colorSim >= 0.85 && simEff >= 0.5);
+          final bool highColorMatch = (colorSim >= 0.80 && simEff >= 0.45);
           
-          // 더 유연한 성공 조건: 라벨이 일치하더라도 최소한의 유사도(0.50)는 있어야 함
-          final bool strictLabelMatch = labelMatch && maxSimilarity >= 0.50;
+          // 더 유연한 성공 조건: 라벨이 일치하더라도 최소한의 유사도(0.45)는 있어야 함
+          final bool strictLabelMatch = labelMatch && maxSimilarity >= 0.45;
           
-          final bool successCandidate = (strictLabelMatch || maxSimilarity >= 0.60 || highColorMatch);
+          final bool successCandidate = (strictLabelMatch || maxSimilarity >= 0.55 || highColorMatch);
           
           if (successCandidate) {
             _successStreak += 1;

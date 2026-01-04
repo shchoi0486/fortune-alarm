@@ -35,15 +35,14 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   Timer? _sfxStopTimer;
   bool? _hasVibrator;
   static const List<_SpawnSpec> _spawnPool = [
-    _SpawnSpec(assetPath: 'assets/icon/fortuni1_trans.webp', points: 10, isFake: false, weight: 22),
-    _SpawnSpec(assetPath: 'assets/icon/fortuni2_trans.webp', points: 10, isFake: false, weight: 22),
-    _SpawnSpec(assetPath: 'assets/icon/fortuni4_joyful_trans.webp', points: 20, isFake: false, weight: 12),
-    _SpawnSpec(assetPath: 'assets/icon/fortuni5_shame_trans.webp', points: 15, isFake: false, weight: 12),
-    _SpawnSpec(assetPath: 'assets/icon/rabit.webp', points: 0, isFake: false, weight: 6),
-    _SpawnSpec(assetPath: 'assets/icon/panda.webp', points: 0, isFake: false, weight: 10),
-    _SpawnSpec(assetPath: 'assets/icon/dog.webp', points: 0, isFake: false, weight: 10), // Set to 0 points as requested
-    _SpawnSpec(assetPath: 'assets/icon/fortuni6_angry2_trans.webp', points: -20, isFake: true, weight: 12),
-    _SpawnSpec(assetPath: 'assets/icon/tiger.webp', points: 0, isFake: false, weight: 6),
+    _SpawnSpec(assetPath: 'assets/icon/fortuni1_trans.webp', points: 25, isFake: false, weight: 35),
+    _SpawnSpec(assetPath: 'assets/icon/fortuni4_joyful_trans.webp', points: 35, isFake: false, weight: 10),
+    _SpawnSpec(assetPath: 'assets/icon/fortuni5_shame_trans.webp', points: 25, isFake: false, weight: 10),
+    _SpawnSpec(assetPath: 'assets/icon/rabit.webp', points: 0, isFake: false, weight: 9),
+    _SpawnSpec(assetPath: 'assets/icon/panda.webp', points: 0, isFake: false, weight: 9),
+    _SpawnSpec(assetPath: 'assets/icon/dog.webp', points: 0, isFake: false, weight: 9),
+    _SpawnSpec(assetPath: 'assets/icon/fortuni6_angry2_trans.webp', points: -10, isFake: true, weight: 9),
+    _SpawnSpec(assetPath: 'assets/icon/tiger.webp', points: 0, isFake: false, weight: 9),
   ];
   // Map hole index to character
   final Map<int, FortuneCharacter> _activeHoles = {};
@@ -52,7 +51,7 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   
   bool _isGameOver = false;
   bool _isSuccess = false;
-  final int _targetScore = 50;
+  final int _targetScore = 100;
   final int _minCatches = 5;
   
   late AnimationController _comboController;
@@ -70,6 +69,9 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   // Grid settings
   final int _gridRows = 3;
   final int _gridCols = 3;
+  
+  _CharacterCategory? _lastCategory;
+  int _consecutiveCategoryCount = 0;
   
   @override
   void initState() {
@@ -140,7 +142,7 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
         if (_hasVibrator == true) {
           Vibration.vibrate(pattern: [0, 70, 60, 70]);
         }
-        await _playSfx('sounds/waves.ogg', volume: 0.22, maxDuration: const Duration(milliseconds: 420));
+        await _playSfx('sounds/ui_success.ogg', volume: 0.22, maxDuration: const Duration(milliseconds: 420));
         Navigator.of(context).pop('timeout');
       }
     });
@@ -258,8 +260,8 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   void _scheduleNextSpawn() {
     if (_isGameOver || !mounted) return;
     
-    // Random delay between spawns: 400ms to 1200ms
-    final delay = Duration(milliseconds: 400 + _random.nextInt(800));
+    // Random delay between spawns: 200ms to 800ms (Previously 400ms to 1200ms)
+    final delay = Duration(milliseconds: 200 + _random.nextInt(600));
     
     _spawnTimer = Timer(delay, () {
       if (!_isGameOver && mounted) {
@@ -270,16 +272,47 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   }
 
   _SpawnSpec _pickSpawnSpec() {
+    // Determine the category of each spec for filtering
+    _CharacterCategory getCat(_SpawnSpec s) {
+      if (s.isFake) return _CharacterCategory.bad;
+      if (s.points > 0) return _CharacterCategory.good;
+      return _CharacterCategory.neutral;
+    }
+
+    // Filter the pool if we've reached the consecutive limit
+    List<_SpawnSpec> availablePool = _spawnPool;
+    if (_consecutiveCategoryCount >= 2 && _lastCategory != null) {
+      final filtered = _spawnPool.where((s) => getCat(s) != _lastCategory).toList();
+      if (filtered.isNotEmpty) {
+        availablePool = filtered;
+      }
+    }
+
     int totalWeight = 0;
-    for (final s in _spawnPool) {
+    for (final s in availablePool) {
       totalWeight += s.weight;
     }
+    
     int roll = _random.nextInt(totalWeight);
-    for (final s in _spawnPool) {
+    _SpawnSpec selected = availablePool.first;
+    for (final s in availablePool) {
       roll -= s.weight;
-      if (roll < 0) return s;
+      if (roll < 0) {
+        selected = s;
+        break;
+      }
     }
-    return _spawnPool.first;
+
+    // Update tracking
+    final selectedCat = getCat(selected);
+    if (selectedCat == _lastCategory) {
+      _consecutiveCategoryCount++;
+    } else {
+      _lastCategory = selectedCat;
+      _consecutiveCategoryCount = 1;
+    }
+
+    return selected;
   }
 
   void _spawnCharacter() {
@@ -305,12 +338,18 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
       isFake: spec.isFake,
       points: spec.points,
       spawnTime: DateTime.now(),
-      duration: Duration(milliseconds: 1000 + _random.nextInt(600)), // Slightly faster for single spawn mode
+      // Duration: 600ms to 1200ms (Previously 1000ms to 1600ms)
+      duration: Duration(milliseconds: 600 + _random.nextInt(600)),
     );
 
     setState(() {
       _activeHoles[holeIndex] = char;
     });
+
+    // 캐릭터 등장 피드백
+    try {
+      HapticFeedback.selectionClick();
+    } catch (_) {}
 
     // Auto remove after duration
     Timer(char.duration, () {
@@ -337,33 +376,38 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
       _activeHoles.remove(holeIndex);
       
       if (char.isFake) {
-        _score = max(0, _score + char.points); // Negative points
+        // Angry Fortune: Reduce score, reset combo
+        _score = max(0, _score + char.points);
         _combo = 0;
+        _lastCatchTime = null;
       } else {
+        // Normal character (Fortune or Animal)
         _catchCount++;
-        if (char.points == 0) {
-          _combo = 0;
-          _lastCatchTime = null;
-        } else {
+        
+        if (char.points > 0) {
+          // It's a Fortune!
           final now = DateTime.now();
-
           if (_lastCatchTime != null && now.difference(_lastCatchTime!) < const Duration(milliseconds: 1000)) {
             _combo++;
             _comboController.forward(from: 0);
           } else {
             _combo = 1;
           }
-
           _lastCatchTime = now;
 
-          int bonus = (_combo > 1) ? (_combo * 2) : 0;
+          int bonus = (_combo > 1) ? (_combo * 5) : 0;
           _score += char.points + bonus;
-
-          if (_score >= _targetScore && _catchCount >= _minCatches) {
-            _isGameOver = true;
-            shouldFinish = true;
-          }
+        } else {
+          // It's a 0-point animal
+          _combo = 0;
+          _lastCatchTime = null;
         }
+      }
+
+      // Mission completion check
+      if (_score >= _targetScore && _catchCount >= _minCatches) {
+        _isGameOver = true;
+        shouldFinish = true;
       }
     });
 
@@ -382,9 +426,9 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
     } else {
       HapticFeedback.mediumImpact(); // light -> medium으로 강화
       if (char.points == 0) {
-        _playSfx('sounds/birds.ogg', volume: 0.12, maxDuration: const Duration(milliseconds: 140));
+        _playSfx('sounds/ui_click.ogg', volume: 0.12, maxDuration: const Duration(milliseconds: 140));
       } else {
-        _playSfx('sounds/birds.ogg', volume: 0.22, maxDuration: const Duration(milliseconds: 180));
+        _playSfx('sounds/ui_click.ogg', volume: 0.22, maxDuration: const Duration(milliseconds: 180));
       }
     }
   }
@@ -401,8 +445,13 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
     }
     
     if (mounted) {
-      HapticFeedback.mediumImpact();
-      await _playSfx('sounds/morning.ogg', volume: 0.24, maxDuration: const Duration(milliseconds: 520));
+      try {
+        HapticFeedback.heavyImpact();
+        if (_hasVibrator == true) {
+          Vibration.vibrate(pattern: [0, 100, 50, 100, 50, 200]);
+        }
+        await _playSfx('sounds/ui_success.ogg', volume: 0.5);
+      } catch (_) {}
       
       setState(() {
         _isSuccess = true;
@@ -855,126 +904,128 @@ class MoleHole extends StatelessWidget {
     // 2.5D Style Hole
     // Consists of: Back (Dark Hole), Character (Middle), Front (Mound Lip)
     
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      clipBehavior: Clip.none, // Allow character to pop out of bounds if needed
-      children: [
-        // Layer 1: Hole Background (Oval)
-        Positioned(
-          bottom: 5,
-          child: Container(
-            width: 88,
-            height: 38,
-            decoration: BoxDecoration(
-              color: const Color(0xFF2D1B15), // Very Dark Brown (Hole interior)
-              borderRadius: BorderRadius.all(Radius.elliptical(88, 38)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 2,
-                  offset: const Offset(0, 2),
-                )
-              ],
-            ),
-          ),
-        ),
-
-        // Layer 2: Character with Mask
-        // We need to mask the bottom of the character so it looks like it's inside the hole.
-        // But we want the top to stick out.
-        // Simplest way: Place character here, and cover its bottom with the "Front Mound".
-        if (character != null)
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        clipBehavior: Clip.none,
+        children: [
+          // Layer 1: Hole Background (Oval)
           Positioned(
-            bottom: 14, // Align with hole center
-            child: TweenAnimationBuilder<double>(
-              key: ValueKey(character!.id),
-              tween: Tween(begin: 0.0, end: 1.0),
-              duration: const Duration(milliseconds: 200), // Faster pop
-              curve: Curves.easeOutBack,
-              builder: (context, value, child) {
-                return Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    Transform.translate(
-                      offset: Offset(0, 25 * (1 - value)), // Start 25px down, move up to 0
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: onTap,
-                        child: _buildCharacterImage(character!, popValue: value),
-                      ),
-                    ),
-                    if (hitController != null)
-                      AnimatedBuilder(
-                        animation: hitController!,
-                        builder: (context, child) {
-                          final effectValue = hitController!.value;
-                          if (effectValue == 0 || effectValue == 1) return const SizedBox.shrink();
-                          
-                          final scale = 0.5 + (1.2 * effectValue);
-                          final opacity = (1.0 - effectValue).clamp(0.0, 1.0);
-                          
-                          return Transform.scale(
-                            scale: scale,
-                            child: Opacity(
-                              opacity: opacity,
-                              child: Container(
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white, width: 4),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.5),
-                                      blurRadius: 10,
-                                      spreadRadius: 2,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+            bottom: 5,
+            child: IgnorePointer(
+              child: Container(
+                width: 88,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF2D1B15),
+                  borderRadius: BorderRadius.all(Radius.elliptical(88, 38)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 2,
+                      offset: const Offset(0, 2),
+                    )
                   ],
-                );
-              },
+                ),
+              ),
             ),
           ),
-          
-        // Layer 3: Front Mound (The Lip)
-        // This covers the bottom of the character and the bottom half of the hole
-        Positioned(
-          bottom: 0,
-          child: Container(
-            width: 98,
-            height: 24, 
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: isDarkMode 
-                    ? [const Color(0xFF5E35B1), const Color(0xFF4527A0)] // Dark Mound
-                    : [const Color(0xFFA1887F), const Color(0xFF8D6E63)], // Light Brown Mound
+  
+          // Layer 2: Character with Mask
+          if (character != null)
+            Positioned(
+              bottom: 14,
+              child: IgnorePointer(
+                child: TweenAnimationBuilder<double>(
+                  key: ValueKey(character!.id),
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOutBack,
+                  builder: (context, value, child) {
+                    return Stack(
+                      alignment: Alignment.center,
+                      clipBehavior: Clip.none,
+                      children: [
+                        Transform.translate(
+                          offset: Offset(0, 25 * (1 - value)),
+                          child: _buildCharacterImage(character!, popValue: value),
+                        ),
+                        if (hitController != null)
+                          AnimatedBuilder(
+                            animation: hitController!,
+                            builder: (context, child) {
+                              final effectValue = hitController!.value;
+                              if (effectValue == 0 || effectValue == 1) return const SizedBox.shrink();
+                              
+                              final scale = 0.5 + (1.2 * effectValue);
+                              final opacity = (1.0 - effectValue).clamp(0.0, 1.0);
+                              
+                              return Transform.scale(
+                                scale: scale,
+                                child: Opacity(
+                                  opacity: opacity,
+                                  child: Container(
+                                    width: 80,
+                                    height: 80,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.white, width: 4),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.white.withOpacity(0.5),
+                                          blurRadius: 10,
+                                          spreadRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                      ],
+                    );
+                  },
+                ),
               ),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(45),
-                bottomRight: Radius.circular(45),
-                topLeft: Radius.circular(15), 
-                topRight: Radius.circular(15),
+            ),
+            
+          // Layer 3: Front Mound (The Lip)
+          Positioned(
+            bottom: 0,
+            child: IgnorePointer(
+              child: Container(
+                width: 98,
+                height: 24, 
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: isDarkMode 
+                        ? [const Color(0xFF5E35B1), const Color(0xFF4527A0)]
+                        : [const Color(0xFFA1887F), const Color(0xFF8D6E63)],
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(45),
+                    bottomRight: Radius.circular(45),
+                    topLeft: Radius.circular(15), 
+                    topRight: Radius.circular(15),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    )
+                  ],
+                ),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 5,
-                  offset: const Offset(0, 3),
-                )
-              ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -988,17 +1039,17 @@ class MoleHole extends StatelessWidget {
       errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, color: Colors.red),
     );
 
-    final visibleFactor = (0.22 + (0.33 * popValue)).clamp(0.22, 0.58);
+    final visibleFactor = (0.30 + (0.50 * popValue)).clamp(0.30, 0.80);
 
     return SizedBox(
-      width: 100, // Reduced from 108
-      height: 100, // Reduced from 108
+      width: 100,
+      height: 100,
       child: ClipRect(
         child: Align(
           alignment: Alignment.topCenter,
           heightFactor: visibleFactor,
           child: Transform.scale(
-            scale: 1.48, // Slightly reduced scale
+            scale: 1.35, // Slightly reduced scale to show more body
             alignment: Alignment.topCenter,
             child: img,
           ),
@@ -1084,3 +1135,5 @@ class _FieldClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
+
+enum _CharacterCategory { good, neutral, bad }

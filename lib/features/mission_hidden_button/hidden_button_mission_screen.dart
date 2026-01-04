@@ -165,7 +165,11 @@ class _HiddenButtonMissionScreenState extends ConsumerState<HiddenButtonMissionS
 
   void _playSuccessFeedback() {
     try {
-      HapticFeedback.mediumImpact();
+      HapticFeedback.heavyImpact();
+      _audioPlayer.play(AssetSource('sounds/morning.ogg'), volume: 0.25);
+      if (Platform.isAndroid || Platform.isIOS) {
+         Vibration.vibrate(pattern: [0, 100, 50, 100]);
+      }
     } catch (_) {}
   }
 
@@ -258,6 +262,7 @@ class _HiddenButtonMissionScreenState extends ConsumerState<HiddenButtonMissionS
       setState(() {
         _countdown -= 1;
       });
+      _playTickFeedback(); // 카운트다운 틱 피드백 추가
     });
   }
 
@@ -332,6 +337,7 @@ class _HiddenButtonMissionScreenState extends ConsumerState<HiddenButtonMissionS
       
       if (_inputIndex + 1 >= _sequence.length) {
         _inputTimer?.cancel();
+        _playSuccessFeedback(); // 성공 피드백 호출
         setState(() {
           _isSuccess = true;
         });

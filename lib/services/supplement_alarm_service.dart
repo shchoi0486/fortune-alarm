@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:io';
-import 'dart:ui';
-import 'dart:isolate';
 
 import 'notification_service.dart';
 import '../features/mission/supplement/models/supplement_settings.dart';
@@ -153,12 +151,13 @@ class SupplementAlarmService {
 
     final String payload = 'supplement_$id';
 
-    // 포그라운드 Isolate로 신호 보내기 (앱이 켜져 있을 때 즉시 화면 전환)
+    /* [사용자 요청] 앱이 켜져 있을 때 즉시 화면 전환되는 기능을 제거하여 덜 방해되도록 수정
     final SendPort? uiSendPort = IsolateNameServer.lookupPortByName('alarm_notification_port');
     if (uiSendPort != null) {
       debugPrint('[SupplementAlarm] Sending signal to Foreground UI Isolate.');
       uiSendPort.send(payload);
     }
+    */
 
     debugPrint('[SupplementAlarm] Calling showSupplementNotification. Payload: $payload');
     await notificationService.showSupplementNotification(

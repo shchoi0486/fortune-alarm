@@ -436,11 +436,11 @@ abstract class AppLocalizations {
   /// **'New Year Fortune'**
   String get newYearFortune;
 
-  /// No description provided for @totalFortune2025.
+  /// No description provided for @totalFortune2026.
   ///
   /// In en, this message translates to:
-  /// **'2025 Total Fortune'**
-  String get totalFortune2025;
+  /// **'2026 Total Fortune'**
+  String get totalFortune2026;
 
   /// No description provided for @traditionalFortune.
   ///
@@ -631,7 +631,7 @@ abstract class AppLocalizations {
   /// No description provided for @privacyPolicy.
   ///
   /// In en, this message translates to:
-  /// **'Privacy Policy'**
+  /// **'Terms of Service and Privacy Policy\n\n1. General Provisions\n\nArticle 1 (Purpose)\nThe purpose of these Terms is to define the conditions and procedures for using the service provided by \'Fortune Alarm\' (hereinafter referred to as the \'Service\'), as well as the rights, obligations, and responsibilities of users and the developer.\n\nArticle 2 (Privacy Policy)\n\n1. Items and Method of Personal Information Collection\nThis Service can be used without membership registration and does not store or collect users\' personal information on a separate server.\nHowever, the following information may be generated and stored on the device during the use of the Service:\n- Alarm settings, mission completion records, fortune cookie acquisition history, etc.\n\n2. Information on Device Permission Usage\nThe Service uses the following permissions to the minimum extent necessary to provide the Service:\n- Notifications (Required): Used for alarm execution and fortune cookie notifications.\n- Exact Alarm & Battery Optimization Exclusion (Required): Used to ensure alarms ring on time even in power-saving mode.\n- Display Over Other Apps (Required): Used to display the alarm screen on the lock screen or while using other apps.\n- Camera (Optional): Used only for \'Object Snap\' mission; captured images are processed only on the device and are not transmitted to a server.\n\n3. Advertising Services and Data Processing\nThis Service uses Google AdMob to deliver advertisements for free service provision.\nGoogle may collect some non-personally identifiable information, such as Advertising ID (ADID), for personalized ad settings.\n- Google Privacy Policy: https://policies.google.com/privacy\n\nArticle 3 (Data Storage and Deletion)\nThis Service is a local app that stores data on the user\'s device.\nIf you delete the app, all data stored on the device (alarms, mission records, etc.) will be immediately deleted and cannot be recovered.\n\nArticle 4 (Disclaimer)\n1. The fortune information provided by this Service is for entertainment purposes only, and its accuracy or reliability is not guaranteed.\n2. The developer is not responsible if the alarm does not ring due to device setting changes (turning off notifications, battery optimization, etc.) or system errors.\n\nArticle 5 (Contact Information)\nIf you have any inconveniences or inquiries while using the Service, please contact us at the email below.\nEmail: seriessnap.co@gmail.com'**
   String get privacyPolicy;
 
   /// No description provided for @alarmOptimization.
@@ -1489,7 +1489,7 @@ abstract class AppLocalizations {
   /// No description provided for @fortuneNewYearButton.
   ///
   /// In en, this message translates to:
-  /// **'View 2025 New Year Fortune'**
+  /// **'View 2026 New Year Fortune'**
   String get fortuneNewYearButton;
 
   /// No description provided for @loveFortune.

@@ -20,17 +20,17 @@ class NoticeScreen extends StatelessWidget {
     final notices = [
       Notice(
         title: l10n.notice1Title,
-        date: '2025.12.21',
+        date: '2026.12.21',
         content: l10n.notice1Content,
       ),
       Notice(
         title: l10n.notice2Title,
-        date: '2025.12.20',
+        date: '2026.12.20',
         content: l10n.notice2Content,
       ),
       Notice(
         title: l10n.notice3Title,
-        date: '2025.12.15',
+        date: '2026.12.15',
         content: l10n.notice3Content,
       ),
     ];

@@ -14,6 +14,7 @@ import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
 import '../../providers/alarm_list_provider.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import '../../services/sharing_service.dart';
 import '../../core/utils/image_helper.dart';
 import 'mixins/fortune_access_mixin.dart';
 
@@ -203,6 +204,19 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     }
   }
 
+  Future<void> _playSfx(String assetPath, {double volume = 0.5, Duration? maxDuration}) async {
+    try {
+      final player = AudioPlayer();
+      await player.play(AssetSource(assetPath), volume: volume);
+      if (maxDuration != null) {
+        Future.delayed(maxDuration, () => player.stop());
+      }
+      player.onPlayerComplete.listen((_) => player.dispose());
+    } catch (e) {
+      debugPrint('Error playing SFX: $assetPath - $e');
+    }
+  }
+
   Future<void> _checkResult() async {
     if (_isChecking) return;
     
@@ -236,6 +250,8 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
       _loadingProgress = 0.0;
     });
 
+    _playSfx('sounds/ui_click.ogg', volume: 0.2);
+
     _loadingTimer?.cancel();
     int totalSteps = 100;
     int durationMs = 3000; // 3 seconds
@@ -257,9 +273,14 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     });
   }
 
-  void _processResult() {
+  void _processResult() async {
     try {
       HapticFeedback.heavyImpact();
+      if (await Vibration.hasVibrator() == true) {
+        Vibration.vibrate(pattern: [0, 100, 50, 100]);
+      }
+      // 효과음 제거 요청으로 주석 처리
+      // await _playSfx('sounds/ui_success.ogg', volume: 0.5);
     } catch (_) {}
     setState(() {
       _loveResult = TarotRepository.drawCard(category: "love", date: widget.targetDate);
@@ -284,6 +305,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     if (emptyIndex != -1) {
       try {
         HapticFeedback.mediumImpact();
+        _playSfx('sounds/ui_click.ogg', volume: 0.1, maxDuration: const Duration(milliseconds: 300));
       } catch (_) {}
       _startMovingAnimation(cardIndex, emptyIndex);
     }
@@ -338,6 +360,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     if (_selectedSlots[slotIndex] != null) {
       try {
         HapticFeedback.lightImpact();
+        _playSfx('sounds/ui_click.ogg', volume: 0.05, maxDuration: const Duration(milliseconds: 200));
       } catch (_) {}
       setState(() {
         _selectedSlots[slotIndex] = null;
@@ -713,59 +736,100 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                 _buildResultCard("wealth", AppLocalizations.of(context)!.wealthFortune, const Color(0xFFB45309), _wealthResult!), // Darker Amber/Gold
                 const SizedBox(height: 30),
                 _buildResultCard("success", AppLocalizations.of(context)!.successFortune, const Color(0xFF2563EB), _successResult!), // Stronger Blue
-                const SizedBox(height: 50),
-                SizedBox(
-                  width: double.infinity,
-                  height: 64,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF334155), // Lighter Slate
-                          Color(0xFF1E293B), // Darker Slate
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFFFD700).withOpacity(0.2),
-                          blurRadius: 15,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: ElevatedButton(
-                      onPressed: _handleClose,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent, // Use Container gradient
-                        shadowColor: Colors.transparent,
-                        foregroundColor: const Color(0xFFFFD700), // Gold Text
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(
-                            color: const Color(0xFFFFD700).withOpacity(0.6),
-                            width: 1.5,
+                const SizedBox(height: 30),
+                SafeArea(
+                  top: false,
+                  child: Column(
+                    children: [
+                      // 공유 버튼
+                      SizedBox(
+                        width: double.infinity,
+                        height: 64,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            SharingService.showShareOptions(
+                              context: context,
+                              title: title,
+                              description: '포춘알람이 분석한 당신의 운세 결과입니다.',
+                              results: {
+                                '연애운': _loveResult?.name ?? '',
+                                '재물운': _wealthResult?.name ?? '',
+                                '성공운': _successResult?.name ?? '',
+                              },
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFEE500),
+                            foregroundColor: Colors.black,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.share, size: 20),
+                              SizedBox(width: 10),
+                              Text("결과 공유하기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            ],
                           ),
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.auto_awesome, size: 20),
-                          const SizedBox(width: 10),
-                          Text(
-                            AppLocalizations.of(context)!.startDayButton, 
-                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)
+                      const SizedBox(height: 15),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 64,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color(0xFF334155), // Lighter Slate
+                                Color(0xFF1E293B), // Darker Slate
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFFFFD700).withOpacity(0.2),
+                                blurRadius: 15,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
-                        ],
+                          child: ElevatedButton(
+                            onPressed: _handleClose,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent, // Use Container gradient
+                              shadowColor: Colors.transparent,
+                              foregroundColor: const Color(0xFFFFD700), // Gold Text
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                side: BorderSide(
+                                  color: const Color(0xFFFFD700).withOpacity(0.6),
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.auto_awesome, size: 20),
+                                const SizedBox(width: 10),
+                                Text(
+                                  AppLocalizations.of(context)!.startDayButton, 
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1.2)
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
               ],
             ),
           ),

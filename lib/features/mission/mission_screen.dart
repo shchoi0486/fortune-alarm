@@ -7,6 +7,8 @@ import 'widgets/mission_tile.dart';
 import 'widgets/add_mission_sheet.dart';
 import 'water/water_mission_screen.dart';
 import 'supplement/supplement_mission_screen.dart';
+import 'water/providers/water_provider.dart';
+import 'supplement/providers/supplement_provider.dart';
 
 class MissionScreen extends ConsumerWidget {
   const MissionScreen({super.key});
@@ -42,7 +44,7 @@ class MissionScreen extends ConsumerWidget {
           // 0. 보상 안내 배너
           SliverToBoxAdapter(
             child: Container(
-              margin: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+              margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
               padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.amber.withOpacity(0.15),
@@ -84,7 +86,7 @@ class MissionScreen extends ConsumerWidget {
             // 1. 헤더 (달성률)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -142,7 +144,7 @@ class MissionScreen extends ConsumerWidget {
             // 1.5 통계 패널
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: Card(
                   elevation: 0,
                   color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E1E1E) : Colors.white,
@@ -227,8 +229,8 @@ class MissionScreen extends ConsumerWidget {
             // 2. 해야 할 미션 (Pending)
             if (pendingMissions.isNotEmpty) ...[
               SliverPadding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 8),
-                sliver: SliverToBoxAdapter(
+                        padding: const EdgeInsets.only(left: 16, right: 16, top: 24, bottom: 8),
+                        sliver: SliverToBoxAdapter(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -281,7 +283,21 @@ class MissionScreen extends ConsumerWidget {
                           );
                           
                           if (confirm == true) {
-                            ref.read(missionProvider).resetAllMissions();
+                            // 1. 일반 미션 초기화
+                            await ref.read(missionProvider).resetAllMissions();
+                            
+                            // 2. 특수 미션(물, 영양제) 초기화
+                            await ref.read(waterProvider.notifier).resetIntake();
+                            await ref.read(supplementProvider.notifier).resetCount();
+                            
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(AppLocalizations.of(context)!.resetMissionsConfirm),
+                                  duration: const Duration(seconds: 1),
+                                ),
+                              );
+                            }
                           }
                         },
                         icon: Icon(Icons.refresh, size: 20, color: isDark ? Colors.white54 : Colors.grey[600]),
@@ -296,9 +312,9 @@ class MissionScreen extends ConsumerWidget {
                           showModalBottomSheet(
                             context: context,
                             isScrollControlled: true,
-                            useRootNavigator: false,
+                            useRootNavigator: true,
                             shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                             ),
                             builder: (context) => AddMissionSheet(
                               onAdd: (title, icon, category, {bool? isCustom, String? id, String? alarmTime, bool? isAlarmEnabled}) {
@@ -381,7 +397,7 @@ class MissionScreen extends ConsumerWidget {
             // 3. 완료한 미션 (Completed)
             if (completedMissions.isNotEmpty) ...[
               SliverPadding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 16, bottom: 4),
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 4),
                 sliver: SliverToBoxAdapter(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -185,7 +185,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get newYearFortune => '新年の運勢';
 
   @override
-  String get totalFortune2025 => '2025年全体の運勢';
+  String get totalFortune2026 => '2026年全体の運勢';
 
   @override
   String get traditionalFortune => '土亭秘訣';
@@ -197,7 +197,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get faceReading => '観相（人相）占い';
 
   @override
-  String get missionFaceReading => 'Face Reading Mission';
+  String get missionFaceReading => '観相ミッション';
 
   @override
   String get faceFate => '顔の観相と運命';
@@ -227,40 +227,40 @@ class AppLocalizationsJa extends AppLocalizations {
   String get notice => 'お知らせ';
 
   @override
-  String get weatherConditionSunny => 'Sunny';
+  String get weatherConditionSunny => '晴れ';
 
   @override
-  String get weatherConditionCloudy => 'Cloudy';
+  String get weatherConditionCloudy => 'くもり';
 
   @override
-  String get weatherConditionFoggy => 'Foggy';
+  String get weatherConditionFoggy => '霧';
 
   @override
-  String get weatherConditionRainy => 'Rainy';
+  String get weatherConditionRainy => '雨';
 
   @override
-  String get weatherConditionSnowy => 'Snowy';
+  String get weatherConditionSnowy => '雪';
 
   @override
-  String get weatherConditionThunderstorm => 'Thunderstorm';
+  String get weatherConditionThunderstorm => '雷雨';
 
   @override
-  String get airQualityGood => 'Good';
+  String get airQualityGood => '良い';
 
   @override
-  String get airQualityNormal => 'Normal';
+  String get airQualityNormal => '普通';
 
   @override
-  String get airQualityBad => 'Bad';
+  String get airQualityBad => '悪い';
 
   @override
-  String get airQualityVeryBad => 'Very Bad';
+  String get airQualityVeryBad => '非常に悪い';
 
   @override
-  String get locationUnknown => 'Unknown Location';
+  String get locationUnknown => '不明な位置';
 
   @override
-  String get locationError => 'Location Error';
+  String get locationError => '位置情報エラー';
 
   @override
   String get faq => 'よくある質問';
@@ -403,7 +403,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String missionRewardEarnedWithCount(int missions, int cookies) {
-    return 'Congratulations! You completed $missions missions today and earned $cookies Fortune Cookie(s)!';
+    return 'おめでとうございます！今日は$missions個のミッションを達成し、フォーチュンクッキーを$cookies個獲得しました！';
   }
 
   @override
@@ -470,7 +470,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get missionShake => '振る';
 
   @override
-  String get missionFortuneCatch => 'Fortune Catch';
+  String get missionFortuneCatch => 'フォーチュニキャッチ';
 
   @override
   String get missionNoDescription => 'ミッションなしでアラームが鳴ります。';
@@ -488,43 +488,41 @@ class AppLocalizationsJa extends AppLocalizations {
   String get missionShakeDescription => '携帯電話を振るとアラームが止まります。';
 
   @override
-  String get missionFortuneCatchDescription => 'Catch the moving Fortuni!';
+  String get missionFortuneCatchDescription => '動くフォーチュニを捕まえよう！';
 
   @override
-  String get missionWalk => 'Walk';
+  String get missionWalk => '歩く';
 
   @override
-  String get missionWalkDescription => 'Walk to turn off the alarm!';
+  String get missionWalkDescription => '歩いてアラームを止めよう！';
 
   @override
-  String get missionFaceDescription => 'Keep your face in the frame for 10s.';
+  String get missionFaceDescription => '顔を枠内に10秒キープしてください。';
 
   @override
-  String get walkStepCount => 'Target Steps';
+  String get walkStepCount => '目標歩数';
 
   @override
   String walkSteps(int count) {
-    return '$count steps';
+    return '$count歩';
   }
 
   @override
-  String get missionNumberOrder => 'Number Order';
+  String get missionNumberOrder => '数字順';
 
   @override
-  String get missionNumberOrderDescription =>
-      'Tap numbers from 1 to 9 in order.';
+  String get missionNumberOrderDescription => '1から9まで順番にタップしてください。';
 
   @override
   String missionNumberOrderGuide(int nextNumber) {
-    return 'Next: $nextNumber';
+    return '次: $nextNumber';
   }
 
   @override
-  String get missionHiddenButton => 'Position Memory';
+  String get missionHiddenButton => '位置記憶';
 
   @override
-  String get missionHiddenButtonDescription =>
-      'Memorize the lit tiles in order and tap them within 10 seconds.';
+  String get missionHiddenButtonDescription => '光ったタイルを順番に覚えて、10秒以内にタップしてください。';
 
   @override
   String missionHiddenButtonDifficulty(int delta) {
@@ -532,65 +530,64 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get missionTapSprint => 'Tap Sprint';
+  String get missionTapSprint => '連打スプリント';
 
   @override
-  String get missionTapSprintDescriptionShort => 'Tap to fill the meter.';
+  String get missionTapSprintDescriptionShort => 'タップしてメーターを満たす。';
 
   @override
   String missionTapSprintDescription(int goalTaps) {
-    return 'Tap $goalTaps+ times to fill the meter.';
+    return '$goalTaps回以上タップしてメーターを満たす。';
   }
 
   @override
-  String get missionTapSprintTapHere => 'Tap';
+  String get missionTapSprintTapHere => 'タップ';
 
   @override
-  String get missionTapSprintHint => 'Fills up fast, drains if you pause.';
+  String get missionTapSprintHint => 'すぐ溜まりますが、止めると減ります。';
 
   @override
-  String get missionLeftRight => 'Left / Right';
+  String get missionLeftRight => '左 / 右';
 
   @override
-  String get missionLeftRightDescriptionShort =>
-      'Follow the prompt and pick left or right.';
+  String get missionLeftRightDescriptionShort => '指示に従って左か右を選んでください。';
 
   @override
   String missionLeftRightDescription(int targetStreak) {
-    return 'Get $targetStreak correct in a row.';
+    return '$targetStreak回連続で正解しましょう。';
   }
 
   @override
-  String get missionLeftRightPromptLeft => 'Tap LEFT';
+  String get missionLeftRightPromptLeft => '左をタップ';
 
   @override
-  String get missionLeftRightPromptRight => 'Tap RIGHT';
+  String get missionLeftRightPromptRight => '右をタップ';
 
   @override
-  String get left => 'Left';
+  String get left => '左';
 
   @override
-  String get right => 'Right';
+  String get right => '右';
 
   @override
-  String get missionHintInactivity => 'If you stop for 2 minutes, it resets.';
+  String get missionHintInactivity => '2分停止するとリセットされます。';
 
   @override
   String fortuneCatchScore(int score) {
-    return 'Score: $score';
+    return 'スコア: $score';
   }
 
   @override
-  String get fortuneCatchGoal => 'Goal: 100';
+  String get fortuneCatchGoal => '目標: 100';
 
   @override
   String fortuneCatchGoalDetail(int count, int min) {
-    return '(Catches: $count/$min)';
+    return '（捕獲: $count/$min）';
   }
 
   @override
   String fortuneCatchCombo(int combo) {
-    return '$combo Combo!';
+    return '$combo コンボ！';
   }
 
   @override
@@ -614,20 +611,20 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get shakeCount => 'Shake Count';
+  String get shakeCount => '振った回数';
 
   @override
   String shakeTimes(int count) {
-    return '$count times';
+    return '$count回';
   }
 
   @override
   String missionNumber(int number) {
-    return 'Mission $number';
+    return 'ミッション $number';
   }
 
   @override
-  String get soundBirds => 'Bird Sounds';
+  String get soundBirds => '鳥の鳴き声';
 
   @override
   String get shakeCountLabel => '振る回数';
@@ -766,7 +763,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get fortuneNewYearButton => '2025年の新正月運勢を見る';
+  String get fortuneNewYearButton => '2026年の新正月運勢を見る';
 
   @override
   String get loveFortune => '恋愛運';
@@ -1086,42 +1083,38 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get fortuneCheckButton => 'Check Fortune';
+  String get fortuneCheckButton => '運勢を見る';
 
   @override
-  String get fortuneSelectCards => 'Select 3 cards';
+  String get fortuneSelectCards => 'カードを3枚選ぶ';
 
   @override
-  String get fortuneDragCards => 'Drag and select 3 cards';
+  String get fortuneDragCards => 'ドラッグして3枚選択';
 
   @override
-  String get fortuneDetailTitle => 'Detailed Interpretation';
+  String get fortuneDetailTitle => '詳細な解釈';
 
   @override
-  String get labelFineDust => 'Fine Dust';
+  String get labelFineDust => '微小粉じん';
 
   @override
-  String get labelUltraFineDust => 'Ultra Fine Dust';
+  String get labelUltraFineDust => '超微小粉じん';
 
   @override
-  String get weatherToday => 'Today\'s Weather';
+  String get weatherToday => '今日の天気';
 
   @override
-  String get weatherUpdateMessage =>
-      'Updating weather information for current location.';
+  String get weatherUpdateMessage => '現在地の天気情報を更新しています。';
 
   @override
-  String get weatherDisclaimer =>
-      'Observed data may vary depending on local conditions or reception status.';
+  String get weatherDisclaimer => '観測データは地域の状況や受信状態により異なる場合があります。';
 
   @override
-  String get weatherSource =>
-      'Provided by Meteorological Administration, Korea Environment Corporation';
+  String get weatherSource => '提供：気象庁・韓国環境公団';
 
   @override
-  String get locationPermissionTitle => 'Allow Location Permission';
+  String get locationPermissionTitle => '位置情報の権限を許可';
 
   @override
-  String get locationPermissionDesc =>
-      'Required to display weather information.';
+  String get locationPermissionDesc => '天気情報を表示するために必要です。';
 }

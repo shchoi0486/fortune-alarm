@@ -84,17 +84,21 @@ class _WaterRecordScreenState extends ConsumerState<WaterRecordScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildMonthlySummary(),
-            const SizedBox(height: 20),
-            _buildCalendar(),
-            const SizedBox(height: 20),
-            _buildLegend(),
-          ],
+      body: SafeArea(
+        bottom: true,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildMonthlySummary(),
+              const SizedBox(height: 20),
+              _buildCalendar(),
+              const SizedBox(height: 20),
+              _buildLegend(),
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );

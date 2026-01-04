@@ -30,7 +30,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text("2025년 토정비결"),
+        title: const Text("2026년 토정비결"),
         backgroundColor: backgroundColor,
         foregroundColor: textColor,
         elevation: 0,
@@ -187,10 +187,10 @@ class _TojeongScreenState extends State<TojeongScreen> {
               ),
             ],
           ),
-          child: Column(
+              child: Column(
             children: [
               Text(
-                "2025년 을사년 토정비결",
+                "2026년 병오년 토정비결",
                 style: TextStyle(fontSize: 18, color: Colors.grey[600]),
               ),
               const SizedBox(height: 8),
@@ -291,9 +291,12 @@ class _TojeongScreenState extends State<TojeongScreen> {
     await showModalBottomSheet(
       context: context,
       backgroundColor: isDarkMode ? const Color(0xFF2C2C2C) : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (BuildContext builder) {
         return SizedBox(
-          height: 300,
+          height: 240,
           child: Column(
             children: [
               Row(
@@ -321,6 +324,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
                   initialDateTime: _birthDate,
                   minimumDate: DateTime(1900),
                   maximumDate: DateTime.now(),
+                  itemExtent: 40,
                   onDateTimeChanged: (DateTime newDate) {
                     tempPickedDate = newDate;
                   },

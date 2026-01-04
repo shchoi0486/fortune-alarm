@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibration/vibration.dart';
 import 'package:intl/intl.dart';
 import 'providers/water_provider.dart';
 import 'widgets/wave_progress.dart';
@@ -17,7 +20,23 @@ class WaterMissionScreen extends ConsumerStatefulWidget {
 }
 
 class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isSuccess = false;
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _playSfx(String assetPath) async {
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource('sounds/$assetPath'));
+    } catch (e) {
+      debugPrint('Error playing SFX: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +51,10 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
           debugPrint('Water mission goal achieved! Showing success overlay.');
           try {
             HapticFeedback.heavyImpact();
+            _playSfx('ui_success.ogg');
+            if (Platform.isAndroid || Platform.isIOS) {
+              Vibration.vibrate(pattern: [0, 100, 50, 100]);
+            }
           } catch (_) {}
           setState(() {
             _isSuccess = true;
@@ -57,178 +80,193 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
         backgroundColor: Colors.white,
         body: Stack(
           children: [
-            Column(
-              children: [
-                if (widget.useSafeAreaTop) SizedBox(height: MediaQuery.of(context).padding.top),
-                // Custom Header for minimal spacing
-                SizedBox(
-                  height: 34,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 16),
-                          child: GestureDetector(
-                            onTap: () => Navigator.pop(context),
-                            behavior: HitTestBehavior.opaque,
-                            child: const Padding(
-                              padding: EdgeInsets.all(4.0),
-                              child: Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+            SafeArea(
+              bottom: true,
+              child: Column(
+                children: [
+                  if (widget.useSafeAreaTop) SizedBox(height: MediaQuery.of(context).padding.top),
+                  // Custom Header for minimal spacing
+                  SizedBox(
+                    height: 34,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 16),
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              behavior: HitTestBehavior.opaque,
+                              child: const Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const Text(
-                        '물',
-                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    ],
+                        const Text(
+                          '물',
+                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: LayoutBuilder(
-                    builder: (context, constraints) {
-                      return SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                          child: IntrinsicHeight(
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 10),
-                                // Text Info
-                                Text(
-                                  '${NumberFormat('#,###').format(currentIntake)} ml',
-                                  style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${(percentage * 100).clamp(0, 100).toStringAsFixed(1)}%',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Color(0xFF4FC3F7), // Light Blue
-                                    fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return SingleChildScrollView(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                            child: IntrinsicHeight(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  // Text Info
+                                  Text(
+                                    '${NumberFormat('#,###').format(currentIntake)} ml',
+                                    style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                
-                                // Progress Bar Line
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 8),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4),
-                                    child: LinearProgressIndicator(
-                                      value: percentage.clamp(0.0, 1.0),
-                                      minHeight: 6,
-                                      backgroundColor: Colors.grey[200],
-                                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4FC3F7)),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${(percentage * 100).clamp(0, 100).toStringAsFixed(1)}%',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Color(0xFF4FC3F7), // Light Blue
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
-                                
-                                const SizedBox(height: 10),
-                                
-                                // Wave Progress
-                                WaveProgress(
-                                  percentage: percentage,
-                                  color: const Color(0xFF4FC3F7), // Light Blue
-                                  size: 180,
-                                ),
-                                
-                                const SizedBox(height: 10),
-                                
-                                // Controls
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.remove, size: 28),
-                                      onPressed: () {
-                                        try {
-                                          HapticFeedback.lightImpact();
-                                        } catch (_) {}
-                                        waterNotifier.removeWater();
-                                      },
-                                    ),
-                                    const SizedBox(width: 20),
-                                    GestureDetector(
-                                       onTap: () {
-                                         try {
-                                           HapticFeedback.mediumImpact();
-                                         } catch (_) {}
-                                         waterNotifier.addWater();
-                                       },
-                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                                        child: const Icon(Icons.local_drink, size: 40, color: Color(0xFF4FC3F7)),
+                                  
+                                  // Progress Bar Line
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 8),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: percentage.clamp(0.0, 1.0),
+                                        minHeight: 6,
+                                        backgroundColor: Colors.grey[200],
+                                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4FC3F7)),
                                       ),
                                     ),
-                                    const SizedBox(width: 20),
-                                    IconButton(
-                                      icon: const Icon(Icons.add, size: 28),
-                                      onPressed: () {
-                                        try {
-                                          HapticFeedback.mediumImpact();
-                                        } catch (_) {}
-                                        waterNotifier.addWater();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                 Text(
-                                  '+ ${waterState.settings.cupSize} ml',
-                                  style: TextStyle(color: Colors.grey[600], fontSize: 13),
-                                ),
-                                
-                                const SizedBox(height: 20),
-                                
-                                // Bottom Menu - Pushed to bottom
-                                const Spacer(),
-                                
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                                  child: Column(
+                                  ),
+                                  
+                                  const SizedBox(height: 10),
+                                  
+                                  // Wave Progress
+                                  WaveProgress(
+                                    percentage: percentage,
+                                    color: const Color(0xFF4FC3F7), // Light Blue
+                                    size: 180,
+                                  ),
+                                  
+                                  const SizedBox(height: 10),
+                                  
+                                  // Controls
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      _buildMenuItem(
-                                        context,
-                                        icon: Icons.bar_chart_rounded,
-                                        title: '미션 기록 보기',
-                                        onTap: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (_) => const WaterRecordScreen()));
+                                      IconButton(
+                                        icon: const Icon(Icons.remove, size: 28),
+                                        onPressed: () {
+                                          try {
+                                            HapticFeedback.lightImpact();
+                                          } catch (_) {}
+                                          waterNotifier.removeWater();
                                         },
                                       ),
-                                      const SizedBox(height: 8),
-                                      _buildMenuItem(
-                                        context,
-                                        title: '목표',
-                                        value: '${NumberFormat('#,###').format(dailyGoal)} ml',
-                                        icon: Icons.edit_note,
-                                        onTap: () {
-                                          _showGoalSettingDialog(context, ref, dailyGoal);
-                                        },
+                                      const SizedBox(width: 20),
+                                      GestureDetector(
+                                         onTap: () {
+                                           try {
+                                             HapticFeedback.mediumImpact();
+                                             _playSfx('waves.ogg');
+                                           } catch (_) {}
+                                           waterNotifier.addWater();
+                                         },
+                                         child: Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                          child: const Icon(Icons.local_drink, size: 40, color: Color(0xFF4FC3F7)),
+                                        ),
                                       ),
-                                       const SizedBox(height: 8),
-                                       _buildMenuItem(
-                                        context,
-                                        title: '알림',
-                                        icon: Icons.notifications_none_rounded,
-                                        onTap: () {
-                                           Navigator.push(context, MaterialPageRoute(builder: (_) => const WaterAlarmScreen()));
+                                      const SizedBox(width: 20),
+                                      IconButton(
+                                        icon: const Icon(Icons.add, size: 28),
+                                        onPressed: () {
+                                          try {
+                                            HapticFeedback.mediumImpact();
+                                            _playSfx('waves.ogg');
+                                          } catch (_) {}
+                                          waterNotifier.addWater();
                                         },
                                       ),
                                     ],
                                   ),
-                                ),
-                                const SizedBox(height: 30), // Bottom padding
-                              ],
+                                   Text(
+                                    '+ ${waterState.settings.cupSize} ml',
+                                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                                  ),
+                                  
+                                  const SizedBox(height: 20),
+                                  
+                                  // Bottom Menu - Pushed to bottom
+                                  const Spacer(),
+                                  
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    child: Column(
+                                      children: [
+                                        _buildMenuItem(
+                                          context,
+                                          icon: Icons.bar_chart_rounded,
+                                          title: '미션 기록 보기',
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (_) => const WaterRecordScreen()));
+                                          },
+                                        ),
+                                        const SizedBox(height: 8),
+                                        _buildMenuItem(
+                                          context,
+                                          title: '목표',
+                                          value: '${NumberFormat('#,###').format(dailyGoal)} ml',
+                                          icon: Icons.edit_note,
+                                          onTap: () {
+                                            _showGoalSettingDialog(context, ref, dailyGoal);
+                                          },
+                                        ),
+                                         const SizedBox(height: 8),
+                                         _buildMenuItem(
+                                          context,
+                                          title: '알림',
+                                          icon: Icons.notifications_none_rounded,
+                                          trailing: Switch(
+                                            value: waterState.settings.isAlarmEnabled,
+                                            onChanged: (value) {
+                                              try {
+                                                HapticFeedback.lightImpact();
+                                              } catch (_) {}
+                                              waterNotifier.updateSettings(isAlarmEnabled: value);
+                                            },
+                                            activeColor: const Color(0xFF4FC3F7),
+                                          ),
+                                          onTap: () {
+                                             Navigator.push(context, MaterialPageRoute(builder: (_) => const WaterAlarmScreen()));
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 30), // Bottom padding
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             if (_isSuccess)
               Positioned.fill(
@@ -252,6 +290,7 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
     String? title,
     String? customLabel,
     String? value,
+    Widget? trailing,
     bool isBlue = false,
     Color? iconColor,
     required VoidCallback onTap,
@@ -298,12 +337,17 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            const SizedBox(width: 8),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: isBlue ? Colors.white70 : Colors.grey,
-              size: 16,
-            ),
+            if (trailing != null) ...[
+              const SizedBox(width: 8),
+              trailing,
+            ] else ...[
+              const SizedBox(width: 8),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: isBlue ? Colors.white70 : Colors.grey,
+                size: 16,
+              ),
+            ],
           ],
         ),
       ),

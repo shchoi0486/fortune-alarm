@@ -1,4 +1,9 @@
+import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:vibration/vibration.dart';
+import '../../../../services/sharing_service.dart';
 import '../models/saju_data.dart';
 import '../models/saju_profile.dart';
 import '../services/saju_service.dart';
@@ -10,7 +15,7 @@ class NewYearFortuneResultScreen extends StatefulWidget {
   const NewYearFortuneResultScreen({
     super.key, 
     required this.profile,
-    this.targetYear = 2025
+    this.targetYear = 2026
   });
 
   @override
@@ -18,6 +23,7 @@ class NewYearFortuneResultScreen extends StatefulWidget {
 }
 
 class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
   late Map<String, Ganji> _saju;
   late String _fortuneText;
 
@@ -26,6 +32,35 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
     super.initState();
     _saju = SajuService.calculateSaju(widget.profile);
     _fortuneText = SajuService.getYearlyFortune(widget.profile, _saju, widget.targetYear);
+    _playRevealFeedback();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _playSfx(String assetPath) async {
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource('sounds/$assetPath'));
+    } catch (e) {
+      debugPrint('Error playing SFX: $e');
+    }
+  }
+
+  void _playRevealFeedback() async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 300));
+      if (!mounted) return;
+      HapticFeedback.heavyImpact();
+      // 효과음 제거 요청으로 주석 처리
+      // _playSfx('ui_tada.mp3'); 
+      if (Platform.isAndroid || Platform.isIOS) {
+        Vibration.vibrate(duration: 100);
+      }
+    } catch (_) {}
   }
 
   @override
@@ -56,6 +91,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
           ),
         ),
         child: SafeArea(
+          bottom: true,
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -68,6 +104,40 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
                 _buildOhaengAnalysis(),
                 const SizedBox(height: 24),
                 _buildFortuneCard(),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  height: 58,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      SharingService.showShareOptions(
+                         context: context,
+                         title: '나의 ${widget.targetYear}년 신년운세 결과',
+                         description: '${widget.profile.name}님의 신년운세 총평입니다.\n\n${_fortuneText.substring(0, _fortuneText.length > 50 ? 50 : _fortuneText.length)}...',
+                         results: {
+                           '이름': widget.profile.name,
+                           '대상 연도': '${widget.targetYear}년',
+                         },
+                       );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFEE500),
+                      foregroundColor: Colors.black,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.share, size: 20),
+                        SizedBox(width: 10),
+                        Text("결과 공유하기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
               ],
             ),
           ),

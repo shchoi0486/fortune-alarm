@@ -1,109 +1,69 @@
-import 'dart:ui';
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
-  factory NotificationService() => _instance;
+
+  factory NotificationService() {
+    return _instance;
+  }
+
   NotificationService._internal();
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  // 알림 그룹화를 위한 키
+  static const String _groupKey = 'com.snapalarm.NOTIFICATION_GROUP';
+  static const int _summaryId = 0; // Android 그룹 요약 알림용 ID
+
   Future<void> init(
-    Future<void> Function(String?)? onNotificationTap, {
-    Future<void> Function(NotificationResponse)? onNotificationResponse,
+    Future<dynamic> Function(int, String?, String?, String?)? onDidReceiveLocalNotification, {
+    void Function(NotificationResponse)? onNotificationResponse,
     bool isBackground = false,
   }) async {
-    tz.initializeTimeZones();
-
-    try {
-      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(timeZoneName));
-    } catch (e) {
-      debugPrint('Failed to get local timezone: $e');
-    }
+    // 타임존 설정
+    await _configureLocalTimeZone();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
 
-    const DarwinInitializationSettings initializationSettingsDarwin =
+    final DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
-      requestSoundPermission: true,
-      requestBadgePermission: true,
       requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
     );
 
-    const InitializationSettings initializationSettings = InitializationSettings(
+    final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
     );
 
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        if (onNotificationResponse != null) {
-          await onNotificationResponse(response);
-        } else if (onNotificationTap != null) {
-          // Backward compatibility
-          await onNotificationTap(response.payload);
-        }
-      },
+      onDidReceiveNotificationResponse: onNotificationResponse,
+      onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
-
-    // Android 13 이상 알림 권한 요청 (백그라운드가 아닐 때만)
-    if (!isBackground) {
-      final platform = flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-      if (platform != null) {
-        await platform.requestNotificationsPermission();
-      }
-    }
   }
 
-  Future<void> _updateAndCacheTimezone() async {
-    try {
-      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(timeZoneName));
-      
-      // Hive에 저장 (앱 상태 박스가 열려있는지 확인)
-      if (Hive.isBoxOpen('app_state')) {
-        await Hive.box('app_state').put('local_timezone', timeZoneName);
-      } else {
-        final box = await Hive.openBox('app_state');
-        await box.put('local_timezone', timeZoneName);
-      }
-      debugPrint('Timezone updated and cached: $timeZoneName');
-    } catch (e) {
-      debugPrint('Error updating timezone: $e');
-    }
+  Future<void> _configureLocalTimeZone() async {
+    tz.initializeTimeZones();
+    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 
-  Future<void> _loadCachedTimezone() async {
-    try {
-      String? timeZoneName;
-      if (Hive.isBoxOpen('app_state')) {
-        timeZoneName = Hive.box('app_state').get('local_timezone');
-      } else {
-        final box = await Hive.openBox('app_state');
-        timeZoneName = box.get('local_timezone');
-      }
+  Future<void> cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
+  }
 
-      if (timeZoneName != null) {
-        tz.setLocalLocation(tz.getLocation(timeZoneName));
-        debugPrint('Cached timezone loaded: $timeZoneName');
-      } else {
-        debugPrint('No cached timezone found. Using default.');
-      }
-    } catch (e) {
-      debugPrint('Error loading cached timezone: $e');
-    }
+  Future<void> cancelAllNotifications() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 
   // 영양제 알림 전용 (액션 버튼 포함)
@@ -115,54 +75,53 @@ class NotificationService {
     String? soundName,
     bool isVibrationEnabled = true,
   }) async {
-    // 소리 설정 (기본값: alarm_sound)
-    String soundResource = (soundName != null && soundName != 'default') ? soundName : 'alarm_sound';
-    if (soundResource.contains('.')) {
-      soundResource = soundResource.split('.').first;
-    }
+    const String channelId = 'supplement_channel_v1';
 
-    // 채널 ID를 소리/진동 설정에 따라 다르게 함 (설정 변경 시 새로운 채널이 생성되도록 함)
-    // [수정] channelId 접두어를 v13으로 변경하여 기존 설정 강제 갱신
-    final String channelId = 'supplement_channel_v13_${soundResource}_${isVibrationEnabled ? 'vibe' : 'novibe'}';
-
-    debugPrint('[NotificationService] Showing notification. ID: $id, Channel: $channelId, Sound: $soundResource');
+    // 액션 버튼 정의
+    final List<AndroidNotificationAction> actions = [
+      const AndroidNotificationAction(
+        'TAKE_NOW',
+        '지금 먹기',
+        showsUserInterface: true,
+        cancelNotification: true,
+      ),
+      const AndroidNotificationAction(
+        'SNOOZE',
+        '나중에',
+        showsUserInterface: true,
+        cancelNotification: true,
+      ),
+    ];
 
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
       '영양제 알림',
-      channelDescription: '영양제 섭취를 위한 전체화면 알람 채널입니다.',
+      channelDescription: '영양제 섭취 알림 채널입니다.',
       importance: Importance.max,
       priority: Priority.max,
-      category: AndroidNotificationCategory.alarm,
+      category: AndroidNotificationCategory.reminder,
       visibility: NotificationVisibility.public,
-      fullScreenIntent: true, // 전체화면 인텐트 설정
-      audioAttributesUsage: AudioAttributesUsage.alarm,
+      fullScreenIntent: false,
+      audioAttributesUsage: AudioAttributesUsage.notification,
       playSound: true,
-      sound: RawResourceAndroidNotificationSound(soundResource),
       enableVibration: isVibrationEnabled,
-      additionalFlags: Int32List.fromList(<int>[4]), // FLAG_INSISTENT
-      autoCancel: false,
-      ongoing: true,
+      autoCancel: true,
+      ongoing: false,
       ticker: '영양제 알림',
-      actions: <AndroidNotificationAction>[
-        const AndroidNotificationAction(
-          'TAKE_NOW',
-          '지금 먹을게요',
-          showsUserInterface: true,
-          cancelNotification: true,
-        ),
-        const AndroidNotificationAction(
-          'SNOOZE',
-          '나중에 먹을게요',
-          showsUserInterface: true,
-          cancelNotification: true,
-        ),
-      ],
+      actions: actions,
+      groupKey: _groupKey, // 그룹화 키 추가
     );
 
-    final NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(
+      threadIdentifier: _groupKey, // iOS 그룹화 키
+    );
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
 
     await flutterLocalNotificationsPlugin.show(
       id,
@@ -171,6 +130,346 @@ class NotificationService {
       platformChannelSpecifics,
       payload: payload,
     );
+
+    // Android 그룹 요약 알림 발송
+    await _showAndroidSummary(channelId, '영양제 알림');
+  }
+
+  // Android 그룹 요약 알림 발송용 프라이빗 메서드
+  Future<void> _showAndroidSummary(String channelId, String channelName) async {
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      channelId,
+      channelName,
+      importance: Importance.max,
+      priority: Priority.max,
+      groupKey: _groupKey,
+      setAsGroupSummary: true,
+      autoCancel: true,
+    );
+
+    final NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      _summaryId,
+      '',
+      '',
+      platformChannelSpecifics,
+    );
+  }
+
+  // 물 마시기 알림 전용
+  Future<void> showWaterNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+    bool isVibrationEnabled = true,
+  }) async {
+    const String channelId = 'water_channel_v1';
+
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      channelId,
+      '물 마시기 알림',
+      channelDescription: '물 마시기 습관을 위한 알림 채널입니다.',
+      importance: Importance.max,
+      priority: Priority.max,
+      category: AndroidNotificationCategory.reminder,
+      visibility: NotificationVisibility.public,
+      fullScreenIntent: false,
+      audioAttributesUsage: AudioAttributesUsage.notification,
+      playSound: true,
+      enableVibration: isVibrationEnabled,
+      autoCancel: true,
+      ongoing: false,
+      ticker: '물 마시기 알림',
+      groupKey: _groupKey,
+    );
+
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(threadIdentifier: _groupKey);
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      id,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: payload,
+    );
+
+    await _showAndroidSummary(channelId, '물 마시기 알림');
+  }
+
+  // 데일리 루틴 알림 전용
+  Future<void> showRoutineNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    const String channelId = 'routine_channel_v1';
+
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      channelId,
+      '데일리 루틴 알림',
+      channelDescription: '오늘의 미션을 확인하고 습관을 만드는 알림 채널입니다.',
+      importance: Importance.max,
+      priority: Priority.max,
+      category: AndroidNotificationCategory.reminder,
+      visibility: NotificationVisibility.public,
+      fullScreenIntent: false,
+      playSound: true,
+      autoCancel: true,
+      ongoing: false,
+      ticker: '데일리 루틴 알림',
+      groupKey: _groupKey,
+    );
+
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(threadIdentifier: _groupKey);
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      id,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: payload,
+    );
+
+    await _showAndroidSummary(channelId, '데일리 루틴 알림');
+  }
+
+  // 일반/커스텀 미션 알림 스케줄링
+  Future<void> scheduleMissionNotification({
+    required String missionId,
+    required String title,
+    required String body,
+    required TimeOfDay time,
+  }) async {
+    final int id = _getStableId(missionId);
+    
+    const String channelId = 'mission_channel_v1';
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      channelId,
+      '미션 알림',
+      channelDescription: '일반 미션 수행을 위한 알림 채널입니다.',
+      importance: Importance.max,
+      priority: Priority.max,
+      category: AndroidNotificationCategory.reminder,
+      visibility: NotificationVisibility.public,
+      fullScreenIntent: false,
+      autoCancel: true,
+      groupKey: _groupKey,
+    );
+
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(threadIdentifier: _groupKey);
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      _nextInstanceOfTime(time.hour, time.minute),
+      platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+      payload: 'mission_$missionId',
+    );
+
+    // 스케줄링된 알림의 경우 Android 요약 알림을 즉시 발송하면 비어있는 그룹이 보일 수 있으므로 
+    // 여기서는 groupKey 설정만으로 충분하거나, 필요시 요약 알림도 함께 스케줄링해야 합니다.
+    // 대부분의 경우 groupKey만으로도 같은 채널 내에서 그룹화가 잘 작동합니다.
+  }
+
+  Future<void> cancelMissionNotification(String missionId) async {
+    final int id = _getStableId(missionId);
+    await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  // 데일리 운세 알림 스케줄링
+  Future<void> scheduleDailyFortuneNotification({
+    required int id,
+    required TimeOfDay time,
+    required String title,
+    required String body,
+  }) async {
+    const String channelId = 'fortune_channel_v1';
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      channelId,
+      '운세 알림',
+      channelDescription: '매일 아침 운세 확인을 위한 알림 채널입니다.',
+      importance: Importance.max,
+      priority: Priority.max,
+      category: AndroidNotificationCategory.reminder,
+      visibility: NotificationVisibility.public,
+      fullScreenIntent: false,
+      autoCancel: true,
+      groupKey: _groupKey,
+    );
+
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(threadIdentifier: _groupKey);
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      _nextInstanceOfTime(time.hour, time.minute),
+      platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+      payload: 'fortune_daily_$id',
+    );
+  }
+
+  Future<void> cancelDailyFortuneNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  Future<void> cancelAllFortuneNotifications() async {
+    await flutterLocalNotificationsPlugin.cancel(40001);
+    await flutterLocalNotificationsPlugin.cancel(40002);
+  }
+
+  // 기본 운세 알림 스케줄링 (앱 초기화 시 사용)
+  Future<void> scheduleDefaultFortuneNotifications() async {
+    final box = await Hive.openBox('alarm_settings');
+    final bool isFirstRun = !box.containsKey('daily_fortune_enabled');
+    
+    if (isFirstRun) {
+      // 첫 실행 시 기본값 저장 및 스케줄링
+      await box.put('daily_fortune_enabled', true);
+      await box.put('daily_fortune_time1', '08:00');
+      await box.put('daily_fortune_time2', '13:00');
+    }
+
+    final enabled = box.get('daily_fortune_enabled', defaultValue: true);
+    if (enabled) {
+      final time1Str = box.get('daily_fortune_time1', defaultValue: '08:00');
+      final time2Str = box.get('daily_fortune_time2', defaultValue: '13:00');
+      
+      final parts1 = time1Str.split(':');
+      final time1 = TimeOfDay(hour: int.parse(parts1[0]), minute: int.parse(parts1[1]));
+      
+      final parts2 = time2Str.split(':');
+      final time2 = TimeOfDay(hour: int.parse(parts2[0]), minute: int.parse(parts2[1]));
+
+      await scheduleDailyFortuneNotification(
+        id: 40001,
+        time: time1,
+        title: "오늘의 운세 (오전)",
+        body: "오늘의 운세를 확인하고 활기차게 시작해 보세요!",
+      );
+      
+      await scheduleDailyFortuneNotification(
+        id: 40002,
+        time: time2,
+        title: "오늘의 운세 (오후)",
+        body: "오후의 운세는 어떨까요? 지금 바로 확인해 보세요!",
+      );
+    }
+  }
+
+  // 포춘 패스 만료 알림 스케줄링
+  Future<void> scheduleFortunePassExpiryReminder({
+    required DateTime activeUntilLocal,
+  }) async {
+    const int id = 50001; // 포춘 패스 알림 고정 ID
+    
+    // 만료 당일 오전 9시 알림 시간 계산
+    final reminderTime = DateTime(
+      activeUntilLocal.year,
+      activeUntilLocal.month,
+      activeUntilLocal.day,
+      9, 0
+    );
+    
+    // 이미 지난 시간이면 알림을 설정하지 않음
+    if (reminderTime.isBefore(DateTime.now())) {
+      return;
+    }
+
+    const String channelId = 'subscription_channel_v1';
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      channelId,
+      '구독 알림',
+      channelDescription: '포춘 패스 만료 및 구독 관련 알림 채널입니다.',
+      importance: Importance.high,
+      priority: Priority.high,
+      category: AndroidNotificationCategory.reminder,
+      visibility: NotificationVisibility.public,
+      autoCancel: true,
+      groupKey: _groupKey,
+    );
+
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(threadIdentifier: _groupKey);
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      '포춘 패스 오늘 만료',
+      '오늘 포춘 패스 멤버십이 만료됩니다. 혜택을 계속 누리시려면 갱신해 보세요!',
+      tz.TZDateTime.from(reminderTime, tz.local),
+      platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      payload: 'subscription_expiry',
+    );
+  }
+
+  Future<void> cancelFortunePassExpiryReminder() async {
+    const int id = 50001;
+    await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate =
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    return scheduledDate;
+  }
+
+  int _getStableId(String id) {
+    int h = 0;
+    for (int i = 0; i < id.length; i++) {
+      h = 31 * h + id.codeUnitAt(i);
+      h &= 0xFFFFFFFF;
+    }
+    if (h > 0x7FFFFFFF) h -= 0x100000000;
+    return h;
   }
 
   Future<void> showAlarmNotification({
@@ -185,61 +484,61 @@ class NotificationService {
   }) async {
     // 진동 패턴 설정
     Int64List vibration;
-    switch (vibrationPattern) {
-      case 'short':
-        vibration = Int64List.fromList([0, 500, 500, 500, 500]);
-        break;
-      case 'long':
-        vibration = Int64List.fromList([0, 2000, 2000, 2000, 2000]);
-        break;
-      case 'heartbeat':
-        vibration = Int64List.fromList([0, 200, 100, 200, 1000, 200, 100, 200, 1000]);
-        break;
-      case 'sos':
-        vibration = Int64List.fromList([0, 200, 100, 200, 100, 200, 500, 500, 200, 500, 200, 500, 500, 200, 100, 200, 100, 200]);
-        break;
-      case 'quick':
-        vibration = Int64List.fromList([0, 100, 50, 100, 50, 100, 50, 100, 50, 100]);
-        break;
-      default:
-        vibration = Int64List.fromList([0, 2000, 1000, 2000, 1000, 2000]);
+    if (vibrationPattern == 'short') {
+      vibration = Int64List.fromList([0, 500, 500, 500]);
+    } else if (vibrationPattern == 'long') {
+      vibration = Int64List.fromList([0, 1000, 1000, 1000]);
+    } else if (vibrationPattern == 'heartbeat') {
+      vibration = Int64List.fromList([0, 200, 200, 200, 500, 500]);
+    } else {
+       vibration = Int64List.fromList([0, 1000, 1000, 1000, 1000, 1000]);
     }
 
-    // 확장자 제거 및 하이픈을 언더바로 변경 (Android 리소스 이름 규칙)
-    String soundResource = (soundName != null && soundName != 'default') ? soundName : 'alarm_sound';
-    if (soundResource.contains('.')) {
-      soundResource = soundResource.split('.').first;
-    }
-    soundResource = soundResource.replaceAll('-', '_');
-    
-    // 채널 ID를 소리/진동 설정에 따라 다르게 하여 설정을 적용 (Android 특성상 채널 설정 변경 불가하므로)
-    // 알람 소리나 진동이 변경되면 새로운 채널을 생성해야 함
-    // [수정] channelId 접두어를 v13으로 변경하여 기존 설정 강제 갱신
-    final String channelId = 'fortune_alarm_channel_v13_${soundResource}_${isVibrationEnabled ? 'vibe' : 'novibe'}'; 
-    
+    final normalizedSoundName =
+        (soundName == null || soundName.isEmpty || soundName == 'default')
+            ? null
+            : soundName;
+    final String channelId =
+        'alarm_channel_${normalizedSoundName ?? 'default'}_v1';
+
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '포춘 알람', // 사용자에게 보이는 채널 이름
-      channelDescription: 'Fortune Alarm의 알람 채널입니다.',
+      '알람',
+      channelDescription: '기상 및 미션 수행을 위한 알람 채널입니다.',
       importance: Importance.max,
       priority: Priority.max,
-      sound: RawResourceAndroidNotificationSound(soundResource),
-      playSound: true,
-      enableVibration: isVibrationEnabled,
-      vibrationPattern: isVibrationEnabled ? vibration : null,
-      fullScreenIntent: true, // 핵심: 전체화면 인텐트
       category: AndroidNotificationCategory.alarm,
       visibility: NotificationVisibility.public,
+      fullScreenIntent: true, // 알람은 풀스크린 인텐트 사용
       audioAttributesUsage: AudioAttributesUsage.alarm,
-      additionalFlags: Int32List.fromList(<int>[4]), // FLAG_INSISTENT
-      autoCancel: false,
+      playSound: true,
+      sound: normalizedSoundName != null
+          ? RawResourceAndroidNotificationSound(normalizedSoundName)
+          : null,
+      enableVibration: isVibrationEnabled,
+      vibrationPattern: isVibrationEnabled ? vibration : null,
+      autoCancel: false, // 알람은 사용자가 끌 때까지 유지
       ongoing: true,
-      ticker: 'SnapAlarm',
+      ticker: '알람이 울립니다!',
+      groupKey: _groupKey,
+      actions: [
+         const AndroidNotificationAction(
+          'DISMISS',
+          '알람 끄기',
+          showsUserInterface: true,
+          cancelNotification: true,
+        ),
+      ]
     );
 
-    final NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(threadIdentifier: _groupKey);
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
 
     await flutterLocalNotificationsPlugin.show(
       id,
@@ -248,170 +547,18 @@ class NotificationService {
       platformChannelSpecifics,
       payload: payload,
     );
+
+    await _showAndroidSummary(channelId, '알람');
   }
+}
 
-  Future<void> cancelNotification(int id) async {
-    await flutterLocalNotificationsPlugin.cancel(id);
-  }
-
-  static const int _fortunePassReminderId = 910001;
-  static const int _dailyFortuneNotificationId = 910002;
-
-  Future<void> scheduleDailyFortuneNotification({
-    required DateTime time,
-    required String title,
-    required String body,
-  }) async {
-    await cancelNotification(_dailyFortuneNotificationId);
-
-    final now = DateTime.now();
-    var scheduledDate = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-
-    const androidDetails = AndroidNotificationDetails(
-      'daily_fortune_notification',
-      'Today\'s Fortune',
-      channelDescription: 'Daily reminder to check your fortune',
-      importance: Importance.defaultImportance,
-      priority: Priority.defaultPriority,
-    );
-
-    const notificationDetails = NotificationDetails(android: androidDetails);
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      _dailyFortuneNotificationId,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time, // Repeat daily at the same time
-      payload: 'fortune_daily',
-    );
-  }
-
-  Future<void> cancelDailyFortuneNotification() async {
-    await cancelNotification(_dailyFortuneNotificationId);
-  }
-
-  Future<void> scheduleFortunePassExpiryReminder({required DateTime activeUntilLocal}) async {
-    final now = DateTime.now();
-    final remindAt = activeUntilLocal.subtract(const Duration(hours: 24));
-
-    await cancelNotification(_fortunePassReminderId);
-    if (!remindAt.isAfter(now.add(const Duration(minutes: 1)))) {
-      return;
-    }
-
-    final lang = PlatformDispatcher.instance.locale.languageCode;
-    final title = _fortunePassReminderTitle(lang);
-    final body = _fortunePassReminderBody(lang);
-
-    const androidDetails = AndroidNotificationDetails(
-      'fortune_pass_reminder',
-      'Fortune Pass',
-      channelDescription: 'Fortune Pass reminder notifications',
-      importance: Importance.high,
-      priority: Priority.high,
-    );
-
-    const notificationDetails = NotificationDetails(android: androidDetails);
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      _fortunePassReminderId,
-      title,
-      body,
-      tz.TZDateTime.from(remindAt, tz.local),
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: null,
-    );
-  }
-
-  String _fortunePassReminderTitle(String lang) {
-    switch (lang) {
-      case 'ko':
-        return '포춘패스 만료 예정';
-      case 'ja':
-        return 'フォーチュンパスの期限が近いです';
-      case 'zh':
-        return 'Fortune Pass 即将到期';
-      default:
-        return 'Fortune Pass Expiring Soon';
-    }
-  }
-
-  String _fortunePassReminderBody(String lang) {
-    switch (lang) {
-      case 'ko':
-        return '내일 포춘패스가 만료됩니다. 혜택을 계속 받으시려면 갱신해주세요!';
-      case 'ja':
-        return '明日フォーチュンパスの期限が切れます。特典を継続するには更新してください！';
-      case 'zh':
-        return '您的 Fortune Pass 将于明天到期。请续订以继续享受优惠！';
-      default:
-        return 'Your Fortune Pass expires tomorrow. Renew now to keep your benefits!';
-    }
-  }
-
-  // 커스텀 미션 알림
-  Future<void> scheduleMissionNotification({
-    required String missionId,
-    required String title,
-    required String body,
-    required TimeOfDay time,
-  }) async {
-    final int notificationId = missionId.hashCode;
-    await cancelNotification(notificationId);
-
-    final now = DateTime.now();
-    var scheduledDate = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-
-    const androidDetails = AndroidNotificationDetails(
-      'mission_notification_channel',
-      'Mission Reminder',
-      channelDescription: 'Reminders for your custom missions',
-      importance: Importance.high,
-      priority: Priority.high,
-      sound: RawResourceAndroidNotificationSound('alarm_sound'),
-      playSound: true,
-      enableVibration: true,
-      actions: <AndroidNotificationAction>[
-        AndroidNotificationAction(
-          'MISSION_COMPLETE',
-          '지금 할게요',
-          showsUserInterface: true,
-          cancelNotification: true,
-        ),
-        AndroidNotificationAction(
-          'MISSION_LATER',
-          '나중에 할게요',
-          showsUserInterface: true,
-          cancelNotification: true,
-        ),
-      ],
-    );
-
-    const notificationDetails = NotificationDetails(android: androidDetails);
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      notificationId,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time, // Repeat daily
-      payload: 'mission_$missionId',
-    );
-  }
-
-  Future<void> cancelMissionNotification(String missionId) async {
-    await cancelNotification(missionId.hashCode);
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  // ignore: avoid_print
+  print('notification(${notificationResponse.id}) action tapped: '
+      '${notificationResponse.actionId} with payload: ${notificationResponse.payload}');
+  if (notificationResponse.input?.isNotEmpty ?? false) {
+    // ignore: avoid_print
+    print('notification action tapped with input: ${notificationResponse.input}');
   }
 }

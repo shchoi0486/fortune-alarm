@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibration/vibration.dart';
 import 'providers/supplement_provider.dart';
 import '../widgets/mission_success_overlay.dart';
 import 'widgets/pill_box_widget.dart';
@@ -18,7 +21,23 @@ class SupplementMissionScreen extends ConsumerStatefulWidget {
 }
 
 class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScreen> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isSuccess = false;
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _playSfx(String assetPath) async {
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource('sounds/$assetPath'));
+    } catch (e) {
+      debugPrint('Error playing SFX: $e');
+    }
+  }
 
   @override
   void initState() {
@@ -167,6 +186,13 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
 
     ref.listen(supplementProvider, (previous, next) {
       if (previous != null && !previous.isGoalAchieved && next.isGoalAchieved) {
+        try {
+          HapticFeedback.heavyImpact();
+          _playSfx('ui_success.ogg');
+          if (Platform.isAndroid || Platform.isIOS) {
+            Vibration.vibrate(pattern: [0, 100, 50, 100]);
+          }
+        } catch (_) {}
         setState(() {
           _isSuccess = true;
         });
@@ -251,6 +277,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                       dailyGoal: dailyGoal,
                                       onTake: () {
                                         HapticFeedback.mediumImpact();
+                                        _playSfx('ui_click.ogg');
                                         notifier.takeSupplement();
                                       },
                                       onRemove: () {
@@ -274,6 +301,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                       GestureDetector(
                                         onTap: () {
                                           HapticFeedback.mediumImpact();
+                                          _playSfx('ui_click.ogg');
                                           notifier.takeSupplement();
                                         },
                                         child: Container(
@@ -291,6 +319,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                         icon: Icons.add,
                                         onPressed: () {
                                           HapticFeedback.mediumImpact();
+                                          _playSfx('ui_click.ogg');
                                           notifier.takeSupplement();
                                         },
                                       ),
@@ -325,6 +354,14 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                         _MenuItem(
                                           title: '알림',
                                           icon: Icons.notifications_none_rounded,
+                                          trailing: Switch(
+                                            value: state.settings.isAlarmEnabled,
+                                            onChanged: (value) {
+                                              HapticFeedback.lightImpact();
+                                              notifier.updateSettings(isAlarmEnabled: value);
+                                            },
+                                            activeColor: Colors.orange[700],
+                                          ),
                                           onTap: () {
                                             Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplementAlarmScreen()));
                                           },
@@ -431,12 +468,14 @@ class _MenuItem extends StatelessWidget {
   final String title;
   final String? value;
   final IconData icon;
+  final Widget? trailing;
   final VoidCallback onTap;
 
   const _MenuItem({
     required this.title,
     this.value,
     required this.icon,
+    this.trailing,
     required this.onTap,
   });
 
@@ -469,8 +508,13 @@ class _MenuItem extends StatelessWidget {
                   fontSize: 16,
                 ),
               ),
-            const SizedBox(width: 4),
-            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+            if (trailing != null) ...[
+              const SizedBox(width: 8),
+              trailing!,
+            ] else ...[
+              const SizedBox(width: 4),
+              const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+            ],
           ],
         ),
       ),
