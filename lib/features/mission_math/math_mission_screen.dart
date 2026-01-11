@@ -16,6 +16,7 @@ import '../../data/models/alarm_model.dart';
 import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
 import '../mission/widgets/mission_success_overlay.dart';
+import '../../widgets/video_background_widget.dart';
 
 class MathMissionScreen extends ConsumerStatefulWidget {
   final String? alarmId;
@@ -26,7 +27,7 @@ class MathMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<MathMissionScreen> createState() => _MathMissionScreenState();
 }
 
-class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with SingleTickerProviderStateMixin {
+class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
   Timer? _inactivityTimer;
@@ -55,6 +56,12 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
+    WidgetsBinding.instance.addObserver(this);
+    
     _loadAlarmSettings();
     _generateProblem(); // 초기 문제 생성 (기본값)
     _startInactivityTimer();
@@ -68,14 +75,6 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
-    // 시스템 바 설정 (투명 배경 및 가독성 확보)
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light, // 어두운 배경에서 밝은 아이콘 (흰색)
-      statusBarBrightness: Brightness.dark, // iOS용
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ));
   }
 
   void _startInactivityTimer() {
@@ -114,6 +113,19 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     }
   }
 
+  Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
+    if (alarm == null) return null;
+    if (alarm.backgroundPath != 'random_background') return alarm;
+    try {
+      final box = await Hive.openBox('app_state');
+      final resolved = box.get('active_alarm_mission_background_path') as String?;
+      if (resolved == null || resolved.isEmpty) return alarm;
+      return alarm.copyWith(backgroundPath: resolved);
+    } catch (_) {
+      return alarm;
+    }
+  }
+
   Future<void> _loadAlarmSettings() async {
     if (widget.alarmId == null) return;
     
@@ -130,6 +142,8 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
          debugPrint('Error loading alarm settings: $e');
        }
     }
+
+    alarm = await _applyResolvedRandomBackground(alarm);
 
     if (alarm != null && mounted) {
       setState(() {
@@ -425,7 +439,17 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      if (mounted) {
+        Navigator.of(context).pop('timeout');
+      }
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _pulseController.dispose();
     _volumeTimer?.cancel();
     _inactivityTimer?.cancel();
@@ -437,26 +461,49 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   @override
   Widget build(BuildContext context) {
     bool isLightBg = true; // 기본적으로 밝은 배경(노란색)으로 가정
-    BoxDecoration bgDecoration;
+    BoxDecoration? bgDecoration;
+    Widget? bgWidget;
 
     if (_alarm != null && _alarm!.backgroundPath != null) {
-      if (_alarm!.backgroundPath!.startsWith('color:')) {
-        int colorValue = int.parse(_alarm!.backgroundPath!.split(':')[1]);
+      final bgPath = _alarm!.backgroundPath!;
+      final lower = bgPath.toLowerCase();
+      final isVideo = lower.endsWith('.mp4') || lower.endsWith('.webm');
+
+      if (bgPath == 'random_background') {
+        bgDecoration = const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF2C3E50), Color(0xFF000000)],
+          ),
+        );
+        isLightBg = false;
+      } else if (bgPath.startsWith('color:')) {
+        int colorValue = int.parse(bgPath.split(':')[1]);
         Color color = Color(colorValue);
         bgDecoration = BoxDecoration(color: color);
         isLightBg = color.computeLuminance() > 0.5;
-      } else if (_alarm!.backgroundPath!.startsWith('assets/')) {
+      } else if (isVideo) {
+        bgWidget = VideoBackgroundWidget(
+          videoPath: bgPath,
+          isAsset: bgPath.startsWith('assets/'),
+          play: false,
+          loop: false,
+          mute: true,
+        );
+        isLightBg = false;
+      } else if (bgPath.startsWith('assets/')) {
         bgDecoration = BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(_alarm!.backgroundPath!),
+            image: AssetImage(bgPath),
             fit: BoxFit.cover,
           ),
         );
-        isLightBg = false; // 이미지는 보통 어두운 텍스트(흰색)를 위해 어둡게 처리하거나 쉐도우 사용
+        isLightBg = false;
       } else {
         bgDecoration = BoxDecoration(
           image: DecorationImage(
-            image: FileImage(File(_alarm!.backgroundPath!)),
+            image: FileImage(File(bgPath)),
             fit: BoxFit.cover,
           ),
         );
@@ -474,15 +521,24 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
 
     return Listener(
       onPointerDown: (_) => _resetInactivityTimer(),
-      child: Scaffold(
-        extendBodyBehindAppBar: true, // 시스템 바가 배경 위에 나타나도록 함
-        body: Stack(
-          children: [
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: bgDecoration,
-            ),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isLightBg ? Brightness.dark : Brightness.light,
+          statusBarBrightness: isLightBg ? Brightness.light : Brightness.dark,
+          systemNavigationBarColor: Colors.white,
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+        child: Scaffold(
+          extendBodyBehindAppBar: true, // 시스템 바가 배경 위에 나타나도록 함
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: bgWidget ??
+                    Container(
+                      decoration: bgDecoration,
+                    ),
+              ),
             SafeArea(
               bottom: false, // 하단 키패드는 자체 패딩 사용
               child: Column(
@@ -791,7 +847,8 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
         ],
       ),
     ),
-  );
+  ),
+);
 }
 
   Widget _buildKey(String label, {Color color = const Color(0xFFF5F5F5), Color textColor = Colors.black87, IconData? icon}) {

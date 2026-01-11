@@ -15,6 +15,7 @@ import 'package:collection/collection.dart';
 import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import 'package:fortune_alarm/services/notification_service.dart';
 import 'package:fortune_alarm/services/alarm_scheduler_service.dart';
+import 'package:fortune_alarm/services/ad_service.dart';
 
 import '../../services/ml_service.dart';
 import 'face_result_screen.dart';
@@ -28,7 +29,7 @@ class FaceDetectionMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<FaceDetectionMissionScreen> createState() => _FaceDetectionMissionScreenState();
 }
 
-class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissionScreen> with SingleTickerProviderStateMixin {
+class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissionScreen> with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
   final MLService _mlService = MLService();
@@ -40,7 +41,7 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   
   Timer? _timer;
   int _elapsedMilliseconds = 0;
-  final int _targetMilliseconds = 10000; // 10초
+  final int _targetMilliseconds = 5000; // 5초
   bool _isFaceDetected = false;
   bool _isSuccess = false;
   CameraDescription? _camera;
@@ -52,6 +53,14 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+
+    AdService.preloadRewardedAd();
+    
+    WidgetsBinding.instance.addObserver(this);
+    
     _scanController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -397,7 +406,17 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      if (mounted) {
+        Navigator.of(context).pop('timeout');
+      }
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scanController.dispose();
     _stopAlarm();
     _timer?.cancel();

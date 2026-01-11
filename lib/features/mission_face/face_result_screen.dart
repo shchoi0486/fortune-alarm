@@ -176,20 +176,47 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     required int health,
   }) {
     final now = DateTime.now();
+    // 날짜, 시간, 점수를 조합하여 더 다양한 인덱스 생성
     final daySeed = now.day + now.month + now.year;
-    final toneIndex = (daySeed + (smile * 100).toInt() + (eyeOpen * 100).toInt()) % 3;
-    final tipIndex = (daySeed + wealth + love + career + health) % 4;
+    final hourSeed = now.hour;
+    final scoreSum = wealth + love + career + health;
+    
+    // 다양한 인덱스 계산
+    final vibeIndex = (daySeed + hourSeed + (smile * 100).toInt()) % 5;
+    final toneIndex = (daySeed + (scoreSum % 7) + (eyeOpen * 100).toInt()) % 10;
+    final tipIndex = (daySeed + (scoreSum % 11) + hourSeed) % 10;
 
     String faceVibe = "";
     if (smile >= 0.6) {
-      faceVibe = "입가에 머문 밝은 미소가 주변에 긍정적인 에너지를 전파하네요. ";
+      final options = [
+        "입가에 머문 밝은 미소가 주변에 긍정적인 에너지를 전파하네요. ",
+        "화사하게 피어난 미소에서 오늘 하루의 밝은 운기가 느껴집니다. ",
+        "부드러운 입매가 귀인을 부르는 매력적인 기운을 뿜어내고 있습니다. ",
+        "자신감 넘치는 미소는 오늘 어떤 난관도 쉽게 풀어낼 열쇠가 될 것입니다. ",
+        "시원한 미소 덕분에 막혔던 기운이 뚫리고 행운이 찾아올 준비를 마쳤습니다. ",
+      ];
+      faceVibe = options[vibeIndex];
     } else if (eyeOpen >= 0.6) {
-      faceVibe = "초롱초롱하게 빛나는 눈빛에서 오늘 하루를 이끌어갈 강한 의지가 느껴집니다. ";
+      final options = [
+        "초롱초롱하게 빛나는 눈빛에서 오늘 하루를 이끌어갈 강한 의지가 느껴집니다. ",
+        "총기 어린 눈매가 날카로운 판단력과 직관을 예고하고 있습니다. ",
+        "맑고 깊은 눈동자가 진실한 기운을 담아 좋은 소식을 기다리고 있네요. ",
+        "정면을 응시하는 당당한 눈빛이 오늘 당신의 존재감을 드높여줄 것입니다. ",
+        "눈빛에 서린 열정이 주변 사람들에게 강한 신뢰를 심어주는 하루입니다. ",
+      ];
+      faceVibe = options[vibeIndex];
     } else {
-      faceVibe = "전체적으로 평온하고 안정된 얼굴의 기운이 마음의 여유를 가져다줍니다. ";
+      final options = [
+        "전체적으로 평온하고 안정된 얼굴의 기운이 마음의 여유를 가져다줍니다. ",
+        "차분하게 가라앉은 안색에서 신중하고 지혜로운 기운이 엿보입니다. ",
+        "균형 잡힌 얼굴의 조화가 오늘 하루의 기복 없는 평탄함을 상징하네요. ",
+        "진중한 분위기가 느껴지는 얼굴은 오늘 중요한 결정을 내리기에 최적입니다. ",
+        "편안한 얼굴 기운이 주변 사람들에게 안도감을 주어 협력이 잘 이루어질 상입니다. ",
+      ];
+      faceVibe = options[vibeIndex];
     }
 
-    String headline = "$faceVibe오늘은 $topKey 운이 들어오는 날입니다. $bottomKey 쪽은 한 번 더 조심하세요.";
+    String headline = "$faceVibe오늘은 $topKey 운이 가장 돋보이는 날입니다. 반면 $bottomKey 쪽은 세심한 주의가 필요해 보이네요.";
 
     String mid;
     if (topKey == "재물") {
@@ -197,6 +224,13 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         "콧망울의 기운이 단단하니, 작은 정리와 확인이 돈의 흐름을 더 크게 만들어줍니다.",
         "재백궁(코)에 힘이 실리는 날입니다. 급할수록 계산을 한 번 더 하면 이득이 남습니다.",
         "얼굴의 중심인 코의 기운이 좋아 알뜰하게 챙긴 한 가지가 예상 밖의 성과로 이어집니다.",
+        "금전운이 깃든 안색입니다. 생각지 못한 곳에서 작은 수익이 발생할 수 있는 흐름입니다.",
+        "코 끝의 생기가 좋아 경제적인 감각이 예리해집니다. 투가나 구매 결정에 유리한 날입니다.",
+        "돈을 부르는 기운이 강합니다. 지갑을 정리하거나 통장 내역을 살피면 행운이 따릅니다.",
+        "재물 창고가 든든하게 채워지는 상입니다. 성실하게 쌓아온 노력이 결실을 맺기 시작합니다.",
+        "안정적인 재물운이 들어오고 있습니다. 큰 지출보다는 꾸준한 저축이 운을 더 키워줍니다.",
+        "경제적 기회를 포착하는 눈이 밝아집니다. 주변의 정보에 귀를 기울여보세요.",
+        "풍요로운 기운이 얼굴 가득합니다. 나누는 마음이 더 큰 재물로 돌아오는 신비한 날입니다.",
       ];
       mid = options[toneIndex];
     } else if (topKey == "인연") {
@@ -204,6 +238,13 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         "입꼬리의 기운이 부드러우니, 먼저 한마디 건네면 관계가 풀립니다.",
         "말을 담는 입매가 정갈합니다. 진심을 짧게 전하는 것이 오해를 줄여줍니다.",
         "밝은 안색이 귀인의 기운을 끌어옵니다. 작은 배려가 큰 인연으로 돌아옵니다.",
+        "사람을 끄는 매력이 돋보이는 날입니다. 새로운 만남에서 긍정적인 기운을 얻겠네요.",
+        "대인관계의 기운이 맑아 갈등이 해결되고 화합이 이루어지는 흐름입니다.",
+        "입매의 부드러움이 상대의 마음을 엽니다. 오늘은 경청이 최고의 대화법입니다.",
+        "주변의 도움을 받을 수 있는 상입니다. 혼자 고민하기보다 조언을 구해보세요.",
+        "진실된 눈빛이 신뢰를 쌓습니다. 약속을 소중히 하면 더 큰 인연이 닿습니다.",
+        "화목한 기운이 가정과 직장에 가득합니다. 웃음이 끊이지 않는 하루가 되겠네요.",
+        "인연의 실타래가 예쁘게 풀리는 날입니다. 소중한 사람에게 고마움을 전해보세요.",
       ];
       mid = options[toneIndex];
     } else if (topKey == "직업") {
@@ -211,6 +252,13 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         "눈빛의 총기가 예리하니, 우선순위를 좁히면 집중력이 성과로 바뀝니다.",
         "관찰력이 돋보이는 눈매입니다. 결정은 간단히, 실행은 꾸준히가 통하는 날입니다.",
         "이마와 눈의 기운이 맑아 오늘은 맡은 일을 끝까지 마무리하는 힘이 큽니다.",
+        "리더십이 발휘되는 상입니다. 당신의 의견이 주변에 큰 영향력을 미치겠네요.",
+        "판단력이 정점에 달하는 하루입니다. 복잡한 문제도 명쾌하게 해결할 수 있습니다.",
+        "일 처리가 깔끔하여 주변의 인정을 받습니다. 승진이나 성취의 기운이 강합니다.",
+        "새로운 프로젝트나 일을 시작하기에 최적인 기운입니다. 자신 있게 도전하세요.",
+        "업무 효율이 비약적으로 상승하는 날입니다. 미뤄둔 일을 처리하기에 좋습니다.",
+        "창의적인 아이디어가 솟아나는 눈빛입니다. 메모하는 습관이 행운을 가져옵니다.",
+        "끈기와 인내가 빛을 발하는 하루입니다. 마지막까지 집중하면 큰 보람이 따릅니다.",
       ];
       mid = options[toneIndex];
     } else {
@@ -218,6 +266,13 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         "전체적인 안색이 안정적이니, 리듬을 고르면 컨디션이 금방 회복됩니다.",
         "얼굴의 활력이 돋보입니다. 무리하지 않고 템포를 지키면 하루가 편안해집니다.",
         "눈과 피부의 기운이 맑아 작은 휴식이 집중력과 기분을 함께 끌어올립니다.",
+        "신체 리듬이 최상의 조화를 이룹니다. 가벼운 운동이 기운을 더 맑게 해줍니다.",
+        "충전된 에너지가 얼굴 가득합니다. 오늘 하루는 지치지 않고 즐겁게 보낼 수 있습니다.",
+        "심신의 안정이 돋보이는 상입니다. 명상이나 깊은 호흡이 운기를 더 높여줍니다.",
+        "회복 탄력성이 좋은 날입니다. 약간의 피로도 금방 씻어낼 수 있는 활력이 있네요.",
+        "피부의 생기가 좋아 주변에서 건강해 보인다는 인사를 듣게 될 흐름입니다.",
+        "절제된 식단과 휴식이 운의 근본을 튼튼하게 합니다. 몸을 아끼는 하루가 되세요.",
+        "맑은 공기와 수분 섭취가 오늘의 보약입니다. 생기 넘치는 하루를 만끽하세요.",
       ];
       mid = options[toneIndex];
     }
@@ -229,6 +284,12 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         "약속 없는 소비는 피하고, 필요한 것만 담는 게 이득입니다.",
         "금전 관련 대화는 기록을 남기면 불필요한 손해를 막습니다.",
         "작은 금액이라도 새는 구멍이 없는지 체크해보세요.",
+        "충동구매의 유혹이 강한 날입니다. 결제 전 10분만 고민해보세요.",
+        "투자나 큰 거래는 오늘은 신중해야 합니다. 전문가의 조언을 참고하세요.",
+        "빌려준 돈이나 받아야 할 돈에 대해 명확하게 정리할 필요가 있습니다.",
+        "지갑 관리에 신경 쓰세요. 분실이나 낭비의 기운이 살짝 보입니다.",
+        "겉모습에 치중한 소비보다는 실속을 챙기는 지혜가 필요합니다.",
+        "공짜를 기대하기보다 정당한 대가를 지불하는 것이 운을 지키는 길입니다.",
       ];
       tip = options[tipIndex];
     } else if (bottomKey == "인연") {
@@ -237,6 +298,12 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         "오해가 생기면 길게 설명보다 짧게 확인이 더 좋습니다.",
         "오늘은 약속 시간을 지키는 것만으로도 신뢰가 쌓입니다.",
         "대화는 결론부터 말하면 감정 소모가 줄어듭니다.",
+        "가까운 사람일수록 예의를 갖추세요. 익숙함에 속아 상처를 줄 수 있습니다.",
+        "비판보다는 칭찬을 먼저 건네보세요. 닫혔던 상대의 마음이 열립니다.",
+        "말실수가 걱정되는 날입니다. 중요한 이야기는 문자로 한 번 더 정리하세요.",
+        "타인의 일에 지나치게 간섭하지 않는 것이 구설수를 막는 비책입니다.",
+        "감정적인 대응보다는 이성적인 대화가 관계를 건강하게 유지해줍니다.",
+        "약속을 겹치게 잡지 않도록 일정을 잘 살피세요. 신뢰가 밑천입니다.",
       ];
       tip = options[tipIndex];
     } else if (bottomKey == "직업") {
@@ -245,6 +312,12 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         "완벽보다 마감이 먼저입니다. 오늘은 80%에서 확정하세요.",
         "미루고 있던 한 가지를 정리하면 머리가 맑아집니다.",
         "내가 할 일과 남의 일을 분리하면 스트레스가 줄어듭니다.",
+        "사소한 실수로 업무가 꼬일 수 있습니다. 마지막 확인을 잊지 마세요.",
+        "상사나 동료와의 마찰이 예상됩니다. 의견 차이를 존중하는 자세가 필요합니다.",
+        "집중력이 흐트러지기 쉬운 날입니다. 50분 일하고 10분 쉬는 리듬을 지키세요.",
+        "과도한 책임감은 독이 될 수 있습니다. 할 수 있는 만큼만 맡으세요.",
+        "공적인 일에 사적인 감정을 섞지 않도록 주의해야 하는 하루입니다.",
+        "문서나 이메일 발송 전, 수신인과 첨부파일을 다시 한 번 체크하세요.",
       ];
       tip = options[tipIndex];
     } else {
@@ -253,6 +326,12 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         "목·어깨 긴장을 풀어주면 하루 피로가 확 줄어듭니다.",
         "짧은 산책이 생각을 정리해주고 기운을 환기합니다.",
         "물 한 잔, 스트레칭 1분이 운의 바닥을 받칩니다.",
+        "눈의 피로가 심해질 수 있습니다. 스마트폰 사용을 잠시 줄여보세요.",
+        "갑작스러운 활동보다는 몸을 충분히 예열한 뒤 움직이는 게 좋습니다.",
+        "기온 변화에 민감할 수 있으니 겉옷을 챙겨 체온을 조절하세요.",
+        "자극적인 음식은 오늘 피하는 것이 장 건강과 피부에 이롭습니다.",
+        "충분한 수면이 최고의 보약입니다. 오늘은 평소보다 일찍 잠자리에 드세요.",
+        "스트레스가 쌓이지 않도록 좋아하는 음악이나 향기로 기분을 전환하세요.",
       ];
       tip = options[tipIndex];
     }
@@ -572,12 +651,28 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     return options[variantIndex];
   }
 
-  void _unlockWithAd() {
-    showRewardedAd(() {
+  Future<void> _unlockWithAd() async {
+    final granted = await showRewardedAd(() {
       setState(() {
         _isLocked = false;
       });
     });
+
+    if (!mounted) return;
+    if (granted) return;
+
+    if (!lastRewardedAdHadTechnicalFailure) return;
+
+    setState(() {
+      _isLocked = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('광고를 불러오지 못해 이번에는 무료로 열어드렸어요.'),
+        duration: Duration(seconds: 3),
+      ),
+    );
   }
 
   Future<void> _unlockWithCookies() async {

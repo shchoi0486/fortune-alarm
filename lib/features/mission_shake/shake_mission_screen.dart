@@ -19,6 +19,7 @@ import '../../data/models/alarm_model.dart';
 import '../../providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
 import '../mission/widgets/mission_success_overlay.dart';
+import '../../widgets/video_background_widget.dart';
 
 class ShakeMissionScreen extends ConsumerStatefulWidget {
   final String? alarmId;
@@ -29,7 +30,7 @@ class ShakeMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<ShakeMissionScreen> createState() => _ShakeMissionScreenState();
 }
 
-class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
+class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
   Timer? _inactivityTimer;
@@ -45,9 +46,28 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
   bool _isSuccess = false;
   String _lastMessage = '';
 
+  Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
+    if (alarm == null) return null;
+    if (alarm.backgroundPath != 'random_background') return alarm;
+    try {
+      final box = await Hive.openBox('app_state');
+      final resolved = box.get('active_alarm_mission_background_path') as String?;
+      if (resolved == null || resolved.isEmpty) return alarm;
+      return alarm.copyWith(backgroundPath: resolved);
+    } catch (_) {
+      return alarm;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
+    WidgetsBinding.instance.addObserver(this);
+    
     _loadAlarmSettings();
     _startShakeDetection();
 
@@ -86,6 +106,8 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
          debugPrint('Error loading alarm settings: $e');
        }
     }
+
+    alarm = await _applyResolvedRandomBackground(alarm);
 
     if (alarm != null && mounted) {
       setState(() {
@@ -224,7 +246,17 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      if (mounted) {
+        Navigator.of(context).pop('timeout');
+      }
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _volumeTimer?.cancel();
     _inactivityTimer?.cancel();
     _audioPlayer.dispose();
@@ -236,21 +268,35 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
   @override
   Widget build(BuildContext context) {
     BoxDecoration bgDecoration;
+    Widget? bgWidget;
     if (_alarm != null && _alarm!.backgroundPath != null) {
-      if (_alarm!.backgroundPath!.startsWith('color:')) {
-        int colorValue = int.parse(_alarm!.backgroundPath!.split(':')[1]);
+      final bgPath = _alarm!.backgroundPath!;
+      final lower = bgPath.toLowerCase();
+      final isVideo = lower.endsWith('.mp4') || lower.endsWith('.webm');
+
+      if (bgPath.startsWith('color:')) {
+        int colorValue = int.parse(bgPath.split(':')[1]);
         bgDecoration = BoxDecoration(color: Color(colorValue));
-      } else if (_alarm!.backgroundPath!.startsWith('assets/')) {
+      } else if (isVideo) {
+        bgDecoration = const BoxDecoration(color: Color(0xFF000000));
+        bgWidget = VideoBackgroundWidget(
+          videoPath: bgPath,
+          isAsset: bgPath.startsWith('assets/'),
+          play: false,
+          loop: false,
+          mute: true,
+        );
+      } else if (bgPath.startsWith('assets/')) {
         bgDecoration = BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(_alarm!.backgroundPath!),
+            image: AssetImage(bgPath),
             fit: BoxFit.cover,
           ),
         );
       } else {
         bgDecoration = BoxDecoration(
           image: DecorationImage(
-            image: FileImage(File(_alarm!.backgroundPath!)),
+            image: FileImage(File(bgPath)),
             fit: BoxFit.cover,
           ),
         );
@@ -266,52 +312,52 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> {
       child: Scaffold(
         body: Stack(
         children: [
-          Container(
-            decoration: bgDecoration,
-            child: SafeArea(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.vibration, size: 100, color: Colors.white, shadows: [Shadow(blurRadius: 10, color: Colors.black45)]),
-                    const SizedBox(height: 30),
-                    Text(
-                      AppLocalizations.of(context)!.shakePhone,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 28, 
-                        fontWeight: FontWeight.bold, 
-                        color: Colors.white,
-                        shadows: [Shadow(blurRadius: 10, color: Colors.black, offset: Offset(2, 2))]
+          Positioned.fill(
+            child: bgWidget ?? Container(decoration: bgDecoration),
+          ),
+          SafeArea(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.vibration, size: 100, color: Colors.white, shadows: [Shadow(blurRadius: 10, color: Colors.black45)]),
+                  const SizedBox(height: 30),
+                  Text(
+                    AppLocalizations.of(context)!.shakePhone,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 28, 
+                      fontWeight: FontWeight.bold, 
+                      color: Colors.white,
+                      shadows: [Shadow(blurRadius: 10, color: Colors.black, offset: Offset(2, 2))]
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 220,
+                        height: 220,
+                        child: CircularProgressIndicator(
+                          value: progress,
+                          strokeWidth: 15,
+                          backgroundColor: Colors.white.withOpacity(0.1),
+                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 40),
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          width: 220,
-                          height: 220,
-                          child: CircularProgressIndicator(
-                            value: progress,
-                            strokeWidth: 15,
-                            backgroundColor: Colors.white.withOpacity(0.1),
-                            valueColor: const AlwaysStoppedAnimation<Color>(Colors.blueAccent),
-                          ),
+                      Text(
+                        '$_currentShakeCount / $_targetShakeCount',
+                        style: const TextStyle(
+                          fontSize: 40, 
+                          fontWeight: FontWeight.bold, 
+                          color: Colors.white,
+                          shadows: [Shadow(blurRadius: 10, color: Colors.black)]
                         ),
-                        Text(
-                          '$_currentShakeCount / $_targetShakeCount',
-                          style: const TextStyle(
-                            fontSize: 40, 
-                            fontWeight: FontWeight.bold, 
-                            color: Colors.white,
-                            shadows: [Shadow(blurRadius: 10, color: Colors.black)]
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

@@ -74,24 +74,47 @@ class SupplementAlarmService {
 
     debugPrint('[SupplementAlarm] Scheduling at $time (ID: $id)');
     
-    return await AndroidAlarmManager.oneShotAt(
-      time,
-      id,
-      _supplementCallback,
-      exact: true,
-      wakeup: true,
-      alarmClock: true, 
-      rescheduleOnReboot: true,
-      allowWhileIdle: true,
-    );
+    if (Platform.isAndroid) {
+      return await AndroidAlarmManager.oneShotAt(
+        time,
+        id,
+        _supplementCallback,
+        exact: true,
+        wakeup: true,
+        alarmClock: true, 
+        rescheduleOnReboot: true,
+        allowWhileIdle: true,
+      );
+    } else if (Platform.isIOS) {
+      try {
+        await NotificationService().scheduleAlarmNotification(
+          id: id,
+          title: '영양제 챙겨드실 시간이에요! 💊',
+          body: '건강을 위해 잊지 말고 지금 영양제를 드세요.',
+          scheduledDate: time,
+          payload: 'supplement_$id',
+        );
+        return true;
+      } catch (e) {
+        debugPrint('[SupplementAlarm] iOS scheduling failed: $e');
+        return false;
+      }
+    }
+    return false;
   }
 
   // 모든 영양제 알람 취소
   static Future<void> cancelAll() async {
-     for (int i = 0; i < 50; i++) {
+    final notificationService = NotificationService();
+    for (int i = 0; i < 50; i++) {
+      if (Platform.isAndroid) {
         await AndroidAlarmManager.cancel(_startId + i);
         await AndroidAlarmManager.cancel(_startId + i + 50000);
-     }
+      } else if (Platform.isIOS) {
+        await notificationService.cancelNotification(_startId + i);
+        await notificationService.cancelNotification(_startId + i + 50000);
+      }
+    }
   }
 
   // 알람 콜백 (static)

@@ -80,7 +80,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
     // 네이티브 광고는 높이를 직접 지정해야 함 (텍스트 한 줄 + 패딩 고려하여 약 50~60dp)
     // 사용자 피드백: 여백이 너무 많음 -> 높이를 45.0으로 축소했으나, 
     // 광고 validator(dismiss) 창이 내비게이션 바를 침범하는 문제로 인해 50.0으로 재조정 및 패딩 추가
-    const double height = 50.0;
+    const double height = 30.0;
 
     // 1. 로드 실패 시 에러 표시 및 재시도
     if (_errorMessage != null) {
@@ -88,7 +88,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
         color: backgroundColor,
         width: double.infinity,
         height: height,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         alignment: Alignment.center,
         child: GestureDetector(
           onTap: _loadAd,
@@ -119,7 +119,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
         color: backgroundColor,
         width: double.infinity,
         height: height,
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: EdgeInsets.zero,
         alignment: Alignment.center,
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -151,7 +151,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
       color: backgroundColor,
       width: double.infinity,
       height: height,
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.zero,
       alignment: Alignment.center,
       child: AdWidget(ad: _nativeAd!),
     );
@@ -255,8 +255,8 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
   @override
   void dispose() {
     _nativeAd?.dispose();
-    // 다음 표시를 위해 광고 다시 사전 로드
-    AdService.preloadListAd();
+    // AdService.preloadListAd()는 이제 getListAd()에서 자동으로 호출되므로 
+    // 여기서 중복 호출할 필요가 없거나, 필요 시에만 호출하도록 변경 가능
     super.dispose();
   }
 
@@ -481,11 +481,12 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return AspectRatio(
       aspectRatio: 1.0, // 정사각형
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
           borderRadius: BorderRadius.circular(12),
         ),
         clipBehavior: Clip.hardEdge,
@@ -495,6 +496,7 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
   }
 
   Widget _buildContent() {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     // 1. 광고 로드 완료 및 표시 시점 도달 시 광고 표시 (전체 영역)
     if (_showAd && _isAdLoaded && _nativeAd != null) {
       return AdWidget(ad: _nativeAd!);
@@ -506,7 +508,7 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
         children: [
           _buildCuteImage(),
           Container(
-            color: Colors.white.withOpacity(0.8),
+            color: isDarkMode ? Colors.black.withOpacity(0.8) : Colors.white.withOpacity(0.8),
             alignment: Alignment.center,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -524,7 +526,7 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
                   icon: const Icon(Icons.refresh, size: 16),
                   label: const Text('재시도'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
+                    backgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
                     foregroundColor: Colors.blueAccent,
                     elevation: 2,
                   ),
@@ -541,8 +543,9 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
   }
 
   Widget _buildCuteImage({bool isLoading = false}) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: const Color(0xFFFFF8E1), // 연한 노란색 배경
+      color: isDarkMode ? const Color(0xFF2C2C2E) : const Color(0xFFFFF8E1), // 연한 노란색 배경 -> 다크모드 대응
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -553,8 +556,9 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDarkMode ? const Color(0xFF3C3C3E) : Colors.white,
                   borderRadius: BorderRadius.circular(20),
+                  border: isDarkMode ? Border.all(color: Colors.white24) : null,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -563,12 +567,12 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
                     ),
                   ],
                 ),
-                child: const Text(
+                child: Text(
                   'Bye',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: isDarkMode ? Colors.white : Colors.black87,
                   ),
                 ),
               ),
@@ -588,10 +592,10 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.1),
+                  color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
@@ -599,13 +603,13 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
                       height: 12,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.black54,
+                        color: isDarkMode ? Colors.white70 : Colors.black54,
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       '광고 로딩 중...',
-                      style: TextStyle(fontSize: 10, color: Colors.black54),
+                      style: TextStyle(fontSize: 10, color: isDarkMode ? Colors.white70 : Colors.black54),
                     ),
                   ],
                 ),

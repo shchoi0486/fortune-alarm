@@ -139,7 +139,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get addMission => 'Добавить миссию';
 
   @override
-  String get completedMissions => 'Завершенные миссии';
+  String get completedMissions => 'Выполненные миссии';
+
+  @override
+  String get noCompletedMissionsHint =>
+      'Пока нет выполненных миссий. Достигните цели на сегодня.';
 
   @override
   String greeting(String userName) {
@@ -373,7 +377,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get repeatDaily => 'Ежедневно';
 
   @override
-  String get snoozeSettings => 'Повтор сигнала (Snooze)';
+  String get snoozeSettings => 'Настройки повтора';
 
   @override
   String get interval => 'Интервал';
@@ -453,7 +457,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get vibration => 'Вибрация';
 
   @override
-  String get alarmNameAndBackground => 'Название и фон';
+  String get alarmNameAndBackground => 'Название и фон будильника';
+
+  @override
+  String get customStyle => 'Пользовательский стиль';
 
   @override
   String get alarmName => 'Название будильника';
@@ -510,7 +517,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get missionWalkDescription => 'Пройдитесь, чтобы выключить будильник!';
 
   @override
-  String get missionFaceDescription => 'Держите лицо в рамке 10 секунд.';
+  String get missionFaceDescription => 'Держите лицо в рамке 5 секунд.';
 
   @override
   String get walkStepCount => 'Целевое количество шагов';
@@ -759,6 +766,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get startMission => 'Начать миссию';
+
+  @override
+  String get alarmSnooze => 'Отложить будильник';
 
   @override
   String get fortuneTitle => 'Проверить удачу';

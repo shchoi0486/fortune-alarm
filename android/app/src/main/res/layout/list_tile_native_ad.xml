@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#000000"
+                android:textColor="@color/ad_headline_text"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textColor="#757575"
+                    android:textColor="@color/ad_body_text"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>

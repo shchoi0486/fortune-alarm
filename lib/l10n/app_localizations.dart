@@ -346,6 +346,12 @@ abstract class AppLocalizations {
   /// **'Completed Missions'**
   String get completedMissions;
 
+  /// No description provided for @noCompletedMissionsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed missions yet. Reach today\'s mission goal.'**
+  String get noCompletedMissionsHint;
+
   /// No description provided for @greeting.
   ///
   /// In en, this message translates to:
@@ -928,6 +934,12 @@ abstract class AppLocalizations {
   /// **'Alarm Name & Background'**
   String get alarmNameAndBackground;
 
+  /// No description provided for @customStyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Style'**
+  String get customStyle;
+
   /// No description provided for @alarmName.
   ///
   /// In en, this message translates to:
@@ -1033,7 +1045,7 @@ abstract class AppLocalizations {
   /// No description provided for @missionFaceDescription.
   ///
   /// In en, this message translates to:
-  /// **'Keep your face in the frame for 10s.'**
+  /// **'Keep your face in the frame for 5s.'**
   String get missionFaceDescription;
 
   /// No description provided for @walkStepCount.
@@ -1443,6 +1455,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start Mission'**
   String get startMission;
+
+  /// No description provided for @alarmSnooze.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze Alarm'**
+  String get alarmSnooze;
 
   /// No description provided for @fortuneTitle.
   ///

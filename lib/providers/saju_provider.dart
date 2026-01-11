@@ -46,11 +46,7 @@ class SajuNotifier extends StateNotifier<SajuState> {
   }
 
   Future<void> saveProfile(SajuProfile profile, {bool isMain = true}) async {
-    await SajuProfile.saveProfile(profile);
-    if (isMain) {
-      // SajuProfile.saveProfile already saves to 'saju_profile' and 'saju_profiles'
-      // But we need to make sure the single profile is updated too if it's main
-    }
+    await SajuProfile.saveProfile(profile, isRepresentative: isMain);
     await loadProfiles();
   }
 

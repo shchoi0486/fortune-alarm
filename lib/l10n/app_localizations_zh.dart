@@ -137,6 +137,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get completedMissions => '已完成的任务';
 
   @override
+  String get noCompletedMissionsHint => '还没有已完成的任务。去达成今天的任务目标吧。';
+
+  @override
   String greeting(String userName) {
     return '您好，$userName';
   }
@@ -444,6 +447,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get alarmNameAndBackground => '闹钟名称和背景';
 
   @override
+  String get customStyle => '自定义样式';
+
+  @override
   String get alarmName => '闹钟名称';
 
   @override
@@ -495,7 +501,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get missionWalkDescription => '走路即可关闭闹钟！';
 
   @override
-  String get missionFaceDescription => '将脸保持在画面中10秒。';
+  String get missionFaceDescription => '将脸保持在画面中5秒。';
 
   @override
   String get walkStepCount => '目标步数';
@@ -728,6 +734,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get startMission => '开始任务';
+
+  @override
+  String get alarmSnooze => '闹钟延后';
 
   @override
   String get fortuneTitle => '查看运势';

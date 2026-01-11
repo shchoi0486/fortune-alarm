@@ -140,7 +140,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String get addMission => 'मिशन जोड़ें';
 
   @override
-  String get completedMissions => 'पूरे किए गए मिशन';
+  String get completedMissions => 'पूर्ण किए गए मिशन';
+
+  @override
+  String get noCompletedMissionsHint =>
+      'अभी तक कोई मिशन पूरा नहीं हुआ है। आज का लक्ष्य पूरा करें।';
 
   @override
   String greeting(String userName) {
@@ -460,6 +464,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get alarmNameAndBackground => 'अलार्म नाम और बैकग्राउंड';
 
   @override
+  String get customStyle => 'कस्टम स्टाइल';
+
+  @override
   String get alarmName => 'अलार्म नाम';
 
   @override
@@ -513,7 +520,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get missionWalkDescription => 'अलार्म बंद करने के लिए चलें!';
 
   @override
-  String get missionFaceDescription => '10 सेकंड तक चेहरा फ्रेम में रखें।';
+  String get missionFaceDescription => '5 सेकंड तक चेहरा फ्रेम में रखें।';
 
   @override
   String get walkStepCount => 'लक्ष्य कदम';
@@ -757,6 +764,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get startMission => 'मिशन शुरू करें';
+
+  @override
+  String get alarmSnooze => 'अलार्म टालें';
 
   @override
   String get fortuneTitle => 'भाग्य की जाँच करें';

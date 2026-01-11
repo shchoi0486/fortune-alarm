@@ -28,75 +28,50 @@ class WaterAlarmScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          // Main Toggle
+          const Text('알림 시간', style: TextStyle(color: Colors.grey, fontSize: 14)),
+          const SizedBox(height: 8),
+          
           Container(
-            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                const Text('알림 설정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                Switch(
-                  value: settings.isAlarmEnabled,
-                  activeThumbColor: Colors.blue,
-                  onChanged: (val) {
-                    notifier.updateSettings(isAlarmEnabled: val);
-                  },
-                ),
+                _buildTimeRow(context, '시작', settings.startTime, (newTime) {
+                  notifier.updateSettings(startTime: newTime);
+                }),
+                Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
+                _buildTimeRow(context, '종료', settings.endTime, (newTime) {
+                  notifier.updateSettings(endTime: newTime);
+                }),
               ],
             ),
           ),
-          
-          if (settings.isAlarmEnabled) ...[
-            const SizedBox(height: 24),
-            const Text('알림 시간', style: TextStyle(color: Colors.grey, fontSize: 14)),
-            const SizedBox(height: 8),
-            
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                children: [
-                  _buildTimeRow(context, '시작', settings.startTime, (newTime) {
-                    notifier.updateSettings(startTime: newTime);
-                  }),
-                  Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
-                  _buildTimeRow(context, '종료', settings.endTime, (newTime) {
-                    notifier.updateSettings(endTime: newTime);
-                  }),
-                ],
-              ),
-            ),
 
-            const SizedBox(height: 24),
-            const Text('알림 간격', style: TextStyle(color: Colors.grey, fontSize: 14)),
-            const SizedBox(height: 8),
-            
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                children: [
-                  _buildIntervalOption(notifier, settings.intervalMinutes, 15),
-                  Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
-                  _buildIntervalOption(notifier, settings.intervalMinutes, 30),
-                  Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
-                  _buildIntervalOption(notifier, settings.intervalMinutes, 60),
-                  Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
-                  _buildIntervalOption(notifier, settings.intervalMinutes, 90),
-                  Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
-                  _buildIntervalOption(notifier, settings.intervalMinutes, 120),
-                ],
-              ),
+          const SizedBox(height: 24),
+          const Text('알림 간격', style: TextStyle(color: Colors.grey, fontSize: 14)),
+          const SizedBox(height: 8),
+          
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
             ),
-          ],
+            child: Column(
+              children: [
+                _buildIntervalOption(notifier, settings.intervalMinutes, 15),
+                Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
+                _buildIntervalOption(notifier, settings.intervalMinutes, 30),
+                Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
+                _buildIntervalOption(notifier, settings.intervalMinutes, 60),
+                Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
+                _buildIntervalOption(notifier, settings.intervalMinutes, 90),
+                Divider(height: 1, indent: 20, endIndent: 20, color: Colors.grey[200]),
+                _buildIntervalOption(notifier, settings.intervalMinutes, 120),
+              ],
+            ),
+          ),
         ],
       ),
     );

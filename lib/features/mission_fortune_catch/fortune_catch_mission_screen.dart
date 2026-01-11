@@ -18,7 +18,7 @@ class FortuneCatchMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<FortuneCatchMissionScreen> createState() => _FortuneCatchMissionScreenState();
 }
 
-class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionScreen> with TickerProviderStateMixin {
+class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
   int _score = 0;
   int _catchCount = 0;
   int _combo = 0;
@@ -76,6 +76,12 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   @override
   void initState() {
     super.initState();
+
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
+    WidgetsBinding.instance.addObserver(this);
+
     _layoutRandom = Random(DateTime.now().millisecondsSinceEpoch);
     _initDeviceFeedback();
     _loadBestRecord();
@@ -168,7 +174,18 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // 앱이 백그라운드로 가면(홈버튼 등) 미션 실패로 간주하고 알람 다시 울림
+      if (mounted) {
+        Navigator.of(context).pop('timeout');
+      }
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     for (final c in _hitControllers.values) {
       c.dispose();
     }
@@ -382,10 +399,11 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
         _lastCatchTime = null;
       } else {
         // Normal character (Fortune or Animal)
-        _catchCount++;
         
         if (char.points > 0) {
           // It's a Fortune!
+          _catchCount++;
+          
           final now = DateTime.now();
           if (_lastCatchTime != null && now.difference(_lastCatchTime!) < const Duration(milliseconds: 1000)) {
             _combo++;

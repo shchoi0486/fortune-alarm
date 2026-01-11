@@ -12,6 +12,7 @@ import 'package:audioplayers/audioplayers.dart';
 import '../../data/models/alarm_model.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../mission/widgets/mission_success_overlay.dart';
+import '../../widgets/video_background_widget.dart';
 
 class TapSprintMissionScreen extends ConsumerStatefulWidget {
   final String? alarmId;
@@ -23,7 +24,7 @@ class TapSprintMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<TapSprintMissionScreen> createState() => _TapSprintMissionScreenState();
 }
 
-class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen> {
+class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen> with WidgetsBindingObserver {
   AlarmModel? _alarm;
   bool _isLoading = true;
 
@@ -39,6 +40,19 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
 
   final List<_TapEffectData> _effects = [];
   final Random _random = Random();
+
+  Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
+    if (alarm == null) return null;
+    if (alarm.backgroundPath != 'random_background') return alarm;
+    try {
+      final box = await Hive.openBox('app_state');
+      final resolved = box.get('active_alarm_mission_background_path') as String?;
+      if (resolved == null || resolved.isEmpty) return alarm;
+      return alarm.copyWith(backgroundPath: resolved);
+    } catch (_) {
+      return alarm;
+    }
+  }
 
   static const List<String> _characters = [
     'assets/icon/fortuni1_trans.webp',
@@ -56,13 +70,27 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
+    WidgetsBinding.instance.addObserver(this);
+    
     _loadAlarm();
     _startInactivityTimer();
     _decayTimer = Timer.periodic(const Duration(milliseconds: 180), (_) => _tickDecay());
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      if (mounted) Navigator.of(context).pop('timeout');
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _decayTimer?.cancel();
     _inactivityTimer?.cancel();
     _audioPlayer.dispose();
@@ -89,7 +117,7 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
     }
     try {
       final alarmBox = await Hive.openBox<AlarmModel>('alarms');
-      final alarm = alarmBox.get(widget.alarmId);
+      final alarm = await _applyResolvedRandomBackground(alarmBox.get(widget.alarmId));
       if (mounted) {
         setState(() {
           _alarm = alarm;
@@ -112,28 +140,45 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
     _startInactivityTimer();
   }
 
-  BoxDecoration _backgroundDecoration() {
+  Widget _backgroundLayer() {
     final path = _alarm?.backgroundPath;
     if (path != null) {
+      final lower = path.toLowerCase();
+      final isVideo = lower.endsWith('.mp4') || lower.endsWith('.webm');
+
       if (path.startsWith('color:')) {
         final colorValue = int.tryParse(path.split(':')[1]);
-        if (colorValue != null) return BoxDecoration(color: Color(colorValue));
+        if (colorValue != null) return Container(color: Color(colorValue));
+      } else if (isVideo) {
+        return VideoBackgroundWidget(
+          videoPath: path,
+          isAsset: path.startsWith('assets/'),
+          play: false,
+          loop: false,
+          mute: true,
+        );
       } else if (path.startsWith('assets/')) {
-        return BoxDecoration(
-          image: DecorationImage(image: AssetImage(path), fit: BoxFit.cover),
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage(path), fit: BoxFit.cover),
+          ),
         );
       } else {
-        return BoxDecoration(
-          image: DecorationImage(image: FileImage(File(path)), fit: BoxFit.cover),
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: FileImage(File(path)), fit: BoxFit.cover),
+          ),
         );
       }
     }
-    // 기본 배경을 더 선명하고 밝은 그라데이션으로 변경
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        colors: [Color(0xFF6DD5FA), Color(0xFF2980B9), Color(0xFFFFFFFF)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+
+    return const DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF6DD5FA), Color(0xFF2980B9), Color(0xFFFFFFFF)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
       ),
     );
   }
@@ -223,20 +268,24 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: Container(
-          decoration: _backgroundDecoration(),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.white.withOpacity(isDarkMode ? 0.1 : 0.3),
-                  Colors.black.withOpacity(isDarkMode ? 0.4 : 0.2),
-                ],
+        body: Stack(
+          children: [
+            Positioned.fill(child: _backgroundLayer()),
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withOpacity(isDarkMode ? 0.1 : 0.3),
+                      Colors.black.withOpacity(isDarkMode ? 0.4 : 0.2),
+                    ],
+                  ),
+                ),
               ),
             ),
-            child: SafeArea(
+            SafeArea(
               child: Column(
                 children: [
                   Padding(
@@ -425,7 +474,7 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                 ],
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -557,5 +606,3 @@ class _TapEffectWidgetState extends State<TapEffectWidget> with SingleTickerProv
     );
   }
 }
-
-

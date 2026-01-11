@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -33,8 +33,9 @@ import '../mission_left_right/left_right_mission_screen.dart';
 import '../mission_walk/walk_mission_screen.dart';
 import '../mission_face/face_detection_mission_screen.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import '../../widgets/video_background_widget.dart';
 
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart';
 
 class AlarmRingingScreen extends ConsumerStatefulWidget {
   final String alarmId;
@@ -45,19 +46,32 @@ class AlarmRingingScreen extends ConsumerStatefulWidget {
   ConsumerState<AlarmRingingScreen> createState() => _AlarmRingingScreenState();
 }
 
-class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
+class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with WidgetsBindingObserver {
   AlarmModel? _alarm;
   BoxDecoration? _selectedBgDecoration;
+  bool _isVideo = false;
+  String? _videoPath;
+  bool _isVideoAsset = false;
+  String? _resolvedMissionBackgroundPath;
+
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
+  Timer? _volumeEnforcementTimer;
   Timer? _timeTimer;
   Timer? _missionTimeoutTimer;
   bool _isLoading = true;
   bool _isMissionStarted = false;
+  DateTime? _snoozeTargetTime;
+  int? _snoozeRemainingAfterTap;
   
+  bool _isMissionCompleted = false;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    
     _loadAlarm();
     
     // ML 서비스 미리 초기화 (카메라 미션 대비)
@@ -74,6 +88,26 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
     _timeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) setState(() {});
     });
+
+    // 볼륨 강제 설정 (1초마다)
+    _startVolumeEnforcement();
+  }
+
+  void _startVolumeEnforcement() {
+    if (Platform.isAndroid) {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      _volumeEnforcementTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (!mounted || _isMissionCompleted) {
+          timer.cancel();
+          return;
+        }
+        try {
+          await channel.invokeMethod('setMaxAlarmVolume');
+        } catch (e) {
+          debugPrint('Error setting max alarm volume: $e');
+        }
+      });
+    }
   }
 
   Future<void> _loadAlarm() async {
@@ -102,13 +136,9 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
           });
         }
 
-        // [수정] 스누즈 중복 예약 방지 ("알람 좀비" 현상 해결)
-        // 미션 성공 시점에만 스누즈를 예약하도록 변경하여, 알람이 울리자마자 예약되는 것을 방지합니다.
-        // _scheduleNextSnoozeIfNeeded();
-
         // 화면이 완전히 빌드된 후 소리를 재생하기 위해 약간의 딜레이를 줍니다.
         Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted && !_isMissionStarted) {
+          if (mounted && !_isMissionStarted && _snoozeTargetTime == null) {
             _playAlarm();
           }
         });
@@ -136,9 +166,9 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
         ? _alarm!.maxSnoozeCount 
         : (_alarm!.remainingSnoozeCount > 0 ? _alarm!.remainingSnoozeCount : 0);
     
-    // 마지막 회차(1)이면 더 이상 스누즈 예약 안 함
-    if (currentRemaining <= 1) {
-      debugPrint('[AlarmRingingScreen] Final snooze round. No more auto-snooze.');
+    // [수정] 남은 횟수가 0보다 크면 스누즈 예약 (기존 1에서 0으로 변경)
+    if (currentRemaining <= 0) {
+      debugPrint('[AlarmRingingScreen] No more snooze rounds left. No auto-snooze.');
       return;
     }
 
@@ -158,68 +188,126 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
   Future<void> _initializeBackground() async {
     if (_alarm == null) return;
 
-    BoxDecoration newDecoration;
+    BoxDecoration? newDecoration;
+    bool isVideo = false;
+    String? videoPath;
+    bool isVideoAsset = false;
+    String? resolvedPath;
 
     if (_alarm!.backgroundPath == 'random_background') {
       final random = math.Random();
-      final List<String> options = [
-        'assets/images/alarm_bg.png',
-        'assets/images/alarm_bg_all.png',
-        'assets/images/alarm_bg_dog.png',
-        'assets/images/alarm_bg_panda.png',
-        'assets/images/alarm_bg_tiger.png',
-        'assets/images/alarm_bg_moon.jpg',
-        'assets/images/alarm_bg_snow.jpg',
-        'assets/images/alarm_bg_rabit.png',
-      ];
+      final List<String> options = [];
+
+      try {
+        final manifestContent = await rootBundle.loadString('AssetManifest.json');
+        final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+
+        const validExtensions = ['.mp4', '.webm', '.jpg', '.jpeg', '.png', '.webp'];
+
+        bool isValidAsset(String key) {
+          return validExtensions.any((ext) => key.toLowerCase().endsWith(ext));
+        }
+
+        bool isAllowedCategoryAsset(String key) {
+          final decodedKey = Uri.decodeFull(key).toLowerCase();
+          if (!decodedKey.startsWith('assets/images/')) return false;
+          if (decodedKey.contains('/simple/')) return false;
+          if (decodedKey.contains('/tarot/')) return false;
+          return decodedKey.contains('/character/') ||
+              decodedKey.contains('/animal/') ||
+              decodedKey.contains('/illustration/') ||
+              decodedKey.contains('/landscape/');
+        }
+
+        options.addAll(
+          manifestMap.keys.where((key) => isAllowedCategoryAsset(key) && isValidAsset(key)),
+        );
+      } catch (e) {
+        debugPrint('Error loading asset manifest for random background: $e');
+      }
+
+      if (options.isEmpty) {
+        options.addAll([
+          'assets/images/character/all.webp',
+          'assets/images/character/dog.webp',
+          'assets/images/character/panda.webp',
+          'assets/images/character/rabbit.webp',
+          'assets/images/character/tiger.webp',
+          'assets/images/illustration/bear.webp',
+          'assets/images/landscape/bridge.webp',
+          'assets/images/landscape/road.webp',
+          'assets/images/landscape/sea.webp',
+          'assets/images/landscape/sky.webp',
+        ]);
+      }
       
       // Load user images
       try {
         final bgDir = await _getBackgroundImagesDir();
         if (await bgDir.exists()) {
-          final userImages = bgDir.listSync()
+          final userFiles = bgDir.listSync()
               .whereType<File>()
               .map((f) => f.path)
-              .where((p) => p.toLowerCase().endsWith('.jpg') || p.toLowerCase().endsWith('.png') || p.toLowerCase().endsWith('.jpeg'))
+              .where((p) {
+                final lower = p.toLowerCase();
+                return lower.endsWith('.jpg') || lower.endsWith('.png') || lower.endsWith('.jpeg') ||
+                       lower.endsWith('.mp4') || lower.endsWith('.webm');
+              })
               .toList();
-          options.addAll(userImages);
+          options.addAll(userFiles);
         }
       } catch (e) {
         debugPrint('Error loading user images: $e');
       }
 
       final selectedPath = options[random.nextInt(options.length)];
+      final lower = selectedPath.toLowerCase();
+      resolvedPath = selectedPath;
       
-      if (selectedPath.startsWith('assets/')) {
-        newDecoration = BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(selectedPath),
-            fit: BoxFit.cover,
-          ),
-        );
+      if (lower.endsWith('.mp4') || lower.endsWith('.webm')) {
+        isVideo = true;
+        videoPath = selectedPath;
+        isVideoAsset = selectedPath.startsWith('assets/');
       } else {
-        newDecoration = BoxDecoration(
-          image: DecorationImage(
-            image: FileImage(File(selectedPath)),
-            fit: BoxFit.cover,
-          ),
-        );
+        if (selectedPath.startsWith('assets/')) {
+          newDecoration = BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(selectedPath),
+              fit: BoxFit.cover,
+            ),
+          );
+        } else {
+          newDecoration = BoxDecoration(
+            image: DecorationImage(
+              image: FileImage(File(selectedPath)),
+              fit: BoxFit.cover,
+            ),
+          );
+        }
       }
     } else if (_alarm!.backgroundPath != null) {
-      if (_alarm!.backgroundPath!.startsWith('color:')) {
-        int colorValue = int.parse(_alarm!.backgroundPath!.split(':')[1]);
+      final path = _alarm!.backgroundPath!;
+      final lower = path.toLowerCase();
+      resolvedPath = path;
+      
+      if (path.startsWith('color:')) {
+        int colorValue = int.parse(path.split(':')[1]);
         newDecoration = BoxDecoration(color: Color(colorValue));
-      } else if (_alarm!.backgroundPath!.startsWith('assets/')) {
+      } else if (lower.endsWith('.mp4') || lower.endsWith('.webm')) {
+        isVideo = true;
+        videoPath = path;
+        isVideoAsset = path.startsWith('assets/');
+      } else if (path.startsWith('assets/')) {
         newDecoration = BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(_alarm!.backgroundPath!),
+            image: AssetImage(path),
             fit: BoxFit.cover,
           ),
         );
       } else {
         newDecoration = BoxDecoration(
           image: DecorationImage(
-            image: FileImage(File(_alarm!.backgroundPath!)),
+            image: FileImage(File(path)),
             fit: BoxFit.cover,
           ),
         );
@@ -228,7 +316,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
       // 기본 배경 이미지
       newDecoration = const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/alarm_bg.png'),
+          image: AssetImage('assets/images/splash/splash_bg.webp'),
           fit: BoxFit.cover,
         ),
       );
@@ -237,29 +325,58 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
     if (mounted) {
       setState(() {
         _selectedBgDecoration = newDecoration;
+        _isVideo = isVideo;
+        _videoPath = videoPath;
+        _isVideoAsset = isVideoAsset;
+        _resolvedMissionBackgroundPath = resolvedPath;
       });
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      final route = ModalRoute.of(context);
+      if (route?.isCurrent ?? true) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      }
     }
   }
 
   @override
   void dispose() {
     debugPrint('[AlarmRingingScreen] Dispose called. Cleaning up...');
-    _stopAlarm(); // 화면이 사라질 때 모든 알람 관련 동작을 중지합니다.
+    WidgetsBinding.instance.removeObserver(this);
     _volumeTimer?.cancel();
+    _volumeEnforcementTimer?.cancel();
     _timeTimer?.cancel();
     _missionTimeoutTimer?.cancel();
     
-    // 정상적으로 화면이 종료될 때 안전 장치 해제
-    if (_alarm != null) {
-      AlarmSchedulerService.cancelSafetyAlarm(_alarm!.id);
+    // 미션이 완료되지 않은 상태에서 dispose가 호출된 경우 (예: 사용자가 앱을 강제로 끔)
+    // 알람 소리를 끄지 않고 서비스가 유지되도록 하거나, 로그를 남겨 재실행을 유도할 수 있습니다.
+    if (!_isMissionCompleted) {
+      debugPrint('[AlarmRingingScreen] WARNING: UI disposed without mission completion!');
+      // 여기서 소리를 끄지 않으면 앱이 죽어도 서비스 Isolate에서 소리가 계속 날 가능성이 높아집니다.
+      // 하지만 현재 구조상 UI Isolate의 _audioPlayer는 앱 종료 시 함께 죽으므로,
+      // 서비스 측에서 소리를 재생하는 로직으로의 전환이 궁극적인 해결책입니다.
+      
+      // 우선은 사용자가 알람을 우회했음을 기록하여 다음 앱 실행 시 바로 알람 화면으로 보내는 용도로 활용 가능
+    } else {
+      // 정상적으로 화면이 종료될 때 안전 장치 해제
+      if (_alarm != null) {
+        AlarmSchedulerService.cancelSafetyAlarm(_alarm!.id);
+      }
+      // 알람 소리 및 진동 중지 보장
+      _stopAlarm();
     }
 
     _audioPlayer.dispose();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 
   Future<void> _playAlarm() async {
-    if (_alarm == null || _isMissionStarted) return;
+    if (_alarm == null || _isMissionStarted || _snoozeTargetTime != null || !mounted) return;
 
     debugPrint('[AlarmRingingScreen] _playAlarm called. sound: ${_alarm!.isSoundEnabled}, volume: ${_alarm!.volume}');
 
@@ -383,6 +500,10 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
   void _startVolumeFadeIn(double targetVolume) {
     double currentVolume = 0.1;
     _volumeTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
+      if (!mounted || _isMissionStarted || _isMissionCompleted) {
+        timer.cancel();
+        return;
+      }
       currentVolume += 0.1;
       if (currentVolume >= targetVolume) {
         currentVolume = targetVolume;
@@ -439,9 +560,15 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
         final baseId = widget.alarmId.replaceAll('_snooze', '');
         await box.put('active_alarm_mission_base_id', baseId);
         await box.put('active_alarm_mission_started_at', DateTime.now().toIso8601String());
+        if (_alarm?.backgroundPath == 'random_background' && _resolvedMissionBackgroundPath != null) {
+          await box.put('active_alarm_mission_background_path', _resolvedMissionBackgroundPath);
+        } else {
+          await box.delete('active_alarm_mission_background_path');
+        }
       } else {
         await box.delete('active_alarm_mission_base_id');
         await box.delete('active_alarm_mission_started_at');
+        await box.delete('active_alarm_mission_background_path');
       }
     } catch (e) {
       debugPrint('[AlarmRingingScreen] Failed to update mission state: $e');
@@ -469,59 +596,74 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
       );
     }
 
-    BoxDecoration bgDecoration;
-    if (_selectedBgDecoration != null) {
-      bgDecoration = _selectedBgDecoration!;
-    } else if (_alarm!.backgroundPath != null) {
-      if (_alarm!.backgroundPath!.startsWith('color:')) {
-        int colorValue = int.parse(_alarm!.backgroundPath!.split(':')[1]);
-        bgDecoration = BoxDecoration(color: Color(colorValue));
-      } else if (_alarm!.backgroundPath!.startsWith('assets/')) {
-        bgDecoration = BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(_alarm!.backgroundPath!),
-            fit: BoxFit.cover,
-          ),
-        );
+    Widget backgroundWidget;
+    if (_isVideo && _videoPath != null) {
+      backgroundWidget = VideoBackgroundWidget(
+        videoPath: _videoPath!,
+        isAsset: _isVideoAsset,
+        loop: true,
+        mute: true,
+      );
+    } else {
+      BoxDecoration bgDecoration;
+      if (_selectedBgDecoration != null) {
+        bgDecoration = _selectedBgDecoration!;
+      } else if (_alarm!.backgroundPath != null) {
+        if (_alarm!.backgroundPath!.startsWith('color:')) {
+          int colorValue = int.parse(_alarm!.backgroundPath!.split(':')[1]);
+          bgDecoration = BoxDecoration(color: Color(colorValue));
+        } else if (_alarm!.backgroundPath!.startsWith('assets/')) {
+          bgDecoration = BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(_alarm!.backgroundPath!),
+              fit: BoxFit.cover,
+            ),
+          );
+        } else {
+          bgDecoration = BoxDecoration(
+            image: DecorationImage(
+              image: FileImage(File(_alarm!.backgroundPath!)),
+              fit: BoxFit.cover,
+            ),
+          );
+        }
       } else {
-        bgDecoration = BoxDecoration(
+        // 기본 배경 이미지 설정 (사용자가 제공한 이미지)
+        bgDecoration = const BoxDecoration(
           image: DecorationImage(
-            image: FileImage(File(_alarm!.backgroundPath!)),
+            image: AssetImage('assets/images/character/default.webp'),
             fit: BoxFit.cover,
           ),
         );
       }
-    } else {
-      // 기본 배경 이미지 설정 (사용자가 제공한 이미지)
-      bgDecoration = const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/alarm_bg.png'),
-          fit: BoxFit.cover,
-        ),
-      );
+      backgroundWidget = Container(decoration: bgDecoration);
     }
 
     return PopScope(
       canPop: false,
       child: Scaffold(
-      body: Container(
-        decoration: bgDecoration,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withOpacity(0.3),
-                Colors.transparent,
-                Colors.black.withOpacity(0.5),
-              ],
+        body: Stack(
+          children: [
+            Positioned.fill(child: backgroundWidget),
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.3),
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.5),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          child: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+            SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                 // Top: App Title, Time, Date
                 Padding(
                   padding: const EdgeInsets.only(top: 40),
@@ -537,138 +679,268 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
                           shadows: const [Shadow(blurRadius: 10, color: Colors.black45, offset: Offset(0, 2))],
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        DateFormat('h:mm').format(DateTime.now()),
-                        style: const TextStyle(
-                          fontSize: 100,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w300,
-                          height: 1.0,
-                          shadows: [Shadow(blurRadius: 15, color: Colors.black38, offset: Offset(0, 4))],
+                      if (_snoozeTargetTime == null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          DateFormat('h:mm').format(DateTime.now()),
+                          style: const TextStyle(
+                            fontSize: 100,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                            height: 1.0,
+                            shadows: [Shadow(blurRadius: 15, color: Colors.black38, offset: Offset(0, 4))],
+                          ),
                         ),
-                      ),
-                      Text(
-                        DateFormat('EEEE, MMMM d').format(DateTime.now()),
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white.withOpacity(0.9),
-                          fontWeight: FontWeight.w400,
-                          shadows: const [Shadow(blurRadius: 8, color: Colors.black38, offset: Offset(0, 2))],
+                        Text(
+                          DateFormat('EEEE, MMMM d').format(DateTime.now()),
+                          style: TextStyle(
+                            fontSize: 22,
+                            color: Colors.white.withOpacity(0.9),
+                            fontWeight: FontWeight.w400,
+                            shadows: const [Shadow(blurRadius: 8, color: Colors.black38, offset: Offset(0, 2))],
+                          ),
                         ),
-                      ),
+                      ],
                       const SizedBox(height: 20),
-                      // 스누즈 상태 표시 (반복알람 2/3)
-                      if (_alarm!.snoozeInterval > 0 && _alarm!.maxSnoozeCount > 0)
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.white.withOpacity(0.3)),
-                          ),
-                          child: Text(
-                            (() {
-                              bool isFirstSnooze = !_alarm!.id.endsWith('_snooze');
-                              int maxCount = _alarm!.maxSnoozeCount;
-                              int currentRemaining = isFirstSnooze 
-                                  ? maxCount 
-                                  : (_alarm!.remainingSnoozeCount > 0 ? _alarm!.remainingSnoozeCount : 0);
-                              int currentCount = maxCount - currentRemaining + 1;
-                              if (currentCount < 1) currentCount = 1;
-                              if (currentCount > maxCount) currentCount = maxCount;
-                              return AppLocalizations.of(context)!.repeatAlarmCount(currentCount, maxCount);
-                            })(),
-                            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                        ),
                     ],
                   ),
                 ),
               
-              // Center: Snooze Button Removed as per user request.
-              // Snooze is now automatically scheduled upon alarm ringing.
-              const SizedBox.shrink(),
+              if (_snoozeTargetTime != null)
+                Builder(
+                  builder: (context) {
+                    final now = DateTime.now();
+                    final target = _snoozeTargetTime!;
+                    final seconds = target.difference(now).inSeconds;
+                    final remainingSeconds = seconds < 0 ? 0 : seconds;
+                    final mm = (remainingSeconds ~/ 60).toString().padLeft(2, '0');
+                    final ss = (remainingSeconds % 60).toString().padLeft(2, '0');
 
-              // Bottom: Mission Start or Dismiss
+                    final alarm = _alarm!;
+                    final l10n = AppLocalizations.of(context)!;
+                    final remainingCountText = _snoozeRemainingAfterTap == null
+                        ? ''
+                        : (() {
+                            if (alarm.maxSnoozeCount == 999) {
+                              return '${l10n.alarmSnooze} ${alarm.snoozeInterval}분(무제한)';
+                            }
+                            final maxCount = alarm.maxSnoozeCount;
+                            final remainingAfterTap = _snoozeRemainingAfterTap!;
+                            final clampedRemaining = remainingAfterTap < 0
+                                ? 0
+                                : (remainingAfterTap > maxCount ? maxCount : remainingAfterTap);
+                            var currentCount = maxCount - clampedRemaining;
+                            if (currentCount < 1) currentCount = 1;
+                            if (currentCount > maxCount) currentCount = maxCount;
+                            return '${l10n.alarmSnooze} ${alarm.snoozeInterval}분($currentCount/$maxCount)';
+                          })();
+
+                    return Column(
+                      children: [
+                        const SizedBox(height: 40), // Z 아이콘 삭제 후 상단 여백 확보
+                        Text(
+                          '$mm:$ss',
+                          style: const TextStyle(
+                            fontSize: 80,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                            height: 1.0,
+                            shadows: [Shadow(blurRadius: 15, color: Colors.black38, offset: Offset(0, 4))],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        if (remainingCountText.isNotEmpty)
+                          Text(
+                            remainingCountText,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white.withOpacity(0.9),
+                              fontWeight: FontWeight.w600,
+                              shadows: const [Shadow(blurRadius: 8, color: Colors.black38, offset: Offset(0, 2))],
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+
+              // Bottom: Snooze & Mission Start
               Padding(
                 padding: const EdgeInsets.only(bottom: 50, left: 20, right: 20),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 60,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_alarm!.missionType == MissionType.none) {
-                        await _stopAlarm(); // 1. 소리/진동 중지
-                        
-                        // 2. 현재 알림을 정확한 ID로 취소
-                        final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
-                        await NotificationService().cancelNotification(stableId);
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 알람 미루기 버튼 (비중을 낮추기 위해 크기 축소)
+                    if (_snoozeTargetTime == null && (_alarm!.snoozeInterval > 0 && _alarm!.maxSnoozeCount > 0) &&
+                        (() {
+                          final bool isFirstSnooze = !_alarm!.id.endsWith('_snooze');
+                          final int currentRemaining = isFirstSnooze
+                              ? _alarm!.maxSnoozeCount
+                              : (_alarm!.remainingSnoozeCount > 0 ? _alarm!.remainingSnoozeCount : 0);
+                          return currentRemaining > 0;
+                        })())
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 24),
+                        child: OutlinedButton(
+                          onPressed: () async {
+                            final alarm = _alarm;
+                            if (alarm == null) return;
 
-                        // 3. 알람 끄기를 눌렀으므로 모든 스누즈 알람을 취소합니다.
-                        // 반복 알람이면 메인 스케줄(내일)은 유지하고 스누즈만 취소합니다.
-                        bool hasRepeat = _alarm!.repeatDays.any((d) => d);
-                        await AlarmSchedulerService.cancelAlarm(_alarm!, cancelMain: !hasRepeat);
-                        
-                        debugPrint('[AlarmRingingScreen] Simple alarm turned off (Snooze cancelled).');
+                            final bool isFirstSnooze = !alarm.id.endsWith('_snooze');
+                            final int currentRemaining = isFirstSnooze
+                                ? alarm.maxSnoozeCount
+                                : (alarm.remainingSnoozeCount > 0 ? alarm.remainingSnoozeCount : 0);
+                            final int newRemainingCount = currentRemaining - 1;
 
-                        // 4. 기상 미션 성공 처리 연동
-                        try {
-                          await ref.read(missionProvider).completeWakeUpMission();
-                        } catch (e) {
-                          debugPrint('Error completing wakeup mission: $e');
-                        }
+                            final now = DateTime.now();
+                            final targetTime = DateTime(
+                              now.year,
+                              now.month,
+                              now.day,
+                              now.hour,
+                              now.minute,
+                              now.second,
+                            ).add(Duration(minutes: alarm.snoozeInterval));
+                            setState(() {
+                              _snoozeTargetTime = targetTime;
+                              _snoozeRemainingAfterTap = newRemainingCount < 0 ? 0 : newRemainingCount;
+                            });
 
-                        // 5. 화면 닫기
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                        }
-                      } else {
-                        _startMission();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _alarm!.missionType == MissionType.none 
-                          ? Colors.white.withOpacity(0.2)
-                          : Colors.white.withOpacity(0.9),
-                      foregroundColor: _alarm!.missionType == MissionType.none 
-                          ? Colors.white 
-                          : Colors.black87,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        side: BorderSide(
-                          color: Colors.white.withOpacity(0.5),
-                          width: 1,
+                            await _stopAlarm();
+
+                            final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
+                            await NotificationService().cancelNotification(stableId);
+
+                            await AlarmSchedulerService.snoozeAlarm(alarm, snoozeTime: targetTime);
+                          },
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: BorderSide(
+                              color: Colors.white.withOpacity(0.4),
+                              width: 1.2,
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            backgroundColor: Colors.white.withOpacity(0.05),
+                          ),
+                          child: Text(
+                            (() {
+                              final bool isFirstSnooze = !_alarm!.id.endsWith('_snooze');
+                              final int maxCount = _alarm!.maxSnoozeCount;
+                              final int currentRemaining = isFirstSnooze
+                                  ? maxCount
+                                  : (_alarm!.remainingSnoozeCount > 0 ? _alarm!.remainingSnoozeCount : 0);
+                              final minutes = _alarm!.snoozeInterval;
+
+                              if (maxCount == 999) {
+                                return '${AppLocalizations.of(context)!.alarmSnooze} $minutes분(무제한)';
+                              }
+
+                              int currentCount = maxCount - currentRemaining + 1;
+                              if (currentCount < 1) currentCount = 1;
+                              if (currentCount > maxCount) currentCount = maxCount;
+                              return '${AppLocalizations.of(context)!.alarmSnooze} $minutes분($currentCount/$maxCount)';
+                            })(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                         ),
                       ),
-                      elevation: 0,
+                    
+                    // 미션 시작 또는 알람 끄기 버튼
+                    SizedBox(
+                      width: double.infinity,
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_alarm!.missionType == MissionType.none) {
+                            _isMissionCompleted = true;
+                            await _stopAlarm(); // 1. 소리/진동 중지
+                            
+                            // 2. 현재 알림을 정확한 ID로 취소
+                            final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
+                            await NotificationService().cancelNotification(stableId);
+
+                            // 3. 알람 끄기를 눌렀으므로 모든 스누즈 알람을 취소합니다.
+                            // 반복 알람이면 메인 스케줄(내일)은 유지하고 스누즈만 취소합니다.
+                            bool hasRepeat = _alarm!.repeatDays.any((d) => d);
+                            await AlarmSchedulerService.cancelAlarm(_alarm!, cancelMain: !hasRepeat);
+                            
+                            debugPrint('[AlarmRingingScreen] Simple alarm turned off (Snooze cancelled).');
+
+                            // 4. 알람 리스트 업데이트 (단일 알람 비활성화 등)
+                            try {
+                              final notifier = ref.read(alarmListProvider.notifier);
+                              await notifier.completeAlarm(widget.alarmId);
+                              
+                              await ref.read(missionProvider).completeWakeUpMission();
+                            } catch (e) {
+                              debugPrint('Error completing wakeup mission: $e');
+                            }
+
+                            // 5. 화면 닫기
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          } else {
+                            _startMission();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _alarm!.missionType == MissionType.none 
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.white.withOpacity(0.9),
+                          foregroundColor: _alarm!.missionType == MissionType.none 
+                              ? Colors.white 
+                              : Colors.black87,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            side: BorderSide(
+                              color: Colors.white.withOpacity(0.5),
+                              width: 1,
+                            ),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: Text(
+                          _alarm!.missionType == MissionType.none 
+                              ? AppLocalizations.of(context)!.turnOffAlarm
+                              : AppLocalizations.of(context)!.startMission, 
+                          style: TextStyle(
+                            fontSize: 20, 
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2,
+                          )
+                        ),
+                      ),
                     ),
-                    child: Text(
-                      _alarm!.missionType == MissionType.none 
-                          ? AppLocalizations.of(context)!.turnOffAlarm
-                          : AppLocalizations.of(context)!.startMission, 
-                      style: TextStyle(
-                        fontSize: 20, 
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      )
-                    ),
-                  ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
-      ),
-      ),
-      ),
-    );
-  }
+      ],
+    ),
+  ),
+);
+}
 
   void _startMission() async {
     if (_alarm == null) return;
     if (_isMissionStarted) return; // Prevent double taps
     _isMissionStarted = true;
+    if (_snoozeTargetTime != null) {
+      setState(() {
+        _snoozeTargetTime = null;
+        _snoozeRemainingAfterTap = null;
+      });
+    }
 
     final MissionType type = _alarm!.missionType;
     final List<String>? refPaths = _alarm!.referenceImagePaths;
@@ -731,8 +1003,13 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
 
     await _setMissionActive(true);
 
-    // 미션 시작 시 알람 소리/진동을 중지합니다. (UI 스레드 차단 방지를 위해 await 제거)
-    _stopAlarm();
+    // 미션 시작 시 알람 소리/진동을 중지합니다.
+    await _stopAlarm();
+    
+    // [중요] 비동기 처리 도중 소리가 다시 시작되지 않도록 한 번 더 확실히 중지
+    await FlutterRingtonePlayer().stop();
+    await _audioPlayer.stop();
+    Vibration.cancel();
 
     // [추가] 미션 수행 중에는 자동 스누즈가 울리지 않도록 이미 예약된 스누즈를 취소합니다.
     // 미션 성공 후에 다시 예약할 것입니다.
@@ -802,52 +1079,30 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> {
 
     } else if (result == true) {
       // 미션 성공!
-      debugPrint('[AlarmRingingScreen] Mission Success! Checking for next snooze...');
+      _isMissionCompleted = true;
+      debugPrint('[AlarmRingingScreen] Mission Success! Alarm completed.');
       
       if (_alarm != null) {
-        bool isFirstSnooze = !_alarm!.id.endsWith('_snooze');
-        int currentRemaining = isFirstSnooze 
-            ? _alarm!.maxSnoozeCount 
-            : (_alarm!.remainingSnoozeCount > 0 ? _alarm!.remainingSnoozeCount : 0);
+        // 미션 성공 시에는 남은 스누즈 횟수와 상관없이 알람을 완전히 종료합니다.
+        debugPrint('[AlarmRingingScreen] Mission cleared. Turning off alarm completely.');
         
-        // 사용자 요청: 미션 성공 후 다음 알람은 설정된 간격(예: 3분) 후에 울려야 함
-        if (currentRemaining > 1) {
-          // 아직 남은 회차가 있음 -> 다음 스누즈 예약
-          debugPrint('[AlarmRingingScreen] Scheduling next snooze (${currentRemaining - 1} left).');
-          await AlarmSchedulerService.snoozeAlarm(_alarm!);
+        // 미션 화면에서 제거했던 completeAlarm을 여기서 호출
+        final notifier = ref.read(alarmListProvider.notifier);
+        await notifier.completeAlarm(widget.alarmId);
+        
+        // 기상 미션 성공 처리 연동
+        try {
+          await ref.read(missionProvider).completeWakeUpMission();
           
-          // 메인 알람 스케줄 갱신 (반복 알람인 경우 내일 시간을 계산해두기 위함)
-          // 단, 스누즈가 진행 중이므로 Hive의 isEnabled는 유지해야 함
-          bool hasRepeat = _alarm!.repeatDays.any((d) => d);
-          if (hasRepeat) {
-             // 반복 알람은 다음 실행 시간을 계산해서 Hive에 업데이트만 해둠 (현재 스케줄은 이미 fire되었으므로)
-             // cancelAlarm(cancelMain: false)를 호출하여 알림 등을 정리
-             await AlarmSchedulerService.cancelAlarm(_alarm!, cancelMain: false, cancelSnooze: false);
+          // 만약 영양제 미션이었다면 영양제 체크도 함께 완료
+          if (_alarm?.missionType == MissionType.supplement) {
+            await ref.read(missionProvider).setMissionCompleted('supplement', true);
           }
-          
-          if (mounted) Navigator.pop(context);
-        } else {
-          // 모든 회차 완료 -> 완전히 종료
-          debugPrint('[AlarmRingingScreen] All snooze rounds completed. Turning off.');
-          
-          // 미션 화면에서 제거했던 completeAlarm을 여기서 호출
-          final notifier = ref.read(alarmListProvider.notifier);
-          await notifier.completeAlarm(widget.alarmId);
-          
-          // 기상 미션 성공 처리 연동
-          try {
-            await ref.read(missionProvider).completeWakeUpMission();
-            
-            // 만약 영양제 미션이었다면 영양제 체크도 함께 완료
-            if (_alarm?.missionType == MissionType.supplement) {
-              await ref.read(missionProvider).setMissionCompleted('supplement', true);
-            }
-          } catch (e) {
-            debugPrint('Error completing wakeup mission: $e');
-          }
-
-          if (mounted) Navigator.pop(context);
+        } catch (e) {
+          debugPrint('Error completing wakeup mission: $e');
         }
+
+        if (mounted) Navigator.pop(context);
       }
     } else {
       // 뒤로가기 등으로 미션을 완료하지 않고 돌아온 경우 알람 다시 재생

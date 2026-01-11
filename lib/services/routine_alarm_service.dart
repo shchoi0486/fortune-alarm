@@ -34,16 +34,37 @@ class RoutineAlarmService {
 
     debugPrint('[RoutineAlarm] Scheduling $type at $scheduledTime (ID: $id)');
 
-    await AndroidAlarmManager.oneShotAt(
-      scheduledTime,
-      id,
-      _routineCallback,
-      exact: true,
-      wakeup: true,
-      alarmClock: true,
-      rescheduleOnReboot: true,
-      allowWhileIdle: true,
-    );
+    if (Platform.isAndroid) {
+      await AndroidAlarmManager.oneShotAt(
+        scheduledTime,
+        id,
+        _routineCallback,
+        exact: true,
+        wakeup: true,
+        alarmClock: true,
+        rescheduleOnReboot: true,
+        allowWhileIdle: true,
+      );
+    } else if (Platform.isIOS) {
+      String title = '오늘의 미션을 확인해보세요! 🚀';
+      String body = '루틴 미션을 지키고 기분 좋은 하루를 만들어봐요.';
+      
+      if (id == _morningId) {
+        title = '상쾌한 아침입니다! ☀️';
+        body = '오늘 계획한 루틴 미션들을 잊지 않으셨나요?';
+      } else if (id == _eveningId) {
+        title = '오늘 하루도 수고 많으셨어요! ✨';
+        body = '오늘의 미션을 모두 수행하셨나요? 루틴을 마무리해보세요.';
+      }
+
+      await NotificationService().scheduleAlarmNotification(
+        id: id,
+        title: title,
+        body: body,
+        scheduledDate: scheduledTime,
+        payload: 'routine_daily',
+      );
+    }
   }
 
   @pragma('vm:entry-point')
@@ -59,7 +80,7 @@ class RoutineAlarmService {
     
     if (id == _morningId) {
       title = '상쾌한 아침입니다! ☀️';
-      body = '오늘 계획한 습관 미션들을 잊지 않으셨나요?';
+      body = '오늘 계획한 루틴 미션들을 잊지 않으셨나요?';
     } else if (id == _eveningId) {
       title = '오늘 하루도 수고 많으셨어요! ✨';
       body = '오늘의 미션을 모두 수행하셨나요? 루틴을 마무리해보세요.';

@@ -319,16 +319,26 @@ class AlarmSchedulerService {
     
     // AndroidAlarmManager 직접 호출 (scheduleAlarm은 권한 체크 등 오버헤드가 있으므로)
     final int stableId = getStableId(safetyId);
-    await AndroidAlarmManager.oneShotAt(
-      safetyTime,
-      stableId,
-      alarmCallback,
-      exact: true,
-      wakeup: true,
-      alarmClock: true,
-      rescheduleOnReboot: true,
-      allowWhileIdle: true,
-    );
+    if (Platform.isAndroid) {
+      await AndroidAlarmManager.oneShotAt(
+        safetyTime,
+        stableId,
+        alarmCallback,
+        exact: true,
+        wakeup: true,
+        alarmClock: true,
+        rescheduleOnReboot: true,
+        allowWhileIdle: true,
+      );
+    } else if (Platform.isIOS) {
+      await NotificationService().scheduleAlarmNotification(
+        id: stableId,
+        title: '스냅 알람',
+        body: '알람이 강제로 종료되었습니다!',
+        scheduledDate: safetyTime,
+        payload: 'safety_$safetyId',
+      );
+    }
   }
 
   /// 안전 장치 알람 취소
@@ -337,7 +347,11 @@ class AlarmSchedulerService {
     debugPrint('[AlarmScheduler] Cancelling Safety Alarm: $safetyId');
     
     final int stableId = getStableId(safetyId);
-    await AndroidAlarmManager.cancel(stableId);
+    if (Platform.isAndroid) {
+      await AndroidAlarmManager.cancel(stableId);
+    } else if (Platform.isIOS) {
+      await NotificationService().cancelNotification(stableId);
+    }
     
     // Hive에서 제거
     final box = await Hive.openBox<AlarmModel>('alarms');
@@ -404,27 +418,66 @@ class AlarmSchedulerService {
         final diff = now.difference(scheduleTime);
         if (diff.inMinutes < 1) {
           debugPrint('[AlarmScheduler] Alarm time is in the past but within 1 minute. Scheduling for immediate fire.');
-          scheduleTime = now.add(const Duration(seconds: 2)); // 2초 뒤 실행
+          scheduleTime = now.add(const Duration(milliseconds: 500)); // 즉시 실행을 위해 0.5초 뒤로 설정
         } else {
           debugPrint('[AlarmScheduler] WARNING: Attempted to schedule alarm in the past (>1m)! Time: ${alarm.time}, Now: $now');
           return false;
         }
+      } else {
+        scheduleTime = DateTime(
+          scheduleTime.year,
+          scheduleTime.month,
+          scheduleTime.day,
+          scheduleTime.hour,
+          scheduleTime.minute,
+          scheduleTime.second
+        );
+        
+        // 만약 보정 후 현재보다 과거가 되면(아주 근소한 차이), 1초 뒤로 설정
+        if (scheduleTime.isBefore(now)) {
+          scheduleTime = now.add(const Duration(seconds: 1));
+        }
       }
 
-      debugPrint('[AlarmScheduler] Calling AndroidAlarmManager.oneShotAt...');
-      bool result = await AndroidAlarmManager.oneShotAt(
-        scheduleTime,
-        alarmId,
-        alarmCallback,
-        exact: true,
-        wakeup: true,
-        alarmClock: true,
-        rescheduleOnReboot: true,
-        allowWhileIdle: true,
-      );
+      debugPrint('[AlarmScheduler] Calling scheduling service...');
+      bool result = false;
+      
+      if (Platform.isAndroid) {
+        // [수정] 스누즈/알람 신뢰성 강화 (Android Doze 모드 대응)
+        // 3분과 같은 짧은 간격의 반복 알람을 Doze 모드(절전 모드)에서도 정확히 울리게 하려면
+        // setExactAndAllowWhileIdle()은 9분의 쓰로틀링(제한)이 있어 부적합합니다.
+        // 따라서 setAlarmClock() (alarmClock: true)을 사용하여 시스템에 알람 시계 이벤트임을 명시해야 합니다.
+        // 이는 제한 없이 정확한 시간에 깨울 수 있는 유일한 방법입니다.
+        result = await AndroidAlarmManager.oneShotAt(
+          scheduleTime,
+          alarmId,
+          alarmCallback,
+          exact: true,
+          wakeup: true,
+          alarmClock: true, // [중요] 3분 스누즈를 위해 true로 설정 (setAlarmClock 사용)
+          rescheduleOnReboot: true,
+          allowWhileIdle: true,
+        );
+      } else if (Platform.isIOS) {
+        try {
+          await NotificationService().scheduleAlarmNotification(
+            id: alarmId,
+            title: '스냅 알람',
+            body: alarm.label.isEmpty ? '알람이 울리고 있습니다!' : alarm.label,
+            scheduledDate: scheduleTime,
+            payload: 'alarm_${alarm.id}',
+            soundName: alarm.ringtonePath,
+            isVibrationEnabled: alarm.isVibrationEnabled,
+          );
+          result = true;
+        } catch (e) {
+          debugPrint('[AlarmScheduler] iOS scheduling failed: $e');
+          result = false;
+        }
+      }
 
       if (result) {
-        debugPrint('[AlarmScheduler] SUCCESSFULLY scheduled at: ${alarm.time}');
+        debugPrint('[AlarmScheduler] SUCCESSFULLY scheduled at: $scheduleTime');
       } else {
         debugPrint('[AlarmScheduler] FAILED to schedule alarm.');
       }
@@ -438,7 +491,7 @@ class AlarmSchedulerService {
   }
 
   // 스누즈 알람 예약
-  static Future<void> snoozeAlarm(AlarmModel alarm) async {
+  static Future<void> snoozeAlarm(AlarmModel alarm, {DateTime? snoozeTime}) async {
     // 스누즈 횟수가 남아있지 않거나, 간격이 설정되지 않았으면 실행하지 않음
     if (alarm.snoozeInterval <= 0 || alarm.maxSnoozeCount <= 0) return;
 
@@ -456,7 +509,7 @@ class AlarmSchedulerService {
       return;
     }
 
-    final snoozeTime = DateTime.now().add(Duration(minutes: alarm.snoozeInterval));
+    final resolvedSnoozeTime = snoozeTime ?? DateTime.now().add(Duration(minutes: alarm.snoozeInterval));
     
     // ID 처리: 원본 ID 추출 후 _snooze 붙임
     String originalId = alarm.id.replaceAll('_snooze', '');
@@ -464,7 +517,7 @@ class AlarmSchedulerService {
 
     final snoozeAlarm = alarm.copyWith(
       id: snoozeId, 
-      time: snoozeTime,
+      time: resolvedSnoozeTime,
       repeatDays: [false, false, false, false, false, false, false], // 스누즈는 항상 일회성
       label: isFirstSnooze ? '[스누즈] ${alarm.label}' : alarm.label, // 이미 붙어있으면 유지
       remainingSnoozeCount: newRemainingCount,
@@ -482,12 +535,11 @@ class AlarmSchedulerService {
     final int alarmId = getStableId(alarm.id);
     
     if (cancelMain) {
-      await AndroidAlarmManager.cancel(alarmId);
-      // [수정] 스누즈 알람 취소 시 원본 메인 알람(내일 알람)은 유지해야 함
-      // if (alarm.id.endsWith('_snooze')) {
-      //   final String originalId = alarm.id.replaceAll('_snooze', '');
-      //   await AndroidAlarmManager.cancel(getStableId(originalId));
-      // }
+      if (Platform.isAndroid) {
+        await AndroidAlarmManager.cancel(alarmId);
+      } else if (Platform.isIOS) {
+        await NotificationService().cancelNotification(alarmId);
+      }
     }
 
     // 알림도 함께 취소 (현재 울리고 있는 알림이 있을 수 있으므로)
@@ -497,8 +549,14 @@ class AlarmSchedulerService {
     // 스누즈 알람 취소 여부 확인
     if (cancelSnooze && !alarm.id.endsWith('_snooze')) {
       final String snoozeId = '${alarm.id}_snooze';
-      await AndroidAlarmManager.cancel(getStableId(snoozeId));
-      await notificationService.cancelNotification(getStableId(snoozeId));
+      final int snoozeStableId = getStableId(snoozeId);
+      
+      if (Platform.isAndroid) {
+        await AndroidAlarmManager.cancel(snoozeStableId);
+      } else if (Platform.isIOS) {
+        await notificationService.cancelNotification(snoozeStableId);
+      }
+      await notificationService.cancelNotification(snoozeStableId);
       
       // Hive에서도 스누즈 알람 삭제
       try {
@@ -521,8 +579,15 @@ class AlarmSchedulerService {
     var box = await Hive.openBox<AlarmModel>('alarms'); // 박스 이름 통일
     if (box.isNotEmpty) {
       debugPrint('[AlarmScheduler] Found ${box.length} alarms. Canceling all...');
+      final notificationService = NotificationService();
       for (final alarm in box.values) {
-        await AndroidAlarmManager.cancel(getStableId(alarm.id));
+        final int alarmId = getStableId(alarm.id);
+        if (Platform.isAndroid) {
+          await AndroidAlarmManager.cancel(alarmId);
+        } else if (Platform.isIOS) {
+          await notificationService.cancelNotification(alarmId);
+        }
+        await notificationService.cancelNotification(alarmId);
       }
       await box.clear();
       debugPrint('[AlarmScheduler] All alarms have been canceled and cleared from Hive.');

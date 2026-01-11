@@ -61,52 +61,36 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
     });
   }
 
-  void _loadRewardedAd() {
+  Future<void> _loadRewardedAd() async {
     if (_isRewardedAdLoading || _isRewardedAdLoaded) return;
-    _isRewardedAdLoading = true;
+    
+    setState(() => _isRewardedAdLoading = true);
 
+    // 1. AdService에서 사전 로드된 광고 가져오기 시도
+    final preloadedAd = await AdService.getPreloadedRewardedAd();
+    
+    if (preloadedAd != null) {
+      debugPrint('Using preloaded RewardedAd in FortunePassScreen');
+      if (!mounted) {
+        preloadedAd.dispose();
+        return;
+      }
+      _setupRewardedAd(preloadedAd);
+      return;
+    }
+
+    // 2. 없으면 새로 로드 (AdService를 통하지 않고 직접 로드하는 것은 폴백용)
     RewardedAd.load(
       adUnitId: AdService.rewardedAdUnitId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
-          debugPrint('RewardedAd loaded successfully in FortunePassScreen');
+          debugPrint('RewardedAd loaded successfully in FortunePassScreen (Direct)');
           if (!mounted) {
             ad.dispose();
             return;
           }
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) {
-              ad.dispose();
-              if (mounted) {
-                setState(() {
-                  _rewardedAd = null;
-                  _isRewardedAdLoaded = false;
-                });
-              }
-              if (_rewardEarned) {
-                _rewardEarned = false;
-                _onRewardCompleted();
-              }
-              _loadRewardedAd();
-            },
-            onAdFailedToShowFullScreenContent: (ad, error) {
-              ad.dispose();
-              if (mounted) {
-                setState(() {
-                  _rewardedAd = null;
-                  _isRewardedAdLoaded = false;
-                });
-              }
-              _loadRewardedAd();
-            },
-          );
-
-          setState(() {
-            _rewardedAd = ad;
-            _isRewardedAdLoaded = true;
-            _isRewardedAdLoading = false;
-          });
+          _setupRewardedAd(ad);
         },
         onAdFailedToLoad: (error) {
           debugPrint('RewardedAd failed to load: $error');
@@ -119,6 +103,41 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
         },
       ),
     );
+  }
+
+  void _setupRewardedAd(RewardedAd ad) {
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        if (mounted) {
+          setState(() {
+            _rewardedAd = null;
+            _isRewardedAdLoaded = false;
+          });
+        }
+        if (_rewardEarned) {
+          _rewardEarned = false;
+          _onRewardCompleted();
+        }
+        _loadRewardedAd();
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        ad.dispose();
+        if (mounted) {
+          setState(() {
+            _rewardedAd = null;
+            _isRewardedAdLoaded = false;
+          });
+        }
+        _loadRewardedAd();
+      },
+    );
+
+    setState(() {
+      _rewardedAd = ad;
+      _isRewardedAdLoaded = true;
+      _isRewardedAdLoading = false;
+    });
   }
 
   void _showRewardedAd() {

@@ -42,7 +42,8 @@
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:enableOnBackInvokedCallback="false">
         
         <activity
             android:name=".MainActivity"
@@ -74,6 +75,11 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-7279511347629270~7938505586"/>
+
+        <!-- AdMob Native Ad Validator 비활성화 (테스트 시 내비게이션 바 가림 방지) -->
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
+            android:value="false" />
 
         <!-- [2] 알람 매니저 설정 구역 (Service & Receiver) -->
         <!-- 앱이 꺼져도 알람이 울리게 하는 핵심 부품들입니다 -->

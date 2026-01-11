@@ -42,6 +42,10 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkArguments();
     });
@@ -100,38 +104,41 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              '언제 다시 알려드릴까요?',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
+      isScrollControlled: true,
+      builder: (context) => SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                '언제 다시 알려드릴까요?',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1E293B),
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              alignment: WrapAlignment.center,
-              children: [
-                _snoozeOptionButton(context, 5, alarmId!),
-                _snoozeOptionButton(context, 10, alarmId),
-                _snoozeOptionButton(context, 20, alarmId),
-                _snoozeOptionButton(context, 30, alarmId),
-                _snoozeOptionButton(context, 60, alarmId),
-              ],
-            ),
-            const SizedBox(height: 16),
-          ],
+              const SizedBox(height: 24),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                alignment: WrapAlignment.center,
+                children: [
+                  _snoozeOptionButton(context, 5, alarmId!),
+                  _snoozeOptionButton(context, 10, alarmId),
+                  _snoozeOptionButton(context, 20, alarmId),
+                  _snoozeOptionButton(context, 30, alarmId),
+                  _snoozeOptionButton(context, 60, alarmId),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );
@@ -269,7 +276,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  const SizedBox(height: 50),
+                                  const SizedBox(height: 24),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                                     child: PillBoxWidget(
@@ -286,7 +293,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                       },
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 8),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -305,13 +312,13 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                           notifier.takeSupplement();
                                         },
                                         child: Container(
-                                          padding: const EdgeInsets.all(16),
+                                          padding: const EdgeInsets.all(12),
                                           decoration: BoxDecoration(
                                             color: Colors.orange[50],
                                             shape: BoxShape.circle,
                                             border: Border.all(color: Colors.orange[200]!),
                                           ),
-                                          child: Icon(Icons.medication, size: 40, color: Colors.orange[700]),
+                                          child: Icon(Icons.medication, size: 36, color: Colors.orange[700]),
                                         ),
                                       ),
                                       const SizedBox(width: 30),
@@ -325,12 +332,12 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: 4),
                                   const Text(
                                     '영양제를 챙겨 드셨나요?',
                                     style: TextStyle(color: Colors.grey, fontSize: 13),
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 12),
                                   const Spacer(),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -343,14 +350,14 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                             Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplementRecordScreen()));
                                           },
                                         ),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(height: 8),
                                         _MenuItem(
                                           title: '섭취 목표 설정',
                                           value: '$dailyGoal회',
                                           icon: Icons.edit_note,
                                           onTap: () => _showGoalDialog(dailyGoal),
                                         ),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(height: 8),
                                         _MenuItem(
                                           title: '알림',
                                           icon: Icons.notifications_none_rounded,
@@ -361,6 +368,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                               notifier.updateSettings(isAlarmEnabled: value);
                                             },
                                             activeColor: Colors.orange[700],
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                           ),
                                           onTap: () {
                                             Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplementAlarmScreen()));
@@ -369,7 +377,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(height: 30),
+                                  const SizedBox(height: 20),
                                 ],
                               ),
                             ),
@@ -485,7 +493,8 @@ class _MenuItem extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        height: 64,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           color: const Color(0xFFF8FAFC),
           borderRadius: BorderRadius.circular(16),

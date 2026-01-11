@@ -24,6 +24,13 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
   bool _isSuccess = false;
 
   @override
+  void initState() {
+    super.initState();
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+  }
+
+  @override
   void dispose() {
     _audioPlayer.dispose();
     super.dispose();
@@ -247,7 +254,8 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
                                               } catch (_) {}
                                               waterNotifier.updateSettings(isAlarmEnabled: value);
                                             },
-                                            activeColor: const Color(0xFF4FC3F7),
+                                            activeColor: Colors.blueAccent,
+                                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                           ),
                                           onTap: () {
                                              Navigator.push(context, MaterialPageRoute(builder: (_) => const WaterAlarmScreen()));
@@ -298,7 +306,8 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        height: 64,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           color: isBlue ? const Color(0xFF0277BD) : const Color(0xFFF1F5F9),
           borderRadius: BorderRadius.circular(16),

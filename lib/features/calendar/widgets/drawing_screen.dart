@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:convert';
 
 class DrawingScreen extends StatefulWidget {
@@ -34,15 +35,26 @@ class _DrawingScreenState extends State<DrawingScreen> {
     _loadInitialData();
   }
 
+  @override
+  void didUpdateWidget(covariant DrawingScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialDrawingData != oldWidget.initialDrawingData) {
+      _loadInitialData();
+    }
+  }
+
   void _loadInitialData() {
-    if (widget.initialDrawingData != null) {
+    if (widget.initialDrawingData != null && widget.initialDrawingData!.isNotEmpty) {
       try {
         final decoded = jsonDecode(widget.initialDrawingData!);
-        if (decoded is Map && decoded['version'] == 2) {
+        if (decoded is Map && decoded.containsKey('strokes')) {
           final List<dynamic> strokesJson = decoded['strokes'];
-          for (var s in strokesJson) {
-            _strokes.add(Stroke.fromJson(s));
-          }
+          setState(() {
+            _strokes.clear();
+            for (var s in strokesJson) {
+              _strokes.add(Stroke.fromJson(s));
+            }
+          });
         } else if (decoded is List) {
           // Old format: List of points
           final List<Offset> points = decoded.map((p) => Offset(
@@ -50,7 +62,10 @@ class _DrawingScreenState extends State<DrawingScreen> {
             (p['y'] as num).toDouble(),
           )).toList();
           if (points.isNotEmpty) {
-            _strokes.add(Stroke(points: points, color: Colors.black, width: 3.0));
+            setState(() {
+              _strokes.clear();
+              _strokes.add(Stroke(points: points, color: Colors.black, width: 3.0));
+            });
           }
         }
       } catch (e) {
@@ -80,6 +95,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF0F4F8),
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -115,57 +131,54 @@ class _DrawingScreenState extends State<DrawingScreen> {
       body: Column(
         children: [
           Expanded(
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: 3 / 2,
-                child: Container(
-                  margin: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: GestureDetector(
+                    onPanStart: (details) {
+                      setState(() {
+                        _currentPoints = [details.localPosition];
+                        _redoStack.clear();
+                      });
+                    },
+                    onPanUpdate: (details) {
+                      setState(() {
+                        _currentPoints.add(details.localPosition);
+                      });
+                    },
+                    onPanEnd: (details) {
+                      setState(() {
+                        if (_currentPoints.isNotEmpty) {
+                          _strokes.add(Stroke(
+                            points: List.from(_currentPoints),
+                            color: _selectedColor,
+                            width: _strokeWidth,
+                          ));
+                          _currentPoints = [];
+                        }
+                      });
+                    },
+                    child: CustomPaint(
+                      painter: DrawingPainter(
+                        strokes: _strokes,
+                        currentPoints: _currentPoints,
+                        currentColor: _selectedColor,
+                        currentWidth: _strokeWidth,
                       ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: GestureDetector(
-                      onPanStart: (details) {
-                        setState(() {
-                          _currentPoints = [details.localPosition];
-                          _redoStack.clear();
-                        });
-                      },
-                      onPanUpdate: (details) {
-                        setState(() {
-                          _currentPoints.add(details.localPosition);
-                        });
-                      },
-                      onPanEnd: (details) {
-                        setState(() {
-                          if (_currentPoints.isNotEmpty) {
-                            _strokes.add(Stroke(
-                              points: List.from(_currentPoints),
-                              color: _selectedColor,
-                              width: _strokeWidth,
-                            ));
-                            _currentPoints = [];
-                          }
-                        });
-                      },
-                      child: CustomPaint(
-                        painter: DrawingPainter(
-                          strokes: _strokes,
-                          currentPoints: _currentPoints,
-                          currentColor: _selectedColor,
-                          currentWidth: _strokeWidth,
-                        ),
-                        size: Size.infinite,
-                      ),
+                      size: Size.infinite,
                     ),
                   ),
                 ),
@@ -180,7 +193,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
 
   Widget _buildToolbox() {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + MediaQuery.of(context).padding.bottom),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -232,13 +245,61 @@ class _DrawingScreenState extends State<DrawingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildToolItem(Icons.edit, '연필', _strokeWidth == 3.0 && _selectedColor != Colors.white),
-              _buildToolItem(Icons.brush, '사인펜', _strokeWidth == 8.0 && _selectedColor != Colors.white),
+              _buildToolItem(Icons.edit, '연필', (_strokeWidth >= 1.0 && _strokeWidth <= 5.0) && _selectedColor != Colors.white),
+              _buildToolItem(Icons.brush, '사인펜', (_strokeWidth > 5.0 && _strokeWidth <= 15.0) && _selectedColor != Colors.white),
               _buildToolItem(Icons.cleaning_services, '지우개', _selectedColor == Colors.white),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  void _showWidthPicker(String label) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) {
+              return SafeArea(
+                child: StatefulBuilder(
+                  builder: (context, setModalState) {
+                    return Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('$label 두께 조절', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          const SizedBox(height: 20),
+                          Slider(
+                            value: _strokeWidth,
+                            min: 1.0,
+                            max: 30.0,
+                            divisions: 29,
+                            label: _strokeWidth.round().toString(),
+                            activeColor: Colors.blue,
+                            onChanged: (value) {
+                              setModalState(() => _strokeWidth = value);
+                              setState(() => _strokeWidth = value);
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            width: 100,
+                            height: _strokeWidth,
+                            decoration: BoxDecoration(
+                              color: _selectedColor == Colors.white ? Colors.black : _selectedColor,
+                              borderRadius: BorderRadius.circular(_strokeWidth / 2),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
     );
   }
 
@@ -258,6 +319,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
           }
         });
       },
+      onLongPress: label == '지우개' ? null : () => _showWidthPicker(label),
       child: Column(
         children: [
           Container(
@@ -299,7 +361,7 @@ class Stroke {
         (p['x'] as num).toDouble(),
         (p['y'] as num).toDouble(),
       )).toList(),
-      color: Color(json['color'] as int),
+      color: Color((json['color'] as num).toInt()),
       width: (json['width'] as num).toDouble(),
     );
   }

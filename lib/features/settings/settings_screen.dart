@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
@@ -43,23 +44,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
     final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
 
-    return Scaffold(
-      body: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-            child: Text(
-              AppLocalizations.of(context)!.settings,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : Colors.black87,
-              ),
-            ),
-          ),
-          
-          _buildSectionHeader(AppLocalizations.of(context)!.general),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        body: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            _buildSectionHeader(AppLocalizations.of(context)!.general, isFirst: true),
           SwitchListTile(
             title: Text(AppLocalizations.of(context)!.darkMode),
             subtitle: Text(AppLocalizations.of(context)!.darkModeDescription),
@@ -84,7 +75,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Divider(thickness: 1),
           ),
-          _buildSectionHeader(AppLocalizations.of(context)!.information),
+          _buildSectionHeader(AppLocalizations.of(context)!.information, isFirst: false),
           ListTile(
             title: Text(AppLocalizations.of(context)!.notice),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -135,18 +126,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
               );
             },
           ),
-          ListTile(
-            title: Text(AppLocalizations.of(context)!.version("1.0.0")),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 32, 16, 8),
+            child: Text(
+              AppLocalizations.of(context)!.version("1.0.0"),
+              style: TextStyle(
+                fontSize: 14,
+                color: isDark ? Colors.grey[500] : Colors.grey[600],
+              ),
+            ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 80),
         ],
       ),
+    ),
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(String title, {bool isFirst = false}) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      padding: EdgeInsets.fromLTRB(16, isFirst ? 12 : 24, 16, 8),
       child: Text(
         title,
         style: const TextStyle(

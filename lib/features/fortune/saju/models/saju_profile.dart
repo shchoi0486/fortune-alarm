@@ -36,10 +36,15 @@ class SajuProfile {
     );
   }
 
-  static Future<void> saveProfile(SajuProfile profile) async {
+  static Future<void> saveProfile(SajuProfile profile, {bool isRepresentative = false}) async {
     // Legacy support: save as single profile but also add to list if not exists
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('saju_profile', jsonEncode(profile.toJson()));
+    
+    // Only update representative profile if explicitly requested or if none exists
+    final String? currentMain = prefs.getString('saju_profile');
+    if (isRepresentative || currentMain == null) {
+      await prefs.setString('saju_profile', jsonEncode(profile.toJson()));
+    }
     
     // Also update list
     List<SajuProfile> profiles = await loadProfiles();

@@ -16,6 +16,7 @@ class MemoBlock {
   final TextEditingController? controller;
   final String? imagePath;
   final String? sticker;
+  final String? drawingData; // 그리기 데이터 추가
   final bool isImage;
   final bool isSticker;
   final FocusNode? focusNode;
@@ -26,13 +27,14 @@ class MemoBlock {
     : controller = TextEditingController(text: text), 
       imagePath = null, 
       sticker = null,
+      drawingData = null,
       isImage = false,
       isSticker = false,
       widthFactor = 1.0,
       isSelected = false,
       focusNode = FocusNode();
       
-  MemoBlock.image(String path, {double width = 1.0}) 
+  MemoBlock.image(String path, {double width = 1.0, this.drawingData}) 
     : controller = null, 
       imagePath = path, 
       sticker = null,
@@ -46,6 +48,7 @@ class MemoBlock {
     : controller = null,
       imagePath = null,
       sticker = stickerEmoji,
+      drawingData = null,
       isImage = false,
       isSticker = true,
       widthFactor = width,
@@ -145,7 +148,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
             (p['x'] as num).toDouble(),
             (p['y'] as num).toDouble(),
           )).toList(),
-          color: Color(s['color'] as int),
+          color: Color((s['color'] as num).toInt()),
           width: (s['width'] as num).toDouble(),
         )).toList();
       } else if (decoded is List) {
@@ -429,122 +432,123 @@ class _AddEventSheetState extends State<AddEventSheet> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '시간 설정',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: textColor,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // 완료 시점의 값을 적용
-                          int finalHour = displayHour;
-                          if (isPm) {
-                            if (finalHour != 12) finalHour += 12;
-                          } else {
-                            if (finalHour == 12) finalHour = 0;
-                          }
-                          
-                          setState(() {
-                            _selectedTime = TimeOfDay(hour: finalHour, minute: currentMinute);
-                            _isTimeManuallySet = true;
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          '완료',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: blueTheme,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 200,
-                    child: Stack(
-                      alignment: Alignment.center,
+        return SafeArea(
+          child: StatefulBuilder(
+            builder: (context, setModalState) {
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Center(
-                          child: Container(
-                            height: 50,
-                            width: 280,
-                            decoration: BoxDecoration(
-                              color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
-                              borderRadius: BorderRadius.circular(12),
+                        Text(
+                          '시간 설정',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // 완료 시점의 값을 적용
+                            int finalHour = displayHour;
+                            if (isPm) {
+                              if (finalHour != 12) finalHour += 12;
+                            } else {
+                              if (finalHour == 12) finalHour = 0;
+                            }
+                            
+                            setState(() {
+                              _selectedTime = TimeOfDay(hour: finalHour, minute: currentMinute);
+                              _isTimeManuallySet = true;
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            '완료',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: blueTheme,
                             ),
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // 오전/오후
-                            SizedBox(
-                              width: 100,
-                              child: CupertinoPicker(
-                                itemExtent: 50,
-                                useMagnifier: true,
-                                magnification: 1.1,
-                                selectionOverlay: const SizedBox(),
-                                scrollController: ampmController,
-                                onSelectedItemChanged: (index) {
-                                  setModalState(() {
-                                    isPm = index == 1;
-                                  });
-                                },
-                                children: [
-                                  Center(child: Text('☀️ 오전', style: TextStyle(color: textColor, fontSize: 18))),
-                                  Center(child: Text('🌙 오후', style: TextStyle(color: textColor, fontSize: 18))),
-                                ],
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: 200,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Center(
+                            child: Container(
+                              height: 50,
+                              width: 280,
+                              decoration: BoxDecoration(
+                                color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            // 시
-                            SizedBox(
-                              width: 70,
-                              child: CupertinoPicker(
-                                itemExtent: 50,
-                                looping: true,
-                                useMagnifier: true,
-                                magnification: 1.1,
-                                selectionOverlay: const SizedBox(),
-                                scrollController: hourController,
-                                onSelectedItemChanged: (index) {
-                                  setModalState(() {
-                                    displayHour = index + 1;
-                                  });
-                                },
-                                children: List.generate(12, (index) => Center(
-                                  child: Text(
-                                    (index + 1).toString().padLeft(2, '0'),
-                                    style: TextStyle(color: textColor, fontSize: 24, fontWeight: FontWeight.bold),
-                                  ),
-                                )),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // 오전/오후
+                              SizedBox(
+                                width: 100,
+                                child: CupertinoPicker(
+                                  itemExtent: 50,
+                                  useMagnifier: true,
+                                  magnification: 1.1,
+                                  selectionOverlay: const SizedBox(),
+                                  scrollController: ampmController,
+                                  onSelectedItemChanged: (index) {
+                                    setModalState(() {
+                                      isPm = index == 1;
+                                    });
+                                  },
+                                  children: [
+                                    Center(child: Text('☀️ 오전', style: TextStyle(color: textColor, fontSize: 18))),
+                                    Center(child: Text('🌙 오후', style: TextStyle(color: textColor, fontSize: 18))),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Text(':', style: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.bold)),
-                            // 분
-                            SizedBox(
-                              width: 70,
-                              child: CupertinoPicker(
-                                itemExtent: 50,
-                                looping: true,
-                                useMagnifier: true,
-                                magnification: 1.1,
+                              // 시
+                              SizedBox(
+                                width: 70,
+                                child: CupertinoPicker(
+                                  itemExtent: 50,
+                                  looping: true,
+                                  useMagnifier: true,
+                                  magnification: 1.1,
+                                  selectionOverlay: const SizedBox(),
+                                  scrollController: hourController,
+                                  onSelectedItemChanged: (index) {
+                                    setModalState(() {
+                                      displayHour = index + 1;
+                                    });
+                                  },
+                                  children: List.generate(12, (index) => Center(
+                                    child: Text(
+                                      (index + 1).toString().padLeft(2, '0'),
+                                      style: TextStyle(color: textColor, fontSize: 24, fontWeight: FontWeight.bold),
+                                    ),
+                                  )),
+                                ),
+                              ),
+                              Text(':', style: TextStyle(color: textColor, fontSize: 20, fontWeight: FontWeight.bold)),
+                              // 분
+                              SizedBox(
+                                width: 70,
+                                child: CupertinoPicker(
+                                  itemExtent: 50,
+                                  looping: true,
+                                  useMagnifier: true,
+                                  magnification: 1.1,
                                 selectionOverlay: const SizedBox(),
                                 scrollController: minuteController,
                                 onSelectedItemChanged: (index) {
@@ -569,17 +573,28 @@ class _AddEventSheetState extends State<AddEventSheet> {
               ),
             );
           },
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
-  void _initializeBlocks(String content, List<String>? images) {
+  void _initializeBlocks(String content, List<String>? images, String? drawingData) {
     // 기존 리소스 정리
     for (var block in _memoBlocks) {
       block.dispose();
     }
     _memoBlocks.clear();
+
+    // drawingData 파싱 (JSON 맵 형식: {"0": "data0", "1": "data1"})
+    Map<String, String> drawingDataMap = {};
+    if (drawingData != null && drawingData.startsWith('{')) {
+      try {
+        drawingDataMap = Map<String, String>.from(jsonDecode(drawingData));
+      } catch (e) {
+        debugPrint('Error parsing drawingData: $e');
+      }
+    }
 
     if (content.isEmpty) {
       _memoBlocks.add(MemoBlock.text(''));
@@ -609,7 +624,8 @@ class _AddEventSheetState extends State<AddEventSheet> {
       if (type == 'IMG') {
         final int imgIndex = int.parse(value);
         if (images != null && imgIndex < images.length) {
-          _memoBlocks.add(MemoBlock.image(images[imgIndex], width: widthFactor));
+          final String? blockDrawingData = drawingDataMap[imgIndex.toString()];
+          _memoBlocks.add(MemoBlock.image(images[imgIndex], width: widthFactor, drawingData: blockDrawingData));
         }
       } else if (type == 'STK') {
         _memoBlocks.add(MemoBlock.sticker(value, width: widthFactor));
@@ -644,16 +660,11 @@ class _AddEventSheetState extends State<AddEventSheet> {
       _contentTextColor = widget.event!.fontColor != null ? Color(widget.event!.fontColor!) : Colors.black87;
       _textAlign = TextAlign.values[widget.event!.textAlign];
       _isTimeManuallySet = true;
-      _initializeBlocks(widget.event!.content, _imagePaths);
+      _initializeBlocks(widget.event!.content, _imagePaths, _drawingData);
     } else {
-      final now = DateTime.now();
-      final isToday = widget.selectedDate.year == now.year &&
-          widget.selectedDate.month == now.month &&
-          widget.selectedDate.day == now.day;
-      
-      _selectedTime = isToday ? TimeOfDay.now() : const TimeOfDay(hour: 9, minute: 0);
+      _selectedTime = const TimeOfDay(hour: 9, minute: 0);
       _isTimeManuallySet = false;
-      _initializeBlocks('', []);
+      _initializeBlocks('', [], null);
     }
   }
 
@@ -786,6 +797,8 @@ class _AddEventSheetState extends State<AddEventSheet> {
               ),
               const SizedBox(height: 16),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
                 children: [
                   _buildFontToolButton(Icons.format_align_left, _textAlign == TextAlign.left, () {
                     setState(() => _textAlign = TextAlign.left);
@@ -800,19 +813,19 @@ class _AddEventSheetState extends State<AddEventSheet> {
                     setSheetState(() {});
                   }),
                   const Spacer(),
-                  _buildSizeButton('H1', _fontSize == 24, () {
+                  _buildSizeButton('H1', 24, _fontSize == 24, () {
                     setState(() => _fontSize = 24);
                     setSheetState(() {});
                   }),
-                  _buildSizeButton('H2', _fontSize == 20, () {
+                  _buildSizeButton('H2', 20, _fontSize == 20, () {
                     setState(() => _fontSize = 20);
                     setSheetState(() {});
                   }),
-                  _buildSizeButton('H3', _fontSize == 18, () {
+                  _buildSizeButton('H3', 18, _fontSize == 18, () {
                     setState(() => _fontSize = 18);
                     setSheetState(() {});
                   }),
-                  _buildSizeButton('H4', _fontSize == 16, () {
+                  _buildSizeButton('H4', 16, _fontSize == 16, () {
                     setState(() => _fontSize = 16);
                     setSheetState(() {});
                   }),
@@ -879,16 +892,24 @@ class _AddEventSheetState extends State<AddEventSheet> {
     );
   }
 
-  Widget _buildSizeButton(String label, bool isSelected, VoidCallback onTap) {
+  Widget _buildSizeButton(String label, double displaySize, bool isSelected, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text(label, style: TextStyle(color: isSelected ? Colors.blue : Colors.grey, fontWeight: FontWeight.bold)),
+        child: Text(
+          label, 
+          style: TextStyle(
+            fontSize: displaySize * 0.85, // 미리보기용으로 약간 조정
+            color: isSelected ? Colors.blue : Colors.grey, 
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }
@@ -1061,11 +1082,11 @@ class _AddEventSheetState extends State<AddEventSheet> {
     );
   }
 
-  void _openDrawingScreen() async {
+  void _openDrawingScreen({MemoBlock? targetBlock}) async {
     final result = await Navigator.push<String>(
       context,
       MaterialPageRoute(
-        builder: (context) => DrawingScreen(initialDrawingData: null), // 새로 그리기 위해 null 전달
+        builder: (context) => DrawingScreen(initialDrawingData: targetBlock?.drawingData), // 수정 시 기존 데이터 전달
       ),
     );
 
@@ -1075,25 +1096,70 @@ class _AddEventSheetState extends State<AddEventSheet> {
         final strokes = _getDrawingStrokes(result);
         if (strokes.isEmpty) return;
 
-        // 이미지 크기 설정 (3:2 비율)
-        const double width = 600.0;
-        const double height = 400.0;
+        // 실제 그림이 있는 영역(Bounding Box) 계산
+        double minX = double.infinity;
+        double minY = double.infinity;
+        double maxX = double.negativeInfinity;
+        double maxY = double.negativeInfinity;
+
+        for (var stroke in strokes) {
+          for (var point in stroke.points) {
+            if (point.dx < minX) minX = point.dx;
+            if (point.dy < minY) minY = point.dy;
+            if (point.dx > maxX) maxX = point.dx;
+            if (point.dy > maxY) maxY = point.dy;
+          }
+        }
+
+        // 약간의 여백(Padding) 추가
+        const double padding = 20.0;
+        double drawingWidth = (maxX - minX) + (padding * 2);
+        double drawingHeight = (maxY - minY) + (padding * 2);
+
+        // 최소 크기 보장
+        drawingWidth = drawingWidth.clamp(100.0, 2000.0);
+        drawingHeight = drawingHeight.clamp(100.0, 2000.0);
 
         final recorder = ui.PictureRecorder();
-        final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, width, height));
+        final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, drawingWidth, drawingHeight));
         
-        // 배경을 투명하게 하거나 흰색으로 채움 (여기선 흰색)
+        // 배경 투명 처리
         final bgPaint = Paint()..color = Colors.white;
-        canvas.drawRect(Rect.fromLTWH(0, 0, width, height), bgPaint);
+        canvas.drawRect(Rect.fromLTWH(0, 0, drawingWidth, drawingHeight), bgPaint);
 
-        // 스케일링 (그리기 화면의 좌표를 600x400으로 변환해야 할 수도 있음)
-        // 일단은 그대로 그림 (DrawingScreen의 크기에 맞게 좌표가 들어오므로)
-        // DrawingPreviewPainter와 유사한 로직 사용
-        final painter = DrawingPreviewPainter(strokes: strokes, scaleToFit: true);
-        painter.paint(canvas, const Size(width, height));
+        // 그림을 캔버스 중앙에 맞게 이동하여 그리기
+        canvas.save();
+        canvas.translate(-minX + padding, -minY + padding);
+        
+        for (var stroke in strokes) {
+          if (stroke.points.isEmpty) continue;
+          final paint = Paint()
+            ..color = stroke.color
+            ..strokeWidth = stroke.width
+            ..strokeCap = StrokeCap.round
+            ..strokeJoin = StrokeJoin.round
+            ..style = PaintingStyle.stroke;
+
+          if (stroke.points.length < 2) {
+            canvas.drawCircle(stroke.points.first, stroke.width / 2, paint..style = PaintingStyle.fill);
+            continue;
+          }
+
+          final path = Path();
+          path.moveTo(stroke.points.first.dx, stroke.points.first.dy);
+          for (int i = 0; i < stroke.points.length - 1; i++) {
+            final p1 = stroke.points[i];
+            final p2 = stroke.points[i + 1];
+            final midPoint = Offset((p1.dx + p2.dx) / 2, (p1.dy + p2.dy) / 2);
+            path.quadraticBezierTo(p1.dx, p1.dy, midPoint.dx, midPoint.dy);
+          }
+          path.lineTo(stroke.points.last.dx, stroke.points.last.dy);
+          canvas.drawPath(path, paint);
+        }
+        canvas.restore();
 
         final picture = recorder.endRecording();
-        final img = await picture.toImage(width.toInt(), height.toInt());
+        final img = await picture.toImage(drawingWidth.toInt(), drawingHeight.toInt());
         final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
         final buffer = byteData!.buffer.asUint8List();
 
@@ -1106,53 +1172,64 @@ class _AddEventSheetState extends State<AddEventSheet> {
           _type = CalendarEventType.memo;
           _drawingData = result;
           
-          // 2. 현재 커서 위치에 이미지 블록 삽입
-          int focusedBlockIndex = _memoBlocks.indexWhere((b) => b.focusNode?.hasFocus ?? false);
-          if (focusedBlockIndex == -1) focusedBlockIndex = _memoBlocks.length - 1;
-
-          final currentBlock = _memoBlocks[focusedBlockIndex];
-          MemoBlock? nextFocusedBlock;
-          
-          if (currentBlock.isImage || currentBlock.isSticker) {
-            _memoBlocks.insert(focusedBlockIndex + 1, MemoBlock.image(filePath));
-            
-            // 다음 블록이 없거나 텍스트 블록이 아니면 빈 텍스트 블록 추가
-            if (focusedBlockIndex + 2 >= _memoBlocks.length || (_memoBlocks[focusedBlockIndex + 2].isImage || _memoBlocks[focusedBlockIndex + 2].isSticker)) {
-              nextFocusedBlock = MemoBlock.text('');
-              _memoBlocks.insert(focusedBlockIndex + 2, nextFocusedBlock);
-            } else {
-              nextFocusedBlock = _memoBlocks[focusedBlockIndex + 2];
+          if (targetBlock != null) {
+            // 기존 블록 수정
+            int index = _memoBlocks.indexOf(targetBlock);
+            if (index != -1) {
+              _memoBlocks[index] = MemoBlock.image(
+                filePath, 
+                width: targetBlock.widthFactor, 
+                drawingData: result
+              );
             }
           } else {
-            final controller = currentBlock.controller!;
-            final selection = controller.selection;
+            // 새 블록 추가
+            int focusedBlockIndex = _memoBlocks.indexWhere((b) => b.focusNode?.hasFocus ?? false);
+            if (focusedBlockIndex == -1) focusedBlockIndex = _memoBlocks.length - 1;
+
+            final currentBlock = _memoBlocks[focusedBlockIndex];
+            MemoBlock? nextFocusedBlock;
             
-            if (selection.isValid && selection.baseOffset < controller.text.length) {
-              final textBefore = controller.text.substring(0, selection.baseOffset);
-              final textAfter = controller.text.substring(selection.baseOffset);
+            final imageBlock = MemoBlock.image(filePath, width: 1.0, drawingData: result);
+            
+            if (currentBlock.isImage || currentBlock.isSticker) {
+              _memoBlocks.insert(focusedBlockIndex + 1, imageBlock);
               
-              controller.text = textBefore;
-              _memoBlocks.insert(focusedBlockIndex + 1, MemoBlock.image(filePath));
-              nextFocusedBlock = MemoBlock.text(textAfter);
-              _memoBlocks.insert(focusedBlockIndex + 2, nextFocusedBlock);
-            } else {
-              _memoBlocks.insert(focusedBlockIndex + 1, MemoBlock.image(filePath));
-              
-              // 다음 블록이 없거나 텍스트 블록이 아니면 빈 텍스트 블록 추가
               if (focusedBlockIndex + 2 >= _memoBlocks.length || (_memoBlocks[focusedBlockIndex + 2].isImage || _memoBlocks[focusedBlockIndex + 2].isSticker)) {
                 nextFocusedBlock = MemoBlock.text('');
                 _memoBlocks.insert(focusedBlockIndex + 2, nextFocusedBlock);
               } else {
                 nextFocusedBlock = _memoBlocks[focusedBlockIndex + 2];
               }
+            } else {
+              final controller = currentBlock.controller!;
+              final selection = controller.selection;
+              
+              if (selection.isValid && selection.baseOffset < controller.text.length) {
+                final textBefore = controller.text.substring(0, selection.baseOffset);
+                final textAfter = controller.text.substring(selection.baseOffset);
+                
+                controller.text = textBefore;
+                _memoBlocks.insert(focusedBlockIndex + 1, imageBlock);
+                nextFocusedBlock = MemoBlock.text(textAfter);
+                _memoBlocks.insert(focusedBlockIndex + 2, nextFocusedBlock);
+              } else {
+                _memoBlocks.insert(focusedBlockIndex + 1, imageBlock);
+                
+                if (focusedBlockIndex + 2 >= _memoBlocks.length || (_memoBlocks[focusedBlockIndex + 2].isImage || _memoBlocks[focusedBlockIndex + 2].isSticker)) {
+                  nextFocusedBlock = MemoBlock.text('');
+                  _memoBlocks.insert(focusedBlockIndex + 2, nextFocusedBlock);
+                } else {
+                  nextFocusedBlock = _memoBlocks[focusedBlockIndex + 2];
+                }
+              }
             }
-          }
 
-          // 다음 텍스트 블록에 포커스
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            nextFocusedBlock?.focusNode?.requestFocus();
-          });
-                });
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              nextFocusedBlock?.focusNode?.requestFocus();
+            });
+          }
+        });
       } catch (e) {
         debugPrint('Error saving drawing: $e');
       }
@@ -1436,6 +1513,29 @@ class _AddEventSheetState extends State<AddEventSheet> {
                   if (_type != CalendarEventType.memo) ...[
                     Row(
                       children: [
+                        GestureDetector(
+                          onTap: () => _showColorPicker(context),
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            margin: const EdgeInsets.only(right: 12),
+                            decoration: BoxDecoration(
+                              color: _selectedTitleColor,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isDark ? Colors.white24 : Colors.black12,
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         Expanded(
                           child: TextField(
                             controller: _titleController,
@@ -1445,7 +1545,13 @@ class _AddEventSheetState extends State<AddEventSheet> {
                               hintStyle: TextStyle(color: (textColor ?? Colors.black).withOpacity(0.4), fontSize: 20, fontWeight: FontWeight.bold),
                               border: InputBorder.none,
                             ),
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
+                            style: TextStyle(
+                              fontSize: 20, 
+                              fontWeight: FontWeight.bold, 
+                              color: (_selectedTitleColor == Colors.black87 || _selectedTitleColor == Colors.black) 
+                                  ? textColor 
+                                  : _selectedTitleColor
+                            ),
                           ),
                         ),
                         CompositedTransformTarget(
@@ -1510,7 +1616,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                     const SizedBox(height: 12),
                     // 시간 설정
                     Container(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
                         color: isDark ? Colors.white10 : Colors.black.withOpacity(0.03),
                         borderRadius: BorderRadius.circular(16),
@@ -1571,6 +1677,29 @@ class _AddEventSheetState extends State<AddEventSheet> {
                     // 메모 모드 제목 영역
                     Row(
                       children: [
+                        GestureDetector(
+                          onTap: () => _showColorPicker(context),
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            margin: const EdgeInsets.only(right: 12),
+                            decoration: BoxDecoration(
+                              color: _selectedTitleColor,
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: isDark ? Colors.white24 : Colors.black12,
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         Expanded(
                           child: TextField(
                           controller: _titleController,
@@ -1580,7 +1709,13 @@ class _AddEventSheetState extends State<AddEventSheet> {
                               hintStyle: TextStyle(color: (textColor ?? Colors.black).withOpacity(0.4), fontSize: 20, fontWeight: FontWeight.bold),
                               border: InputBorder.none,
                             ),
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
+                            style: TextStyle(
+                              fontSize: 20, 
+                              fontWeight: FontWeight.bold, 
+                              color: (_selectedTitleColor == Colors.black87 || _selectedTitleColor == Colors.black) 
+                                  ? textColor 
+                                  : _selectedTitleColor
+                            ),
                           ),
                         ),
                         CompositedTransformTarget(
@@ -1688,7 +1823,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          // 일정 모드에서는 즐겨찾기만 표시하거나 최소화
+          // 일정 모드
           if (_type != CalendarEventType.memo) ...[
             IconButton(
               icon: Icon(_isFavorite ? Icons.star : Icons.star_border, color: _isFavorite ? Colors.amber : null), 
@@ -1698,9 +1833,11 @@ class _AddEventSheetState extends State<AddEventSheet> {
                 });
               }
             ),
-            IconButton(icon: const Icon(Icons.notes), onPressed: () {
-              // 내용 입력창으로 포커스 이동 등의 기능 추가 가능
-            }),
+            IconButton(icon: const Icon(Icons.text_fields), onPressed: _showFontPicker),
+            IconButton(
+              icon: const Icon(Icons.notes), 
+              onPressed: _focusOnLastTextBlock, // 내용 입력창으로 포커스 이동
+            ),
           ] else ...[
             // 메모 모드에서는 모든 꾸미기 기능 제공
             IconButton(icon: const Icon(Icons.image_outlined), onPressed: _pickImage),
@@ -1919,7 +2056,13 @@ class _AddEventSheetState extends State<AddEventSheet> {
                       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                       isDense: true,
                     ),
-                    style: TextStyle(fontSize: 14, color: textColor, fontWeight: _type == CalendarEventType.memo ? FontWeight.bold : FontWeight.normal),
+                    style: TextStyle(
+                      fontSize: 14, 
+                      color: (_selectedTitleColor == Colors.black87 || _selectedTitleColor == Colors.black) 
+                          ? textColor 
+                          : _selectedTitleColor, 
+                      fontWeight: _type == CalendarEventType.memo ? FontWeight.bold : FontWeight.normal
+                    ),
                     onChanged: (text) {
                       if (_type == CalendarEventType.routine && !_routinePresets.any((e) => "${e['emoji']} ${e['label']}" == text)) {
                         setState(() {
@@ -1967,30 +2110,33 @@ class _AddEventSheetState extends State<AddEventSheet> {
                     },
                   );
                 } else {
-                  return TextField(
-                    controller: block.controller,
-                    focusNode: block.focusNode,
-                    contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: _handleContentInsertion),
-                    maxLines: null,
-                    minLines: 1,
-                    scrollPhysics: const NeverScrollableScrollPhysics(),
-                    textAlign: _textAlign,
-                    decoration: InputDecoration(
-                      hintText: (_memoBlocks.indexOf(block) == 0 && block.controller!.text.isEmpty) ? '내용을 추가해 주세요' : '',
-                      hintStyle: TextStyle(
-                        color: hintColor,
-                        fontSize: _fontSize,
+                  return GestureDetector(
+                    onLongPress: () => _showBlockActionDialog(block),
+                    child: TextField(
+                      controller: block.controller,
+                      focusNode: block.focusNode,
+                      contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: _handleContentInsertion),
+                      maxLines: null,
+                      minLines: 1,
+                      scrollPhysics: const NeverScrollableScrollPhysics(),
+                      textAlign: _textAlign,
+                      decoration: InputDecoration(
+                        hintText: (_memoBlocks.indexOf(block) == 0 && block.controller!.text.isEmpty) ? '내용을 추가해 주세요' : '',
+                        hintStyle: TextStyle(
+                          color: hintColor,
+                          fontSize: _fontSize,
+                        ),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 4),
+                        isDense: true,
                       ),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 4),
-                      isDense: true,
-                    ),
-                    style: TextStyle(
-                      fontSize: _fontSize, 
-                      color: _type == CalendarEventType.memo ? _contentTextColor : textColor,
-                      fontFamily: _fontFamily == 'Default' ? null : _fontFamily,
-                      fontWeight: _fontFamily == 'Bold' ? FontWeight.bold : FontWeight.normal,
-                      height: 1.6,
+                      style: TextStyle(
+                        fontSize: _fontSize, 
+                        color: _type == CalendarEventType.memo ? _contentTextColor : textColor,
+                        fontFamily: _fontFamily == 'Default' ? null : _fontFamily,
+                        fontWeight: _fontFamily == 'Bold' ? FontWeight.bold : FontWeight.normal,
+                        height: 1.6,
+                      ),
                     ),
                   );
                 }
@@ -2001,7 +2147,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
             // 시간 및 알람 설정 (메모가 아닐 경우 표시)
             if (_type != CalendarEventType.memo) ...[
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: inputFillColor,
                   borderRadius: BorderRadius.circular(16),
@@ -2124,6 +2270,52 @@ class _AddEventSheetState extends State<AddEventSheet> {
     );
   }
 
+  void _showBlockActionDialog(MemoBlock block) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('항목 관리'),
+        content: const Text('이 항목을 어떻게 하시겠습니까?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              if (block.isImage) {
+                // 이미지 블록은 무조건 그리기 모드로 수정 시도 (기존 데이터 있으면 로드)
+                _openDrawingScreen(targetBlock: block);
+              } else if (!block.isSticker) {
+                // 텍스트 블록: 포커스 주기
+                setState(() {
+                  block.focusNode?.requestFocus();
+                });
+              } else {
+                // 스티커 블록: 선택 모드(크기 조절) 활성화
+                setState(() {
+                  for (var b in _memoBlocks) {
+                    b.isSelected = (b == block);
+                  }
+                });
+              }
+            },
+            child: const Text('수정'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() => _memoBlocks.remove(block));
+              Navigator.pop(context);
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('삭제'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildResizableBlock(MemoBlock block, Color blueTheme, double maxWidth) {
     Alignment alignment;
     switch (_textAlign) {
@@ -2153,6 +2345,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
               FocusScope.of(context).unfocus();
             });
           },
+          onLongPress: () => _showBlockActionDialog(block),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -2328,7 +2521,10 @@ class _AddEventSheetState extends State<AddEventSheet> {
   }
 
   void _save() {
-    if (_titleController.text.trim().isEmpty) return;
+    String title = _titleController.text.trim();
+    if (title.isEmpty) {
+      title = '제목없음';
+    }
 
     final date = DateTime(
       widget.selectedDate.year,
@@ -2341,11 +2537,16 @@ class _AddEventSheetState extends State<AddEventSheet> {
     // 블록들을 하나의 문자열과 이미지 리스트로 병합
     String mergedContent = '';
     List<String> mergedImages = [];
+    Map<String, String> drawingDataMap = {};
     
     for (var block in _memoBlocks) {
       if (block.isImage) {
-        mergedContent += '[[IMG_${mergedImages.length}|${block.widthFactor}]]';
+        final imgIndex = mergedImages.length;
+        mergedContent += '[[IMG_$imgIndex|${block.widthFactor}]]';
         mergedImages.add(block.imagePath!);
+        if (block.drawingData != null) {
+          drawingDataMap[imgIndex.toString()] = block.drawingData!;
+        }
       } else if (block.isSticker) {
         mergedContent += '[[STK_${block.sticker}|${block.widthFactor}]]';
       } else {
@@ -2355,7 +2556,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
 
     final event = CalendarEvent(
       id: widget.event?.id ?? const Uuid().v4(),
-      title: _titleController.text.trim(),
+      title: title,
       content: mergedContent,
       date: date,
       type: _type,
@@ -2363,7 +2564,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
       titleColor: _selectedTitleColor.toARGB32(),
       sticker: _selectedSticker,
       images: _type == CalendarEventType.memo ? mergedImages : null,
-      drawingData: _type == CalendarEventType.memo ? _drawingData : null,
+      drawingData: _type == CalendarEventType.memo ? jsonEncode(drawingDataMap) : null,
       isFavorite: _isFavorite,
       fontSize: _fontSize,
       fontFamily: _fontFamily,

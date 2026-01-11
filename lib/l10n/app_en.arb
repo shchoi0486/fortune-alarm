@@ -63,6 +63,7 @@
   "reset": "Reset",
   "addMission": "Add Mission",
   "completedMissions": "Completed Missions",
+  "noCompletedMissionsHint": "No completed missions yet. Reach today's mission goal.",
 
   "greeting": "Hello, {userName}",
   "@greeting": {
@@ -196,6 +197,7 @@
   "gradualVolume": "Gradual Volume",
   "vibration": "Vibration",
   "alarmNameAndBackground": "Alarm Name & Background",
+  "customStyle": "Custom Style",
   "alarmName": "Alarm Name",
   "enterAlarmName": "Please enter alarm name",
   "save": "Save",
@@ -213,7 +215,7 @@
   "missionFortuneCatchDescription": "Catch the moving Fortuni!",
   "missionWalk": "Walk",
   "missionWalkDescription": "Walk to turn off the alarm!",
-  "missionFaceDescription": "Keep your face in the frame for 10s.",
+  "missionFaceDescription": "Keep your face in the frame for 5s.",
   "walkStepCount": "Target Steps",
   "walkSteps": "{count} steps",
   "@walkSteps": {
@@ -354,6 +356,7 @@
   },
   "turnOffAlarm": "Turn Off Alarm",
   "startMission": "Start Mission",
+  "alarmSnooze": "Snooze Alarm",
   "fortuneTitle": "Check Fortune",
   "fortuneMessage": "Check your fortune results\nand get hidden gifts!",
   "fortuneAdButton": "Watch Ad and Check Results",

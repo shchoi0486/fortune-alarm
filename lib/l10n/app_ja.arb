@@ -63,6 +63,7 @@
   "reset": "初期化",
   "addMission": "ミッション追加",
   "completedMissions": "完了したミッション",
+  "noCompletedMissionsHint": "まだ完了したミッションがありません。今日の目標を達成しましょう。",
 
   "greeting": "こんにちは、{userName}さん",
   "@greeting": {
@@ -109,7 +110,7 @@
   "left": "左",
   "locationError": "位置情報エラー",
   "locationUnknown": "不明な位置",
-  "missionFaceDescription": "顔を枠内に10秒キープしてください。",
+  "missionFaceDescription": "顔を枠内に5秒キープしてください。",
   "missionFortuneCatch": "フォーチュニキャッチ",
   "missionFortuneCatchDescription": "動くフォーチュニを捕まえよう！",
   "missionHiddenButton": "位置記憶",
@@ -233,6 +234,7 @@
   "gradualVolume": "だんだん大きく",
   "vibration": "バイブレーション",
   "alarmNameAndBackground": "アラーム名と背景",
+  "customStyle": "カスタムスタイル",
   "alarmName": "アラーム名",
   "enterAlarmName": "アラーム名を入力してください",
   "save": "保存",
@@ -306,6 +308,7 @@
   },
   "turnOffAlarm": "アラームを止める",
   "startMission": "ミッション開始",
+  "alarmSnooze": "アラームをスヌーズ",
   "fortuneTitle": "運勢を確認する",
   "fortuneMessage": "運勢の結果を確認して、\n隠されたプレゼントも手に入れましょう！",
   "fortuneAdButton": "広告を見て結果を確認",

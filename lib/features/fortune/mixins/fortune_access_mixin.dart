@@ -9,12 +9,16 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
   RewardedAd? _rewardedAd;
   bool _isRewardedAdLoading = false;
   bool _isRewardedAdLoaded = false;
+  bool _lastRewardedAdHadTechnicalFailure = false;
+  bool _lastRewardedAdWasUserCancelled = false;
 
   // 전면 광고 관련 필드 제거 (정책 준수)
   final bool _isInterstitialAdLoaded = false;
 
   bool _rewardEarned = false;
   Completer<bool>? _adCompleter;
+
+  bool get lastRewardedAdHadTechnicalFailure => _lastRewardedAdHadTechnicalFailure;
 
   @override
   void initState() {
@@ -37,11 +41,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
 
     // 1. 먼저 AdService에서 사전 로드된 광고가 있는지 확인
     try {
-      // 사전 로드된 광고를 가져올 때는 타임아웃을 짧게 가져가서 UI 반응성을 높임
-      final preloadedAd = await AdService.getPreloadedRewardedAd().timeout(
-        const Duration(seconds: 2),
-        onTimeout: () => null,
-      );
+      final preloadedAd = await AdService.getPreloadedRewardedAd();
       
       if (preloadedAd != null) {
         debugPrint('Using preloaded RewardedAd from AdService');
@@ -74,24 +74,23 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
         },
         onAdFailedToLoad: (error) {
           _isRewardedAdLoading = false; 
+          _lastRewardedAdHadTechnicalFailure = true;
           debugPrint('RewardedAd failed to load: $error');
           if (mounted) {
-            // 로드 실패 시 상태 업데이트 최소화
             if (_isWaitingForAd) {
               _isWaitingForAd = false;
               Navigator.of(context).pop(); // Close loading dialog
               
-              _onAccessGrantedCallback?.call();
               _onAccessGrantedCallback = null;
               
               if (_adCompleter != null && !_adCompleter!.isCompleted) {
-                _adCompleter!.complete(true);
+                _adCompleter!.complete(false);
               }
               
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('광고를 불러올 수 없지만 결과를 보여드릴게요!'),
-                  duration: Duration(seconds: 2),
+                  content: Text('광고를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.'),
+                  duration: Duration(seconds: 3),
                 ),
               );
             }
@@ -99,6 +98,14 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
         },
       ),
     );
+  }
+
+  void _forceReloadRewardedAd() {
+    _rewardedAd?.dispose();
+    _rewardedAd = null;
+    _isRewardedAdLoaded = false;
+    _isRewardedAdLoading = false;
+    Future.microtask(() => _loadRewardedAd());
   }
 
   void _setupRewardedAd(RewardedAd ad) {
@@ -126,9 +133,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
             _adCompleter!.complete(true);
           }
         } else {
-          // 보상을 못 받았더라도 (광고를 끝까지 안 봤더라도)
-          // 사용자가 결과를 보고 싶어 하므로 일단 권한을 줄지 고민...
-          // 여기서는 정책상 보상 확인 후 실행
+          _lastRewardedAdWasUserCancelled = true;
           _onAccessGrantedCallback = null;
           if (_adCompleter != null && !_adCompleter!.isCompleted) {
             _adCompleter!.complete(false);
@@ -139,6 +144,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
         debugPrint('RewardedAd failed to show: $error');
+        _lastRewardedAdHadTechnicalFailure = true;
         ad.dispose();
         if (mounted) {
           setState(() {
@@ -146,10 +152,17 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
             _isRewardedAdLoaded = false;
           });
         }
-        _onAccessGrantedCallback?.call(); // 실패 시에도 권한 부여하여 사용자 경험 보호
         _onAccessGrantedCallback = null;
         if (_adCompleter != null && !_adCompleter!.isCompleted) {
-          _adCompleter!.complete(true);
+          _adCompleter!.complete(false);
+        }
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('광고를 표시할 수 없습니다. 잠시 후 다시 시도해주세요.'),
+              duration: Duration(seconds: 3),
+            ),
+          );
         }
         _loadRewardedAd();
       },
@@ -191,6 +204,8 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
 
   Future<bool> showRewardedAd(VoidCallback onAccessGranted) async {
     _adCompleter = Completer<bool>();
+    _lastRewardedAdHadTechnicalFailure = false;
+    _lastRewardedAdWasUserCancelled = false;
     
     if (_rewardedAd != null && _isRewardedAdLoaded) {
       _onAccessGrantedCallback = onAccessGranted;
@@ -210,92 +225,142 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
   }
 
   void _showLoadingDialog() {
+    StateSetter? dialogSetState;
+    var showRetry = false;
+
+    Future<void> enableRetryUiLater() async {
+      await Future.delayed(const Duration(seconds: 8));
+      if (!_isWaitingForAd || !mounted) return;
+      if (dialogSetState == null) return;
+      dialogSetState!(() {
+        showRetry = true;
+      });
+    }
+
+    Future.microtask(enableRetryUiLater);
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => WillPopScope(
-        onWillPop: () async {
-          _isWaitingForAd = false;
-          return true;
-        },
-        child: Center(
-          child: RepaintBoundary(
-            child: Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.85),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: CircularProgressIndicator(
-                      color: Colors.amber,
-                      strokeWidth: 3,
-                    ),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          dialogSetState = setState;
+
+          return WillPopScope(
+            onWillPop: () async {
+              _isWaitingForAd = false;
+              return true;
+            },
+            child: Center(
+              child: RepaintBoundary(
+                child: Container(
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.85),
+                    borderRadius: BorderRadius.circular(24),
                   ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    '광고를 불러오는 중입니다...',
-                    style: TextStyle(
-                      color: Colors.white, 
-                      fontSize: 16,
-                      decoration: TextDecoration.none,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: CircularProgressIndicator(
+                          color: Colors.amber,
+                          strokeWidth: 3,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text(
+                        '광고를 불러오는 중입니다...',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      if (showRetry) ...[
+                        const SizedBox(height: 12),
+                        const Text(
+                          '로드가 지연되고 있어요.\n잠시 후 다시 시도해주세요.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 13,
+                            decoration: TextDecoration.none,
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 24),
+                      if (showRetry)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextButton(
+                              onPressed: () {
+                                _forceReloadRewardedAd();
+                              },
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.amber,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              ),
+                              child: const Text(
+                                '다시 시도',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                _lastRewardedAdWasUserCancelled = true;
+                                _isWaitingForAd = false;
+                                Navigator.of(context).pop();
+
+                                if (_adCompleter != null && !_adCompleter!.isCompleted) {
+                                  _adCompleter!.complete(false);
+                                }
+                              },
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.white70,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              ),
+                              child: const Text(
+                                '취소',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ),
+                          ],
+                        )
+                      else
+                        TextButton(
+                          onPressed: () {
+                            _lastRewardedAdWasUserCancelled = true;
+                            _isWaitingForAd = false;
+                            Navigator.of(context).pop();
+
+                            if (_adCompleter != null && !_adCompleter!.isCompleted) {
+                              _adCompleter!.complete(false);
+                            }
+                          },
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white70,
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          ),
+                          child: const Text(
+                            '취소',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                    ],
                   ),
-                  const SizedBox(height: 24),
-                  TextButton(
-                    onPressed: () {
-                      _isWaitingForAd = false;
-                      Navigator.of(context).pop();
-                      
-                      if (_adCompleter != null && !_adCompleter!.isCompleted) {
-                        _adCompleter!.complete(false);
-                      }
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white70,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    ),
-                    child: const Text(
-                      '취소',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
-    
-    // 5초 후에도 광고가 로드되지 않으면 다이얼로그 닫고 즉시 권한 부여 (Stuck 방지)
-    Future.delayed(const Duration(seconds: 5), () {
-      if (_isWaitingForAd && mounted) {
-        _isWaitingForAd = false;
-        Navigator.of(context).pop(); // Close loading dialog
-        
-        debugPrint('Ad load timeout - granting access anyway');
-        _onAccessGrantedCallback?.call();
-        _onAccessGrantedCallback = null;
-        
-        if (_adCompleter != null && !_adCompleter!.isCompleted) {
-          _adCompleter!.complete(true);
-        }
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('광고 준비가 늦어지고 있네요. 바로 결과를 보여드릴게요!'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    });
   }
 
   Future<bool> showFortuneAccessDialog(VoidCallback onAccessGranted, {VoidCallback? onDirectAccess, bool isInterstitial = false}) async {
@@ -523,7 +588,19 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
     );
 
     if (choice == 'ad') {
-      return await showRewardedAd(internalOnAccessGranted);
+      final ok = await showRewardedAd(internalOnAccessGranted);
+      if (ok) return true;
+      if (!mounted) return false;
+      if (!_lastRewardedAdHadTechnicalFailure) return false;
+
+      internalOnAccessGranted();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('광고를 불러오지 못해 이번에는 무료로 진행합니다.'),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return true;
     } else if (choice == 'cookie' || choice == 'pass') {
       if (onDirectAccess != null) {
         onDirectAccess();

@@ -21,9 +21,13 @@ class AdService {
   static const String _testRewardedInterstitialAdUnitId = 'ca-app-pub-3940256099942544/5354046379';
   static const String _testAppOpenAdUnitId = 'ca-app-pub-3940256099942544/3419835294';
 
-  // 개발 모드 여부 (배포 시 false로 변경하거나 kReleaseMode 사용)
-  // 주의: "검토 필요" 상태에서는 실제 광고 ID가 작동하지 않습니다. 테스트를 위해 true로 두세요.
-  static bool get _isTestMode => kDebugMode; 
+  // 개발 모드 여부
+  // true: 항상 테스트 광고 사용
+  // false: 릴리스 빌드에서 실제 광고 사용
+  // 내부 테스트 중에는 true로 설정하는 것이 안전합니다.
+  static const bool _forceTestMode = true; 
+
+  static bool get _isTestMode => kDebugMode || _forceTestMode; 
 
   static String get bannerAdUnitId {
     if (Platform.isAndroid) {
@@ -81,18 +85,94 @@ class AdService {
 
   static NativeAd? _preloadedListAd;
   static Completer<void>? _listAdLoadCompleter;
+  static DateTime? _listAdLoadTime;
 
   // 보상형 광고 프리로드 추가
   static RewardedAd? _preloadedRewardedAd;
   static Completer<RewardedAd?>? _rewardedAdCompleter;
-  
+
+  // 앱 오프닝 광고 관련
+  static AppOpenAd? _appOpenAd;
+  static bool _isShowingAppOpenAd = false;
+  static DateTime? _appOpenAdLoadTime;
+  static AppLifecycleReactor? _lifecycleReactor;
+
   /// 광고 시스템 초기화 및 초기 프리로드 시작
   static Future<void> init() async {
-    await MobileAds.instance.initialize();
-    // 초기 광고들 프리로드 시작
-    preloadRewardedAd();
-    preloadExitAd();
-    preloadListAd();
+    // 1. MobileAds 초기화 (대기하지 않고 백그라운드에서 실행)
+    final initFuture = MobileAds.instance.initialize();
+    
+    // 2. 초기 광고들 프리로드 시작 (초기화 완료 후 실행되도록 함)
+    initFuture.then((_) {
+      debugPrint('AdMob SDK initialized');
+      loadAppOpenAd();
+      preloadRewardedAd();
+      preloadExitAd();
+      preloadListAd();
+      
+      // 3. 앱 라이프사이클 관찰자 등록 (앱 오프닝 광고용)
+      _lifecycleReactor = AppLifecycleReactor();
+      _lifecycleReactor!.listenToAppStateChanges();
+    });
+  }
+
+  /// 앱 오프닝 광고 로드
+  static void loadAppOpenAd() {
+    if (_isShowingAppOpenAd) return;
+    
+    AppOpenAd.load(
+      adUnitId: appOpenAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: AppOpenAdLoadCallback(
+        onAdLoaded: (ad) {
+          debugPrint('AppOpenAd loaded');
+          _appOpenAd = ad;
+          _appOpenAdLoadTime = DateTime.now();
+        },
+        onAdFailedToLoad: (error) {
+          debugPrint('AppOpenAd failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  /// 앱 오프닝 광고 표시
+  static void showAppOpenAdIfAvailable() {
+    if (_appOpenAd == null || _isShowingAppOpenAd) {
+      debugPrint('AppOpenAd not available or already showing');
+      loadAppOpenAd();
+      return;
+    }
+
+    // 광고가 4시간 이상 지나면 무효
+    if (_appOpenAdLoadTime != null && 
+        DateTime.now().difference(_appOpenAdLoadTime!).inHours >= 4) {
+      debugPrint('AppOpenAd expired');
+      _appOpenAd?.dispose();
+      _appOpenAd = null;
+      loadAppOpenAd();
+      return;
+    }
+
+    _appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (ad) {
+        _isShowingAppOpenAd = true;
+      },
+      onAdDismissedFullScreenContent: (ad) {
+        _isShowingAppOpenAd = false;
+        ad.dispose();
+        _appOpenAd = null;
+        loadAppOpenAd();
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        _isShowingAppOpenAd = false;
+        ad.dispose();
+        _appOpenAd = null;
+        loadAppOpenAd();
+      },
+    );
+
+    _appOpenAd!.show();
   }
 
   /// 보상형 광고 사전 로드
@@ -133,7 +213,7 @@ class AdService {
         final ad = _preloadedRewardedAd;
         _preloadedRewardedAd = null;
         _rewardedAdCompleter = null;
-        preloadRewardedAd(); // 다음을 위해 로드 시작
+        Future.microtask(preloadRewardedAd);
         return ad;
       }
 
@@ -143,22 +223,29 @@ class AdService {
           const Duration(seconds: 3),
           onTimeout: () => null,
         );
+        if (ad == null) {
+          return null;
+        }
         _preloadedRewardedAd = null;
         _rewardedAdCompleter = null;
-        preloadRewardedAd();
+        Future.microtask(preloadRewardedAd);
         return ad;
       }
 
       // 3. 로드된 것도 없고 로딩 중도 아니면 새로 로드 시도
       preloadRewardedAd();
       if (_rewardedAdCompleter != null) {
-        final ad = await _rewardedAdCompleter!.future.timeout(
+        final currentCompleter = _rewardedAdCompleter!;
+        final ad = await currentCompleter.future.timeout(
           const Duration(seconds: 3),
           onTimeout: () => null,
         );
+        if (ad == null) {
+          return null;
+        }
         _preloadedRewardedAd = null;
         _rewardedAdCompleter = null;
-        preloadRewardedAd();
+        Future.microtask(preloadRewardedAd);
         return ad;
       }
     } catch (e) {
@@ -206,6 +293,17 @@ class AdService {
 
   /// 리스트용 광고 사전 로드
   static void preloadListAd() {
+    // 이미 로드된 광고가 있고 1시간이 지나지 않았다면 유지
+    if (_preloadedListAd != null && _listAdLoadTime != null) {
+      if (DateTime.now().difference(_listAdLoadTime!).inHours < 1) {
+        return;
+      }
+      // 오래된 광고는 폐기
+      _preloadedListAd?.dispose();
+      _preloadedListAd = null;
+      _listAdLoadCompleter = null;
+    }
+
     if (_preloadedListAd != null) return; 
 
     final completer = Completer<void>();
@@ -218,6 +316,7 @@ class AdService {
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           debugPrint('Preloaded List Ad loaded');
+          _listAdLoadTime = DateTime.now();
           if (!completer.isCompleted) {
             completer.complete();
           }
@@ -225,14 +324,16 @@ class AdService {
         onAdFailedToLoad: (ad, error) {
           debugPrint('Preloaded List Ad failed: $error');
           ad.dispose();
-          // 현재 프리로드된 광고가 실패한 광고라면 초기화
           if (_preloadedListAd == ad) {
             _preloadedListAd = null;
             _listAdLoadCompleter = null;
+            _listAdLoadTime = null;
           }
           if (!completer.isCompleted) {
              completer.completeError(error);
           }
+          // 실패 시 30초 후 재시도
+          Future.delayed(const Duration(seconds: 30), () => preloadListAd());
         },
       ),
     )..load();
@@ -257,9 +358,29 @@ class AdService {
     final ad = _preloadedListAd;
     final future = _listAdLoadCompleter?.future;
     
+    // 가져가면 다음 사용을 위해 변수 초기화
     _preloadedListAd = null;
     _listAdLoadCompleter = null;
+    _listAdLoadTime = null;
+    
+    // 비동기로 다음 광고 미리 로드 시작 (즉시)
+    Future.microtask(() => preloadListAd());
     
     return (ad, future);
+  }
+}
+
+/// 앱 라이프사이클 관찰자 (앱 오프닝 광고용)
+class AppLifecycleReactor {
+  void listenToAppStateChanges() {
+    AppStateEventNotifier.startListening();
+    AppStateEventNotifier.appStateStream.forEach((state) => _onAppStateChanged(state));
+  }
+
+  void _onAppStateChanged(AppState state) {
+    if (state == AppState.foreground) {
+      debugPrint('App moving to foreground, showing AppOpenAd');
+      AdService.showAppOpenAdIfAvailable();
+    }
   }
 }

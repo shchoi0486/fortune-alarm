@@ -75,21 +75,43 @@ class WaterAlarmService {
   static Future<bool> scheduleOneTime(DateTime time, int id) async {
     debugPrint('[WaterAlarm] Scheduling at $time (ID: $id)');
     
-    return await AndroidAlarmManager.oneShotAt(
-      time,
-      id,
-      _waterCallback,
-      exact: true,
-      wakeup: true,
-      alarmClock: true,
-      rescheduleOnReboot: true,
-      allowWhileIdle: true,
-    );
+    if (Platform.isAndroid) {
+      return await AndroidAlarmManager.oneShotAt(
+        time,
+        id,
+        _waterCallback,
+        exact: true,
+        wakeup: true,
+        alarmClock: true,
+        rescheduleOnReboot: true,
+        allowWhileIdle: true,
+      );
+    } else if (Platform.isIOS) {
+      try {
+        await NotificationService().scheduleAlarmNotification(
+          id: id,
+          title: '물 마실 시간이에요! 💧',
+          body: '건강한 습관을 위해 지금 물 한 잔 어떠세요?',
+          scheduledDate: time,
+          payload: 'water_$id',
+        );
+        return true;
+      } catch (e) {
+        debugPrint('[WaterAlarm] iOS scheduling failed: $e');
+        return false;
+      }
+    }
+    return false;
   }
 
   static Future<void> cancelAll() async {
+    final notificationService = NotificationService();
     for (int i = 0; i < 100; i++) {
-      await AndroidAlarmManager.cancel(_startId + i);
+      if (Platform.isAndroid) {
+        await AndroidAlarmManager.cancel(_startId + i);
+      } else if (Platform.isIOS) {
+        await notificationService.cancelNotification(_startId + i);
+      }
     }
   }
 

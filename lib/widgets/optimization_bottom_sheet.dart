@@ -60,10 +60,11 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
+    final size = MediaQuery.of(context).size;
     
     if (_isLoading) {
       return SizedBox(
-        height: 300,
+        height: 350,
         child: Center(
           child: CircularProgressIndicator(
             color: isDark ? Colors.blueAccent : null,
@@ -84,19 +85,22 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
       onWillPop: () async => allGranted, // 모든 권한 허용 전에는 뒤로가기 버튼으로 못 닫음
       child: Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Container(
-          constraints: const BoxConstraints(maxWidth: 400),
+          constraints: BoxConstraints(
+            maxWidth: 420,
+            maxHeight: size.height * 0.85,
+          ),
           decoration: BoxDecoration(
             color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(28),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Fixed Header
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -113,19 +117,19 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                           ),
                         ),
                         if (allGranted)
-                          const Icon(Icons.check_circle, color: Colors.green, size: 24)
+                          const Icon(Icons.check_circle, color: Colors.green, size: 20)
                         else
-                          Icon(Icons.info_outline_rounded, color: isDark ? Colors.blue[300] : Colors.blue[600], size: 24),
+                          Icon(Icons.info_outline_rounded, color: isDark ? Colors.blue[300] : Colors.blue[600], size: 20),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 4),
                     Text(
                       allGranted 
                         ? l10n.optimizationDescription 
                         : '정확한 시간에 알람을 울리기 위해 권한 설정이 필요합니다.',
                       style: TextStyle(
                         fontSize: 15,
-                        height: 1.4,
+                        height: 1.3,
                         fontWeight: FontWeight.bold,
                         color: isDark ? Colors.white : Colors.black87,
                       ),
@@ -136,7 +140,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                         '안정적인 서비스 이용을 위해 모든 항목을 허용으로 설정해 주세요.',
                         style: TextStyle(
                           fontSize: 13,
-                          height: 1.4,
+                          height: 1.3,
                           color: isDark ? Colors.grey[400] : Colors.grey[600],
                         ),
                       ),
@@ -227,7 +231,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
             
             // Fixed Footer
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 20),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -238,7 +242,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     disabledBackgroundColor: isDark ? Colors.grey[800] : Colors.grey[300],
                     disabledForegroundColor: isDark ? Colors.grey[600] : Colors.grey[500],
                     elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -267,7 +271,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
           Expanded(
@@ -290,14 +294,14 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 12,
-                    height: 1.3,
-                    color: isDark ? Colors.grey[400] : Colors.grey[500],
+                    height: 1.2,
+                    color: isDark ? Colors.grey[400] : Colors.grey[600],
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
           Transform.scale(
             scale: 0.85,
             child: Switch(

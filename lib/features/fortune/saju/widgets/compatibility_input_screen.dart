@@ -578,62 +578,64 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
     
     showCupertinoModalPopup(
       context: context,
-      builder: (_) => Container(
-        height: 240,
-        color: isDarkMode ? const Color(0xFF2C2C2C) : Colors.white,
-        child: Column(
-          children: [
-            // Toolbar
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
-                    width: 0.5,
+      builder: (_) => SafeArea(
+        child: Container(
+          height: 240,
+          color: isDarkMode ? const Color(0xFF2C2C2C) : Colors.white,
+          child: Column(
+            children: [
+              // Toolbar
+              Container(
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
+                      width: 0.5,
+                    ),
                   ),
                 ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      child: const Text("취소", style: TextStyle(color: Colors.redAccent)),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    Text("생년월일 선택", 
+                      style: TextStyle(
+                        fontSize: 16, 
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      )
+                    ),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      child: const Text("확인", style: TextStyle(color: Colors.blueAccent)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    child: const Text("취소", style: TextStyle(color: Colors.redAccent)),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  Text("생년월일 선택", 
-                    style: TextStyle(
-                      fontSize: 16, 
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                    )
-                  ),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    child: const Text("확인", style: TextStyle(color: Colors.blueAccent)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+              // Picker
+              Expanded(
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: initialDate,
+                  minimumDate: DateTime(1900),
+                  maximumDate: DateTime.now(),
+                  itemExtent: 40,
+                  onDateTimeChanged: (val) {
+                    onConfirm(val);
+                  },
+                ),
               ),
-            ),
-            // Picker
-            Expanded(
-              child: CupertinoDatePicker(
-                mode: CupertinoDatePickerMode.date,
-                initialDateTime: initialDate,
-                minimumDate: DateTime(1900),
-                maximumDate: DateTime.now(),
-                itemExtent: 40,
-                onDateTimeChanged: (val) {
-                  onConfirm(val);
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -648,61 +650,63 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
 
     showCupertinoModalPopup(
       context: context,
-      builder: (_) => Container(
-        height: 240,
-        color: isDarkMode ? const Color(0xFF2C2C2C) : Colors.white,
-        child: Column(
-          children: [
-            // Toolbar
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
-                    width: 0.5,
+      builder: (_) => SafeArea(
+        child: Container(
+          height: 240,
+          color: isDarkMode ? const Color(0xFF2C2C2C) : Colors.white,
+          child: Column(
+            children: [
+              // Toolbar
+              Container(
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
+                      width: 0.5,
+                    ),
                   ),
                 ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      child: const Text("취소", style: TextStyle(color: Colors.redAccent)),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    Text("태어난 시간 선택", 
+                      style: TextStyle(
+                        fontSize: 16, 
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode ? Colors.white : Colors.black,
+                      )
+                    ),
+                    CupertinoButton( 
+                      padding: EdgeInsets.zero,
+                      child: const Text("확인", style: TextStyle(color: Colors.blueAccent)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    child: const Text("취소", style: TextStyle(color: Colors.redAccent)),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  Text("태어난 시간 선택", 
-                    style: TextStyle(
-                      fontSize: 16, 
-                      fontWeight: FontWeight.bold,
-                      color: isDarkMode ? Colors.white : Colors.black,
-                    )
-                  ),
-                  CupertinoButton( 
-                    padding: EdgeInsets.zero,
-                    child: const Text("확인", style: TextStyle(color: Colors.blueAccent)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
+              // Picker
+              Expanded(
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.time,
+                  initialDateTime: initialDateTime,
+                  use24hFormat: false,
+                  itemExtent: 40,
+                  onDateTimeChanged: (val) {
+                    onConfirm(TimeOfDay.fromDateTime(val));
+                  },
+                ),
               ),
-            ),
-            // Picker
-            Expanded(
-              child: CupertinoDatePicker(
-                mode: CupertinoDatePickerMode.time,
-                initialDateTime: initialDateTime,
-                use24hFormat: false,
-                itemExtent: 40,
-                onDateTimeChanged: (val) {
-                  onConfirm(TimeOfDay.fromDateTime(val));
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

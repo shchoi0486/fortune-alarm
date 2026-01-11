@@ -19,6 +19,11 @@ class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.seriessnap.fortunealarm/foreground"
     private var methodChannel: MethodChannel? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        configureWindow()
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
@@ -39,9 +44,27 @@ class MainActivity: FlutterActivity() {
             if (call.method == "bringToForeground") {
                 bringToForeground()
                 result.success(null)
+            } else if (call.method == "setMaxAlarmVolume") {
+                setMaxAlarmVolume()
+                result.success(null)
             } else {
                 result.notImplemented()
             }
+        }
+    }
+
+    private fun setMaxAlarmVolume() {
+        try {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as android.media.AudioManager
+            val maxVolume = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_ALARM)
+            val minVolume = kotlin.math.ceil(maxVolume * 0.5).toInt().coerceAtLeast(1)
+            val currentVolume = audioManager.getStreamVolume(android.media.AudioManager.STREAM_ALARM)
+            if (currentVolume < minVolume) {
+                audioManager.setStreamVolume(android.media.AudioManager.STREAM_ALARM, minVolume, 0)
+                android.util.Log.d("MainActivity", "Alarm volume raised to min: $minVolume (max: $maxVolume)")
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Failed to set max alarm volume: ${e.message}")
         }
     }
 
@@ -106,8 +129,8 @@ class MainActivity: FlutterActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
-            val keyguardManager = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-            keyguardManager.requestDismissKeyguard(this, null)
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            // KeyguardManager.requestDismissKeyguard 제거: 패턴 잠금 화면이 알람 화면을 가리는 문제 해결
         } else {
             window.addFlags(
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or

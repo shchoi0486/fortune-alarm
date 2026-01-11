@@ -109,9 +109,40 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
   }
 
   Future<AlarmModel> _toggle(AlarmModel alarm) async {
+    DateTime newTime = alarm.time;
+    
+    // 알람을 켜는 경우(!alarm.isEnabled)이고, 일회성 알람인 경우
+    // 저장된 시간이 과거라면 다음 유효한 시간(오늘 남은 시간 또는 내일)으로 업데이트
+    if (!alarm.isEnabled && !alarm.repeatDays.any((d) => d)) {
+      final now = DateTime.now();
+      if (alarm.time.isBefore(now)) {
+        // 오늘 날짜의 같은 시간으로 설정
+        DateTime targetTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          alarm.time.hour,
+          alarm.time.minute,
+        );
+        
+        // 만약 오늘 날짜로 설정했을 때도 과거라면
+        if (targetTime.isBefore(now)) {
+          // 1분 이내의 과거라면 오늘로 유지 (즉시 실행)
+          final diff = now.difference(targetTime);
+          if (diff.inMinutes >= 1) {
+             targetTime = targetTime.add(const Duration(days: 1));
+          } else {
+             debugPrint('[AlarmListNotifier] Toggle time is within 1 minute grace period. Keeping today for immediate alarm.');
+          }
+        }
+        newTime = targetTime;
+        debugPrint('[AlarmListNotifier] Updated past one-time alarm time to: $newTime');
+      }
+    }
+
     final newAlarm = AlarmModel(
       id: alarm.id,
-      time: alarm.time,
+      time: newTime,
       isEnabled: !alarm.isEnabled,
       missionType: alarm.missionType,
       label: alarm.label,

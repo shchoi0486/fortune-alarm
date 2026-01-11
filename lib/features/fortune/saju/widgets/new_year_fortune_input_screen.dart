@@ -189,55 +189,57 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext builder) {
-        return Container(
-          height: 240,
-          color: backgroundColor,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CupertinoButton(
-                    child: const Text('취소', style: TextStyle(color: Colors.red)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  Text("생년월일 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
-                  CupertinoButton(
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
-                    onPressed: () {
-                      setState(() {
-                        _birthDate = tempPickedDate;
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-              Expanded(
-                child: CupertinoTheme(
-                  data: CupertinoThemeData(
-                    textTheme: CupertinoTextThemeData(
-                      dateTimePickerTextStyle: TextStyle(
-                        color: textColor,
-                        fontSize: 20,
+        return SafeArea(
+          child: Container(
+            height: 240,
+            color: backgroundColor,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                      child: const Text('취소', style: TextStyle(color: Colors.red)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    Text("생년월일 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+                    CupertinoButton(
+                      child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                      onPressed: () {
+                        setState(() {
+                          _birthDate = tempPickedDate;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: CupertinoTheme(
+                    data: CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: TextStyle(
+                          color: textColor,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
-                  ),
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: _birthDate,
-                    minimumDate: DateTime(1900),
-                    maximumDate: DateTime.now(),
-                    itemExtent: 40,
-                    onDateTimeChanged: (DateTime newDate) {
-                      tempPickedDate = newDate;
-                    },
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: _birthDate,
+                      minimumDate: DateTime(1900),
+                      maximumDate: DateTime.now(),
+                      itemExtent: 40,
+                      onDateTimeChanged: (DateTime newDate) {
+                        tempPickedDate = newDate;
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -263,41 +265,43 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        return Container(
-          height: 240,
-          color: backgroundColor,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                   CupertinoButton(
-                    child: const Text('취소', style: TextStyle(fontSize: 18, color: Colors.red)), 
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  Text("운세 년도 선택", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: textColor)), 
-                  CupertinoButton(
-                    child: const Text('확인', style: TextStyle(fontSize: 18, color: Colors.blue)), 
-                    onPressed: () {
-                      setState(() {
-                        _targetYear = years[selectedIndex];
-                      });
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-              Expanded(
-                child: CupertinoPicker(
-                  itemExtent: 40, 
-                  scrollController: FixedExtentScrollController(initialItem: selectedIndex),
-                  onSelectedItemChanged: (int index) {
-                    selectedIndex = index;
-                  },
-                  children: years.map((year) => Center(child: Text("$year년", style: TextStyle(fontSize: 20, color: textColor)))).toList(), 
+        return SafeArea(
+          child: Container(
+            height: 240,
+            color: backgroundColor,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                     CupertinoButton(
+                      child: const Text('취소', style: TextStyle(fontSize: 18, color: Colors.red)), 
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    Text("운세 년도 선택", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: textColor)), 
+                    CupertinoButton(
+                      child: const Text('확인', style: TextStyle(fontSize: 18, color: Colors.blue)), 
+                      onPressed: () {
+                        setState(() {
+                          _targetYear = years[selectedIndex];
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                Expanded(
+                  child: CupertinoPicker(
+                    itemExtent: 40, 
+                    scrollController: FixedExtentScrollController(initialItem: selectedIndex),
+                    onSelectedItemChanged: (int index) {
+                      selectedIndex = index;
+                    },
+                    children: years.map((year) => Center(child: Text("$year년", style: TextStyle(fontSize: 20, color: textColor)))).toList(), 
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -320,53 +324,55 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext builder) {
-        return Container(
-          height: 240,
-          color: backgroundColor,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CupertinoButton(
-                    child: const Text('취소', style: TextStyle(color: Colors.red)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  Text("태어난 시간 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
-                  CupertinoButton(
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-              Expanded(
-                child: CupertinoTheme(
-                  data: CupertinoThemeData(
-                    textTheme: CupertinoTextThemeData(
-                      dateTimePickerTextStyle: TextStyle(
-                        color: textColor,
-                        fontSize: 20,
+        return SafeArea(
+          child: Container(
+            height: 240,
+            color: backgroundColor,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                      child: const Text('취소', style: TextStyle(color: Colors.red)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    Text("태어난 시간 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+                    CupertinoButton(
+                      child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: CupertinoTheme(
+                    data: CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: TextStyle(
+                          color: textColor,
+                          fontSize: 20,
+                        ),
                       ),
                     ),
-                  ),
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.time,
-                    initialDateTime: initialDateTime,
-                    itemExtent: 40,
-                    onDateTimeChanged: (DateTime newDate) {
-                      setState(() {
-                        _birthTime = TimeOfDay.fromDateTime(newDate);
-                        _isUnknownTime = false;
-                      });
-                    },
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.time,
+                      initialDateTime: initialDateTime,
+                      itemExtent: 40,
+                      onDateTimeChanged: (DateTime newDate) {
+                        setState(() {
+                          _birthTime = TimeOfDay.fromDateTime(newDate);
+                          _isUnknownTime = false;
+                        });
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

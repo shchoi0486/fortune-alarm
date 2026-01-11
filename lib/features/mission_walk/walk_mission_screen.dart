@@ -19,6 +19,7 @@ import '../../data/models/alarm_model.dart';
 import '../../providers/alarm_list_provider.dart';
 import '../../core/constants/positive_messages.dart';
 import '../mission/widgets/mission_success_overlay.dart';
+import '../../widgets/video_background_widget.dart';
 
 class WalkMissionScreen extends ConsumerStatefulWidget {
   final String? alarmId;
@@ -29,7 +30,7 @@ class WalkMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<WalkMissionScreen> createState() => _WalkMissionScreenState();
 }
 
-class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with TickerProviderStateMixin {
+class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
   Timer? _inactivityTimer;
@@ -48,6 +49,19 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
   bool _isSuccess = false;
   String _lastMessage = '';
 
+  Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
+    if (alarm == null) return null;
+    if (alarm.backgroundPath != 'random_background') return alarm;
+    try {
+      final box = await Hive.openBox('app_state');
+      final resolved = box.get('active_alarm_mission_background_path') as String?;
+      if (resolved == null || resolved.isEmpty) return alarm;
+      return alarm.copyWith(backgroundPath: resolved);
+    } catch (_) {
+      return alarm;
+    }
+  }
+
   late AnimationController _animationController;
   late Animation<double> _walkAnimation;
   late AnimationController _waddleController;
@@ -58,6 +72,12 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
+    WidgetsBinding.instance.addObserver(this);
+    
     _loadAlarmSettings();
     _startWalkDetection();
     _startInactivityTimer();
@@ -91,7 +111,17 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      if (mounted) {
+        Navigator.of(context).pop('timeout');
+      }
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _frameTimer?.cancel();
     _animationController.dispose();
     _waddleController.dispose();
@@ -115,7 +145,7 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
 
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
-    _inactivityTimer = Timer(const Duration(minutes: 3), () {
+    _inactivityTimer = Timer(const Duration(minutes: 2), () {
       if (mounted) {
         debugPrint('[WalkMissionScreen] Inactivity timeout - returning to ringing screen');
         Navigator.of(context).pop('timeout');
@@ -141,6 +171,8 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
          debugPrint('Error loading alarm settings: $e');
        }
     }
+
+    alarm = await _applyResolvedRandomBackground(alarm);
 
     if (alarm != null && mounted) {
       setState(() {
@@ -228,21 +260,35 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     final l10n = AppLocalizations.of(context)!;
     
     BoxDecoration bgDecoration;
+    Widget? bgWidget;
     if (_alarm != null && _alarm!.backgroundPath != null) {
-      if (_alarm!.backgroundPath!.startsWith('color:')) {
-        int colorValue = int.parse(_alarm!.backgroundPath!.split(':')[1]);
+      final bgPath = _alarm!.backgroundPath!;
+      final lower = bgPath.toLowerCase();
+      final isVideo = lower.endsWith('.mp4') || lower.endsWith('.webm');
+
+      if (bgPath.startsWith('color:')) {
+        int colorValue = int.parse(bgPath.split(':')[1]);
         bgDecoration = BoxDecoration(color: Color(colorValue));
-      } else if (_alarm!.backgroundPath!.startsWith('assets/')) {
+      } else if (isVideo) {
+        bgDecoration = const BoxDecoration(color: Color(0xFF000000));
+        bgWidget = VideoBackgroundWidget(
+          videoPath: bgPath,
+          isAsset: bgPath.startsWith('assets/'),
+          play: false,
+          loop: false,
+          mute: true,
+        );
+      } else if (bgPath.startsWith('assets/')) {
         bgDecoration = BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(_alarm!.backgroundPath!),
+            image: AssetImage(bgPath),
             fit: BoxFit.cover,
           ),
         );
       } else {
         bgDecoration = BoxDecoration(
           image: DecorationImage(
-            image: FileImage(File(_alarm!.backgroundPath!)),
+            image: FileImage(File(bgPath)),
             fit: BoxFit.cover,
           ),
         );
@@ -263,10 +309,11 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
       body: Stack(
         children: [
           // Background
-          Container(
-            decoration: bgDecoration,
-            width: double.infinity,
-            height: double.infinity,
+          Positioned.fill(
+            child: bgWidget ??
+                Container(
+                  decoration: bgDecoration,
+                ),
           ),
           
           // Content Overlay

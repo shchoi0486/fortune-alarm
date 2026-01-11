@@ -138,6 +138,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get completedMissions => '完了したミッション';
 
   @override
+  String get noCompletedMissionsHint => 'まだ完了したミッションがありません。今日の目標を達成しましょう。';
+
+  @override
   String greeting(String userName) {
     return 'こんにちは、$userNameさん';
   }
@@ -446,6 +449,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get alarmNameAndBackground => 'アラーム名と背景';
 
   @override
+  String get customStyle => 'カスタムスタイル';
+
+  @override
   String get alarmName => 'アラーム名';
 
   @override
@@ -497,7 +503,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get missionWalkDescription => '歩いてアラームを止めよう！';
 
   @override
-  String get missionFaceDescription => '顔を枠内に10秒キープしてください。';
+  String get missionFaceDescription => '顔を枠内に5秒キープしてください。';
 
   @override
   String get walkStepCount => '目標歩数';
@@ -736,6 +742,9 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get startMission => 'ミッション開始';
+
+  @override
+  String get alarmSnooze => 'アラームをスヌーズ';
 
   @override
   String get fortuneTitle => '運勢を確認する';

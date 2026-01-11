@@ -47,7 +47,7 @@ class MissionCameraScreen extends ConsumerStatefulWidget {
       _MissionCameraScreenState();
 }
 
-class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
+class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with WidgetsBindingObserver {
   final MLService _mlService = MLService();
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
@@ -77,9 +77,28 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
 
   AlarmModel? _alarm;
 
+  Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
+    if (alarm == null) return null;
+    if (alarm.backgroundPath != 'random_background') return alarm;
+    try {
+      final box = await Hive.openBox('app_state');
+      final resolved = box.get('active_alarm_mission_background_path') as String?;
+      if (resolved == null || resolved.isEmpty) return alarm;
+      return alarm.copyWith(backgroundPath: resolved);
+    } catch (_) {
+      return alarm;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
+    WidgetsBinding.instance.addObserver(this);
+    
     _isDisposed = false;
     _startInactivityTimer();
     _initializeAll();
@@ -164,7 +183,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
   Future<void> _loadAlarmInfo() async {
     try {
       final alarmBox = await Hive.openBox<AlarmModel>('alarms');
-      final alarm = alarmBox.get(widget.alarmId);
+      final alarm = await _applyResolvedRandomBackground(alarmBox.get(widget.alarmId));
       if (mounted) {
         setState(() {
           _alarm = alarm;
@@ -502,7 +521,18 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      if (mounted && !_isDisposed) {
+        debugPrint('[MissionCameraScreen] App paused - returning to ringing screen');
+        Navigator.of(context).pop('timeout');
+      }
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _isDisposed = true;
     _volumeTimer?.cancel();
     _timeTimer?.cancel();

@@ -17,6 +17,7 @@ import 'package:fortune_alarm/services/cookie_service.dart';
 import 'package:fortune_alarm/widgets/ad_widgets.dart';
 import 'mixins/fortune_access_mixin.dart';
 
+import 'dream/dream_interpretation_screen.dart';
 import '../mission_face/face_detection_mission_screen.dart';
 
 class FortuneScreen extends ConsumerStatefulWidget {
@@ -47,7 +48,12 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
 
 
   Future<void> _initHive() async {
-    _fortuneBox = await Hive.openBox('fortune');
+    if (Hive.isBoxOpen('fortune')) {
+      _fortuneBox = Hive.box('fortune');
+    } else {
+      _fortuneBox = await Hive.openBox('fortune');
+    }
+    if (mounted) setState(() {});
   }
 
   String _getZodiacAnimal(DateTime? birthDate) {
@@ -99,23 +105,38 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
     final dividerColor = isDarkMode ? Colors.grey[800] : (isDarkMode ? Colors.grey[800] : const Color(0xFFF2F4F6));
 
     final sajuState = ref.watch(sajuProvider);
+
+    // 데이터 로딩 중일 때 로딩 화면 표시 (잘못된 UI 렌더링 방지)
+    if (sajuState.isLoading || _fortuneBox == null) {
+      return Scaffold(
+        backgroundColor: backgroundColor,
+        body: Center(
+          child: CircularProgressIndicator(
+            color: isDarkMode ? Colors.white : Colors.black,
+          ),
+        ),
+      );
+    }
+
     final isNameMissing = sajuState.mainProfile == null || sajuState.mainProfile!.name.isEmpty;
     final userName = isNameMissing ? "이름을 입력해주세요" : sajuState.mainProfile!.name;
     final zodiacIcon = _getZodiacAnimal(sajuState.mainProfile?.birthDate);
     final dailyLuck = _getDailyLuck(userName, context);
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: Column(
-        children: [
-          // Custom Header
-          Container(
-            padding: const EdgeInsets.fromLTRB(
-              20,
-              0,
-              20,
-              20,
-            ),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        body: Column(
+          children: [
+            // Custom Header with SafeArea consideration
+            Container(
+              padding: const EdgeInsets.fromLTRB(
+                20,
+                0, // 공통 간격 4가 main.dart에서 적용되므로 0으로 설정
+                20,
+                20,
+              ),
             decoration: BoxDecoration(
               color: cardColor,
               borderRadius: const BorderRadius.only(
@@ -225,7 +246,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 4), // 간격 최소화 (16 -> 4)
                   
                   // 메인 추천 카드 (오늘의 운세)
                   _buildFeaturedCard(isDarkMode),
@@ -270,6 +291,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
           ),
         ],
       ),
+    ),
     );
   }
 
@@ -330,12 +352,12 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: isDarkMode ? Colors.white.withOpacity(0.1) : const Color(0xFFE2E8F0),
+          color: isDarkMode ? Colors.grey[800]! : const Color(0xFFE2E8F0),
           width: 1,
         ),
         gradient: LinearGradient(
           colors: isDarkMode 
-            ? [const Color(0xFFF8FAFC), const Color(0xFFF1F5F9)]
+            ? [const Color(0xFF1E1E1E), const Color(0xFF252525)] // 다크모드 배경색 수정
             : [const Color(0xFFFFFFFF), const Color(0xFFF8FAFC)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -412,7 +434,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                       Text(
                         "오늘의 운세 확인",
                         style: TextStyle(
-                          color: isDarkMode ? Colors.black87 : Colors.black87,
+                          color: isDarkMode ? Colors.white : Colors.black87, // 다크모드 텍스트 색상 수정
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           letterSpacing: -0.5,
@@ -422,7 +444,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                       Text(
                         "신비로운 별들이 들려주는 오늘의 조언",
                         style: TextStyle(
-                          color: isDarkMode ? Colors.black54 : Colors.black54,
+                          color: isDarkMode ? Colors.grey[400] : Colors.black54, // 다크모드 설명 색상 수정
                           fontSize: 12,
                         ),
                       ),
@@ -436,10 +458,10 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                     width: 32, // 크기를 살짝 줄여서 여백 확보
                     height: 32,
                     decoration: BoxDecoration(
-                      color: isDarkMode ? Colors.black.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+                      color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05), // 화살표 배경 수정
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.black54),
+                    child: Icon(Icons.arrow_forward_ios, size: 12, color: isDarkMode ? Colors.white70 : Colors.black54), // 화살표 색상 수정
                   ),
                 ),
                 const Positioned(
@@ -467,67 +489,69 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (BuildContext context) {
-        return Container(
-          height: 240,
-          padding: const EdgeInsets.only(top: 6.0),
-          child: Column(
-            children: [
-              Container(
-                height: 50,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: isDarkMode ? Colors.white12 : Colors.black12,
-                      width: 0.5,
-                    ),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        AppLocalizations.of(context)!.cancel,
-                        style: TextStyle(
-                          color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                          fontSize: 16,
-                        ),
+        return SafeArea(
+          child: Container(
+            height: 240,
+            padding: const EdgeInsets.only(top: 6.0),
+            child: Column(
+              children: [
+                Container(
+                  height: 50,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: isDarkMode ? Colors.white12 : Colors.black12,
+                        width: 0.5,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, tempDate),
-                      child: Text(
-                        AppLocalizations.of(context)!.confirm,
-                        style: const TextStyle(
-                          color: Colors.blueAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          AppLocalizations.of(context)!.cancel,
+                          style: TextStyle(
+                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                            fontSize: 16,
+                          ),
                         ),
                       ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, tempDate),
+                        child: Text(
+                          AppLocalizations.of(context)!.confirm,
+                          style: const TextStyle(
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: CupertinoTheme(
+                    data: CupertinoThemeData(
+                      brightness: isDarkMode ? Brightness.dark : Brightness.light,
                     ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: CupertinoTheme(
-                  data: CupertinoThemeData(
-                    brightness: isDarkMode ? Brightness.dark : Brightness.light,
-                  ),
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: tempDate,
-                    minimumDate: DateTime.now(),
-                    maximumDate: DateTime.now().add(const Duration(days: 365)),
-                    itemExtent: 40,
-                    onDateTimeChanged: (DateTime newDate) {
-                      tempDate = newDate;
-                    },
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: tempDate,
+                      minimumDate: DateTime.now(),
+                      maximumDate: DateTime.now().add(const Duration(days: 365)),
+                      itemExtent: 40,
+                      onDateTimeChanged: (DateTime newDate) {
+                        tempDate = newDate;
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
@@ -677,6 +701,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const FaceDetectionMissionScreen()));
                   } else if (item['target'] == 'compatibility') {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const CompatibilityInputScreen()));
+                  } else if (item['target'] == 'dream') {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const DreamInterpretationScreen()));
                   } else {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: item['title'] as String)));
                   }
@@ -777,15 +803,13 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
             ),
           ),
           const SizedBox(height: 18),
-          _buildListItem("💭", "꿈해몽 분석", "꿈에 담긴 신비로운 의미 풀이", textColor, subTextColor),
-          _buildListItem("💘", "천생연분 찾기", "나의 진정한 인연은 어디에?", textColor, subTextColor),
-          _buildListItem("📜", "액운 방지 부적", "부정적인 기운을 막아주는 비법", textColor, subTextColor),
+          _buildListItem("💭", "꿈해몽 분석", "꿈에 담긴 신비로운 의미 풀이", textColor, subTextColor, target: 'dream'),
         ],
       ),
     );
   }
 
-  Widget _buildListItem(String emoji, String title, String subtitle, Color textColor, Color subTextColor) {
+  Widget _buildListItem(String emoji, String title, String subtitle, Color textColor, Color subTextColor, {String? target}) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
 
@@ -811,10 +835,17 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         child: InkWell(
           onTap: () {
             HapticFeedback.selectionClick();
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: title)),
-            );
+            if (target == 'dream') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const DreamInterpretationScreen()),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: title)),
+              );
+            }
           },
           borderRadius: BorderRadius.circular(22),
           child: Padding(
@@ -840,30 +871,26 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                       Text(
                         title,
                         style: TextStyle(
+                          fontSize: 17,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
                           color: textColor,
-                          letterSpacing: -0.3,
                         ),
                       ),
-                      const SizedBox(height: 3),
+                      const SizedBox(height: 2),
                       Text(
                         subtitle,
                         style: TextStyle(
-                          color: subTextColor.withOpacity(0.7),
                           fontSize: 13,
+                          color: subTextColor,
                         ),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(7),
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[50],
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.arrow_forward_ios, color: subTextColor.withOpacity(0.4), size: 11),
+                Icon(
+                  Icons.chevron_right,
+                  color: subTextColor.withOpacity(0.5),
+                  size: 20,
                 ),
               ],
             ),

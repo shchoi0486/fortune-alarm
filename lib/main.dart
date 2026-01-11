@@ -48,6 +48,7 @@ import 'features/mission/supplement/models/supplement_log.dart';
 import 'providers/bottom_nav_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final GlobalKey<NavigatorState> missionNavigatorKey = GlobalKey<NavigatorState>();
 final container = ProviderContainer();
 
 // 백그라운드와 통신하기 위한 포트 이름
@@ -56,6 +57,10 @@ const MethodChannel _foregroundChannel = MethodChannel('com.seriessnap.fortuneal
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // 1. 광고 서비스 가장 먼저 초기화 (백그라운드에서 진행됨)
+  AdService.init();
+  
   SharingService.init();
   debugPrint('App starting: Initializing services...');
   
@@ -79,7 +84,9 @@ void main() async {
     
     // 앱 상태 저장을 위한 박스 미리 열기
     await Hive.openBox('app_state');
-    debugPrint('Step 2: App state box opened');
+    // 운세 박스 미리 열기 (로딩 속도 개선)
+    await Hive.openBox('fortune');
+    debugPrint('Step 2: App state & fortune boxes opened');
 
     // 날짜/시간 포맷팅 초기화
     await initializeDateFormatting();
@@ -104,11 +111,6 @@ void main() async {
       debugPrint('Firebase initialization failed or timed out: $e');
     }
 
-    // AdMob 초기화 및 사전 로드
-    AdService.init().then((_) {
-      debugPrint('AdMob initialized and preloading started');
-    });
-
   } catch (e) {
     debugPrint('Initialization warning (ignored for startup): $e');
   }
@@ -125,6 +127,24 @@ void main() async {
       child: const FortuneAlarmApp(),
     ),
   );
+
+  // 앱이 완전히 종료된 상태에서 알림(풀스크린 인텐트 포함)으로 실행된 경우 감지
+  try {
+    final notificationService = NotificationService();
+    final notificationAppLaunchDetails = 
+        await notificationService.flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    
+    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+      final payload = notificationAppLaunchDetails!.notificationResponse?.payload;
+      debugPrint('[Main] App launched via notification. Payload: $payload');
+      if (payload != null) {
+        // _onNotificationTap 함수 내부에 Navigator 준비 대기 로직이 포함되어 있음
+        _onNotificationTap(payload);
+      }
+    }
+  } catch (e) {
+    debugPrint('[Main] Error checking notification launch details: $e');
+  }
 }
 
 // 어댑터 등록 로직 분리
@@ -310,7 +330,7 @@ void _handleSupplementAction(String? actionId, String? payload) {
   Future.delayed(const Duration(milliseconds: 500), () {
     final currentState = navigatorKey.currentState;
     if (currentState == null) return;
-    
+
     int? alarmId;
     if (payload.startsWith('supplement_')) {
       alarmId = int.tryParse(payload.split('_').last);
@@ -416,11 +436,12 @@ Future<void> _onNotificationTap(String? payload) async {
 
   // 운세 알림 처리
   if (payload.startsWith('fortune_daily')) {
+    // 운세 탭으로 이동 (인덱스 2)
+    container.read(bottomNavProvider.notifier).state = 2;
     final currentState = navigatorKey.currentState;
     if (currentState != null) {
-      currentState.push(
-        MaterialPageRoute(builder: (context) => const FortuneScreen()),
-      );
+      // 만약 현재 화면이 MainScreen이 아니라면 (예: 다른 단독 화면), MainScreen으로 돌아옴
+      currentState.popUntil((route) => route.isFirst);
     }
     return;
   }
@@ -593,6 +614,12 @@ class FortuneAlarmApp extends ConsumerWidget {
           foregroundColor: Colors.white,
           elevation: 0,
         ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          backgroundColor: Color(0xFF121212),
+          elevation: 0,
+          selectedItemColor: Colors.blueAccent,
+          unselectedItemColor: Colors.grey,
+        ),
       ),
       home: const SplashScreen(),
       routes: {
@@ -643,9 +670,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (mounted) {
       debugPrint('[Main] SplashScreen: Navigating to MainScreen...');
-      Navigator.pushReplacement(
-        context,
+      // MainScreen을 새로운 루트로 설정하여 이동 (이전 스택 모두 제거)
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const MainScreen()),
+        (route) => false,
       );
     }
   }
@@ -658,7 +686,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           // 배경 이미지 (네이티브 스플래시와 동일하게 설정)
           Image.asset(
-            'assets/images/alarm_bg.png',
+            'assets/images/splash/splash_bg.webp',
             fit: BoxFit.cover,
           ),
           // 하단 텍스트
@@ -912,7 +940,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         },
         behavior: HitTestBehavior.opaque,
         child: Container(
-          padding: const EdgeInsets.only(top: 6, bottom: 2),
+          padding: const EdgeInsets.only(top: 5, bottom: 5),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -931,7 +959,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                   );
                 },
               ),
-              const SizedBox(height: 2),
+              const SizedBox(height: 3),
               Text(
                 label,
                 style: TextStyle(
@@ -993,74 +1021,93 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       }
     });
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
+
+        final currentTab = ref.read(bottomNavProvider);
+        debugPrint('[Main] onPopInvoked triggered: tab=$currentTab');
+
+        // 1. 미션 탭(index 3)이고, 내부 네비게이터가 pop 가능한 상태인지 확인
+        if (currentTab == 3) {
+          final missionNavigator = missionNavigatorKey.currentState;
+          // canPop()이 true이면 내부 화면이 스택에 있다는 뜻
+          if (missionNavigator != null && missionNavigator.canPop()) {
+            debugPrint('[Main] MissionTab: Popping internal route');
+            missionNavigator.pop();
+            return;
+          }
+          debugPrint('[Main] MissionTab: Root screen reached, showing exit dialog');
+        }
+
+        // 2. 그 외 모든 경우 (다른 탭이거나, 미션 탭의 루트 화면) -> 종료 다이얼로그 표시
+        if (!context.mounted) return;
+
         final shouldExit = await showDialog<bool>(
           context: context,
-          builder: (context) => Dialog(
+          barrierDismissible: false,
+          builder: (dialogContext) => AlertDialog(
             backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
             surfaceTintColor: Colors.transparent,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // 상단: 제목
-                  const Text(
-                    '종료하시겠습니까?',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 20),
-                  
-                  // 중단: 버튼 영역 (사용자 요청: "취소 종료를 위에")
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          style: TextButton.styleFrom(
-                            foregroundColor: isDark ? Colors.grey : Colors.black54,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              side: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[300]!),
-                            ),
+            title: const Text(
+              '종료하시겠습니까?',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(false),
+                        style: TextButton.styleFrom(
+                          foregroundColor: isDark ? Colors.grey : Colors.black54,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[300]!),
                           ),
-                          child: Text(AppLocalizations.of(context)!.cancel),
                         ),
+                        child: Text(AppLocalizations.of(context)?.cancel ?? '취소'),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () => Navigator.of(context).pop(true),
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.redAccent,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(true),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.redAccent,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
                         ),
+                        child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
-                    ],
-                  ),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // 하단: 광고 영역 (꽉 차게)
-                  const ExitDialogAdWidget(),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const ExitDialogAdWidget(),
+              ],
             ),
           ),
         );
-        return shouldExit ?? false;
+
+        if (shouldExit == true) {
+          debugPrint('[Main] User confirmed exit. Calling SystemNavigator.pop()');
+          SystemNavigator.pop();
+        } else {
+          debugPrint('[Main] Exit cancelled');
+        }
       },
-      child: AnnotatedRegion<SystemUiOverlayStyle>(
+       child: AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: isDark ? const Color(0xFF121212) : Colors.white,
         systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
@@ -1076,6 +1123,8 @@ class _MainScreenState extends ConsumerState<MainScreen> {
               bottom: false,
               child: const FortuneCookieBar(),
             ),
+            
+            const SizedBox(height: 4), // 모든 화면 공통 간격 4 적용
             
             // 타임 세일 배너
             StreamBuilder<int>(
@@ -1183,11 +1232,14 @@ class _MainScreenState extends ConsumerState<MainScreen> {
           // 시스템 내비게이션 바(뒤로가기 버튼 등) 위에 광고가 표시되도록 SafeArea 적용
           // top: false로 설정하여 위쪽 여백은 무시하고 아래쪽(시스템 바)만 고려
           // minimum 패딩을 추가하여 광고 dismiss 창 등이 내비게이션 바를 침범하지 않도록 함
-          const SafeArea(
-            top: false,
-            bottom: true,
-            minimum: EdgeInsets.only(bottom: 4.0),
-            child: BottomBannerAd(),
+          Container(
+            color: isDark ? const Color(0xFF121212) : Colors.white,
+            child: const SafeArea(
+              top: false,
+              bottom: true,
+              minimum: EdgeInsets.only(bottom: 2.0),
+              child: BottomBannerAd(),
+            ),
           ),
           ],
         ),

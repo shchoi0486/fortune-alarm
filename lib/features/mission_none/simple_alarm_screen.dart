@@ -33,6 +33,19 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
   bool _isLoading = true;
   bool _isSuccess = false;
 
+  Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
+    if (alarm == null) return null;
+    if (alarm.backgroundPath != 'random_background') return alarm;
+    try {
+      final box = await Hive.openBox('app_state');
+      final resolved = box.get('active_alarm_mission_background_path') as String?;
+      if (resolved == null || resolved.isEmpty) return alarm;
+      return alarm.copyWith(backgroundPath: resolved);
+    } catch (_) {
+      return alarm;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -56,7 +69,7 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
     
     try {
       final alarmBox = await Hive.openBox<AlarmModel>('alarms');
-      final alarm = alarmBox.get(widget.alarmId);
+      final alarm = await _applyResolvedRandomBackground(alarmBox.get(widget.alarmId));
       if (mounted) {
         setState(() {
           _alarm = alarm;

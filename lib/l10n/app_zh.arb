@@ -63,6 +63,7 @@
   "reset": "重置",
   "addMission": "添加任务",
   "completedMissions": "已完成的任务",
+  "noCompletedMissionsHint": "还没有已完成的任务。去达成今天的任务目标吧。",
 
   "greeting": "您好，{userName}",
   "@greeting": {
@@ -109,7 +110,7 @@
   "left": "左",
   "locationError": "定位错误",
   "locationUnknown": "未知位置",
-  "missionFaceDescription": "将脸保持在画面中10秒。",
+  "missionFaceDescription": "将脸保持在画面中5秒。",
   "missionFortuneCatch": "运势捕捉",
   "missionFortuneCatchDescription": "抓住移动的 Fortuni！",
   "missionHiddenButton": "位置记忆",
@@ -233,6 +234,7 @@
   "gradualVolume": "音量渐强",
   "vibration": "震动",
   "alarmNameAndBackground": "闹钟名称和背景",
+  "customStyle": "自定义样式",
   "alarmName": "闹钟名称",
   "enterAlarmName": "请输入闹钟名称",
   "save": "保存",
@@ -306,6 +308,7 @@
   },
   "turnOffAlarm": "关闭闹钟",
   "startMission": "开始任务",
+  "alarmSnooze": "闹钟延后",
   "fortuneTitle": "查看运势",
   "fortuneMessage": "查看您的运势结果\n并获得隐藏的礼物！",
   "fortuneAdButton": "观看广告并查看结果",

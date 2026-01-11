@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import '../../l10n/app_localizations.dart';
 import '../../providers/saju_provider.dart';
 import '../../providers/mission_provider.dart';
 import 'saju/widgets/saju_profile_screen.dart';
 import 'fortune_pass_screen.dart';
 import '../../services/cookie_service.dart';
+import '../settings/settings_screen.dart';
+import '../settings/notice_screen.dart';
+import '../settings/support_screen.dart';
 
 class AccountManagementScreen extends ConsumerStatefulWidget {
   const AccountManagementScreen({super.key});
@@ -65,8 +69,23 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(icon: Icon(Icons.notifications_none, color: textColor), onPressed: () {}),
-          IconButton(icon: Icon(Icons.settings_outlined, color: textColor), onPressed: () {}),
+          IconButton(
+            icon: Icon(Icons.notifications_none, color: textColor),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('새로운 알림이 없습니다.')),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.settings_outlined, color: textColor),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -239,57 +258,42 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildActionButton(Icons.assignment_outlined, "구매내역", textColor),
-                  _buildActionButton(Icons.confirmation_number_outlined, "쿠폰함", textColor),
-                  _buildActionButton(Icons.favorite_border, "찜", textColor),
-                  _buildActionButton(Icons.chat_bubble_outline, "상담내역", textColor),
-                  _buildActionButton(Icons.edit_outlined, "후기관리", textColor),
-                ],
-              ),
-            ),
-
-            // Banner
-            Container(
-              margin: const EdgeInsets.all(16),
-              width: double.infinity,
-              height: 100,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFB388FF), Color(0xFF8C9EFF)],
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    right: 20,
-                    bottom: 0,
-                    child: Icon(Icons.face, size: 80, color: Colors.white.withOpacity(0.3)),
+                  _buildActionButton(
+                    Icons.assignment_outlined,
+                    "구매내역",
+                    textColor,
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('구매 내역이 없습니다.')),
+                      );
+                    },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.blue[700],
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: const Text(
-                            "상담 이용 가이드",
-                            style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                  _buildActionButton(
+                    Icons.campaign_outlined,
+                    "공지사항",
+                    textColor,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const NoticeScreen()),
+                      );
+                    },
+                  ),
+                  _buildActionButton(
+                    Icons.help_outline,
+                    "고객센터",
+                    textColor,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SupportScreen(
+                            title: AppLocalizations.of(context)!.support,
+                            description: AppLocalizations.of(context)!.feedbackDescription,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          "1:1 실시간 상담 이용가이드",
-                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -300,27 +304,30 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label, Color textColor) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
+  Widget _buildActionButton(IconData icon, String label, Color textColor, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Icon(icon, color: Colors.black87, size: 24),
           ),
-          child: Icon(icon, color: Colors.black87, size: 24),
-        ),
-        const SizedBox(height: 8),
-        Text(label, style: TextStyle(color: textColor.withOpacity(0.7), fontSize: 12)),
-      ],
+          const SizedBox(height: 8),
+          Text(label, style: TextStyle(color: textColor.withOpacity(0.7), fontSize: 12)),
+        ],
+      ),
     );
   }
 }

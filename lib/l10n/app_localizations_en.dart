@@ -142,6 +142,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get completedMissions => 'Completed Missions';
 
   @override
+  String get noCompletedMissionsHint =>
+      'No completed missions yet. Reach today\'s mission goal.';
+
+  @override
   String greeting(String userName) {
     return 'Hello, $userName';
   }
@@ -456,6 +460,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alarmNameAndBackground => 'Alarm Name & Background';
 
   @override
+  String get customStyle => 'Custom Style';
+
+  @override
   String get alarmName => 'Alarm Name';
 
   @override
@@ -511,7 +518,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get missionWalkDescription => 'Walk to turn off the alarm!';
 
   @override
-  String get missionFaceDescription => 'Keep your face in the frame for 10s.';
+  String get missionFaceDescription => 'Keep your face in the frame for 5s.';
 
   @override
   String get walkStepCount => 'Target Steps';
@@ -756,6 +763,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get startMission => 'Start Mission';
+
+  @override
+  String get alarmSnooze => 'Snooze Alarm';
 
   @override
   String get fortuneTitle => 'Check Fortune';

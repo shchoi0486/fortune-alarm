@@ -12,6 +12,7 @@ import 'package:audioplayers/audioplayers.dart';
 import '../../data/models/alarm_model.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../mission/widgets/mission_success_overlay.dart';
+import '../../widgets/video_background_widget.dart';
 
 class LeftRightMissionScreen extends ConsumerStatefulWidget {
   final String? alarmId;
@@ -23,7 +24,7 @@ class LeftRightMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<LeftRightMissionScreen> createState() => _LeftRightMissionScreenState();
 }
 
-class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen> with TickerProviderStateMixin {
+class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
   final Random _random = Random();
   final AudioPlayer _audioPlayer = AudioPlayer();
 
@@ -36,6 +37,19 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
   int _streak = 0;
   bool _wrongFlash = false;
   bool _isSuccess = false;
+
+  Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
+    if (alarm == null) return null;
+    if (alarm.backgroundPath != 'random_background') return alarm;
+    try {
+      final box = await Hive.openBox('app_state');
+      final resolved = box.get('active_alarm_mission_background_path') as String?;
+      if (resolved == null || resolved.isEmpty) return alarm;
+      return alarm.copyWith(backgroundPath: resolved);
+    } catch (_) {
+      return alarm;
+    }
+  }
 
   late AnimationController _characterController;
   late Animation<double> _characterMove;
@@ -55,6 +69,12 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
+    WidgetsBinding.instance.addObserver(this);
+    
     _expectLeft = _random.nextBool();
     _loadAlarm();
     _startInactivityTimer();
@@ -86,7 +106,15 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      if (mounted) Navigator.of(context).pop('timeout');
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _inactivityTimer?.cancel();
     _characterController.dispose();
     _audioPlayer.dispose();
@@ -100,7 +128,7 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
     }
     try {
       final alarmBox = await Hive.openBox<AlarmModel>('alarms');
-      final alarm = alarmBox.get(widget.alarmId);
+      final alarm = await _applyResolvedRandomBackground(alarmBox.get(widget.alarmId));
       if (mounted) {
         setState(() {
           _alarm = alarm;
@@ -123,28 +151,45 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
     _startInactivityTimer();
   }
 
-  BoxDecoration _backgroundDecoration() {
+  Widget _backgroundLayer() {
     final path = _alarm?.backgroundPath;
     if (path != null) {
+      final lower = path.toLowerCase();
+      final isVideo = lower.endsWith('.mp4') || lower.endsWith('.webm');
+
       if (path.startsWith('color:')) {
         final colorValue = int.tryParse(path.split(':')[1]);
-        if (colorValue != null) return BoxDecoration(color: Color(colorValue));
+        if (colorValue != null) return Container(color: Color(colorValue));
+      } else if (isVideo) {
+        return VideoBackgroundWidget(
+          videoPath: path,
+          isAsset: path.startsWith('assets/'),
+          play: false,
+          loop: false,
+          mute: true,
+        );
       } else if (path.startsWith('assets/')) {
-        return BoxDecoration(
-          image: DecorationImage(image: AssetImage(path), fit: BoxFit.cover),
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: AssetImage(path), fit: BoxFit.cover),
+          ),
         );
       } else {
-        return BoxDecoration(
-          image: DecorationImage(image: FileImage(File(path)), fit: BoxFit.cover),
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(image: FileImage(File(path)), fit: BoxFit.cover),
+          ),
         );
       }
     }
-    // 기본 배경을 더 선명하고 밝은 오렌지-옐로우 그라데이션으로 변경
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        colors: [Color(0xFFFDC830), Color(0xFFF37335), Color(0xFFFFFFFF)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+
+    return const DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFFDC830), Color(0xFFF37335), Color(0xFFFFFFFF)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
       ),
     );
   }
@@ -223,20 +268,24 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
     return PopScope(
       canPop: false,
       child: Scaffold(
-        body: Container(
-          decoration: _backgroundDecoration(),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.white.withOpacity(isDarkMode ? 0.1 : 0.25),
-                  Colors.black.withOpacity(isDarkMode ? 0.35 : 0.15),
-                ],
+        body: Stack(
+          children: [
+            Positioned.fill(child: _backgroundLayer()),
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.white.withOpacity(isDarkMode ? 0.1 : 0.25),
+                      Colors.black.withOpacity(isDarkMode ? 0.35 : 0.15),
+                    ],
+                  ),
+                ),
               ),
             ),
-            child: SafeArea(
+            SafeArea(
               child: Column(
                 children: [
                   Padding(
@@ -493,10 +542,9 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                 ],
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 }
-

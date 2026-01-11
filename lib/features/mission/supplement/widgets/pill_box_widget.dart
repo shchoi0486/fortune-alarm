@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class PillBoxWidget extends StatelessWidget {
   final int currentCount;
@@ -89,7 +90,7 @@ class PillBoxWidget extends StatelessWidget {
   }
 }
 
-class _PillCompartment extends StatelessWidget {
+class _PillCompartment extends StatefulWidget {
   final int index;
   final bool isTaken;
 
@@ -99,7 +100,57 @@ class _PillCompartment extends StatelessWidget {
   });
 
   @override
+  State<_PillCompartment> createState() => _PillCompartmentState();
+}
+
+class _PillCompartmentState extends State<_PillCompartment> {
+  bool _showCheck = false;
+  bool _showPills = true;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _showCheck = widget.isTaken;
+    _showPills = !widget.isTaken;
+  }
+
+  @override
+  void didUpdateWidget(_PillCompartment oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isTaken != oldWidget.isTaken) {
+      _timer?.cancel();
+      if (widget.isTaken) {
+        // 열릴 때: 뚜껑이 열리면서 알약이 보이고, 잠시 후 알약이 사라지며 체크 표시
+        _timer = Timer(const Duration(milliseconds: 600), () {
+          if (mounted) {
+            setState(() {
+              _showPills = false; // 알약 소멸
+              _showCheck = true;  // 체크 표시
+            });
+          }
+        });
+      } else {
+        // 닫힐 때: 즉시 알약 생성, 체크 숨김
+        setState(() {
+          _showPills = true;
+          _showCheck = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final index = widget.index;
+    final isTaken = widget.isTaken;
+    
     // 3D Isometric look simulation
     return Container(
       width: 70,
@@ -155,15 +206,24 @@ class _PillCompartment extends StatelessWidget {
             ),
           ),
 
-          // 1. Inside Compartment (Pill or Empty)
-          if (!isTaken)
-            _buildPills(index)
-          else
-             Icon(
-               Icons.check_circle, // Filled circle check
-               size: 40,
-               color: Colors.green.withOpacity(0.9),
-             ),
+          // 1. Inside Compartment (Pill)
+          // 알약 소멸 애니메이션
+          AnimatedOpacity(
+            duration: const Duration(milliseconds: 300),
+            opacity: _showPills ? 1.0 : 0.0,
+            child: _buildPills(index),
+          ),
+
+          // 체크 표시 애니메이션 (알약이 사라진 후 나타남)
+          AnimatedOpacity(
+            duration: const Duration(milliseconds: 400),
+            opacity: _showCheck ? 1.0 : 0.0,
+            child: Icon(
+              Icons.check_circle, // Filled circle check
+              size: 40,
+              color: Colors.green.withOpacity(0.9),
+            ),
+          ),
 
           // 2. Lid (Animated)
           AnimatedContainer(

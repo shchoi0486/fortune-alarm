@@ -295,42 +295,44 @@ class _TojeongScreenState extends State<TojeongScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext builder) {
-        return SizedBox(
-          height: 240,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CupertinoButton(
-                    child: const Text('취소', style: TextStyle(color: Colors.red)),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  Text("생년월일 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black)),
-                  CupertinoButton(
-                    child: const Text('확인', style: TextStyle(color: Colors.blue)),
-                    onPressed: () {
-                      setState(() {
-                        _birthDate = tempPickedDate;
-                      });
-                      Navigator.of(context).pop();
+        return SafeArea(
+          child: SizedBox(
+            height: 240,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CupertinoButton(
+                      child: const Text('취소', style: TextStyle(color: Colors.red)),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    Text("생년월일 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black)),
+                    CupertinoButton(
+                      child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                      onPressed: () {
+                        setState(() {
+                          _birthDate = tempPickedDate;
+                        });
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    initialDateTime: _birthDate,
+                    minimumDate: DateTime(1900),
+                    maximumDate: DateTime.now(),
+                    itemExtent: 40,
+                    onDateTimeChanged: (DateTime newDate) {
+                      tempPickedDate = newDate;
                     },
                   ),
-                ],
-              ),
-              Expanded(
-                child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.date,
-                  initialDateTime: _birthDate,
-                  minimumDate: DateTime(1900),
-                  maximumDate: DateTime.now(),
-                  itemExtent: 40,
-                  onDateTimeChanged: (DateTime newDate) {
-                    tempPickedDate = newDate;
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

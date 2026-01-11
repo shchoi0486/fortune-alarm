@@ -41,52 +41,10 @@ class MissionScreen extends ConsumerWidget {
           Expanded(
             child: CustomScrollView(
               slivers: [
-          // 0. 보상 안내 배너
-          SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.amber.withOpacity(0.3)),
-                ),
-                child: Row(
-                  children: [
-                    const Text('🥠', style: TextStyle(fontSize: 24)),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.dailyFortuneCookieReward,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.amber[800],
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            AppLocalizations.of(context)!.missionRewardInfo,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.8),
-                        ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
             // 1. 헤더 (달성률)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -141,95 +99,54 @@ class MissionScreen extends ConsumerWidget {
               ),
             ),
 
-            // 1.5 통계 패널
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Card(
-                  elevation: 0,
-                  color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E1E1E) : Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: BorderSide(
-                      color: Theme.of(context).brightness == Brightness.dark 
-                        ? Colors.white.withOpacity(0.2) 
-                        : const Color(0xFFE2E8F0),
-                      width: 1.2,
-                    ),
-                  ),
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                      dividerColor: Colors.transparent,
-                    ),
-                    child: ExpansionTile(
-                      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      minTileHeight: 43,
-                      title: Text(
-                        AppLocalizations.of(context)!.myMissionRecord,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                      leading: Icon(Icons.bar_chart_rounded, color: Theme.of(context).colorScheme.primary, size: 22),
-                      children: [
-                        FutureBuilder<Map<String, dynamic>>(
-                          future: ref.read(missionProvider).getMissionStatistics(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Center(child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))),
-                              );
-                            }
-                            final stats = snapshot.data!;
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  _StatItem(
-                                    label: AppLocalizations.of(context)!.consecutiveSuccess,
-                                    value: AppLocalizations.of(context)!.daysCount(stats['streak']),
-                                    icon: Icons.local_fire_department,
-                                    color: Colors.orange,
-                                  ),
-                                  _StatItem(
-                                    label: AppLocalizations.of(context)!.successRate30Days,
-                                    value: '${stats['successRate'].toStringAsFixed(1)}%',
-                                    icon: Icons.pie_chart,
-                                    color: Colors.blue,
-                                  ),
-                                  _StatItem(
-                                    label: AppLocalizations.of(context)!.totalSuccess,
-                                    value: AppLocalizations.of(context)!.daysCount(stats['totalSuccess']),
-                                    icon: Icons.check_circle_outline,
-                                    color: Colors.green,
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
 
-            // 1.2 광고
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: DetailedAdWidget(),
+
+            // 1.3 보상 안내 배너 (도전 중 바로 위로 이동)
+            SliverToBoxAdapter(
+              child: Container(
+                margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.amber.withOpacity(0.3)),
+                ),
+                child: Row(
+                  children: [
+                    const Text('🥠', style: TextStyle(fontSize: 24)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.dailyFortuneCookieReward,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.amber[800],
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            AppLocalizations.of(context)!.missionRewardInfo,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.8),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
             // 2. 해야 할 미션 (Pending)
             if (pendingMissions.isNotEmpty) ...[
               SliverPadding(
-                        padding: const EdgeInsets.only(left: 16, right: 16, top: 24, bottom: 8),
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 8),
                         sliver: SliverToBoxAdapter(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -395,43 +312,70 @@ class MissionScreen extends ConsumerWidget {
             ],
 
             // 3. 완료한 미션 (Completed)
-            if (completedMissions.isNotEmpty) ...[
-              SliverPadding(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 4),
-                sliver: SliverToBoxAdapter(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.completedMissions,
+            SliverPadding(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 4),
+              sliver: SliverToBoxAdapter(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.completedMissions,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.green[700],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.green[100],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${completedMissions.length}',
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.green[700],
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green[800],
+                          height: 1.2,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.green[100],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          '${completedMissions.length}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green[800],
-                            height: 1.2,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
+            ),
+            if (completedMissions.isEmpty)
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isDark ? Colors.white.withOpacity(0.12) : Colors.black.withOpacity(0.06),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.noCompletedMissionsHint,
+                      style: TextStyle(
+                        fontSize: 13,
+                        height: 1.4,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            else
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
@@ -465,8 +409,123 @@ class MissionScreen extends ConsumerWidget {
                   childCount: completedMissions.length,
                 ),
               ),
-            ],
             
+            // 4. 구분선 및 하단 섹션 분리
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            child: Divider(
+              thickness: 1,
+              color: Theme.of(context).brightness == Brightness.dark 
+                ? Colors.white.withOpacity(0.1) 
+                : Colors.black.withOpacity(0.05),
+            ),
+          ),
+        ),
+
+        // 5. 광고 (통계 패널 위로 이동)
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: DetailedAdWidget(),
+          ),
+        ),
+
+            // 6. 통계 패널 (나의 미션 기록)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E1E1E) : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Theme.of(context).brightness == Brightness.dark 
+                        ? Colors.white.withOpacity(0.2) 
+                        : const Color(0xFFE2E8F0),
+                      width: 1.2,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 타이틀 영역
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: Row(
+                          children: [
+                            Icon(Icons.bar_chart_rounded, color: Theme.of(context).colorScheme.primary, size: 22),
+                            const SizedBox(width: 12),
+                            Text(
+                              AppLocalizations.of(context)!.myMissionRecord,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // 내부 구분선
+                      Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Theme.of(context).brightness == Brightness.dark 
+                          ? Colors.white.withOpacity(0.1) 
+                          : const Color(0xFFE2E8F0),
+                      ),
+                      // 데이터 영역
+                      FutureBuilder<Map<String, dynamic>>(
+                        future: ref.read(missionProvider).getMissionStatistics(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Padding(
+                              padding: EdgeInsets.all(24.0),
+                              child: Center(child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))),
+                            );
+                          }
+                          final stats = snapshot.data!;
+                          return Padding(
+                             padding: const EdgeInsets.symmetric(vertical: 20),
+                             child: Row(
+                               children: [
+                                 Expanded(
+                                   child: _StatItem(
+                                     label: AppLocalizations.of(context)!.consecutiveSuccess,
+                                     value: AppLocalizations.of(context)!.daysCount(stats['streak']),
+                                     icon: Icons.local_fire_department,
+                                     color: Colors.orange,
+                                   ),
+                                 ),
+                                 Container(width: 1, height: 30, color: Theme.of(context).dividerColor.withOpacity(0.1)),
+                                 Expanded(
+                                   child: _StatItem(
+                                     label: AppLocalizations.of(context)!.successRate30Days,
+                                     value: '${stats['successRate'].toStringAsFixed(1)}%',
+                                     icon: Icons.pie_chart,
+                                     color: Colors.blue,
+                                   ),
+                                 ),
+                                 Container(width: 1, height: 30, color: Theme.of(context).dividerColor.withOpacity(0.1)),
+                                 Expanded(
+                                   child: _StatItem(
+                                     label: AppLocalizations.of(context)!.totalSuccess,
+                                     value: AppLocalizations.of(context)!.daysCount(stats['totalSuccess']),
+                                     icon: Icons.check_circle_outline,
+                                     color: Colors.green,
+                                   ),
+                                 ),
+                               ],
+                             ),
+                           );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
             // 하단 여백
             const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
@@ -494,6 +553,8 @@ class _StatItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
           padding: const EdgeInsets.all(6),

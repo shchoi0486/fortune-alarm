@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'dart:io';
 import 'dart:async';
 
 import 'providers/supplement_provider.dart';
+import '../../alarm/ringtone_select_screen.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -22,6 +21,21 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   double? _draggingVolume;
   Timer? _previewTimer;
+  String? _playingPath;
+  StateSetter? _ringtoneModalSetState;
+
+  @override
+  void initState() {
+    super.initState();
+    _audioPlayer.onPlayerComplete.listen((event) {
+      if (mounted) {
+        setState(() {
+          _playingPath = null;
+        });
+        _ringtoneModalSetState?.call(() {});
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -80,7 +94,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                       ],
                     ),
                   ),
-                // Main Toggle
+                // Settings Container
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -102,184 +116,132 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                           const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('알림 활성화', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              Text('알림 미루기 시간', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                               SizedBox(height: 4),
-                              Text('설정한 시간에 알림을 보내드려요', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                              Text('나중에 먹기 선택 시 기본 시간입니다', style: TextStyle(fontSize: 12, color: Colors.grey)),
                             ],
                           ),
-                          Switch(
-                            value: settings.isAlarmEnabled,
-                            activeThumbColor: Colors.orange[700],
-                            onChanged: (val) async {
-                              if (val) {
-                                if (Platform.isAndroid) {
-                                  // 정확한 알람 권한 확인
-                                  final status = await Permission.scheduleExactAlarm.status;
-                                  if (status.isDenied) {
-                                    // 권한 요청
-                                    // Android 12+에서는 scheduleExactAlarm 권한이 별도로 관리됨
-                                    // request() 호출 시 시스템 정책에 따라 다르게 동작할 수 있음
-                                    final result = await Permission.scheduleExactAlarm.request();
-                                    
-                                    if (!result.isGranted) {
-                                      if (context.mounted) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (ctx) => AlertDialog(
-                                            title: const Text('알람 권한 필요'),
-                                            content: const Text('정확한 시간에 알람을 울리기 위해 권한 설정이 필요합니다.\n설정 화면으로 이동하시겠습니까?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(ctx),
-                                                child: const Text('취소'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(ctx);
-                                                  openAppSettings();
-                                                },
-                                                child: const Text('설정으로 이동'),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                      return; // 권한 없으면 켜지 않음
-                                    }
-                                  }
-                                }
+                          DropdownButton<int>(
+                            value: settings.defaultSnoozeInterval,
+                            underline: const SizedBox(),
+                            items: [5, 10, 20, 30, 60].map((int value) {
+                              return DropdownMenuItem<int>(
+                                value: value,
+                                child: Text(value >= 60 ? '1시간' : '$value분'),
+                              );
+                            }).toList(),
+                            onChanged: (val) {
+                              if (val != null) {
+                                notifier.updateSettings(defaultSnoozeInterval: val);
                               }
-                              notifier.updateSettings(isAlarmEnabled: val);
                             },
                           ),
                         ],
                       ),
-                      if (settings.isAlarmEnabled) ...[
-                        const Divider(height: 32),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('알림 미루기 시간', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                SizedBox(height: 4),
-                                Text('나중에 먹기 선택 시 기본 시간입니다', style: TextStyle(fontSize: 12, color: Colors.grey)),
-                              ],
+                      const Divider(height: 32),
+                      // 벨소리 설정
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('알람 벨소리', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        subtitle: Text(_getRingtoneTitle(settings.ringtonePath ?? 'default'), style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 14),
+                        onTap: () async {
+                          final selectedPath = await showModalBottomSheet<String>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => RingtoneSelectScreen(
+                              initialRingtonePath: settings.ringtonePath ?? 'default',
                             ),
-                            DropdownButton<int>(
-                              value: settings.defaultSnoozeInterval,
-                              underline: const SizedBox(),
-                              items: [5, 10, 20, 30, 60].map((int value) {
-                                return DropdownMenuItem<int>(
-                                  value: value,
-                                  child: Text(value >= 60 ? '1시간' : '$value분'),
-                                );
-                              }).toList(),
-                              onChanged: (val) {
-                                if (val != null) {
-                                  notifier.updateSettings(defaultSnoozeInterval: val);
-                                }
-                              },
-                            ),
-                          ],
-                        ),
-                        const Divider(height: 32),
-                        // 벨소리 설정
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: const Text('알람 벨소리', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          subtitle: Text(_getRingtoneTitle(settings.ringtonePath ?? 'default'), style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                          trailing: const Icon(Icons.arrow_forward_ios, size: 14),
-                          onTap: () => _showRingtonePicker(context, settings.ringtonePath ?? 'default', settings.volume),
-                        ),
-                        const Divider(height: 32),
-                        // 볼륨 설정
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('알람 볼륨', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                                Text('${((_draggingVolume ?? settings.volume) * 100).toInt()}%', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.orange)),
-                              ],
-                            ),
-                            Slider(
-                              value: _draggingVolume ?? settings.volume,
-                              activeColor: Colors.orange,
-                              onChanged: (val) {
-                                setState(() {
-                                  _draggingVolume = val;
-                                });
-                              },
-                              onChangeEnd: (val) {
-                                setState(() {
-                                  _draggingVolume = null;
-                                });
-                                notifier.updateSettings(volume: val);
-                                _playPreview(settings.ringtonePath ?? 'default', val);
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                          );
+                          if (selectedPath != null) {
+                            notifier.updateSettings(ringtonePath: selectedPath);
+                          }
+                        },
+                      ),
+                      const Divider(height: 32),
+                      // 볼륨 설정
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('알람 볼륨', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              Text('${((_draggingVolume ?? settings.volume) * 100).toInt()}%', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.orange)),
+                            ],
+                          ),
+                          Slider(
+                            value: _draggingVolume ?? settings.volume,
+                            activeColor: Colors.orange,
+                            onChanged: (val) {
+                              setState(() {
+                                _draggingVolume = val;
+                              });
+                            },
+                            onChangeEnd: (val) {
+                              setState(() {
+                                _draggingVolume = null;
+                              });
+                              notifier.updateSettings(volume: val);
+                              _playPreview(settings.ringtonePath ?? 'default', val);
+                            },
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 24),
 
-                if (settings.isAlarmEnabled) ...[
-                  const SizedBox(height: 8),
-                  const Padding(
-                    padding: EdgeInsets.only(left: 4, bottom: 12),
-                    child: Text('알림 시간 목록', style: TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.bold)),
-                  ),
-                  
-                  if (settings.reminderTimes.isEmpty)
-                    Container(
-                      padding: const EdgeInsets.all(40),
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.notifications_off_outlined, size: 48, color: Colors.grey[300]),
-                            const SizedBox(height: 16),
-                            const Text('설정된 알림 시간이 없습니다', style: TextStyle(color: Colors.grey)),
-                          ],
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4, bottom: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('알림 시간 목록', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      if (settings.reminderTimes.length < 5)
+                        TextButton.icon(
+                          onPressed: () => _showCustomTimePicker(context, ref, settings.reminderTimes),
+                          icon: const Icon(Icons.add_rounded, size: 20),
+                          label: const Text('추가'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.orange[700],
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
                         ),
-                      ),
-                    )
-                  else
-                    ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: settings.reminderTimes.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        return _buildAlarmCard(context, ref, settings.reminderTimes[index], index, settings.reminderTimes);
-                      },
+                    ],
+                  ),
+                ),
+                if (settings.reminderTimes.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 40),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.grey[200]!),
                     ),
-                ],
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Icon(Icons.notifications_off_outlined, size: 48, color: Colors.grey[300]),
+                          const SizedBox(height: 12),
+                          const Text('추가된 알림 시간이 없습니다', style: TextStyle(color: Colors.grey)),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  ...settings.reminderTimes.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final timeStr = entry.value;
+                    return _buildAlarmCard(context, ref, timeStr, index, settings.reminderTimes);
+                  }),
+                const SizedBox(height: 40),
               ],
             ),
-            
-            // Floating Action Button for adding time
-            if (settings.isAlarmEnabled)
-              Positioned(
-                right: 20,
-                bottom: 20,
-                child: FloatingActionButton(
-                  onPressed: () =>
-                      _showCustomTimePicker(context, ref, settings.reminderTimes),
-                  backgroundColor: const Color(0xFFE57373),
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  child:
-                      const Icon(Icons.add_rounded, color: Colors.white, size: 32),
-                ),
-              ),
           ],
         ),
       ),
@@ -287,101 +249,62 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
   }
 
   String _getRingtoneTitle(String path) {
-    switch (path) {
-      case 'default': return '기본 벨소리';
-      case 'alarm_sound': return '클래식 알람';
-      case 'morning': return '디지털 알람';
-      case 'birds': return '새소리';
-      case 'waves': return '파도 소리';
-      case 'cuckoo_cuckoo_clock': return '뻐꾸기 시계';
-      case 'discreet': return '차분한 알람';
-      case 'door_knock': return '노크 소리';
-      case 'early_sunrise': return '이른 일출';
-      case 'good_morning': return '굿모닝';
-      case 'in_a_hurry': return '서둘러요';
-      case 'loving_you': return '러빙 유';
-      case 'siren_air_raid': return '사이렌';
-      case 'swinging': return '스윙';
-      case 'telephone_busy_signal': return '전화 신호음';
-      default: return '기본 벨소리';
-    }
-  }
-
-  void _showRingtonePicker(BuildContext context, String currentPath, double volume) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Consumer(
-          builder: (context, ref, child) {
-            final settings = ref.watch(supplementProvider).settings;
-            final ringtonePath = settings.ringtonePath ?? 'default';
-            
-            return ListView(
-              shrinkWrap: true,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Text("벨소리 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ),
-                _buildRingtoneItem("기본 벨소리", 'default', ringtonePath, volume),
-                _buildRingtoneItem("클래식 알람", 'alarm_sound', ringtonePath, volume),
-                _buildRingtoneItem("디지털 알람", 'morning', ringtonePath, volume),
-                _buildRingtoneItem("새소리", 'birds', ringtonePath, volume),
-                _buildRingtoneItem("파도 소리", 'waves', ringtonePath, volume),
-              ],
-            );
-          },
-        );
-      },
-    ).whenComplete(() {
-      _audioPlayer.stop();
-      FlutterRingtonePlayer().stop();
-    });
-  }
-
-  Widget _buildRingtoneItem(String title, String path, String currentPath, double volume) {
-    final isSelected = currentPath == path;
-    return ListTile(
-      title: Text(title, style: TextStyle(
-        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        color: isSelected ? Colors.orange : Colors.black87,
-      )),
-      trailing: isSelected ? const Icon(Icons.check, color: Colors.orange) : null,
-      onTap: () {
-        ref.read(supplementProvider.notifier).updateSettings(ringtonePath: path);
-        _playPreview(path, volume);
-      },
-    );
+    if (path == 'default') return '기본 벨소리';
+    
+    // "Category/filename" -> "filename"
+    final filename = path.split('/').last;
+    
+    // 언더바를 공백으로 변환하고 첫 글자 대문자화 등 포맷팅
+    return filename.replaceAll('_', ' ');
   }
 
   void _playPreview(String path, double volume) async {
+    // 이미 같은 소리가 재생 중이면 중지
+    if (_playingPath == path) {
+      await _audioPlayer.stop();
+      await FlutterRingtonePlayer().stop();
+      setState(() {
+        _playingPath = null;
+      });
+      _ringtoneModalSetState?.call(() {});
+      return;
+    }
+
     _previewTimer?.cancel();
     await _audioPlayer.stop();
     await FlutterRingtonePlayer().stop();
     
+    setState(() {
+      _playingPath = path;
+    });
+    _ringtoneModalSetState?.call(() {});
+
     if (path == 'default') {
-      await FlutterRingtonePlayer().playAlarm(volume: volume, looping: true);
+      await FlutterRingtonePlayer().playAlarm(volume: volume, looping: false);
+      // FlutterRingtonePlayer는 완료 이벤트를 제공하지 않으므로 타이머 사용 (기본 벨소리만)
+      _previewTimer = Timer(const Duration(seconds: 5), () {
+        if (mounted && _playingPath == 'default') {
+          setState(() {
+            _playingPath = null;
+          });
+          _ringtoneModalSetState?.call(() {});
+        }
+      });
     } else {
       try {
+        // assets/sounds/Category/filename.ogg
         await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
         await _audioPlayer.setVolume(volume);
-        await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+        await _audioPlayer.setReleaseMode(ReleaseMode.release); // 루프 제거
         await _audioPlayer.resume();
       } catch (e) {
         debugPrint('Error playing preview: $e');
+        setState(() {
+          _playingPath = null;
+        });
+        _ringtoneModalSetState?.call(() {});
       }
     }
-
-    // 5초 후에 정지
-    _previewTimer = Timer(const Duration(seconds: 5), () {
-      if (mounted) {
-        _audioPlayer.stop();
-        FlutterRingtonePlayer().stop();
-      }
-    });
   }
 
   Widget _buildAlarmCard(BuildContext context, WidgetRef ref, String timeStr, int index, List<String> currentTimes) {

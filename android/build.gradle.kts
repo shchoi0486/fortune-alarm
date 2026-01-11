@@ -6,8 +6,10 @@ allprojects {
 }
 
 subprojects {
-    tasks.withType<JavaCompile>().configureEach {
-        options.compilerArgs.add("-Xlint:-options")
+    afterEvaluate {
+        tasks.withType<JavaCompile>().configureEach {
+            options.compilerArgs.addAll(listOf("-nowarn", "-Xlint:none", "-XDsuppressNotes", "-XDsuppressWarnings"))
+        }
     }
 }
 

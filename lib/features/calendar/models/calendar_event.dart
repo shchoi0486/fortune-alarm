@@ -1,4 +1,4 @@
-enum CalendarEventType { event, routine, memo }
+enum CalendarEventType { event, routine, memo, holiday }
 
 class CalendarEvent {
   final String id;

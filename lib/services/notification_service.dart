@@ -365,13 +365,19 @@ class NotificationService {
       // 첫 실행 시 기본값 저장 및 스케줄링
       await box.put('daily_fortune_enabled', true);
       await box.put('daily_fortune_time1', '08:00');
-      await box.put('daily_fortune_time2', '13:00');
+      await box.put('daily_fortune_time2', '13:30');
     }
 
     final enabled = box.get('daily_fortune_enabled', defaultValue: true);
     if (enabled) {
       final time1Str = box.get('daily_fortune_time1', defaultValue: '08:00');
-      final time2Str = box.get('daily_fortune_time2', defaultValue: '13:00');
+      var time2Str = box.get('daily_fortune_time2', defaultValue: '13:30');
+      
+      // 13:00인 경우 13:30으로 자동 업데이트 (사용자 요청 사항 반영)
+      if (time2Str == '13:00') {
+        time2Str = '13:30';
+        await box.put('daily_fortune_time2', time2Str);
+      }
       
       final parts1 = time1Str.split(':');
       final time1 = TimeOfDay(hour: int.parse(parts1[0]), minute: int.parse(parts1[1]));
@@ -382,14 +388,14 @@ class NotificationService {
       await scheduleDailyFortuneNotification(
         id: 40001,
         time: time1,
-        title: "오늘의 운세 (오전)",
+        title: "오늘의 운세",
         body: "오늘의 운세를 확인하고 활기차게 시작해 보세요!",
       );
       
       await scheduleDailyFortuneNotification(
         id: 40002,
         time: time2,
-        title: "오늘의 운세 (오후)",
+        title: "오늘의 운세",
         body: "오후의 운세는 어떨까요? 지금 바로 확인해 보세요!",
       );
     }
@@ -460,6 +466,69 @@ class NotificationService {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
     return scheduledDate;
+  }
+
+  // 알람 스케줄링 (iOS 대응용)
+  Future<void> scheduleAlarmNotification({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledDate,
+    String? payload,
+    String? soundName,
+    bool isVibrationEnabled = true,
+  }) async {
+    final normalizedSoundName =
+        (soundName == null || soundName.isEmpty || soundName == 'default')
+            ? null
+            : soundName;
+    
+    final String channelId =
+        'alarm_channel_${normalizedSoundName ?? 'default'}_v1';
+
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      channelId,
+      '알람',
+      importance: Importance.max,
+      priority: Priority.max,
+      fullScreenIntent: true,
+      audioAttributesUsage: AudioAttributesUsage.alarm,
+      playSound: true,
+      sound: normalizedSoundName != null
+          ? RawResourceAndroidNotificationSound(normalizedSoundName)
+          : null,
+      enableVibration: isVibrationEnabled,
+      autoCancel: false,
+      ongoing: true,
+      groupKey: _groupKey,
+    );
+
+    final DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      sound: normalizedSoundName != null ? '$normalizedSoundName.caf' : null,
+      threadIdentifier: _groupKey,
+      interruptionLevel: InterruptionLevel.critical, // 알람이므로 크리티컬 레벨 시도
+    );
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      platformChannelSpecifics,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+      payload: payload,
+    );
   }
 
   int _getStableId(String id) {

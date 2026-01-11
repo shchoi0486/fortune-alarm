@@ -63,6 +63,7 @@
   "reset": "초기화",
   "addMission": "미션 추가",
   "completedMissions": "완료된 미션",
+  "noCompletedMissionsHint": "아직 완료된 미션이 없습니다. 오늘의 미션을 시작하세요!",
 
   "greeting": "안녕하세요, {userName}님",
   "@greeting": {
@@ -145,7 +146,7 @@
   "setTime": "시간 설정",
   "repeatDays": "반복 요일",
   "repeatDaily": "매일 반복",
-  "snoozeSettings": "반복 알람 (스누즈)",
+  "snoozeSettings": "알람 미루기",
   "interval": "간격",
   "wakeUpAlarm": "기상 알람",
   "snoozeInfo": "{interval}분, {count}회",
@@ -196,6 +197,7 @@
   "gradualVolume": "점점 커지게",
   "vibration": "진동",
   "alarmNameAndBackground": "알람 이름 및 배경",
+  "customStyle": "커스텀 스타일",
   "alarmName": "알람 이름",
   "enterAlarmName": "알람 이름을 입력해주세요",
   "save": "저장",
@@ -249,7 +251,7 @@
   "missionLeftRightPromptRight": "오른쪽을 누르세요",
   "missionWalk": "걷기",
   "missionWalkDescription": "걸어서 알람을 끄세요!",
-  "missionFaceDescription": "10초간 화면을 응시하여 관상을 확인하세요.",
+  "missionFaceDescription": "5초간 화면을 응시하여 관상을 확인하세요.",
   "walkStepCount": "목표 걸음 수",
   "walkSteps": "{count} 걸음",
   "@walkSteps": {
@@ -345,7 +347,7 @@
   "resetTooltip": "초기화",
   "errorLoadingAlarm": "알람 정보를 불러오지 못했습니다.",
   "alarmNotFound": "알람 정보를 찾을 수 없습니다.",
-  "repeatAlarmCount": "반복 알람 ({current}/{max})",
+  "repeatAlarmCount": "알람 미루기 ({current}/{max})",
   "@repeatAlarmCount": {
     "placeholders": {
       "current": { "type": "int" },
@@ -354,10 +356,11 @@
   },
   "turnOffAlarm": "알람 끄기",
   "startMission": "미션 시작",
+  "alarmSnooze": "알람 미루기",
   "fortuneTitle": "운세 확인하기",
   "fortuneMessage": "운세 결과를 확인하고\n숨겨진 선물도 받아 가요!",
   "fortuneAdButton": "광고 보고 결과 확인",
-  "fortuneLoadingMessage": "점신의 특별한 타로 해석을 경험해보세요.",
+  "fortuneLoadingMessage": "특별한 타로 해석을 경험해보세요.",
   "fortuneAnalyzing": "선택한 타로를 분석하고 있어요... {progress}%",
   "@fortuneAnalyzing": {
     "placeholders": {

@@ -34,6 +34,19 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   Timer? _inactivityTimer;
   AlarmModel? _alarm;
   bool _isLoading = true;
+
+  Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
+    if (alarm == null) return null;
+    if (alarm.backgroundPath != 'random_background') return alarm;
+    try {
+      final box = await Hive.openBox('app_state');
+      final resolved = box.get('active_alarm_mission_background_path') as String?;
+      if (resolved == null || resolved.isEmpty) return alarm;
+      return alarm.copyWith(backgroundPath: resolved);
+    } catch (_) {
+      return alarm;
+    }
+  }
   
   // Mission State: 1=Selection, 2=Result, 3=Loading
   int _missionStep = 1; 
@@ -58,6 +71,10 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
     _loadAlarm();
     _startInactivityTimer();
     // 미션 화면 진입 시 알람 소리를 직접 제어하지 않고 
@@ -72,7 +89,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     
     try {
       final alarmBox = await Hive.openBox<AlarmModel>('alarms');
-      final alarm = alarmBox.get(widget.alarmId);
+      final alarm = await _applyResolvedRandomBackground(alarmBox.get(widget.alarmId));
       if (mounted) {
         setState(() {
           _alarm = alarm;

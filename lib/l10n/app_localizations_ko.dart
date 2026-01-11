@@ -139,6 +139,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get completedMissions => '완료된 미션';
 
   @override
+  String get noCompletedMissionsHint => '아직 완료된 미션이 없습니다. 오늘의 미션을 시작하세요!';
+
+  @override
   String greeting(String userName) {
     return '안녕하세요, $userName님';
   }
@@ -365,7 +368,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get repeatDaily => '매일 반복';
 
   @override
-  String get snoozeSettings => '반복 알람 (스누즈)';
+  String get snoozeSettings => '알람 미루기';
 
   @override
   String get interval => '간격';
@@ -447,6 +450,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get alarmNameAndBackground => '알람 이름 및 배경';
 
   @override
+  String get customStyle => '커스텀 스타일';
+
+  @override
   String get alarmName => '알람 이름';
 
   @override
@@ -498,7 +504,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get missionWalkDescription => '걸어서 알람을 끄세요!';
 
   @override
-  String get missionFaceDescription => '10초간 화면을 응시하여 관상을 확인하세요.';
+  String get missionFaceDescription => '5초간 화면을 응시하여 관상을 확인하세요.';
 
   @override
   String get walkStepCount => '목표 걸음 수';
@@ -729,7 +735,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String repeatAlarmCount(int current, int max) {
-    return '반복 알람 ($current/$max)';
+    return '알람 미루기 ($current/$max)';
   }
 
   @override
@@ -737,6 +743,9 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get startMission => '미션 시작';
+
+  @override
+  String get alarmSnooze => '알람 미루기';
 
   @override
   String get fortuneTitle => '운세 확인하기';
@@ -748,7 +757,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get fortuneAdButton => '광고 보고 결과 확인';
 
   @override
-  String get fortuneLoadingMessage => '점신의 특별한 타로 해석을 경험해보세요.';
+  String get fortuneLoadingMessage => '특별한 타로 해석을 경험해보세요.';
 
   @override
   String fortuneAnalyzing(int progress) {

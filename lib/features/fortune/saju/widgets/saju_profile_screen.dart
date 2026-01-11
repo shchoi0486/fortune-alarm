@@ -274,50 +274,52 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext builder) {
-        return Container(
-          height: 240, // 300에서 240으로 축소하여 약 5개 항목만 보이도록 조정
-          color: Colors.transparent,
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.1))),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CupertinoButton(
-                      child: const Text('취소', style: TextStyle(color: Colors.red, fontSize: 16)),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    Text("생년월일 선택", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
-                    CupertinoButton(
-                      child: const Text('확인', style: TextStyle(color: Colors.blue, fontSize: 16)),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: CupertinoTheme(
-                  data: CupertinoThemeData(
-                    textTheme: CupertinoTextThemeData(
-                      dateTimePickerTextStyle: TextStyle(color: textColor, fontSize: 18), // 폰트 크기 살짝 조정
-                    ),
+        return SafeArea(
+          child: Container(
+            height: 240, // 300에서 240으로 축소하여 약 5개 항목만 보이도록 조정
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.1))),
                   ),
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    initialDateTime: _birthDate,
-                    minimumDate: DateTime(1900),
-                    maximumDate: DateTime.now(),
-                    itemExtent: 40, // 항목 간격을 넓혀서 더 명확하게 5개 위주로 보이게 함
-                    onDateTimeChanged: (DateTime newDate) {
-                      setState(() => _birthDate = newDate);
-                    },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CupertinoButton(
+                        child: const Text('취소', style: TextStyle(color: Colors.red, fontSize: 16)),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      Text("생년월일 선택", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+                      CupertinoButton(
+                        child: const Text('확인', style: TextStyle(color: Colors.blue, fontSize: 16)),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: CupertinoTheme(
+                    data: CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: TextStyle(color: textColor, fontSize: 18), // 폰트 크기 살짝 조정
+                      ),
+                    ),
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: _birthDate,
+                      minimumDate: DateTime(1900),
+                      maximumDate: DateTime.now(),
+                      itemExtent: 40, // 항목 간격을 넓혀서 더 명확하게 5개 위주로 보이게 함
+                      onDateTimeChanged: (DateTime newDate) {
+                        setState(() => _birthDate = newDate);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -340,48 +342,50 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext builder) {
-        return Container(
-          height: 240,
-          color: Colors.transparent,
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.1))),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CupertinoButton(
-                      child: const Text('취소', style: TextStyle(color: Colors.red, fontSize: 16)),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    Text("태어난 시간 선택", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
-                    CupertinoButton(
-                      child: const Text('확인', style: TextStyle(color: Colors.blue, fontSize: 16)),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: CupertinoTheme(
-                  data: CupertinoThemeData(
-                    textTheme: CupertinoTextThemeData(
-                      dateTimePickerTextStyle: TextStyle(color: textColor, fontSize: 18),
-                    ),
+        return SafeArea(
+          child: Container(
+            height: 240,
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.1))),
                   ),
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.time,
-                    initialDateTime: initialDateTime,
-                    itemExtent: 40,
-                    onDateTimeChanged: (DateTime newDate) {
-                      setState(() => _birthTime = TimeOfDay.fromDateTime(newDate));
-                    },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CupertinoButton(
+                        child: const Text('취소', style: TextStyle(color: Colors.red, fontSize: 16)),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      Text("태어난 시간 선택", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+                      CupertinoButton(
+                        child: const Text('확인', style: TextStyle(color: Colors.blue, fontSize: 16)),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: CupertinoTheme(
+                    data: CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: TextStyle(color: textColor, fontSize: 18),
+                      ),
+                    ),
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.time,
+                      initialDateTime: initialDateTime,
+                      itemExtent: 40,
+                      onDateTimeChanged: (DateTime newDate) {
+                        setState(() => _birthTime = TimeOfDay.fromDateTime(newDate));
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

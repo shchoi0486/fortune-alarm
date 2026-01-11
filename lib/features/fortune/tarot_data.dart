@@ -32,7 +32,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 0,
     name: "The Fool (광대)",
-    imagePath: "assets/images/tarot/ar00.jpg",
+    imagePath: "assets/images/tarot/ar00.webp",
     keywords: "새로운 시작, 모험, 순수, 자유, 무모함",
     description: "광대는 화려한 옷을 입고 절벽 끝에 위태롭게 서 있지만, 시선은 먼 곳을 향해 희망에 차 있습니다. 작은 강아지가 그를 따르며 경고하듯 짖고 있습니다. 이는 현실적인 위험을 고려하지 않는 순수한 열정과 새로운 여정의 시작을 상징합니다.",
     loveMeaning: "예기치 못한 새로운 사랑이 찾아오거나 첫눈에 반하는 운명적인 만남이 있을 수 있습니다. 계산하지 않는 순수한 마음으로 다가가면 관계가 급진전될 수 있습니다.",
@@ -45,7 +45,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 1,
     name: "The Magician (마법사)",
-    imagePath: "assets/images/tarot/ar01.jpg",
+    imagePath: "assets/images/tarot/ar01.webp",
     keywords: "창조, 의지, 능력, 실현, 다재다능",
     description: "마법사는 붉은 로브를 입고 한 손은 하늘을, 다른 한 손은 땅을 가리키며 천상의 힘을 지상으로 가져오고 있습니다. 테이블 위에는 4원소(지팡이, 컵, 검, 동전)가 모두 갖춰져 있어, 당신이 이미 목표를 이룰 모든 도구와 능력을 가지고 있음을 의미합니다.",
     loveMeaning: "당신의 매력이 최고조에 달해 이성에게 인기가 많아지는 시기입니다. 썸을 타고 있다면 재치 있는 말솜씨와 리드로 관계를 발전시킬 수 있습니다.",
@@ -58,7 +58,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 2,
     name: "The High Priestess (고위 여사제)",
-    imagePath: "assets/images/tarot/ar02.jpg",
+    imagePath: "assets/images/tarot/ar02.webp",
     keywords: "직관, 지혜, 신비, 비밀, 플라토닉",
     description: "신비로운 베일 뒤에 앉아 있는 여사제는 손에 지혜의 두루마리(TORA)를 들고 있습니다. 흑과 백의 기둥 사이에 앉아 균형을 잡으며, 드러나지 않은 무의식의 세계와 깊은 통찰력을 상징합니다. 겉으로 보이는 것보다 내면의 목소리가 중요함을 암시합니다.",
     loveMeaning: "정신적인 교감이 중요한 플라토닉한 사랑을 의미합니다. 상대방에 대한 깊은 이해와 신뢰가 쌓이지만, 겉으로 감정을 잘 드러내지 않아 짝사랑으로 남거나 관계 진전이 더딜 수 있습니다.",
@@ -71,7 +71,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 3,
     name: "The Empress (여황제)",
-    imagePath: "assets/images/tarot/ar03.jpg",
+    imagePath: "assets/images/tarot/ar03.webp",
     keywords: "풍요, 모성, 자연, 아름다움, 결실",
     description: "풍요로운 자연 속에서 편안하게 앉아 있는 여황제는 물질적, 정신적 풍요의 상징입니다. 화려한 옷과 왕관은 그녀의 권위와 매력을 나타내며, 흐르는 강물과 무르익은 곡식은 노력의 결실과 생명력을 의미합니다.",
     loveMeaning: "사랑이 넘치고 관계가 더욱 깊어지는 시기입니다. 상대방에게 모성애 같은 편안함과 배려를 베풀면 관계가 더욱 돈독해집니다. 결혼을 약속하거나 임신 등 기쁜 소식이 있을 수 있습니다.",
@@ -84,7 +84,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 4,
     name: "The Emperor (황제)",
-    imagePath: "assets/images/tarot/ar04.jpg",
+    imagePath: "assets/images/tarot/ar04.webp",
     keywords: "권위, 구조, 안정, 리더십, 책임감",
     description: "딱딱한 돌좌에 앉은 황제는 갑옷을 입고 앙크 십자가와 보주를 들고 있습니다. 이는 세속적인 권력과 확고한 지배력을 상징합니다. 그는 질서와 규율을 중시하며, 강한 의지력으로 자신의 영토를 지키고 다스립니다.",
     loveMeaning: "신뢰할 수 있고 책임감 있는 상대와의 안정적인 연애를 의미합니다. 연상의 이성이나 리더십 있는 사람과 인연이 있을 수 있습니다. 다만, 너무 권위적이거나 고집을 부리면 다툼이 생길 수 있습니다.",
@@ -97,7 +97,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 5,
     name: "The Hierophant (교황)",
-    imagePath: "assets/images/tarot/ar05.jpg",
+    imagePath: "assets/images/tarot/ar05.webp",
     keywords: "전통, 가르침, 신념, 조언, 중재",
     description: "교황은 종교적인 의복을 입고 두 사제에게 축복을 내리고 있습니다. 그는 신의 뜻을 전달하는 중재자이자 영적인 스승입니다. 사회적 규범, 전통, 도덕적 가치를 중시하며, 지혜로운 조언으로 사람들을 이끕니다.",
     loveMeaning: "신뢰와 존중을 바탕으로 한 진지하고 건전한 만남이 이어집니다. 결혼을 전제로 한 교제나 집안의 소개로 만나는 인연일 가능성이 큽니다. 서로의 가치관을 공유하며 정신적인 유대감을 쌓아가는 것이 중요합니다.",
@@ -110,7 +110,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 6,
     name: "The Lovers (연인)",
-    imagePath: "assets/images/tarot/ar06.jpg",
+    imagePath: "assets/images/tarot/ar06.webp",
     keywords: "사랑, 조화, 선택, 결합, 파트너십",
     description: "따스한 태양 아래 천사의 축복을 받는 아담과 이브가 서 있습니다. 이는 순수한 사랑과 조화로운 결합을 상징합니다. 또한 배경의 뱀과 사과나무는 유혹과 선택의 기로에 서 있음을 암시하기도 합니다.",
     loveMeaning: "사랑이 꽃피는 가장 좋은 시기 중 하나입니다. 서로에게 깊이 빠져들며, 썸에서 연인으로 발전하거나 관계가 더욱 친밀해집니다. 마음이 잘 통하는 소울메이트를 만날 수 있습니다.",
@@ -123,7 +123,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 7,
     name: "The Chariot (전차)",
-    imagePath: "assets/images/tarot/ar07.jpg",
+    imagePath: "assets/images/tarot/ar07.webp",
     keywords: "승리, 의지, 전진, 정복, 이동",
     description: "전차를 탄 젊은 왕이 지휘봉을 들고 당당하게 서 있습니다. 흑백의 스핑크스는 서로 다른 방향으로 가려 하지만, 왕은 강한 의지로 이들을 통제하며 앞으로 나아갑니다. 목표를 향한 거침없는 돌진과 승리를 상징합니다.",
     loveMeaning: "적극적인 애정 공세가 성공하는 시기입니다. 경쟁자가 있더라도 승리할 수 있으며, 썸을 끝내고 연인으로 발전시킬 수 있는 추진력이 생깁니다. 장거리 연애나 여행지에서의 만남 등 이동과 관련된 연애운도 있습니다.",
@@ -136,7 +136,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 8,
     name: "Strength (힘)",
-    imagePath: "assets/images/tarot/ar08.jpg",
+    imagePath: "assets/images/tarot/ar08.webp",
     keywords: "인내, 용기, 내면의 힘, 포용, 외유내강",
     description: "흰 옷을 입은 여인이 사자의 입을 부드럽게 다루고 있습니다. 그녀는 물리적인 힘이 아닌 정신적인 힘과 인내심으로 맹수를 굴복시킵니다. 머리 위의 뫼비우스 띠는 무한한 잠재력과 지혜를 상징합니다.",
     loveMeaning: "상대방을 있는 그대로 받아들이고 이해하는 포용력이 필요한 시기입니다. 다툼이 있더라도 부드럽게 대처하면 관계가 더욱 단단해집니다. 짝사랑 중이라면 서두르지 말고 끈기 있게 기다리며 자신의 매력을 은근히 어필하세요.",
@@ -149,7 +149,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 9,
     name: "The Hermit (은둔자)",
-    imagePath: "assets/images/tarot/ar09.jpg",
+    imagePath: "assets/images/tarot/ar09.webp",
     keywords: "성찰, 고독, 탐구, 지혜, 휴식",
     description: "어두운 설산 위에서 노인이 등불을 들고 홀로 서 있습니다. 그는 세속적인 욕망에서 벗어나 내면의 목소리에 귀 기울이며 진리를 탐구합니다. 등불은 지혜의 빛으로, 자신과 타인의 길을 밝혀줍니다.",
     loveMeaning: "혼자만의 시간이 필요하거나 연애에 대해 깊이 고민하는 시기입니다. 짝사랑을 오랫동안 마음속에 간직하거나, 헤어진 연인을 그리워할 수 있습니다. 억지로 관계를 맺으려 하기보다는 자신의 마음을 먼저 들여다보세요.",
@@ -162,7 +162,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 10,
     name: "Wheel of Fortune (운명의 수레바퀴)",
-    imagePath: "assets/images/tarot/ar10.jpg",
+    imagePath: "assets/images/tarot/ar10.webp",
     keywords: "운명, 변화, 기회, 순환, 터닝포인트",
     description: "구름 위에 거대한 수레바퀴가 있고, 네 귀퉁이에는 4원소를 상징하는 천사들이 책을 읽고 있습니다. 수레바퀴는 멈추지 않고 돌며 상승과 하강을 반복합니다. 이는 피할 수 없는 운명의 흐름과 새로운 주기의 시작을 의미합니다.",
     loveMeaning: "운명적인 만남이 기다리고 있습니다. 우연히 마주친 사람과 사랑에 빠지거나, 헤어진 연인과 다시 만나는 재회운이 강합니다. 권태기였던 커플은 관계가 호전되는 등 긍정적인 변화의 흐름을 타게 됩니다.",
@@ -175,7 +175,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 11,
     name: "Justice (정의)",
-    imagePath: "assets/images/tarot/ar11.jpg",
+    imagePath: "assets/images/tarot/ar11.webp",
     keywords: "공정, 균형, 책임, 진실, 인과응보",
     description: "붉은 옷을 입은 재판관이 오른손엔 검, 왼손엔 저울을 들고 있습니다. 그는 감정에 치우치지 않고 사실과 원칙에 따라 공정하게 판단합니다. 자신이 뿌린 대로 거두게 된다는 인과응보의 법칙을 상징합니다.",
     loveMeaning: "감정보다는 이성이 앞서는 관계입니다. 서로 주고받는 것이 공평한지 따져보게 되거나, 조건을 보고 만날 수도 있습니다. 짝사랑 중이라면 상대방의 명확한 태도를 요구하게 됩니다.",
@@ -188,7 +188,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 12,
     name: "The Hanged Man (매달린 사람)",
-    imagePath: "assets/images/tarot/ar12.jpg",
+    imagePath: "assets/images/tarot/ar12.webp",
     keywords: "희생, 인내, 새로운 시각, 정체, 깨달음",
     description: "한 남자가 나무에 거꾸로 매달려 있지만, 그의 머리 뒤에는 후광이 비치고 표정은 평온합니다. 그는 자발적으로 고난을 선택했으며, 이를 통해 세상을 거꾸로 보며 남들이 보지 못하는 새로운 깨달음을 얻고 있습니다.",
     loveMeaning: "관계가 정체되거나 짝사랑이 길어질 수 있습니다. 지금은 억지로 상황을 바꾸려 하기보다는 인내심을 가지고 기다려야 합니다. 상대방을 위해 희생하고 배려하는 마음이 결국에는 상대의 마음을 움직일 수 있습니다.",
@@ -201,7 +201,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 13,
     name: "Death (죽음)",
-    imagePath: "assets/images/tarot/ar13.jpg",
+    imagePath: "assets/images/tarot/ar13.webp",
     keywords: "종결, 변화, 재탄생, 이별, 새로운 시작",
     description: "검은 갑옷을 입은 죽음의 기사가 백마를 타고 지나가자 왕도, 아이도 쓰러집니다. 이는 육체적 죽음이 아닌, 낡은 것의 완전한 종결과 그로 인한 새로운 시작을 의미합니다. 고통스럽지만 피할 수 없는 변화의 과정입니다.",
     loveMeaning: "관계의 끝이나 이별을 의미할 수 있지만, 이는 더 좋은 인연을 만나기 위한 정리일 수 있습니다. 혹은 현재의 나쁜 습관이나 태도를 완전히 버리고 새롭게 태어나는 계기가 되어 관계가 급반전될 수도 있습니다.",
@@ -214,7 +214,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 14,
     name: "Temperance (절제)",
-    imagePath: "assets/images/tarot/ar14.jpg",
+    imagePath: "assets/images/tarot/ar14.webp",
     keywords: "조화, 균형, 중용, 치유, 절제",
     description: "천사가 한 발은 물에, 한 발은 땅에 디디고 두 컵의 물을 서로 섞고 있습니다. 이는 서로 다른 성질의 것을 조화롭게 융합하고 균형을 맞추는 과정을 의미합니다. 극단으로 치우치지 않는 중용의 미덕이 필요합니다.",
     loveMeaning: "서로 다른 두 사람이 만나 조화를 이루어가는 과정입니다. 감정의 기복 없이 안정적이고 편안한 연애를 할 수 있습니다. 상대방과 대화를 통해 타협점을 찾고 서로에게 맞춰가려는 노력이 관계를 더욱 깊게 만듭니다.",
@@ -227,7 +227,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 15,
     name: "The Devil (악마)",
-    imagePath: "assets/images/tarot/ar15.jpg",
+    imagePath: "assets/images/tarot/ar15.webp",
     keywords: "유혹, 속박, 욕망, 집착, 중독",
     description: "어둠 속에서 악마가 두 남녀를 사슬로 묶고 있습니다. 하지만 사슬은 느슨하여 스스로 벗어날 수 있음에도, 그들은 욕망과 쾌락에 취해 머물러 있습니다. 벗어날 수 없는 유혹과 물질적 집착을 경고합니다.",
     loveMeaning: "치명적인 매력을 가진 이성에게 강하게 끌리거나 육체적인 관계에 탐닉할 수 있습니다. 집착이나 질투가 심해져 서로를 구속하는 건강하지 못한 관계가 될 수 있으니 주의하세요.",
@@ -240,7 +240,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 16,
     name: "The Tower (탑)",
-    imagePath: "assets/images/tarot/ar16.jpg",
+    imagePath: "assets/images/tarot/ar16.webp",
     keywords: "파괴, 충격, 갑작스러운 변화, 각성, 해방",
     description: "견고했던 탑이 번개를 맞아 무너져 내리고, 사람들이 추락하고 있습니다. 이는 인간의 오만함에 대한 신의 경고이자, 거짓된 기반 위에 세워진 것들의 붕괴를 의미합니다. 고통스럽지만, 이를 통해 갇혀있던 상황에서 해방될 수 있습니다.",
     loveMeaning: "갑작스러운 이별 통보를 받거나 큰 다툼으로 관계가 깨질 위기에 처할 수 있습니다. 충격적이지만, 그동안 덮어두었던 문제가 터진 것입니다. 이 기회에 썩은 환부를 도려내고 관계를 재정립하거나, 아니라면 과감히 정리하세요.",
@@ -253,7 +253,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 17,
     name: "The Star (별)",
-    imagePath: "assets/images/tarot/ar17.jpg",
+    imagePath: "assets/images/tarot/ar17.webp",
     keywords: "희망, 영감, 치유, 평온, 낙관",
     description: "밤하늘에 큰 별과 일곱 개의 작은 별이 빛나고, 나체의 여인이 물을 땅과 호수에 붓고 있습니다. 이는 고난 뒤에 찾아오는 평온과 희망, 그리고 생명력의 순환을 의미합니다. 당신의 꿈이 이루어질 것이라는 약속입니다.",
     loveMeaning: "이상형을 만나거나 꿈꾸던 로맨틱한 사랑을 하게 될 운입니다. 힘든 시기를 겪었다면 이제 치유와 회복의 시간이 찾아옵니다. 미래에 대한 긍정적인 희망을 공유하며 아름다운 관계를 만들어갈 수 있습니다.",
@@ -266,7 +266,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 18,
     name: "The Moon (달)",
-    imagePath: "assets/images/tarot/ar18.jpg",
+    imagePath: "assets/images/tarot/ar18.webp",
     keywords: "불안, 환상, 모호함, 직감, 무의식",
     description: "달이 떠 있는 밤, 개와 늑대가 짖고 가재가 물에서 기어 나옵니다. 달빛은 사물을 왜곡되게 보여주어 불안과 공포를 자아내지만, 동시에 무의식과 직관의 세계로 이끕니다. 보이지 않는 이면의 진실을 조심해야 합니다.",
     loveMeaning: "상대방의 마음을 알 수 없어 답답하거나, 오해와 의심이 싹트기 쉽습니다. 삼각관계나 불륜 등 비밀스러운 관계에 연루될 위험도 있습니다. 감정에 휩쓸리지 말고, 겉으로 드러난 모습 이면의 진실을 냉철하게 파악해야 합니다.",
@@ -279,7 +279,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 19,
     name: "The Sun (태양)",
-    imagePath: "assets/images/tarot/ar19.jpg",
+    imagePath: "assets/images/tarot/ar19.webp",
     keywords: "성공, 행복, 활력, 긍정, 축복",
     description: "밝은 태양 아래 어린아이가 백마를 타고 깃발을 흔들며 즐거워합니다. 담장 너머에는 해바라기가 피어 있습니다. 어둠이 걷히고 모든 것이 명명백백하게 드러나는, 긍정적인 에너지와 순수한 기쁨으로 가득 찬 최고의 카드입니다.",
     loveMeaning: "축복받는 밝고 행복한 연애를 하게 됩니다. 서로에게 솔직하고 숨김이 없으며, 함께 있으면 웃음이 끊이지 않습니다. 결혼 운이 아주 좋으며, 임신이나 출산 등 경사스러운 소식이 있을 수 있습니다.",
@@ -292,7 +292,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 20,
     name: "Judgement (심판)",
-    imagePath: "assets/images/tarot/ar20.jpg",
+    imagePath: "assets/images/tarot/ar20.webp",
     keywords: "부활, 보상, 소식, 결단, 재회",
     description: "하늘에서 천사가 나팔을 불자, 관 속에 있던 사람들이 깨어나 환호합니다. 이는 최후의 심판을 상징하며, 과거의 행적에 대한 공정한 평가와 보상을 받고 새로운 단계로 부활함을 의미합니다. 중요한 기로에서의 결단을 촉구합니다.",
     loveMeaning: "헤어진 연인에게서 연락이 오거나 재회할 기회가 생깁니다. 혹은 오랫동안 썸만 타던 관계가 확실한 결말(연인)을 맺게 됩니다. 그동안의 마음에 대한 보상을 받는 시기이니, 용기를 내어 결정하면 좋은 결과가 있습니다.",
@@ -305,7 +305,7 @@ const List<TarotCard> majorArcana = [
   TarotCard(
     id: 21,
     name: "The World (세계)",
-    imagePath: "assets/images/tarot/ar21.jpg",
+    imagePath: "assets/images/tarot/ar21.webp",
     keywords: "완성, 통합, 달성, 해피엔딩, 완벽함",
     description: "월계수 화환 안에서 여인이 춤을 추고 있고, 네 귀퉁이에는 4원소가 완성된 모습으로 자리 잡고 있습니다. 긴 여정의 끝에 도달하여 목표를 완전히 달성하고, 완벽한 조화를 이룬 상태를 상징합니다. 최고의 해피엔딩입니다.",
     loveMeaning: "사랑의 결실을 맺어 결혼에 골인하거나, 이상적인 가정을 꾸리게 됩니다. 서로에게 완벽한 짝이며, 더 바랄 것 없는 행복한 관계가 지속됩니다. 해외와 관련된 인연이 있거나, 함께 여행을 떠나며 사랑을 확인할 수도 있습니다.",

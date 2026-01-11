@@ -3,6 +3,7 @@ import '../l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/mission_provider.dart';
 import '../providers/weather_provider.dart';
+import '../providers/notification_provider.dart';
 import '../features/fortune/account_management_screen.dart';
 
 class FortuneCookieBar extends ConsumerWidget {
@@ -12,13 +13,14 @@ class FortuneCookieBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Watch fortuneCookieCount from missionProvider
     final count = ref.watch(missionProvider.select((s) => s.fortuneCookieCount));
+    final hasNewNotification = ref.watch(hasNewNotificationProvider);
     final weatherAsync = ref.watch(weatherProvider);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final iconColor = isDarkMode ? Colors.white : Colors.black87;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 0),
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,8 +128,40 @@ class FortuneCookieBar extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               
-              // Search Icon
-              Icon(Icons.search, size: 24, color: iconColor),
+              // Notification Icon
+               Stack(
+                 children: [
+                   GestureDetector(
+                     onTap: () {
+                       // 알림 아이콘 클릭 시 빨간 점 사라지게 함 (알림을 확인한 것으로 간주)
+                       ref.read(hasNewNotificationProvider.notifier).state = false;
+                       
+                       // TODO: Implement notification list or popup
+                       ScaffoldMessenger.of(context).showSnackBar(
+                         const SnackBar(
+                           content: Text('새로운 알림이 없습니다.'),
+                           duration: Duration(seconds: 1),
+                         ),
+                       );
+                     },
+                     child: Icon(Icons.notifications_outlined, size: 24, color: iconColor),
+                   ),
+                   // New notification badge - 새로운 알림이 있을 때만 표시
+                   if (hasNewNotification)
+                     Positioned(
+                       top: 2,
+                       right: 2,
+                       child: Container(
+                         width: 6,
+                         height: 6,
+                         decoration: const BoxDecoration(
+                           color: Colors.red,
+                           shape: BoxShape.circle,
+                         ),
+                       ),
+                     ),
+                 ],
+               ),
               
               const SizedBox(width: 8),
               
