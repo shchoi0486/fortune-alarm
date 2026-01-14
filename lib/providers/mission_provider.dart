@@ -36,6 +36,9 @@ class MissionNotifier extends ChangeNotifier {
   bool get showRewardDialog => _showRewardDialog;
   int? get lastRewardMissions => _lastRewardMissions;
   int? get lastRewardCookies => _lastRewardCookies;
+  
+  // 동시 처리 방지용 락 (따닥 방지)
+  bool _isProcessingCompletion = false;
 
   void consumeRewardDialogEvent() {
     _showRewardDialog = false;
@@ -86,93 +89,101 @@ class MissionNotifier extends ChangeNotifier {
 
   // 미션 상태 변경 (완료/미완료)
   Future<void> setMissionCompleted(String missionId, bool completed) async {
-    // _todayLog가 null이면 초기화 대기 (재시도 로직은 호출측에서 처리하거나 여기서 간단히 대기)
-    if (_todayLog == null) {
-      debugPrint('setMissionCompleted: _todayLog is null, waiting for init...');
-      // 최대 3초까지 대기 (Hive 박스 오픈 등이 늦어질 수 있음)
-      int retry = 0;
-      while (_isLoading && retry < 30) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        retry++;
-      }
+    // 동시 처리 방지 (따닥 방지)
+    if (_isProcessingCompletion) return;
+    _isProcessingCompletion = true;
+
+    try {
+      // _todayLog가 null이면 초기화 대기 (재시도 로직은 호출측에서 처리하거나 여기서 간단히 대기)
       if (_todayLog == null) {
-         debugPrint('setMissionCompleted: Failed to load todayLog after waiting.');
+        debugPrint('setMissionCompleted: _todayLog is null, waiting for init...');
+        // 최대 3초까지 대기 (Hive 박스 오픈 등이 늦어질 수 있음)
+        int retry = 0;
+        while (_isLoading && retry < 30) {
+          await Future.delayed(const Duration(milliseconds: 100));
+          retry++;
+        }
+        if (_todayLog == null) {
+           debugPrint('setMissionCompleted: Failed to load todayLog after waiting.');
+           return;
+        }
+      }
+
+      final List<String> currentCompleted = List.from(_todayLog!.completedMissionIds);
+      bool changed = false;
+
+      if (completed) {
+        if (!currentCompleted.contains(missionId)) {
+          currentCompleted.add(missionId);
+          changed = true;
+        }
+      } else {
+        if (currentCompleted.contains(missionId)) {
+          currentCompleted.remove(missionId);
+          changed = true;
+        }
+      }
+
+      if (!changed) {
+         debugPrint('setMissionCompleted: No change for $missionId (completed: $completed)');
          return;
       }
-    }
 
-    final List<String> currentCompleted = List.from(_todayLog!.completedMissionIds);
-    bool changed = false;
+      debugPrint('setMissionCompleted: Updating $missionId to $completed');
 
-    if (completed) {
-      if (!currentCompleted.contains(missionId)) {
-        currentCompleted.add(missionId);
-        changed = true;
-      }
-    } else {
-      if (currentCompleted.contains(missionId)) {
-        currentCompleted.remove(missionId);
-        changed = true;
-      }
-    }
-
-    if (!changed) {
-       debugPrint('setMissionCompleted: No change for $missionId (completed: $completed)');
-       return;
-    }
-
-    debugPrint('setMissionCompleted: Updating $missionId to $completed');
-
-    // 1. 먼저 상태와 DB를 업데이트하여 UI가 즉시 반응하게 함
-    final validMissionIds = _missions.map((m) => m.id).toSet();
-    final newCompletedCount = currentCompleted.where((id) => validMissionIds.contains(id)).length;
-    
-    // 보상 조건 확인 (업데이트 전 상태 기준)
-    bool shouldRewardFive = newCompletedCount >= 5 && !(_todayLog!.isGoalAchieved);
-    bool shouldRewardTen = newCompletedCount >= 10 && !(_todayLog!.isTenGoalAchieved ?? false);
-
-    debugPrint('setMissionCompleted: count=$newCompletedCount, rewardFive=$shouldRewardFive, rewardTen=$shouldRewardTen');
-
-    // 로그 객체 먼저 업데이트 및 저장
-    final newLog = _todayLog!.copyWith(
-      completedMissionIds: currentCompleted,
-      isGoalAchieved: _todayLog!.isGoalAchieved || shouldRewardFive,
-      isTenGoalAchieved: (_todayLog!.isTenGoalAchieved ?? false) || shouldRewardTen,
-    );
-
-    final logBox = await Hive.openBox<DailyMissionLog>('mission_logs');
-    await logBox.put(_todayLog!.dateKey, newLog);
-    _todayLog = newLog;
-    
-    // UI 즉시 갱신 (미션 이동)
-    notifyListeners();
-
-    // 2. 그 다음 보상 처리 (이미 업데이트된 상태이므로 중복 실행 안됨)
-    int rewardCookies = 0;
-    int? rewardMissions;
-
-    if (shouldRewardFive) {
-      rewardCookies += 1;
-      rewardMissions = 5;
-    }
-
-    if (shouldRewardTen) {
-      rewardCookies += 1;
-      rewardMissions = 10;
-    }
-
-    if (rewardCookies > 0 && !_showRewardDialog) {
-      _showRewardDialog = true;
-      _lastRewardMissions = rewardMissions;
-      _lastRewardCookies = rewardCookies;
-      debugPrint('setMissionCompleted: Awarding $rewardCookies cookies for $rewardMissions missions');
+      // 1. 먼저 상태와 DB를 업데이트하여 UI가 즉시 반응하게 함
+      final validMissionIds = _missions.map((m) => m.id).toSet();
+      final newCompletedCount = currentCompleted.where((id) => validMissionIds.contains(id)).length;
       
-      // 보상 다이얼로그가 뜨기 전에 UI를 먼저 업데이트하여 버튼 연타 방지
-      notifyListeners();
+      // 보상 조건 확인 (업데이트 전 상태 기준)
+      bool shouldRewardFive = newCompletedCount >= 5 && !(_todayLog!.isGoalAchieved);
+      bool shouldRewardTen = newCompletedCount >= 10 && !(_todayLog!.isTenGoalAchieved ?? false);
+
+      debugPrint('setMissionCompleted: count=$newCompletedCount, rewardFive=$shouldRewardFive, rewardTen=$shouldRewardTen');
+
+      // 로그 객체 먼저 업데이트 및 저장
+      final newLog = _todayLog!.copyWith(
+        completedMissionIds: currentCompleted,
+        isGoalAchieved: _todayLog!.isGoalAchieved || shouldRewardFive,
+        isTenGoalAchieved: (_todayLog!.isTenGoalAchieved ?? false) || shouldRewardTen,
+      );
+
+      final logBox = await Hive.openBox<DailyMissionLog>('mission_logs');
+      await logBox.put(_todayLog!.dateKey, newLog);
+      _todayLog = newLog;
       
-      await _cookieService.addCookies(rewardCookies);
-      // addCookies 이후에 다시 notify 하여 쿠키 숫자가 실시간 반영되도록 함
+      // UI 즉시 갱신 (미션 이동)
       notifyListeners();
+
+      // 2. 그 다음 보상 처리 (이미 업데이트된 상태이므로 중복 실행 안됨)
+      int rewardCookies = 0;
+      int? rewardMissions;
+
+      if (shouldRewardFive) {
+        rewardCookies += 1;
+        rewardMissions = 5;
+      }
+
+      if (shouldRewardTen) {
+        rewardCookies += 1;
+        rewardMissions = 10;
+      }
+
+      if (rewardCookies > 0 && !_showRewardDialog) {
+        _showRewardDialog = true;
+        _lastRewardMissions = rewardMissions;
+        _lastRewardCookies = rewardCookies;
+        debugPrint('setMissionCompleted: Awarding $rewardCookies cookies for $rewardMissions missions');
+        
+        // 보상 다이얼로그가 뜨기 전에 UI를 먼저 업데이트하여 버튼 연타 방지
+        notifyListeners();
+        
+        await _cookieService.addCookies(rewardCookies);
+        // addCookies 이후에 다시 notify 하여 쿠키 숫자가 실시간 반영되도록 함
+        notifyListeners();
+      }
+    } finally {
+      _isProcessingCompletion = false;
     }
   }
 
