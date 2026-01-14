@@ -285,7 +285,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get termsOfService => '服务条款';
 
   @override
-  String get privacyPolicy => '隐私政策';
+  String get privacyPolicy =>
+      '服务条款与隐私政策\n\n1. 总则\n\n第1条（目的）\n本条款旨在规定“幸运闹钟”（以下简称“本服务”）所提供服务的使用条件与流程，以及用户与开发者的权利、义务与责任等事项。\n\n第2条（隐私政策）\n\n1. 个人信息收集项目与方式\n本服务无需注册即可使用，不会在独立服务器上保存或收集用户的个人信息。\n但在使用过程中，以下信息可能会在设备上生成并本地保存：\n- 闹钟设置、任务完成记录、幸运饼干获取记录等\n\n2. 设备权限使用说明\n为提供服务，本服务仅在必要范围内使用以下权限：\n- 通知（必需）：用于闹钟运行及幸运饼干通知\n- 精确闹钟与电池优化排除（必需）：用于确保在省电模式下闹钟也能准时响铃\n- 在其他应用上层显示（必需）：用于在锁屏或使用其他应用时显示闹钟界面\n- 相机（可选）：仅用于“物体拍摄”任务；拍摄图片仅在设备上处理，不会上传至服务器\n\n3. 广告服务与数据处理\n为免费提供服务，本服务使用 Google AdMob 投放广告。\nGoogle 可能会为广告个性化设置收集广告标识符（ADID）等非个人身份信息。\n- Google 隐私政策：https://policies.google.com/privacy\n\n第3条（数据存储与删除）\n本服务为本地应用，数据存储在用户设备中。\n如删除应用，设备中保存的所有数据（闹钟、任务记录等）将立即删除且无法恢复。\n\n第4条（免责声明）\n1. 本服务提供的运势信息仅供娱乐参考，不保证其准确性或可靠性。\n2. 因设备设置变更（关闭通知、启用电池优化等）或系统错误导致闹钟未响，开发者不承担责任。\n\n第5条（联系方式）\n如有任何问题或意见，请通过以下邮箱联系我们：\n邮箱：seriessnap.co@gmail.com';
 
   @override
   String get alarmOptimization => '闹钟响铃优化';
@@ -857,7 +858,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get missionMeditation => '冥想5分钟';
 
   @override
-  String get missionEnglishWords => '背5个单词';
+  String get missionLearnWords => '背5个单词';
 
   @override
   String get missionVentilation => '通风';
@@ -969,111 +970,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get shakePhone => '请摇晃手机！';
-
-  @override
-  String get englishQuizMission => '英语问答任务';
-
-  @override
-  String get quizInstruction => '按顺序点击左侧单词和右侧意思进行匹配。';
-
-  @override
-  String get missionSuccess => '任务成功！';
-
-  @override
-  String get goHome => '返回首页';
-
-  @override
-  String get quizWord1 => '苹果';
-
-  @override
-  String get quizWord1Ans => 'apple';
-
-  @override
-  String get quizWord2 => '香蕉';
-
-  @override
-  String get quizWord2Ans => 'banana';
-
-  @override
-  String get quizWord3 => '学校';
-
-  @override
-  String get quizWord3Ans => 'school';
-
-  @override
-  String get quizWord4 => '电脑';
-
-  @override
-  String get quizWord4Ans => 'computer';
-
-  @override
-  String get quizWord5 => '水';
-
-  @override
-  String get quizWord5Ans => 'water';
-
-  @override
-  String get quizWord6 => '朋友';
-
-  @override
-  String get quizWord6Ans => 'friend';
-
-  @override
-  String get quizWord7 => '家人';
-
-  @override
-  String get quizWord7Ans => 'family';
-
-  @override
-  String get quizWord8 => '房子';
-
-  @override
-  String get quizWord8Ans => 'house';
-
-  @override
-  String get quizWord9 => '书';
-
-  @override
-  String get quizWord9Ans => 'book';
-
-  @override
-  String get quizWord10 => '爱';
-
-  @override
-  String get quizWord10Ans => 'love';
-
-  @override
-  String get quizWord11 => '太阳';
-
-  @override
-  String get quizWord11Ans => 'sun';
-
-  @override
-  String get quizWord12 => '月亮';
-
-  @override
-  String get quizWord12Ans => 'moon';
-
-  @override
-  String get quizWord13 => '大海';
-
-  @override
-  String get quizWord13Ans => 'sea';
-
-  @override
-  String get quizWord14 => '天空';
-
-  @override
-  String get quizWord14Ans => 'sky';
-
-  @override
-  String get quizWord15 => '树';
-
-  @override
-  String get quizWord15Ans => 'tree';
-
-  @override
-  String get missionComplete => '任务完成！';
 
   @override
   String version(String version) {

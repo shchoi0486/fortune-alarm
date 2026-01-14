@@ -87,7 +87,6 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
     _volumeTimer?.cancel();
     _timeTimer?.cancel();
     _audioPlayer.dispose();
-    _stopAlarm();
     super.dispose();
   }
 

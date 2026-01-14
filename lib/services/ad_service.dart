@@ -11,7 +11,7 @@ class AdService {
   static const String _realInterstitialAdUnitId = 'ca-app-pub-7279511347629270/4802040508'; // 전면광고 추가
   static const String _realRewardedAdUnitId = 'ca-app-pub-7279511347629270/4530561850';
   static const String _realRewardedInterstitialAdUnitId = 'ca-app-pub-7279511347629270/3273320503'; // 보상형 전면
-  static const String _realAppOpenAdUnitId = 'ca-app-pub-4511718702168477/4090905707'; // 앱 오프닝
+  static const String _realAppOpenAdUnitId = 'ca-app-pub-7279511347629270/3416790733'; // 앱 오프닝 (이미지 ID와 일치하게 수정)
   
   // 테스트 광고 ID (Google 제공)
   static const String _testBannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
@@ -24,8 +24,7 @@ class AdService {
   // 개발 모드 여부
   // true: 항상 테스트 광고 사용
   // false: 릴리스 빌드에서 실제 광고 사용
-  // 내부 테스트 중에는 true로 설정하는 것이 안전합니다.
-  static const bool _forceTestMode = true; 
+  static const bool _forceTestMode = false; 
 
   static bool get _isTestMode => kDebugMode || _forceTestMode; 
 

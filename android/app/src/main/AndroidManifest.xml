@@ -81,6 +81,11 @@
             android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
             android:value="false" />
 
+        <!-- [추가] Notification Icon Metadata (Foreground Service용) -->
+        <meta-data
+            android:name="com.seriessnap.fortunealarm.notification_icon"
+            android:resource="@mipmap/launcher_icon" />
+
         <!-- [2] 알람 매니저 설정 구역 (Service & Receiver) -->
         <!-- 앱이 꺼져도 알람이 울리게 하는 핵심 부품들입니다 -->
         <!-- flutter_local_notifications 리시버 추가 (안정성 강화) -->

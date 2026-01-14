@@ -286,7 +286,8 @@ class AppLocalizationsJa extends AppLocalizations {
   String get termsOfService => '利用規約';
 
   @override
-  String get privacyPolicy => 'プライバシーポリシー';
+  String get privacyPolicy =>
+      '利用規約およびプライバシーポリシー\n\n1. 総則\n\n第1条（目的）\n本規約は、「フォーチュンアラーム」（以下「本サービス」）が提供するサービスの利用条件および手続、利用者と開発者の権利・義務・責任等を定めることを目的とします。\n\n第2条（プライバシーポリシー）\n\n1. 個人情報の収集項目および方法\n本サービスは会員登録なしで利用でき、利用者の個人情報を別途サーバーに保存または収集しません。\nただし、サービス利用の過程で次の情報が生成され、端末内に保存される場合があります：\n- アラーム設定、ミッション達成記録、フォーチュンクッキー獲得履歴 など\n\n2. 端末権限の利用について\n本サービスは、機能提供に必要な範囲で次の権限を利用します：\n- 通知（必須）：アラーム実行およびフォーチュンクッキー通知のため\n- 正確なアラーム／バッテリー最適化の除外（必須）：省電力時でも定刻に鳴動させるため\n- 他のアプリの上に表示（必須）：ロック画面や他アプリ使用中でもアラーム画面を表示するため\n- カメラ（任意）：「オブジェクトスナップ」ミッションでのみ使用。撮影画像は端末内で処理され、サーバーへ送信されません。\n\n3. 広告サービスとデータ処理\n本サービスは無料提供のため、Google AdMob を利用して広告を配信します。\nGoogle は広告の最適化のために広告識別子（ADID）等の非個人情報を収集する場合があります。\n- Google プライバシーポリシー：https://policies.google.com/privacy\n\n第3条（データの保存および削除）\n本サービスは利用者の端末にデータを保存するローカルアプリです。\nアプリを削除すると、端末内に保存されたすべてのデータ（アラーム、ミッション記録等）は直ちに削除され、復元できません。\n\n第4条（免責）\n1. 本サービスが提供する運勢情報は娯楽目的の参考情報であり、正確性・信頼性を保証しません。\n2. 端末設定の変更（通知オフ、バッテリー最適化等）やシステム不具合によりアラームが鳴らない場合、開発者は責任を負いません。\n\n第5条（お問い合わせ）\n本サービスに関するお問い合わせは下記メールアドレスまでご連絡ください。\nメール：seriessnap.co@gmail.com';
 
   @override
   String get alarmOptimization => 'アラーム最適化';
@@ -865,13 +866,13 @@ class AppLocalizationsJa extends AppLocalizations {
   String get missionMeditation => '瞑想5分';
 
   @override
-  String get missionEnglishWords => '英単語5個覚える';
+  String get missionLearnWords => '英単語5個覚える';
 
   @override
-  String get missionVentilation => '換気をする';
+  String get missionVentilation => '換気';
 
   @override
-  String get missionCleaning => '部屋の掃除';
+  String get missionCleaning => '部屋を掃除する';
 
   @override
   String get missionGratitudeDiary => '感謝日記';
@@ -980,111 +981,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get shakePhone => '携帯電話を振ってください！';
-
-  @override
-  String get englishQuizMission => '英語クイズミッション';
-
-  @override
-  String get quizInstruction => '左の単語と右の意味を順番にタップして一致させてください。';
-
-  @override
-  String get missionSuccess => 'ミッション成功！';
-
-  @override
-  String get goHome => 'ホームへ';
-
-  @override
-  String get quizWord1 => 'りんご';
-
-  @override
-  String get quizWord1Ans => 'apple';
-
-  @override
-  String get quizWord2 => 'バナナ';
-
-  @override
-  String get quizWord2Ans => 'banana';
-
-  @override
-  String get quizWord3 => '学校';
-
-  @override
-  String get quizWord3Ans => 'school';
-
-  @override
-  String get quizWord4 => 'コンピューター';
-
-  @override
-  String get quizWord4Ans => 'computer';
-
-  @override
-  String get quizWord5 => '水';
-
-  @override
-  String get quizWord5Ans => 'water';
-
-  @override
-  String get quizWord6 => '友達';
-
-  @override
-  String get quizWord6Ans => 'friend';
-
-  @override
-  String get quizWord7 => '家族';
-
-  @override
-  String get quizWord7Ans => 'family';
-
-  @override
-  String get quizWord8 => '家';
-
-  @override
-  String get quizWord8Ans => 'house';
-
-  @override
-  String get quizWord9 => '本';
-
-  @override
-  String get quizWord9Ans => 'book';
-
-  @override
-  String get quizWord10 => '愛';
-
-  @override
-  String get quizWord10Ans => 'love';
-
-  @override
-  String get quizWord11 => '太陽';
-
-  @override
-  String get quizWord11Ans => 'sun';
-
-  @override
-  String get quizWord12 => '月';
-
-  @override
-  String get quizWord12Ans => 'moon';
-
-  @override
-  String get quizWord13 => '海';
-
-  @override
-  String get quizWord13Ans => 'sea';
-
-  @override
-  String get quizWord14 => '空';
-
-  @override
-  String get quizWord14Ans => 'sky';
-
-  @override
-  String get quizWord15 => '木';
-
-  @override
-  String get quizWord15Ans => 'tree';
-
-  @override
-  String get missionComplete => 'ミッション完了！';
 
   @override
   String version(String version) {

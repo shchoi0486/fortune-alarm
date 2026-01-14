@@ -50,10 +50,19 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
     }
   }
 
+  String _getZodiacAnimal(DateTime? birthDate) {
+    if (birthDate == null) return 'assets/icon/fortuni1_trans.webp';
+    final animals = ['🐭', '🐮', '🐯', '🐰', '🐲', '🐍', '🐴', '🐑', '🐵', '🐔', '🐶', '🐷'];
+    final index = (birthDate.year - 4) % 12;
+    return animals[index];
+  }
+
   @override
   Widget build(BuildContext context) {
     final sajuState = ref.watch(sajuProvider);
     final userName = sajuState.mainProfile?.name ?? "사용자";
+    final birthDate = sajuState.mainProfile?.birthDate;
+    final zodiacIcon = _getZodiacAnimal(birthDate);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF121212) : const Color(0xFFF8F9FA);
     final cardColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
@@ -99,7 +108,17 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.grey[200],
-                    child: const Text('🐷', style: TextStyle(fontSize: 30)),
+                    child: zodiacIcon.startsWith('assets/')
+                        ? ClipOval(
+                            child: Image.asset(
+                              zodiacIcon,
+                              fit: BoxFit.cover,
+                              width: 60,
+                              height: 60,
+                              alignment: const Alignment(0, -0.5),
+                            ),
+                          )
+                        : Text(zodiacIcon, style: const TextStyle(fontSize: 30)),
                   ),
                   const SizedBox(width: 16),
                   Expanded(

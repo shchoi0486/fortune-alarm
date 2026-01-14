@@ -36,6 +36,7 @@ import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../widgets/video_background_widget.dart';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 class AlarmRingingScreen extends ConsumerStatefulWidget {
   final String alarmId;
@@ -66,11 +67,23 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
   
   bool _isMissionCompleted = false;
 
+  void _closeToMain() {
+    if (!mounted) return;
+    final navigator = Navigator.of(context);
+    if (navigator.canPop()) {
+      navigator.pop();
+      return;
+    }
+    navigator.pushNamedAndRemoveUntil('/main', (route) => false);
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+    _markActiveRinging();
     
     _loadAlarm();
     
@@ -91,6 +104,38 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
 
     // 볼륨 강제 설정 (1초마다)
     _startVolumeEnforcement();
+    _ensureForegroundServiceRunning();
+  }
+
+  Future<void> _markActiveRinging() async {
+    try {
+      final box = await Hive.openBox('app_state');
+      await box.put('active_ringing_alarm_id', widget.alarmId);
+      await box.put('active_ringing_set_at', DateTime.now().toIso8601String());
+      await box.flush();
+    } catch (_) {}
+  }
+
+  Future<void> _ensureForegroundServiceRunning() async {
+    try {
+      if (!await FlutterForegroundTask.isRunningService) {
+        await FlutterForegroundTask.startService(
+          serviceId: 256,
+          notificationTitle: '스냅 알람',
+          notificationText: '알람이 울리고 있습니다!',
+          notificationIcon: NotificationIcon(
+            metaDataName: 'com.seriessnap.fortunealarm.notification_icon',
+            backgroundColor: const Color(0xFF5C6BC0),
+          ),
+          callback: startCallback,
+        );
+        debugPrint('[AlarmRingingScreen] Foreground Service STARTED.');
+      } else {
+        debugPrint('[AlarmRingingScreen] Foreground Service is already running.');
+      }
+    } catch (e) {
+      debugPrint('[AlarmRingingScreen] Failed to start Foreground Service: $e');
+    }
   }
 
   void _startVolumeEnforcement() {
@@ -148,7 +193,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
           SnackBar(content: Text(AppLocalizations.of(context)!.errorLoadingAlarm)),
         );
         Future.delayed(const Duration(seconds: 2), () {
-          if (mounted) Navigator.pop(context);
+          _closeToMain();
         });
       }
     }
@@ -381,13 +426,6 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     debugPrint('[AlarmRingingScreen] _playAlarm called. sound: ${_alarm!.isSoundEnabled}, volume: ${_alarm!.volume}');
 
     try {
-      // 1. Notification 소리 중지 (소리 재생 전 미리 시도)
-      final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
-      await NotificationService().cancelNotification(stableId);
-      
-      // 2. 잠시 대기하여 OS가 알림 소리 채널을 정리할 시간을 줌
-      await Future.delayed(const Duration(milliseconds: 500));
-
       if (_alarm!.isSoundEnabled) {
         String path = _alarm!.ringtonePath ?? 'default';
         // 만약 예전 데이터가 남아있어서 하이픈이 포함되어 있다면 언더바로 교체
@@ -539,8 +577,31 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     Vibration.vibrate(pattern: vibrationPattern, repeat: 0);
   }
 
-  Future<void> _stopAlarm() async {
+  Future<void> _clearPendingAlarmFlag() async {
     try {
+      final stateBox = await Hive.openBox('app_state');
+      await stateBox.delete('pending_alarm_payload');
+      await stateBox.delete('pending_alarm_set_at');
+      await stateBox.flush();
+      debugPrint('[AlarmRingingScreen] Pending alarm flag cleared.');
+    } catch (e) {
+      debugPrint('[AlarmRingingScreen] Failed to clear pending flag: $e');
+    }
+  }
+
+  Future<void> _stopAlarm() async {
+    debugPrint('[AlarmRingingScreen] _stopAlarm called');
+    try {
+      try {
+        final box = await Hive.openBox('app_state');
+        await box.delete('active_ringing_alarm_id');
+        await box.delete('active_ringing_set_at');
+        await box.delete('active_alarm_mission_base_id');
+        await box.delete('active_alarm_mission_started_at');
+        await box.delete('active_alarm_mission_background_path');
+        await box.flush();
+      } catch (_) {}
+
       _volumeTimer?.cancel();
       await _audioPlayer.stop();
       await FlutterRingtonePlayer().stop();
@@ -548,8 +609,24 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
 
       final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
       await NotificationService().cancelNotification(stableId);
+
+      if (await FlutterForegroundTask.isRunningService) {
+        debugPrint('[AlarmRingingScreen] Stopping Foreground Service...');
+        await FlutterForegroundTask.stopService();
+      }
     } catch (e) {
       debugPrint('Error stopping alarm: $e');
+    }
+  }
+
+  Future<void> _pauseAlarmRingingForMission() async {
+    try {
+      _volumeTimer?.cancel();
+      await _audioPlayer.stop();
+      await FlutterRingtonePlayer().stop();
+      Vibration.cancel();
+    } catch (e) {
+      debugPrint('Error pausing alarm for mission: $e');
     }
   }
 
@@ -579,10 +656,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const Scaffold(
-        backgroundColor: Colors.white, // Changed from amber to white for a cleaner look
-        body: Center(
-          child: CircularProgressIndicator(color: Colors.blueAccent),
-        ),
+        backgroundColor: Colors.black,
+        body: SizedBox.shrink(), // 인디케이터 제거: 검은 화면만 유지
       );
     }
 
@@ -790,7 +865,11 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                             final int currentRemaining = isFirstSnooze
                                 ? alarm.maxSnoozeCount
                                 : (alarm.remainingSnoozeCount > 0 ? alarm.remainingSnoozeCount : 0);
-                            final int newRemainingCount = currentRemaining - 1;
+                            
+                            // 무제한(999)이면 카운트를 줄이지 않음
+                            final int newRemainingCount = (alarm.maxSnoozeCount == 999)
+                                ? 999
+                                : currentRemaining - 1;
 
                             final now = DateTime.now();
                             final targetTime = DateTime(
@@ -806,6 +885,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                               _snoozeRemainingAfterTap = newRemainingCount < 0 ? 0 : newRemainingCount;
                             });
 
+                            await _clearPendingAlarmFlag();
                             await _stopAlarm();
 
                             final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
@@ -860,6 +940,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                         onPressed: () async {
                           if (_alarm!.missionType == MissionType.none) {
                             _isMissionCompleted = true;
+                            await _clearPendingAlarmFlag();
                             await _stopAlarm(); // 1. 소리/진동 중지
                             
                             // 2. 현재 알림을 정확한 ID로 취소
@@ -885,7 +966,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
 
                             // 5. 화면 닫기
                             if (context.mounted) {
-                              Navigator.pop(context);
+                              _closeToMain();
                             }
                           } else {
                             _startMission();
@@ -1002,17 +1083,10 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     debugPrint('[AlarmRingingScreen] Starting mission: $type');
 
     await _setMissionActive(true);
+    await _clearPendingAlarmFlag();
 
-    // 미션 시작 시 알람 소리/진동을 중지합니다.
-    await _stopAlarm();
-    
-    // [중요] 비동기 처리 도중 소리가 다시 시작되지 않도록 한 번 더 확실히 중지
-    await FlutterRingtonePlayer().stop();
-    await _audioPlayer.stop();
-    Vibration.cancel();
+    await _pauseAlarmRingingForMission();
 
-    // [추가] 미션 수행 중에는 자동 스누즈가 울리지 않도록 이미 예약된 스누즈를 취소합니다.
-    // 미션 성공 후에 다시 예약할 것입니다.
     try {
       final String originalId = widget.alarmId.replaceAll('_snooze', '');
       final String snoozeId = '${originalId}_snooze';
@@ -1072,6 +1146,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
       }
 
       // 소리/진동 다시 시작
+      await _ensureForegroundServiceRunning();
       _playAlarm();
       
       // 다시 스누즈 예약 (활동 없을 때를 대비)
@@ -1085,6 +1160,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
       if (_alarm != null) {
         // 미션 성공 시에는 남은 스누즈 횟수와 상관없이 알람을 완전히 종료합니다.
         debugPrint('[AlarmRingingScreen] Mission cleared. Turning off alarm completely.');
+
+        await _stopAlarm();
         
         // 미션 화면에서 제거했던 completeAlarm을 여기서 호출
         final notifier = ref.read(alarmListProvider.notifier);
@@ -1102,11 +1179,15 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
           debugPrint('Error completing wakeup mission: $e');
         }
 
-        if (mounted) Navigator.pop(context);
+        _closeToMain();
       }
     } else {
       // 뒤로가기 등으로 미션을 완료하지 않고 돌아온 경우 알람 다시 재생
-      if (mounted) _playAlarm();
+      if (mounted) {
+        await _ensureForegroundServiceRunning();
+        _playAlarm();
+        _scheduleNextSnoozeIfNeeded();
+      }
     }
   }
 }

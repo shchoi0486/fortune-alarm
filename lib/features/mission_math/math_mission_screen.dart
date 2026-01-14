@@ -454,7 +454,6 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     _volumeTimer?.cancel();
     _inactivityTimer?.cancel();
     _audioPlayer.dispose();
-    _stopAlarm();
     super.dispose();
   }
 

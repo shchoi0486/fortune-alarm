@@ -130,7 +130,6 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     _volumeTimer?.cancel();
     _inactivityTimer?.cancel();
     _audioPlayer.dispose();
-    _stopAlarm();
     super.dispose();
   }
 

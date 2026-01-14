@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart'; // 로컬라이제이션 패키지 임포트
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -67,6 +68,7 @@ void main() async {
 
   
   // 시스템 내비게이션 바 색상 설정 (하얀색)
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge); // [추가] 상태바/내비바 영역을 앱이 그리도록 설정 (부드러운 전환)
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.white,
     systemNavigationBarIconBrightness: Brightness.dark,
@@ -549,10 +551,12 @@ Future<void> _onNotificationTap(String? payload) async {
   if (navigatorKey.currentState != null) {
     debugPrint('[Main] Navigating to AlarmRingingScreen with ID: $actualPayload');
     navigatorKey.currentState?.pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => AlarmRingingScreen(alarmId: actualPayload),
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => AlarmRingingScreen(alarmId: actualPayload),
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
       ),
-      (route) => route.isFirst,
+      (route) => false,
     );
   } else {
     debugPrint('Navigator state is null even after retries. Cannot navigate to AlarmRingingScreen.');
@@ -623,6 +627,7 @@ class FortuneAlarmApp extends ConsumerWidget {
       ),
       home: const SplashScreen(),
       routes: {
+        '/main': (context) => const MainScreen(),
         '/supplement': (context) => const SupplementMissionScreen(),
         '/water': (context) => const WaterMissionScreen(),
       },
@@ -644,16 +649,77 @@ class _SplashScreenState extends State<SplashScreen> {
     _navigateToMain();
   }
 
+  Future<bool> _tryRestoreAlarmOnSplash() async {
+    try {
+      if (Platform.isAndroid) {
+        final notificationService = NotificationService();
+        final androidPlugin = notificationService.flutterLocalNotificationsPlugin
+            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+        if (androidPlugin != null) {
+          final active = await androidPlugin.getActiveNotifications();
+          for (final n in active) {
+            final channelId = n.channelId;
+            if (channelId == null) continue;
+            if (!channelId.startsWith('alarm_channel_')) continue;
+            if (n.id == 0) continue;
+            _initialNotificationHandled = true;
+            await _onNotificationTap('loading_${n.id}');
+            return true;
+          }
+        }
+      }
+    } catch (_) {}
+
+    try {
+      final appStateBox = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+      final payload = appStateBox.get('pending_alarm_payload');
+      final setAtStr = appStateBox.get('pending_alarm_set_at');
+
+      if (payload != null && setAtStr != null) {
+        final setAt = DateTime.tryParse(setAtStr.toString());
+        if (setAt != null) {
+          final diff = DateTime.now().difference(setAt);
+          if (diff <= const Duration(minutes: 30)) {
+            _initialNotificationHandled = true;
+            await _onNotificationTap(payload.toString());
+            await appStateBox.delete('pending_alarm_payload');
+            await appStateBox.delete('pending_alarm_set_at');
+            await appStateBox.flush();
+            return true;
+          }
+        }
+      }
+    } catch (_) {}
+
+    try {
+      final appStateBox = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+      final alarmId = appStateBox.get('active_ringing_alarm_id') as String?;
+      if (alarmId != null && alarmId.isNotEmpty) {
+        _initialNotificationHandled = true;
+        await _onNotificationTap(alarmId);
+        return true;
+      }
+    } catch (_) {}
+
+    return false;
+  }
+
   void _navigateToMain() async {
     debugPrint('[Main] SplashScreen: Checking for pending alarm...');
+
+    try {
+      final restored = await _tryRestoreAlarmOnSplash();
+      if (restored) return;
+    } catch (_) {}
     
     // 1. 펜딩 알람이 있는지 확인
+    bool hasPending = false;
     try {
       if (Hive.isBoxOpen('app_state')) {
         await Hive.box('app_state').close();
       }
       final appStateBox = await Hive.openBox('app_state');
-      final hasPending = appStateBox.containsKey('pending_alarm_payload');
+      hasPending = appStateBox.containsKey('pending_alarm_payload');
       
       if (hasPending) {
         debugPrint('[Main] SplashScreen: Pending alarm detected. Moving to MainScreen immediately.');
@@ -672,7 +738,11 @@ class _SplashScreenState extends State<SplashScreen> {
       debugPrint('[Main] SplashScreen: Navigating to MainScreen...');
       // MainScreen을 새로운 루트로 설정하여 이동 (이전 스택 모두 제거)
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const MainScreen()),
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => MainScreen(isAlarmRestoreMode: hasPending),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
+        ),
         (route) => false,
       );
     }
@@ -681,6 +751,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // 알람 복원 시 검은 배경을 위해 기본색 설정
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -734,13 +805,14 @@ class _SplashScreenState extends State<SplashScreen> {
 }
 
 class MainScreen extends ConsumerStatefulWidget {
-  const MainScreen({super.key});
+  final bool isAlarmRestoreMode;
+  const MainScreen({super.key, this.isAlarmRestoreMode = false});
 
   @override
   ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends ConsumerState<MainScreen> {
+class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObserver {
   final List<Widget> _screens = [
     const AlarmScreen(),
     const CalendarScreen(),
@@ -749,19 +821,95 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     const SettingsScreen(),
   ];
 
+  bool _isStartupCheckDone = false;
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this); // Observer 등록
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge); // 초기 로드 시에도 강제 적용
+
     // 앱 시작 시 주요 광고 사전 로드 (최적화)
     AdService.preloadExitAd();
     AdService.preloadListAd();
 
-    _checkNotificationLaunch();
-    _checkPendingAlarmFlag();
-    // 권한 확인 및 최적화 시트 표시 (필요한 경우)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAndShowPermissions();
-    });
+    // 알람 체크 로직 실행 (완료 전까지 스플래시 UI 유지)
+    _runStartupCheckSequence();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // 앱으로 돌아왔을 때 상태바/내비바 모드 강제 적용 (딜레이 방지)
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    }
+  }
+
+  Future<void> _runStartupCheckSequence() async {
+    await _runStartupAlarmChecks();
+    if (mounted) {
+      setState(() {
+        _isStartupCheckDone = true;
+      });
+      // 초기화 완료 후 권한 체크 다이얼로그 표시 (필요한 경우)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _checkAndShowPermissions();
+      });
+    }
+  }
+
+  Future<void> _runStartupAlarmChecks() async {
+    try {
+      await _checkNotificationLaunch();
+      await _checkPendingAlarmFlag();
+      await _checkActiveAlarmNotificationRestore();
+      await _checkActiveRingingRestore();
+    } catch (_) {}
+  }
+
+  Future<void> _checkActiveAlarmNotificationRestore() async {
+    if (_initialNotificationHandled) return;
+    if (!Platform.isAndroid) return;
+
+    try {
+      final notificationService = NotificationService();
+      final androidPlugin = notificationService.flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      if (androidPlugin == null) return;
+
+      final active = await androidPlugin.getActiveNotifications();
+      if (active.isEmpty) return;
+
+      ActiveNotification? alarmNoti;
+      for (final n in active) {
+        final channelId = n.channelId;
+        if (channelId == null) continue;
+        if (!channelId.startsWith('alarm_channel_')) continue;
+        if (n.id == 0) continue;
+        alarmNoti = n;
+        break;
+      }
+
+      if (alarmNoti == null) return;
+      final alarmNotiId = alarmNoti.id;
+
+      _initialNotificationHandled = true;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        int retries = 0;
+        while (navigatorKey.currentState == null && retries < 30) {
+          await Future.delayed(const Duration(milliseconds: 100));
+          retries++;
+        }
+        await _onNotificationTap('loading_$alarmNotiId');
+      });
+    } catch (_) {}
   }
 
   Future<void> _checkAndShowPermissions() async {
@@ -892,6 +1040,39 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         await appStateBox.delete('pending_alarm_set_at');
         return;
       }
+
+      // [Bug Fix] 알람이 이미 비활성화되었는지 확인 (사용자가 끄고 나갔는데 다시 울리는 문제 방지)
+      try {
+        final alarmsBox = Hive.isBoxOpen('alarms') 
+            ? Hive.box<AlarmModel>('alarms') 
+            : await Hive.openBox<AlarmModel>('alarms');
+        
+        // payloadStr이 실제 알람 ID인지, loading_ 접두사가 있는지 확인하여 처리
+        String alarmId = payloadStr;
+        if (payloadStr.startsWith('loading_')) {
+          final stableId = int.tryParse(payloadStr.replaceFirst('loading_', ''));
+          if (stableId != null) {
+             for (final a in alarmsBox.values) {
+               if (AlarmSchedulerService.getStableId(a.id) == stableId) {
+                 alarmId = a.id;
+                 break;
+               }
+             }
+          }
+        }
+        
+        final alarm = alarmsBox.get(alarmId);
+        if (alarm != null && !alarm.isEnabled) {
+           debugPrint('[Main] Pending alarm found ($alarmId) but it is DISABLED. Ignoring and clearing flag.');
+           await appStateBox.delete('pending_alarm_payload');
+           await appStateBox.delete('pending_alarm_set_at');
+           await appStateBox.flush();
+           return;
+        }
+      } catch (e) {
+        debugPrint('[Main] Error checking alarm enabled status: $e');
+        // 에러 발생 시 안전하게 진행 (알람을 울리는 쪽으로)
+      }
       
       _initialNotificationHandled = true;
       debugPrint('[Main] VALID pending alarm found: $payloadStr. Navigating immediately...');
@@ -922,6 +1103,74 @@ class _MainScreenState extends ConsumerState<MainScreen> {
       debugPrint('[Main] Error in _checkPendingAlarmFlag: $e');
       debugPrint(stack.toString());
     }
+  }
+
+  Future<void> _checkActiveRingingRestore() async {
+    if (_initialNotificationHandled) return;
+
+    try {
+      if (Hive.isBoxOpen('app_state')) {
+        await Hive.box('app_state').close();
+      }
+
+      final appStateBox = await Hive.openBox('app_state');
+      final alarmId = appStateBox.get('active_ringing_alarm_id') as String?;
+      final setAtStr = appStateBox.get('active_ringing_set_at') as String?;
+
+      if (alarmId == null || alarmId.isEmpty) return;
+
+      bool shouldRestore = false;
+      if (Platform.isAndroid) {
+        try {
+          if (await FlutterForegroundTask.isRunningService) {
+            shouldRestore = true;
+          }
+        } catch (_) {}
+      }
+
+      if (!shouldRestore && setAtStr != null) {
+        final setAt = DateTime.tryParse(setAtStr);
+        if (setAt != null && DateTime.now().difference(setAt) <= const Duration(hours: 6)) {
+          shouldRestore = true;
+        }
+      }
+
+      if (!shouldRestore) return;
+
+      try {
+        final alarmsBox = Hive.isBoxOpen('alarms')
+            ? Hive.box<AlarmModel>('alarms')
+            : await Hive.openBox<AlarmModel>('alarms');
+        final alarm = alarmsBox.get(alarmId);
+        if (alarm == null || !alarm.isEnabled) {
+          await appStateBox.delete('active_ringing_alarm_id');
+          await appStateBox.delete('active_ringing_set_at');
+          await appStateBox.flush();
+          return;
+        }
+      } catch (_) {}
+
+      _initialNotificationHandled = true;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        int retries = 0;
+        while (navigatorKey.currentState == null && retries < 30) {
+          await Future.delayed(const Duration(milliseconds: 100));
+          retries++;
+        }
+
+        if (navigatorKey.currentState != null) {
+          navigatorKey.currentState?.pushAndRemoveUntil(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) => AlarmRingingScreen(alarmId: alarmId),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero,
+            ),
+            (route) => route.isFirst,
+          );
+        }
+      });
+    } catch (_) {}
   }
 
   Widget _buildNavItem(IconData icon, IconData selectedIcon, String label, int index) {
@@ -978,6 +1227,67 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 초기화(알람 체크)가 완료되지 않았으면 스플래시 화면을 유지하여 목록 화면 노출 방지
+    if (!_isStartupCheckDone) {
+      // 알람 복원 모드라면 보라색 스플래시 대신 검은 화면을 보여줌 (자연스러운 전환)
+      if (widget.isAlarmRestoreMode) {
+        return const Scaffold(
+          backgroundColor: Colors.black,
+          body: SizedBox.shrink(), // 인디케이터 제거: 검은 화면만 유지
+        );
+      }
+
+      return Scaffold(
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              'assets/images/splash/splash_bg.webp',
+              fit: BoxFit.cover,
+            ),
+            Positioned(
+              bottom: 80,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: [
+                  Text(
+                    "FORTUNE ALARM",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      letterSpacing: 4.0,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.5),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  // 로딩 중임을 알리는 인디케이터 (선택 사항, 기존 스플래시와 통일감)
+                  SizedBox(
+                    width: 60,
+                    height: 3,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: LinearProgressIndicator(
+                        backgroundColor: Colors.white.withOpacity(0.2),
+                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final currentIndex = ref.watch(bottomNavProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 

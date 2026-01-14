@@ -541,8 +541,6 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
     
     // 카메라 리소스 해제
     ref.read(cameraControllerProvider.notifier).disposeCamera();
-    
-    _stopAlarm(); // 화면 나갈 때 알람/진동 정지
     super.dispose();
   }
 

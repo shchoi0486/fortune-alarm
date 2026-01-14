@@ -465,19 +465,19 @@ class AppLocalizationsKo extends AppLocalizations {
   String get missionNone => '미션 없음';
 
   @override
-  String get missionSnap => '사물찍기';
+  String get missionSnap => '촬영 미션';
 
   @override
-  String get missionMath => '계산 문제';
+  String get missionMath => '계산 미션';
 
   @override
   String get missionFortune => '운세 미션';
 
   @override
-  String get missionShake => '흔들기';
+  String get missionShake => '쉐이크 미션';
 
   @override
-  String get missionFortuneCatch => '포츄니 잡기';
+  String get missionFortuneCatch => '포춘 캐치 미션';
 
   @override
   String get missionNoDescription => '미션 없이 알람이 울립니다.';
@@ -498,7 +498,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get missionFortuneCatchDescription => '포츄니를 터치하여 100점 이상을 획득하세요!';
 
   @override
-  String get missionWalk => '걷기';
+  String get missionWalk => '걷기 미션';
 
   @override
   String get missionWalkDescription => '걸어서 알람을 끄세요!';
@@ -515,7 +515,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get missionNumberOrder => '숫자 순서';
+  String get missionNumberOrder => '숫자 순서 미션';
 
   @override
   String get missionNumberOrderDescription => '1부터 9까지 순서대로 터치하세요.';
@@ -526,7 +526,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get missionHiddenButton => '위치 기억';
+  String get missionHiddenButton => '패턴 기억 미션';
 
   @override
   String get missionHiddenButtonDescription => '밝아지는 칸의 위치를 순서대로 기억하고 터치하세요.';
@@ -537,7 +537,7 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
-  String get missionTapSprint => '터치 연타';
+  String get missionTapSprint => '터치 연타 미션';
 
   @override
   String get missionTapSprintDescriptionShort => '연타로 게이지를 채우세요.';
@@ -554,7 +554,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get missionTapSprintHint => '빠르게 채우고, 잠시 멈추면 조금 줄어들어요.';
 
   @override
-  String get missionLeftRight => '좌우 선택';
+  String get missionLeftRight => '좌우 선택 미션';
 
   @override
   String get missionLeftRightDescriptionShort => '지시에 맞게 좌/우를 선택하세요.';
@@ -866,13 +866,13 @@ class AppLocalizationsKo extends AppLocalizations {
   String get missionMeditation => '명상 5분';
 
   @override
-  String get missionEnglishWords => '영어 단어 5개 외우기';
+  String get missionLearnWords => '영어 단어 5개 외우기';
 
   @override
-  String get missionVentilation => '환기 시키기';
+  String get missionVentilation => '환기';
 
   @override
-  String get missionCleaning => '방 정리하기';
+  String get missionCleaning => '방 정리정돈 하기';
 
   @override
   String get missionGratitudeDiary => '감사 일기 쓰기';
@@ -981,111 +981,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get shakePhone => '핸드폰을 흔들어주세요!';
-
-  @override
-  String get englishQuizMission => '영어 퀴즈 미션';
-
-  @override
-  String get quizInstruction => '왼쪽 단어와 오른쪽 뜻을 차례로 눌러 매칭하세요';
-
-  @override
-  String get missionSuccess => '미션 성공!';
-
-  @override
-  String get goHome => '홈으로';
-
-  @override
-  String get quizWord1 => '사과';
-
-  @override
-  String get quizWord1Ans => 'apple';
-
-  @override
-  String get quizWord2 => '바나나';
-
-  @override
-  String get quizWord2Ans => 'banana';
-
-  @override
-  String get quizWord3 => '학교';
-
-  @override
-  String get quizWord3Ans => 'school';
-
-  @override
-  String get quizWord4 => '컴퓨터';
-
-  @override
-  String get quizWord4Ans => 'computer';
-
-  @override
-  String get quizWord5 => '물';
-
-  @override
-  String get quizWord5Ans => 'water';
-
-  @override
-  String get quizWord6 => '친구';
-
-  @override
-  String get quizWord6Ans => 'friend';
-
-  @override
-  String get quizWord7 => '가족';
-
-  @override
-  String get quizWord7Ans => 'family';
-
-  @override
-  String get quizWord8 => '집';
-
-  @override
-  String get quizWord8Ans => 'house';
-
-  @override
-  String get quizWord9 => '책';
-
-  @override
-  String get quizWord9Ans => 'book';
-
-  @override
-  String get quizWord10 => '사랑';
-
-  @override
-  String get quizWord10Ans => 'love';
-
-  @override
-  String get quizWord11 => '태양';
-
-  @override
-  String get quizWord11Ans => 'sun';
-
-  @override
-  String get quizWord12 => '달';
-
-  @override
-  String get quizWord12Ans => 'moon';
-
-  @override
-  String get quizWord13 => '바다';
-
-  @override
-  String get quizWord13Ans => 'sea';
-
-  @override
-  String get quizWord14 => '하늘';
-
-  @override
-  String get quizWord14Ans => 'sky';
-
-  @override
-  String get quizWord15 => '나무';
-
-  @override
-  String get quizWord15Ans => 'tree';
-
-  @override
-  String get missionComplete => '미션 완료!';
 
   @override
   String version(String version) {

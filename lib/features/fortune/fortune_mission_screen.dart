@@ -122,7 +122,6 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     _loadingTimer?.cancel();
     _inactivityTimer?.cancel();
     _audioPlayer.dispose();
-    _stopAlarm();
     super.dispose();
   }
 

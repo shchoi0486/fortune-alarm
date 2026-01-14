@@ -50,7 +50,7 @@ class MissionTile extends ConsumerWidget {
         case 'planning': displayTitle = AppLocalizations.of(context)!.missionPlanning; break;
         case 'breakfast': displayTitle = AppLocalizations.of(context)!.missionBreakfast; break;
         case 'meditation': displayTitle = AppLocalizations.of(context)!.missionMeditation; break;
-        case 'english_words': displayTitle = AppLocalizations.of(context)!.missionEnglishWords; break;
+        case 'english_words': displayTitle = AppLocalizations.of(context)!.missionLearnWords; break;
         case 'ventilation': displayTitle = AppLocalizations.of(context)!.missionVentilation; break;
         case 'cleaning': displayTitle = AppLocalizations.of(context)!.missionCleaning; break;
         case 'gratitude_diary': displayTitle = AppLocalizations.of(context)!.missionGratitudeDiary; break;

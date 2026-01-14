@@ -418,7 +418,6 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _scanController.dispose();
-    _stopAlarm();
     _timer?.cancel();
     _controller?.dispose();
     _audioPlayer.dispose();

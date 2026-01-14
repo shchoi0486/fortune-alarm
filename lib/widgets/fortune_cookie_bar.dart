@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../providers/mission_provider.dart';
 import '../providers/weather_provider.dart';
 import '../providers/notification_provider.dart';
@@ -33,16 +34,16 @@ class FortuneCookieBar extends ConsumerWidget {
                 context: context,
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
+                enableDrag: true, // 스와이프로 닫기 활성화
                 builder: (context) => const WeatherDetailSheet(),
               );
             },
             child: weatherAsync.when(
               data: (weather) => Row(
                 children: [
-                  Icon(
-                    _getWeatherIconSmall(weather.condition), 
-                    size: 24, 
-                    color: iconColor
+                  Text(
+                    _getWeatherEmoji(weather.condition),
+                    style: const TextStyle(fontSize: 18, height: 1),
                   ),
                   const SizedBox(width: 4),
                   Column(
@@ -182,18 +183,6 @@ class FortuneCookieBar extends ConsumerWidget {
     );
   }
 
-  IconData _getWeatherIconSmall(String condition) {
-    switch (condition) {
-      case 'Sunny': return Icons.wb_sunny_outlined;
-      case 'Cloudy': return Icons.wb_cloudy_outlined;
-      case 'Foggy': return Icons.cloud;
-      case 'Rainy': return Icons.umbrella_outlined;
-      case 'Snowy': return Icons.ac_unit_outlined;
-      case 'Thunderstorm': return Icons.thunderstorm_outlined;
-      default: return Icons.wb_cloudy_outlined;
-    }
-  }
-
   Color _getDustColor(String statusKey) {
     switch (statusKey) {
       case 'airQualityGood': return Colors.green;
@@ -212,204 +201,533 @@ class WeatherDetailSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final weatherAsync = ref.watch(weatherProvider);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    
-    return Container(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.7,
-      ),
-      decoration: BoxDecoration(
-        color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: weatherAsync.when(
-        data: (weather) => SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        AppLocalizations.of(context)!.weatherToday,
-                        style: TextStyle(
-                          fontSize: 20, 
-                          fontWeight: FontWeight.bold,
-                          color: isDarkMode ? Colors.white : Colors.black87,
+    final l10n = AppLocalizations.of(context)!;
+
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.9,
+      maxChildSize: 0.9,
+      minChildSize: 0.35,
+      shouldCloseOnMinExtent: true,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: isDarkMode ? const Color(0xFF121212) : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            border: Border.all(
+              color: isDarkMode ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.04),
+            ),
+          ),
+          child: SafeArea(
+            top: false,
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                ...weatherAsync.when(
+                  data: (weather) => [
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 5,
+                              margin: const EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                                color: isDarkMode ? Colors.white24 : Colors.grey[300],
+                                borderRadius: BorderRadius.circular(2.5),
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                const SizedBox(width: 40),
+                                Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      l10n.weatherToday,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w800,
+                                        color: isDarkMode ? Colors.white : Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.refresh_rounded,
+                                    color: isDarkMode ? Colors.white70 : Colors.black54,
+                                  ),
+                                  onPressed: () => ref.invalidate(weatherProvider),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            GestureDetector(
+                              onTap: () => ref.invalidate(weatherProvider),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: isDarkMode ? Colors.white.withOpacity(0.06) : Colors.grey[100],
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.location_on_rounded,
+                                      size: 14,
+                                      color: isDarkMode ? Colors.blueAccent[100] : Colors.blueAccent,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      _getLocalizedLocation(context, weather.location),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: isDarkMode ? Colors.white60 : Colors.black54,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: isDarkMode
+                                      ? [const Color(0xFF2C2C2C), const Color(0xFF1E1E1E)]
+                                      : [Colors.blue[50]!, Colors.white],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(18),
+                                border: Border.all(
+                                  color: isDarkMode ? Colors.white.withOpacity(0.06) : Colors.black.withOpacity(0.04),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(isDarkMode ? 0.18 : 0.05),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${weather.temperature.toInt()}°',
+                                          style: TextStyle(
+                                            fontSize: 48,
+                                            fontWeight: FontWeight.bold,
+                                            color: isDarkMode ? Colors.white : Colors.black87,
+                                            height: 1.05,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          _getLocalizedCondition(context, weather.condition),
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700,
+                                            color: _getWeatherColor(weather.condition),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 46,
+                                    height: 46,
+                                    decoration: BoxDecoration(
+                                      color: _getWeatherColor(weather.condition).withOpacity(isDarkMode ? 0.18 : 0.12),
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        _getWeatherEmoji(weather.condition),
+                                        style: const TextStyle(fontSize: 20, height: 1),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildDustCard(
+                                    context,
+                                    l10n.labelFineDust,
+                                    weather.fineDustStatusKey,
+                                    isDarkMode,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: _buildDustCard(
+                                    context,
+                                    l10n.labelUltraFineDust,
+                                    weather.ultraFineDustStatusKey,
+                                    isDarkMode,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            if (weather.hourlyForecasts.isNotEmpty) ...[
+                              _buildSectionTitle('시간대별 예보', isDarkMode),
+                              const SizedBox(height: 8),
+                              SizedBox(
+                                height: 90,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: weather.hourlyForecasts.length,
+                                  itemBuilder: (context, index) {
+                                    final hourly = weather.hourlyForecasts[index];
+                                    return Container(
+                                      width: 58,
+                                      margin: const EdgeInsets.only(right: 10),
+                                      decoration: BoxDecoration(
+                                        color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[50],
+                                        borderRadius: BorderRadius.circular(14),
+                                        border: Border.all(
+                                          color: isDarkMode ? Colors.white10 : Colors.grey[200]!,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '${hourly.time.hour}시',
+                                            style: TextStyle(
+                                              color: isDarkMode ? Colors.white60 : Colors.black54,
+                                              fontSize: 11,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            _getWeatherEmoji(hourly.condition),
+                                            style: const TextStyle(fontSize: 18, height: 1),
+                                          ),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            '${hourly.temperature.toInt()}°',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: isDarkMode ? Colors.white : Colors.black87,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                            if (weather.dailyForecasts.isNotEmpty) ...[
+                              _buildSectionTitle('주간 예보', isDarkMode),
+                              const SizedBox(height: 6),
+                              ...weather.dailyForecasts.map((daily) => _buildDailyRow(daily, isDarkMode)),
+                            ],
+                            const SizedBox(height: 22),
+                            Text(
+                              l10n.weatherDisclaimer,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: isDarkMode ? Colors.white38 : Colors.grey,
+                                fontSize: 11,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 14),
+                              decoration: BoxDecoration(
+                                color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              child: Text(
+                                l10n.weatherSource,
+                                style: TextStyle(
+                                  color: isDarkMode ? Colors.white54 : Colors.grey[600],
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        icon: Icon(Icons.close, color: isDarkMode ? Colors.white70 : Colors.black54),
-                        onPressed: () => Navigator.pop(context),
-                      ),
+                  ],
+                  loading: () => [
+                    const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(child: CircularProgressIndicator()),
                     ),
                   ],
-                ),
-                const SizedBox(height: 8),
-              InkWell(
-                onTap: () {
-                  ref.invalidate(weatherProvider);
-                  // Optional: Show a small snackbar or feedback
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(AppLocalizations.of(context)!.weatherUpdateMessage),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
-                },
-                borderRadius: BorderRadius.circular(8),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text(
-                        _getLocalizedLocation(context, weather.location),
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
-                Icon(
-                  _getWeatherIcon(weather.condition),
-                  size: 80,
-                  color: _getWeatherColor(weather.condition),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      '${weather.temperature.toInt()}°C',
-                      style: TextStyle(
-                        fontSize: 48, 
-                        fontWeight: FontWeight.bold,
-                        color: isDarkMode ? Colors.white : Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      weather.condition,
-                      style: const TextStyle(fontSize: 20, color: Colors.grey),
+                  error: (err, stack) => [
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: _buildErrorState(context, l10n, isDarkMode, ref),
                     ),
                   ],
-                ),
-                const SizedBox(height: 32),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[100],
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildDustInfo(context, AppLocalizations.of(context)!.labelFineDust, weather.fineDustStatusKey),
-                      Container(width: 1, height: 24, color: isDarkMode ? Colors.white24 : Colors.grey[300]),
-                      _buildDustInfo(context, AppLocalizations.of(context)!.labelUltraFineDust, weather.ultraFineDustStatusKey),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Text(
-                  AppLocalizations.of(context)!.weatherDisclaimer,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: isDarkMode ? Colors.white38 : Colors.grey, fontSize: 12),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black87,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    AppLocalizations.of(context)!.weatherSource,
-                    style: TextStyle(color: isDarkMode ? Colors.white70 : Colors.white, fontSize: 12),
-                  ),
                 ),
               ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget _buildSectionTitle(String title, bool isDarkMode) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w800,
+          color: isDarkMode ? Colors.white : Colors.black87,
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
       ),
     );
   }
 
-  Widget _buildDustInfo(BuildContext context, String label, String statusKey) {
+  Widget _buildDustCard(BuildContext context, String label, String statusKey, bool isDarkMode) {
     Color valueColor = Colors.green;
     if (statusKey == 'airQualityBad') valueColor = Colors.orange;
     if (statusKey == 'airQualityVeryBad') valueColor = Colors.red;
 
-    return Column(
-      children: [
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
-        const SizedBox(height: 4),
-        Text(
-          _getLocalizedAirQuality(context, statusKey),
-          style: TextStyle(
-            color: valueColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[50],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDarkMode ? Colors.white10 : Colors.grey[200]!,
         ),
-      ],
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: isDarkMode ? Colors.white38 : Colors.grey[600],
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(color: valueColor, borderRadius: BorderRadius.circular(3.5)),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            _getLocalizedAirQuality(context, statusKey),
+            style: TextStyle(
+              color: valueColor,
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  IconData _getWeatherIcon(String condition) {
-    switch (condition) {
-      case 'Sunny': return Icons.wb_sunny_outlined;
-      case 'Cloudy': return Icons.wb_cloudy_outlined;
-      case 'Foggy': return Icons.foggy;
-      case 'Rainy': return Icons.umbrella_outlined;
-      case 'Snowy': return Icons.ac_unit_outlined;
-      case 'Thunderstorm': return Icons.thunderstorm_outlined;
-      default: return Icons.wb_cloudy_outlined;
-    }
+  Widget _buildDailyRow(dynamic daily, bool isDarkMode) {
+    final weekDay = _getWeekdayName(daily.date.weekday);
+    final dateStr = '${daily.date.month}/${daily.date.day}';
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[100]!,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 72,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(weekDay, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: isDarkMode ? Colors.white : Colors.black87)),
+                Text(dateStr, style: TextStyle(fontSize: 11, color: isDarkMode ? Colors.white38 : Colors.grey)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            width: 22,
+            child: Center(
+              child: Text(
+                _getWeatherEmoji(daily.condition),
+                style: const TextStyle(fontSize: 16, height: 1),
+              ),
+            ),
+          ),
+          const Spacer(),
+          SizedBox(
+            width: 72,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  '${daily.maxTemp.toInt()}°',
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black87),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  '${daily.minTemp.toInt()}°',
+                  style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.white38 : Colors.grey),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          SizedBox(
+            width: 42,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Icon(Icons.water_drop_rounded, size: 11, color: Colors.blueAccent[100]),
+                const SizedBox(width: 2),
+                Text('${daily.precipitationProbability}%', style: const TextStyle(fontSize: 10, color: Colors.blueAccent)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  Color _getWeatherColor(String condition) {
-    switch (condition) {
-      case 'Sunny': return Colors.orange;
-      case 'Cloudy': return Colors.blueGrey;
-      case 'Foggy': return Colors.grey;
-      case 'Rainy': return Colors.blue;
-      case 'Snowy': return Colors.lightBlueAccent;
-      case 'Thunderstorm': return Colors.deepPurple;
-      default: return Colors.blue;
-    }
+  Widget _buildErrorState(BuildContext context, AppLocalizations l10n, bool isDarkMode, WidgetRef ref) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(width: 48),
+                Text(l10n.weatherToday, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                IconButton(
+                  icon: const Icon(Icons.refresh_rounded),
+                  onPressed: () => ref.invalidate(weatherProvider),
+                ),
+              ],
+            ),
+            const SizedBox(height: 40),
+            Icon(Icons.location_off_rounded, size: 64, color: Colors.grey[400]),
+            const SizedBox(height: 24),
+            Text(l10n.locationPermissionTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            Text(l10n.locationPermissionDesc, textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            const SizedBox(height: 32),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => openAppSettings(),
+                    child: const Text('설정 열기'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => ref.invalidate(weatherProvider),
+                    child: const Text('다시 시도'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Global Helper Functions
+String _getWeekdayName(int weekday) {
+  const weekdays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+  return weekdays[weekday - 1];
+}
+
+String _getWeatherEmoji(String condition) {
+  switch (condition) {
+    case 'Sunny': return '☀️';
+    case 'PartlyCloudy': return '⛅️';
+    case 'Cloudy': return '☁️';
+    case 'Foggy': return '🌫️';
+    case 'Drizzle': return '🌦️';
+    case 'Rainy': return '🌧️';
+    case 'FreezingRain': return '🌧️';
+    case 'Snowy': return '🌨️';
+    case 'SnowGrains': return '🌨️';
+    case 'RainShowers': return '🌧️';
+    case 'SnowShowers': return '🌨️';
+    case 'Thunderstorm': return '⛈️';
+    default: return '☁️';
+  }
+}
+
+Color _getWeatherColor(String condition) {
+  switch (condition) {
+    case 'Sunny': return Colors.orange;
+    case 'PartlyCloudy': return Colors.blueGrey;
+    case 'Cloudy': return Colors.grey;
+    case 'Foggy': return Colors.blueGrey[200]!;
+    case 'Drizzle': return Colors.lightBlue;
+    case 'Rainy': return Colors.blue;
+    case 'FreezingRain': return Colors.cyan;
+    case 'Snowy': return Colors.lightBlue[100]!;
+    case 'SnowGrains': return Colors.lightBlue[50]!;
+    case 'RainShowers': return Colors.blueAccent;
+    case 'SnowShowers': return Colors.cyan[100]!;
+    case 'Thunderstorm': return Colors.deepPurple;
+    default: return Colors.grey;
   }
 }
 
 String _getLocalizedCondition(BuildContext context, String condition) {
-  final l10n = AppLocalizations.of(context)!;
   switch (condition) {
-    case 'Sunny': return l10n.weatherConditionSunny;
-    case 'Cloudy': return l10n.weatherConditionCloudy;
-    case 'Foggy': return l10n.weatherConditionFoggy;
-    case 'Rainy': return l10n.weatherConditionRainy;
-    case 'Snowy': return l10n.weatherConditionSnowy;
-    case 'Thunderstorm': return l10n.weatherConditionThunderstorm;
-    default: return condition;
+    case 'Sunny': return '맑음';
+    case 'PartlyCloudy': return '구름 조금';
+    case 'Cloudy': return '흐림';
+    case 'Foggy': return '안개';
+    case 'Drizzle': return '이슬비';
+    case 'Rainy': return '비';
+    case 'FreezingRain': return '얼어붙는 비';
+    case 'Snowy': return '눈';
+    case 'SnowGrains': return '싸락눈';
+    case 'RainShowers': return '소나기';
+    case 'SnowShowers': return '소낙눈';
+    case 'Thunderstorm': return '뇌우';
+    default: return '흐림';
   }
 }
 

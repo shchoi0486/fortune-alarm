@@ -624,7 +624,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
       {
         'title': AppLocalizations.of(context)!.newYearFortune,
         'subtitle': AppLocalizations.of(context)!.totalFortune2026,
-        'icon': '🐲',
+        'icon': '🐴',
         'colors': [const Color(0xFFFF416C), const Color(0xFFFF4B2B)],
         'target': 'saju'
       },

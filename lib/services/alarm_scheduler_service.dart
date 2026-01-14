@@ -75,7 +75,7 @@ Future<void> alarmCallback(int id) async {
     await notificationService.showAlarmNotification(
       id: id,
       title: '스냅 알람',
-      body: '알람을 확인하세요!', // 기본 메시지
+      body: '일어날 시간입니다!', // 초기 메시지 통일
       payload: 'loading_$id', // 로딩 중임을 표시
       soundName: 'morning', // 기본 사운드 (안전장치)
       isVibrationEnabled: true,
@@ -96,10 +96,9 @@ Future<void> alarmCallback(int id) async {
       await FlutterForegroundTask.startService(
         serviceId: 256,
         notificationTitle: '스냅 알람',
-        notificationText: '알람이 울리고 있습니다!',
+        notificationText: '일어날 시간입니다!',
         notificationIcon: NotificationIcon(
           metaDataName: 'com.seriessnap.fortunealarm.notification_icon',
-          backgroundColor: const Color(0xFF5C6BC0),
         ),
         callback: startCallback,
       );
@@ -202,8 +201,6 @@ Future<void> alarmCallback(int id) async {
         } catch (e) {
           debugPrint('[AlarmScheduler] Failed to store pending alarm flag: $e');
         }
-        // 기존 즉시 알림 취소 (중복 방지)
-        await notificationService.cancelNotification(id);
         
         // UI Isolate로 신호 전송
         final SendPort? uiSendPort = IsolateNameServer.lookupPortByName(kAlarmPortName);
@@ -501,10 +498,13 @@ class AlarmSchedulerService {
         ? alarm.maxSnoozeCount 
         : (alarm.remainingSnoozeCount > 0 ? alarm.remainingSnoozeCount : 0);
     
-    int newRemainingCount = currentRemaining - 1;
+    // 무제한(999)이면 카운트를 줄이지 않음
+    int newRemainingCount = (alarm.maxSnoozeCount == 999) 
+        ? 999 
+        : currentRemaining - 1;
 
-    // 더 이상 스누즈할 수 없으면 종료
-    if (newRemainingCount < 0) {
+    // 더 이상 스누즈할 수 없으면 종료 (무제한이 아닐 때만 체크)
+    if (alarm.maxSnoozeCount != 999 && newRemainingCount < 0) {
       debugPrint('[AlarmScheduler] No more snoozes left for alarm ${alarm.id}.');
       return;
     }
@@ -571,6 +571,32 @@ class AlarmSchedulerService {
     }
     
     debugPrint('Alarm schedule and notification canceled: ${alarm.id} (StableID: $alarmId, cancelMain: $cancelMain, cancelSnooze: $cancelSnooze)');
+
+    // [Bug Fix] 알람 취소 시 펜딩 플래그도 함께 삭제하여 앱 재시작 시 재울림 방지
+    try {
+      final stateBox = await Hive.openBox('app_state');
+      final pendingPayload = stateBox.get('pending_alarm_payload');
+      
+      if (pendingPayload != null) {
+        final String p = pendingPayload.toString();
+        // payload가 현재 취소하는 알람 ID와 관련이 있는지 확인
+        // 예: payload="123", alarm.id="123" 또는 "123_snooze"
+        // loading_ 접두사 처리
+        final String cleanPayload = p.replaceFirst('loading_', '');
+        
+        if (cleanPayload == alarm.id || 
+            alarm.id.startsWith(cleanPayload) || 
+            cleanPayload.startsWith(alarm.id.replaceAll('_snooze', ''))) {
+          
+          debugPrint('[AlarmScheduler] Clearing pending flag for canceled alarm: $alarm.id (Payload: $p)');
+          await stateBox.delete('pending_alarm_payload');
+          await stateBox.delete('pending_alarm_set_at');
+          await stateBox.flush();
+        }
+      }
+    } catch (e) {
+      debugPrint('[AlarmScheduler] Error clearing pending flag in cancelAlarm: $e');
+    }
   }
 
   static Future<void> cancelAllAlarms() async {

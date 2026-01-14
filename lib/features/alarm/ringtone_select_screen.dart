@@ -100,15 +100,16 @@ class _RingtoneSelectScreenState extends State<RingtoneSelectScreen> with Single
         if (parts.length >= 4) {
           final folderName = parts[2];
           filename = path.posix.basenameWithoutExtension(normalized);
+          
+          // ui_ 로 시작하는 효과음은 제외
+          if (filename.startsWith('ui_')) continue;
+
           for (final key in _ringtonesByCategory.keys) {
             if (key.toLowerCase() == folderName.toLowerCase()) {
               matchedCategory = key;
               break;
             }
           }
-        } else if (parts.length == 3) {
-          matchedCategory = 'Standard';
-          filename = path.posix.basenameWithoutExtension(normalized);
         }
 
         if (matchedCategory != null && filename != null) {

@@ -580,6 +580,8 @@ class NotificationService {
       category: AndroidNotificationCategory.alarm,
       visibility: NotificationVisibility.public,
       fullScreenIntent: true, // 알람은 풀스크린 인텐트 사용
+      icon: '@mipmap/launcher_icon',
+      largeIcon: const DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
       audioAttributesUsage: AudioAttributesUsage.alarm,
       playSound: true,
       sound: normalizedSoundName != null
@@ -590,7 +592,6 @@ class NotificationService {
       autoCancel: false, // 알람은 사용자가 끌 때까지 유지
       ongoing: true,
       ticker: '알람이 울립니다!',
-      groupKey: _groupKey,
       actions: [
          const AndroidNotificationAction(
           'DISMISS',
@@ -616,8 +617,6 @@ class NotificationService {
       platformChannelSpecifics,
       payload: payload,
     );
-
-    await _showAndroidSummary(channelId, '알람');
   }
 }
 

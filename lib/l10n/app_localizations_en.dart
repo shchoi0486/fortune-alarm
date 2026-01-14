@@ -892,7 +892,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get missionMeditation => 'Meditation 5min';
 
   @override
-  String get missionEnglishWords => 'Learn 5 Words';
+  String get missionLearnWords => 'Learn 5 Words';
 
   @override
   String get missionVentilation => 'Ventilation';
@@ -1010,112 +1010,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shakePhone => 'Please shake your phone!';
-
-  @override
-  String get englishQuizMission => 'English Quiz Mission';
-
-  @override
-  String get quizInstruction =>
-      'Tap the word on the left and the meaning on the right in order to match them.';
-
-  @override
-  String get missionSuccess => 'Mission Success!';
-
-  @override
-  String get goHome => 'Go Home';
-
-  @override
-  String get quizWord1 => 'Apple';
-
-  @override
-  String get quizWord1Ans => 'apple';
-
-  @override
-  String get quizWord2 => 'Banana';
-
-  @override
-  String get quizWord2Ans => 'banana';
-
-  @override
-  String get quizWord3 => 'School';
-
-  @override
-  String get quizWord3Ans => 'school';
-
-  @override
-  String get quizWord4 => 'Computer';
-
-  @override
-  String get quizWord4Ans => 'computer';
-
-  @override
-  String get quizWord5 => 'Water';
-
-  @override
-  String get quizWord5Ans => 'water';
-
-  @override
-  String get quizWord6 => 'Friend';
-
-  @override
-  String get quizWord6Ans => 'friend';
-
-  @override
-  String get quizWord7 => 'Family';
-
-  @override
-  String get quizWord7Ans => 'family';
-
-  @override
-  String get quizWord8 => 'House';
-
-  @override
-  String get quizWord8Ans => 'house';
-
-  @override
-  String get quizWord9 => 'Book';
-
-  @override
-  String get quizWord9Ans => 'book';
-
-  @override
-  String get quizWord10 => 'Love';
-
-  @override
-  String get quizWord10Ans => 'love';
-
-  @override
-  String get quizWord11 => 'Sun';
-
-  @override
-  String get quizWord11Ans => 'sun';
-
-  @override
-  String get quizWord12 => 'Moon';
-
-  @override
-  String get quizWord12Ans => 'moon';
-
-  @override
-  String get quizWord13 => 'Sea';
-
-  @override
-  String get quizWord13Ans => 'sea';
-
-  @override
-  String get quizWord14 => 'Sky';
-
-  @override
-  String get quizWord14Ans => 'sky';
-
-  @override
-  String get quizWord15 => 'Tree';
-
-  @override
-  String get quizWord15Ans => 'tree';
-
-  @override
-  String get missionComplete => 'Mission Complete!';
 
   @override
   String version(String version) {

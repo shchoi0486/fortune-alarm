@@ -23,7 +23,7 @@ class MissionModelAdapter extends TypeAdapter<MissionModel> {
       isSystemMission: fields[3] as bool,
       category: fields[4] as MissionCategory,
       alarmTime: fields[5] as String?,
-      isAlarmEnabled: fields[6] as bool? ?? false,
+      isAlarmEnabled: fields[6] as bool,
     );
   }
 

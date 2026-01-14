@@ -292,7 +292,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get termsOfService => 'Условия использования';
 
   @override
-  String get privacyPolicy => 'Политика конфиденциальности';
+  String get privacyPolicy =>
+      'Условия использования и Политика конфиденциальности\n\n1. Общие положения\n\nСтатья 1 (Цель)\nНастоящие условия определяют порядок и условия использования сервиса «Fortune Alarm» (далее — «Сервис»), а также права, обязанности и ответственность пользователей и разработчика.\n\nСтатья 2 (Политика конфиденциальности)\n\n1. Сбор и обработка персональных данных\nСервис можно использовать без регистрации. Мы не собираем и не храним персональные данные пользователей на отдельном сервере.\nОднако в процессе использования на устройстве могут создаваться и храниться следующие данные:\n- настройки будильника, записи о выполнении миссий, история получения печенек удачи и т. п.\n\n2. Использование разрешений устройства\nСервис использует следующие разрешения в минимально необходимом объеме:\n- Уведомления (обязательно): для запуска будильника и уведомлений о печеньках удачи.\n- Точный будильник и исключение из оптимизации батареи (обязательно): чтобы будильник срабатывал вовремя даже в режиме энергосбережения.\n- Отображение поверх других приложений (обязательно): для показа экрана будильника на экране блокировки или поверх других приложений.\n- Камера (необязательно): используется только для миссии «Object Snap»; снятые изображения обрабатываются только на устройстве и не передаются на сервер.\n\n3. Реклама и обработка данных\nДля бесплатного предоставления Сервиса мы используем Google AdMob для показа рекламы.\nGoogle может собирать некоторые неперсонифицированные данные, например Advertising ID (ADID), для настройки рекламы.\n- Политика конфиденциальности Google: https://policies.google.com/privacy\n\nСтатья 3 (Хранение и удаление данных)\nСервис является локальным приложением и хранит данные на устройстве пользователя.\nПри удалении приложения все данные, сохраненные на устройстве (будильники, записи миссий и т. п.), будут немедленно удалены и не подлежат восстановлению.\n\nСтатья 4 (Отказ от ответственности)\n1. Информация о «удаче/гороскопе», предоставляемая Сервисом, носит развлекательный характер; ее точность и надежность не гарантируются.\n2. Разработчик не несет ответственности, если будильник не сработал из‑за изменений настроек устройства (отключение уведомлений, оптимизация батареи и т. п.) или системных ошибок.\n\nСтатья 5 (Контакты)\nЕсли у вас есть вопросы или замечания по работе Сервиса, свяжитесь с нами по адресу:\nEmail: seriessnap.co@gmail.com';
 
   @override
   String get alarmOptimization => 'Оптимизация будильника';
@@ -896,7 +897,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get missionMeditation => 'Медитация 5 мин';
 
   @override
-  String get missionEnglishWords => 'Выучить 5 слов';
+  String get missionLearnWords => 'Выучить 5 слов';
 
   @override
   String get missionVentilation => 'Проветривание';
@@ -1014,112 +1015,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get shakePhone => 'Пожалуйста, потрясите телефон!';
-
-  @override
-  String get englishQuizMission => 'Английская викторина';
-
-  @override
-  String get quizInstruction =>
-      'Нажимайте на слово слева и его перевод справа, чтобы сопоставить их.';
-
-  @override
-  String get missionSuccess => 'Миссия выполнена!';
-
-  @override
-  String get goHome => 'На главную';
-
-  @override
-  String get quizWord1 => 'Яблоко';
-
-  @override
-  String get quizWord1Ans => 'apple';
-
-  @override
-  String get quizWord2 => 'Банан';
-
-  @override
-  String get quizWord2Ans => 'banana';
-
-  @override
-  String get quizWord3 => 'Школа';
-
-  @override
-  String get quizWord3Ans => 'school';
-
-  @override
-  String get quizWord4 => 'Компьютер';
-
-  @override
-  String get quizWord4Ans => 'computer';
-
-  @override
-  String get quizWord5 => 'Вода';
-
-  @override
-  String get quizWord5Ans => 'water';
-
-  @override
-  String get quizWord6 => 'Друг';
-
-  @override
-  String get quizWord6Ans => 'friend';
-
-  @override
-  String get quizWord7 => 'Семья';
-
-  @override
-  String get quizWord7Ans => 'family';
-
-  @override
-  String get quizWord8 => 'Дом';
-
-  @override
-  String get quizWord8Ans => 'house';
-
-  @override
-  String get quizWord9 => 'Книга';
-
-  @override
-  String get quizWord9Ans => 'book';
-
-  @override
-  String get quizWord10 => 'Любовь';
-
-  @override
-  String get quizWord10Ans => 'love';
-
-  @override
-  String get quizWord11 => 'Солнце';
-
-  @override
-  String get quizWord11Ans => 'sun';
-
-  @override
-  String get quizWord12 => 'Луна';
-
-  @override
-  String get quizWord12Ans => 'moon';
-
-  @override
-  String get quizWord13 => 'Море';
-
-  @override
-  String get quizWord13Ans => 'sea';
-
-  @override
-  String get quizWord14 => 'Небо';
-
-  @override
-  String get quizWord14Ans => 'sky';
-
-  @override
-  String get quizWord15 => 'Дерево';
-
-  @override
-  String get quizWord15Ans => 'tree';
-
-  @override
-  String get missionComplete => 'Миссия завершена!';
 
   @override
   String version(String version) {
