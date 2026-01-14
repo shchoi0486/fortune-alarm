@@ -538,8 +538,9 @@ class MissionNotifier extends ChangeNotifier {
     if (_todayLog != null) {
       final newLog = _todayLog!.copyWith(
         completedMissionIds: [],
-        isGoalAchieved: false,
-        isTenGoalAchieved: false,
+        // 보상 획득 여부는 초기화하지 않고 유지 (어뷰징 방지)
+        isGoalAchieved: _todayLog!.isGoalAchieved,
+        isTenGoalAchieved: _todayLog!.isTenGoalAchieved,
       );
 
       final logBox = await Hive.openBox<DailyMissionLog>('mission_logs');
