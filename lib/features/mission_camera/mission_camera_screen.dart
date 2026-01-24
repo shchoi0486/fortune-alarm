@@ -523,7 +523,9 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      if (mounted && !_isDisposed) {
+      // 미션 성공 후 결과 다이얼로그(광고)가 뜬 상태에서 앱이 일시정지되어도 
+      // 다이얼로그가 닫히지 않도록 _isSuccess 상태 체크 추가
+      if (mounted && !_isDisposed && !_isSuccess) {
         debugPrint('[MissionCameraScreen] App paused - returning to ringing screen');
         Navigator.of(context).pop('timeout');
       }
@@ -905,50 +907,52 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                 ),
                 if (_isSuccess)
                   Positioned.fill(
-                  child: MissionSuccessOverlay(
-                    onFinish: () async {
-                      if (mounted) {
-                        _stopAlarm();
+                    child: MissionSuccessOverlay(
+                      onFinish: () async {
+                        if (mounted) {
+                          await _stopAlarm();
 
-                        // [추가] 사용자 경험 개선: 스누즈 안내
-                        if (widget.alarmId != null && _alarm != null) {
-                          final bool hasMoreSnooze = _alarm!.snoozeInterval > 0 &&
-                              (_alarm!.remainingSnoozeCount > 1 ||
-                                  (!_alarm!.id.endsWith('_snooze') && _alarm!.maxSnoozeCount > 0));
+                          // [추가] 사용자 경험 개선: 스누즈 안내
+                          if (widget.alarmId != null && _alarm != null) {
+                            final bool hasMoreSnooze = _alarm!.snoozeInterval > 0 &&
+                                (_alarm!.remainingSnoozeCount > 1 ||
+                                    (!_alarm!.id.endsWith('_snooze') && _alarm!.maxSnoozeCount > 0));
 
-                          if (hasMoreSnooze) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('미션 성공! 하지만 설정에 따라 ${_alarm!.snoozeInterval}분 뒤 다시 울립니다.'),
-                                duration: const Duration(seconds: 3),
-                              ),
-                            );
+                            if (hasMoreSnooze) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('미션 성공! 하지만 설정에 따라 ${_alarm!.snoozeInterval}분 뒤 다시 울립니다.'),
+                                  duration: const Duration(seconds: 3),
+                                ),
+                              );
+                            }
+                          }
+
+                          try {
+                            final controller = ref.read(cameraControllerProvider);
+                            if (controller != null && controller.value.isStreamingImages) {
+                              await controller.stopImageStream();
+                            }
+                          } catch (e) {
+                            debugPrint('Error stopping camera stream on success: $e');
+                          }
+
+                          if (!mounted) return;
+
+                          if (mounted) {
+                            if (widget.alarmId != null) {
+                              Navigator.of(context).pop(true);
+                            } else {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(builder: (context) => const AddAlarmScreen()),
+                                (route) => false,
+                              );
+                            }
                           }
                         }
-
-                        try {
-                          final controller = ref.read(cameraControllerProvider);
-                          if (controller != null && controller.value.isStreamingImages) {
-                            await controller.stopImageStream();
-                          }
-                        } catch (e) {
-                          debugPrint('Error stopping camera stream on success: $e');
-                        }
-
-                        if (!mounted) return;
-
-                        if (widget.alarmId != null) {
-                          Navigator.of(context).pop(true);
-                        } else {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => const AddAlarmScreen()),
-                            (route) => false,
-                          );
-                        }
-                      }
-                    },
+                      },
+                    ),
                   ),
-                ),
               ],
             );
           },

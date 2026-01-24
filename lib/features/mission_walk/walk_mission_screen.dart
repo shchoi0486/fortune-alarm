@@ -113,7 +113,9 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      if (mounted) {
+      // 미션 성공 후 결과 다이얼로그(광고)가 뜬 상태에서 앱이 일시정지되어도 
+      // 다이얼로그가 닫히지 않도록 _isSuccess 상태 체크 추가
+      if (mounted && !_isSuccess) {
         Navigator.of(context).pop('timeout');
       }
     }
@@ -225,15 +227,23 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     });
   }
 
+  bool _isHandlingSuccess = false;
   void _handleSuccess() {
-    if (_isSuccess) return;
+    if (_isHandlingSuccess) return;
+    _isHandlingSuccess = true;
+
+    // 미션 성공 시 모든 타이머 중지
+    _inactivityTimer?.cancel();
+    _volumeTimer?.cancel();
     
     final random = Random();
     _lastMessage = PositiveMessages.messages[random.nextInt(PositiveMessages.messages.length)];
     
-    setState(() {
-      _isSuccess = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isSuccess = true;
+      });
+    }
     
     _accelerometerSubscription?.cancel();
   }
@@ -469,10 +479,13 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
           if (_isSuccess)
             Positioned.fill(
               child: MissionSuccessOverlay(
-                onFinish: () {
+                onFinish: () async {
                   if (mounted) {
                     _stopAlarm();
-                    Navigator.of(context).pop(true);
+                    
+                    if (mounted) {
+                      Navigator.of(context).pop(true);
+                    }
                   }
                 },
               ),

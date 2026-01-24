@@ -6,6 +6,7 @@ import 'package:vibration/vibration.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../../services/lotto_service.dart';
 import '../../services/sharing_service.dart';
+import '../../widgets/ad_widgets.dart';
 import 'mixins/fortune_access_mixin.dart';
 
 class LottoScreen extends StatefulWidget {
@@ -270,6 +271,12 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
             _buildFeatureItem(Icons.emoji_events_rounded, "데이터 분석", "최적 조합", isDarkMode, textColor, subTextColor),
           ],
         ),
+        const SizedBox(height: 20),
+        // 인트로 화면 네이티브 광고 추가
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: DetailedAdWidget(),
+        ),
         const Spacer(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -417,7 +424,11 @@ class _LottoScreenState extends State<LottoScreen> with FortuneAccessMixin {
               return _buildLottoRow(entry.key, entry.value, isDarkMode);
             }),
 
+            const SizedBox(height: 12),
+            // 결과 화면 네이티브 광고 추가
+            const DetailedAdWidget(),
             const SizedBox(height: 20),
+
             Text(
               "※ 본 서비스는 재미를 위한 서비스로, 제공된 번호는 AI 알고리즘에 의해 생성된 참고용 번호이며 당첨을 보장하지 않습니다.",
               textAlign: TextAlign.center,

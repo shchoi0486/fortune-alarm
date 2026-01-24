@@ -5,6 +5,8 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import '../../services/notification_service.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/sharing_service.dart';
+import '../../services/ad_service.dart';
+import '../../widgets/ad_widgets.dart';
 
 class FaceResultScreen extends StatefulWidget {
   final String? alarmId;
@@ -41,13 +43,21 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3), // 3초간 분석 연출
-    )..forward().whenComplete(() {
+    )..forward().whenComplete(() async {
       if (!mounted) return;
-      setState(() {
-        _isAnalyzing = false;
-        _isLocked = true; // 분석 완료 후 잠금 상태로 전환
-        _result = _buildResult(widget.analysis);
-      });
+      
+      // 구독 상태 확인하여 잠금 여부 결정
+      // AdService.isSubscriber와 로컬 쿠키 서비스 상태를 모두 확인하여 더 정확하게 판단
+      final hasPass = await _localCookieService.hasActiveFortunePassSubscription();
+      final isSubscriber = AdService.isSubscriber || hasPass;
+      
+      if (mounted) {
+        setState(() {
+          _isAnalyzing = false;
+          _isLocked = !isSubscriber; // 구독자면 잠금 해제 상태로 시작
+          _result = _buildResult(widget.analysis);
+        });
+      }
     });
   }
 
@@ -788,45 +798,67 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
           const SizedBox(height: 48),
           
           // Ad Button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton.icon(
-              onPressed: _unlockWithAd,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                foregroundColor: Colors.black,
-                elevation: 4,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              ),
-              icon: const Icon(Icons.play_circle_filled),
-              label: const Text(
-                "광고 보고 무료로 결과 보기",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          if (!AdService.isSubscriber)
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton.icon(
+                onPressed: _unlockWithAd,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  foregroundColor: Colors.black,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                icon: const Icon(Icons.play_circle_filled),
+                label: const Text(
+                  "광고 보고 무료로 결과 보기",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-          ),
           
-          const SizedBox(height: 16),
+          if (!AdService.isSubscriber)
+            const SizedBox(height: 16),
           
           // Cookie Button
-          SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: OutlinedButton.icon(
-              onPressed: _unlockWithCookies,
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.black87,
-                side: BorderSide(color: Colors.grey[400]!),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              ),
-              icon: const Icon(Icons.cookie, color: Colors.amber),
-              label: const Text(
-                "포춘쿠키 2개 사용하기",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          if (!AdService.isSubscriber)
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: OutlinedButton.icon(
+                onPressed: _unlockWithCookies,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.black87,
+                  side: BorderSide(color: Colors.grey[400]!),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                icon: const Icon(Icons.cookie, color: Colors.amber),
+                label: const Text(
+                  "포춘쿠키 2개 사용하기",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-          ),
+
+          if (AdService.isSubscriber)
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () => setState(() => _isLocked = false),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+                child: const Text(
+                  "결과 확인하기",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -1000,7 +1032,11 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
               ),
             ),
 
+            const SizedBox(height: 24),
+            // 결과 화면 네이티브 광고 추가 (수익화 강화)
+            const DetailedAdWidget(),
             const SizedBox(height: 32),
+
             const Text(
               "상세 분석",
               style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black87),

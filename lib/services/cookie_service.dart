@@ -23,6 +23,7 @@ class CookieService {
 
   static const String _localBoxName = 'fortune';
   static const String _localCookieKey = 'cookies';
+  static const String _localFortunePassActiveUntilKey = 'fortune_pass_active_until';
   static const String _localProcessedPurchasePrefix = 'processed_purchase_';
 
   Future<int> _getLocalCookieCount() async {
@@ -150,23 +151,53 @@ class CookieService {
   }
 
   Future<DateTime?> getFortunePassActiveUntil() async {
-    if (!_isFirebaseReady) return null;
+    // 1. 로컬 캐시 먼저 확인 (오프라인/빠른 응답 대응)
+    DateTime? cachedUntil;
+    try {
+      final box = await Hive.openBox(_localBoxName);
+      final cachedMillis = box.get(_localFortunePassActiveUntilKey) as int?;
+      if (cachedMillis != null) {
+        cachedUntil = DateTime.fromMillisecondsSinceEpoch(cachedMillis, isUtc: true).toLocal();
+      }
+    } catch (_) {}
+
+    if (!_isFirebaseReady) return cachedUntil;
 
     try {
       final uid = await _getUserId();
-      if (uid == 'offline_user') return null;
+      if (uid == 'offline_user') return cachedUntil;
 
-      final snapshot = await _database.ref('users/$uid/fortunePass/activeUntil').get();
-      if (!snapshot.exists) return null;
+      // 2. 서버에서 최신 정보 가져오기 (타임아웃 2초로 단축하여 UI 프리징 방지)
+      final snapshot = await _database.ref('users/$uid/fortunePass/activeUntil').get().timeout(
+        const Duration(seconds: 2),
+      );
+      
+      if (!snapshot.exists) {
+        // 서버에 데이터가 없으면 로컬 캐시도 삭제 (동기화)
+        if (cachedUntil != null) {
+          final box = await Hive.openBox(_localBoxName);
+          await box.delete(_localFortunePassActiveUntilKey);
+        }
+        return null;
+      }
+
       final raw = snapshot.value;
       final millis = raw is int ? raw : int.tryParse(raw?.toString() ?? '');
-      if (millis == null) return null;
+      if (millis == null) return cachedUntil;
+
       final until = DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true).toLocal();
+      
+      // 3. 로컬 캐시 업데이트
+      if (cachedUntil == null || cachedUntil.millisecondsSinceEpoch != until.millisecondsSinceEpoch) {
+        final box = await Hive.openBox(_localBoxName);
+        await box.put(_localFortunePassActiveUntilKey, until.millisecondsSinceEpoch);
+      }
+
       await NotificationService().scheduleFortunePassExpiryReminder(activeUntilLocal: until);
       return until;
     } catch (e) {
-      debugPrint('Failed to get fortune pass: $e');
-      return null;
+      debugPrint('Failed to get fortune pass from server: $e');
+      return cachedUntil; // 실패 시 캐시된 정보라도 반환
     }
   }
 
@@ -228,6 +259,11 @@ class CookieService {
         final millis = raw is int ? raw : int.tryParse(raw?.toString() ?? '');
         if (millis != null) {
           final until = DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true).toLocal();
+          
+          // 로컬 캐시 업데이트
+          final box = await Hive.openBox(_localBoxName);
+          await box.put(_localFortunePassActiveUntilKey, millis);
+          
           await NotificationService().scheduleFortunePassExpiryReminder(activeUntilLocal: until);
         }
       }
@@ -394,6 +430,10 @@ class CookieService {
       final millis = activeUntilMillis is int ? activeUntilMillis : int.tryParse(activeUntilMillis?.toString() ?? '');
       if (millis != null && millis > 0) {
         final until = DateTime.fromMillisecondsSinceEpoch(millis, isUtc: true).toLocal();
+        
+        // 로컬 캐시 업데이트 (getFortunePassActiveUntil에서 사용됨)
+        await localBox.put(_localFortunePassActiveUntilKey, millis);
+        
         await NotificationService().scheduleFortunePassExpiryReminder(activeUntilLocal: until);
       } else {
         // Fallback to local duration calculation if server doesn't return activeUntil

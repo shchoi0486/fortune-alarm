@@ -211,6 +211,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
       'fortune_pass_monthly',
       'fortune_pass_6months',
       'fortune_pass_yearly',
+      'fortune_pass_yearly_sale',
     };
 
     final response = await _iap.queryProductDetails(productIds);
@@ -224,6 +225,9 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
 
   Future<void> _refreshSubscriptionStatus() async {
     final hasActive = await _cookieService.hasActiveFortunePassSubscription();
+    // 광고 서비스의 구독 상태도 함께 업데이트합니다.
+    AdService.isSubscriber = hasActive;
+    
     if (!mounted) return;
     setState(() {
       _hasActiveSubscription = hasActive;
@@ -300,7 +304,10 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
 
   Future<void> _deliverPurchase(PurchaseDetails purchase) async {
     final id = purchase.productID;
-    if (id != 'fortune_pass_monthly' && id != 'fortune_pass_6months' && id != 'fortune_pass_yearly') return;
+    if (id != 'fortune_pass_monthly' && 
+        id != 'fortune_pass_6months' && 
+        id != 'fortune_pass_yearly' && 
+        id != 'fortune_pass_yearly_sale') return;
 
     String rawKey = purchase.purchaseID?.trim() ?? '';
     if (rawKey.isEmpty) rawKey = purchase.verificationData.serverVerificationData.trim();
@@ -320,6 +327,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
       );
       if (!mounted) return;
       await _refreshSubscriptionStatus();
+      
       if (!mounted) return;
       if (!applied) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -418,13 +426,13 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
             ),
             const SizedBox(height: 16),
             const Text(
-              "기본 가격 연 ₩34,800",
-              style: TextStyle(color: Colors.grey, fontSize: 14, decoration: TextDecoration.lineThrough),
-            ),
-            const Text(
-              "연 ₩17,400",
-              style: TextStyle(color: Colors.black87, fontSize: 32, fontWeight: FontWeight.bold),
-            ),
+                  "기본 가격 연 ₩58,800",
+                  style: TextStyle(color: Colors.grey, fontSize: 14, decoration: TextDecoration.lineThrough),
+                ),
+                const Text(
+                  "연 ₩29,400",
+                  style: TextStyle(color: Colors.redAccent, fontSize: 32, fontWeight: FontWeight.bold),
+                ),
             const SizedBox(height: 8),
             const Text(
               "3분 내 구독 시 50% 할인 혜택!",
@@ -628,7 +636,13 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
               height: 56,
               child: ElevatedButton(
                 onPressed: _isPurchasing ? null : () {
-                  final product = _productById(_selectedProductId);
+                  String targetId = _selectedProductId;
+                  // 타임세일 중이고 12개월권 선택 시 할인용 상품 ID로 변경
+                  if (_remainingDiscountSeconds > 0 && targetId == 'fortune_pass_yearly') {
+                    targetId = 'fortune_pass_yearly_sale';
+                  }
+                  
+                  final product = _productById(targetId);
                   if (product != null) {
                     _buy(product);
                   } else {
@@ -729,42 +743,51 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
   }) {
     final product = _productById(productId);
     
-    // 가격 설정 (3,900원 기준)
-    int originalMonthlyPrice = 3900;
+    // 가격 설정 (4,900원 기준)
+    int originalMonthlyPrice = 4900;
     int currentMonthlyPrice = 0;
     int totalPlanPrice = 0;
+    int originalTotalPlanPrice = 0; // 정가 추가
     String planUnit = "";
     String discountLabel = "";
     bool isDiscountedPlan = false;
 
     if (productId == 'fortune_pass_monthly') {
-      currentMonthlyPrice = 3900;
+      currentMonthlyPrice = 4900;
       planUnit = "월 정가";
     } else if (productId == 'fortune_pass_6months') {
-      currentMonthlyPrice = 3300; // 19,800 / 6
-      totalPlanPrice = 19800;
+      currentMonthlyPrice = 3900; 
+      totalPlanPrice = 23400;
+      originalTotalPlanPrice = 29400; // 4900 * 6
       planUnit = "6개월";
-      discountLabel = "15% OFF";
+      discountLabel = "20% OFF";
       isDiscountedPlan = true;
     } else if (productId == 'fortune_pass_yearly') {
-      currentMonthlyPrice = 2900; // 34,800 / 12
-      totalPlanPrice = 34800;
+      currentMonthlyPrice = 3200; 
+      totalPlanPrice = 38400;
+      originalTotalPlanPrice = 58800; // 4900 * 12
       planUnit = "년";
-      discountLabel = "25% OFF";
+      discountLabel = "35% OFF";
       isDiscountedPlan = true;
     }
 
-    // 3분 타임세일 적용 (50% 할인)
+    // 3분 타임세일 적용 (12개월 상품만 50% 할인)
     final isTimeSaleActive = _remainingDiscountSeconds > 0;
-    if (isTimeSaleActive) {
-      currentMonthlyPrice = (currentMonthlyPrice * 0.5).round();
-      if (totalPlanPrice > 0) {
-        totalPlanPrice = (totalPlanPrice * 0.5).round();
-      }
+    if (isTimeSaleActive && productId == 'fortune_pass_yearly') {
+      currentMonthlyPrice = 2450; 
+      totalPlanPrice = 29400;     
+      originalTotalPlanPrice = 58800; // 타임세일 시에도 원래 정가는 58800원
       discountLabel = "50% 타임세일!";
+      isDiscountedPlan = true;
     }
 
     String priceText = "₩${currentMonthlyPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}";
+    
+    // 정가 텍스트 생성
+    String originalPriceText = originalTotalPlanPrice > 0 
+        ? "₩${originalTotalPlanPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}"
+        : "";
+
     String detailPriceText = totalPlanPrice > 0 
         ? "총 ₩${totalPlanPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} / $planUnit"
         : planUnit;
@@ -902,9 +925,9 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                         crossAxisAlignment: CrossAxisAlignment.baseline,
                         textBaseline: TextBaseline.alphabetic,
                         children: [
-                          if (isTimeSaleActive) ...[
+                          if (isTimeSaleActive && productId == 'fortune_pass_yearly') ...[
                             Text(
-                              "₩${(totalPlanPrice > 0 ? (productId == 'fortune_pass_6months' ? 3300 : 2900) : 3900).toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}",
+                              "₩4,900",
                               style: TextStyle(
                                 color: isDark ? Colors.white30 : Colors.black26,
                                 fontSize: 14,
@@ -934,13 +957,30 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                         ],
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        detailPriceText,
-                        style: TextStyle(
-                          color: isDiscountedPlan || isTimeSaleActive ? subTextColor : (isDark ? Colors.white38 : Colors.black26), 
-                          fontSize: 11,
-                          fontWeight: isDiscountedPlan || isTimeSaleActive ? FontWeight.w500 : FontWeight.normal,
-                        ),
+                      Row(
+                        children: [
+                          if (isDiscountedPlan && originalPriceText.isNotEmpty)
+                            Text(
+                              originalPriceText,
+                              style: TextStyle(
+                                color: isDark ? Colors.white38 : Colors.black38,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.lineThrough,
+                                decorationThickness: 2.0,
+                              ),
+                            ),
+                          if (isDiscountedPlan && originalPriceText.isNotEmpty)
+                            const SizedBox(width: 4),
+                          Text(
+                            detailPriceText,
+                            style: TextStyle(
+                              color: isDiscountedPlan || isTimeSaleActive ? subTextColor : (isDark ? Colors.white38 : Colors.black26), 
+                              fontSize: 11,
+                              fontWeight: isDiscountedPlan || isTimeSaleActive ? FontWeight.w500 : FontWeight.normal,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

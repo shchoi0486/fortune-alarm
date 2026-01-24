@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../widgets/ad_widgets.dart';
 import '../mixins/fortune_access_mixin.dart';
 import 'dream_service.dart';
 import 'models/dream_result.dart';
@@ -127,7 +128,12 @@ class _DreamInterpretationScreenState extends State<DreamInterpretationScreen> w
                         ),
                       ),
                     ),
-                  if (_result != null) _buildResultSection(isDarkMode),
+                  if (_result != null) ...[
+                    _buildResultSection(isDarkMode),
+                    const SizedBox(height: 20),
+                    // 해몽 결과 화면 하단 네이티브 광고 추가
+                    const DetailedAdWidget(),
+                  ],
                   const SizedBox(height: 50), // Bottom padding
                 ],
               ),
@@ -156,6 +162,10 @@ class _DreamInterpretationScreenState extends State<DreamInterpretationScreen> w
             color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
           ),
         ),
+        const SizedBox(height: 12),
+        // 해몽 인트로 화면 네이티브 광고 추가
+        const DetailedAdWidget(),
+        const SizedBox(height: 20),
       ],
     );
   }

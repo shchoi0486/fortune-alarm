@@ -224,6 +224,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get alarmSettings => 'アラーム設定';
 
   @override
+  String get privacySettings => 'プライバシー設定';
+
+  @override
   String get information => '情報';
 
   @override
@@ -273,7 +276,7 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get feedbackDescription =>
-      'フォーチュンアラームをご利用中に感じた不便な点や提案したい機能があれば、いつでもお知らせください。\n皆様の貴重な意見がより良いサービスを作ります。';
+      'フォーチュンアラームをご利用中にご不便な点やご要望がございましたら、いつでもお知らせください。\n皆様の貴重なご意見がより良いサービスを作ります。';
 
   @override
   String get reportCopyright => '著作権侵害を報告する';
@@ -1015,7 +1018,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get weatherDisclaimer => '観測データは地域の状況や受信状態により異なる場合があります。';
 
   @override
-  String get weatherSource => '提供：気象庁・韓国環境公団';
+  String get weatherSource => '気象データ提供：信頼できる気象機関';
 
   @override
   String get locationPermissionTitle => '位置情報の権限を許可';

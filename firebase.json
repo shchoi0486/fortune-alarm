@@ -1,6 +1,1 @@
-{
-  "functions": {
-    "source": "functions"
-  }
-}
-
+{"functions":{"source":"functions"},"flutter":{"platforms":{"android":{"default":{"projectId":"fortune-alarm-f1c20","appId":"1:857898979788:android:bdb68ccaec2cc8f72fcd69","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"fortune-alarm-f1c20","configurations":{"android":"1:857898979788:android:bdb68ccaec2cc8f72fcd69","ios":"1:857898979788:ios:64fd2f8fc6fba1ea2fcd69","web":"1:857898979788:web:ac2173774096d5d12fcd69","windows":"1:857898979788:web:ff96f74ed7e50d602fcd69"}}}}}}

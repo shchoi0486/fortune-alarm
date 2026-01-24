@@ -223,6 +223,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get alarmSettings => '闹钟设置';
 
   @override
+  String get privacySettings => '隐私设置';
+
+  @override
   String get information => '信息';
 
   @override
@@ -1004,11 +1007,11 @@ class AppLocalizationsZh extends AppLocalizations {
   String get weatherDisclaimer => '观测数据可能因当地条件或信号接收情况而有所不同。';
 
   @override
-  String get weatherSource => '数据来源：气象厅、韩国环境公团';
+  String get weatherSource => '气象数据来源：权威气象机构';
 
   @override
   String get locationPermissionTitle => '允许位置权限';
 
   @override
-  String get locationPermissionDesc => '显示天气信息所需。';
+  String get locationPermissionDesc => '显示天气信息所必需。';
 }

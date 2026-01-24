@@ -53,6 +53,12 @@ android {
     dependencies {
         implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
         coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+        // AppLovin Mediation Adapter
+        implementation("com.google.ads.mediation:applovin:13.0.1.0")
+        // Unity Ads Mediation Adapter
+        implementation("com.google.ads.mediation:unity:4.12.5.0")
+        // Unity Ads SDK (Explicitly added to resolve R8 classpath issues)
+        implementation("com.unity3d.ads:unity-ads:4.12.5")
     }
 
     buildTypes {
@@ -64,6 +70,11 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
+            
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }

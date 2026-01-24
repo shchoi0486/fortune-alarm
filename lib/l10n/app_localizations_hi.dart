@@ -230,6 +230,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get alarmSettings => 'अलार्म सेटिंग्स';
 
   @override
+  String get privacySettings => 'गोपनीयता सेटिंग्स';
+
+  @override
   String get information => 'जानकारी';
 
   @override
@@ -1048,7 +1051,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get weatherSource =>
-      'मौसम विभाग, कोरिया पर्यावरण निगम द्वारा प्रदान किया गया';
+      'मौसम डेटा विश्वसनीय सेवाओं द्वारा प्रदान किया गया';
 
   @override
   String get locationPermissionTitle => 'स्थान अनुमति दें';

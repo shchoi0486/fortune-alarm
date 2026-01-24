@@ -15,7 +15,6 @@ import 'package:collection/collection.dart';
 import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import 'package:fortune_alarm/services/notification_service.dart';
 import 'package:fortune_alarm/services/alarm_scheduler_service.dart';
-import 'package:fortune_alarm/services/ad_service.dart';
 
 import '../../services/ml_service.dart';
 import 'face_result_screen.dart';
@@ -56,8 +55,6 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
     
     // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
     Vibration.cancel();
-
-    AdService.preloadRewardedAd();
     
     WidgetsBinding.instance.addObserver(this);
     
@@ -269,8 +266,9 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
 
     final analysis = _analysisAccumulator.toMetrics();
     
+    if (!mounted) return;
+    
     // [수정] pushReplacement 대신 push를 사용하여 AlarmRingingScreen이 계속 대기하도록 함
-    // 이렇게 해야 FaceResultScreen이 닫힐 때까지 AlarmRingingScreen이 '실패/취소'로 오판하여 알람을 다시 울리지 않음
     final result = await Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => FaceResultScreen(alarmId: widget.alarmId, analysis: analysis)),
     );
@@ -408,7 +406,8 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      if (mounted) {
+      // 미션 성공 후 광고 등이 뜰 때 화면이 닫히지 않도록 _isSuccess 체크 추가
+      if (mounted && !_isSuccess) {
         Navigator.of(context).pop('timeout');
       }
     }

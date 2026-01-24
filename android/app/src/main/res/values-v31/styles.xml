@@ -3,7 +3,8 @@
     <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:forceDarkAllowed">false</item>
-        <item name="android:windowFullscreen">true</item>
+        <!-- [Android 15 대응] windowFullscreen 제거 (Edge-to-Edge 정책 준수) -->
+        <!-- <item name="android:windowFullscreen">true</item> -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="android:windowSplashScreenBackground">#5C6BC0</item>

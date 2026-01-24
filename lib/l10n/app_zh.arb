@@ -147,7 +147,7 @@
   "weatherConditionSunny": "晴",
   "weatherConditionThunderstorm": "雷暴",
   "weatherDisclaimer": "观测数据可能因当地条件或信号接收情况而有所不同。",
-  "weatherSource": "数据来源：气象厅、韩国环境公团",
+  "weatherSource": "气象数据来源：权威气象机构",
   "weatherToday": "今日天气",
   "weatherUpdateMessage": "正在更新当前位置的天气信息。",
 
@@ -425,5 +425,6 @@
     }
   },
   "locationPermissionTitle": "允许位置权限",
-  "locationPermissionDesc": "显示天气信息所需。"
+  "locationPermissionDesc": "显示天气信息所必需。",
+  "privacySettings": "隐私设置"
 }

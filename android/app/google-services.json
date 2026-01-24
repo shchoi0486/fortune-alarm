@@ -23,7 +23,8 @@
         "appinvite_service": {
           "other_platform_oauth_client": []
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-7279511347629270~7938505586"
     }
   ],
   "configuration_version": "1"

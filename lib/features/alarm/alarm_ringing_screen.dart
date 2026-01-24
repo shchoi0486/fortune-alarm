@@ -38,6 +38,13 @@ import '../../widgets/video_background_widget.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
+import 'package:fortune_alarm/widgets/ad_widgets.dart'; // 광고 위젯 임포트
+import 'package:fortune_alarm/services/ad_service.dart'; // 광고 서비스 임포트
+
+import '../../widgets/mission_result_dialog.dart';
+import '../../providers/bottom_nav_provider.dart';
+import '../../core/navigation/app_navigator.dart';
+
 class AlarmRingingScreen extends ConsumerStatefulWidget {
   final String alarmId;
 
@@ -67,14 +74,30 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
   
   bool _isMissionCompleted = false;
 
-  void _closeToMain() {
+  void _closeToMain({bool showAdAfterClose = false}) {
     if (!mounted) return;
+    if (showAdAfterClose) {
+      ref.read(bottomNavProvider.notifier).state = 0;
+    }
+
     final navigator = Navigator.of(context);
     if (navigator.canPop()) {
       navigator.pop();
-      return;
+    } else {
+      navigator.pushNamedAndRemoveUntil('/main', (route) => false);
     }
-    navigator.pushNamedAndRemoveUntil('/main', (route) => false);
+
+    if (showAdAfterClose && !AdService.isSubscriber) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final dialogContext = navigatorKey.currentContext;
+        if (dialogContext == null) return;
+        await showDialog(
+          context: dialogContext,
+          barrierDismissible: false,
+          builder: (context) => const MissionResultDialog(),
+        );
+      });
+    }
   }
 
   @override
@@ -737,11 +760,12 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
             ),
             SafeArea(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // [Top Ad] 텍스트 배너 광고 제거됨 (사용자 요청)
+
                 // Top: App Title, Time, Date
                 Padding(
-                  padding: const EdgeInsets.only(top: 40),
+                  padding: const EdgeInsets.only(top: 40), // 상단 광고 제거로 여백 원복
                   child: Column(
                     children: [
                       Text(
@@ -839,13 +863,15 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                   },
                 ),
 
-              // Bottom: Snooze & Mission Start
+              const Spacer(), // 중간 공간을 모두 차지하여 아래 요소들을 바닥으로 밀어냄
+
+              // Bottom Group: Snooze Button + Mission Button + Ad
               Padding(
-                padding: const EdgeInsets.only(bottom: 50, left: 20, right: 20),
+                padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // 알람 미루기 버튼 (비중을 낮추기 위해 크기 축소)
+                    // 알람 미루기 버튼
                     if (_snoozeTargetTime == null && (_alarm!.snoozeInterval > 0 && _alarm!.maxSnoozeCount > 0) &&
                         (() {
                           final bool isFirstSnooze = !_alarm!.id.endsWith('_snooze');
@@ -855,7 +881,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                           return currentRemaining > 0;
                         })())
                       Padding(
-                        padding: const EdgeInsets.only(bottom: 24),
+                        padding: const EdgeInsets.only(bottom: 12),
                         child: OutlinedButton(
                           onPressed: () async {
                             final alarm = _alarm;
@@ -899,9 +925,9 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                               color: Colors.white.withOpacity(0.4),
                               width: 1.2,
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(24),
                             ),
                             backgroundColor: Colors.white.withOpacity(0.05),
                           ),
@@ -925,17 +951,17 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                             })(),
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 17,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
                       ),
                     
-                    // 미션 시작 또는 알람 끄기 버튼
+                    // 미션 시작 버튼
                     SizedBox(
-                      width: double.infinity,
-                      height: 60,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 54,
                       child: ElevatedButton(
                         onPressed: () async {
                           if (_alarm!.missionType == MissionType.none) {
@@ -958,15 +984,13 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                             try {
                               final notifier = ref.read(alarmListProvider.notifier);
                               await notifier.completeAlarm(widget.alarmId);
-                              
-                              await ref.read(missionProvider).completeWakeUpMission();
                             } catch (e) {
                               debugPrint('Error completing wakeup mission: $e');
                             }
 
                             // 5. 화면 닫기
                             if (context.mounted) {
-                              _closeToMain();
+                              _closeToMain(showAdAfterClose: true);
                             }
                           } else {
                             _startMission();
@@ -980,7 +1004,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                               ? Colors.white 
                               : Colors.black87,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(27),
                             side: BorderSide(
                               color: Colors.white.withOpacity(0.5),
                               width: 1,
@@ -1000,14 +1024,21 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                         ),
                       ),
                     ),
+
+                    // 버튼과 광고 사이의 간격
+                    if (!AdService.isSubscriber) const SizedBox(height: 30),
+
+                    // [Bottom Ad] 박스형 배너 광고 (구독자 제외)
+                    if (!AdService.isSubscriber)
+                      const DetailedAdWidget(),
                   ],
                 ),
               ),
-            ],
-          ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    ),
   ),
 );
 }
@@ -1161,6 +1192,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
         // 미션 성공 시에는 남은 스누즈 횟수와 상관없이 알람을 완전히 종료합니다.
         debugPrint('[AlarmRingingScreen] Mission cleared. Turning off alarm completely.');
 
+        final hasRepeat = _alarm!.repeatDays.any((d) => d);
         await _stopAlarm();
         
         // 미션 화면에서 제거했던 completeAlarm을 여기서 호출
@@ -1178,8 +1210,9 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
         } catch (e) {
           debugPrint('Error completing wakeup mission: $e');
         }
-
-        _closeToMain();
+        if (context.mounted) {
+          _closeToMain(showAdAfterClose: true);
+        }
       }
     } else {
       // 뒤로가기 등으로 미션을 완료하지 않고 돌아온 경우 알람 다시 재생

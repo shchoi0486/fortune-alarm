@@ -5,7 +5,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
 import 'app_localizations_hi.dart';
 import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
@@ -98,7 +101,10 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
+    Locale('es'),
+    Locale('fr'),
     Locale('hi'),
     Locale('ja'),
     Locale('ko'),
@@ -133,7 +139,7 @@ abstract class AppLocalizations {
   /// No description provided for @missionWater.
   ///
   /// In en, this message translates to:
-  /// **'Drink 2L Water'**
+  /// **'Drink over 2L of Water'**
   String get missionWater;
 
   /// No description provided for @fortuneCookie.
@@ -514,6 +520,12 @@ abstract class AppLocalizations {
   /// **'Alarm Settings'**
   String get alarmSettings;
 
+  /// No description provided for @privacySettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Settings'**
+  String get privacySettings;
+
   /// No description provided for @information.
   ///
   /// In en, this message translates to:
@@ -613,7 +625,7 @@ abstract class AppLocalizations {
   /// No description provided for @feedbackDescription.
   ///
   /// In en, this message translates to:
-  /// **'Please let us know if you have any inconveniences or features you would like to suggest while using Fortune Alarm.\nYour valuable opinions make a better service.'**
+  /// **'Please share any feedback or suggestions regarding Fortune Alarm.\nYour input helps us improve.'**
   String get feedbackDescription;
 
   /// No description provided for @reportCopyright.
@@ -1957,7 +1969,7 @@ abstract class AppLocalizations {
   /// No description provided for @weatherSource.
   ///
   /// In en, this message translates to:
-  /// **'Provided by Meteorological Administration, Korea Environment Corporation'**
+  /// **'Weather data provided by trusted services'**
   String get weatherSource;
 
   /// No description provided for @locationPermissionTitle.
@@ -1984,7 +1996,10 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
+        'de',
         'en',
+        'es',
+        'fr',
         'hi',
         'ja',
         'ko',
@@ -1999,8 +2014,14 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
     case 'hi':
       return AppLocalizationsHi();
     case 'ja':

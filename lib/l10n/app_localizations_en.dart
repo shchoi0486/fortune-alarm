@@ -21,7 +21,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get missionSupplement => 'Take Supplements';
 
   @override
-  String get missionWater => 'Drink 2L Water';
+  String get missionWater => 'Drink over 2L of Water';
 
   @override
   String get fortuneCookie => 'Fortune Cookie';
@@ -229,6 +229,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alarmSettings => 'Alarm Settings';
 
   @override
+  String get privacySettings => 'Privacy Settings';
+
+  @override
   String get information => 'Information';
 
   @override
@@ -278,7 +281,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get feedbackDescription =>
-      'Please let us know if you have any inconveniences or features you would like to suggest while using Fortune Alarm.\nYour valuable opinions make a better service.';
+      'Please share any feedback or suggestions regarding Fortune Alarm.\nYour input helps us improve.';
 
   @override
   String get reportCopyright => 'Report Copyright Infringement';
@@ -1046,8 +1049,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Observed data may vary depending on local conditions or reception status.';
 
   @override
-  String get weatherSource =>
-      'Provided by Meteorological Administration, Korea Environment Corporation';
+  String get weatherSource => 'Weather data provided by trusted services';
 
   @override
   String get locationPermissionTitle => 'Allow Location Permission';

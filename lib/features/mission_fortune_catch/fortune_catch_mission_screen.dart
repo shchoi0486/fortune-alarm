@@ -176,8 +176,8 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // 앱이 백그라운드로 가면(홈버튼 등) 미션 실패로 간주하고 알람 다시 울림
-      if (mounted) {
+      // 미션 성공 후 광고 등이 뜰 때 화면이 닫히지 않도록 _isSuccess 체크 추가
+      if (mounted && !_isSuccess) {
         Navigator.of(context).pop('timeout');
       }
     }

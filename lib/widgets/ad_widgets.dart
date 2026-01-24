@@ -5,7 +5,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../services/ad_service.dart';
 
 class BottomBannerAd extends StatefulWidget {
-  const BottomBannerAd({super.key});
+  final Duration refreshInterval;
+  const BottomBannerAd({super.key, this.refreshInterval = const Duration(seconds: 45)});
 
   @override
   State<BottomBannerAd> createState() => _BottomBannerAdState();
@@ -13,13 +14,24 @@ class BottomBannerAd extends StatefulWidget {
 
 class _BottomBannerAdState extends State<BottomBannerAd> {
   NativeAd? _nativeAd;
+  NativeAd? _pendingAd;
   bool _isLoaded = false;
   String? _errorMessage;
+  Timer? _refreshTimer;
   
   @override
   void initState() {
     super.initState();
-    _loadAd();
+    if (AdService.isSubscriber || !AdService.isAdsEnabled) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _loadAd();
+    });
+
+    _refreshTimer = Timer.periodic(widget.refreshInterval, (timer) {
+      if (!mounted) return;
+      if (AdService.isSubscriber || !AdService.isAdsEnabled) return;
+      _loadAd();
+    });
 
     // 타임아웃 10초
     Future.delayed(const Duration(seconds: 10), () {
@@ -32,42 +44,97 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
   }
 
   void _loadAd() {
-    setState(() {
-      _isLoaded = false;
-      _errorMessage = null;
-    });
+    _errorMessage = null;
 
-    _nativeAd = NativeAd(
+    _pendingAd?.dispose();
+    _pendingAd = null;
+
+    final (preloadedAd, loadFuture) = AdService.getTextBannerAd();
+    if (preloadedAd != null) {
+      final oldAd = _nativeAd;
+      _nativeAd = preloadedAd;
+      _isLoaded = false;
+      if (mounted) setState(() {});
+
+      loadFuture?.then((_) {
+        if (!mounted) return;
+        setState(() {
+          _isLoaded = true;
+          _errorMessage = null;
+        });
+      }).catchError((_) {
+        if (!mounted) return;
+        if (_nativeAd == preloadedAd) {
+          setState(() {
+            _isLoaded = false;
+            _errorMessage = 'preload_failed';
+          });
+        }
+      });
+
+      if (oldAd != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          oldAd.dispose();
+        });
+      }
+      return;
+    }
+
+    final newAd = NativeAd(
       adUnitId: AdService.nativeAdUnitId, 
       factoryId: 'textBanner',
       request: const AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           debugPrint('Text Banner Ad loaded');
-          if (mounted) {
-            setState(() {
-              _isLoaded = true;
-              _errorMessage = null;
+          if (!mounted) {
+            ad.dispose();
+            return;
+          }
+          final newAd = ad as NativeAd;
+          final oldAd = _nativeAd;
+          setState(() {
+            _nativeAd = newAd;
+            _pendingAd = null;
+            _isLoaded = true;
+            _errorMessage = null;
+          });
+          if (oldAd != null && oldAd != newAd) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              oldAd.dispose();
             });
           }
         },
         onAdFailedToLoad: (ad, err) {
           debugPrint('Text Banner Ad failed to load: $err');
           ad.dispose();
-          if (mounted) {
+          if (!mounted) return;
+          if (_nativeAd == null) {
             setState(() {
               _isLoaded = false;
               _errorMessage = '${err.code}';
+              _pendingAd = null;
             });
+            return;
           }
+          _pendingAd = null;
         },
       ),
-    )..load();
+    );
+    _pendingAd = newAd;
+    if (_nativeAd == null) {
+      setState(() {
+        _isLoaded = false;
+      });
+    }
+    newAd.load();
   }
 
   @override
   void dispose() {
+    _refreshTimer?.cancel();
     _nativeAd?.dispose();
+    _pendingAd?.dispose();
     super.dispose();
   }
 
@@ -82,35 +149,9 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
     // 광고 validator(dismiss) 창이 내비게이션 바를 침범하는 문제로 인해 50.0으로 재조정 및 패딩 추가
     const double height = 30.0;
 
-    // 1. 로드 실패 시 에러 표시 및 재시도
+    // 1. 로드 실패 시 에러 표시 대신 빈 공간 반환 (사용자 경험 개선)
     if (_errorMessage != null) {
-      return Container(
-        color: backgroundColor,
-        width: double.infinity,
-        height: height,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        alignment: Alignment.center,
-        child: GestureDetector(
-          onTap: _loadAd,
-          child: SingleChildScrollView( // 에러 메시지가 길 경우를 대비
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.refresh, size: 14, color: isDarkMode ? Colors.grey[600] : Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  'Ad error (Tap to retry)', 
-                  style: TextStyle(
-                    fontSize: 10, 
-                    color: isDarkMode ? Colors.grey[600] : Colors.grey,
-                  )
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
+      return const SizedBox.shrink();
     }
 
     // 2. 로딩 중
@@ -169,11 +210,14 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
   NativeAd? _nativeAd;
   bool _isLoaded = false;
   String _errorMessage = ''; // 에러 메시지 저장용
+  int _loadToken = 0;
 
   @override
   void initState() {
     super.initState();
-    _loadAd();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _loadAd();
+    });
 
     // 10초 타임아웃 처리
     Future.delayed(const Duration(seconds: 10), () {
@@ -185,63 +229,81 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
     });
   }
 
-  void _loadAd() {
-    // 이미 로딩된 광고가 있다면 정리
-    _nativeAd?.dispose();
+  void _loadAd() async {
+    final token = ++_loadToken;
+    final oldAd = _nativeAd;
     _nativeAd = null;
-    
-    if (Platform.isAndroid || Platform.isIOS) {
+
+    if (!(Platform.isAndroid || Platform.isIOS)) return;
+
+    if (mounted) {
       setState(() {
         _isLoaded = false;
         _errorMessage = '';
       });
+    }
 
-      // 1. 사전 로드된 광고 확인
-      final (preloadedAd, loadFuture) = AdService.getListAd();
-      if (preloadedAd != null) {
-        debugPrint('Using Preloaded List Ad');
+    if (oldAd != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        oldAd.dispose();
+      });
+    }
+
+    final (preloadedAd, loadFuture) = AdService.getListAd();
+    if (preloadedAd != null) {
+      if (!mounted || token != _loadToken) {
+        preloadedAd.dispose();
+        return;
+      }
+      setState(() {
         _nativeAd = preloadedAd;
-        
-        loadFuture?.then((_) {
-          if (mounted) {
-            setState(() {
-              _isLoaded = true;
-              _errorMessage = '';
-            });
-          }
-        }).catchError((error) {
-          debugPrint('Preloaded List Ad failed: $error');
-          if (mounted) {
-             _loadNewAd(); // 실패 시 새로 로드 시도
-          }
+        _isLoaded = true;
+        _errorMessage = '';
+      });
+      return;
+    }
+
+    if (loadFuture != null) {
+      try {
+        await loadFuture.timeout(const Duration(milliseconds: 800));
+      } catch (_) {}
+      if (!mounted || token != _loadToken) return;
+      final (ad2, _) = AdService.getListAd();
+      if (ad2 != null) {
+        setState(() {
+          _nativeAd = ad2;
+          _isLoaded = true;
+          _errorMessage = '';
         });
         return;
       }
-
-      // 2. 없으면 새로 로드
-      _loadNewAd();
     }
+
+    if (!mounted || token != _loadToken) return;
+    _loadNewAd(token);
   }
 
-  void _loadNewAd() {
+  void _loadNewAd(int token) {
       _nativeAd = NativeAd(
-        adUnitId: AdService.nativeAdUnitId,
+        adUnitId: AdService.nativeAdAdvancedUnitId,
         factoryId: 'listTile', // Android 네이티브 팩토리 ID
         request: const AdRequest(),
         listener: NativeAdListener(
           onAdLoaded: (ad) {
             debugPrint('Native Ad loaded successfully: ${ad.responseInfo}');
-            if (mounted) {
-              setState(() {
-                _isLoaded = true;
-                _errorMessage = '';
-              });
+            if (!mounted || token != _loadToken) {
+              ad.dispose();
+              return;
             }
+            setState(() {
+              _isLoaded = true;
+              _errorMessage = '';
+            });
           },
           onAdFailedToLoad: (ad, error) {
             debugPrint('NativeAd failed to load: $error');
             ad.dispose();
-            if (mounted) {
+            if (mounted && token == _loadToken) {
               setState(() {
                 _isLoaded = false;
                 _errorMessage = 'Code: ${error.code}\n${error.message}'; // 에러 메시지 저장
@@ -291,40 +353,9 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
       );
     }
     
-    // 로딩 실패 시 에러 메시지 표시 (디버깅용)
+    // 로딩 실패 시 빈 공간 반환 (에러 메시지 숨김)
     if (_errorMessage.isNotEmpty) {
-      return GestureDetector(
-        onTap: _loadAd, // 탭하면 재시도
-        child: Container(
-          height: 60,
-          margin: const EdgeInsets.symmetric(vertical: 4),
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.red.withOpacity(0.3)),
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.red.withOpacity(0.05),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                _errorMessage,
-                style: const TextStyle(color: Colors.red, fontSize: 10),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.refresh, size: 12, color: Colors.red),
-                  SizedBox(width: 4),
-                  Text('탭하여 재시도', style: TextStyle(color: Colors.red, fontSize: 10)),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
+      return const SizedBox.shrink();
     }
 
     // 로딩 중일 때 (스켈레톤 UI 표시로 체감 속도 향상)
@@ -385,7 +416,10 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
   @override
   void initState() {
     super.initState();
-    _loadAd();
+    // UI가 먼저 렌더링된 후 광고를 로드하도록 지연 실행
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) _loadAd();
+    });
     
     // 1초 후에 광고 표시 (애니메이션 효과처럼)
     _timer = Timer(const Duration(seconds: 1), () {

@@ -225,6 +225,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get alarmSettings => '알람 설정';
 
   @override
+  String get privacySettings => '개인정보 설정';
+
+  @override
   String get information => '정보';
 
   @override

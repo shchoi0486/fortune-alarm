@@ -307,10 +307,9 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   }
 
   void _handleClose() {
-    // if (widget.alarmId != null) {
-    //   ref.read(alarmListProvider.notifier).toggleAlarm(widget.alarmId!);
-    // }
-    Navigator.pop(context, true);
+    if (mounted) {
+      Navigator.pop(context, true);
+    }
   }
 
   void _handleCardTap(int cardIndex) {

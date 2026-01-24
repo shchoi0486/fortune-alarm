@@ -203,6 +203,20 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
   bool _isWaitingForAd = false;
 
   Future<bool> showRewardedAd(VoidCallback onAccessGranted) async {
+    // 구독자는 보상형 광고를 시청할 필요가 없음 (이미 모든 권한이 있거나 프리미엄 혜택 대상)
+    // AdService.isSubscriber와 로컬 쿠키 서비스 상태를 모두 확인하여 더 정확하게 판단
+    final hasPass = await _cookieService.hasActiveFortunePassSubscription().timeout(
+      const Duration(milliseconds: 500),
+      onTimeout: () => false,
+    );
+    final isSubscriber = AdService.isSubscriber || hasPass;
+
+    if (isSubscriber) {
+      debugPrint('Skipping RewardedAd for subscriber');
+      onAccessGranted();
+      return true;
+    }
+
     _adCompleter = Completer<bool>();
     _lastRewardedAdHadTechnicalFailure = false;
     _lastRewardedAdWasUserCancelled = false;
@@ -216,6 +230,33 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
       
       // 다이얼로그를 먼저 띄우고 광고 로드를 시작하여 체감 속도 향상
       _showLoadingDialog();
+      
+      // [사용자 요청] 2초 내로 광고가 안 뜨면 그냥 통과 (UX 개선)
+      Timer(const Duration(seconds: 2), () {
+        if (_isWaitingForAd && mounted) {
+          debugPrint('Ad loading timed out (2s), skipping ad for better UX.');
+          _isWaitingForAd = false;
+          // 로딩 다이얼로그 닫기
+          Navigator.of(context).pop();
+          
+          // 무료 통과 처리
+          if (_onAccessGrantedCallback != null) {
+            _onAccessGrantedCallback!();
+            _onAccessGrantedCallback = null;
+          }
+          
+          if (_adCompleter != null && !_adCompleter!.isCompleted) {
+            _adCompleter!.complete(true);
+          }
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('광고 없이 무료로 결과를 보여드립니다! 🎉'),
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+      });
       
       // 마이크로태스크로 분리하여 다이얼로그 렌더링을 방해하지 않음
       Future.microtask(() => _loadRewardedAd());
@@ -373,24 +414,17 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
       onAccessGranted();
     }
 
-    // 1. 병렬로 체크하여 속도 개선 (최대 1.5초 대기)
+    // 1. 구독 상태 우선 확인 (캐시된 정보 사용으로 즉시 처리 시도)
     try {
-      final results = await Future.wait([
-        _cookieService.hasActiveFortunePassSubscription().timeout(
-          const Duration(milliseconds: 1500),
-          onTimeout: () => false,
-        ),
-        _cookieService.getCookieCount().timeout(
-          const Duration(milliseconds: 1500),
-          onTimeout: () => 0,
-        ),
-      ]).catchError((e) {
-        debugPrint('Error checking background status: $e');
-        return [false, 0];
-      });
+      // 보상형 광고나 쿠키 사용 선택창을 띄우기 전에 구독 여부를 먼저 확인합니다.
+      // 구독자는 아무런 대기 시간 없이 즉시 통과시켜 프리미엄 경험을 제공합니다.
+      final hasPass = await _cookieService.hasActiveFortunePassSubscription().timeout(
+        const Duration(milliseconds: 500), // 로컬 캐시가 있으면 매우 빠르게 응답함
+        onTimeout: () => false,
+      );
 
-      final hasPass = results[0] as bool;
       if (hasPass) {
+        // 구독자는 광고 없이 즉시 통과시켜 프리미엄 경험을 제공합니다.
         if (onDirectAccess != null) {
           onDirectAccess();
         } else {
@@ -399,8 +433,19 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
         return true;
       }
     } catch (e) {
-      debugPrint('Error in showFortuneAccessDialog parallel check: $e');
+      debugPrint('Error checking subscription in showFortuneAccessDialog: $e');
     }
+
+    if (!mounted) return false;
+
+    // 2. 쿠키 개수 체크 (UI에 표시하기 위함, 1초 대기)
+    int cookieCount = 0;
+    try {
+      cookieCount = await _cookieService.getCookieCount().timeout(
+        const Duration(seconds: 1),
+        onTimeout: () => 0,
+      );
+    } catch (_) {}
 
     if (!mounted) return false;
 

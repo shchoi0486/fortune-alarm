@@ -87,8 +87,37 @@ class MissionNotifier extends ChangeNotifier {
     });
   }
 
+  // 날짜 변경 확인 및 로그 갱신 (외부 호출용)
+  Future<void> checkDayChange() async {
+    await _checkDayChange();
+  }
+
+  // 날짜 변경 확인 및 로그 갱신
+  Future<void> _checkDayChange() async {
+    final todayKey = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    
+    // 로그가 없거나 날짜가 변경된 경우
+    if (_todayLog == null || _todayLog!.dateKey != todayKey) {
+      debugPrint('MissionProvider: Date changed or log null. Refreshing log for $todayKey');
+      
+      final logBox = await Hive.openBox<DailyMissionLog>('mission_logs');
+      
+      if (logBox.containsKey(todayKey)) {
+        _todayLog = logBox.get(todayKey);
+      } else {
+        // 새 로그 생성
+        _todayLog = DailyMissionLog(dateKey: todayKey, completedMissionIds: []);
+        await logBox.put(todayKey, _todayLog!);
+      }
+      notifyListeners();
+    }
+  }
+
   // 미션 상태 변경 (완료/미완료)
   Future<void> setMissionCompleted(String missionId, bool completed) async {
+    // 날짜 변경 체크
+    await _checkDayChange();
+
     // 동시 처리 방지 (따닥 방지)
     if (_isProcessingCompletion) return;
     _isProcessingCompletion = true;
@@ -576,6 +605,8 @@ class MissionNotifier extends ChangeNotifier {
 
   // 기상 알람 성공 처리 (외부에서 호출)
   Future<void> completeWakeUpMission() async {
+    await _checkDayChange();
+    
     // wakeup 미션 ID는 'wakeup'으로 고정
     if (_todayLog != null && !_todayLog!.completedMissionIds.contains('wakeup')) {
       await setMissionCompleted('wakeup', true);

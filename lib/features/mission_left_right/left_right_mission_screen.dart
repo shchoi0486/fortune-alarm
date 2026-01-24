@@ -108,7 +108,8 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      if (mounted) Navigator.of(context).pop('timeout');
+      // 미션 성공 후 광고 등이 뜰 때 화면이 닫히지 않도록 _isSuccess 체크 추가
+      if (mounted && !_isSuccess) Navigator.of(context).pop('timeout');
     }
   }
 

@@ -6,7 +6,8 @@
              the Flutter engine draws its first frame -->
         <item name="android:windowBackground">@drawable/launch_background</item>
         <item name="android:forceDarkAllowed">false</item>
-        <item name="android:windowFullscreen">true</item>
+        <!-- [Android 15 대응] windowFullscreen 제거 (Edge-to-Edge 정책 준수) -->
+        <!-- <item name="android:windowFullscreen">true</item> -->
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>

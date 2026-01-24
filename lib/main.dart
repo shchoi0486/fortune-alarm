@@ -11,6 +11,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_core/firebase_core.dart'; // Firebase Core 임포트
+import 'firebase_options.dart'; // Firebase Options 임포트
 import 'features/alarm/alarm_screen.dart';
 import 'features/calendar/calendar_screen.dart';
 import 'services/notification_service.dart';
@@ -47,9 +48,8 @@ import 'providers/mission_provider.dart';
 import 'features/mission/supplement/models/supplement_settings.dart';
 import 'features/mission/supplement/models/supplement_log.dart';
 import 'providers/bottom_nav_provider.dart';
+import 'core/navigation/app_navigator.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final GlobalKey<NavigatorState> missionNavigatorKey = GlobalKey<NavigatorState>();
 final container = ProviderContainer();
 
 // 백그라운드와 통신하기 위한 포트 이름
@@ -58,9 +58,6 @@ const MethodChannel _foregroundChannel = MethodChannel('com.seriessnap.fortuneal
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // 1. 광고 서비스 가장 먼저 초기화 (백그라운드에서 진행됨)
-  AdService.init();
   
   SharingService.init();
   debugPrint('App starting: Initializing services...');
@@ -107,11 +104,23 @@ void main() async {
     // Firebase 초기화는 앱 시작을 위해 필수적이므로 여기서 대기하되, 오류 발생 시 무시
     debugPrint('Step 4: Initializing Firebase...');
     try {
-      await Firebase.initializeApp().timeout(const Duration(seconds: 5));
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      ).timeout(const Duration(seconds: 5));
       debugPrint('Step 5: Firebase initialized');
     } catch (e) {
       debugPrint('Firebase initialization failed or timed out: $e');
     }
+
+    // 6. 광고 서비스 초기화 (앱 실행 후 백그라운드에서 진행하도록 변경)
+    final cookieService = CookieService();
+    AdService.init();
+    cookieService.hasActiveFortunePassSubscription().timeout(
+      const Duration(milliseconds: 500),
+      onTimeout: () => false,
+    ).then((isSub) {
+      AdService.isSubscriber = isSub;
+    });
 
   } catch (e) {
     debugPrint('Initialization warning (ignored for startup): $e');
@@ -848,6 +857,9 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
     if (state == AppLifecycleState.resumed) {
       // 앱으로 돌아왔을 때 상태바/내비바 모드 강제 적용 (딜레이 방지)
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      
+      // 날짜 변경 체크 및 미션 로그 갱신
+      ref.read(missionProvider).checkDayChange();
     }
   }
 
@@ -1403,8 +1415,10 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                const ExitDialogAdWidget(),
+                if (!AdService.isSubscriber) ...[
+                  const SizedBox(height: 20),
+                  const ExitDialogAdWidget(),
+                ],
               ],
             ),
           ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../main.dart';
+import '../../core/navigation/app_navigator.dart';
 import 'mission_screen.dart';
 
 class MissionTab extends StatefulWidget {

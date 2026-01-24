@@ -689,6 +689,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
               child: InkWell(
                 onTap: () {
                   HapticFeedback.selectionClick();
+                  
                   if (item['target'] == 'specific_date') {
                     _handleSpecificDateFortune(context);
                   } else if (item['target'] == 'lotto') {

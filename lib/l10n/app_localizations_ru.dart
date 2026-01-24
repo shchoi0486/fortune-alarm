@@ -230,6 +230,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get alarmSettings => 'Настройки будильника';
 
   @override
+  String get privacySettings => 'Настройки конфиденциальности';
+
+  @override
   String get information => 'Информация';
 
   @override
@@ -1052,7 +1055,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get weatherSource =>
-      'Источник: Метеорологическая администрация, Корейская корпорация окружающей среды';
+      'Данные о погоде предоставлены надежными службами';
 
   @override
   String get locationPermissionTitle => 'Разрешить доступ к местоположению';

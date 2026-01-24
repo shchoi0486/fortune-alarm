@@ -1,7 +1,7 @@
 name: fortune_alarm
 description: A new Flutter project for Fortune Alarm.
 publish_to: 'none'
-version: 1.0.0+7
+version: 1.0.3+12
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -73,6 +73,7 @@ dependencies:
   kakao_flutter_sdk_share: ^1.10.0
   share_plus: ^12.0.1
   flutter_native_splash: ^2.4.0
+  package_info_plus: ^9.0.0
 
 
 dev_dependencies:
@@ -86,11 +87,13 @@ dev_dependencies:
 
 flutter_launcher_icons:
   android: "launcher_icon"
-  ios: false
+  ios: true
   image_path: "assets/icon/Fortuni icon.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
-  adaptive_icon_background: "#8E99F3" # 이미지 배경과 일관된 연보라/파란색
+  adaptive_icon_background: "#5C6BC0" # 스플래시 화면과 동일한 진한 파란색
   adaptive_icon_foreground: "assets/icon/Fortuni icon.png" 
+  adaptive_icon_foreground_inset: 1 # 15는 너무 작고 0은 너무 크므로, 8 정도로 설정하여 캐릭터를 조금 더 크게 표시
+  # adaptive_icon_background: "assets/icon/Fortuni icon.png" 
 
 flutter_native_splash:
   color: "#5C6BC0" # 배경 이미지와 어울리는 진한 파란색

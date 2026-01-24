@@ -4,7 +4,7 @@
   "morningGreeting": "Good morning! Start your lucky day.",
   "missionWakeUp": "Wake-up Mission",
   "missionSupplement": "Take Supplements",
-  "missionWater": "Drink 2L Water",
+  "missionWater": "Drink over 2L of Water",
   "fortuneCookie": "Fortune Cookie",
   "settings": "Settings",
   "alarm": "Alarm",
@@ -98,6 +98,7 @@
   "darkMode": "Dark Mode",
   "darkModeDescription": "Set the screen to dark.",
   "alarmSettings": "Alarm Settings",
+  "privacySettings": "Privacy Settings",
   "information": "Information",
   "notice": "Notice",
 
@@ -115,7 +116,7 @@
   "locationError": "Location Error",
   "faq": "FAQ",
   "sendFeedback": "Send Feedback",
-  "feedbackDescription": "Please let us know if you have any inconveniences or features you would like to suggest while using Fortune Alarm.\nYour valuable opinions make a better service.",
+  "feedbackDescription": "Please share any feedback or suggestions regarding Fortune Alarm.\nYour input helps us improve.",
   "reportCopyright": "Report Copyright Infringement",
   "copyrightDescription": "If you believe that the content in Fortune Alarm infringes on copyright, please report it via email.\nWe will take immediate action after confirmation.",
   "termsOfService": "Terms of Service",
@@ -480,7 +481,7 @@
   "weatherToday": "Today's Weather",
   "weatherUpdateMessage": "Updating weather information for current location.",
   "weatherDisclaimer": "Observed data may vary depending on local conditions or reception status.",
-  "weatherSource": "Provided by Meteorological Administration, Korea Environment Corporation",
+  "weatherSource": "Weather data provided by trusted services",
   "locationPermissionTitle": "Allow Location Permission",
   "locationPermissionDesc": "Required to display weather information."
 }

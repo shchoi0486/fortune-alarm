@@ -429,19 +429,36 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     }
   }
 
-  void _handleSuccess() {
+  bool _isHandlingSuccess = false;
+  Future<void> _handleSuccess() async {
+    if (_isHandlingSuccess) return;
+    _isHandlingSuccess = true;
+    
+    // 미션 성공 시 모든 타이머 중지 (광고 화면에서 꺼지는 문제 방지)
+    _inactivityTimer?.cancel();
+    _volumeTimer?.cancel();
+    
     _stopAlarm();
+    
+    // 성공 상태 UI 업데이트
     if (mounted) {
       setState(() {
         _isSuccess = true;
       });
+    }
+    
+    // 다이얼로그 닫힌 후 (또는 구독자라 바로 닫힌 후) 성공 반환
+    if (mounted) {
+      Navigator.of(context).pop(true);
     }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      if (mounted) {
+      // 미션 성공 후 결과 다이얼로그(광고)가 뜬 상태에서 앱이 일시정지(광고 로드 등으로 인한)되어도 
+      // 다이얼로그가 닫히지 않도록 _isSuccess 상태 체크 추가
+      if (mounted && !_isSuccess) {
         Navigator.of(context).pop('timeout');
       }
     }

@@ -4,7 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'dart:io';
+import 'package:package_info_plus/package_info_plus.dart'; // [추가]
 import '../../providers/theme_provider.dart';
+import '../../services/ad_service.dart';
+import '../../widgets/ad_widgets.dart';
 import 'notice_screen.dart';
 import 'faq_screen.dart';
 import 'support_screen.dart';
@@ -126,15 +129,47 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
               );
             },
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 32, 16, 8),
-            child: Text(
-              AppLocalizations.of(context)!.version("1.0.0"),
-              style: TextStyle(
-                fontSize: 14,
-                color: isDark ? Colors.grey[500] : Colors.grey[600],
-              ),
-            ),
+          FutureBuilder<bool>(
+            future: AdService.isPrivacyOptionsRequired(), // GDPR 대상 여부 확인
+            builder: (context, snapshot) {
+              if (snapshot.data == true) {
+                return ListTile(
+                  title: Text(AppLocalizations.of(context)!.privacySettings),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  onTap: () async {
+                    await AdService.showPrivacyOptionsForm((error) {
+                      if (error != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(error.message)),
+                        );
+                      }
+                    });
+                  },
+                );
+              }
+              return const SizedBox.shrink(); // 대상이 아니면 버튼 숨김
+            },
+          ),
+          // 설정 화면 하단 네이티브 광고 추가
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: DetailedAdWidget(),
+          ),
+          FutureBuilder<PackageInfo>(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, snapshot) {
+              final version = snapshot.data?.version ?? "1.0.0";
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(16, 32, 16, 8),
+                child: Text(
+                  AppLocalizations.of(context)!.version(version),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: isDark ? Colors.grey[500] : Colors.grey[600],
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 80),
         ],

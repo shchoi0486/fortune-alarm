@@ -14,12 +14,16 @@ import android.content.Intent
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 
 import android.os.PowerManager
+import androidx.core.view.WindowCompat // [추가]
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "com.seriessnap.fortunealarm/foreground"
     private var methodChannel: MethodChannel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // [Android 15 대응] Edge-to-Edge 강제 활성화 (Flutter SystemChrome과 호환성 확보)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        
         super.onCreate(savedInstanceState)
         configureWindow()
     }

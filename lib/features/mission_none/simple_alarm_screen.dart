@@ -195,8 +195,9 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
     }
   }
 
-  void _onFinish() {
+  Future<void> _onFinish() async {
     _stopAlarm();
+
     if (widget.alarmId != null) {
       ref.read(alarmListProvider.notifier).toggleAlarm(widget.alarmId!);
       Navigator.pop(context, true);
