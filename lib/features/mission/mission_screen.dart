@@ -44,7 +44,7 @@ class MissionScreen extends ConsumerWidget {
             // 1. 헤더 (달성률)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -81,7 +81,7 @@ class MissionScreen extends ConsumerWidget {
                     const SizedBox(height: 12),
                     // 프로그레스 바 (폭을 나의 미션 기록 박스와 일치하도록 Padding 조정)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: LinearProgressIndicator(
@@ -101,11 +101,10 @@ class MissionScreen extends ConsumerWidget {
 
 
 
-            // 1.3 보상 안내 배너 (도전 중 바로 위로 이동)
             SliverToBoxAdapter(
               child: Container(
-                margin: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.amber.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -113,29 +112,16 @@ class MissionScreen extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    const Text('🥠', style: TextStyle(fontSize: 24)),
-                    const SizedBox(width: 12),
+                    const Text('🥠', style: TextStyle(fontSize: 20)),
+                    const SizedBox(width: 10),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.dailyFortuneCookieReward,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.amber[800],
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            AppLocalizations.of(context)!.missionRewardInfo,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.8),
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        AppLocalizations.of(context)!.missionRewardInfo,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.amber[900],
+                        ),
                       ),
                     ),
                   ],
@@ -146,7 +132,7 @@ class MissionScreen extends ConsumerWidget {
             // 2. 해야 할 미션 (Pending)
             if (pendingMissions.isNotEmpty) ...[
               SliverPadding(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 12, bottom: 8),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 4, bottom: 8),
                         sliver: SliverToBoxAdapter(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -313,7 +299,7 @@ class MissionScreen extends ConsumerWidget {
 
             // 3. 완료한 미션 (Completed)
             SliverPadding(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 4),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 8),
               sliver: SliverToBoxAdapter(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -322,25 +308,23 @@ class MissionScreen extends ConsumerWidget {
                       AppLocalizations.of(context)!.completedMissions,
                       style: TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.green[700],
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: Colors.green[100],
-                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.green.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      alignment: Alignment.center,
                       child: Text(
                         '${completedMissions.length}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green[800],
-                          height: 1.2,
+                          color: Colors.green,
                         ),
                       ),
                     ),
@@ -348,25 +332,24 @@ class MissionScreen extends ConsumerWidget {
                 ),
               ),
             ),
+
             if (completedMissions.isEmpty)
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.fromLTRB(20, 2, 20, 12),
                   child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-                      borderRadius: BorderRadius.circular(16),
+                      color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isDark ? Colors.white.withOpacity(0.12) : Colors.black.withOpacity(0.06),
-                        width: 1,
+                        color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
                       ),
                     ),
                     child: Text(
                       AppLocalizations.of(context)!.noCompletedMissionsHint,
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 12,
                         height: 1.4,
                         color: isDark ? Colors.white70 : Colors.black54,
                         fontWeight: FontWeight.w500,
@@ -413,7 +396,7 @@ class MissionScreen extends ConsumerWidget {
             // 4. 구분선 및 하단 섹션 분리
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 0),
             child: Divider(
               thickness: 1,
               color: Theme.of(context).brightness == Brightness.dark 
@@ -425,16 +408,15 @@ class MissionScreen extends ConsumerWidget {
 
         // 5. 광고 (통계 패널 위로 이동)
         const SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: DetailedAdWidget(),
+          child: DetailedAdWidget(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           ),
         ),
 
             // 6. 통계 패널 (나의 미션 기록)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 12),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E1E1E) : Colors.white,
@@ -451,7 +433,7 @@ class MissionScreen extends ConsumerWidget {
                     children: [
                       // 타이틀 영역
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                         child: Row(
                           children: [
                             Icon(Icons.bar_chart_rounded, color: Theme.of(context).colorScheme.primary, size: 22),

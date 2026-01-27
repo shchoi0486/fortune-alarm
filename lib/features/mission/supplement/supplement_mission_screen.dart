@@ -183,7 +183,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
      final time = DateTime.now().add(Duration(minutes: minutes));
      final snoozeId = id + 50000;
      SupplementAlarmService.scheduleOneTime(time, snoozeId);
-     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$minutes분 후에 다시 알림을 보냅니다.')));
+     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$minutes분 후에 알람이 다시 울립니다.')));
   }
 
   @override
@@ -391,14 +391,14 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
             ),
             if (_isSuccess)
               Positioned.fill(
-                child: MissionSuccessOverlay(
-                  onFinish: () {
-                    if (mounted && Navigator.canPop(context)) {
-                      Navigator.pop(context);
-                    }
-                  },
-                ),
-              ),
+            child: MissionSuccessOverlay(
+              onFinish: () {
+                if (mounted) {
+                  Navigator.pop(context);
+                }
+              },
+            ),
+          ),
           ],
         ),
       ),

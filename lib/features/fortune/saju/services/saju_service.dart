@@ -1,5 +1,7 @@
 import '../models/saju_data.dart';
 import '../models/saju_profile.dart';
+import 'package:flutter/material.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class SajuService {
   // 60 Ganji List (Gapja to Gyehae)
@@ -240,8 +242,219 @@ class SajuService {
     };
   }
 
-  // Generate Yearly Fortune Text (Simple Mock Logic based on Element Balance)
-  static String getYearlyFortune(SajuProfile profile, Map<String, Ganji> saju, int targetYear) {
+  // Generate Yearly Fortune Text with context for localization
+  static String getYearlyFortune(BuildContext context, SajuProfile profile, Map<String, Ganji> saju, int targetYear) {
+    final locale = Localizations.localeOf(context).languageCode;
+    
+    // 기기 언어가 영어인 경우 영어 운세 반환
+    if (locale == 'en') {
+      return _generateEnglishYearlyFortune(profile, saju, targetYear);
+    }
+    
+    // 기본적으로 한국어 운세 반환
+    return _generateYearlyFortune(profile, saju, targetYear);
+  }
+
+  // 영어 운세 생성
+  static String _generateEnglishYearlyFortune(SajuProfile profile, Map<String, Ganji> saju, int targetYear) {
+    Cheongan dayMaster = saju['day']!.cheongan;
+    Ohaeng myElement = dayMaster.ohaeng;
+    
+    String yearName = "";
+    if (targetYear == 2025) {
+      yearName = "2025 (Year of the Blue Snake)";
+    } else if (targetYear == 2026) {
+      yearName = "2026 (Year of the Red Horse)";
+    } else {
+      yearName = "$targetYear";
+    }
+
+    if (targetYear == 2025) {
+      switch (dayMaster) {
+        case Cheongan.gap:
+        case Cheongan.eul:
+          return "🌿 $yearName Total Luck for Wood: 'A Year of Growth and New Opportunities'\n\n"
+              "2025 brings vibrant energy for you. You'll find yourself more creative and expressive. "
+              "It's a great time to start new projects and showcase your talents to the world.\n\n"
+              "💼 [Career & Business]\n"
+              "New doors will open. Your ideas will be well-received by others. Collaborative work is favored.\n\n"
+              "💰 [Wealth]\n"
+              "Steady income is expected. Focus on long-term investments rather than quick gains.\n\n"
+              "❤️ [Relationship]\n"
+              "You'll be more social and charming. Great time to meet new people or deepen existing bonds.\n\n"
+              "⚠️ [Note]\n"
+              "Don't overextend yourself. Balance your passion with rest.";
+        case Cheongan.byeong:
+        case Cheongan.jeong:
+          return "🔥 $yearName Total Luck for Fire: 'Passionate Achievements and Recognition'\n\n"
+              "The year 2025 amplifies your natural energy. You'll feel a strong drive to succeed and gain recognition for your hard work.\n\n"
+              "💼 [Career & Business]\n"
+              "Your leadership skills will shine. Expect promotion or significant progress in your field.\n\n"
+              "💰 [Wealth]\n"
+              "Financial luck is strong. Success in business or investments is likely.\n\n"
+              "❤️ [Relationship]\n"
+              "Dynamic and passionate relationships. You'll be the center of attention in social circles.\n\n"
+              "⚠️ [Note]\n"
+              "Watch out for your temper. Keep a cool head when dealing with competition.";
+        case Cheongan.mu:
+        case Cheongan.gi:
+          return "⛰️ $yearName Total Luck for Earth: 'Stability and Inner Growth'\n\n"
+              "2025 is a year for you to solidify your foundations. You'll find peace and stability in both your personal and professional life.\n\n"
+              "💼 [Career & Business]\n"
+              "Steady progress in your current position. It's a good time to acquire new skills or certifications.\n\n"
+              "💰 [Wealth]\n"
+              "A good year for saving and building assets. Real estate related matters are favorable.\n\n"
+              "❤️ [Relationship]\n"
+              "Deep and stable connections. Sincerity will be the key to your relationship success.\n\n"
+              "⚠️ [Note]\n"
+              "Avoid being too stubborn. Stay open to new ideas and perspectives.";
+        case Cheongan.gyeong:
+        case Cheongan.sin:
+          return "💎 $yearName Total Luck for Metal: 'Refinement and Strategic Success'\n\n"
+              "In 2025, your strategic thinking and attention to detail will lead you to success. It's a year to refine your goals and execute them with precision.\n\n"
+              "💼 [Career & Business]\n"
+              "You'll excel in roles that require planning and organization. Your expertise will be highly valued.\n\n"
+              "💰 [Wealth]\n"
+              "Wealth luck is stable. Prudent financial planning will yield good results.\n\n"
+              "❤️ [Relationship]\n"
+              "Intellectual connections will be important. You'll appreciate partners who share your values.\n\n"
+              "⚠️ [Note]\n"
+              "Don't be too critical of yourself or others. Practice flexibility.";
+        case Cheongan.im:
+        case Cheongan.gye:
+          return "💧 $yearName Total Luck for Water: 'Fluidity and Creative Breakthroughs'\n\n"
+              "2025 brings a wave of change and inspiration. Your intuition will be your best guide as you navigate new experiences.\n\n"
+              "💼 [Career & Business]\n"
+              "Great for jobs involving communication, travel, or innovation. You'll adapt well to changes.\n\n"
+              "💰 [Wealth]\n"
+              "Money flow is active. You might find new ways to increase your income through creative pursuits.\n\n"
+              "❤️ [Relationship]\n"
+              "Emotional and intuitive bonds. You'll connect with others on a deeper level.\n\n"
+              "⚠️ [Note]\n"
+              "Manage your stress levels. Don't let yourself get overwhelmed by small details.";
+      }
+    } else if (targetYear == 2026) {
+      switch (dayMaster) {
+        case Cheongan.gap:
+          return "🌳 $yearName Total Luck for Gap-Wood: 'Fires of Passion, Maximizing Activity'\n\n"
+              "2026 is a year of strong creative and expressive energy. Your talents will burst forth, and your activity range will expand significantly.\n\n"
+              "💼 [Career & Business]\n"
+              "Excellent for starting new projects or business. Your ideas will become reality. Success in arts, media, and sales is likely.\n\n"
+              "💰 [Wealth]\n"
+              "Wealth follows your active efforts. Side income or business profits will increase. Beware of impulsive spending.\n\n"
+              "❤️ [Relationship]\n"
+              "Your honest and active approach will attract others. It's a passionate year for romance and family news.\n\n"
+              "⚠️ [Note]\n"
+              "Watch out for burnout. Manage your energy and be careful with your words to avoid misunderstandings.";
+        case Cheongan.eul:
+          return "🌸 $yearName Total Luck for Eul-Wood: 'Splendid Bloom, Full Bloom of Talent'\n\n"
+              "Your charm and talent reach their peak in 2026. You'll find yourself in the spotlight, achieving brilliant results through your unique expression.\n\n"
+              "💼 [Career & Business]\n"
+              "Unconventional ideas will lead to success. Great for design, fashion, and entertainment fields. Watch out for friction with authorities.\n\n"
+              "💰 [Wealth]\n"
+              "High ability to create wealth. Your brand value rises. However, avoid luxury and unnecessary waste.\n\n"
+              "❤️ [Relationship]\n"
+              "Explosive popularity among others. Expect passionate romances. For those in relationships, children might be a key focus.\n\n"
+              "⚠️ [Note]\n"
+              "Manage your mood swings. Staying calm and following rules will prevent unnecessary legal or social issues.";
+        case Cheongan.byeong:
+          return "☀️ $yearName Total Luck for Byeong-Fire: 'Two Suns, Fierce Competition and Leap'\n\n"
+              "A year of intense pride and competitive spirit. You'll push forward with your own path, gaining strength from your natural element.\n\n"
+              "💼 [Career & Business]\n"
+              "Success comes through winning in competitive environments. Freelancers can make a significant name for themselves.\n\n"
+              "💰 [Wealth]\n"
+              "Money comes in but also goes out quickly. Avoid lending money to friends or family. Invest in your reputation.\n\n"
+              "❤️ [Relationship]\n"
+              "You might find a partner who feels like a close friend. Be cautious of love triangles or competition in romance.\n\n"
+              "⚠️ [Note]\n"
+              "Humility is your best strategy. Avoid dogmatic actions and pay attention to your cardiovascular health.";
+        case Cheongan.jeong:
+          return "🔥 $yearName Total Luck for Jeong-Fire: 'Giant Flame, Expansion of Power'\n\n"
+              "Your influence and power grow in 2026. Cooperation and help from others will allow you to achieve goals that were previously out of reach.\n\n"
+              "💼 [Career & Business]\n"
+              "Strong drive and leadership. You'll excel in team projects. Remember to share the credit to maintain loyalty.\n\n"
+              "💰 [Wealth]\n"
+              "High risk, high return opportunities may appear. While you can gain significantly, keep emergency funds for unexpected expenses.\n\n"
+              "❤️ [Relationship]\n"
+              "Active social life leads to new connections. For men, pay extra attention to your partner to avoid neglect.\n\n"
+              "⚠️ [Note]\n"
+              "Excessive greed can lead to trouble. Avoid over-expansion and manage your stress levels carefully.";
+        case Cheongan.mu:
+          return "🌋 $yearName Total Luck for Mu-Earth: 'Patience and Preparation in the Heat'\n\n"
+              "A year for condensed energy and inner growth. Best time for studying, gaining certifications, and refining your professional skills.\n\n"
+              "💼 [Career & Business]\n"
+              "Mental and strategic work shines more than physical activity. Success in contracts and planning is highlighted.\n\n"
+              "💰 [Wealth]\n"
+              "Strong luck with real estate and documents. While cash flow might be slow, long-term investments are very promising.\n\n"
+              "❤️ [Relationship]\n"
+              "You'll value deep mental connections. Potential for meeting partners through elders or family introductions.\n\n"
+              "⚠️ [Note]\n"
+              "Avoid overthinking, which can lead to lethargy. Physical exercise and outdoor activities will improve your luck.";
+        case Cheongan.gi:
+          return "🌾 $yearName Total Luck for Gi-Earth: 'Solid Foundation and Sure Support'\n\n"
+              "Warm support from elders and superiors helps you ripen your goals. A year to build a stable foundation for the future.\n\n"
+              "💼 [Career & Business]\n"
+              "Excellent results in exams, certifications, and academic pursuits. You'll gain the trust of superiors and take on key roles.\n\n"
+              "💰 [Wealth]\n"
+              "Luck with important documents. Buying a home or asset growth is likely. Honor and reputation shine more than pure wealth.\n\n"
+              "❤️ [Relationship]\n"
+              "A year of receiving love and appreciation. Good for marriage or strengthening family bonds. Harmony is at its peak.\n\n"
+              "⚠️ [Note]\n"
+              "Don't become too dependent on others. Practice gratitude and develop your own independent skills.";
+        case Cheongan.gyeong:
+          return "⚔️ $yearName Total Luck for Gyeong-Metal: 'Birth of a Great Sword Beyond Trials'\n\n"
+              "Intense pressure and responsibility act as a furnace, refining your character. Overcoming these trials will lead to great authority.\n\n"
+              "💼 [Career & Business]\n"
+              "Heavy responsibilities may feel stressful, but succeeding will elevate your status. Great for public service and law fields.\n\n"
+              "💰 [Wealth]\n"
+              "Focus on honor over immediate wealth. Status rise brings natural financial gain, but maintain your budget for social costs.\n\n"
+              "❤️ [Relationship]\n"
+              "For women, meeting charismatic and capable partners is likely. Relationships with superiors will be key this year.\n\n"
+              "⚠️ [Note]\n"
+              "Health should be your priority. Manage overwork-related stress and pay attention to your respiratory system.";
+        case Cheongan.sin:
+          return "💎 $yearName Total Luck for Sin-Metal: 'Shining Gem, Peak of Honor'\n\n"
+              "Your value is revealed to the world in 2026. A year where your honor rises and you find strong connections with stable organizations.\n\n"
+              "💼 [Career & Business]\n"
+              "Excellent for career moves, promotions, or scout offers. Earn respect through your principled and fair work ethic.\n\n"
+              "💰 [Wealth]\n"
+              "Stable fixed income is guaranteed. Honor brings wealth naturally. You may also benefit from your partner's success.\n\n"
+              "❤️ [Relationship]\n"
+              "Best year for romance and marriage, especially for women. Meet principled and capable partners who share your values.\n\n"
+              "⚠️ [Note]\n"
+              "Avoid overwork and excessive stress. Practice flexibility to maintain smooth relationships with colleagues.";
+        case Cheongan.im:
+          return "🌊 $yearName Total Luck for Im-Water: 'Sun over the River, Opportunity for Great Wealth'\n\n"
+              "Wealth luck explodes in 2026 as the sun shines on your element. A year for potential life-changing financial turnarounds.\n\n"
+              "💼 [Career & Business]\n"
+              "Excellent for business expansion, even overseas. Employees can expect significant bonuses or performance incentives.\n\n"
+              "💰 [Wealth]\n"
+              "Big money opportunities. High investment gains and business profits are likely. Manage your greed to maintain health.\n\n"
+              "❤️ [Relationship]\n"
+              "High popularity among the opposite sex. You'll find yourself surrounded by many potential connections.\n\n"
+              "⚠️ [Note]\n"
+              "Obsession with wealth or romance can lead to trouble. Be careful with scams and monitor your blood pressure.";
+        case Cheongan.gye:
+          return "🌧️ $yearName Total Luck for Gye-Water: 'Rainbow Season of Results'\n\n"
+              "Honest rewards for your sincere efforts arrive in 2026. A financially prosperous and stable year where your life feels balanced.\n\n"
+              "💼 [Career & Business]\n"
+              "Success comes from attention to detail. Great for finance, data, and accounting fields. Stable business operations are favored.\n\n"
+              "💰 [Wealth]\n"
+              "Small savings grow into significant assets. Fixed income increases, providing a sense of security and comfort.\n\n"
+              "❤️ [Relationship]\n"
+              "Men may meet wise and supportive partners. Seek realistic and stable relationships that provide peace of mind.\n\n"
+              "⚠️ [Note]\n"
+              "Avoid over-activity that leads to exhaustion. Don't lose the big picture while focusing on small immediate gains.";
+      }
+    }
+    
+    return "Total Luck for $targetYear: 'A New Journey Begins'\n\n"
+        "This year brings a fresh flow of energy. Use the strength of your element, ${myElement.name.toUpperCase()}, to find balance and harmony.\n\n"
+        "Focus on your goals and stay positive throughout the year!";
+  }
+
+  // 한국어 운세 생성 (기존 로직)
+  static String _generateYearlyFortune(SajuProfile profile, Map<String, Ganji> saju, int targetYear) {
     // 2024: Gap-Chin (Blue Dragon) - Wood/Earth
     // 2025: Eul-Sa (Blue Snake) - Wood/Fire
     // 2026: Byeong-O (Red Horse) - Fire/Fire
@@ -743,18 +956,51 @@ class SajuService {
     return dominant;
   }
 
-  static String getOhaengExplanation(Ohaeng ohaeng) {
+  static String getOhaengExplanation(BuildContext context, Ohaeng ohaeng) {
+    final l10n = AppLocalizations.of(context)!;
     switch (ohaeng) {
       case Ohaeng.wood:
-        return "목(나무) 기운이 강한 당신은 성장과 의욕이 넘치며, 인정이 많고 진취적인 성향을 가집니다.";
+        return l10n.ohaengWoodExplanation;
       case Ohaeng.fire:
-        return "화(불) 기운이 강한 당신은 열정과 예의가 바르며, 활발하고 화려한 것을 좋아하는 성향입니다.";
+        return l10n.ohaengFireExplanation;
       case Ohaeng.earth:
-        return "토(흙) 기운이 강한 당신은 신뢰와 포용력이 있으며, 중후하고 변함없는 성향을 가집니다.";
+        return l10n.ohaengEarthExplanation;
       case Ohaeng.metal:
-        return "금(쇠) 기운이 강한 당신은 결단력과 의리가 있으며, 냉철하고 원칙을 중요시하는 성향입니다.";
+        return l10n.ohaengMetalExplanation;
       case Ohaeng.water:
-        return "수(물) 기운이 강한 당신은 지혜와 유연함이 있으며, 총명하고 적응력이 뛰어난 성향입니다.";
+        return l10n.ohaengWaterExplanation;
+    }
+  }
+
+  static String getLocalizedOhaengName(BuildContext context, Ohaeng ohaeng) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (ohaeng) {
+      case Ohaeng.wood:
+        return l10n.ohaengWood;
+      case Ohaeng.fire:
+        return l10n.ohaengFire;
+      case Ohaeng.earth:
+        return l10n.ohaengEarth;
+      case Ohaeng.metal:
+        return l10n.ohaengMetal;
+      case Ohaeng.water:
+        return l10n.ohaengWater;
+    }
+  }
+
+  static String getLocalizedOhaengSymbol(BuildContext context, Ohaeng ohaeng) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (ohaeng) {
+      case Ohaeng.wood:
+        return l10n.ohaengWoodSymbol;
+      case Ohaeng.fire:
+        return l10n.ohaengFireSymbol;
+      case Ohaeng.earth:
+        return l10n.ohaengEarthSymbol;
+      case Ohaeng.metal:
+        return l10n.ohaengMetalSymbol;
+      case Ohaeng.water:
+        return l10n.ohaengWaterSymbol;
     }
   }
 }

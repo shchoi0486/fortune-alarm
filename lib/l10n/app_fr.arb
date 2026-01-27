@@ -1,11 +1,11 @@
 {
   "@@locale": "fr",
-  "appTitle": "Fortune Alarm",
+  "appTitle": "Réveil Fortune",
   "morningGreeting": "Bonjour ! Commencez votre journée chanceuse.",
   "missionWakeUp": "Mission Réveil",
   "missionSupplement": "Prendre des compléments",
   "missionWater": "Boire plus de 2L d'eau",
-  "fortuneCookie": "Fortune Cookie",
+  "fortuneCookie": "Biscuit de Fortune",
   "settings": "Paramètres",
   "alarm": "Alarme",
   "calendar": "Calendrier",
@@ -15,22 +15,51 @@
   "allMissionsCompleted": "Vous avez terminé les 5 missions d'aujourd'hui.",
   "rewardReceived": "Vous avez reçu 1 Fortune Cookie en récompense ! 🥠",
   "confirm": "Confirmer",
-
   "exactAlarmPermissionRequired": "La permission \"Alarme exacte\" est requise pour sonner à l'heure correcte.",
   "overlayPermissionRequired": "La permission \"Afficher sur d'autres applis\" est requise pour les notifications plein écran.",
   "deleteAllAlarms": "Supprimer toutes les alarmes",
   "noAlarms": "Aucune alarme enregistrée.",
   "lessThanAMinuteRemaining": "Sonne dans moins d'une minute",
   "hoursMinutesRemaining": "Sonne dans {hours}h {minutes}m",
+  "@hoursMinutesRemaining": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "minutesRemaining": "Sonne dans {minutes}m",
+  "@minutesRemaining": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "am": "AM",
   "pm": "PM",
-
   "dailyFortuneCookieReward": "Récompense quotidienne Fortune Cookie",
   "missionRewardInfo": "1 cookie pour 5 missions réussies, 2 pour 10 !",
   "dailyMission": "Mission Quotidienne",
   "goalAchieved": "🎉 {completed}/5 Objectif Atteint !",
+  "@goalAchieved": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      }
+    }
+  },
   "missionProgress": "{completed}/5 Atteint",
+  "@missionProgress": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      }
+    }
+  },
   "myMissionRecord": "Mon Journal de Mission",
   "consecutiveSuccess": "Consécutif",
   "successRate30Days": "Taux de réussite (30j)",
@@ -43,31 +72,619 @@
   "addMission": "Ajouter une mission",
   "completedMissions": "Missions terminées",
   "noCompletedMissionsHint": "Aucune mission terminée pour l'instant. Atteignez l'objectif du jour.",
-
   "greeting": "Bonjour, {userName}",
+  "@greeting": {
+    "placeholders": {
+      "userName": {
+        "type": "String"
+      }
+    }
+  },
   "welcomeFortune": "Bienvenue dans le monde mystérieux de la fortune",
   "luckyColor": "Couleur porte-bonheur",
   "luckyItem": "Objet porte-bonheur",
   "luckyDirection": "Direction porte-bonheur",
   "viewVariousFortunes": "Voir diverses fortunes",
   "todaysRecommendation": "Recommandation du jour",
-  "checkTodaysFortune": "Vérifier la fortune du jour",
-  "todaysAdvice": "Le conseil du jour des étoiles mystérieuses",
-  "viewSpecificDateFortune": "Voir la fortune pour une date spécifique",
-  "lottoRecommendation": "Recommandation Loto",
-  "luckyNumber": "Numéro Chance",
-  "specificDateFortune": "Fortune Date Spécifique",
-  "specialDayFortune": "Fortune Jour Spécial",
-  "newYearFortune": "Fortune Nouvel An",
+  "checkTodaysFortune": "Voir la fortune du jour",
+  "todaysAdvice": "Conseil du jour",
+  "viewSpecificDateFortune": "Fortune pour une date précise",
+  "luckyNumberRecommendation": "Numéros chance du jour",
+  "luckyNumber": "Numéro chance",
+  "specificDateFortune": "Fortune à une date précise",
+  "specialDayFortune": "Fortune des jours spéciaux",
+  "newYearFortune": "Fortune du Nouvel An",
   "totalFortune2026": "Fortune Totale 2026",
-  "traditionalFortune": "Fortune Traditionnelle",
+  "traditionalFortune": "Fortune Traditionnelle (Tojeong)",
   "traditionalSaju": "Analyse Saju Traditionnelle",
-  "faceReading": "Lecture du visage",
+  "faceReading": "Lecture du Visage AI",
+  "missionFaceReading": "Mission Lecture du Visage",
+  "faceFate": "Visage et Destin",
+  "compatibility": "Analyse de Compatibilité",
+  "relationshipHarmony": "Harmonie Relationnelle",
+  "ohaengWood": "Bois",
+  "ohaengFire": "Feu",
+  "ohaengEarth": "Terre",
+  "ohaengMetal": "Métal",
+  "ohaengWater": "Eau",
+  "ohaengWoodSymbol": "Bois",
+  "ohaengFireSymbol": "Feu",
+  "ohaengEarthSymbol": "Terre",
+  "ohaengMetalSymbol": "Métal",
+  "ohaengWaterSymbol": "Eau",
+  "ohaengWoodExplanation": "Avec une forte énergie de Bois, vous débordez de croissance et de motivation, possédant une nature compatissante et entreprenante.",
+  "ohaengFireExplanation": "Avec une forte énergie de Feu, vous êtes passionné et poli, avec une tendance à être actif et amateur de belles choses.",
+  "ohaengEarthExplanation": "Avec une forte énergie de Terre, vous avez confiance et tolérance, possédant une nature grave et immuable.",
+  "ohaengMetalExplanation": "Avec une forte énergie de Métal, vous avez de la décision et de la loyauté, possédant une nature posée qui valorise les principes.",
+  "ohaengWaterExplanation": "Avec une forte énergie de Eau, vous avez de la sagesse et de la flexibilité, possédant une nature intelligente et hautement adaptable.",
   "missionFaceReading": "Mission Lecture Visage",
   "faceFate": "Destin du Visage",
   "compatibility": "Compatibilité",
   "relationshipHarmony": "Harmonie Relationnelle",
-
+  "ohaengWood": "Bois",
+  "ohaengFire": "Feu",
+  "ohaengEarth": "Terre",
+  "ohaengMetal": "Métal",
+  "ohaengWater": "Eau",
+  "ohaengWoodSymbol": "Bois",
+  "ohaengFireSymbol": "Feu",
+  "ohaengEarthSymbol": "Terre",
+  "ohaengMetalSymbol": "Métal",
+  "ohaengWaterSymbol": "Eau",
+  "ohaengWoodExplanation": "Avec une forte énergie de Bois (Arbre), vous êtes plein de croissance et de motivation, possédant une nature compatissante et entreprenante.",
+  "ohaengFireExplanation": "Avec une forte énergie de Feu, vous êtes passionné et poli, avec une tendance à être actif et amateur de choses glamour.",
+  "ohaengEarthExplanation": "Avec une forte énergie de Terre, vous avez confiance et tolérance, possédant une nature grave et immuable.",
+  "ohaengMetalExplanation": "Avec une forte énergie de Métal, vous avez de la décision et de la loyauté, possédant une nature calme qui valorise les principes.",
+  "ohaengWaterExplanation": "Avec une forte énergie de Eau, vous avez de la sagesse et de la flexibilité, possédant une nature intelligente et très adaptable.",
+  "cheonganGap": "Gap",
+  "cheonganEul": "Eul",
+  "cheonganByeong": "Byeong",
+  "cheonganJeong": "Jeong",
+  "cheonganMu": "Mu",
+  "cheonganGi": "Gi",
+  "cheonganGyeong": "Gyeong",
+  "cheonganSin": "Sin",
+  "cheonganIm": "Im",
+  "cheonganGye": "Gye",
+  "jijiJa": "Rat",
+  "jijiChuk": "Bœuf",
+  "jijiIn": "Tigre",
+  "jijiMyo": "Lapin",
+  "jijiJin": "Dragon",
+  "jijiSa": "Serpent",
+  "jijiO": "Cheval",
+  "jijiMi": "Chèvre",
+  "jijiSin": "Singe",
+  "jijiYu": "Coq",
+  "jijiSul": "Chien",
+  "jijiHae": "Cochon",
+  "jijiAnimalRat": "Rat",
+  "jijiAnimalOx": "Bœuf",
+  "jijiAnimalTiger": "Tigre",
+  "jijiAnimalRabbit": "Lapin",
+  "jijiAnimalDragon": "Dragon",
+  "jijiAnimalSnake": "Serpent",
+  "jijiAnimalHorse": "Cheval",
+  "jijiAnimalSheep": "Mouton",
+  "jijiAnimalMonkey": "Singe",
+  "jijiAnimalRooster": "Coq",
+  "jijiAnimalDog": "Chien",
+  "jijiAnimalPig": "Cochon",
+  "assetDefaultBackground": "Arrière-plan par défaut",
+  "assetFortuneyFriends": "Amis Fortuney",
+  "assetMongchuny": "Mongchuny",
+  "assetPanchuny": "Panchuny",
+  "assetTochuny": "Tochuny",
+  "assetHochuny": "Hochuny",
+  "assetBear": "Bear",
+  "assetMoon": "Moon",
+  "assetBridge": "Bridge",
+  "assetRoad": "Road",
+  "assetSky": "Sky",
+  "assetMinimalGray": "Minimal Gray",
+  "assetDarkMode": "Dark Mode",
+  "assetSoftBlue": "Soft Blue",
+  "assetWarmBeige": "Warm Beige",
+  "assetCat": "Chat {number}",
+  "@assetCat": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "assetDog": "Chien {number}",
+  "@assetDog": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "assetSea": "Mer {number}",
+  "@assetSea": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryCharacter": "Personnage",
+  "categoryAnimal": "Animal",
+  "categoryIllustration": "Illustration",
+  "categoryLandscape": "Paysage",
+  "categorySimple": "Simple",
+  "alarmBackground": "Arrière-plan de l'alarme",
+  "random": "Aléatoire",
+  "gallery": "Galerie",
+  "selectSolidColor": "Sélectionner une couleur unie",
+  "deleteColor": "Supprimer la couleur",
+  "deleteColorConfirm": "Êtes-vous sûr de vouloir supprimer cette couleur de la liste ?",
+  "randomBackgroundDesc": "Un nouvel arrière-plan à chaque sonnerie d'alarme !",
+  "backgroundDeleted": "Image d'arrière-plan supprimée.",
+  "pickFromDevice": "Choisir depuis l'appareil",
+  "alarmSaveError": "Échec de l'enregistrement de l'alarme. Une erreur inconnue est survenue.",
+  "errorOccurred": "Une erreur est survenue : {error}",
+  "@errorOccurred": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "openSettings": "Ouvrir les paramètres",
+  "videoLoadFailed": "Échec du chargement de la vidéo\nAppuyez pour réessayer",
+  "itsTimeToWakeUp": "Il est temps de se lever !",
+  "dismissAlarm": "Arrêter l'alarme",
+  "slideToDismiss": "Faire glisser pour arrêter",
+  "snoozeInfo": "{minutes} min, {count} fois",
+  "@snoozeInfo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "snoozeInfoUnlimited": "{minutes}m, Illimité",
+  "@snoozeInfoUnlimited": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "noActiveAlarms": "Pas d'alarmes actives",
+  "wealth": "Richesse",
+  "love": "Relation",
+  "career": "Carrière",
+  "health": "Santé",
+  "faceAnalysisBasic": "Analyse du visage (Basique)",
+  "insufficientDataOverallImpression": "Données de mesure insuffisantes, interprétées selon l'impression générale.",
+  "noseStabilityWealthAccuracy": "La stabilité du contour du nez augmente la précision de l'interprétation de la fortune de richesse.",
+  "mouthClarityInterpersonalAccuracy": "La clarté du contour de la bouche affine l'interprétation de la fortune interpersonnelle et de la parole.",
+  "improveAnalysisQualityAdvice": "Un éclairage plus vif et faire face à l'appareil amélioreront la qualité de l'analyse.",
+  "basicAnalysisDescription": "Ce résultat est affiché comme une interprétation de base en raison de mesures insuffisantes du contour/de l'expression du visage.\nLa stabilité des indicateurs tels que l'ouverture des yeux, le contour du nez et la zone de la bouche s'améliorera en faisant face à l'appareil et avec un meilleur éclairage.\nRéessayer rendra les distributions de scores et les descriptions plus spécifiques.",
+  "defaultDailyFortune": "Aujourd'hui est une bonne journée pour commencer avec un esprit paisible.\nRemplissez-vous d'énergie positive avec un sourire dans le miroir.\nUn peu de loisir apporte une chance inattendue.",
+  "dailyFortuneHeadline": "{vibe}Aujourd'hui, votre fortune {topKey} ressort le plus. En revanche, {bottomKey} semble nécessiter une attention particulière.",
+  "@dailyFortuneHeadline": {
+    "placeholders": {
+      "vibe": {
+        "type": "String"
+      },
+      "topKey": {
+        "type": "String"
+      },
+      "bottomKey": {
+        "type": "String"
+      }
+    }
+  },
+  "faceShapeVLine": "Visage en V",
+  "faceShapeSquare": "Carré",
+  "faceShapeBalanced": "Équilibré",
+  "faceShapeRound": "Rond",
+  "faceShapeLong": "Allongé",
+  "faceShapeOval": "Ovale",
+  "titleWealthOriented": "Visage tourné vers la richesse",
+  "titleLoveStrong": "Visage favorisant les relations",
+  "titleCareerNotable": "Visage favorisant la carrière",
+  "titleStableEnergy": "Visage à l'énergie stable",
+  "faceAnalysisComplete": "Analyse terminée !",
+  "chooseUnlockMethod": "Choisissez une méthode pour\ndébloquer votre résultat.",
+  "watchAdForFreeResult": "Regarder une pub (Gratuit)",
+  "useTwoCookies": "Utiliser 2 Fortune Cookies",
+  "checkResult": "Vérifier le résultat",
+  "aiAnalyzingFace": "L'IA analyse votre visage...",
+  "faceRecognitionComplete": "Visage reconnu",
+  "extractingFeatures": "Extraction des traits...",
+  "matchingFortuneData": "Analyse des données...",
+  "adLoadFailedFreeUnlock": "Échec du chargement de la pub. Débloqué gratuitement.",
+  "insufficientCookies": "Cookies insuffisants",
+  "insufficientCookiesDesc": "Pas assez de Fortune Cookies.\nRegardez une pub pour vérifier gratuitement !",
+  "usingTwoCookiesToast": "2 Fortune Cookies utilisés.",
+  "todaysFaceAnalysis": "Analyse du visage d'aujourd'hui",
+  "totalScoreWithPoints": "Score total : {score} pts",
+  "@totalScoreWithPoints": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "adLoadFailFreeAccess": "Échec du chargement de la pub. Accès gratuit cette fois.",
+  "insufficientCookiesTitle": "Pas assez de Fortune Cookies",
+  "insufficientCookiesMessage": "Gagnez-en via les missions ou regardez une pub.",
+  "useCookiesSnackbar": "2 Fortune Cookies ont été utilisés.",
+  "chooseMethodToViewResult": "Choisissez une méthode pour voir votre fortune cachée.",
+  "watchAdForFree": "Regarder une pub (Gratuit)",
+  "viewResult": "Voir le résultat",
+  "wealthLuck": "💰 Richesse",
+  "loveLuck": "❤️ Amour",
+  "careerLuck": "💼 Carrière",
+  "healthLuck": "💪 Santé",
+  "tojeongMonthlyGood_0": "Une personne de noble lignée venant de l'est apporte de bonnes nouvelles. Vos projets de longue date vont enfin aboutir.",
+  "tojeongMonthlyGood_1": "La richesse coule comme une source. Vos soucis s'estompent et tout avance sans encombre.",
+  "tojeongMonthlyGood_2": "Vos efforts portent leurs fruits et vous recevez des félicitations. Une promotion ou de grands résultats sont attendus.",
+  "tojeongMonthlyGood_3": "Le soleil se lève après une nuit sombre. Les épreuves se terminent et le bonheur arrive.",
+  "tojeongMonthlyGood_4": "Une rentrée d'argent inattendue remplit vos poches. De petits investissements mènent à de gros profits.",
+  "tojeongMonthlyNeutral_0": "Une vie quotidienne paisible se poursuit. La période passe sans événement particulier.",
+  "tojeongMonthlyNeutral_1": "Le contentement apporte la paix de l'esprit. Savourez ces petits bonheurs.",
+  "tojeongMonthlyNeutral_2": "Prenez du repos dans votre vie trépidante. Portez une attention particulière à votre santé.",
+  "tojeongMonthlyNeutral_3": "Maintenez votre situation actuelle plutôt que de vous lancer dans la nouveauté.",
+  "tojeongMonthlyNeutral_4": "La communication est la clé. Surveillez vos paroles pour éviter tout malentendu.",
+  "tojeongMonthlyCaution_0": "Soyez prudent en tout. Mieux vaut prévenir que guérir.",
+  "tojeongMonthlyCaution_1": "Faites attention à votre santé et évitez tout surmenage.",
+  "tojeongMonthlyCaution_2": "Évitez les commérages et ne vous mêlez pas des affaires d'autrui.",
+  "tojeongMonthlyCaution_3": "Une ambition excessive apporte des ennuis. Vivez selon vos moyens.",
+  "tojeongMonthlyCaution_4": "Évitez les transactions financières, vous pourriez être déçu par des personnes de confiance.",
+  "tojeongMonthlySpecial_1_0": "Avec l’énergie claire de la nouvelle année avec vous, les choses se passeront bien une fois que vous aurez commencé à faire ce que vous avez prévu.",
+  "tojeongMonthlySpecial_1_1": "Au début de l'année, vous recevrez l'aide de personnes nobles, alors chérissez vos relations avec les gens qui vous entourent.",
+  "tojeongMonthlySpecial_1_2": "Si vous êtes trop motivé, vous risquez de mal faire les choses. Examinez sereinement vos projets dans une perspective à long terme.",
+  "tojeongMonthlySpecial_1_3": "Un bien commencé est à moitié fait. Si vous commencez hardiment à faire quelque chose que vous avez reporté, vous obtiendrez des résultats inattendus.",
+  "tojeongMonthlySpecial_1_4": "De petits changements dans vos habitudes peuvent changer le cours de votre chance. Prenez l’habitude de vous lever tôt.",
+  "tojeongMonthlySpecial_2_0": "Ce n’est pas encore le moment, nous devons donc renforcer nos forces sous la surface et rechercher des opportunités.",
+  "tojeongMonthlySpecial_2_1": "D’anciens problèmes ou conflits peuvent refaire surface. Ne l’évitez pas et affrontez-le de front.",
+  "tojeongMonthlySpecial_2_2": "C’est une époque où il est plus important de construire du contenu plutôt que des performances extérieures. Des mouvements précipités peuvent causer des dégâts.",
+  "tojeongMonthlySpecial_2_3": "Alors que nous attendons le printemps à la fin de l’hiver, des opportunités se présentent à ceux qui se préparent avec patience.",
+  "tojeongMonthlySpecial_2_4": "Vous devez parcourir tranquillement votre propre chemin sans être dérangé par le bruit qui vous entoure.",
+  "tojeongMonthlySpecial_3_0": "L’énergie de revitalisation de toutes choses vous apporte de nouvelles opportunités. N'hésitez pas et relevez le défi.",
+  "tojeongMonthlySpecial_3_1": "C'est le mois où une nouvelle relation peut commencer. Si vous traitez les gens avec un esprit positif, vous obtiendrez de bons résultats.",
+  "tojeongMonthlySpecial_3_2": "Il est facile de perdre sa concentration face au vent du changement. Contrôlez votre esprit afin de ne pas vous laisser influencer par des changements émotionnels mineurs.",
+  "tojeongMonthlySpecial_3_3": "Tout comme une pousse qui traverse le sol, c’est le moment où votre potentiel explose. Soyez confiant.",
+  "tojeongMonthlySpecial_3_4": "Une relation précieuse viendra à vous, alors ouvrez la porte de votre cœur et accueillez les gens.",
+  "tojeongMonthlySpecial_4_0": "Votre richesse augmentera avec l’énergie chaude. Les fruits de vos efforts déboucheront sur des récompenses financières.",
+  "tojeongMonthlySpecial_4_1": "Vous avez de la chance avec les documents, vous pouvez donc obtenir de bons résultats aux contrats ou aux examens. Veuillez examiner attentivement.",
+  "tojeongMonthlySpecial_4_2": "Des dépenses inattendues peuvent survenir, vous devez donc accorder une attention particulière à la gestion de votre argent.",
+  "tojeongMonthlySpecial_4_3": "C’est le mois où vos charmes ressortent comme des fleurs en pleine floraison. Prendre des initiatives dans les relations interpersonnelles.",
+  "tojeongMonthlySpecial_4_4": "C’est le bon moment pour investir ou augmenter votre épargne car vous serez béni par la richesse.",
+  "tojeongMonthlySpecial_5_0": "Comme il règne une atmosphère harmonieuse à la maison, vous trouverez joie et stabilité dans vos relations avec votre famille.",
+  "tojeongMonthlySpecial_5_1": "La gentillesse que vous manifestez envers votre entourage reviendra comme une bénédiction. L’accumulation de vertu aide à résoudre les difficultés.",
+  "tojeongMonthlySpecial_5_2": "Un petit malentendu peut provoquer une bagarre avec un proche. Une posture inversée est requise.",
+  "tojeongMonthlySpecial_5_3": "Comme c'est le Mois de la famille, concentrez-vous sur le temps passé avec votre famille. L'harmonie au sein de la famille est le fondement de tout.",
+  "tojeongMonthlySpecial_5_4": "Si vous regardez autour de vous l’esprit tranquille, vous découvrirez des choses précieuses qui vous manquaient.",
+  "tojeongMonthlySpecial_6_0": "Vos efforts porteront leurs fruits et vous recevrez la reconnaissance de votre entourage. Il existe une opportunité de promotion ou d’honneur.",
+  "tojeongMonthlySpecial_6_1": "À mesure que votre énergie active devient plus forte, il peut être utile d’envisager de vous lancer dans un nouveau domaine ou de changer d’emploi.",
+  "tojeongMonthlySpecial_6_2": "Si vous allez trop loin, vous risquez d’avoir des ennuis. Restez humble et regardez autour de vous.",
+  "tojeongMonthlySpecial_6_3": "Avant que la chaleur ne commence, vous devez faire le plein d'endurance. C'est également une bonne idée de passer un bilan de santé.",
+  "tojeongMonthlySpecial_6_4": "Prenez le temps de faire un bilan à mi-parcours pour terminer le premier semestre et planifier le second semestre.",
+  "tojeongMonthlySpecial_7_0": "C’est une époque où la passion passionnée mène aux résultats. Si vous avancez avec audace, vous pouvez atteindre vos objectifs.",
+  "tojeongMonthlySpecial_7_1": "Vous pouvez rencontrer quelqu'un de précieux ou obtenir une nouvelle opportunité lors d'un voyage ou d'un déménagement.",
+  "tojeongMonthlySpecial_7_2": "C’est une période où votre santé peut être facilement compromise. Il est important d’éviter le surmenage et de se reposer suffisamment.",
+  "tojeongMonthlySpecial_7_3": "Cela demande une passion infatigable, même sous une chaleur torride. Autant vous transpirez, autant vous obtiendrez des résultats.",
+  "tojeongMonthlySpecial_7_4": "Prenez le temps de vous ressourcer grâce au repos. Un long voyage porte chance.",
+  "tojeongMonthlySpecial_8_0": "Au fil du temps, la patience commence à s’améliorer progressivement. Ne soyez pas impatient et attendez votre heure.",
+  "tojeongMonthlySpecial_8_1": "Les vieux problèmes non résolus trouveront un indice. Utilisez votre intelligence pour le résoudre.",
+  "tojeongMonthlySpecial_8_2": "Il est facile de baisser la garde lorsqu’il s’agit de concrétiser. Ne lâchez pas votre tension jusqu'à la fin.",
+  "tojeongMonthlySpecial_8_3": "Il est temps de donner le dernier élan avant la saison fructueuse. Ne vous détendez pas.",
+  "tojeongMonthlySpecial_8_4": "Il y a un coup de main inattendu. Si vous rencontrez des difficultés, demandez conseil à votre entourage.",
+  "tojeongMonthlySpecial_9_0": "Comme la saison de fécondité abondante, c’est une période où la richesse et la fortune amoureuse deviennent abondantes.",
+  "tojeongMonthlySpecial_9_1": "Si vous y consacrez beaucoup d’efforts, vous obtiendrez de meilleurs résultats que prévu.",
+  "tojeongMonthlySpecial_9_2": "Tout comme il y a beaucoup d’entrées, beaucoup de choses peuvent sortir. Vous avez besoin d’un plan de dépenses intelligent.",
+  "tojeongMonthlySpecial_9_3": "C'est une période d'abondance comme les champs dorés. Si vous avez un cœur généreux, de plus grandes bénédictions vous parviendront.",
+  "tojeongMonthlySpecial_9_4": "C’est le bon moment pour résoudre tout malentendu ou conflit. Tendez d'abord la main.",
+  "tojeongMonthlySpecial_10_0": "Votre renommée augmentera et votre nom deviendra largement connu. Vous gagnerez la confiance de votre entourage.",
+  "tojeongMonthlySpecial_10_1": "Vous pouvez obtenir d'excellents résultats dans les activités intellectuelles. C’est le bon moment pour vous concentrer sur vos études ou vos recherches.",
+  "tojeongMonthlySpecial_10_2": "À mesure que votre statut augmente, votre responsabilité devient plus lourde. Vous devez faire attention à vos paroles et à vos actions.",
+  "tojeongMonthlySpecial_10_3": "Votre renommée s'élève comme le ciel bleu. Libérez pleinement vos capacités.",
+  "tojeongMonthlySpecial_10_4": "C’est un bon mois pour développer la sagesse intérieure grâce à une contemplation et une lecture profondes.",
+  "tojeongMonthlySpecial_11_0": "C’est une période où nous avons besoin de sagesse pour revenir sur l’année écoulée et préparer l’avenir. Grâce à la réflexion, vous passerez au niveau supérieur.",
+  "tojeongMonthlySpecial_11_1": "Vous retrouverez la stabilité financière, mais vous ne devriez pas faire d’investissements excessifs à la recherche de profits importants.",
+  "tojeongMonthlySpecial_11_2": "Vous pouvez vous sentir seul dans vos relations. Tout d’abord, vous devez faire un effort pour aborder les gens avec un esprit ouvert.",
+  "tojeongMonthlySpecial_11_3": "Tout comme pour ajuster votre col lorsqu'un vent froid souffle, vous devez veiller à l'aspect pratique et renforcer votre force intérieure.",
+  "tojeongMonthlySpecial_11_4": "Alors que nous terminons l’année, nous avons besoin de sagesse pour regarder en arrière sur ce qui nous a manqué et nous préparer pour l’année prochaine.",
+  "tojeongMonthlySpecial_12_0": "Une chance inattendue arrive à la fin de l’année. Attendez-vous à un gain financier ou à une bonne nouvelle.",
+  "tojeongMonthlySpecial_12_1": "Vous serez récompensé pour votre travail acharné sur une longue période. C’est le mois où l’on récolte la beauté du pétrole.",
+  "tojeongMonthlySpecial_12_2": "Des rassemblements fréquents peuvent nuire à votre santé ou entraîner des dépenses inutiles, la modération est donc nécessaire.",
+  "tojeongMonthlySpecial_12_3": "La fin est un nouveau départ. Terminez l’année en planifiant un avenir plein d’espoir plutôt que de regrets.",
+  "tojeongMonthlySpecial_12_4": "Si vous pratiquez le partage chaleureux, cette chaleur vous reviendra sous forme de chance.",
+  "todaysFaceFortune": "Today's Face Fortune",
+  "detailedAnalysis": "Detailed Analysis",
+  "eyeInsight": "👁️ Eye (Insight)",
+  "noseWealth": "👃 Nose (Wealth)",
+  "mouthLateLuck": "👄 Mouth (Late Luck)",
+  "overallAnalysisTitle": "Overall Analysis",
+  "shareResultTitle": "Today's Face Result",
+  "shareResultDesc": "AI face analysis result.\n{title}",
+  "@shareResultDesc": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "shareResultTotalScore": "Total Score",
+  "shareResultWealth": "Wealth Luck",
+  "shareResultLove": "Love Luck",
+  "shareResultCareer": "Career Luck",
+  "shareResultHealth": "Health Luck",
+  "shareResultText": "Share Result",
+  "wakeUpComplete": "Wake up complete!",
+  "collapseOptions": "Collapse Options",
+  "expandOptions": "More Options",
+  "snoozeAlarm": "Snooze Alarm",
+  "interval": "Intervalle",
+  "maxSnoozeCount": "Max Snooze Count",
+  "unlimited": "Unlimited",
+  "permissionRequired": "Permission Requise",
+  "exactAlarmFailMessage": "Failed to register alarm. Exact alarm permission is off and needs setting.",
+  "batteryOptimFailMessage": "Failed to register alarm. Battery optimization exception permission is missing.",
+  "overlayFailMessage": "Failed to register alarm. Display over other apps permission is missing.",
+  "loadingDelay": "Loading delay",
+  "previewFail": "Preview failed",
+  "bgDefault": "Default Background",
+  "bgFortuneFriends": "Fortune Friends",
+  "bgMongChuni": "Mongchuni",
+  "bgPanChuni": "Panchuni",
+  "bgToChuni": "Tochuni",
+  "bgHoChuni": "Hochuni",
+  "bgBear": "Bear",
+  "bgMoon": "Moon",
+  "bgSea": "Sea",
+  "bgBridge": "Bridge",
+  "bgRoad": "Road",
+  "bgSky": "Sky",
+  "bgMinimalGray": "Minimal Gray",
+  "bgDarkMode": "Dark Mode",
+  "bgSoftBlue": "Soft Blue",
+  "bgWarmBeige": "Warm Beige",
+  "dateFormatMdyE": "MMM d (E)",
+  "deleteAlarm": "Delete Alarm",
+  "confirmDelete": "Are you sure you want to delete?",
+  "yes": "Yes",
+  "no": "No",
+  "wealthLuckWithIcon": "💰 Wealth Luck",
+  "loveLuckWithIcon": "❤️ Love Luck",
+  "careerLuckWithIcon": "💼 Career Luck",
+  "healthLuckWithIcon": "💪 Health Luck",
+  "mouthFortune": "👄 Mouth (Maturity Luck)",
+  "comprehensiveAnalysis": "Comprehensive Analysis",
+  "todaysFaceResult": "Today's Face Analysis Result",
+  "faceAnalysisShareDesc": "This is the AI face analysis result.\n{title}",
+  "@faceAnalysisShareDesc": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "shareResult": "Share Result",
+  "faceVibeSmile0": "Votre sourire radieux propage une énergie positive autour de vous. ",
+  "faceVibeSmile1": "Votre sourire reflète l'énergie brillante de cette nouvelle journée. ",
+  "faceVibeSmile2": "Vos traits doux émanent une énergie attractive qui attirera de l'aide aujourd'hui. ",
+  "faceVibeSmile3": "Un sourire confiant sera la clé pour surmonter tout obstacle aujourd'hui. ",
+  "faceVibeSmile4": "Grâce à votre sourire rafraîchissant, l'énergie circule et la chance est là. ",
+  "faceVibeEye0": "Vos yeux brillants reflètent une forte détermination pour mener votre journée. ",
+  "faceVibeEye1": "Votre regard vif annonce un jugement et une intuition exceptionnels. ",
+  "faceVibeEye2": "Vos yeux profonds et clairs attendent de bonnes nouvelles avec sincérité. ",
+  "faceVibeEye3": "Votre regard fixe et direct augmentera votre présence aujourd'hui. ",
+  "faceVibeEye4": "La passion dans vos yeux inspire une grande confiance à votre entourage. ",
+  "faceVibeNeutral0": "Globalement, votre énergie faciale paisible vous apporte la tranquillité d'esprit. ",
+  "faceVibeNeutral1": "Votre teint serein montre une énergie prudente et sage. ",
+  "faceVibeNeutral2": "L'harmonie de votre visage symbolise une journée stable et sans heurts. ",
+  "faceVibeNeutral3": "Votre expression sérieuse est idéale pour prendre des décisions importantes. ",
+  "faceVibeNeutral4": "Votre énergie faciale rassurante facilite la coopération avec les autres. ",
+  "dailyFortuneWealth0": "L'énergie de votre nez est solide ; une planification minutieuse augmentera votre flux financier.",
+  "dailyFortuneWealth1": "Aujourd'hui, la chance se concentre sur votre nez. Calculez bien pour maximiser vos profits.",
+  "dailyFortuneWealth2": "Le centre de votre visage a une bonne énergie ; un petit détail soigné apportera des résultats inattendus.",
+  "dailyFortuneWealth3": "Votre teint indique une bonne fortune économique. Des gains peuvent surgir de façon imprévue.",
+  "dailyFortuneWealth4": "La vitalité de votre nez aiguise votre sens économique. Journée favorable aux décisions financières.",
+  "dailyFortuneWealth5": "L'énergie pour attirer l'argent est forte. Vérifiez vos comptes pour attirer encore plus de chance.",
+  "dailyFortuneWealth6": "Votre visage indique que vos économies vont croître. Vos efforts commencent à porter leurs fruits.",
+  "dailyFortuneWealth7": "Une fortune stable arrive. L'épargne constante plutôt que les grosses dépenses augmentera votre chance.",
+  "dailyFortuneWealth8": "Vos yeux pour saisir les opportunités sont brillants. Écoutez les informations autour de vous.",
+  "dailyFortuneWealth9": "Votre visage respire la prospérité. C'est un jour où partager vous apportera plus de richesse.",
+  "dailyFortuneLove0": "Votre expression est douce ; si vous faites le premier pas, vos relations s'amélioreront.",
+  "dailyFortuneLove1": "Votre communication est impeccable aujourd'hui. La sincérité réduira tout malentendu.",
+  "dailyFortuneLove2": "Votre teint brillant attire des personnes précieuses. Un petit geste apportera un grand lien.",
+  "dailyFortuneLove3": "Aujourd'hui, votre charme personnel ressort. Vous recevrez l'énergie positive de nouvelles rencontres.",
+  "dailyFortuneLove4": "L'énergie dans vos relations est claire ; les conflits se résolvent et l'harmonie arrive.",
+  "dailyFortuneLove5": "La douceur de votre visage ouvre le cœur des autres. Aujourd'hui, écouter est la meilleure façon de converser.",
+  "dailyFortuneLove6": "Votre visage indique que vous recevrez de l'aide. Ne vous inquiétez pas seul, cherchez conseil.",
+  "dailyFortuneLove7": "Vos yeux sincères inspirent confiance. Si vous tenez vos promesses, vous renforcerez vos liens.",
+  "dailyFortuneLove8": "L'harmonie règne dans votre entourage. Ce sera une journée riche en sourires.",
+  "dailyFortuneLove9": "Vos liens se renforcent aujourd'hui. Exprimez votre gratitude aux personnes qui vous sont chères.",
+  "dailyFortuneCareer0": "Votre regard est vif ; si vous ciblez vos priorités, votre concentration se transformera en succès.",
+  "dailyFortuneCareer1": "Votre capacité d'observation se distingue. Les décisions seront simples et l'exécution ferme.",
+  "dailyFortuneCareer2": "Votre front et vos yeux sont dégagés ; aujourd'hui, vous avez la force de réussir vos tâches.",
+  "dailyFortuneCareer3": "Votre visage exerce un leadership. Votre opinion aura une grande influence sur les autres.",
+  "dailyFortuneCareer4": "Votre jugement atteint son apogée aujourd'hui. Même les problèmes complexes se résoudront clairement.",
+  "dailyFortuneCareer5": "Votre travail sera reconnu. Vous avez une forte énergie pour les accomplissements et les promotions.",
+  "dailyFortuneCareer6": "Énergie optimale pour lancer de nouveaux projets. Relevez le défi avec confiance.",
+  "dailyFortuneCareer7": "Votre efficacité au travail augmente nettement. Idéal pour les tâches en attente.",
+  "dailyFortuneCareer8": "Vos yeux regorgent d'idées créatives. Prendre des notes aujourd'hui vous portera chance.",
+  "dailyFortuneCareer9": "Votre persévérance brille aujourd'hui. Si vous vous concentrez jusqu'au bout, de grandes récompenses suivront.",
+  "dailyFortuneHealth0": "Votre teint est stable, donc si vous maintenez un bon rythme, votre condition physique se rétablira rapidement.",
+  "dailyFortuneHealth1": "La vitalité de votre visage est remarquable. Si vous gardez le tempo sans trop en faire, la journée sera agréable.",
+  "dailyFortuneHealth2": "L'énergie de vos yeux et de votre peau est claire ; un court repos améliorera à la fois votre concentration et votre humeur.",
+  "dailyFortuneHealth3": "Votre rythme corporel atteint une harmonie parfaite. Un exercice léger rendra votre énergie encore plus limpide.",
+  "dailyFortuneHealth4": "Une énergie débordante se lit sur votre visage. Vous passerez une journée plaisante sans ressentir de fatigue.",
+  "dailyFortuneHealth5": "La stabilité de l'esprit et du corps est à l'honneur. La méditation ou la respiration profonde augmentera votre chance.",
+  "dailyFortuneHealth6": "C'est une journée avec une bonne capacité de récupération. Vous avez la vitalité nécessaire pour effacer rapidement toute trace de fatigue.",
+  "dailyFortuneHealth7": "La vitalité de votre peau est excellente, on vous dira sûrement que vous avez l'air en pleine forme.",
+  "dailyFortuneHealth8": "Une alimentation équilibrée et du repos renforcent la source de votre chance. Prenez le temps de chérir votre corps aujourd'hui.",
+  "dailyFortuneHealth9": "L'air frais et l'hydratation sont vos meilleurs remèdes aujourd'hui. Profitez d'une journée pleine de vitalité.",
+  "dailyFortuneTipWealth0": "Vérifiez vos dépenses, abonnements et paiements 'demain' plutôt que 'maintenant'.",
+  "dailyFortuneTipWealth1": "Évitez les achats impulsifs ; ne gardez que ce dont vous avez réellement besoin.",
+  "dailyFortuneTipWealth2": "Gardez une trace de vos discussions financières pour éviter toute perte inutile.",
+  "dailyFortuneTipWealth3": "Vérifiez s'il y a des fuites d'argent, même pour de petites sommes.",
+  "dailyFortuneTipWealth4": "La tentation des achats impulsifs est forte aujourd'hui. Réfléchissez 10 minutes avant de payer.",
+  "dailyFortuneTipWealth5": "Soyez prudent avec les investissements ou les transactions importantes aujourd'hui. Demandez conseil à un expert.",
+  "dailyFortuneTipWealth6": "Organisez clairement l'argent prêté ou celui que vous devez recevoir.",
+  "dailyFortuneTipWealth7": "Faites attention à la gestion de votre portefeuille. Une légère tendance à la perte ou au gaspillage est visible.",
+  "dailyFortuneTipWealth8": "Privilégiez les gains concrets plutôt que les dépenses liées à l'apparence.",
+  "dailyFortuneTipWealth9": "Plutôt que d'attendre quelque chose gratuitement, payer le juste prix est le meilleur moyen de conserver votre chance.",
+  "dailyFortuneTipLove0": "Comme votre ton peut devenir tranchant, prenez une pause avant de répondre.",
+  "dailyFortuneTipLove1": "Si un malentendu surgit, une brève vérification vaut mieux qu'une longue explication.",
+  "dailyFortuneTipLove2": "Aujourd'hui, la confiance se gagne simplement en respectant vos rendez-vous à l'heure.",
+  "dailyFortuneTipLove3": "La conversation sera moins éprouvante si vous commencez directement par la conclusion.",
+  "dailyFortuneTipLove4": "Restez poli, même avec vos proches. La familiarité pourrait vous amener à les blesser involontairement.",
+  "dailyFortuneTipLove5": "Essayez de complimenter avant de critiquer. Le cœur fermé de l'autre s'ouvrira plus facilement.",
+  "dailyFortuneTipLove6": "Attention aux lapsus aujourd'hui. Confirmez les points importants par écrit.",
+  "dailyFortuneTipLove7": "Ne pas trop s'immiscer dans les affaires d'autrui est le secret pour éviter les rumeurs.",
+  "dailyFortuneTipLove8": "Une conversation rationnelle plutôt qu'une réaction émotionnelle préservera vos relations.",
+  "dailyFortuneTipLove9": "Vérifiez soigneusement votre emploi du temps pour éviter les chevauchements. La fiabilité est votre atout.",
+  "dailyFortuneTipCareer0": "Plutôt que de commencer de nouvelles choses, 'en terminer une' boostera votre chance.",
+  "dailyFortuneTipCareer1": "Le respect des délais prime sur la perfection. Aujourd'hui, visez 80% de réussite.",
+  "dailyFortuneTipCareer2": "Si vous réglez une tâche que vous avez reportée, votre esprit deviendra plus clair.",
+  "dailyFortuneTipCareer3": "Séparez votre travail de celui des autres pour réduire votre stress.",
+  "dailyFortuneTipCareer4": "De petites erreurs peuvent compliquer le travail. N'oubliez pas la vérification finale.",
+  "dailyFortuneTipCareer5": "Des frictions avec des collègues ou supérieurs sont possibles. Respectez les différences d'opinion.",
+  "dailyFortuneTipCareer6": "La concentration est fragile aujourd'hui. Travaillez 50 minutes et reposez-vous 10 minutes.",
+  "dailyFortuneTipCareer7": "Une responsabilité excessive peut être néfaste. Ne prenez que ce que vous pouvez assumer.",
+  "dailyFortuneTipCareer8": "Veillez à ne pas mélanger sentiments personnels et travail professionnel aujourd'hui.",
+  "dailyFortuneTipCareer9": "Avant d'envoyer des documents ou des e-mails, vérifiez le destinataire et les pièces jointes.",
+  "dailyFortuneTipHealth0": "Évitez le manque de sommeil, les excès alimentaires et la caféine pour stabiliser votre condition.",
+  "dailyFortuneTipHealth1": "Relâcher la tension dans le cou et les épaules réduira considérablement votre fatigue.",
+  "dailyFortuneTipHealth2": "Une courte promenade organisera vos pensées et rafraîchira votre énergie.",
+  "dailyFortuneTipHealth3": "Un verre d'eau et une minute d'étirement soutiendront la base de votre chance.",
+  "dailyFortuneTipHealth4": "La fatigue oculaire peut devenir intense. Réduisez brièvement l'utilisation de votre smartphone.",
+  "dailyFortuneTipHealth5": "Plutôt qu'une activité soudaine, il est préférable de bouger après un échauffement suffisant.",
+  "dailyFortuneTipHealth6": "Comme vous pourriez être sensible aux changements de température, prévoyez un vêtement pour réguler votre chaleur corporelle.",
+  "dailyFortuneTipHealth7": "Évitez les aliments stimulants aujourd'hui pour votre santé intestinale et votre peau.",
+  "dailyFortuneTipHealth8": "Un sommeil suffisant est votre meilleur remède. Couchez-vous plus tôt que d'habitude.",
+  "dailyFortuneTipHealth9": "Changez d'humeur avec votre musique ou parfum préféré pour ne pas accumuler de stress.",
+  "eyeAnalysisTypeSharp": "Vos yeux sont intenses et clairs, montrant un jugement et une détermination qui se démarquent.",
+  "eyeAnalysisTypeDeep": "Vos yeux sont calmes et profonds, un visage sage qui observe et réfléchit attentivement avant d'agir.",
+  "eyeAnalysisTypeBalanced": "L'énergie de vos yeux est équilibrée, harmonisant émotion et raison pour donner un sentiment de stabilité.",
+  "eyeExpressionBright": "Particulièrement, vos yeux brillants s'harmonisent avec votre sourire, manifestant l'énergie attractive du 'Dohwa'.",
+  "eyeExpressionGentle": "Un sourire doux se cache dans vos yeux calmes, dégageant un charisme souple de type 'Oeyu-naegang' (fermeté sous la douceur).",
+  "eyeExpressionStrong": "Des yeux forts sans sourire symbolisent la décision et le leadership, montrant la force d'aller droit vers ses objectifs.",
+  "eyeExpressionSteady": "Une atmosphère calme et sérieuse, gagnant la confiance par une attitude posée plutôt que par des paroles légères.",
+  "eyePostureTilt": "Cependant, votre tête est légèrement inclinée, ce qui pourrait troubler votre esprit ; regarder droit devant clarifiera votre chance.",
+  "eyePostureStraight": "Le fait de regarder droit devant rend l'énergie de vos yeux plus limpide et droite.",
+  "noseInsufficient": "La mesure du contour du nez est insuffisante, l'interprétation sera donc modérée.",
+  "noseWealthRich": "L'arête du nez est épaisse et longue, l'énergie du 'Palais de la Richesse' (Jebaekgung) est excellente pour accumuler des biens.",
+  "noseWealthPlanner": "Le nez est net et précis, faisant de vous une personne pragmatique qui gère et fait fructifier sa richesse méthodiquement.",
+  "noseWealthBalanced": "Les proportions du nez sont équilibrées, vous donnant le pouvoir de maintenir durablement la richesse acquise.",
+  "mouthExpressionBlessing": "La bouche est fermée mais les coins sont relevés ; la chance réside dans chacune de vos paroles et votre visage attire la bienveillance.",
+  "mouthExpressionReliable": "Une bouche fermement close montre la fiabilité et la responsabilité, un type qui agit plus qu'il ne parle.",
+  "mouthExpressionLucky": "Une bouche largement souriante est rafraîchissante, émettant une énergie positive et attirant la chance dans les relations.",
+  "mouthExpressionOpen": "La bouche est légèrement ouverte, montrant une personnalité franche, mais attention parfois aux paroles imprudentes.",
+  "overallHeadlineSimple": "Aujourd'hui, l'accent est mis sur {topKey}, et le point de vigilance est {bottomKey}.",
+  "@overallHeadlineSimple": {
+    "placeholders": {
+      "topKey": {
+        "type": "String"
+      },
+      "bottomKey": {
+        "type": "String"
+      }
+    }
+  },
+  "overallVibeWealthRich": "L'énergie du Palais de la Richesse (nez) est vive, offrant un excellent teint pour saisir les opportunités financières.",
+  "overallVibeWealthSteady": "L'énergie autour du nez est calme, favorisant des gains concrets et une accumulation régulière de richesse.",
+  "overallVibeLoveCharisma": "Le sourire éclatant amplifie l'énergie 'Dohwa', attirant les gens et favorisant les rencontres avec des protecteurs bienveillants.",
+  "overallVibeLoveTrust": "Le sérieux de vos yeux inspire une confiance profonde, idéal pour nouer des relations sérieuses aujourd'hui.",
+  "overallVibeCareerSmart": "L'intelligence dans votre regard aiguise votre jugement, parfait pour les tâches complexes ou les décisions importantes.",
+  "overallVibeCareerSteady": "L'énergie stable du bas du visage soutient la persévérance ; vos efforts silencieux porteront de grands fruits.",
+  "overallVibeHealth": "La vitalité circulant sur votre visage montre un rythme corporel stable, idéal pour recharger vos batteries.",
+  "overallActionPrudent": "Une certaine sagesse se dégage de votre bouche fermée. Aujourd'hui, la chance suit l'action plus que la parole.",
+  "overallActionConfident": "Le contour de votre bouche ouverte appelle l'énergie positive. Exprimez vos opinions avec assurance.",
+  "adviceHealth0": "La gestion de votre condition physique soutient votre chance. Évitez les programmes surchargés aujourd'hui.",
+  "adviceHealth1": "Écoutez les signaux de votre corps. Un court repos apportera de meilleurs résultats.",
+  "adviceHealth2": "Un sommeil suffisant et une bonne hydratation suffiront à éclaircir votre chance aujourd'hui.",
+  "adviceWealth0": "L'argent s'échappe aussi vite qu'il entre. Vérifiez vos dépenses et vos contrats une fois de plus.",
+  "adviceWealth1": "Réduire les petites dépenses est le début de la grande richesse.",
+  "adviceWealth2": "Reporter vos décisions financières à demain pourrait s'avérer bénéfique.",
+  "adviceLove0": "Chaque ton et chaque expression compte pour votre chance relationnelle. Commencez en douceur.",
+  "adviceLove1": "Une attitude d'écoute sera la clé pour ouvrir le cœur de l'autre.",
+  "adviceLove2": "Rester poli, même avec vos proches, est le meilleur moyen de préserver votre chance.",
+  "adviceCareer0": "Aujourd'hui, concentrez-vous sur une tâche précise plutôt que de multiplier les objectifs. Réduisez vos priorités.",
+  "adviceCareer1": "Ne vous précipitez pas. Avancer pas à pas est le chemin le plus rapide.",
+  "adviceCareer2": "Prenez conseil autour de vous, mais fiez-vous à votre intuition pour la décision finale.",
+  "sajuFortune2024Gap": "🌿 Fortune générale de l'année Gapjin 2024 (Bois-Gap) : 'Une année de nouveaux départs et de bonds en avant'\n\n2024 est une année où l'énergie de 'Bi-gyeon' et 'Pyeon-jae' entre en jeu pour vous. C'est comme si de nouveaux arbres étaient plantés dans une forêt luxuriante et qu'une vaste terre s'ouvrait à vous. Ce sera une excellente année pour avoir une vision subjective claire et planifier de nouvelles choses.\n\n💼 [Carrière et Affaires]\nUne période où la confiance déborde et où votre détermination se renforce. Des opportunités se présenteront pour réussir de grands projets en coopérant avec des collègues ou des partenaires. Si vous envisagiez de créer une entreprise ou de changer d'emploi, cette année pourrait être le moment idéal. Cependant, vous pourriez devenir têtu, une attitude d'écoute est donc nécessaire.\n\n💰 [Richesse]\nDes occasions de toucher une grande richesse se présenteront. Des gains inattendus ou des retours sur investissement sont prévus. Cependant, il pourrait y avoir beaucoup de sorties d'argent, une gestion rigoureuse des actifs est donc requise. Investir avec une perspective à long terme est avantageux.\n\n❤️ [Amour et Relations]\nUn bon moment pour élargir vos relations et nouer de nouveaux liens. Si vous êtes célibataire, il y a de fortes chances de rencontrer un partenaire séduisant, et si vous êtes en couple, la relation s'approfondira. Cependant, méfiez-vous de l'apparition de concurrents.\n\n⚠️ [Précautions]\nFaites attention à la santé de votre foie ou de votre vésicule biliaire et gérez votre stress. Évitez également les décisions arbitraires dues à un excès de confiance.",
+  "sajuFortune2024Eul": "🌿 Fortune générale de l'année Gapjin 2024 (Bois-Eul) : 'Une année de croissance avec des protecteurs'\n\n2024 est une année où l'énergie de 'Geob-jae' et 'Jeong-jae' entre en jeu pour vous. C'est comme du lierre grimpant sur un grand arbre pour voir le ciel. Ce sera une année où vous pourrez obtenir de meilleurs résultats avec l'aide de votre entourage plutôt que seul.\n\n💼 [Carrière et Affaires]\nLa collaboration et le réseautage sont essentiels. Vous rencontrerez des aides compétents, ce qui augmentera l'efficacité de votre travail et vous vaudra de la reconnaissance. Cependant, des situations où les performances doivent être partagées peuvent survenir, portez donc attention à une distribution équitable. C'est un bon moment pour affirmer votre présence au milieu de la compétition.\n\n💰 [Richesse]\nUn revenu stable est garanti. Les récompenses suivent des efforts sincères, et c'est un moment avantageux pour l'épargne ou l'investissement immobilier. Cependant, évitez les transactions financières avec des collègues ou des connaissances et soyez attentif à la gestion de vos dépenses.\n\n❤️ [Amour et Relations]\nIl y aura de nombreux rassemblements sociaux et votre popularité augmentera. Dans les relations amoureuses, de légers malentendus peuvent survenir, une conversation honnête est donc nécessaire. De nouveaux liens sont susceptibles de se nouer naturellement par l'intermédiaire d'amis ou de collègues.\n\n⚠️ [Précautions]\nAttention aux troubles nerveux ou aux migraines. Maintenez également une attitude flexible, car vous pourriez souffrir de conflits avec votre entourage.",
+  "sajuFortune2024Byeong": "🔥 Fortune générale de l'année Gapjin 2024 (Feu-Byeong) : 'Une année où brillent passion et sagesse'\n\n2024 est une année où l'énergie de 'Pyeon-in' et 'Sik-sin' entre en jeu pour vous. C'est comme le soleil brillant sur une forêt pour lui insuffler la vie. Des idées créatives jailliront et ce sera une année où vous pourrez pleinement exprimer vos talents.\n\n💼 [Carrière et Affaires]\nVous vous distinguerez dans des domaines professionnels et obtiendrez des résultats originaux. Particulièrement avantageux pour ceux qui travaillent dans la recherche, l'art ou des postes techniques. Cependant, votre capacité d'exécution pourrait baisser à cause de trop de réflexion ; si vous avez fait un plan, efforcez-vous de le mettre en pratique immédiatement.\n\n💰 [Richesse]\nUne période où vos talents et vos idées mènent à l'argent. Des activités secondaires ou des passe-temps pourraient générer des revenus. Cependant, examinez attentivement les contrats de documents ou les investissements pour prévenir les pertes.\n\n❤️ [Amour et Relations]\nUne période où votre élocution s'améliore et où votre charme déborde. Vous jouerez un rôle de leader dans vos relations et gagnerez la faveur de nombreuses personnes. Dans les relations amoureuses, il y aura de nombreux rendez-vous et événements plaisants, approfondissant la relation.\n\n⚠️ [Précautions]\nFaites attention au système digestif ou à la santé cardiovasculaire. De plus, vous pourriez vous sentir déprimé à force de trop réfléchir ; il est bon de libérer votre énergie par des activités de plein air.",
+  "sajuFortune2024Jeong": "🔥 Fortune générale de l'année Gapjin 2024 (Feu-Jeong) : 'Une année de renforcement des bases internes dans la stabilité'\n\n2024 est une année où l'énergie de 'Jeong-in' et 'Sang-gwan' entre en jeu pour vous. C'est comme une lampe dans le ciel nocturne éclairant la forêt. Ce sera une bonne année pour se concentrer sur le développement personnel, comme les études ou l'acquisition de certifications, et renforcer vos bases internes.\n\n💼 [Carrière et Affaires]\nAvec l'aide de supérieurs ou d'aînés, l'environnement de travail s'améliore et des opportunités de promotion ou de transfert se présentent. C'est un moment avantageux pour transmettre vos opinions de manière persuasive et obtenir l'accord de votre entourage. Cependant, soyez prudent dans vos paroles et vos actes, car des attitudes critiques pourraient mener à des rumeurs.\n\n💰 [Richesse]\nLa chance liée aux documents est bonne. Des contrats immobiliers ou une amélioration des revenus grâce à l'acquisition de certifications sont prévus. Il est bon de se concentrer sur une gestion d'actifs stable et de s'abstenir de consommation impulsive.\n\n❤️ [Amour et Relations]\nVous gagnerez la confiance de votre entourage par votre apparence polie et chaleureuse. Dans les relations amoureuses, la considération mutuelle grandit, maintenant des rencontres stables. Une bonne année pour préparer un mariage également.\n\n⚠️ [Précautions]\nAttention aux maladies oculaires ou à l'épuisement nerveux. Maintenez également une attitude humble, car faire étalage de vos compétences pourrait susciter du ressentiment autour de vous.",
+  "sajuFortune2024Mu": "⛰️ Fortune générale de l'année Gapjin 2024 (Terre-Mu) : 'Une année de responsabilité et de défi'\n\n2024 est une année où l'énergie de 'Pyeon-gwan' et 'Bi-gyeon' entre en jeu pour vous. C'est comme une immense montagne s'harmonisant avec une forêt pour montrer sa majesté. Les responsabilités augmenteront, mais ce sera une année où vous grandirez en les surmontant.\n\n💼 [Carrière et Affaires]\nOn vous confiera souvent des missions difficiles ou vous devrez exercer votre leadership. Des opportunités de prouver vos compétences se présenteront dans des environnements très compétitifs. Même si c'est dur, le sentiment d'accomplissement sera grand ; la persévérance est nécessaire pour aller jusqu'au bout.\n\n💰 [Richesse]\nLes dépenses pourraient augmenter quelque peu cette année. Il est sage de se concentrer sur la préservation du capital plutôt que sur l'investissement, et soyez prudent car vous pourriez perdre de l'argent dans des relations financières avec votre entourage. Il est important de définir un plan d'actifs avec une perspective à long terme.\n\n❤️ [Amour et Relations]\nVous attirerez l'attention du sexe opposé grâce à votre fort charisme. Cependant, des attitudes têtues pourraient provoquer des disputes avec votre partenaire ; des efforts pour considérer la position de l'autre sont nécessaires. Une période où les liens d'amitié deviennent plus profonds.\n\n⚠️ [Précautions]\nAttention au surmenage physique, comme des troubles gastriques ou des douleurs musculaires. Un repos suffisant et des étirements sont nécessaires, et il est bon d'avoir des passe-temps pour relâcher la pression mentale.",
+  "sajuFortune2024Gi": "🌾 Fortune générale de l'année Gapjin 2024 (Terre-Gi) : 'Une année de concrétisation et d'harmonie'\n\n2024 est une année où l'énergie de 'Jeong-gwan' et 'Geob-jae' entre en jeu pour vous. C'est comme des arbres luxuriants poussant sur un large champ et portant des fruits. Ce sera une année plaisante où le statut social s'élève et où l'on gagne de l'honneur.\n\n💼 [Carrière et Affaires]\nVous serez reconnu au sein de l'organisation et occuperez des postes importants. Une année avec une très forte chance d'emploi ou de promotion. Si vous suivez les règles et travaillez sincèrement, vous pouvez obtenir des résultats au-delà de vos attentes. Cependant, vous pourriez être stressé par la compétition avec vos collègues, gardez donc une certaine tranquillité d'esprit.\n\n💰 [Richesse]\nUne année où des revenus stables apparaissent et où la richesse s'accumule régulièrement. Des récompenses selon les performances ou l'honneur sont prévues. Cependant, il peut y avoir des dépenses car vous aurez beaucoup à donner à votre entourage, un ajustement approprié est donc nécessaire.\n\n❤️ [Amour et Relations]\nUne période où la chance de mariage est forte. Si vous êtes célibataire, vous pouvez rencontrer un partenaire fiable et développer une relation sérieuse. Dans vos relations, vous obtiendrez le soutien de nombreuses personnes grâce à une communication fluide.\n\n⚠️ [Précautions]\nFaites attention au fonctionnement de la rate ou du pancréas et maintenez des habitudes alimentaires régulières. Soyez également prudent, car vous pourriez négliger vos propres intérêts en vous impliquant trop dans les affaires des autres.",
+  "sajuFortune2024Gyeong": "⚔️ Fortune générale de l'année Gapjin 2024 (Métal-Gyeong) : 'Une année de changement et d'innovation'\n\n2024 est une année où l'énergie de 'Pyeon-jae' et 'Pyeon-in' entre en jeu pour vous. C'est comme une épée tranchante dégageant une forêt et créant un nouveau chemin. Ce sera une année où vous briserez les cadres existants et défierez de nouveaux domaines pour faire face à de grands changements.\n\n💼 [Carrière et Affaires]\nDe nouvelles idées d'affaires vous viendront à l'esprit et vous ferez preuve d'une audace décisive. Le travail à l'étranger ou la chance de mouvement est forte ; une attitude sans peur du changement est la clé du succès. Cependant, des compétences de coordination sont nécessaires car des actions arbitraires pourraient causer des conflits au sein de l'organisation.\n\n💰 [Richesse]\nUne année avec de grandes fluctuations dans la chance de richesse. Vous pourriez réaliser de grands profits, mais des investissements déraisonnables peuvent mener à de lourdes pertes. Vous devez agir sous une analyse et une planification rigoureuses, et il est préférable d'éviter les investissements spéculatifs.\n\n❤️ [Amour et Relations]\nIl y aura de nombreuses occasions de rencontrer de nouvelles personnes et vous participerez à des activités sociales actives. Une période où la curiosité augmente dans les rencontres. Cependant, une attitude sérieuse est nécessaire car les sentiments peuvent s'enflammer et se refroidir facilement.\n\n⚠️ [Précautions]\nFaites attention à la santé respiratoire ou du côlon. Gardez également votre calme en tout temps et portez attention à la sécurité, car des accidents peuvent survenir à cause d'une personnalité précipitée.",
+  "sajuFortune2024Sin": "💎 Fortune générale de l'année Gapjin 2024 (Métal-Sin) : 'Une année de bijoux étincelants et d'honneur'\n\n2024 est une année où l'énergie de 'Jeong-jae' et 'Jeong-in' entre en jeu pour vous. C'est comme un bijou brillant dans une forêt et dont la valeur est reconnue. Ce sera une année où vous recevrez de justes récompenses pour vos efforts et rehausserez votre honneur.\n\n💼 [Carrière et Affaires]\nLa sincérité et la méticulosité brillent, vous valant la confiance de tout votre entourage. Vous pourriez être reconnu pour votre expertise et devenir responsable d'un projet important ou savourer la joie d'une promotion. Une période stable où les choses se passent comme prévu.\n\n💰 [Richesse]\nLa chance de richesse est très stable et bonne. Un revenu régulier est garanti, et vous obtiendrez de bons résultats dans l'épargne ou les technologies financières. Vous pourriez également hériter de vos parents ou supérieurs ou recevoir une aide économique.\n\n❤️ [Amour et Relations]\nVous ferez preuve d'un grand charme auprès du sexe opposé grâce à une apparence digne et polie. Dans les relations amoureuses, la confiance mutuelle s'approfondit, ce qui en fait une bonne année pour promettre un mariage. Les relations sont également fluides et paisibles.\n\n⚠️ [Précautions]\nFaites attention à la santé des poumons ou aux maladies de peau. De plus, vous devez parfois vous sentir à l'aise, car chercher trop la perfection peut mener à un stress personnel.",
+  "sajuFortune2024Im": "🌊 Fortune générale de l'année Gapjin 2024 (Eau-Im) : 'Une année de croissance flexible comme l'eau qui coule'\n\n2024 est une année où l'énergie de 'Sik-sin' et 'Pyeon-gwan' entre en jeu pour vous. C'est comme une vaste mer humidifiant une forêt pour faire croître la vie. Ce sera une année où vous exercerez votre sagesse pour résoudre des problèmes difficiles et étendre votre territoire.\n\n💼 [Carrière et Affaires]\nUne période où les compétences créatives de résolution de problèmes se démarquent. Vous trouverez des percées même dans des situations difficiles et gagnerez de la reconnaissance pour vos capacités. De bons résultats sont particulièrement attendus dans les domaines de l'éducation, du conseil et de la planification. Cependant, un ajustement du rythme est nécessaire car vous pourriez vous épuiser en raison d'une charge de travail excessive.\n\n💰 [Richesse]\nUne bonne année pour générer des revenus grâce à vos compétences ou vos talents. Une période où la chance alimentaire et la chance de richesse entrent ensemble. Cependant, il est sage de sécuriser des fonds d'urgence car des dépenses soudaines pourraient survenir.\n\n❤️ [Amour et Relations]\nVous maintiendrez de bonnes relations avec votre entourage grâce à une compréhension et une tolérance accrues. Dans les relations amoureuses, vous confirmerez vos sentiments mutuels par une conversation profonde. Si vous êtes célibataire, vous êtes très susceptible de rencontrer un partenaire avec un sentiment de confort.\n\n⚠️ [Précautions]\nFaites attention à la santé du système rénal ou de la vessie. Priorisez également vos actions, car essayer de gérer trop de choses à la fois pourrait nuire à votre santé.",
+  "sajuFortune2024Gye": "💧 Fortune générale de l'année Gapjin 2024 (Eau-Gye) : 'Saisir les opportunités au milieu du changement'\n\n2024 est une année où l'énergie de 'Sang-gwan' et 'Jeong-gwan' entre en jeu pour vous. C'est comme une pluie douce humidifiant une forêt pour faire revivre tout ce qui s'y trouve. Ce sera une année où vous ferez entendre votre voix pour annoncer votre présence au monde et saisir de nouvelles opportunités.\n\n💼 [Carrière et Affaires]\nL'éloquence s'améliore et les idées créatives deviennent abondantes. Vous ferez preuve d'un excellent talent dans les domaines du marketing, des relations publiques et de l'art. Cependant, une sagesse pour agir avec flexibilité est nécessaire car une rébellion contre les chefs ou les règles de l'organisation pourrait surgir.\n\n💰 [Richesse]\nUne année où le flux d'argent devient actif. Des opportunités d'augmenter vos revenus en faisant preuve d'esprit et de rapidité se présenteront. Cependant, soyez prudent car les dépenses pourraient devenir importantes en raison d'une consommation impulsive ou d'une volonté de paraître.\n\n❤️ [Amour et Relations]\nVous deviendrez populaire grâce à un charme débordant et de bonnes compétences conversationnelles. Dans les relations amoureuses, vous insufflez de la vie par une expression émotionnelle honnête, mais de la considération est nécessaire car des paroles tranchantes pourraient parfois blesser.\n\n⚠️ [Précautions]\nFaites attention aux maladies urologiques ou à la circulation sanguine. Évitez également de dire du mal des autres et maintenez un discours et des actions humbles en tout temps, car vous pourriez faire l'objet de rumeurs.",
+  "sajuFortune2025Gap": "🌿 Fortune générale de l'année Eulsa 2025 (Bois-Gap) : 'Croissance au milieu d'une nouvelle étape et de la compétition'\n\n2025 est une année où l'énergie de 'Geob-jae' et 'Sik-sin' entre en jeu pour vous. C'est comme un grand arbre dans une forêt s'harmonisant avec du lierre (Bois-Eul) pour grandir ensemble. Une synergie se crée à plusieurs plutôt que seul, mais en même temps, ce sera une année où une compétition féroce sera inévitable.\n\n💼 [Carrière et Affaires]\nL'activité devient vigoureuse et le désir d'expression s'accentue. Des opportunités se présenteront pour annoncer largement vos idées et vos talents au monde. D'excellents résultats sont attendus pour les freelances, les artistes ou les commerciaux. Cependant, de subtils conflits pourraient surgir dans les relations avec les collègues ou les concurrents ; une sagesse pour en faire des collaborateurs plutôt que des ennemis est nécessaire.\n\n💰 [Richesse]\nLe flux de richesse est actif, mais il pourrait y avoir autant de sorties que d'entrées d'argent (influence de Geob-jae). La prudence est de mise car des dépenses pourraient survenir suite à des rassemblements ou des recommandations d'investissement. Investir dans le développement personnel ou l'expansion de l'entreprise est plus avantageux à long terme que l'épargne simple.\n\n❤️ [Amour et Relations]\nLa sociabilité s'améliore et vous rencontrerez de nombreuses nouvelles personnes. Votre popularité augmente dans les rassemblements, et c'est un bon moment pour séduire. Cependant, comme des concurrents pourraient apparaître, il est bon de s'exprimer activement si quelqu'un vous plaît.\n\n⚠️ [Précautions]\nUn esprit de compétition excessif pourrait mener à des ennuis. De plus, la chance de mouvement augmente en raison de l'énergie 'Feu-Sa', portez donc attention à la sécurité routière et à la gestion de votre force physique.",
+  "sajuFortune2025Eul": "🌿 Fortune générale de l'année Eulsa 2025 (Bois-Eul) : 'Un bond brillant révélant vos couleurs'\n\n2025 est une année où l'énergie de 'Bi-gyeon' et 'Sang-gwan' entre en jeu pour vous. C'est comme des fleurs en plein champ s'épanouissant sous un soleil chaud. Ce sera une année dynamique où vous montrerez pleinement votre individualité et vos talents, recevant l'attention du public.\n\n💼 [Carrière et Affaires]\nLa créativité et le sens artistique atteignent leur apogée. Vous vous distinguerez dans les tâches de planification et de présentation d'idées. Des opportunités de devenir indépendant ou de diriger de nouveaux projets surgissent car vos compétences sont reconnues. Cependant, une coordination est nécessaire car essayer d'aller trop vite pourrait entrer en conflit avec les règles existantes.\n\n💰 [Richesse]\nUne année où les revenus sont créés sur la base de l'esprit et de la compétence. Vous pourriez obtenir des revenus inattendus par des activités secondaires ou créatives. Cependant, les dépenses pour le maintien du rang ou les divertissements pourraient augmenter ; ne perdez pas votre sens économique.\n\n❤️ [Amour et Relations]\nUne période de charme débordant, attirant l'attention du sexe opposé. Dans les relations amoureuses, vous passez des moments agréables et animés, mais des disputes peuvent survenir à cause de votre propre entêtement. Si vous êtes seul, vous pouvez espérer une rencontre fatidique.\n\n⚠️ [Précautions]\nAttention aux lapsus, car c'est une année propice aux rumeurs. De plus, un sommeil et un repos réguliers sont essentiels car vous pourriez consommer trop d'énergie et vous fatiguer facilement.",
+  "sajuFortune2026Gap": "🌳 Fortune générale de l'année Byeong-oh 2026 (Bois-Gap) : 'Flamme de la passion, maximisation de l'activité'\n\n2026 est une année où l'énergie de 'Sik-sin' (Productivité) et 'Sang-gwan' (Expression) est très forte pour vous, Bois-Gap. C'est une situation où le bois rencontre le feu et brûle vigoureusement, une période où votre talent et votre expression éclatent au monde sans hésitation. Votre présence se révèle même si vous restez immobile, et votre champ d'activité s'étend considérablement.\n\n💼 [Carrière et Affaires]\nC'est un moment idéal pour lancer de nouveaux projets ou une entreprise. Vos idées se réalisent et vous vous immergez avec passion dans le travail. Vous pouvez obtenir de grands résultats dans les domaines de l'expression de soi, comme l'art, les médias, la vente et l'éducation. Cependant, soyez prudent et vérifiez tout deux fois car vous pourriez faire des erreurs en courant trop vite vers l'avant.\n\n💰 [Richesse]\nLa richesse suit votre activité. Les revenus de votre entreprise ou de vos activités secondaires pourraient augmenter. Cependant, autant vous gagnez, autant d'argent pourrait sortir pour l'investissement ou la consommation. Investir pour l'avenir est bon, mais les dépenses impulsives doivent être surveillées.\n\n❤️ [Amour et Relations]\nSéduisez le sexe opposé avec une attitude honnête et active. La chance amoureuse s'enflamme, mais une expression émotionnelle excessive pourrait peser sur le partenaire. C'est aussi une année où la chance liée aux enfants est très présente.\n\n⚠️ [Précautions]\nC'est une année d'extrême consommation d'énergie. Un 'burnout' peut survenir, la gestion de la force physique est donc essentielle. Attention aux rumeurs causées par des lapsus, et essayez de ne pas imposer uniquement vos propres arguments.",
+  "sajuFortune2026Eul": "🌸 Fortune générale de l'année Byeong-oh 2026 (Bois-Eul) : 'Floraison éclatante, plein épanouissement du talent'\n\n2026 est une année où 'Sang-gwan' (Expression) est dominant pour vous, Bois-Eul. C'est une situation où les fleurs s'épanouissent sous un soleil brûlant, une période où votre charme et votre talent atteignent leur apogée. Vous serez le protagoniste qui attire l'attention partout et goûterez à des réussites brillantes.\n\n💼 [Carrière et Affaires]\nLes tentatives non conventionnelles qui brisent les cadres existants réussissent. Vous vous distinguerez dans le design, la mode, la beauté et le divertissement. Vous pourriez recevoir des offres de promotion ou de recrutement au travail, mais attention aux frictions avec les supérieurs. Votre capacité double dans un environnement libre.\n\n💰 [Richesse]\nVotre capacité à créer de la richesse devient excellente. Votre valeur de marque et votre mérite augmentent. Cependant, la recherche du glamour peut mener au luxe ou au gaspillage, vous devez donc bien surveiller votre portefeuille.\n\n❤️ [Amour et Relations]\nLa popularité auprès du sexe opposé explose. Vous vivrez une romance brillante et passionnée, mais elle pourrait être intense et brève. Les personnes mariées pourraient avoir beaucoup de préoccupations concernant les enfants.\n\n⚠️ [Précautions]\nLes hauts et les bas émotionnels peuvent devenir graves. Si vous ne contrôlez pas votre tempérament, des réussites durement acquises pourraient s'effondrer. Gardez un esprit respectueux des lois pour éviter les problèmes juridiques ou les rumeurs.",
+  "sajuFortune2026Byeong": "☀️ Fortune générale de l'année Byeong-oh 2026 (Feu-Byeong) : 'Deux soleils, compétition intense et bond en avant'\n\n2026 est une année où 'Bi-gyeon' (Ami) et 'Geob-jae' (Concurrent) sont très forts pour vous, Feu-Byeong. C'est une situation où deux soleils apparaissent dans le ciel, une période où la fierté et l'esprit de compétition atteignent des sommets. Votre subjectivité devient forte, vous détestez toute interférence et vous poursuivez votre chemin avec détermination.\n\n💼 [Carrière et Affaires]\nC'est une chance de gagner et de réussir dans les milieux compétitifs. Vous pouvez augmenter votre envergure grâce au partenariat ou à la collaboration, mais des conflits peuvent surgir sur le partage des bénéfices. C'est une bonne opportunité pour les freelances ou les professionnels de faire connaître largement leur nom.\n\n💰 [Richesse]\nL'argent rentre, mais il y a aussi de grands trous par lesquels il s'échappe. L'argent peut sortir à cause de frères et sœurs, d'amis ou de collègues. Se porter garant ou prêter de l'argent est absolument interdit. Il vaut mieux investir dans l'honneur ou la croissance de votre pouvoir plutôt que d'épargner.\n\n❤️ [Amour et Relations]\nVous pourriez rencontrer un amant comme un ami ou passer de l'amitié à l'amour. Cependant, si vous avez un partenaire, soyez prudent car un triangle amoureux ou un concurrent pourrait apparaître.\n\n⚠️ [Précautions]\nDes actions dogmatiques pourraient susciter du ressentiment. L'humilité est votre meilleure tactique. Faites attention aux maladies cardiovasculaires ou à la santé oculaire.",
+  "sajuFortune2026Jeong": "🔥 Fortune générale de l'année Byeong-oh 2026 (Feu-Jeong) : 'Flamme géante, expansion du pouvoir'\n\n2026 est une année de 'Geob-jae' (Concurrent) et 'Bi-gyeon' (Ami) pour vous, Feu-Jeong. Comme une bougie rencontrant une fournaise, c'est une période où votre pouvoir devient massif. Vous pouvez accomplir des choses impossibles seul grâce à l'aide ou à la coopération de votre entourage.\n\n💼 [Carrière et Affaires]\nUne force motrice puissante surgit. Vous aurez la sagesse de dominer vos concurrents ou de les rallier à votre cause. Des opportunités d'exercer votre leadership dans des projets d'équipe ou la vie organisationnelle se présenteront. Cependant, si vous tentez de monopoliser les résultats, vous pourriez être trahi ; un partage des mérites est donc nécessaire.\n\n💰 [Richesse]\nLes tendances spéculatives deviennent fortes. Vous viserez le 'haut risque, haut rendement' ; si vous avez de la chance, vous toucherez beaucoup d'argent, mais l'échec a aussi un impact important. Des dépenses imprévues pourraient survenir, il est donc bon de préparer un fonds d'urgence.\n\n❤️ [Amour et Relations]\nIl y a une forte probabilité de faire des rencontres lors de rassemblements sociaux ou d'activités de groupe. Les hommes doivent être prudents car ils pourraient négliger leur conjointe. Les relations avec votre entourage deviennent des atouts cette année.\n\n⚠️ [Précautions]\nL'avidité mène aux ennuis. Abstenez-vous de toute expansion ou investissement déraisonnable. Attention aux maladies causées par la colère ou le stress.",
+  "sajuFortune2026Mu": "🌋 Fortune générale de l'année Byeong-oh 2026 (Terre-Mu) : 'Patience et préparation au milieu d'une chaleur intense'\n\n2026 est une année où l'énergie de 'Pyeon-in' (Intuition) et 'Jeong-in' (Connaissance) est forte pour vous, Terre-Mu. C'est comme l'énergie condensée juste avant l'éruption d'un volcan. C'est le moment idéal pour enrichir votre moi intérieur et développer vos compétences par l'étude, l'art et l'obtention de certifications.\n\n💼 [Carrière et Affaires]\nLe travail intellectuel comme la planification, la recherche et l'établissement de stratégies brille plus que le travail actif. La chance liée aux documents est bonne, favorisant les contrats ou les tâches administratives. Cependant, si vous ne faites que réfléchir sans agir, vous pourriez manquer des opportunités ; une audace décisive est aussi nécessaire.\n\n💰 [Richesse]\nLa chance liée aux documents immobiliers est très forte. C'est une opportunité d'augmenter vos actifs par la vente ou un contrat. Le flux de trésorerie peut être frustrant, mais l'investissement à long terme est prometteur.\n\n❤️ [Amour et Relations]\nL'interférence des mères ou des supérieurs pourrait augmenter. En amour, vous valoriserez la communion mentale, et des liens avec des personnes plus âgées pourraient se nouer.\n\n⚠️ [Précautions]\nTrop de pensées peuvent mener à la dépression ou à la léthargie. Les activités de plein air ou l'exercice physique aident à améliorer votre chance. Comme le sol se fissure sous l'effet de la chaleur, attention à la peau sèche ou aux troubles gastriques.",
+  "sajuFortune2026Gi": "🌾 Fortune générale de l'année Byeong-oh 2026 (Terre-Gi) : 'Fondation solide et soutien indéfectible'\n\n2026 est une année de 'Jeong-in' (Connaissance) et 'Pyeon-in' (Intuition) pour vous, Terre-Gi. C'est une situation où une lumière chaude brille sur la terre et fait mûrir les grains. C'est une période de consolidation d'une base stable tout en recevant un plein soutien et de l'amour des supérieurs.\n\n💼 [Carrière et Affaires]\nVous obtiendrez les meilleurs résultats dans tout ce qui concerne l'étude, comme les examens de promotion, de certification ou l'obtention de diplômes. Au travail, vous gagnerez la confiance des supérieurs et occuperez des postes importants. Vous vous distinguerez dans l'éducation, l'immobilier, le conseil et le bien-être.\n\n💰 [Richesse]\nC'est une chance de détenir des documents. Vous pourriez atteindre votre objectif de devenir propriétaire ou recevoir un héritage ou des dons. Une croissance stable des actifs est possible, et c'est une année où l'honneur brille plus que la richesse.\n\n❤️ [Amour et Relations]\nC'est une année pour être aimé. Vous recevrez un amour fiable de votre partenaire ou rencontrerez quelqu'un avec de bonnes conditions. La chance de mariage entre également en jeu et la vie de famille devient harmonieuse.\n\n⚠️ [Précautions]\nSi vous ne faites que recevoir, vous pourriez devenir paresseux. Une attitude de partage est nécessaire. Délaissez la dépendance et développez votre autonomie.",
+  "sajuFortune2026Gyeong": "⚔️ Fortune générale de l'année Byeong-oh 2026 (Métal-Gyeong) : 'Naissance d'un chef-d'œuvre au-delà de l'épreuve'\n\n2026 est une année où 'Pyeon-gwan' (Pression) et 'Jeong-gwan' (Autorité) sont très puissants pour vous, Métal-Gyeong. C'est comme faire fondre du minerai brut dans une fournaise pour en faire une épée d'exception. Il peut y avoir une forte pression et du stress, mais si vous endurez, vous gagnerez une autorité et un honneur immenses.\n\n💼 [Carrière et Affaires]\nVous pourriez assumer des postes à haute responsabilité ou gérer des projets difficiles. Cependant, c'est un processus de test pour vous, et en cas de succès, votre statut s'élèvera instantanément. C'est une opportunité de promotion pour ceux qui travaillent dans la fonction publique, l'armée, la police et le domaine juridique.\n\n💰 [Richesse]\nC'est une chance d'honneur et de titres plutôt que d'argent. À mesure que votre statut s'élève, la richesse suivra naturellement, mais les dépenses pour maintenir votre rang sont aussi significatives.\n\n❤️ [Amour et Relations]\nPour les femmes, c'est une chance où un homme charismatique et capable apparaît. Les hommes ont une forte chance liée aux enfants. Les relations avec les supérieurs ou les aînés deviennent importantes.\n\n⚠️ [Précautions]\nLa gestion de la santé est la priorité absolue. Attention aux maladies ou accidents causés par le surmenage. Les poumons et le gros intestin peuvent s'affaiblir. Trouvez des moyens de relâcher le stress.",
+  "sajuFortune2026Sin": "💎 Fortune générale de l'année Byeong-oh 2026 (Métal-Sin) : 'Bijou étincelant, apogée de l'honneur'\n\n2026 est une année de 'Jeong-gwan' (Autorité) et 'Pyeon-gwan' (Pression) pour vous, Métal-Sin. Comme un bijou brillant sous les projecteurs, c'est une période où votre valeur se révèle au monde et où votre honneur s'élève. Vous avez des liens profonds avec des lieux de travail ou des organisations stables.\n\n💼 [Carrière et Affaires]\nLa chance de recherche d'emploi, de promotion et de transfert est très bonne. Vous pourriez aussi recevoir des offres de recrutement en étant reconnu pour vos compétences. Si vous suivez les principes et gérez le travail correctement, vous recevrez le respect de tous.\n\n💰 [Richesse]\nUn salaire stable ou un revenu fixe est garanti. Si vous protégez votre honneur plutôt que de courir après la richesse, celle-ci suivra naturellement. Vous pouvez bénéficier du soutien de votre conjoint ou de votre lieu de travail.\n\n❤️ [Amour et Relations]\nC'est la meilleure chance de mariage et de rencontre pour les femmes. Vous pouvez rencontrer un époux droit et capable. Les hommes gagnent des enfants ou vivent des événements joyeux grâce à eux.\n\n⚠️ [Précautions]\nUne chaleur excessive peut faire fondre le bijou. Un travail excessif ou le stress peuvent causer de la nervosité. Vous pourriez paraître inflexible en raison de fortes tendances axées sur les principes, soyez donc prudent.",
+  "sajuFortune2026Im": "🌊 Fortune générale de l'année Byeongo 2026 (Eau-Im) : 'Une année dynamique d'expansion du champ d'activité'\n\n2026 est une année où l'énergie de 'Pyeon-jae' et 'Jeong-jae' entre en jeu pour vous. C'est comme une vaste mer circulant activement en recevant la chaleur du soleil et se dirigeant vers le vaste monde. Ce sera une année dynamique où les activités économiques deviennent vigoureuses et où les opportunités de toucher une grande richesse se présentent.\n\n💼 [Carrière et Affaires]\nLe sens des affaires est maximisé. Une très bonne année pour défricher de nouveaux marchés ou récolter de grands profits sur les investissements. Une chance où le champ d'activité peut s'étendre au-delà des frontières nationales. Des décisions audacieuses mènent à de grands résultats, mais un examen détaillé est essentiel.\n\n💰 [Richesse]\nLa chance de richesse atteint son apogée. Des gains inattendus ou des bénéfices commerciaux à grande échelle sont prévus. Si vous suivez bien le flux d'argent, vous pouvez constituer des actifs importants. Cependant, la gestion est importante car les sorties peuvent être aussi grandes que les entrées.\n\n❤️ [Amour et Relations]\nLa sociabilité s'améliore et de nombreuses personnes du sexe opposé se rassemblent autour de vous grâce à votre charme. Un bon moment pour profiter de rencontres actives. Dans les relations amoureuses, vous passez des moments heureux en profitant de sorties et de voyages. Cependant, attention à ne pas négliger votre partenaire à cause d'un emploi du temps trop chargé.\n\n⚠️ [Précautions]\nFaites attention au fonctionnement des reins ou à la circulation sanguine. De plus, une sagesse pour savoir se satisfaire d'un niveau approprié est nécessaire car une avidité excessive pourrait mener à des ennuis.",
+  "sajuFortune2026Gye": "💧 Fortune générale de l'année Byeongo 2026 (Eau-Gye) : 'Gagner des intérêts concrets tout en renforçant ses bases internes'\n\n2026 est une année où l'énergie de 'Jeong-jae' et 'Pyeon-jae' entre en jeu pour vous. C'est comme un rayon de soleil brillant après une pluie douce, rendant la terre pleine de vie et d'abondance. Vous atteindrez une stabilité économique basée sur un revenu stable et trouverez de petits bonheurs.\n\n💼 [Carrière et Affaires]\nVous gérez parfaitement les tâches assignées avec sincérité et méticulosité. Vous faites preuve d'une excellente capacité dans les tâches financières, comptables ou de gestion. La reconnaissance et les récompenses suivent quand vous faites de votre mieux dans le travail assigné plutôt que par avidité excessive. Vous pouvez grandir pas à pas tout en développant vos compétences dans un environnement stable.\n\n💰 [Richesse]\nLa chance de richesse est très bonne. Un revenu régulier et stable apparaît, et vous appréciez la joie d'augmenter vos actifs par l'épargne. Des profits petits mais certains s'accumulent pour donner une grande récompense. Vos habitudes de dépenses frugales brillent cette année.\n\n❤️ [Amour et Relations]\nVous inspirez une confiance profonde à votre partenaire grâce à une considération bienveillante et méticuleuse. Vous cultivez un amour petit mais chaleureux tout en partageant votre quotidien. Les relations sont également fluides et paisibles. Vous jouerez le rôle d'un conseiller de confiance pour votre entourage.\n\n⚠️ [Précautions]\nFaites attention aux maladies oculaires ou à la santé du système urologique. De plus, pratiquez parfois l'observation du monde avec une perspective large car vous pourriez manquer le grand flux en prêtant attention à trop de détails.",
+  "sajuFortune2025Byeong": "🔥 Fortune générale de l'année Eulsa 2025 (Feu-Byeong) : 'Réussite et compétition pleines de passion'\n\n2025 est une année où l'énergie de 'Jeong-in' et 'Bi-gyeon' entre en jeu pour vous. C'est comme le soleil dans le ciel rencontrant la chaleur du sol pour brûler encore plus fort. Vous gagnerez de solides forces de soutien et avancerez vers vos objectifs sans hésitation, porté par la confiance.\n\n💼 [Carrière et Affaires]\nVous réaliserez une grande croissance avec l'aide de protecteurs ou de mentors fiables. Très avantageux pour l'acquisition de certifications ou de diplômes académiques. La collaboration avec les collègues brille, et vous mènerez l'équipe au succès en exerçant votre leadership. Cependant, attention car un esprit de compétition excessif pourrait nuire aux relations.\n\n💰 [Richesse]\nUne période pour accroître votre richesse tout en partageant des informations avec votre entourage. Des revenus issus d'investissements conjoints ou de coopérations sont attendus. Cependant, il est important de veiller à vos intérêts concrets car vous pourriez dépenser excessivement par fierté ou par souci du regard des autres.\n\n❤️ [Amour et Relations]\nUne année où les amitiés s'approfondissent car il y aura de nombreux rassemblements. Dans les relations amoureuses, le confort comme avec un ami se renforce. Cependant, un équilibre approprié est nécessaire car des conflits peuvent survenir si vous donnez la priorité aux amis sur votre partenaire.\n\n⚠️ [Précautions]\nFaites attention au système circulatoire, comme la pression artérielle ou la santé cardiaque. Gardez également votre calme en tout temps car des émotions impulsives dues à une personnalité fougueuse pourraient gâcher les choses.",
+  "sajuFortune2025Jeong": "🔥 Fortune générale de l'année Eulsa 2025 (Feu-Jeong) : 'Stabilité et opportunité trouvées au milieu du changement'\n\n2025 est une année où l'énergie de 'Pyeon-in' et 'Geob-jae' entre en jeu pour vous. C'est comme une bougie vacillant au vent mais finissant par éclairer les environs et révéler sa présence. Des changements inattendus peuvent survenir, mais ce sera une année où vous les surmonterez sagement pour les transformer en opportunités.\n\n💼 [Carrière et Affaires]\nLes idées originales et l'intuition brillent. Vous ciblerez des marchés de niche auxquels les autres n'ont pas pensé ou obtiendrez des résultats profonds dans des domaines professionnels. Cependant, la compétition avec les collègues devient féroce et certains pourraient tenter de s'approprier vos résultats, portez donc attention à la sécurité et à la gestion des relations.\n\n💰 [Richesse]\nUne année où il peut y avoir des fluctuations dans la chance de richesse. Une gestion d'actifs conservatrice est nécessaire car des dépenses imprévues pourraient survenir ou des pertes pourraient être constatées dans les investissements. Cependant, les revenus utilisant vos propres compétences professionnelles rentreront de manière stable. Il vaut mieux éviter les transactions financières.\n\n❤️ [Amour et Relations]\nVous pourriez devenir passif dans les rencontres à mesure que vos pensées augmentent. Dans les relations amoureuses, il est facile de se sentir déçu pour de petites choses, il est donc important de faire confiance à l'autre et de le traiter avec un cœur ouvert. Se ressourcer par du temps seul est aussi une bonne méthode.\n\n⚠️ [Précautions]\nAttention aux troubles nerveux ou à l'insomnie dus au stress. Il est important de gérer votre esprit par la méditation ou un exercice léger, et essayez d'avoir une mentalité positive plutôt que des pensées négatives.",
+  "sajuFortune2025Mu": "⛰️ Fortune générale de l'année Eulsa 2025 (Terre-Mu) : 'Une année de maturité renforçant sagement ses bases internes'\n\n2025 est une année où l'énergie de 'Jeong-gwan' et 'Pyeon-in' entre en jeu pour vous. C'est comme une chaleur chaude imprégnant le bas d'une immense montagne pour tout embrasser. Ce sera une année substantielle où vous ajouterez votre propre profondeur tout en conservant votre honneur social.\n\n💼 [Carrière et Affaires]\nVous accéderez à un poste à responsabilité au sein de l'organisation ou des opportunités de promotion se présenteront. Si vous valorisez les principes et travaillez sincèrement, vous recevrez une grande reconnaissance. Parallèlement, vous obtiendrez d'excellents résultats dans l'acquisition de connaissances professionnelles ou les tâches de recherche. Cependant, une pensée flexible est nécessaire car vous pourriez refuser le changement en étant prisonnier de stéréotypes.\n\n💰 [Richesse]\nUn revenu stable est garanti. Il est avantageux d'épargner sincèrement et de gérer ses actifs. La fortune liée à l'immobilier ou aux documents est bonne, il vaut donc la peine d'envisager des investissements à long terme. Cependant, évitez les investissements déraisonnables en étant ébranlé par les tentations environnantes.\n\n❤️ [Amour et Relations]\nVous gagnez la confiance des gens par un discours et des actions dignes. Dans les relations amoureuses, c'est un bon moment pour se respecter mutuellement et développer une relation sérieuse. Si vous pensez au mariage, c'est aussi le bon moment pour faire des plans concrets.\n\n⚠️ [Précautions]\nFaites attention au système digestif ou à la santé de la peau. Pratiquez également la prise de décisions rapides en écoutant les conseils de votre entourage car vous pourriez vivre une paralysie décisionnelle due à trop de réflexion.",
+  "sajuFortune2025Gi": "🌾 Fortune générale de l'année Eulsa 2025 (Terre-Gi) : 'Atteindre ses objectifs avec responsabilité'\n\n2025 est une année où l'énergie de 'Pyeon-gwan' et 'Jeong-in' entre en jeu pour vous. C'est comme un rayon de soleil brillant après la pluie sur une vaste terre pour faire croître les récoltes. Il peut y avoir des processus difficiles, mais ce sera une année gratifiante où vous finirez par gagner de l'honneur et atteindre vos objectifs.\n\n💼 [Carrière et Affaires]\nL'intensité du travail peut augmenter et des tâches difficiles peuvent être confiées. Cependant, vous prouverez vos qualités de leader en les surmontant avec vos compétences et votre patience. Vous traverserez les crises avec l'aide ou le soutien de vos supérieurs et, par conséquent, vous goûterez à un grand sentiment d'accomplissement.\n\n💰 [Richesse]\nUne année où vous devez porter attention à la gestion des dépenses. Il pourrait y avoir beaucoup de sorties d'argent, comme des taxes imprévues ou des charges de service public. Cependant, comme vous pouvez espérer des primes ou des bonus grâce à des efforts réguliers, la sincérité est la clé pour attirer la richesse.\n\n❤️ [Amour et Relations]\nUne apparence responsable est perçue comme attrayante par le sexe opposé. Dans les relations amoureuses, le lien s'approfondit car vous écoutez les difficultés de l'autre et vous vous réconfortez mutuellement. Cependant, des efforts pour une communication fréquente même courte sont nécessaires car vous pourriez négliger votre partenaire à cause d'un quotidien chargé.\n\n⚠️ [Précautions]\nAttention au déclin de l'immunité dû au surmenage. Il est important de gérer sa force physique avec des repas réguliers et de l'exercice, et de relâcher le stress par des pensées positives.",
+  "sajuFortune2025Gyeong": "⚔️ Fortune générale de l'année Eulsa 2025 (Métal-Gyeong) : 'Gagner de l'honneur tout en veillant à ses intérêts concrets'\n\n2025 est une année où l'énergie de 'Jeong-jae' et 'Pyeon-gwan' entre en jeu pour vous. C'est comme un rocher solide chauffé par le feu et renaissant sous la forme d'une épée précieuse. Vous obtiendrez des récompenses concrètes pour vos efforts et prouverez socialement votre valeur.\n\n💼 [Carrière et Affaires]\nVous obtenez de grands résultats grâce à une pensée orientée vers les résultats et à votre détermination. Particulièrement reconnu pour vos capacités dans les domaines de la finance, de la gestion et de la technologie. La chance de résoudre des problèmes difficiles et de gagner de l'honneur est forte, mais la responsabilité grandit aussi, vous pourriez donc ressentir de la pression. Croyez en vous et avancez hardiment.\n\n💰 [Richesse]\nLa chance de richesse est très bonne. En plus d'un revenu stable, vous gagnez des profits concrets grâce à des investissements ou des activités secondaires. Vous saisirez avec précision le flux d'argent et gérerez efficacement vos actifs. Cependant, abstenez-vous de dépenser de grosses sommes pour l'honneur.\n\n❤️ [Amour et Relations]\nSéduisez le sexe opposé avec une apparence sincère et fiable. Dans les relations amoureuses, vous donnez à l'autre un sentiment de soulagement par une attitude responsable. Dans vos relations, vous pourriez donner une image quelque peu stricte, il est donc bon de discuter avec un peu d'humour doux occasionnellement.\n\n⚠️ [Précautions]\nFaites attention à la santé des os ou des articulations, et aux maladies respiratoires. Calmez-vous également avec l'idée que 'c'est suffisant' car vous pourriez vous en prendre à vous-même en raison de tendances perfectionnistes.",
+  "sajuFortune2025Sin": "💎 Fortune générale de l'année Eulsa 2025 (Métal-Sin) : 'Une année où la sagesse brille au milieu du changement'\n\n2025 est une année où l'énergie de 'Pyeon-jae' et 'Jeong-gwan' entre en jeu pour vous. C'est comme un bijou sophistiqué révélant sa valeur sous un éclairage brillant. Ce sera une année plaisante où le statut social s'élève en même temps que des gains inattendus.\n\n💼 [Carrière et Affaires]\nLe sens des affaires s'améliore et la capacité à saisir de nouvelles opportunités est excellente. Une période où les défis audacieux rapportent de grands profits. Au sein de l'organisation, vous gagnez la confiance grâce à un jugement rationnel et saisissez des opportunités de promotion ou de transfert. Cependant, veillez à ne pas négliger le processus en vous concentrant trop sur les résultats.\n\n💰 [Richesse]\nUne année où la chance financière entre en jeu. Des opportunités de toucher une grande richesse comme des retours sur investissement inattendus ou un héritage se présentent. Cependant, comme les dépenses pourraient aussi devenir luxueuses, il est important de maintenir des habitudes de dépenses planifiées.\n\n❤️ [Amour et Relations]\nVous devenez le protagoniste des rassemblements sociaux avec une apparence soignée et attrayante. La chance de rencontre est très forte, vous pourriez recevoir des avances de nombreuses personnes. Dans les relations amoureuses, vous passez des moments passionnés et agréables. Une bonne année pour développer une relation sérieuse.\n\n⚠️ [Précautions]\nFaites attention à la santé des poumons ou aux maladies de peau. Maintenez toujours l'humilité et n'oubliez pas de considérer les autres car vous pourriez paraître arrogant à cause d'un excès de confiance.",
+  "sajuFortune2025Im": "🌊 Fortune générale de l'année Eulsa 2025 (Eau-Im) : 'Obtenir des résultats en exerçant sa sagesse'\n\n2025 est une année où l'énergie de 'Sang-gwan' et 'Pyeon-jae' entre en jeu pour vous. C'est comme une grande rivière serpentant et humidifiant un large champ. Ce sera une année dynamique où vous gagnerez une grande richesse et étendrez votre champ d'activité en exerçant vos talents et votre éloquence.\n\n💼 [Carrière et Affaires]\nL'éloquence s'améliore et vous obtenez d'excellents résultats dans les domaines du marketing ou des relations publiques. Un très bon moment pour commercialiser vos idées ou défricher de nouveaux marchés. Ce sera la meilleure année pour ceux qui font un travail créatif. Cependant, il est important d'être poli car il pourrait y avoir des frictions avec les chefs.\n\n💰 [Richesse]\nLa chance de richesse bouge activement. La chance de gagner de l'argent avec vos propres compétences est forte, et les opportunités de brasser beaucoup d'argent arrivent. Cependant, la prudence est de mise pour les investissements spéculatifs, et la chance de richesse ne se maintiendra longtemps que si vous avez l'esprit de donner autant que vous avez gagné.\n\n❤️ [Amour et Relations]\nGrâce à votre humour et votre charme débordants, les gens ne cessent d'être autour de vous. Une année où vous pouvez profiter de rencontres agréables avec une grande popularité auprès du sexe opposé. Dans les relations amoureuses, vous insufflez de la vie par divers rendez-vous. Cependant, attention car une seule parole légère pourrait causer un malentendu.\n\n⚠️ [Précautions]\nFaites attention à la santé du système rénal ou urologique. Portez également attention à un repos et une nutrition appropriés car votre force physique pourrait s'épuiser à cause d'un large champ d'activité.",
+  "sajuFortune2025Gye": "💧 Fortune générale de l'année Eulsa 2025 (Eau-Gye) : 'Une année de sincérité produisant des fruits stables'\n\n2025 est une année où l'énergie de 'Sik-sin' et 'Jeong-jae' entre en jeu pour vous. C'est comme une petite bruine claire humidifiant la terre pour préparer une riche récolte. Ce sera une année chaleureuse où vos efforts s'accumulent régulièrement et reviennent sous la forme d'une richesse et d'un bonheur stables.\n\n💼 [Carrière et Affaires]\nUne année où la sincérité devient votre meilleure arme. Vous produisez des résultats constants en assumant vos responsabilités et gagnez la confiance de vos collègues. Un bon moment pour accroître votre expertise, et vous vous sentirez récompensé par un travail que vous aimez. Vous pouvez grandir pas à pas dans un environnement stable.\n\n💰 [Richesse]\nUne année économiquement détendue et stable. Un revenu régulier apparaît, et vous ressentirez le plaisir d'augmenter vos actifs de manière frugale. Il y a de la chance en matière de nourriture et de vêtements, l'abondance est donc présente dans l'ensemble de la vie. L'épargne est plus avantageuse que les investissements déraisonnables.\n\n❤️ [Amour et Relations]\nVous apportez du réconfort à votre partenaire par une apparence chaleureuse. Une année où vous cultivez un bel amour tout en vous considérant méticuleusement. Si vous êtes célibataire, vous êtes très susceptible de rencontrer un partenaire qui communique bien et partage des valeurs similaires.\n\n⚠️ [Précautions]\nFaites attention à la santé de l'estomac ou à la gestion des habitudes alimentaires. Il est bon de trouver de la vitalité en apportant de nouveaux stimuli occasionnellement car vous pourriez devenir paresseux en vous installant dans le confort.",
+  "preparationForTomorrow": "Preparation for Tomorrow",
+  "howToMeetMoreLuck": "How to meet more luck",
+  "enterName": "Please enter your name",
+  "fortuneDateConfirm": "Would you like to check the fortune for {date}?",
+  "@fortuneDateConfirm": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "colorPurple": "Purple",
+  "colorBlue": "Blue",
+  "colorYellow": "Yellow",
+  "colorRed": "Red",
+  "colorGreen": "Green",
+  "colorPink": "Pink",
+  "colorOrange": "Orange",
+  "colorWhite": "White",
+  "colorBlack": "Black",
+  "itemPerfume": "Perfume",
+  "itemHandkerchief": "Handkerchief",
+  "itemRing": "Ring",
+  "itemWatch": "Watch",
+  "itemGlasses": "Glasses",
+  "itemHat": "Hat",
+  "itemBook": "Book",
+  "itemEarphones": "Earphones",
+  "itemMirror": "Mirror",
+  "itemPen": "Pen",
+  "itemCoin": "Coin",
+  "itemKey": "Key",
+  "dirEast": "East",
+  "dirWest": "West",
+  "dirSouth": "South",
+  "dirNorth": "North",
+  "dirNorthEast": "North-East",
+  "dirSouthEast": "South-East",
+  "dirNorthWest": "North-West",
+  "dirSouthWest": "South-West",
   "general": "Général",
   "darkMode": "Mode Sombre",
   "darkModeDescription": "Régler l'écran en mode sombre.",
@@ -75,12 +692,17 @@
   "privacySettings": "Paramètres de confidentialité",
   "information": "Information",
   "notice": "Avis",
-
   "weatherConditionSunny": "Ensoleillé",
+  "weatherConditionPartlyCloudy": "Partly Cloudy",
   "weatherConditionCloudy": "Nuageux",
   "weatherConditionFoggy": "Brumeux",
+  "weatherConditionDrizzle": "Drizzle",
   "weatherConditionRainy": "Pluvieux",
+  "weatherConditionFreezingRain": "Freezing Rain",
   "weatherConditionSnowy": "Neigeux",
+  "weatherConditionSnowGrains": "Snow Grains",
+  "weatherConditionRainShowers": "Rain Showers",
+  "weatherConditionSnowShowers": "Snow Showers",
   "weatherConditionThunderstorm": "Orage",
   "airQualityGood": "Bon",
   "airQualityNormal": "Normal",
@@ -108,23 +730,20 @@
   "drawOverOtherApps": "Afficher sur d'autres applis",
   "overlayDescription": "Affiche l'écran d'alarme même sur l'écran de verrouillage ou lors de l'utilisation d'autres applications.",
   "allSettingsCompleted": "Tous les paramètres sont terminés.",
+  "allowAllItems": "Please allow all items",
   "manualSettingsInfo": "Vous pouvez désactiver les paramètres directement dans les paramètres système Android.",
-
   "takePhoto": "Prendre une photo",
   "selectPhoto": "Sélectionner une photo",
   "selectAlarmBackground": "Fond d'alarme",
   "defaultLabel": "Défaut",
   "howToAdd": "Comment ajouter",
   "addAssetInstructions": "Placez l'image dans le dossier assets/images/ et enregistrez-la dans pubspec.yaml.",
-  "gallery": "Galerie",
   "ringingNow": "Sonne maintenant",
   "setTime": "Régler l'heure",
   "repeatDays": "Jours de répétition",
   "repeatDaily": "Répéter tous les jours",
   "snoozeSettings": "Paramètres de répétition",
-  "interval": "Intervalle",
   "wakeUpAlarm": "Alarme de réveil",
-  "snoozeInfo": "{interval} min, {count} fois",
   "daySun": "Dim",
   "dayMon": "Lun",
   "dayTue": "Mar",
@@ -132,14 +751,131 @@
   "dayThu": "Jeu",
   "dayFri": "Ven",
   "daySat": "Sam",
+  "daySunFull": "Dimanche",
+  "dayMonFull": "Lundi",
+  "dayTueFull": "Mardi",
+  "dayWedFull": "Mercredi",
+  "dayThuFull": "Jeudi",
+  "dayFriFull": "Vendredi",
+  "daySatFull": "Samedi",
   "missionRewardEarned": "Félicitations ! Vous avez terminé 5 missions aujourd'hui et gagné 1 Fortune Cookie !",
   "missionRewardEarnedWithCount": "Félicitations ! Vous avez terminé {missions} missions aujourd'hui et gagné {cookies} Fortune Cookie(s) !",
+  "@missionRewardEarnedWithCount": {
+    "placeholders": {
+      "missions": {
+        "type": "int"
+      },
+      "cookies": {
+        "type": "int"
+      }
+    }
+  },
   "daysCount": "{count} jours",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "user": "Utilisateur",
+  "member": "Membre",
+  "manageSajuInfo": "Gérer les infos Saju",
+  "freeCharge": "Recharge Gratuite",
+  "fortunePass": "Fortune Pass",
+  "unlimitedNotSubscribed": "Illimité non souscrit",
+  "unlimitedInUse": "Illimité en cours d'utilisation",
+  "subscribe": "S'abonner",
+  "manageSubscription": "Gérer l'abonnement",
+  "purchaseHistory": "Historique des achats",
+  "customerCenter": "Support Client",
+  "noNewNotifications": "Aucune nouvelle notification.",
+  "noPurchaseHistory": "Aucun historique d'achat.",
   "none": "Aucun",
+  "deleteConfirmMessage": "Voulez-vous supprimer \"{title}\" ?",
+  "@deleteConfirmMessage": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Supprimer",
+  "notepad": "Bloc-notes",
+  "today": "Aujourd'hui",
+  "yearView": "Année",
+  "monthView": "Mois",
+  "weekView": "Semaine",
+  "dayView": "Jour",
+  "noEvents": "Aucun événement prévu.",
+  "noSavedMemos": "Aucun mémo ou événement enregistré.",
+  "holiday": "Jour férié",
+  "photo": "Photo",
+  "drawing": "Dessin",
+  "drawingTitle": "Dessin",
+  "pencil": "Crayon",
+  "marker": "Marqueur",
+  "eraser": "Gomme",
+  "adjustThickness": "Ajuster l'épaisseur du {label}",
+  "@adjustThickness": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "sticker": "Autocollant",
+  "event": "Événement",
+  "memo": "Mémo",
+  "routineExercise": "Exercice",
+  "routineHiking": "Randonnée",
+  "routineCleaning": "Ménage",
+  "routineTravel": "Voyage",
+  "routineDate": "Rendez-vous",
+  "routineConcert": "Concert",
+  "routineMovie": "Film",
+  "routineMeeting": "Réunion",
+  "howIsYourMoodToday": "Comment vous sentez-vous aujourd'hui ?",
+  "complete": "Terminer",
+  "amWithIcon": "☀️ AM",
+  "pmWithIcon": "🌙 PM",
+  "photoPermissionDescription": "Pour ajouter des photos, vous devez autoriser l'accès aux photos dans les paramètres.",
+  "goToSettings": "Aller aux paramètres",
+  "photoPermissionNeeded": "La permission d'accès aux photos est requise.",
+  "fontSize": "Taille de police",
+  "fontFamily": "Police",
+  "textColor": "Couleur du texte",
+  "textAlign": "Alignement",
+  "alignLeft": "Gauche",
+  "alignCenter": "Centre",
+  "alignRight": "Droite",
+  "edit": "Modifier",
+  "fontSettings": "Paramètres de police",
+  "imageAddedFromKeyboard": "Image ajoutée depuis le clavier.",
+  "cancelWriting": "Annuler l'écriture",
+  "cancelWritingConfirm": "Un contenu est en cours d'écriture. Voulez-vous annuler et quitter ?",
+  "continueWriting": "Continuer l'écriture",
+  "title": "Titre",
+  "content": "Contenu",
+  "selectTime": "Sélectionner l'heure",
+  "noTime": "Aucune heure",
   "minutesLater": "{minutes} min plus tard",
+  "@minutesLater": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
   "countLabel": "Nombre",
   "timesCount": "Total {count} fois",
+  "@timesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "wakeUpMission": "Mission Réveil",
   "alarmSound": "Son de l'alarme",
   "gradualVolume": "Volume progressif",
@@ -148,6 +884,15 @@
   "customStyle": "Style personnalisé",
   "alarmName": "Nom de l'alarme",
   "enterAlarmName": "Veuillez entrer le nom de l'alarme",
+  "routineSummary": "Routine Summary",
+  "alarmOn": "Alarm ON",
+  "alarmOff": "Alarm OFF",
+  "contentHint": "Add content",
+  "addEvent": "Add Event",
+  "manageItem": "Manage Item",
+  "manageItemDescription": "What would you like to do with this item?",
+  "noTitle": "No Title",
+  "selectTitleColor": "Select Title Color",
   "save": "Enregistrer",
   "missionNone": "Aucune Mission",
   "missionSnap": "Object Snap",
@@ -166,62 +911,291 @@
   "missionFaceDescription": "Gardez votre visage dans le cadre pendant 5s.",
   "walkStepCount": "Pas cibles",
   "walkSteps": "{count} pas",
+  "@walkSteps": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "missionNumberOrder": "Ordre des nombres",
   "missionNumberOrderDescription": "Tapez sur les nombres de 1 à 9 dans l'ordre.",
   "missionNumberOrderGuide": "Suivant : {nextNumber}",
+  "@missionNumberOrderGuide": {
+    "placeholders": {
+      "nextNumber": {
+        "type": "int"
+      }
+    }
+  },
   "missionHiddenButton": "Mémorisation de position",
   "missionHiddenButtonDescription": "Mémorisez les tuiles allumées dans l'ordre et tapez dessus dans les 10 secondes.",
   "missionHiddenButtonDifficulty": "Δ{delta}",
+  "@missionHiddenButtonDifficulty": {
+    "placeholders": {
+      "delta": {
+        "type": "int"
+      }
+    }
+  },
   "missionTapSprint": "Sprint Tactile",
   "missionTapSprintDescriptionShort": "Tapez pour remplir la jauge.",
   "missionTapSprintDescription": "Tapez {goalTaps}+ fois pour remplir la jauge.",
+  "@missionTapSprintDescription": {
+    "placeholders": {
+      "goalTaps": {
+        "type": "int"
+      }
+    }
+  },
   "missionTapSprintTapHere": "Tapez",
   "missionTapSprintHint": "Se remplit vite, se vide si vous faites une pause.",
   "missionLeftRight": "Gauche / Droite",
   "missionLeftRightDescriptionShort": "Suivez l'invite et choisissez gauche ou droite.",
   "missionLeftRightDescription": "Obtenez {targetStreak} correctes d'affilée.",
+  "@missionLeftRightDescription": {
+    "placeholders": {
+      "targetStreak": {
+        "type": "int"
+      }
+    }
+  },
   "missionLeftRightPromptLeft": "Tapez GAUCHE",
   "missionLeftRightPromptRight": "Tapez DROITE",
   "left": "Gauche",
   "right": "Droite",
   "missionHintInactivity": "Si vous arrêtez pendant 2 minutes, cela se réinitialise.",
   "fortuneCatchScore": "Score : {score}",
+  "@fortuneCatchScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
   "fortuneCatchGoal": "Objectif : 100",
   "fortuneCatchGoalDetail": "(Attrapés : {count}/{min})",
+  "@fortuneCatchGoalDetail": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "fortuneCatchTime": "Time: {seconds}s",
+  "@fortuneCatchTime": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "fortuneCatchBest": "Best: {seconds}s",
+  "@fortuneCatchBest": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "fortuneCatchAngryHint": "Angry Fortuny is a penalty!",
+  "fortuneCatchInstruction": "Avoid angry Fortuni and catch them!",
+  "fortuneCatchPointMinus": "{points} points deducted",
+  "@fortuneCatchPointMinus": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "fortuneCatchPointPlus": "+{points} points",
+  "@fortuneCatchPointPlus": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
   "fortuneCatchCombo": "{combo} Combo !",
+  "@fortuneCatchCombo": {
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
   "difficulty": "Difficulté",
   "difficultyEasy": "Facile",
   "difficultyNormal": "Normal",
   "difficultyHard": "Difficile",
   "problemCount": "Nombre de problèmes",
   "problemsCount": "{count} Problèmes",
+  "@problemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "missionAnalyzing": "Mission {index}/{total} Analyse en cours...",
+  "@missionAnalyzing": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "missionPointObject": "Mission {index}/{total} : Pointer l'objet dans le guide.",
+  "@missionPointObject": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "missionPointSink": "Pointer l'évier.",
+  "missionPointRefrigerator": "Pointer le réfrigérateur.",
+  "missionPointScale": "Pointer le pèse-personne.",
+  "missionPointFace": "Pointer votre visage.",
+  "missionPointObjectGeneric": "Pointer l'objet spécifié.",
+  "missionRecognizeObject": "Veuillez reconnaître l'objet.",
+  "missionPerform": "Veuillez effectuer la mission.",
+  "initError": "Une erreur est survenue lors de l'initialisation.",
+  "analyzingNextTarget": "Analyse de la cible suivante...",
+  "errorOccurredGeneric": "Une erreur est survenue",
+  "missionSuccessWithCount": "{completed}/{total} Réussite !",
+  "@missionSuccessWithCount": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "missionMatchSuccess": "{total}/{total} Réussite ! Correspondance réussie !",
+  "@missionMatchSuccess": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "escape": "Échap",
+  "pointObjectClearly": "Prenez une photo où la cible est clairement visible",
+  "matchingSuccess": "Correspondance réussie !",
+  "missionComplete": "Mission terminée !",
+  "allMissionsComplete": "Toutes les missions sont terminées !",
+  "missionSnoozeMessage": "Mission réussie ! Mais elle sonnera à nouveau dans {minutes} minutes selon les paramètres.",
+  "@missionSnoozeMessage": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "showFace": "Veuillez montrer votre visage",
+  "keepWatching": "Continuez à regarder l'écran",
+  "recognizingFaceForFortune": "Reconnaissance du visage pour l'analyse de physiognomonie",
+  "dataNotStored": "Les données ne sont pas stockées",
+  "solveProblem": "Veuillez résoudre le problème.",
+  "correctAnswer": "Bonne réponse !",
+  "wrongAnswerRetry": "Faux. Veuillez réessayer.",
+  "correct": "Correct !",
+  "walkToDismiss": "Veuillez marcher en tenant votre smartphone",
   "shakeCount": "Nombre de secousses",
   "shakeTimes": "{count} fois",
+  "@shakeTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "missionNumber": "Mission {number}",
+  "@missionNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "soundBirds": "Chants d'oiseaux",
   "shakeCountLabel": "Nombre de secousses",
   "missionIndex": "Mission {index}",
+  "@missionIndex": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
   "ringtoneSelect": "Sélectionner la sonnerie",
   "vibrationSelect": "Sélectionner le modèle de vibration",
+  "selectMissionTitle": "Veuillez sélectionner une mission d'arrêt d'alarme.",
+  "ringtoneCategoryStandard": "Standard",
+  "ringtoneCategoryCalm": "Calme",
+  "ringtoneCategoryUpbeat": "Entraînant",
+  "ringtoneCategoryLoud": "Fort",
+  "noRingtones": "Aucune sonnerie trouvée.",
+  "photoPermissionRequired": "La permission d'accès aux photos est requise.",
+  "deleteImage": "Supprimer l'image",
+  "longPressToDelete": "Appuyez longuement pour supprimer.",
+  "videoLoadFail": "Échec du chargement de la vidéo\nAppuyez pour réessayer",
+  "existingCapturedImages": "Images capturées existantes",
+  "deleteCount": "Supprimer {count}",
+  "@deleteCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteSelectedImagesConfirm": "Êtes-vous sûr de vouloir supprimer {count} images ?\nCette action est irréversible.",
+  "@deleteSelectedImagesConfirm": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "defaultRingtone": "Sonnerie par défaut",
   "classicAlarm": "Alarme Classique",
   "digitalAlarm": "Alarme Digitale",
   "birdsSound": "Oiseaux qui chantent",
   "wavesSound": "Vagues de l'océan",
+  "cuckooClock": "Pendule à coucou",
+  "calmAlarm": "Alarme calme",
+  "doorKnock": "Frappe à la porte",
+  "earlySunrise": "Lever du soleil précoce",
+  "goodMorningSound": "Bonjour",
+  "inAHurry": "Pressé",
+  "lovingYou": "En t'aimant",
+  "sirenSound": "Sirène",
+  "swingingSound": "Balançant",
+  "telephoneBusy": "Téléphone occupé",
   "defaultVibration": "Vibration par défaut",
   "shortVibration": "Répétition courte",
   "longVibration": "Répétition longue",
   "heartbeatVibration": "Battement de cœur",
   "sosVibration": "SOS",
   "quickVibration": "Rythme rapide",
-  "permissionRequired": "Permission Requise",
   "exactAlarmPermissionDesc": "Pour faire sonner l'alarme à l'heure exacte, la permission \"Calendrier et rappels\" est requise.",
   "batteryOptimizationPermissionDesc": "L'optimisation de la batterie doit être désactivée pour que l'alarme sonne à l'heure.",
   "overlayPermissionDesc": "Pour afficher l'écran de mission lorsque l'alarme se déclenche, la permission \"Afficher sur d'autres applis\" est requise.",
   "cameraMissionFirstImageError": "Veuillez définir au moins la première image de mission.",
   "cameraMissionSequentialImageError": "Veuillez définir les images de mission dans l'ordre.",
-  "errorOccurred": "Une erreur est survenue : {error}",
-  "openSettings": "Ouvrir les paramètres",
+  "retry": "Réessayer",
   "exactAlarmPermissionFail": "Échec de l'enregistrement de l'alarme. La permission d'alarme exacte est désactivée et doit être définie.",
   "batteryOptimizationPermissionFail": "Échec de l'enregistrement de l'alarme. La permission d'exception d'optimisation de la batterie est manquante et doit être définie.",
   "overlayPermissionFail": "Échec de l'enregistrement de l'alarme. La permission \"Afficher sur d'autres applis\" est manquante et doit être définie.",
@@ -230,6 +1204,16 @@
   "errorLoadingAlarm": "Échec du chargement des informations d'alarme.",
   "alarmNotFound": "Informations d'alarme introuvables.",
   "repeatAlarmCount": "Alarme de répétition ({current}/{max})",
+  "@repeatAlarmCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "turnOffAlarm": "Éteindre l'alarme",
   "startMission": "Commencer la mission",
   "alarmSnooze": "Répéter",
@@ -238,15 +1222,75 @@
   "fortuneAdButton": "Regarder la pub et voir les résultats",
   "fortuneLoadingMessage": "Découvrez l'interprétation spéciale du tarot de la voyante.",
   "fortuneAnalyzing": "Analyse de votre tarot sélectionné... {progress}%",
+  "@fortuneAnalyzing": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      }
+    }
+  },
   "fortuneSelectTitle": "Pensez à l'énergie d'aujourd'hui\net sélectionnez 3 cartes.",
   "fortuneSelectTitleDate": "Pensez à l'énergie du {month}/{day}\net sélectionnez 3 cartes.",
+  "@fortuneSelectTitleDate": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
   "fortuneNewYearButton": "Voir la fortune du Nouvel An 2026",
   "loveFortune": "Amour",
   "wealthFortune": "Richesse",
   "successFortune": "Succès",
   "fortuneResultTitle": "Voici votre résultat de fortune pour aujourd'hui.",
   "fortuneResultTitleDate": "Fortune pour le {year}/{month}/{day}",
+  "@fortuneResultTitleDate": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
   "startDayButton": "Commencez votre journée",
+  "tarotName0": "Le Fou",
+  "tarotName1": "Le Magicien",
+  "tarotName2": "La Grande Prêtresse",
+  "tarotName3": "L'Impératrice",
+  "tarotName4": "L'Empereur",
+  "tarotName5": "Le Hiérophante",
+  "tarotName6": "Les Amoureux",
+  "tarotName7": "Le Chariot",
+  "tarotName8": "La Force",
+  "tarotName9": "L'Ermite",
+  "tarotName10": "La Roue de la Fortune",
+  "tarotName11": "La Justice",
+  "tarotName12": "Le Pendu",
+  "tarotName13": "La Mort",
+  "tarotName14": "La Tempérance",
+  "tarotName15": "Le Diable",
+  "tarotName16": "La Maison Dieu",
+  "tarotName17": "L'Étoile",
+  "tarotName18": "La Lune",
+  "tarotName19": "Le Soleil",
+  "tarotName20": "Le Jugement",
+  "tarotName21": "Le Monde",
+  "tarotKeywords1": "Création, Volonté, Capacité, Réalisation, Polyvalence",
+  "tarotDescription1": "Le magicien porte une robe rouge, une main pointée vers le ciel et l'autre vers le sol, apportant le pouvoir céleste sur terre. Il y a quatre éléments (bâton, coupe, épée, denier) sur la table, ce qui signifie que vous avez déjà tous les outils et capacités pour atteindre vos objectifs.",
+  "tarotLoveMeaning1": "C'est une période où votre charme est à son apogée et où vous êtes populaire auprès du sexe opposé. Si vous êtes dans une relation naissante, vous pouvez développer la relation avec votre discours spirituel et prendre les devants.",
+  "tarotLoveDetail1": "C'est une excellente occasion de capturer le cœur du sexe opposé alors que votre charme et votre talent brillent. S'il y a quelqu'un qui vous plaît, n'hésitez pas à l'approcher activement. Votre sens de l'humour et votre conversation sensée raviront l'autre personne et vous permettront de mener la relation de manière proactive. Si vous êtes célibataire, vous pouvez être approché par plusieurs personnes, et si vous êtes en couple, l'autre personne sera grandement émue si vous menez la sortie ou préparez un événement. Gagnez l'amour avec confiance.",
+  "tarotWealthMeaning1": "C'est le bon moment pour générer des revenus en utilisant vos capacités et vos compétences. Si vous concrétisez les idées que vous avez en tête, cela mènera à des résultats financiers.",
+  "tarotWealthDetail1": "C'est le moment où vos connaissances, vos compétences et vos idées deviennent de l'argent. Ne vous contentez pas d'un salaire ; générez des revenus supplémentaires via des activités secondaires ou en freelance. Votre planification créative, votre capacité de vente et votre aisance à l'oral seront d'excellents atouts, entraînant des revenus plus élevés que prévu. Comme votre jugement est susceptible de viser juste dans la gestion des fonds, vous obtiendrez de bons résultats si vous établissez de manière proactive un plan financier et le mettez en pratique.",
+  "tarotSuccessMeaning1": "Votre capacité de travail sera excellemment démontrée et reconnue par votre entourage. Si vous avez quelque chose de prévu, c'est le moment de le mettre en pratique.",
+  "tarotSuccessDetail1": "Vous pouvez vous démarquer sur votre lieu de travail ou dans vos études en utilisant pleinement vos capacités. Quel que soit le problème auquel vous faites face, vous pouvez le résoudre avec votre propre esprit et votre humour, et vous serez reconnu comme une 'personne capable' par vos collègues ou supérieurs. Si vous prenez la tête d'un nouveau projet ou faites une présentation importante, vous pouvez la terminer avec succès. Tout comme les opportunités viennent à ceux qui sont préparés, vous l'êtes déjà pleinement. Croyez en vous et montrez vos compétences avec confiance comme un protagoniste sur scène.",
   "policy": "Conditions et Confidentialité",
   "support": "Support",
   "defaultAlarmBehavior": "Comportement d'alarme par défaut",
@@ -259,7 +1303,27 @@
   "minutes": "min",
   "times": "fois",
   "cupsCount": "({current}/{goal} tasses)",
+  "@cupsCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
   "timesCountProgress": "({current}/{goal} fois)",
+  "@timesCountProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
   "missionGym": "Aller à la salle de sport",
   "missionWorkout": "Entraînement à la maison",
   "missionDiary": "Écrire un journal",
@@ -301,11 +1365,48 @@
   "supportContentPrefix": "Contenu de la demande",
   "supportCopySuccessTitle": "Demande copiée",
   "supportCopySuccessMessage": "Le contenu de la demande a été copié dans le presse-papiers.\\nVoulez-vous envoyer un e-mail à {email} ?",
+  "@supportCopySuccessMessage": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "selectionComplete": "Sélection terminée",
+  "selectVibration": "Sélectionner le modèle de vibration",
   "copyEmailAction": "Copier l'adresse e-mail",
+  "addMissionTitle": "Ajouter une nouvelle mission",
+  "recommendedMissionList": "Missions recommandées",
+  "recommendedMissionDesc": "Missions recommandées pour une journée saine.",
+  "all": "Tout",
+  "allMissions": "Toutes les missions",
+  "categoryMissions": "Missions {category}",
+  "deselectAll": "Tout désélectionner",
+  "selectAll": "Tout sélectionner",
+  "myCustomMissions": "Mes missions personnalisées",
+  "myCustomMissionsDesc": "Ajouter des missions que vous avez créées auparavant.",
+  "createYourOwnMission": "Créer votre propre mission",
+  "createYourOwnMissionDesc": "Créez une mission si vous ne trouvez pas ce que vous cherchez.",
+  "missionNameHint": "Entrez le nom de la mission (ex: Aller à la salle)",
+  "selectCategory": "Sélectionner une catégorie",
+  "getNotification": "Recevoir une notification",
+  "notificationTime": "Heure de notification",
+  "missionCategoryHealth": "Santé",
+  "missionCategoryStudy": "Études",
+  "missionCategoryRoutine": "Routine",
+  "missionCategoryHobby": "Loisir",
+  "missionCategoryOther": "Autre",
   "copyEmailSuccessMessage": "Adresse e-mail copiée. Veuillez la coller dans votre application de messagerie.",
   "supportSubmitButton": "Copier la demande et envoyer",
   "shakePhone": "Veuillez secouer votre téléphone !",
   "version": "Version {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
   "fortuneCheckButton": "Vérifier la fortune",
   "fortuneSelectCards": "Sélectionnez 3 cartes",
   "fortuneDragCards": "Faites glisser et sélectionnez 3 cartes",
@@ -317,5 +1418,612 @@
   "weatherDisclaimer": "Les données observées peuvent varier en fonction des conditions locales ou de l'état de réception.",
   "weatherSource": "Données météo fournies par des services de confiance",
   "locationPermissionTitle": "Autoriser la permission de localisation",
-  "locationPermissionDesc": "Requis pour afficher les informations météo."
+  "locationPermissionDesc": "Requis pour afficher les informations météo.",
+  "hourlyForecast": "Prévisions horaires",
+  "weeklyForecast": "Prévisions hebdomadaires",
+  "hourFormat": "{hour}h",
+  "noNotifications": "Aucune nouvelle notification.",
+  "adLoadFailed": "Échec du chargement de la publicité",
+  "adLoading": "Chargement de la publicité...",
+  "removeAds": "Supprimer les publicités",
+  "close": "Fermer",
+  "exitQuestion": "Voulez-vous quitter ?",
+  "exitApp": "Quitter",
+  "shareResultDescription": "Ceci est votre résultat de fortune analysé par Fortune Alarm.",
+  "shareResultButton": "Partager le résultat",
+  "unknownTime": "Heure inconnue",
+  "adLoadError": "Impossible de charger la publicité. Veuillez réessayer dans un instant.",
+  "adShowError": "Impossible d'afficher la publicité. Veuillez réessayer dans un instant.",
+  "earnCookies": "Vous avez gagné {count} fortune cookies ! 🎉",
+  "@earnCookies": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "freePassAfterTimeout": "Affichage des résultats gratuitement sans publicité ! 🎉",
+  "adLoadDelay": "Le chargement est retardé.\nVeuillez réessayer dans un instant.",
+  "fortuneAccessTitle": "Vérifier la fortune",
+  "fortuneAccessSubtitle": "Vérifiez vos résultats de fortune\net obtenez des cadeaux cachés !",
+  "watchAdButtonText": "Regarder la pub pour des résultats gratuits",
+  "useCookiesButtonText": "Utiliser {count} Fortune Cookies",
+  "@useCookiesButtonText": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "adFailFreePass": "Impossible de charger la publicité, nous vous laissons passer gratuitement cette fois.",
+  "luckyNumberTitle": "Mes Numéros Chance",
+  "luckyNumberSubtitle": "Numéros chance spéciaux générés par l'IA",
+  "luckyNumberGenerateButton": "Générer des Numéros Chance",
+  "luckyNumberGuideText": "Découvrez vos propres numéros chance\ngrâce à l'algorithme IA de Fortune Alarm",
+  "luckyNumberAnalysisStep1": "Collecte des données de chance...",
+  "luckyNumberAnalysisStep2": "Analyse des modèles de numéros récents...",
+  "luckyNumberAnalysisStep3": "Analyse de l'énergie pour chaque numéro...",
+  "luckyNumberAnalysisStep4": "Apprentissage des modèles géométriques...",
+  "luckyNumberAnalysisStep5": "Application des poids du modèle de prédiction IA...",
+  "luckyNumberAnalysisStep6": "Calcul de la combinaison chance optimale...",
+  "luckyNumberAnalysisStep7": "Analyse terminée ! Génération des numéros chance",
+  "luckyNumberAnalysisFinal": "Traitement des données finales...",
+  "luckyNumberGenerating": "Génération des numéros chance...",
+  "luckyNumberResultTitle": "Génération des numéros chance terminée",
+  "luckyNumberResultSubtitle": "6 numéros + numéro bonus",
+  "luckyNumberDisclaimer": "* Ce service est à des fins de divertissement. Les numéros fournis sont à titre de référence générés par des algorithmes d'IA et ne garantissent pas un gain.",
+  "luckyNumberShareTitle": "Numéros Chance d'Aujourd'hui",
+  "luckyNumberShareDescription": "Numéros chance analysés par Fortune Alarm.",
+  "luckyNumberSetLabel": "Set {label}",
+  "@luckyNumberSetLabel": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "luckyNumberRegenerateButton": "Régénérer les numéros",
+  "luckyNumberFeatureAiTitle": "Recommandation IA",
+  "luckyNumberFeatureAiDesc": "Algoritme Intelligent",
+  "luckyNumberFeatureSmartTitle": "Intelligent",
+  "luckyNumberFeatureSmartDesc": "Recommandation de Numéros Chance",
+  "luckyNumberFeatureDataTitle": "Analyse de Données",
+  "luckyNumberFeatureDataDesc": "Combinaison optimale",
+  "fortunePassTitle": "Fortune Pass",
+  "fortunePassTabFree": "Recharge Gratuite",
+  "fortunePassTabPremium": "Pass Premium",
+  "fortunePassFreeChargeTitle": "Recharger des cookies gratuitement",
+  "fortunePassFreeChargeButton": "Regarder une pub et obtenir 1 cookie",
+  "fortunePassActivePlan": "Plan Actuel",
+  "fortunePassNoSubscription": "Aucun abonnement actif",
+  "fortunePassRestore": "Restaurer",
+  "fortunePassMonth1Title": "Pass 1 Mois",
+  "fortunePassMonth1Desc": "Débloquez toutes les fonctionnalités pendant 1 mois",
+  "fortunePassMonth6Title": "Pass 6 Mois",
+  "fortunePassMonth6Desc": "Abonnement de 6 mois à prix réduit",
+  "fortunePassYear1Title": "Pass 1 An",
+  "fortunePassYear1Desc": "Meilleure valeur pour une année entière",
+  "fortunePassBestPlan": "Plan le plus populaire",
+  "fortunePassTimeSaleLabel": "Offre éclair de {percent}% !",
+  "@fortunePassTimeSaleLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "fortunePassOffLabel": "{percent}% de RÉDUCTION",
+  "@fortunePassOffLabel": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "fortunePassPerMonth": " /mois",
+  "fortunePassTotalPrice": "Total {price} / {unit}",
+  "@fortunePassTotalPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "fortunePassUnitMonth": "Mois",
+  "fortunePassUnit6Months": "6 Mois",
+  "fortunePassUnitYear": "An",
+  "fortunePassMyCookies": "Mes Cookies",
+  "fortunePassCurrentStatus": "Statut du Pass",
+  "fortunePassStatusPremium": "Pass Premium Actif",
+  "fortunePassStatusFree": "Utilisateur Standard",
+  "fortunePassStoreErrorTitle": "Abonnement non disponible",
+  "fortunePassStoreErrorContent": "Impossible de récupérer les informations sur les produits du magasin pour le moment.",
+  "fortunePassSubscribeSale": "S'abonner avec {percent}% de réduction",
+  "@fortunePassSubscribeSale": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "fortunePassSubscribeNow": "S'abonner maintenant",
+  "fortunePassApplied": "Abonnement Fortune Pass appliqué.",
+  "fortunePassApplyFailed": "Échec de l'application de l'abonnement.",
+  "fortunePassRestored": "Historique des achats restauré.",
+  "fortunePassRestoreFailed": "Échec de la restauration de l'historique des achats.",
+  "fortunePassTimeSaleTitle": "Attendez ! Un cadeau est arrivé 🎁",
+  "fortunePassTimeSalePriceOriginal": "Prix original {price}/an",
+  "@fortunePassTimeSalePriceOriginal": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "fortunePassTimeSalePriceDiscount": "{price}/an",
+  "@fortunePassTimeSalePriceDiscount": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "fortunePassTimeSaleBadge": "50% de réduction si vous vous abonnez dans les 3 minutes !",
+  "fortunePassTimeSaleButton": "Obtenir la réduction et commencer Pro",
+  "fortunePassTimeSaleCancel": "Peut-être plus tard",
+  "fortunePassTimeSaleStartMessage": "La réduction de 3 minutes a commencé ! Vérifiez la bannière en haut.",
+  "fortunePassSubscribeButton": "S'abonner maintenant",
+  "fortunePassSubscribeDiscountButton": "S'abonner avec 50% de réduction",
+  "fortunePassCookieBalance": "Vos Cookies de Fortune",
+  "fortunePassCookieCount": "{count}",
+  "@fortunePassCookieCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fortunePassActive": "Pass Actif",
+  "fortunePassTotalFormat": "Total {price} / {unit}",
+  "@fortunePassTotalFormat": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "fortunePassPopularPlan": "Plan Populaire",
+  "fortunePassPricePerMonth": " /mois",
+  "fortunePassPaymentFailed": "La demande de paiement a échoué.",
+  "fortunePassSubscriptionFailed": "Échec de l'application de l'abonnement. Veuillez vérifier votre réseau.",
+  "fortunePassSubscriptionSuccess": "L'abonnement Fortune Pass a été appliqué.",
+  "fortunePassCannotSubscribeTitle": "Impossible de s'abonner",
+  "fortunePassCannotSubscribeMessage": "Impossible de récupérer les informations sur les produits du magasin pour le moment.\n\n[Liste de vérification]\n1. État de connexion Google Play / App Store\n2. Connexion Internet\n3. État d'enregistrement de l'appareil de test",
+  "year": "Année",
+  "month": "Mois",
+  "day": "Jour",
+  "sajuProfileTitle": "Modifier le profil principal des Quatre Piliers du Destin",
+  "sajuNameLabel": "Nom",
+  "sajuNameHint": "Veuillez entrer votre nom",
+  "sajuNameHelper": "Jusqu'à 6 caractères",
+  "sajuGenderLabel": "Genre",
+  "sajuGenderMale": "Homme",
+  "sajuGenderFemale": "Femme",
+  "sajuBirthDateLabel": "Date de naissance",
+  "sajuBirthTimeLabel": "Heure de naissance",
+  "sajuUnknownTime": "Heure inconnue",
+  "sajuEditComplete": "Modification terminée",
+  "sajuSolar": "Solaire",
+  "sajuLunar": "Lunaire",
+  "sajuSelectBirthDate": "Sélectionner la date de naissance",
+  "sajuSelectBirthTime": "Sélectionner l'heure de naissance",
+  "compatibilityTitle": "Vérifier la compatibilité",
+  "compatibilityInputHeader": "Veuillez entrer les informations pour les deux",
+  "compatibilityInputSubtitle": "Nous analyserons la compatibilité exacte basée sur les informations des Quatre Piliers du Destin.",
+  "compatibilityMyInfo": "Mes informations",
+  "compatibilityInputMyNameGuide": "Veuillez entrer votre nom.",
+  "compatibilityInputPartnerNameGuide": "Veuillez entrer le nom du partenaire.",
+  "compatibilityPartnerInfo": "Informations du partenaire",
+  "compatibilityLoadSaved": "Charger les infos enregistrées",
+  "compatibilityTitleBest": "Un match parfait ! ❤️",
+  "compatibilityDescBest": "La meilleure compatibilité que vous puissiez demander. Ne vous laissez pas partir !",
+  "compatibilityTitleGreat": "Une très bonne relation 💕",
+  "compatibilityDescGreat": "Un excellent partenaire qui est un grand soutien l'un pour l'autre.",
+  "compatibilityTitleGood": "Un couple bien assorti 😊",
+  "compatibilityDescGood": "Il y a quelques différences, mais vous pouvez avoir un bel amour tout en vous ajustant l'un à l'autre.",
+  "compatibilityTitleEffort": "Des efforts sont nécessaires 🧐",
+  "compatibilityDescEffort": "Il y a beaucoup de différences. La compréhension et la considération sont les clés de la relation.",
+  "compatibilityTitleDifficult": "Besoin de beaucoup s'ajuster 😅",
+  "compatibilityDescDifficult": "Les différences de personnalité peuvent être importantes. Vous devez comprendre profondément les différences de chacun.",
+  "compatibilityResultButton": "Voir le résultat de compatibilité",
+  "compatibilityDeleteTooltip": "Supprimer",
+  "compatibilityGenderMale": "Homme",
+  "compatibilityGenderFemale": "Femme",
+  "tojeongInputTitle": "Saisie des informations de l'Oracle Annuel de Tojeong",
+  "tojeongCheckFortune": "Consultez votre {year}\nOracle Annuel de Tojeong",
+  "@tojeongCheckFortune": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "tojeongInputGuide": "Veuillez entrer votre date et heure de naissance\npour une analyse précise.",
+  "tojeongViewResult": "Voir l'Oracle Annuel de Tojeong {year}",
+  "@tojeongViewResult": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "tojeongCheckButton": "Consulter l'Oracle Annuel de Tojeong",
+  "tojeongSaveAndCheck": "Enregistrer et voir l'Oracle Annuel de Tojeong",
+  "tojeongYearSelect": "Sélectionner l'année de l'Oracle",
+  "tojeongResultTitle": "Oracle Annuel de Tojeong {year}",
+  "@tojeongResultTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "tojeongUserFortune": "Oracle de {name} pour {year}",
+  "@tojeongUserFortune": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "tojeongGua": "Gua: {gua}",
+  "@tojeongGua": {
+    "placeholders": {
+      "gua": {
+        "type": "String"
+      }
+    }
+  },
+  "tojeongTotalLuck": "Chance Totale",
+  "tojeongProcess": "Processus",
+  "tojeongResult": "Résultat",
+  "tojeongMonthlyLuck": "Fortune Mensuelle",
+  "tojeongShareResult": "Partager les Résultats",
+  "tojeongShareTitle": "Résultats de l'Oracle Annuel de Tojeong {year}",
+  "tojeongShareDesc": "Examen global de l'Oracle Annuel de Tojeong de {name}.\n\n{desc}...",
+  "@tojeongShareDesc": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "desc": {
+        "type": "String"
+      }
+    }
+  },
+  "tojeongShareTargetYear": "Année cible",
+  "sajuDeleteTitle": "Supprimer les informations des Quatre Piliers du Destin",
+  "sajuDeleteConfirm": "Êtes-vous sûr de vouloir supprimer les infos de {name} ?",
+  "@sajuDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sajuProfileSelect": "Sélectionner les informations des Quatre Piliers du Destin",
+  "add": "Ajouter",
+  "modify": "Modifier",
+  "fortuneUnderConstructionTitle": "{title}\nLe service est en cours de préparation.",
+  "@fortuneUnderConstructionTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "fortuneUnderConstructionSubtitle": "Nous travaillons dur pour vous fournir des\ninformations de fortune plus précises et utiles !",
+  "goBack": "Retour",
+  "name": "Nom",
+  "nameInputGuide": "Veuillez entrer votre nom",
+  "sajuLunarSolar": "Solaire/Lunaire",
+  "sajuBirthDateDisplay": "{year}.{month}.{day}",
+  "@sajuBirthDateDisplay": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "sajuSelectFortuneYear": "Sélectionner l'année de la fortune",
+  "sajuYearDisplay": "{year}",
+  "@sajuYearDisplay": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "sajuSelectProfile": "Sélectionner un profil",
+  "male": "Homme",
+  "female": "Femme",
+  "newYearFortuneInputTitle": "Infos pour la Fortune du Nouvel An",
+  "newYearFortuneHeader": "Comment sera votre fortune\npour {year} ?",
+  "@newYearFortuneHeader": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newYearFortuneSubHeader": "Veuillez entrer votre date et heure de naissance\npour une analyse précise des Quatre Piliers du Destin.",
+  "newYearFortuneViewButton": "Voir la fortune de {year}",
+  "@newYearFortuneViewButton": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newYearFortuneCheckButton": "Vérifier la fortune",
+  "newYearFortuneSaveAndCheckButton": "Enregistrer et voir la fortune",
+  "newYearFortuneResultTitle": "Ma fortune du Nouvel An {year}",
+  "@newYearFortuneResultTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newYearFortuneShareTitle": "Résultat de ma fortune du Nouvel An {year}",
+  "@newYearFortuneShareTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newYearFortuneShareDesc": "Fortune du Nouvel An pour {name}.\n\n{desc}...",
+  "@newYearFortuneShareDesc": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "desc": {
+        "type": "String"
+      }
+    }
+  },
+  "sajuChartTitle": "Graphique des Quatre Piliers du Destin",
+  "sajuHour": "Heure",
+  "sajuDay": "Jour",
+  "sajuMonth": "Mois",
+  "sajuYear": "Année",
+  "ohaengAnalysisTitle": "Analyse des Cinq Éléments",
+  "dominantOhaeng": "Votre élément dominant : {name}({symbol})",
+  "@dominantOhaeng": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "symbol": {
+        "type": "String"
+      }
+    }
+  },
+  "ohaengDisclaimer": "※ Les Cinq Éléments (Bois, Feu, Terre, Métal, Eau) sont les énergies de base des Quatre Piliers du Destin. Bien que l'équilibre soit idéal, vous pouvez comprendre vos tendances à travers ces éléments.",
+  "yearlyTotalLuck": "Chance Totale pour {year}",
+  "@yearlyTotalLuck": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "fortuneDisclaimer": "Cette fortune est à des fins de divertissement. Votre vie dépend de votre propre volonté.",
+  "compatibilityResultTitle": "Résultat de compatibilité",
+  "compatibilityScore": "Score de compatibilité",
+  "compatibilityScoreDisplay": "{score}",
+  "@compatibilityScoreDisplay": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "compatibilityShareTitle": "Notre Compatibilité",
+  "compatibilityShareResult": "Partager le Résultat",
+  "compatibilityRetryButton": "Vérifier avec quelqu'un d'autre",
+  "compatibilitySummary": "Résumé",
+  "tojeongSaveAndCheckButton": "Enregistrer et voir la fortune traditionnelle",
+  "tojeongSangsuKeyword1": "une période exigeant une forte impulsion et du leadership",
+  "tojeongSangsuKeyword2": "une période riche en relations actives et en joie",
+  "tojeongSangsuKeyword3": "une période où l'intelligence et la passion brillent",
+  "tojeongSangsuKeyword4": "une période de changements rapides et de nouveaux départs",
+  "tojeongSangsuKeyword5": "une période exigeant une attitude flexible et une communication douce",
+  "tojeongSangsuKeyword6": "une période pour surmonter les difficultés avec sagesse et patience",
+  "tojeongSangsuKeyword7": "une période pour rechercher la stabilité et renforcer sa force intérieure",
+  "tojeongSangsuKeyword8": "une période pour cultiver la vertu avec inclusivité et un cœur chaleureux",
+  "tojeongJungsuKeyword1": "vous rencontrerez une aide précieuse",
+  "tojeongJungsuKeyword2": "il y aura de bonnes nouvelles concernant des documents ou contrats",
+  "tojeongJungsuKeyword3": "vous ferez face à de nouveaux défis et opportunités",
+  "tojeongJungsuKeyword4": "le succès et l'honneur au travail suivront",
+  "tojeongJungsuKeyword5": "vous devriez gérer vos finances avec soin",
+  "tojeongJungsuKeyword6": "vous devriez donner la priorité à votre santé",
+  "tojeongHasuKeyword1": "vous obtiendrez un grand succès.",
+  "tojeongHasuKeyword2": "vous récolterez les fruits de vos efforts.",
+  "tojeongHasuKeyword3": "vous transformerez la crise en opportunité grâce à la patience.",
+  "tojeongCoreMessage": "Cette année, entre {sangsu}, {jungsu}, et enfin {hasu}",
+  "tojeongSangsuDetail1": "C'est une situation où le ciel et la terre vous aident. C'est une année où vous pouvez obtenir d'excellents résultats si vous procédez avec une forte impulsion. Comme un dragon montant au ciel, votre énergie est puissante et brillante. Vous aurez de nombreuses occasions de faire preuve de leadership et d'obtenir la reconnaissance de votre entourage. Cependant, agir de manière trop dogmatique pourrait susciter du ressentiment, il est donc important d'être inclusif.",
+  "tojeongSangsuDetail2": "C'est comme jeter une pierre dans un lac calme, créant des ondulations. C'est une année avec beaucoup de joie et de plaisir, mais vous devez faire attention aux commérages causés par des paroles malheureuses. Votre vie sociale deviendra active et votre popularité augmentera, mais cela peut aussi attirer la jalousie. Vous pourriez rencontrer un bon partenaire lors d'un rassemblement ou d'un événement agréable.",
+  "tojeongSangsuDetail3": "C'est comme un soleil brillant éclairant le monde entier. Votre intellect et votre passion brilleront, et vous pourriez vous démarquer dans les domaines des études ou de l'art. Votre réputation augmentera et vous deviendrez connu, mais vous devez gérer un tempérament aussi vif que le feu pour éviter les ennuis. Bien que les choses semblent glamour à l'extérieur, vous pourriez vous sentir seul à l'intérieur, alors concentrez-vous sur votre force intérieure.",
+  "tojeongSangsuDetail4": "Des changements rapides sont attendus, comme un coup de tonnerre dans un ciel serein. Votre énergie est active et entreprenante, ce qui en fait un bon moment pour commencer de nouvelles choses. Vous serez occupé par des déménagements ou des changements. Le début pourrait être bruyant mais la fin pourrait être floue, vous avez donc besoin de persévérance pour terminer ce que vous commencez.",
+  "tojeongSangsuDetail5": "C'est un moment où tout renaît alors qu'une douce brise printanière souffle. Si vous répondez avec une attitude flexible, les chemins bloqués s'ouvriront en douceur. Vous pouvez réaliser des bénéfices dans les affaires ou le commerce, et de bonnes nouvelles viendront de loin. Cependant, l'indécision pourrait vous faire manquer des opportunités, une certaine détermination est donc nécessaire le moment venu.",
+  "tojeongSangsuDetail6": "C'est comme nager en eaux profondes. Bien que cela paraisse calme en surface, il peut y avoir des inquiétudes à l'intérieur. Vous devez faire preuve de sagesse pour surmonter les difficultés, et il est préférable d'éviter les investissements ou expansions excessifs. Si vous attendez patiemment le bon moment, un jour faste viendra sûrement. Faites attention à votre santé.",
+  "tojeongSangsuDetail7": "C'est comme si une grande montagne bloquait votre chemin, mais une fois franchie, une vaste plaine s'étendra devant vous. Si vous endurez les difficultés avec une volonté ferme, vous porterez de grands fruits. Il est avantageux de maintenir votre position actuelle et de vous concentrer sur la stabilité intérieure. La stabilité vaut mieux que des changements hâtifs, et instaurer la confiance est important.",
+  "tojeongSangsuDetail8": "C'est le moment de semer des graines sur une vaste terre. Si vous embrassez votre environnement avec inclusivité et patience, vous cultiverez la vertu. Si vous traitez les gens avec un cœur chaleureux et maternel, vous pourrez recevoir l'aide des autres. Les investissements pour l'avenir, plutôt que les résultats immédiats, brilleront cette année. La paix habitera votre foyer.",
+  "tojeongJungsuDetail1": "Une aide arrive à votre porte, apportant des événements joyeux. Les problèmes bloqués se résoudront et la richesse affluera. Si vous planifiez des choses avec un partenaire, la probabilité de succès augmentera.",
+  "tojeongJungsuDetail2": "Il pourrait y avoir une célébration à la maison ou vous pourriez accueillir un nouveau membre dans la famille. La chance concernant les documents est bonne, ce qui est favorable pour les contrats ou les ventes. Cependant, de petites disputes pourraient se transformer en grands conflits, soyez donc prudent avec vos paroles et vos actes.",
+  "tojeongJungsuDetail3": "Vous êtes destiné à déployer vos ailes en terre étrangère ou à déménager loin. Vous pouvez obtenir de nouvelles opportunités grâce à des voyages ou des déplacements professionnels. Si vous vous lancez des défis sans craindre le changement, vous obtiendrez de bons résultats.",
+  "tojeongJungsuDetail4": "L'honneur suit alors que vous recevez une reconnaissance ou une promotion au travail. C'est une période favorable pour réussir des examens ou obtenir des certifications. N'hésitez pas à démontrer pleinement vos capacités.",
+  "tojeongJungsuDetail5": "La chance de richesse est forte, mais les dépenses pourraient aussi augmenter. Vous devez être rigoureux dans la gestion de votre argent et vous abstenir de dépenses impulsives. Il est préférable d'éviter les transactions financières avec des connaissances proches.",
+  "tojeongJungsuDetail6": "C'est le moment de prendre particulièrement soin de votre santé. Évitez le surmenage et reposez-vous beaucoup. Il est également bon de vérifier vos assurances en préparation d'accidents ou de maladies inattendus.",
+  "tojeongHasuDetail1": "En conséquence, tout se résoudra en douceur et vos vœux se réaliseront. Vous recevrez sûrement des récompenses pour vos efforts et susciterez l'envie de votre entourage. Si vous ne perdez pas votre état d'esprit initial, vos bénédictions dureront longtemps.",
+  "tojeongHasuDetail2": "Il peut y avoir quelques difficultés dans le processus, mais si vous persévérez et travaillez dur, vous finirez par atteindre votre objectif. Rien ne s'obtient facilement, vous récolterez donc ce pour quoi vous avez travaillé. C'est une fortune de floraison tardive.",
+  "tojeongHasuDetail3": "Vous pourriez rencontrer des obstacles inattendus, mais si vous persévérez sans frustration, vous pouvez transformer la crise en opportunité. Si vous lâchez prise sur l'avidité et libérez votre esprit, de bonnes choses arriveront à la place. La sagesse de transformer le malheur en bénédiction est nécessaire.",
+  "tojeongGeneralWealthGood": "La chance de richesse est bonne. Des revenus peuvent provenir d'endroits inattendus, ou des investissements peuvent donner de bons résultats. Cependant, autant l'argent rentre, autant il peut sortir, alors concentrez-vous sur l'épargne.",
+  "tojeongGeneralWealthBad": "Le flux de richesse peut ne pas être fluide. Vous devriez réduire les dépenses inutiles et prendre l'habitude d'épargner. Soyez prudent avec les transactions financières et consultez des experts pour vos investissements.",
+  "tojeongGeneralCareerGood": "Des occasions d'obtenir de la reconnaissance dans votre carrière ou vos affaires se présenteront. C'est un bon moment pour des promotions, des changements de carrière ou pour lancer une entreprise. De meilleurs résultats peuvent être obtenus grâce à de bonnes relations.",
+  "tojeongGeneralCareerBad": "Il est préférable de maintenir l'état actuel. Concentrez-vous sur vos tâches actuelles et développez vos compétences plutôt que de lancer de nouveaux projets. Vous pourriez ressentir du stress dans vos relations avec vos collègues ou supérieurs, alors gardez l'esprit tranquille.",
+  "tojeongGeneralLoveGood": "La chance en amour augmente, les célibataires pourraient rencontrer un bon partenaire et l'amour des couples s'approfondira. Le rire et l'harmonie rempliront le foyer. C'est un bon moment pour parler mariage.",
+  "tojeongGeneralLoveBad": "Des disputes pourraient survenir suite à des malentendus insignifiants. La compréhension et la considération des positions de chacun sont nécessaires. Essayez de résoudre les problèmes par un dialogue rationnel plutôt que par des réponses émotionnelles.",
+  "optional": "Optionnel",
+  "sajuSolarHint": "Tojeongbigyeol est plus précis lorsqu'il est analysé sur la base de l'anniversaire lunaire.",
+  "yourFortune": "Votre Fortune",
+  "guaUpper": "Gua Supérieur",
+  "guaMiddle": "Gua Moyen",
+  "guaLower": "Gua Inférieur",
+  "guaCode": "Code Gua",
+  "viewAgain": "Vérifier à nouveau",
+  "zodiacAries": "Bélier",
+  "zodiacTaurus": "Taureau",
+  "zodiacGemini": "Gémeaux",
+  "zodiacCancer": "Cancer",
+  "zodiacLeo": "Lion",
+  "zodiacVirgo": "Vierge",
+  "zodiacLibra": "Balance",
+  "zodiacScorpio": "Scorpion",
+  "zodiacSagittarius": "Sagittaire",
+  "zodiacCapricorn": "Capricorne",
+  "zodiacAquarius": "Verseau",
+  "zodiacPisces": "Poissons",
+  "elementFire": "Feu",
+  "elementEarth": "Terre",
+  "elementAir": "Air",
+  "elementWater": "Eau",
+  "compatibilityCategoryZodiac": "Compatibilité Zodiacale",
+  "compatibilityCategoryInner": "Compatibilité Intérieure",
+  "compatibilityCategoryConstellation": "Compatibilité de Constellation",
+  "compatibilitySummarySamhap": "Meilleur Accord Zodiacal (Samhap)",
+  "compatibilityDescSamhap": "Le {animal1} et le {animal2} sont un accord parfait, complétant les faiblesses de l'autre. Cette relation crée une excellente synergie lorsqu'ils sont ensemble.",
+  "@compatibilityDescSamhap": {
+    "placeholders": {
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
+    }
+  },
+  "compatibilitySummaryYukhap": "Grand Accord Zodiacal (Yukhap)",
+  "compatibilityDescYukhap": "Le {animal1} et le {animal2} ont une forte attraction mutuelle. Il est facile de ressentir une connexion dès le début.",
+  "@compatibilityDescYukhap": {
+    "placeholders": {
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
+    }
+  },
+  "compatibilitySummaryChung": "Relation Nécessitant des Efforts (Chung)",
+  "compatibilityDescChung": "Le {animal1} et le {animal2} ont des tempéraments différents et peuvent s'affronter. Respecter les différences de l'autre et faire preuve de considération est nécessaire.",
+  "@compatibilityDescChung": {
+    "placeholders": {
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
+    }
+  },
+  "compatibilitySummaryWonjin": "Relation Nécessitant de la Compréhension (Wonjin)",
+  "compatibilityDescWonjin": "C'est une relation où vous pourriez occasionnellement ressentir du ressentiment ou de la tristesse sans raison claire. Une communication fréquente est recommandée pour réduire les malentendus.",
+  "compatibilitySummaryDefaultZodiac": "Accord Zodiacal Moyen",
+  "compatibilityDescDefaultZodiac": "Le {animal1} et le {animal2} ont une relation fluide sans conflits majeurs.",
+  "@compatibilityDescDefaultZodiac": {
+    "placeholders": {
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
+    }
+  },
+  "compatibilitySummaryCheonganHap": "Âmes Sœurs Destinées",
+  "compatibilityDescCheonganHap": "Vos personnalités et vos valeurs sont parfaitement alignées. Vous êtes des âmes sœurs qui se comprennent même sans mots.",
+  "compatibilitySummarySangsaeng": "Partenariat de Soutien",
+  "compatibilityDescSangsaeng": "Une relation positive où vous vous soutenez naturellement et vous aidez mutuellement à grandir.",
+  "compatibilitySummarySanggeuk": "Équilibre Dynamique Requis",
+  "compatibilityDescSanggeuk": "Bien qu'il puisse y avoir des différences de personnalité, vous avez le potentiel unique de compléter les forces et les faiblesses de l'autre.",
+  "compatibilitySummaryDefaultInner": "Amis Naturels",
+  "compatibilityDescDefaultInner": "Une relation bâtie sur des tendances similaires et des intérêts partagés, rendant votre temps ensemble facile et confortable.",
+  "compatibilitySummarySameElement": "Rencontre d'Esprits Similaires",
+  "compatibilityDescSameElement": "Le fait de partager la tendance '{element}' signifie que vos valeurs et vos façons d'agir sont très synchronisées.",
+  "@compatibilityDescSameElement": {
+    "placeholders": {
+      "element": {
+        "type": "String"
+      }
+    }
+  },
+  "compatibilitySummaryCompatibleElement": "Équilibre Harmonieux",
+  "compatibilityDescCompatibleElement": "Une belle relation où vos différents charmes se mélangent en une harmonie parfaite.",
+  "compatibilitySummaryIncompatibleElement": "Différences Fascinantes",
+  "compatibilityDescIncompatibleElement": "Vos tempéraments différents peuvent sembler inhabituels au début, mais ils offrent d'infinies opportunités de croissance et de découverte ensemble.",
+  "compatibilitySummaryDefaultConstellation": "Harmonie Moyenne",
+  "compatibilityDescDefaultConstellation": "Une relation qui s'accorde raisonnablement bien sur la base des signes du zodiaque.",
+  "loading": "Chargement...",
+  "useTwoCookies_v2": "Utiliser 2 cookies",
+  "aiAnalyzingFace_v2": "L’IA analyse votre visage...",
+  "faceRecognitionComplete_v2": "Reconnaissance terminée",
+  "extractingFeatures_v2": "Extraction des caractéristiques...",
+  "matchingFortuneData_v2": "Correspondance des données...",
+  "faceAnalysisComplete_v2": "Analyse du visage terminée !",
+  "tapTimes": "{count} appuis",
+  "@tapTimes": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "snoozeMinutesUnlimited": "{minutes} min (illimité)",
+  "@snoozeMinutesUnlimited": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "snoozeMinutesCount": "{minutes} min ({current}/{total})",
+  "@snoozeMinutesCount": {
+    "placeholders": {
+      "minutes": { "type": "int" },
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "ringtone_fluttering_day": "Journée pétillante",
+  "ringtone_cozy_day": "Journée cocooning",
+  "ringtone_sensible_day": "Journée posée",
+  "ringtone_play_with_me": "Joue avec moi",
+  "ringtone_refreshing_day": "Journée rafraîchissante",
+  "ringtone_new_beginning": "Nouveau départ",
+  "ringtone_self_love": "Amour de soi"
 }

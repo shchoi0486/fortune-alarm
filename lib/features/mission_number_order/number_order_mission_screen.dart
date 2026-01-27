@@ -41,8 +41,8 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
   int? _wrongNumber;
   String _feedbackText = '';
 
-  bool _positionsReady = false;
   bool _isSuccess = false;
+  Size? _lastSize;
 
   Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
     if (alarm == null) return null;
@@ -139,14 +139,17 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
       });
       
       if (_nextNumber == goal && mounted) {
+        _inactivityTimer?.cancel(); // 미션 성공 시 타이머 정지
         HapticFeedback.heavyImpact();
         if (await Vibration.hasVibrator() == true) {
           Vibration.vibrate(duration: 200);
         }
         await _playSfx('sounds/ui_success.ogg', volume: 0.5);
-        setState(() {
-          _isSuccess = true;
-        });
+        if (mounted) {
+          setState(() {
+            _isSuccess = true;
+          });
+        }
       }
       return;
     }
@@ -238,7 +241,12 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
   }
 
   void _ensurePositions(Size size) {
-    if (_positionsReady) return;
+    if (_lastSize == size && _positions.isNotEmpty) return;
+    _lastSize = size;
+    
+    // 화면 크기가 너무 작으면(0,0 등) 나중에 다시 계산하도록 함
+    if (size.width < 100 || size.height < 100) return;
+
     const double buttonSize = 76;
     const double padding = 22;
     final width = size.width;
@@ -255,6 +263,7 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
     final List<Offset> placedCenters = [];
 
     const goal = 10;
+    _positions.clear(); // 새로 계산할 때 초기화
 
     for (int n = 1; n < goal; n++) {
       Offset? pos;
@@ -275,8 +284,6 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
       );
       _positions[n] = pos;
     }
-
-    _positionsReady = true;
   }
 
   Widget _buildNumberButton(int n) {
@@ -363,115 +370,143 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   _ensurePositions(constraints.biggest);
-                  return Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(18, 14, 18, 10),
-                              child: Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.12),
-                                  borderRadius: BorderRadius.circular(18),
-                                  border: Border.all(color: Colors.white.withOpacity(0.18)),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 44,
-                                      height: 44,
-                                      decoration: const BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [Colors.cyanAccent, Colors.cyan],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(Icons.filter_9_plus, color: Colors.white),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            l10n.missionNumberOrder,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w900,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            l10n.missionNumberOrderGuide(_nextNumber),
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white.withOpacity(0.85),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withOpacity(0.12),
-                                        borderRadius: BorderRadius.circular(999),
-                                        border: Border.all(color: Colors.white.withOpacity(0.18)),
-                                      ),
-                                      child: Text(
-                                        '${_disabledNumbers.length}/9',
-                                        style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            if (_feedbackText.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(18, 0, 18, 10),
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.redAccent.withOpacity(0.22),
-                                    borderRadius: BorderRadius.circular(14),
-                                    border: Border.all(color: Colors.redAccent.withOpacity(0.4)),
-                                  ),
-                                  child: Text(
-                                    _feedbackText,
-                                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-                                  ),
-                                ),
-                              ),
-                            Expanded(
-                              child: _isLoading
-                                  ? const Center(child: CircularProgressIndicator(color: Colors.white))
-                                  : const SizedBox.shrink(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      for (int n = 1; n <= 9; n++)
+                  
+                  return SizedBox.expand(
+                    child: Stack(
+                      children: [
+                        // UI Header & Loader
                         Positioned(
-                          left: _positions[n]!.dx,
-                          top: _positions[n]!.dy,
-                          child: _buildNumberButton(n),
-                        ),
-                      if (_isSuccess)
-                        Positioned.fill(
-                          child: MissionSuccessOverlay(
-                            onFinish: () {
-                              if (mounted) Navigator.of(context).pop(true);
-                            },
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(18, 14, 18, 10),
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.12),
+                                    borderRadius: BorderRadius.circular(18),
+                                    border: Border.all(color: Colors.white.withOpacity(0.18)),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 44,
+                                        height: 44,
+                                        decoration: const BoxDecoration(
+                                          gradient: LinearGradient(
+                                            colors: [Colors.cyanAccent, Colors.cyan],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                          ),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(Icons.filter_9_plus, color: Colors.white),
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              l10n.missionNumberOrder,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.white,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              l10n.missionNumberOrderGuide(_nextNumber),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white.withOpacity(0.85),
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.12),
+                                          borderRadius: BorderRadius.circular(999),
+                                          border: Border.all(color: Colors.white.withOpacity(0.18)),
+                                        ),
+                                        child: Text(
+                                          '${_disabledNumbers.length}/9',
+                                          style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              if (_feedbackText.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(18, 0, 18, 10),
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.redAccent.withOpacity(0.22),
+                                      borderRadius: BorderRadius.circular(14),
+                                      border: Border.all(color: Colors.redAccent.withOpacity(0.4)),
+                                    ),
+                                    child: Text(
+                                      _feedbackText,
+                                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
-                    ],
+                        
+                        // Loader
+                        if (_isLoading || _positions.isEmpty)
+                          const Center(
+                            child: CircularProgressIndicator(color: Colors.white),
+                          ),
+
+                        // Number Buttons
+                        if (!_isLoading && _positions.isNotEmpty)
+                          ...[
+                            for (int n = 1; n <= 9; n++)
+                              if (_positions.containsKey(n))
+                                Positioned(
+                                  left: _positions[n]!.dx,
+                                  top: _positions[n]!.dy,
+                                  child: _buildNumberButton(n),
+                                ),
+                          ],
+
+                        // Success Overlay
+                        if (_isSuccess)
+                          Positioned.fill(
+                            child: MissionSuccessOverlay(
+                              onFinish: () async {
+                                if (mounted) {
+                                  _sfxPlayer.stop();
+                                  _inactivityTimer?.cancel();
+                                  Navigator.of(context).pop(true);
+                                }
+                              },
+                            ),
+                          ),
+                      ],
+                    ),
                   );
                 },
               ),

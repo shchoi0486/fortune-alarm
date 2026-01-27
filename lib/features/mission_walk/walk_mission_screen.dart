@@ -43,8 +43,8 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
   int _targetStepCount = 20;
   int _currentStepCount = 0;
   DateTime _lastStepTime = DateTime.now();
-  final double _stepThreshold = 2.5; // Sensitivity for walking (UserAccelerometer excludes gravity)
-  final double _shakeThreshold = 4.0; // Max rotation speed (rad/s) to consider as valid walking (prevents violent shaking)
+  final double _stepThreshold = 4.0; // Sensitivity for walking (UserAccelerometer excludes gravity)
+  final double _shakeThreshold = 6.0; // Max rotation speed (rad/s) to consider as valid walking (prevents violent shaking)
   
   bool _isSuccess = false;
   String _lastMessage = '';
@@ -205,8 +205,8 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
 
         final now = DateTime.now();
         // Walking frequency is typically 1-2 steps per second.
-        // Debounce steps to prevent multiple counts (min 400ms between steps for anti-cheat)
-        if (now.difference(_lastStepTime).inMilliseconds > 400) {
+        // Debounce steps to prevent multiple counts (min 500ms between steps for anti-cheat)
+        if (now.difference(_lastStepTime).inMilliseconds > 500) {
           _lastStepTime = now;
           _resetInactivityTimer();
           
@@ -315,6 +315,7 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     double progress = (_currentStepCount / _targetStepCount).clamp(0.0, 1.0);
 
     return Scaffold(
+      backgroundColor: Colors.black, // fallback
       body: Stack(
         children: [
           // Background
@@ -326,44 +327,52 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
           ),
           
           // Content Overlay
-          Container(
-            color: Colors.black.withOpacity(0.3),
-            width: double.infinity,
-            height: double.infinity,
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.3),
+            ),
           ),
 
-          SafeArea(
-            child: Column(
-              children: [
-                const SizedBox(height: 60),
-                
-                // Header
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    children: [
-                      Text(
-                        l10n.missionWalk,
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          letterSpacing: -1.0,
+          Positioned.fill(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  const SizedBox(height: 60),
+                  
+                  // Header
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            l10n.missionWalk,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                              letterSpacing: -1.0,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        l10n.missionWalkDescription,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white.withOpacity(0.8),
-                          fontWeight: FontWeight.w500,
+                        const SizedBox(height: 8),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            l10n.missionWalkDescription,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white.withOpacity(0.8),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
 
                 const Spacer(),
 
@@ -412,20 +421,33 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            l10n.walkSteps(_currentStepCount),
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                l10n.walkSteps(_currentStepCount),
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
-                          Text(
-                            l10n.walkSteps(_targetStepCount),
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white.withOpacity(0.6),
+                          const SizedBox(width: 10),
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                l10n.walkSteps(_targetStepCount),
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white.withOpacity(0.6),
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -460,28 +482,34 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
                       children: [
                         const Icon(Icons.info_outline, color: Colors.tealAccent, size: 18),
                         const SizedBox(width: 8),
-                        Text(
-                          "스마트폰을 들고 걸어주세요",
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.9),
-                            fontWeight: FontWeight.w600,
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              l10n.walkToDismiss,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.9),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-
-          // Success Overlay
-          if (_isSuccess)
+        ),
+      ),
+            
+            // Success Overlay
+            if (_isSuccess)
             Positioned.fill(
               child: MissionSuccessOverlay(
                 onFinish: () async {
                   if (mounted) {
-                    _stopAlarm();
+                    await _stopAlarm();
                     
                     if (mounted) {
                       Navigator.of(context).pop(true);

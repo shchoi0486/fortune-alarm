@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'; // Import Cupertino for Wheel Pickers
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../models/saju_profile.dart';
 import 'new_year_fortune_result_screen.dart';
 import '../../mixins/fortune_access_mixin.dart';
@@ -134,6 +135,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
   }
 
   Future<void> _confirmDelete(SajuProfile profile) async {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     
     final bool? result = await showDialog<bool>(
@@ -142,14 +144,14 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
         return AlertDialog(
           backgroundColor: isDarkMode ? const Color(0xFF2C2C2C) : Colors.white,
           title: Text(
-            "사주 정보 삭제",
+            l10n.sajuDeleteTitle,
             style: TextStyle(
               color: isDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),
           content: Text(
-            "${profile.name}님의 정보를 삭제하시겠습니까?",
+            l10n.sajuDeleteConfirm(profile.name),
             style: TextStyle(
               color: isDarkMode ? Colors.white70 : Colors.black87,
             ),
@@ -157,11 +159,11 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text("취소", style: TextStyle(color: Colors.grey[500])),
+              child: Text(l10n.cancel, style: TextStyle(color: Colors.grey[500])),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text("삭제", style: TextStyle(color: Colors.red)),
+              child: Text(l10n.delete, style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -176,6 +178,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
 
 
   Future<void> _selectDate(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     // Use CupertinoDatePicker for easier Year/Month/Day selection
     DateTime tempPickedDate = _birthDate;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -199,14 +202,14 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CupertinoButton(
-                      child: const Text('취소', style: TextStyle(color: Colors.red)),
+                      child: Text(l10n.cancel, style: const TextStyle(color: Colors.red)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
-                    Text("생년월일 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+                    Text(l10n.sajuSelectBirthDate, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
                     CupertinoButton(
-                      child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                      child: Text(l10n.confirm, style: const TextStyle(color: Colors.blue)),
                       onPressed: () {
                         setState(() {
                           _birthDate = tempPickedDate;
@@ -247,6 +250,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
   }
 
   void _showTargetYearPicker() {
+    final l10n = AppLocalizations.of(context)!;
     final currentYear = DateTime.now().year;
     final years = List.generate(3, (index) => currentYear + index);
     int selectedIndex = years.indexOf(_targetYear);
@@ -275,12 +279,12 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                      CupertinoButton(
-                      child: const Text('취소', style: TextStyle(fontSize: 18, color: Colors.red)), 
+                      child: Text(l10n.cancel, style: const TextStyle(fontSize: 18, color: Colors.red)), 
                       onPressed: () => Navigator.of(context).pop(),
                     ),
-                    Text("운세 년도 선택", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: textColor)), 
+                    Text(l10n.sajuSelectFortuneYear, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: textColor)), 
                     CupertinoButton(
-                      child: const Text('확인', style: TextStyle(fontSize: 18, color: Colors.blue)), 
+                      child: Text(l10n.confirm, style: const TextStyle(fontSize: 18, color: Colors.blue)), 
                       onPressed: () {
                         setState(() {
                           _targetYear = years[selectedIndex];
@@ -297,7 +301,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                     onSelectedItemChanged: (int index) {
                       selectedIndex = index;
                     },
-                    children: years.map((year) => Center(child: Text("$year년", style: TextStyle(fontSize: 20, color: textColor)))).toList(), 
+                    children: years.map((year) => Center(child: Text(l10n.sajuYearDisplay(year), style: TextStyle(fontSize: 20, color: textColor)))).toList(), 
                   ),
                 ),
               ],
@@ -309,6 +313,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
   }
 
   Future<void> _selectTime(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF2C2C2C) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
@@ -334,14 +339,14 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CupertinoButton(
-                      child: const Text('취소', style: TextStyle(color: Colors.red)),
+                      child: Text(l10n.cancel, style: const TextStyle(color: Colors.red)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
-                    Text("태어난 시간 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+                    Text(l10n.sajuSelectBirthTime, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
                     CupertinoButton(
-                      child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                      child: Text(l10n.confirm, style: const TextStyle(color: Colors.blue)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -381,6 +386,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (_isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -394,7 +400,15 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text('신년운세 정보 입력', style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            l10n.newYearFortuneInputTitle,
+            style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+          ),
+        ),
+        centerTitle: false,
         backgroundColor: backgroundColor,
         elevation: 0,
         foregroundColor: textColor,
@@ -407,7 +421,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                "$_targetYear년\n나의 운세는 어떨까요?",
+                l10n.newYearFortuneHeader(_targetYear),
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -416,7 +430,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
               ),
               const SizedBox(height: 8),
               Text(
-                "정확한 사주 분석을 위해\n생년월일시를 입력해주세요.",
+                l10n.newYearFortuneSubHeader,
                 style: TextStyle(
                   fontSize: 16,
                   color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
@@ -433,6 +447,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
   }
 
   Widget _buildViewMode(bool isDarkMode) {
+    final l10n = AppLocalizations.of(context)!;
     final cardColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
     final borderColor = isDarkMode ? Colors.grey[800]! : Colors.grey[300]!;
@@ -460,7 +475,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                 Icon(Icons.calendar_month, color: primaryColor),
                 const SizedBox(width: 8),
                 Text(
-                  "$_targetYear년 운세 보기",
+                  l10n.newYearFortuneViewButton(_targetYear),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -480,7 +495,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "사주 정보 선택",
+              l10n.sajuSelectProfile,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -495,7 +510,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                 });
               },
               icon: Icon(Icons.add, size: 16, color: buttonTextColor),
-              label: Text("추가", style: TextStyle(color: buttonTextColor)),
+              label: Text(l10n.add, style: TextStyle(color: buttonTextColor)),
             ),
           ],
         ),
@@ -555,7 +570,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      profile.gender == 'male' ? "남성" : "여성",
+                                      profile.gender == 'male' ? l10n.male : l10n.female,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey[500],
@@ -565,7 +580,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  "${profile.birthDate.year}.${profile.birthDate.month}.${profile.birthDate.day} ${profile.birthTime ?? '(시간 모름)'}",
+                                  "${profile.birthDate.year}.${profile.birthDate.month}.${profile.birthDate.day} ${profile.birthTime ?? (l10n.unknownTime)}",
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[500],
@@ -590,7 +605,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
-                                  "수정",
+                                  l10n.edit,
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[500],
@@ -611,7 +626,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
-                                  "삭제",
+                                  l10n.delete,
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.red[300],
@@ -646,9 +661,9 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
             ),
             elevation: 0,
           ),
-          child: const Text(
-            "운세 확인하기",
-            style: TextStyle(
+          child: Text(
+            l10n.newYearFortuneCheckButton,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -659,6 +674,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
   }
 
   Widget _buildEditForm(bool isDarkMode) {
+    final l10n = AppLocalizations.of(context)!;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
     final borderColor = isDarkMode ? Colors.grey[800]! : Colors.grey[400]!;
     final inputFillColor = isDarkMode ? const Color(0xFF2C2C2C) : Colors.white;
@@ -685,7 +701,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                   Icon(Icons.calendar_month, color: primaryColor),
                   const SizedBox(width: 8),
                   Text(
-                    "$_targetYear년 운세 보기",
+                    l10n.newYearFortuneViewButton(_targetYear),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -706,7 +722,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
             controller: _nameController,
             style: TextStyle(color: textColor), 
             decoration: InputDecoration(
-              labelText: '이름',
+              labelText: l10n.name,
               labelStyle: TextStyle(color: Colors.grey[600]),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -724,7 +740,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return '이름을 입력해주세요';
+                return l10n.enterName;
               }
               return null;
             },
@@ -735,11 +751,11 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
           Row(
             children: [
               Expanded(
-                child: _buildGenderButton('남성', 'male', isDarkMode),
+                child: _buildGenderButton(l10n.male, 'male', isDarkMode),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: _buildGenderButton('여성', 'female', isDarkMode),
+                child: _buildGenderButton(l10n.female, 'female', isDarkMode),
               ),
             ],
           ),
@@ -759,7 +775,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "${_birthDate.year}년 ${_birthDate.month}월 ${_birthDate.day}일",
+                    "${_birthDate.year}.${_birthDate.month}.${_birthDate.day}",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
                   ),
                   Icon(Icons.calendar_today, color: primaryColor),
@@ -788,10 +804,10 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                       children: [
                         Text(
                           _isUnknownTime
-                              ? "시간 모름"
+                              ? l10n.unknownTime
                               : (_birthTime != null
                                   ? "${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}"
-                                  : "태어난 시간 선택"),
+                                  : l10n.sajuSelectBirthTime),
                           style: TextStyle(
                             fontSize: 16,
                             color: _isUnknownTime ? Colors.grey : textColor,
@@ -825,7 +841,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                     ),
                     child: Center(
                       child: Text(
-                        "시간 모름",
+                        l10n.unknownTime,
                         style: TextStyle(
                           color: _isUnknownTime ? Colors.white : Colors.grey[600],
                           fontWeight: FontWeight.bold,
@@ -852,9 +868,9 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
               ),
               elevation: 0,
             ),
-            child: const Text(
-              "저장하고 운세 보기",
-              style: TextStyle(
+            child: Text(
+              l10n.newYearFortuneSaveAndCheckButton,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -871,7 +887,7 @@ class _NewYearFortuneInputScreenState extends State<NewYearFortuneInputScreen> w
                     _setFormData(_profiles[_selectedProfileIndex]);
                   });
                 },
-                child: Text("취소", style: TextStyle(color: Colors.grey[600], fontSize: 16)),
+                child: Text(l10n.cancel, style: TextStyle(color: Colors.grey[600], fontSize: 16)),
               ),
             ),
         ],

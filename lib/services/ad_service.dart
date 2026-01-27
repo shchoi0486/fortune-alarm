@@ -150,6 +150,13 @@ class AdService {
     // 1. MobileAds 초기화 (대기하지 않고 백그라운드에서 실행)
     final initFuture = MobileAds.instance.initialize();
     
+    // 테스트 기기 설정 (선택 사항)
+    if (_isTestMode) {
+      MobileAds.instance.updateRequestConfiguration(
+        RequestConfiguration(testDeviceIds: ['76CC75FB16CA258B358B60382990B818']),
+      );
+    }
+    
     // 2. 초기 광고들 프리로드 시작 (초기화 완료 후 실행되도록 함)
     initFuture.then((_) {
       debugPrint('AdMob SDK initialized');
@@ -374,6 +381,13 @@ class AdService {
       adUnitId: nativeAdUnitId,
       factoryId: 'dialogAd',
       request: const AdRequest(),
+      nativeAdOptions: NativeAdOptions(
+        videoOptions: VideoOptions(
+          startMuted: true,
+          customControlsRequested: false,
+          clickToExpandRequested: false,
+        ),
+      ),
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           debugPrint('Preloaded Exit Ad loaded');

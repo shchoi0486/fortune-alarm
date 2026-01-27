@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../models/saju_profile.dart';
 import '../../../../providers/saju_provider.dart';
 
@@ -46,6 +47,7 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF121212) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
@@ -59,11 +61,15 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
           icon: Icon(Icons.arrow_back, color: textColor),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text(
-          "대표 사주정보 수정",
-          style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 18),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            l10n.sajuProfileTitle,
+            style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 18),
+          ),
         ),
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -72,12 +78,12 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildLabel("이름", textColor),
+              _buildLabel(l10n.sajuNameLabel, textColor),
               TextFormField(
                 controller: _nameController,
                 style: TextStyle(color: textColor, fontSize: 18),
                 decoration: InputDecoration(
-                  hintText: "이름을 입력해주세요",
+                  hintText: l10n.sajuNameHint,
                   hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey[300]!)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: textColor)),
@@ -86,24 +92,24 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
                     onPressed: () => _nameController.clear(),
                   ),
                 ),
-                validator: (value) => value == null || value.isEmpty ? "이름을 입력해주세요" : null,
+                validator: (value) => value == null || value.isEmpty ? l10n.sajuNameHint : null,
               ),
               const SizedBox(height: 8),
-              Text("한글 최대 6자", style: TextStyle(color: Colors.grey[400], fontSize: 12)),
+              Text(l10n.sajuNameHelper, style: TextStyle(color: Colors.grey[400], fontSize: 12)),
               
               const SizedBox(height: 40),
-              _buildLabel("성별", textColor),
+              _buildLabel(l10n.sajuGenderLabel, textColor),
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Expanded(child: _buildGenderButton("남자", 'male', isDarkMode)),
+                  Expanded(child: _buildGenderButton(l10n.sajuGenderMale, 'male', isDarkMode)),
                   const SizedBox(width: 12),
-                  Expanded(child: _buildGenderButton("여자", 'female', isDarkMode)),
+                  Expanded(child: _buildGenderButton(l10n.sajuGenderFemale, 'female', isDarkMode)),
                 ],
               ),
               
               const SizedBox(height: 40),
-              _buildLabel("생년월일", textColor),
+              _buildLabel(l10n.sajuBirthDateLabel, textColor),
               const SizedBox(height: 16),
               InkWell(
                 onTap: () => _selectDate(context),
@@ -124,14 +130,14 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
                         onPressed: () {},
                       ),
                       const Spacer(),
-                      _buildLunarToggle(isDarkMode),
+                      _buildLunarToggle(isDarkMode, l10n),
                     ],
                   ),
                 ),
               ),
               
               const SizedBox(height: 40),
-              _buildLabel("태어난 시간", textColor),
+              _buildLabel(l10n.sajuBirthTimeLabel, textColor),
               const SizedBox(height: 16),
               InkWell(
                 onTap: _isUnknownTime ? null : () => _selectTime(context),
@@ -145,7 +151,7 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
                       Expanded(
                         child: Text(
                           _isUnknownTime 
-                              ? "시간 모름" 
+                              ? l10n.sajuUnknownTime 
                               : "${_birthTime?.hour.toString().padLeft(2, '0') ?? '00'}:${_birthTime?.minute.toString().padLeft(2, '0') ?? '00'}",
                           style: TextStyle(
                             color: _isUnknownTime ? Colors.grey[400] : textColor, 
@@ -168,7 +174,7 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
                             checkColor: Colors.black,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           ),
-                          Text("시간 모름", style: TextStyle(color: textColor, fontSize: 14)),
+                          Text(l10n.sajuUnknownTime, style: TextStyle(color: textColor, fontSize: 14)),
                         ],
                       ),
                     ],
@@ -195,7 +201,7 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
               ),
-              child: const Text("수정 완료", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              child: Text(l10n.sajuEditComplete, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
           ),
         ),
@@ -232,11 +238,11 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
     );
   }
 
-  Widget _buildLunarToggle(bool isDarkMode) {
+  Widget _buildLunarToggle(bool isDarkMode, AppLocalizations l10n) {
     return Row(
       children: [
-        _buildToggleItem("양력", !_isLunar, isDarkMode, () => setState(() => _isLunar = false)),
-        _buildToggleItem("음력", _isLunar, isDarkMode, () => setState(() => _isLunar = true)),
+        _buildToggleItem(l10n.sajuSolar, !_isLunar, isDarkMode, () => setState(() => _isLunar = false)),
+        _buildToggleItem(l10n.sajuLunar, _isLunar, isDarkMode, () => setState(() => _isLunar = true)),
       ],
     );
   }
@@ -263,6 +269,7 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF2C2C2C) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
@@ -288,12 +295,12 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CupertinoButton(
-                        child: const Text('취소', style: TextStyle(color: Colors.red, fontSize: 16)),
+                        child: Text(l10n.cancel, style: const TextStyle(color: Colors.red, fontSize: 16)),
                         onPressed: () => Navigator.pop(context),
                       ),
-                      Text("생년월일 선택", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+                      Text(l10n.sajuSelectBirthDate, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
                       CupertinoButton(
-                        child: const Text('확인', style: TextStyle(color: Colors.blue, fontSize: 16)),
+                        child: Text(l10n.confirm, style: const TextStyle(color: Colors.blue, fontSize: 16)),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
@@ -327,6 +334,7 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
   }
 
   Future<void> _selectTime(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF2C2C2C) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
@@ -356,12 +364,12 @@ class _SajuProfileScreenState extends ConsumerState<SajuProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CupertinoButton(
-                        child: const Text('취소', style: TextStyle(color: Colors.red, fontSize: 16)),
+                        child: Text(l10n.cancel, style: const TextStyle(color: Colors.red, fontSize: 16)),
                         onPressed: () => Navigator.pop(context),
                       ),
-                      Text("태어난 시간 선택", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+                      Text(l10n.sajuSelectBirthTime, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
                       CupertinoButton(
-                        child: const Text('확인', style: TextStyle(color: Colors.blue, fontSize: 16)),
+                        child: Text(l10n.confirm, style: const TextStyle(color: Colors.blue, fontSize: 16)),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],

@@ -7,17 +7,17 @@ import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../providers/saju_provider.dart';
 import 'generic_fortune_screen.dart';
 import 'fortune_mission_screen.dart';
-import 'lotto_screen.dart';
+import 'lucky_number_screen.dart';
 import 'saju/widgets/new_year_fortune_input_screen.dart';
 import 'saju/widgets/saju_profile_screen.dart';
 import 'saju/widgets/compatibility_input_screen.dart';
 import 'tojeong/tojeong_input_screen.dart';
 import 'dart:math';
+import 'package:intl/intl.dart';
 import 'package:fortune_alarm/services/cookie_service.dart';
 import 'package:fortune_alarm/widgets/ad_widgets.dart';
 import 'mixins/fortune_access_mixin.dart';
 
-import 'dream/dream_interpretation_screen.dart';
 import '../mission_face/face_detection_mission_screen.dart';
 
 class FortuneScreen extends ConsumerStatefulWidget {
@@ -59,32 +59,40 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
   String _getZodiacAnimal(DateTime? birthDate) {
     if (birthDate == null) return 'assets/icon/fortuni1_trans.webp';
     final animals = ['🐭', '🐮', '🐯', '🐰', '🐲', '🐍', '🐴', '🐑', '🐵', '🐔', '🐶', '🐷'];
-    // 띠 계산 공식: (연도 - 4) % 12
+    // Zodiac calculation formula: (Year - 4) % 12
     final index = (birthDate.year - 4) % 12;
     return animals[index];
   }
 
   Map<String, dynamic> _getDailyLuck(String seed, BuildContext context) {
     final now = DateTime.now();
-    // 매일 바뀌도록 날짜와 시드(이름 등)를 조합하여 랜덤 생성기 초기화
+    final l10n = AppLocalizations.of(context)!;
+    // Initialize random generator combining date and seed (name, etc.) to change daily
     final dateSeed = now.year * 10000 + now.month * 100 + now.day;
     final random = Random(dateSeed + seed.hashCode);
 
     final colors = [
-      {'name': AppLocalizations.of(context)!.luckyColor, 'color': Colors.purple, 'bg': Colors.purple[100]},
-      {'name': '보라색', 'color': Colors.purple, 'bg': Colors.purple[100]},
-      {'name': '파란색', 'color': Colors.blue, 'bg': Colors.blue[100]},
-      {'name': '노란색', 'color': Colors.amber, 'bg': Colors.amber[100]},
-      {'name': '빨간색', 'color': Colors.red, 'bg': Colors.red[100]},
-      {'name': '초록색', 'color': Colors.green, 'bg': Colors.green[100]},
-      {'name': '분홍색', 'color': Colors.pink, 'bg': Colors.pink[100]},
-      {'name': '주황색', 'color': Colors.orange, 'bg': Colors.orange[100]},
-      {'name': '하얀색', 'color': Colors.grey, 'bg': Colors.grey[200]},
-      {'name': '검정색', 'color': Colors.black, 'bg': Colors.grey[300]},
+      {'name': l10n.colorPurple, 'color': Colors.purple, 'bg': Colors.purple[100]},
+      {'name': l10n.colorBlue, 'color': Colors.blue, 'bg': Colors.blue[100]},
+      {'name': l10n.colorYellow, 'color': Colors.amber, 'bg': Colors.amber[100]},
+      {'name': l10n.colorRed, 'color': Colors.red, 'bg': Colors.red[100]},
+      {'name': l10n.colorGreen, 'color': Colors.green, 'bg': Colors.green[100]},
+      {'name': l10n.colorPink, 'color': Colors.pink, 'bg': Colors.pink[100]},
+      {'name': l10n.colorOrange, 'color': Colors.orange, 'bg': Colors.orange[100]},
+      {'name': l10n.colorWhite, 'color': Colors.grey, 'bg': Colors.grey[200]},
+      {'name': l10n.colorBlack, 'color': Colors.black, 'bg': Colors.grey[300]},
     ];
 
-    final items = ['향수', '손수건', '반지', '시계', '안경', '모자', '책', '이어폰', '거울', '펜', '동전', '열쇠'];
-    final directions = ['동쪽', '서쪽', '남쪽', '북쪽', '북동쪽', '남동쪽', '북서쪽', '남서쪽'];
+    final items = [
+      l10n.itemPerfume, l10n.itemHandkerchief, l10n.itemRing, l10n.itemWatch, 
+      l10n.itemGlasses, l10n.itemHat, l10n.itemBook, l10n.itemEarphones, 
+      l10n.itemMirror, l10n.itemPen, l10n.itemCoin, l10n.itemKey
+    ];
+    
+    final directions = [
+      l10n.dirEast, l10n.dirWest, l10n.dirSouth, l10n.dirNorth, 
+      l10n.dirNorthEast, l10n.dirSouthEast, l10n.dirNorthWest, l10n.dirSouthWest
+    ];
 
     return {
       'color': colors[random.nextInt(colors.length)],
@@ -119,7 +127,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
     }
 
     final isNameMissing = sajuState.mainProfile == null || sajuState.mainProfile!.name.isEmpty;
-    final userName = isNameMissing ? "이름을 입력해주세요" : sajuState.mainProfile!.name;
+    final l10n = AppLocalizations.of(context)!;
+    final userName = isNameMissing ? l10n.enterName : sajuState.mainProfile!.name;
     final zodiacIcon = _getZodiacAnimal(sajuState.mainProfile?.birthDate);
     final dailyLuck = _getDailyLuck(userName, context);
 
@@ -135,13 +144,13 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                 20,
                 0, // 공통 간격 4가 main.dart에서 적용되므로 0으로 설정
                 20,
-                20,
+                12, // 20에서 12로 축소
               ),
             decoration: BoxDecoration(
               color: cardColor,
               borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(32),
-                bottomRight: Radius.circular(32),
+                bottomLeft: Radius.zero,
+                bottomRight: Radius.zero,
               ),
               boxShadow: [
                 BoxShadow(
@@ -162,8 +171,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                       children: [
                         Text(
                           isNameMissing 
-                            ? "이름을 입력해주세요"
-                            : AppLocalizations.of(context)!.greeting(
+                            ? l10n.enterName
+                            : l10n.greeting(
                                 userName.length > 2 
                                   ? userName.substring(1) 
                                   : userName
@@ -246,20 +255,19 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 4), // 간격 최소화 (16 -> 4)
+                  const SizedBox(height: 12), // 4에서 12로 증대하여 상단 헤더와의 간격 확보
                   
                   // 메인 추천 카드 (오늘의 운세)
                   _buildFeaturedCard(isDarkMode),
                   
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12), // 10에서 12로 증대하여 상단 카드와의 간격 통일
 
                   // 리스트 네이티브 광고 (알람, 운세, 미션에만 노출)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: DetailedAdWidget(),
+                  const DetailedAdWidget(
+                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12), // 10에서 12로 증대하여 하단 텍스트와의 간격 통일
                   
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -279,11 +287,6 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                   // 운세 그리드 메뉴
                   _buildFortuneGrid(isDarkMode, textColor, subTextColor!),
                   
-                  const SizedBox(height: 32),
-                  
-                  // 추가 콘텐츠
-                  _buildExtraContent(textColor, subTextColor),
-                  
                   const SizedBox(height: 40),
                 ],
               ),
@@ -296,17 +299,21 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
   }
 
   Widget _buildQuickLuckChip(String label, String value, Color bgColor, Color textColor, bool isDarkMode) {
+    final l10n = AppLocalizations.of(context)!;
     String icon = "";
-    if (label.contains("색")) {
+    if (label == l10n.luckyColor) {
       icon = "🎨";
-    } else if (label.contains("물건")) icon = "✨";
-    else if (label.contains("방향")) icon = "🧭";
+    } else if (label == l10n.luckyItem) {
+      icon = "✨";
+    } else if (label == l10n.luckyDirection) {
+      icon = "🧭";
+    }
 
-    final isWhite = value == "하얀색";
+    final isWhite = value == l10n.colorWhite;
 
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4), // 8에서 6으로 축소
         decoration: BoxDecoration(
           color: isDarkMode ? Colors.white.withOpacity(0.05) : bgColor.withOpacity(0.15),
           borderRadius: BorderRadius.circular(16),
@@ -327,7 +334,9 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                 fontSize: 11, // 9에서 11로 확대
                 fontWeight: FontWeight.bold, // 굵게 변경
                 color: isDarkMode ? Colors.white70 : Colors.black87 // 가독성을 위해 색상도 살짝 진하게 조정
-              )
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 1),
             Text(
@@ -336,7 +345,9 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                 fontSize: 12, 
                 fontWeight: FontWeight.bold, 
                 color: isDarkMode ? Colors.white : textColor.withOpacity(0.9)
-              )
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -345,6 +356,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
   }
 
   Widget _buildFeaturedCard(bool isDarkMode) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       width: double.infinity,
@@ -420,7 +432,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                             Text("✨", style: TextStyle(fontSize: 10, color: isDarkMode ? Colors.blue[300] : Colors.amber[700])),
                             const SizedBox(width: 4),
                             Text(
-                              "오늘의 추천",
+                              l10n.todaysRecommendation,
                               style: TextStyle(
                                 color: isDarkMode ? Colors.blue[300] : Colors.amber[700],
                                 fontSize: 10,
@@ -432,7 +444,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                       ),
                       const Spacer(),
                       Text(
-                        "오늘의 운세 확인",
+                        l10n.checkTodaysFortune,
                         style: TextStyle(
                           color: isDarkMode ? Colors.white : Colors.black87, // 다크모드 텍스트 색상 수정
                           fontSize: 20,
@@ -442,7 +454,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        "신비로운 별들이 들려주는 오늘의 조언",
+                        l10n.todaysAdvice,
                         style: TextStyle(
                           color: isDarkMode ? Colors.grey[400] : Colors.black54, // 다크모드 설명 색상 수정
                           fontSize: 12,
@@ -497,7 +509,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
               children: [
                 Container(
                   height: 50,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
@@ -559,7 +571,9 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
 
     if (pickedDate == null || !context.mounted) return;
 
-    final dateStr = "${pickedDate.year}년 ${pickedDate.month}월 ${pickedDate.day}일";
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toString();
+    final dateStr = DateFormat.yMMMMd(locale).format(pickedDate);
     
     final bool? confirmed = await showDialog<bool>(
       context: context,
@@ -571,9 +585,9 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
           children: [
             const Text("📅", style: TextStyle(fontSize: 40)),
             const SizedBox(height: 16),
-            Text(AppLocalizations.of(context)!.viewSpecificDateFortune, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(l10n.viewSpecificDateFortune, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
-            Text("$dateStr 운세를 보시겠습니까?", textAlign: TextAlign.center),
+            Text(l10n.fortuneDateConfirm(dateStr), textAlign: TextAlign.center),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
@@ -585,12 +599,12 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
-                child: Text(AppLocalizations.of(context)!.confirm, style: const TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(l10n.confirm, style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.grey)),
+              child: Text(l10n.cancel, style: const TextStyle(color: Colors.grey)),
             ),
           ],
         ),
@@ -606,45 +620,46 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
   }
 
   Widget _buildFortuneGrid(bool isDarkMode, Color textColor, Color subTextColor) {
+    final l10n = AppLocalizations.of(context)!;
     final gridItems = [
       {
-        'title': AppLocalizations.of(context)!.luckyNumber,
-        'subtitle': AppLocalizations.of(context)!.lottoRecommendation,
+        'title': l10n.luckyNumber,
+        'subtitle': l10n.luckyNumberRecommendation,
         'icon': '🎰',
         'colors': [const Color(0xFFFDC830), const Color(0xFFF37335)],
-        'target': 'lotto'
+        'target': 'luckyNumber'
       },
       {
-        'title': AppLocalizations.of(context)!.specificDateFortune,
-        'subtitle': AppLocalizations.of(context)!.specialDayFortune,
+        'title': l10n.specificDateFortune,
+        'subtitle': l10n.specialDayFortune,
         'icon': '📅',
         'colors': [const Color(0xFF00C6FF), const Color(0xFF0072FF)],
         'target': 'specific_date'
       },
       {
-        'title': AppLocalizations.of(context)!.newYearFortune,
-        'subtitle': AppLocalizations.of(context)!.totalFortune2026,
+        'title': l10n.newYearFortune,
+        'subtitle': l10n.totalFortune2026,
         'icon': '🐴',
         'colors': [const Color(0xFFFF416C), const Color(0xFFFF4B2B)],
         'target': 'saju'
       },
       {
-        'title': AppLocalizations.of(context)!.traditionalFortune,
-        'subtitle': AppLocalizations.of(context)!.traditionalSaju,
+        'title': l10n.traditionalFortune,
+        'subtitle': l10n.traditionalSaju,
         'icon': '📜',
         'colors': [const Color(0xFF11998e), const Color(0xFF38ef7d)],
         'target': 'tojeong'
       },
       {
-        'title': AppLocalizations.of(context)!.faceReading,
-        'subtitle': AppLocalizations.of(context)!.faceFate,
+        'title': l10n.faceReading,
+        'subtitle': l10n.faceFate,
         'icon': '🧿',
         'colors': [const Color(0xFF8E2DE2), const Color(0xFF4A00E0)],
         'target': 'face'
       },
       {
-        'title': AppLocalizations.of(context)!.compatibility,
-        'subtitle': AppLocalizations.of(context)!.relationshipHarmony,
+        'title': l10n.compatibility,
+        'subtitle': l10n.relationshipHarmony,
         'icon': '💖',
         'colors': [const Color(0xFFFF5F6D), const Color(0xFFFFC371)],
         'target': 'compatibility'
@@ -661,7 +676,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
           crossAxisCount: 3,
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
-          childAspectRatio: 1.15,
+          childAspectRatio: 1.25, // 0.95에서 1.25로 변경하여 눌린 직사각형 형태 생성
         ),
         itemCount: gridItems.length,
         itemBuilder: (context, index) {
@@ -692,8 +707,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                   
                   if (item['target'] == 'specific_date') {
                     _handleSpecificDateFortune(context);
-                  } else if (item['target'] == 'lotto') {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LottoScreen()));
+                  } else if (item['target'] == 'luckyNumber') {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LuckyNumberScreen()));
                   } else if (item['target'] == 'saju') {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const NewYearFortuneInputScreen()));
                   } else if (item['target'] == 'tojeong') {
@@ -702,28 +717,26 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const FaceDetectionMissionScreen()));
                   } else if (item['target'] == 'compatibility') {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const CompatibilityInputScreen()));
-                  } else if (item['target'] == 'dream') {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const DreamInterpretationScreen()));
                   } else {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: item['title'] as String)));
                   }
                 },
                 borderRadius: BorderRadius.circular(16),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2), // 4에서 2로 축소
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        width: 42,
-                        height: 42,
+                        width: 34, // 40에서 34로 축소
+                        height: 34, // 40에서 34로 축소
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: colors,
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(8), // 10에서 8로 조정
                           boxShadow: [
                             BoxShadow(
                               color: colors[0].withOpacity(0.2),
@@ -735,19 +748,22 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                         child: Center(
                           child: Text(
                             item['icon'] as String,
-                            style: const TextStyle(fontSize: 24),
+                            style: const TextStyle(fontSize: 18), // 22에서 18로 축소
                           ),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4), // 6에서 4로 조정
                       Text(
                         item['title'] as String,
                         textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 11, // 12에서 11로 소폭 축소
                           fontWeight: FontWeight.bold,
                           color: textColor,
                           letterSpacing: -0.5,
+                          height: 1.0, // 줄 간격 최소화
                         ),
                       ),
                     ],
@@ -762,6 +778,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
   }
 
   Widget _buildExtraContent(Color textColor, Color subTextColor) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -783,7 +800,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
               ),
               const SizedBox(width: 10),
               Text(
-                "내일을 위한 준비",
+                l10n.preparationForTomorrow,
                 style: TextStyle(
                   color: subTextColor,
                   fontSize: 14,
@@ -795,7 +812,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
           ),
           const SizedBox(height: 10),
           Text(
-            "더 많은 행운을 만나는 방법",
+            l10n.howToMeetMoreLuck,
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -804,7 +821,6 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
             ),
           ),
           const SizedBox(height: 18),
-          _buildListItem("💭", "꿈해몽 분석", "꿈에 담긴 신비로운 의미 풀이", textColor, subTextColor, target: 'dream'),
         ],
       ),
     );
@@ -836,21 +852,14 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         child: InkWell(
           onTap: () {
             HapticFeedback.selectionClick();
-            if (target == 'dream') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const DreamInterpretationScreen()),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: title)),
-              );
-            }
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: title)),
+            );
           },
           borderRadius: BorderRadius.circular(22),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             child: Row(
               children: [
                 Container(

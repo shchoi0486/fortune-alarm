@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -113,16 +115,19 @@ class _AddEventSheetState extends State<AddEventSheet> {
   bool _canPopNow = false; // PopScope에서 즉시 팝 가능 여부
 
   // 루틴 프리셋 데이터 (이모지와 함께)
-  final List<Map<String, String>> _routinePresets = [
-    {'emoji': '🏃', 'label': '운동'},
-    {'emoji': '⛰️', 'label': '등산'},
-    {'emoji': '🧹', 'label': '대청소'},
-    {'emoji': '🚗', 'label': '여행'},
-    {'emoji': '❤️', 'label': '데이트'},
-    {'emoji': '🎸', 'label': '콘서트 '},
-    {'emoji': '🎞️', 'label': '영화관람'},
-    {'emoji': '🥂', 'label': '모임'},
-  ];
+  List<Map<String, String>> get _routinePresets {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      {'emoji': '🏃', 'label': l10n.routineExercise},
+      {'emoji': '⛰️', 'label': l10n.routineHiking},
+      {'emoji': '🧹', 'label': l10n.routineCleaning},
+      {'emoji': '🚗', 'label': l10n.routineTravel},
+      {'emoji': '❤️', 'label': l10n.routineDate},
+      {'emoji': '🎸', 'label': l10n.routineConcert},
+      {'emoji': '🎞️', 'label': l10n.routineMovie},
+      {'emoji': '🥂', 'label': l10n.routineMeeting},
+    ];
+  }
 
   @override
   void dispose() {
@@ -239,7 +244,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '오늘 기분은?',
+                          AppLocalizations.of(context)!.howIsYourMoodToday,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -444,7 +449,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '시간 설정',
+                          AppLocalizations.of(context)!.setTime,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -468,7 +473,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                             Navigator.pop(context);
                           },
                           child: Text(
-                            '완료',
+                            AppLocalizations.of(context)!.complete,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -512,8 +517,8 @@ class _AddEventSheetState extends State<AddEventSheet> {
                                     });
                                   },
                                   children: [
-                                    Center(child: Text('☀️ 오전', style: TextStyle(color: textColor, fontSize: 18))),
-                                    Center(child: Text('🌙 오후', style: TextStyle(color: textColor, fontSize: 18))),
+                                    Center(child: Text(AppLocalizations.of(context)!.amWithIcon, style: TextStyle(color: textColor, fontSize: 18))),
+                                    Center(child: Text(AppLocalizations.of(context)!.pmWithIcon, style: TextStyle(color: textColor, fontSize: 18))),
                                   ],
                                 ),
                               ),
@@ -742,19 +747,19 @@ class _AddEventSheetState extends State<AddEventSheet> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('권한 필요'),
-            content: const Text('사진을 추가하려면 설정에서 사진 접근 권한을 허용해야 합니다.'),
+            title: Text(AppLocalizations.of(context)!.permissionRequired),
+            content: Text(AppLocalizations.of(context)!.photoPermissionDescription),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('취소'),
+                child: Text(AppLocalizations.of(context)!.cancel),
               ),
               TextButton(
                 onPressed: () {
                   openAppSettings();
                   Navigator.pop(context);
                 },
-                child: const Text('설정으로 이동'),
+                child: Text(AppLocalizations.of(context)!.goToSettings),
               ),
             ],
           ),
@@ -764,7 +769,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
       // 일반 거부
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('사진 접근 권한이 필요합니다.')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.photoPermissionNeeded)),
         );
       }
     }
@@ -788,7 +793,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('글꼴 설정', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(AppLocalizations.of(context)!.fontSettings, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   IconButton(
                     icon: const Icon(Icons.check),
                     onPressed: () => Navigator.pop(context),
@@ -1305,7 +1310,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('키보드에서 이미지가 추가되었습니다.'), duration: Duration(seconds: 2)),
+            SnackBar(content: Text(AppLocalizations.of(context)!.imageAddedFromKeyboard), duration: const Duration(seconds: 2)),
           );
         }
       } catch (e) {
@@ -1350,17 +1355,17 @@ class _AddEventSheetState extends State<AddEventSheet> {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('작성 취소'),
-        content: const Text('작성 중인 내용이 있습니다. 작성을 취소하고 나가시겠습니까?'),
+        title: Text(AppLocalizations.of(context)!.cancelWriting),
+        content: Text(AppLocalizations.of(context)!.cancelWritingConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('계속 작성'),
+            child: Text(AppLocalizations.of(context)!.continueWriting),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('작성 취소'),
+            child: Text(AppLocalizations.of(context)!.cancelWriting),
           ),
         ],
       ),
@@ -1435,7 +1440,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 elevation: 0,
               ),
-              child: const Text('저장', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(AppLocalizations.of(context)!.save, style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
         ],
@@ -1458,7 +1463,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                   child: Row(
                     children: [
                       _buildTypeTab(
-                        '일정',
+                        AppLocalizations.of(context)!.event,
                         _type == CalendarEventType.event || _type == CalendarEventType.routine,
                         blueTheme,
                         isDark,
@@ -1466,7 +1471,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                         isSmall: true,
                       ),
                       _buildTypeTab(
-                        '메모',
+                        AppLocalizations.of(context)!.memo,
                         _type == CalendarEventType.memo,
                         blueTheme,
                         isDark,
@@ -1484,7 +1489,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                      Row(
                        children: [
                          Text(
-                           '${widget.selectedDate.year}년 ${widget.selectedDate.month}월 ${widget.selectedDate.day}일',
+                           DateFormat.yMMMMd(AppLocalizations.of(context)?.localeName ?? 'ko').format(widget.selectedDate),
                            style: TextStyle(
                              fontSize: 18, 
                              fontWeight: FontWeight.bold, 
@@ -1541,7 +1546,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                             controller: _titleController,
                             contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: _handleContentInsertion),
                             decoration: InputDecoration(
-                              hintText: '제목',
+                              hintText: AppLocalizations.of(context)!.title,
                               hintStyle: TextStyle(color: (textColor ?? Colors.black).withOpacity(0.4), fontSize: 20, fontWeight: FontWeight.bold),
                               border: InputBorder.none,
                             ),
@@ -1568,7 +1573,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      '루틴 요약', // 간단 일정 -> 루틴 요약
+                                      AppLocalizations.of(context)!.routineSummary, // 간단 일정 -> 루틴 요약
                                       style: TextStyle(
                                        fontSize: 13,
                                        fontWeight: FontWeight.w600,
@@ -1658,7 +1663,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
-                                    _isAlarmEnabled ? '알람 ON' : '알람 OFF',
+                                    _isAlarmEnabled ? AppLocalizations.of(context)!.alarmOn : AppLocalizations.of(context)!.alarmOff,
                                     style: TextStyle(
                                       color: _isAlarmEnabled ? blueTheme : (textColor ?? Colors.black).withOpacity(0.4),
                                       fontSize: 13,
@@ -1705,7 +1710,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                           controller: _titleController,
                           contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: _handleContentInsertion),
                           decoration: InputDecoration(
-                              hintText: '제목',
+                              hintText: AppLocalizations.of(context)!.title,
                               hintStyle: TextStyle(color: (textColor ?? Colors.black).withOpacity(0.4), fontSize: 20, fontWeight: FontWeight.bold),
                               border: InputBorder.none,
                             ),
@@ -1766,7 +1771,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                           scrollPhysics: const NeverScrollableScrollPhysics(),
                           textAlign: _textAlign,
                           decoration: InputDecoration(
-                            hintText: (_memoBlocks.indexOf(block) == 0 && block.controller!.text.isEmpty) ? '내용을 추가해 주세요' : '',
+                            hintText: (_memoBlocks.indexOf(block) == 0 && block.controller!.text.isEmpty) ? AppLocalizations.of(context)!.contentHint : '',
                             hintStyle: TextStyle(
                               color: (textColor ?? Colors.black).withOpacity(0.4),
                               fontSize: _fontSize,
@@ -1964,7 +1969,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
             const SizedBox(height: 12),
             
             Text(
-              '일정 추가',
+              AppLocalizations.of(context)!.addEvent,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -1984,7 +1989,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
               child: Row(
                 children: [
                   _buildTypeTab(
-                    '일정',
+                    AppLocalizations.of(context)!.event,
                     _type == CalendarEventType.event || _type == CalendarEventType.routine,
                     blueTheme,
                     isDark,
@@ -1995,7 +2000,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                     },
                   ),
                   _buildTypeTab(
-                    '메모',
+                    AppLocalizations.of(context)!.memo,
                     _type == CalendarEventType.memo,
                     blueTheme,
                     isDark,
@@ -2019,7 +2024,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                     contentInsertionConfiguration: ContentInsertionConfiguration(onContentInserted: _handleContentInsertion),
                     scrollPadding: const EdgeInsets.only(bottom: 120),
                     decoration: InputDecoration(
-                      hintText: '제목',
+                      hintText: AppLocalizations.of(context)!.title,
                       hintStyle: TextStyle(color: hintColor),
                       filled: true,
                       fillColor: inputFillColor,
@@ -2121,7 +2126,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                       scrollPhysics: const NeverScrollableScrollPhysics(),
                       textAlign: _textAlign,
                       decoration: InputDecoration(
-                        hintText: (_memoBlocks.indexOf(block) == 0 && block.controller!.text.isEmpty) ? '내용을 추가해 주세요' : '',
+                        hintText: (_memoBlocks.indexOf(block) == 0 && block.controller!.text.isEmpty) ? AppLocalizations.of(context)!.contentHint : '',
                         hintStyle: TextStyle(
                           color: hintColor,
                           fontSize: _fontSize,
@@ -2215,7 +2220,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              _isAlarmEnabled ? '알람 켜짐' : '알람 꺼짐',
+                              _isAlarmEnabled ? AppLocalizations.of(context)!.alarmOn : AppLocalizations.of(context)!.alarmOff,
                               style: TextStyle(
                                 color: _isAlarmEnabled ? blueTheme : hintColor,
                                 fontWeight: FontWeight.bold,
@@ -2252,9 +2257,9 @@ class _AddEventSheetState extends State<AddEventSheet> {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              child: const Text(
-                '저장',
-                style: TextStyle(
+              child: Text(
+                AppLocalizations.of(context)!.save,
+                style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
@@ -2274,12 +2279,12 @@ class _AddEventSheetState extends State<AddEventSheet> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('항목 관리'),
-        content: const Text('이 항목을 어떻게 하시겠습니까?'),
+        title: Text(AppLocalizations.of(context)!.manageItem),
+        content: Text(AppLocalizations.of(context)!.manageItemDescription),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('취소'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -2301,7 +2306,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                 });
               }
             },
-            child: const Text('수정'),
+            child: Text(AppLocalizations.of(context)!.edit),
           ),
           TextButton(
             onPressed: () {
@@ -2309,7 +2314,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('삭제'),
+            child: Text(AppLocalizations.of(context)!.delete),
           ),
         ],
       ),
@@ -2523,7 +2528,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
   void _save() {
     String title = _titleController.text.trim();
     if (title.isEmpty) {
-      title = '제목없음';
+      title = AppLocalizations.of(context)!.noTitle;
     }
 
     final date = DateTime(
@@ -2609,7 +2614,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('제목 색상 선택', style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Text(AppLocalizations.of(context)!.selectTitleColor, style: const TextStyle(fontWeight: FontWeight.bold)),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           content: SingleChildScrollView(
             child: Wrap(
@@ -2650,7 +2655,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('취소'),
+              child: Text(AppLocalizations.of(context)!.cancel),
               onPressed: () {
                 Navigator.of(context).pop();
               },

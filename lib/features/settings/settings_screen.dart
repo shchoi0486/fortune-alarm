@@ -22,10 +22,22 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBindingObserver {
+  String _appVersion = '';
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() {
+        _appVersion = '${packageInfo.version} (${packageInfo.buildNumber})';
+      });
+    }
   }
 
   @override
@@ -151,25 +163,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             },
           ),
           // 설정 화면 하단 네이티브 광고 추가
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: DetailedAdWidget(),
+          const DetailedAdWidget(
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
-          FutureBuilder<PackageInfo>(
-            future: PackageInfo.fromPlatform(),
-            builder: (context, snapshot) {
-              final version = snapshot.data?.version ?? "1.0.0";
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 32, 16, 8),
-                child: Text(
-                  AppLocalizations.of(context)!.version(version),
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: isDark ? Colors.grey[500] : Colors.grey[600],
-                  ),
-                ),
-              );
-            },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 32, 16, 8),
+            child: Text(
+              AppLocalizations.of(context)!.version(_appVersion.isEmpty ? "1.0.0" : _appVersion),
+              style: TextStyle(
+                fontSize: 14,
+                color: isDark ? Colors.grey[500] : Colors.grey[600],
+              ),
+            ),
           ),
           const SizedBox(height: 80),
         ],

@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:vibration/vibration.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'tarot_data.dart'; // 타로 데이터 import
 import '../../data/models/alarm_model.dart';
@@ -101,7 +102,36 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
       if (mounted) setState(() => _isLoading = false);
     }
   }
-  
+
+  String _getLocalizedTarotName(int id) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (id) {
+      case 0: return l10n.tarotName0;
+      case 1: return l10n.tarotName1;
+      case 2: return l10n.tarotName2;
+      case 3: return l10n.tarotName3;
+      case 4: return l10n.tarotName4;
+      case 5: return l10n.tarotName5;
+      case 6: return l10n.tarotName6;
+      case 7: return l10n.tarotName7;
+      case 8: return l10n.tarotName8;
+      case 9: return l10n.tarotName9;
+      case 10: return l10n.tarotName10;
+      case 11: return l10n.tarotName11;
+      case 12: return l10n.tarotName12;
+      case 13: return l10n.tarotName13;
+      case 14: return l10n.tarotName14;
+      case 15: return l10n.tarotName15;
+      case 16: return l10n.tarotName16;
+      case 17: return l10n.tarotName17;
+      case 18: return l10n.tarotName18;
+      case 19: return l10n.tarotName19;
+      case 20: return l10n.tarotName20;
+      case 21: return l10n.tarotName21;
+      default: return "";
+    }
+  }
+
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () {
@@ -518,7 +548,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     
     String title = AppLocalizations.of(context)!.fortuneSelectTitle;
     if (widget.targetDate != null) {
-      title = AppLocalizations.of(context)!.fortuneSelectTitleDate(widget.targetDate!.month, widget.targetDate!.day);
+      title = AppLocalizations.of(context)!.fortuneSelectTitleDate(widget.targetDate!.month.toString(), widget.targetDate!.day);
     }
 
     return Stack(
@@ -719,7 +749,12 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   Widget _buildResultScreen() {
     String title = AppLocalizations.of(context)!.fortuneResultTitle;
     if (widget.targetDate != null) {
-      title = AppLocalizations.of(context)!.fortuneResultTitleDate(widget.targetDate!.year, widget.targetDate!.month, widget.targetDate!.day);
+      final l10n = AppLocalizations.of(context)!;
+      if (Localizations.localeOf(context).languageCode == 'ko') {
+        title = l10n.fortuneResultTitleDate(widget.targetDate!.year, widget.targetDate!.month.toString(), widget.targetDate!.day);
+      } else {
+        title = "${l10n.fortuneResultTitle} for ${DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(widget.targetDate!)}";
+      }
     }
 
     return Stack(
@@ -762,14 +797,15 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                         height: 64,
                         child: ElevatedButton(
                           onPressed: () {
+                            final l10n = AppLocalizations.of(context)!;
                             SharingService.showShareOptions(
                               context: context,
                               title: title,
-                              description: '포춘알람이 분석한 당신의 운세 결과입니다.',
+                              description: l10n.shareResultDescription,
                               results: {
-                                '연애운': _loveResult?.name ?? '',
-                                '재물운': _wealthResult?.name ?? '',
-                                '성공운': _successResult?.name ?? '',
+                                l10n.loveFortune: _loveResult != null ? _getLocalizedTarotName(_loveResult!.id) : '',
+                                l10n.wealthFortune: _wealthResult != null ? _getLocalizedTarotName(_wealthResult!.id) : '',
+                                l10n.successFortune: _successResult != null ? _getLocalizedTarotName(_successResult!.id) : '',
                               },
                             );
                           },
@@ -779,13 +815,16 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                             elevation: 0,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.share, size: 20),
-                              SizedBox(width: 10),
-                              Text("결과 공유하기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            ],
+                                const Icon(Icons.share, size: 20),
+                                const SizedBox(width: 10),
+                                Text(
+                                  AppLocalizations.of(context)!.shareResultButton, 
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                                ),
+                              ],
                           ),
                         ),
                       ),
@@ -854,20 +893,74 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   }
 
   Widget _buildResultCard(String category, String title, Color color, TarotCard card) {
-    String meaning = "";
-    String detail = "";
+    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
     
-    if (category == "love") {
-      meaning = card.loveMeaning;
-      detail = card.loveDetail;
-    } else if (category == "wealth") {
-      meaning = card.wealthMeaning;
-      detail = card.wealthDetail;
-    } else {
-      meaning = card.successMeaning;
-      detail = card.successDetail;
+    // Check if English content exists for all required fields
+    bool hasEnglishContent = true;
+    if (isEnglish) {
+      if (card.enKeywords == null || card.enDescription == null) {
+        hasEnglishContent = false;
+      } else if (category == "love" && (card.enLoveMeaning == null || card.enLoveDetail == null)) {
+        hasEnglishContent = false;
+      } else if (category == "wealth" && (card.enWealthMeaning == null || card.enWealthDetail == null)) {
+        hasEnglishContent = false;
+      } else if (category == "success" && (card.enSuccessMeaning == null || card.enSuccessDetail == null)) {
+        hasEnglishContent = false;
+      }
     }
 
+    // If English mode but content is missing, we follow the rule: hide/translate Korean interpretations in English mode.
+    // We already checked hasEnglishContent. If it's English mode and we don't have English content,
+    // we should NOT show Korean. We'll show a "Translation coming soon" or similar placeholder.
+    
+    String keywords = "";
+    String description = "";
+    String meaning = "";
+    String detail = "";
+
+    if (isEnglish) {
+      if (card.enKeywords != null) {
+        keywords = card.enKeywords!;
+      } else {
+        keywords = "Keywords available soon";
+      }
+
+      if (card.enDescription != null) {
+        description = card.enDescription!;
+      } else {
+        description = "Interpretation for this card is being translated. Please check back later.";
+      }
+
+      if (category == "love") {
+        meaning = card.enLoveMeaning ?? "Love fortune details are coming soon.";
+        detail = card.enLoveDetail ?? "";
+      } else if (category == "wealth") {
+        meaning = card.enWealthMeaning ?? "Wealth fortune details are coming soon.";
+        detail = card.enWealthDetail ?? "";
+      } else {
+        meaning = card.enSuccessMeaning ?? "Success fortune details are coming soon.";
+        detail = card.enSuccessDetail ?? "";
+      }
+    } else {
+      // Korean mode
+      keywords = card.keywords;
+      description = card.description;
+      if (category == "love") {
+        meaning = card.loveMeaning;
+        detail = card.loveDetail;
+      } else if (category == "wealth") {
+        meaning = card.wealthMeaning;
+        detail = card.wealthDetail;
+      } else {
+        meaning = card.successMeaning;
+        detail = card.successDetail;
+      }
+    }
+
+    // If we are in English mode and still have Korean content (heuristic: contains Korean characters)
+    // we might want to hide it or show a placeholder. 
+    // However, the best approach is to ensure tarot_data.dart has all en* fields.
+    
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -889,18 +982,24 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  title, 
-                  style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 16)
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      title, 
+                      style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                  ),
                 ),
               ),
-              Text(card.name, style: const TextStyle(color: Colors.black45, fontSize: 14)),
+              const SizedBox(width: 8),
+              Text(_getLocalizedTarotName(card.id), style: const TextStyle(color: Colors.black45, fontSize: 14)),
             ],
           ),
           const SizedBox(height: 20),
@@ -934,7 +1033,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
             child: Column(
               children: [
                 Text(
-                  card.keywords,
+                  keywords,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.black87, 
@@ -955,7 +1054,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
               const Icon(Icons.menu_book, color: Colors.black87, size: 18),
               const SizedBox(width: 8),
               Text(
-                '상세 풀이',
+                AppLocalizations.of(context)!.fortuneDetailTitle,
                 style: const TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ],
@@ -969,7 +1068,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
               border: Border(left: BorderSide(color: Colors.black12, width: 2)),
             ),
             child: Text(
-              card.description,
+              description,
               style: const TextStyle(color: Colors.black54, fontSize: 14, height: 1.5, fontStyle: FontStyle.italic),
             ),
           ),

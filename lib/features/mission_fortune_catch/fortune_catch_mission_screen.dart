@@ -233,6 +233,10 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   void _ensureHoleLayouts(Size size) {
     if (_holeLayoutSize == size && _holeLayouts != null) return;
     _holeLayoutSize = size;
+    
+    // 화면 크기가 너무 작으면(0,0 등) 나중에 다시 계산하도록 함
+    if (size.width < 100 || size.height < 100) return;
+
     final layouts = <_HoleLayout>[];
     
     // Perspective field inset ratio (matches _FieldClipper)
@@ -380,6 +384,7 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
 
   void _onTapCharacter(int holeIndex) {
     if (_isGameOver) return;
+    final l10n = AppLocalizations.of(context)!;
     final char = _activeHoles[holeIndex];
     if (char == null) return;
     
@@ -440,13 +445,14 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
         Vibration.vibrate(pattern: [0, 50, 40, 60]);
       }
       _playSfx('sounds/alarm_sound.ogg', volume: 0.16, maxDuration: const Duration(milliseconds: 200));
-      _showFeedback('감점 ${char.points}점', Colors.redAccent);
+      _showFeedback(l10n.fortuneCatchPointMinus(char.points.abs()), Colors.redAccent);
     } else {
       HapticFeedback.mediumImpact(); // light -> medium으로 강화
       if (char.points == 0) {
         _playSfx('sounds/ui_click.ogg', volume: 0.12, maxDuration: const Duration(milliseconds: 140));
       } else {
         _playSfx('sounds/ui_click.ogg', volume: 0.22, maxDuration: const Duration(milliseconds: 180));
+        _showFeedback(l10n.fortuneCatchPointPlus(char.points), Colors.amber);
       }
     }
   }
@@ -532,66 +538,82 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              l10n.missionFortuneCatch,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: isDarkMode ? Colors.white : Colors.black87,
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                l10n.missionFortuneCatch,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDarkMode ? Colors.white : Colors.black87,
+                                ),
                               ),
                             ),
-                            Text(
-                              '${l10n.fortuneCatchGoal} ${l10n.fortuneCatchGoalDetail(_catchCount, _minCatches)}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: isDarkMode ? Colors.white70 : Colors.black54,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.timer_outlined,
-                                  size: 14,
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                '${l10n.fortuneCatchGoal} ${l10n.fortuneCatchGoalDetail(_catchCount, _minCatches)}',
+                                style: TextStyle(
+                                  fontSize: 12,
                                   color: isDarkMode ? Colors.white70 : Colors.black54,
                                 ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '진행 시간: $_elapsedSeconds초',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: isDarkMode ? Colors.white70 : Colors.black54,
-                                  ),
-                                ),
-                                if (_bestTimeSeconds != null) ...[
-                                  const SizedBox(width: 8),
-                                  const Icon(Icons.emoji_events_outlined, size: 14, color: Colors.amber),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                    '최고: $_bestTimeSeconds초',
-                                    style: const TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ],
+                              ),
                             ),
                             const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.warning_amber_rounded,
-                                  size: 14,
-                                  color: Colors.redAccent.withOpacity(0.9),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '화난 포츄니는 감점!',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.timer_outlined,
+                                    size: 14,
+                                    color: isDarkMode ? Colors.white70 : Colors.black54,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    l10n.fortuneCatchTime(_elapsedSeconds),
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: isDarkMode ? Colors.white70 : Colors.black54,
+                                    ),
+                                  ),
+                                  if (_bestTimeSeconds != null) ...[
+                                    const SizedBox(width: 8),
+                                    const Icon(Icons.emoji_events_outlined, size: 14, color: Colors.amber),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      l10n.fortuneCatchBest(_bestTimeSeconds!),
+                                      style: const TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.warning_amber_rounded,
+                                    size: 14,
                                     color: Colors.redAccent.withOpacity(0.9),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    l10n.fortuneCatchAngryHint,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.redAccent.withOpacity(0.9),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -705,13 +727,18 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
                           children: [
                             Icon(Icons.touch_app, size: 22, color: Colors.orangeAccent),
                             const SizedBox(width: 12),
-                            Text(
-                              '화난 포츄니를 피해서 잡으세요!',
-                              style: TextStyle(
-                                fontSize: 17, 
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                                shadows: const [Shadow(color: Colors.black, offset: Offset(0, 1.5), blurRadius: 4)],
+                            Flexible(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  l10n.fortuneCatchInstruction,
+                                  style: TextStyle(
+                                    fontSize: 17, 
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.white,
+                                    shadows: const [Shadow(color: Colors.black, offset: Offset(0, 1.5), blurRadius: 4)],
+                                  ),
+                                ),
                               ),
                             ),
                           ],
@@ -723,6 +750,11 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
                         builder: (context, constraints) {
                           final size = constraints.biggest;
                           _ensureHoleLayouts(size);
+                          
+                          if (_holeLayouts == null) {
+                            return const Center(child: CircularProgressIndicator(color: Colors.white));
+                          }
+                          
                           final layouts = _holeLayouts!;
                           const baseItem = 124.0;
 
@@ -807,14 +839,17 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: Colors.white.withOpacity(isDarkMode ? 0.12 : 0.22)),
                       ),
-                      child: Text(
-                        l10n.missionFortuneCatchDescription,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: isDarkMode ? Colors.white70 : Colors.white,
-                          shadows: [Shadow(color: Colors.black45, offset: Offset(0, 1), blurRadius: 2)],
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          l10n.missionFortuneCatchDescription,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: isDarkMode ? Colors.white70 : Colors.white,
+                            shadows: [Shadow(color: Colors.black45, offset: Offset(0, 1), blurRadius: 2)],
+                          ),
                         ),
                       ),
                     ),

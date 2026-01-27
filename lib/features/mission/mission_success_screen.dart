@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../l10n/app_localizations.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../core/constants/cheering_messages.dart';
 import '../../main.dart';
 import '../../providers/mission_provider.dart';

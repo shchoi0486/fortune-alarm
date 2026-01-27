@@ -325,21 +325,29 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  l10n.missionLeftRight,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0xFF2C3E50), // 어두운 색으로 변경하여 가독성 확보
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    l10n.missionLeftRight,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900,
+                                      color: Color(0xFF2C3E50), // 어두운 색으로 변경하여 가독성 확보
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Text(
-                                  l10n.missionLeftRightDescription(goal),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFF34495E), // 어두운 색으로 변경
-                                    fontWeight: FontWeight.w600,
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    l10n.missionLeftRightDescription(goal),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF34495E), // 어두운 색으로 변경
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -396,14 +404,17 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                                   child: Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          _expectLeft ? l10n.missionLeftRightPromptLeft : l10n.missionLeftRightPromptRight,
-                                          style: const TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w900,
-                                            color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            _expectLeft ? l10n.missionLeftRightPromptLeft : l10n.missionLeftRightPromptRight,
+                                            style: const TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w900,
+                                              color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ],
@@ -463,12 +474,18 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                                               ],
                                             ),
                                             child: Center(
-                                              child: Text(
-                                                l10n.left,
-                                                style: const TextStyle(
-                                                  fontSize: 19,
-                                                  fontWeight: FontWeight.w900,
-                                                  color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    l10n.left,
+                                                    style: const TextStyle(
+                                                      fontSize: 19,
+                                                      fontWeight: FontWeight.w900,
+                                                      color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -494,12 +511,18 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                                               ],
                                             ),
                                             child: Center(
-                                              child: Text(
-                                                l10n.right,
-                                                style: const TextStyle(
-                                                  fontSize: 19,
-                                                  fontWeight: FontWeight.w900,
-                                                  color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Text(
+                                                    l10n.right,
+                                                    style: const TextStyle(
+                                                      fontSize: 19,
+                                                      fontWeight: FontWeight.w900,
+                                                      color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -511,10 +534,13 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
-                                  child: Text(
-                                    l10n.missionHintInactivity,
-                                    style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 11),
-                                    textAlign: TextAlign.center,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      l10n.missionHintInactivity,
+                                      style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 11),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 ),
                               ],

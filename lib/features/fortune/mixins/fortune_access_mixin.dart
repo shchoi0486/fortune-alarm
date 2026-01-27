@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:fortune_alarm/services/ad_service.dart';
 import 'package:fortune_alarm/services/cookie_service.dart';
@@ -87,12 +88,16 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                 _adCompleter!.complete(false);
               }
               
+              // [사용자 요청] 광고 로드 실패 시 에러 스낵바를 띄우지 않고 
+              // 다이얼로그에서 '무료 패스' 로직(showFortuneAccessDialog)에 의해 처리되도록 함
+              /*
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('광고를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.'),
-                  duration: Duration(seconds: 3),
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.adLoadError),
+                  duration: const Duration(seconds: 3),
                 ),
               );
+              */
             }
           }
         },
@@ -157,12 +162,16 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
           _adCompleter!.complete(false);
         }
         if (mounted) {
+          // [사용자 요청] 광고 표시 실패 시에도 에러 메시지보다는 
+          // 조용히 넘어가거나(무료 처리 등) 하기 위해 스낵바 주석 처리
+          /*
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('광고를 표시할 수 없습니다. 잠시 후 다시 시도해주세요.'),
-              duration: Duration(seconds: 3),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.adShowError),
+              duration: const Duration(seconds: 3),
             ),
           );
+          */
         }
         _loadRewardedAd();
       },
@@ -190,7 +199,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
       await _cookieService.addCookies(2);
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('포춘쿠키 2개를 획득했습니다! 🎉')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.earnCookies(2))),
       );
       _cookieService.useCookies(2).then((success) {
          if (!success) debugPrint('Failed to deduct cookies after ad');
@@ -250,11 +259,11 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
           }
           
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('광고 없이 무료로 결과를 보여드립니다! 🎉'),
-              duration: Duration(seconds: 3),
-            ),
-          );
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.freePassAfterTimeout),
+                duration: const Duration(seconds: 3),
+              ),
+            );
         }
       });
       
@@ -312,9 +321,9 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                         ),
                       ),
                       const SizedBox(height: 24),
-                      const Text(
-                        '광고를 불러오는 중입니다...',
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!.adLoading,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           decoration: TextDecoration.none,
@@ -323,10 +332,10 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                       ),
                       if (showRetry) ...[
                         const SizedBox(height: 12),
-                        const Text(
-                          '로드가 지연되고 있어요.\n잠시 후 다시 시도해주세요.',
+                        Text(
+                          AppLocalizations.of(context)!.adLoadDelay,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white70,
                             fontSize: 13,
                             decoration: TextDecoration.none,
@@ -347,9 +356,9 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                                 foregroundColor: Colors.amber,
                                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               ),
-                              child: const Text(
-                                '다시 시도',
-                                style: TextStyle(fontSize: 15),
+                              child: Text(
+                                AppLocalizations.of(context)!.retry,
+                                style: const TextStyle(fontSize: 15),
                               ),
                             ),
                             TextButton(
@@ -366,9 +375,9 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                                 foregroundColor: Colors.white70,
                                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               ),
-                              child: const Text(
-                                '취소',
-                                style: TextStyle(fontSize: 15),
+                              child: Text(
+                                AppLocalizations.of(context)!.cancel,
+                                style: const TextStyle(fontSize: 15),
                               ),
                             ),
                           ],
@@ -388,9 +397,9 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                             foregroundColor: Colors.white70,
                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                           ),
-                          child: const Text(
-                            '취소',
-                            style: TextStyle(fontSize: 15),
+                          child: Text(
+                            AppLocalizations.of(context)!.cancel,
+                            style: const TextStyle(fontSize: 15),
                           ),
                         ),
                     ],
@@ -481,7 +490,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                 
                 // Title
                 Text(
-                  '운세 확인하기',
+                  AppLocalizations.of(context)!.fortuneAccessTitle,
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -493,7 +502,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                 
                 // Subtitle
                 Text(
-                  '운세 결과를 확인하고\n숨겨진 선물도 받아 가요!',
+                  AppLocalizations.of(context)!.fortuneAccessSubtitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
@@ -521,14 +530,19 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.play_circle_fill, color: Colors.black87, size: 24),
-                        SizedBox(width: 10),
-                        Text(
-                          '광고 보고 무료 결과 보기',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                      children: [
+                        const Icon(Icons.play_circle_fill, color: Colors.black87, size: 24),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              AppLocalizations.of(context)!.watchAdButtonText,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -565,14 +579,14 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                             backgroundColor: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                             title: Text(
-                              '포춘쿠키 부족',
+                              AppLocalizations.of(context)!.insufficientCookiesTitle,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: isDarkMode ? Colors.white : Colors.black87,
                               ),
                             ),
                             content: Text(
-                              '보유한 포춘쿠키가 부족합니다.\n미션을 수행하거나 광고를 보고 무료로 충전할 수 있습니다.',
+                              AppLocalizations.of(context)!.insufficientCookiesMessage,
                               style: TextStyle(
                                 color: isDarkMode ? Colors.white70 : Colors.black54,
                               ),
@@ -580,7 +594,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                             actions: [
                               TextButton(
                                 onPressed: () => Navigator.pop(ctx),
-                                child: const Text('확인'),
+                                child: Text(AppLocalizations.of(context)!.confirm),
                               ),
                             ],
                           ),
@@ -610,16 +624,18 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                       children: [
                         const Icon(Icons.cookie, size: 24, color: Colors.orangeAccent),
                         const SizedBox(width: 8),
-                        const Flexible(
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
                             child: Text(
-                              '포춘쿠키 2개 사용하기',
-                              style: TextStyle(
+                              AppLocalizations.of(context)!.useCookiesButtonText(2),
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
+                        ),
                       ],
                     ),
                   ),
@@ -640,9 +656,9 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
 
       internalOnAccessGranted();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('광고를 불러오지 못해 이번에는 무료로 진행합니다.'),
-          duration: Duration(seconds: 3),
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.adFailFreePass),
+          duration: const Duration(seconds: 3),
         ),
       );
       return true;

@@ -33,7 +33,7 @@ import 'services/routine_alarm_service.dart';
 
 import 'features/alarm/alarm_ringing_screen.dart';
 import 'providers/theme_provider.dart';
-import 'l10n/app_localizations.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'features/mission/supplement/supplement_mission_screen.dart';
@@ -64,13 +64,14 @@ void main() async {
   
 
   
-  // 시스템 내비게이션 바 색상 설정 (하얀색)
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge); // [추가] 상태바/내비바 영역을 앱이 그리도록 설정 (부드러운 전환)
+  // 시스템 UI 설정 (Edge-to-Edge 정책 준수 및 최신 안드로이드 대응)
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.white,
+    systemNavigationBarColor: Colors.transparent, // 투명하게 설정하여 Edge-to-Edge 활성화
     systemNavigationBarIconBrightness: Brightness.dark,
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
+    systemNavigationBarDividerColor: Colors.transparent,
   ));
   
   try {
@@ -1248,8 +1249,12 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
           body: SizedBox.shrink(), // 인디케이터 제거: 검은 화면만 유지
         );
       }
-
+      
+      // [사용자 요청] 로딩 중일 때 SplashScreen 위젯을 그대로 반환하면 
+      // SplashScreen의 initState에 있는 네비게이션 로직 때문에 무한 루프가 발생할 수 있음.
+      // 따라서 SplashScreen의 UI만 가져와서 보여줌.
       return Scaffold(
+        backgroundColor: Colors.black,
         body: Stack(
           fit: StackFit.expand,
           children: [
@@ -1263,24 +1268,16 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
               right: 0,
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     "FORTUNE ALARM",
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
                       letterSpacing: 4.0,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withOpacity(0.5),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
                     ),
                   ),
                   const SizedBox(height: 15),
-                  // 로딩 중임을 알리는 인디케이터 (선택 사항, 기존 스플래시와 통일감)
                   SizedBox(
                     width: 60,
                     height: 3,
@@ -1373,10 +1370,10 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
             backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
             surfaceTintColor: Colors.transparent,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: const Text(
-              '종료하시겠습니까?',
+            title: Text(
+              AppLocalizations.of(context)?.exitQuestion ?? 'Do you want to exit?',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -1395,7 +1392,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                             side: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[300]!),
                           ),
                         ),
-                        child: Text(AppLocalizations.of(context)?.cancel ?? '취소'),
+                        child: Text(AppLocalizations.of(context)?.cancel ?? 'Cancel'),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -1410,7 +1407,10 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: const Text('종료', style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(
+                          AppLocalizations.of(context)?.exitApp ?? 'Exit',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ],

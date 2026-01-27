@@ -16,6 +16,7 @@ import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import 'package:fortune_alarm/services/notification_service.dart';
 import 'package:fortune_alarm/services/alarm_scheduler_service.dart';
 
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../services/ml_service.dart';
 import 'face_result_screen.dart';
 
@@ -425,7 +426,7 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
 
   @override
   Widget build(BuildContext context) {
-    // final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context)!;
     final progress = _elapsedMilliseconds / _targetMilliseconds;
     final remainingSeconds = ((_targetMilliseconds - _elapsedMilliseconds) / 1000).ceil();
     
@@ -472,34 +473,57 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        _isFaceDetected 
-                          ? "$remainingSeconds" 
-                          : "얼굴을 보여주세요",
-                        style: TextStyle(
-                          color: _isFaceDetected ? Colors.greenAccent : Colors.white, 
-                          fontSize: _isFaceDetected ? 48 : 24,
-                          fontWeight: FontWeight.bold,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          _isFaceDetected 
+                            ? "$remainingSeconds" 
+                            : l10n.showFace,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: _isFaceDetected ? Colors.greenAccent : Colors.white, 
+                            fontSize: _isFaceDetected ? 48 : 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       if (_isFaceDetected)
-                        const Text(
-                          "화면을 계속 응시하세요",
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            l10n.keepWatching,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.white70, fontSize: 16),
+                          ),
                         ),
                     ],
                   ),
                 ),
                 const Spacer(),
-                const Text(
-                  "관상 분석을 위해 얼굴을 인식 중입니다",
-                  style: TextStyle(color: Colors.white60, fontSize: 14),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      l10n.recognizingFaceForFortune,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.white60, fontSize: 14),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  "데이터는 저장되지 않습니다",
-                  style: TextStyle(color: Colors.white30, fontSize: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      l10n.dataNotStored,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.white30, fontSize: 12),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 40),
               ],

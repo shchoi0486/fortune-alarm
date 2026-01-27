@@ -12,6 +12,7 @@ import 'package:vibration/vibration.dart';
 import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 // 프로젝트 경로에 맞춰 임포트 경로 확인 필요
 import '../../core/constants/mission_type.dart';
@@ -106,17 +107,26 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
 
   Future<void> _initializeAll() async {
     try {
-      // 1. 카메라 초기화부터 시작 (가장 중요한 시각적 요소)
-      await ref.read(cameraControllerProvider.notifier).initializeCamera();
+      // 1. UI 상태 즉시 업데이트 (로딩 표시)
+      if (mounted) {
+        setState(() {
+          _isInitialized = true;
+        });
+      }
+
+      // 2. 카메라 렌즈 방향 결정
+      CameraLensDirection lensDirection = CameraLensDirection.back;
+      if (widget.missionType == MissionType.cameraFace || 
+          widget.missionType == MissionType.faceDetection) {
+        lensDirection = CameraLensDirection.front;
+      }
+
+      // 3. 카메라 초기화 시작
+      await ref.read(cameraControllerProvider.notifier).initializeCamera(lensDirection: lensDirection);
       
       if (_isDisposed) return;
 
-      // 2. 카메라가 준비되면 즉시 화면 표시
-      setState(() {
-        _isInitialized = true;
-      });
-
-      // 3. 나머지 무거운 작업들은 백그라운드에서 진행 (UI 스레드 양보)
+      // 4. 나머지 무거운 작업들은 백그라운드에서 진행 (UI 스레드 양보)
       Future.microtask(() async {
         if (_isDisposed) return;
 
@@ -150,8 +160,9 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
     } catch (e) {
       debugPrint('Error during initialization: $e');
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!; 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('초기화 중 오류가 발생했습니다.')),
+          SnackBar(content: Text(l10n.initError)),
         );
       }
     }
@@ -170,12 +181,13 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
   void _resetInactivityTimer() {
     _startInactivityTimer();
 
-    // 미션 화면 진입 시 알람 소리를 직접 제어하지 않고 
-    // AlarmRingingScreen에서 일시 정지된 상태로 진입함.
-
+    // 기존 타이머가 있으면 취소하여 중복 실행 및 메모리 누수 방지
+    _timeTimer?.cancel();
     _timeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (mounted) {
+      if (mounted && !_isDisposed) {
         setState(() {});
+      } else {
+        timer.cancel();
       }
     });
   }
@@ -298,9 +310,10 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
   Future<void> _loadCurrentReferenceImage() async {
     if (_activeImagePaths.isEmpty || _currentMissionIndex >= _activeImagePaths.length) return;
     
+    final l10n = AppLocalizations.of(context)!; 
     setState(() {
       _referenceImage = File(_activeImagePaths[_currentMissionIndex]);
-      _debugLabelText = "다음 목표 분석 중...";
+      _debugLabelText = l10n.analyzingNextTarget;
     });
     
     await _analyzeReferenceImage();
@@ -390,8 +403,9 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
         } catch (e) {
           debugPrint('Error processing image: $e');
           if (mounted) {
+            final l10n = AppLocalizations.of(context)!;
             setState(() {
-              _debugLabelText = "오류 발생";
+              _debugLabelText = l10n.errorOccurredGeneric;
             });
           }
         } finally {
@@ -424,9 +438,10 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
       // 1. 성공 사운드 및 UI 피드백 (오버레이 표시)
       _playTransitionSound();
       
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
         _showSuccessOverlay = true; // 성공 오버레이 표시
-        _debugLabelText = "$completedMissionNumber/$totalMissions 성공!";
+        _debugLabelText = l10n.missionSuccessWithCount(completedMissionNumber, totalMissions);
       });
 
       // 2. 0.5초 지연 후 오버레이 숨기고 다음 미션 준비 (빠른 전환)
@@ -459,11 +474,12 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
       _isTransitioning = true;
       
       final totalMissions = _activeImagePaths.length;
+      final l10n = AppLocalizations.of(context)!;
       
       setState(() {
         _isMissionSuccess = true;
         _isSuccess = true;
-        _debugLabelText = "$totalMissions/$totalMissions 성공! 매칭 성공!";
+        _debugLabelText = l10n.missionMatchSuccess(totalMissions);
         _currentSimilarity = 1.0;
       });
       try {
@@ -496,27 +512,28 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
   }
 
   String _getMissionGuideText() {
+    final l10n = AppLocalizations.of(context)!;
     if (_activeImagePaths.isNotEmpty) {
       if (_targetLabels.isEmpty) {
-        return "미션 ${_currentMissionIndex + 1}/${_activeImagePaths.length} 분석 중...";
+        return l10n.missionAnalyzing(_currentMissionIndex + 1, _activeImagePaths.length);
       }
-      return "미션 ${_currentMissionIndex + 1}/${_activeImagePaths.length}: 가이드 속 물체를 화면에 비춰주세요.";
+      return l10n.missionPointObject(_currentMissionIndex + 1, _activeImagePaths.length);
     }
     switch (widget.missionType) {
       case MissionType.cameraSink:
-        return "세면대를 비춰주세요.";
+        return l10n.missionPointSink;
       case MissionType.cameraRefrigerator:
-        return "냉장고를 비춰주세요.";
+        return l10n.missionPointRefrigerator;
       case MissionType.cameraScale:
-        return "체중계를 비춰주세요.";
+        return l10n.missionPointScale;
       case MissionType.cameraFace:
-        return "얼굴을 화면에 비춰주세요.";
+        return l10n.missionPointFace;
       case MissionType.cameraOther:
-        return "지정된 물체를 비춰주세요.";
+        return l10n.missionPointObjectGeneric;
       case MissionType.none:
-        return "사물을 인식시켜주세요.";
+        return l10n.missionRecognizeObject;
       default:
-        return "미션을 수행해주세요.";
+        return l10n.missionPerform;
     }
   }
 
@@ -548,26 +565,11 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!; 
     final controller = ref.watch(cameraControllerProvider);
-// unused screenSize removed
-
-    // 알람 데이터/시간 포맷은 현재 화면 표시에서 사용하지 않음
-
-    if (!_isInitialized || controller == null || !controller.value.isInitialized) {
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CircularProgressIndicator(color: Colors.white),
-              const SizedBox(height: 20),
-              // Text removed as per user request for smoother transition feel
-            ],
-          ),
-        ),
-      );
-    }
+    
+    // 로딩 상태 정의
+    final bool isLoading = !_isInitialized || controller == null || !controller.value.isInitialized;
 
     BoxDecoration bgDecoration;
     if (_alarm != null && _alarm!.backgroundPath != null) {
@@ -596,38 +598,55 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
             return Stack(
               fit: StackFit.expand,
               children: [
-              // 0. Background (Alarm Theme)
-              Container(decoration: bgDecoration),
+                // 0. Background (Alarm Theme)
+                Container(decoration: bgDecoration),
 
-              // 1. 카메라 프리뷰 (지정된 프레임 안에만 보이도록 ClipRRect 사용)
-              Positioned.fromRect(
-                rect: CameraOverlayPainter.getFrameRect(layoutSize),
-                child: RepaintBoundary(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0), // 프레임 모서리를 둥글게
-                    child: SizedBox.expand(
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        child: SizedBox(
-                          width: controller.value.previewSize?.height ?? layoutSize.width,
-                          height: controller.value.previewSize?.width ?? layoutSize.height,
-                          child: CameraPreview(controller),
+                // 1. 카메라 프리뷰 또는 로딩 인디케이터
+                if (isLoading)
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                        const SizedBox(height: 20),
+                        Text(
+                          l10n.loading,
+                          style: const TextStyle(color: Colors.white70, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  Positioned.fromRect(
+                    rect: CameraOverlayPainter.getFrameRect(layoutSize),
+                    child: RepaintBoundary(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: SizedBox.expand(
+                          child: FittedBox(
+                            fit: BoxFit.cover,
+                            child: SizedBox(
+                              width: controller.value.previewSize?.height ?? layoutSize.width,
+                              height: controller.value.previewSize?.width ?? layoutSize.height,
+                              child: CameraPreview(controller),
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
 
-              Positioned.fill(
-                child: RepaintBoundary(
-                  child: CustomPaint(
-                    painter: CameraOverlayPainter(
-                      similarity: _currentSimilarity, // 유사도 전달
+                // 2. 오버레이 (가이드 라인 등)
+                if (!isLoading)
+                  Positioned.fill(
+                    child: RepaintBoundary(
+                      child: CustomPaint(
+                        painter: CameraOverlayPainter(
+                          similarity: _currentSimilarity,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
 
               Positioned(
                 top: 0,
@@ -680,6 +699,46 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                   image: FileImage(_referenceImage!),
                   top: 170, // 시계 텍스트와 겹치지 않도록 위치 조정
                 ),
+
+              // [추가] 카메라 전환 버튼
+              Positioned(
+                top: 0,
+                right: 100, // 비상 버튼 왼쪽 옆에 위치
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: IconButton(
+                      icon: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.4),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
+                        ),
+                        child: const Icon(Icons.flip_camera_ios_rounded, color: Colors.white, size: 24),
+                      ),
+                      onPressed: () async {
+                        try {
+                          // 스트림 중지 후 전환
+                          final controller = ref.read(cameraControllerProvider);
+                          if (controller != null && controller.value.isStreamingImages) {
+                            await controller.stopImageStream();
+                          }
+                          
+                          await ref.read(cameraControllerProvider.notifier).switchCamera();
+                          
+                          // 스트림 재시작
+                          if (mounted && !_isDisposed && !_isTransitioning) {
+                            _startImageStream();
+                          }
+                        } catch (e) {
+                          debugPrint('Error switching camera: $e');
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ),
 
               // [추가] 비상 버튼 (카메라 인식 불가 시 대체 미션)
               Positioned(
@@ -737,14 +796,14 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                             ),
                           ],
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.touch_app_rounded, color: Colors.white, size: 16),
-                            SizedBox(width: 6),
+                            const Icon(Icons.touch_app_rounded, color: Colors.white, size: 16),
+                            const SizedBox(width: 6),
                             Text(
-                              "탈출",
-                              style: TextStyle(
+                              l10n.escape,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -775,7 +834,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                         ),
                       const SizedBox(height: 10),
                       Text(
-                        _referenceImage != null ? "목표물이 잘 보이게 찍으세요" : _getMissionGuideText(),
+                        _referenceImage != null ? l10n.pointObjectClearly : _getMissionGuideText(),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
@@ -841,7 +900,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                                   ),
                                   const SizedBox(height: 24),
                                   Text(
-                                    _isMissionSuccess ? '매칭 성공!' : '미션 완료!',
+                                    _isMissionSuccess ? l10n.matchingSuccess : l10n.missionComplete,
                                     style: const TextStyle(
                                       fontSize: 40,
                                       fontWeight: FontWeight.bold,
@@ -858,7 +917,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                                   // 진행도 표시 (예: 1/2 성공!)
                                   if (!_isMissionSuccess && _activeImagePaths.isNotEmpty)
                                     Text(
-                                      "${_currentMissionIndex + 1}/${_activeImagePaths.length} 성공!",
+                                      l10n.missionSuccessWithCount(_currentMissionIndex + 1, _activeImagePaths.length),
                                       style: const TextStyle(
                                         color: Colors.greenAccent,
                                         fontSize: 22,
@@ -867,9 +926,9 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                                     ),
                                   
                                   if (_isMissionSuccess)
-                                    const Text(
-                                      "모든 미션 완료!",
-                                      style: TextStyle(
+                                    Text(
+                                      l10n.allMissionsComplete,
+                                      style: const TextStyle(
                                         color: Colors.greenAccent,
                                         fontSize: 24,
                                         fontWeight: FontWeight.bold,
@@ -911,22 +970,6 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                       onFinish: () async {
                         if (mounted) {
                           await _stopAlarm();
-
-                          // [추가] 사용자 경험 개선: 스누즈 안내
-                          if (widget.alarmId != null && _alarm != null) {
-                            final bool hasMoreSnooze = _alarm!.snoozeInterval > 0 &&
-                                (_alarm!.remainingSnoozeCount > 1 ||
-                                    (!_alarm!.id.endsWith('_snooze') && _alarm!.maxSnoozeCount > 0));
-
-                            if (hasMoreSnooze) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('미션 성공! 하지만 설정에 따라 ${_alarm!.snoozeInterval}분 뒤 다시 울립니다.'),
-                                  duration: const Duration(seconds: 3),
-                                ),
-                              );
-                            }
-                          }
 
                           try {
                             final controller = ref.read(cameraControllerProvider);

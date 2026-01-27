@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../providers/mission_provider.dart';
@@ -19,6 +19,7 @@ class FortuneCookieBar extends ConsumerWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final iconColor = isDarkMode ? Colors.white : Colors.black87;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 0),
@@ -34,7 +35,7 @@ class FortuneCookieBar extends ConsumerWidget {
                 context: context,
                 isScrollControlled: true,
                 backgroundColor: Colors.transparent,
-                enableDrag: true, // 스와이프로 닫기 활성화
+                enableDrag: true,
                 builder: (context) => const WeatherDetailSheet(),
               );
             },
@@ -70,7 +71,7 @@ class FortuneCookieBar extends ConsumerWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '미세 ${_getLocalizedAirQuality(context, weather.fineDustStatusKey)}',
+                            '${l10n.labelFineDust} ${_getLocalizedAirQuality(context, weather.fineDustStatusKey)}',
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w500,
@@ -134,14 +135,13 @@ class FortuneCookieBar extends ConsumerWidget {
                  children: [
                    GestureDetector(
                      onTap: () {
-                       // 알림 아이콘 클릭 시 빨간 점 사라지게 함 (알림을 확인한 것으로 간주)
                        ref.read(hasNewNotificationProvider.notifier).state = false;
                        
                        // TODO: Implement notification list or popup
                        ScaffoldMessenger.of(context).showSnackBar(
-                         const SnackBar(
-                           content: Text('새로운 알림이 없습니다.'),
-                           duration: Duration(seconds: 1),
+                         SnackBar(
+                           content: Text(l10n.noNotifications ?? 'No new notifications.'),
+                           duration: const Duration(seconds: 1),
                          ),
                        );
                      },
@@ -385,7 +385,7 @@ class WeatherDetailSheet extends ConsumerWidget {
                             ),
                             const SizedBox(height: 16),
                             if (weather.hourlyForecasts.isNotEmpty) ...[
-                              _buildSectionTitle('시간대별 예보', isDarkMode),
+                              _buildSectionTitle(l10n.hourlyForecast, isDarkMode),
                               const SizedBox(height: 8),
                               SizedBox(
                                 height: 90,
@@ -408,7 +408,7 @@ class WeatherDetailSheet extends ConsumerWidget {
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            '${hourly.time.hour}시',
+                                            l10n.hourFormat(hourly.time.hour.toString()),
                                             style: TextStyle(
                                               color: isDarkMode ? Colors.white60 : Colors.black54,
                                               fontSize: 11,
@@ -437,9 +437,9 @@ class WeatherDetailSheet extends ConsumerWidget {
                               const SizedBox(height: 16),
                             ],
                             if (weather.dailyForecasts.isNotEmpty) ...[
-                              _buildSectionTitle('주간 예보', isDarkMode),
+                              _buildSectionTitle(l10n.weeklyForecast, isDarkMode),
                               const SizedBox(height: 6),
-                              ...weather.dailyForecasts.map((daily) => _buildDailyRow(daily, isDarkMode)),
+                              ...weather.dailyForecasts.map((daily) => _buildDailyRow(context, daily, isDarkMode)),
                             ],
                             const SizedBox(height: 22),
                             Text(
@@ -552,8 +552,8 @@ class WeatherDetailSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildDailyRow(dynamic daily, bool isDarkMode) {
-    final weekDay = _getWeekdayName(daily.date.weekday);
+  Widget _buildDailyRow(BuildContext context, dynamic daily, bool isDarkMode) {
+    final weekDay = _getWeekdayName(context, daily.date.weekday);
     final dateStr = '${daily.date.month}/${daily.date.day}';
     
     return Container(
@@ -652,14 +652,14 @@ class WeatherDetailSheet extends ConsumerWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => openAppSettings(),
-                    child: const Text('설정 열기'),
+                    child: Text(l10n.openSettings),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () => ref.invalidate(weatherProvider),
-                    child: const Text('다시 시도'),
+                    child: Text(l10n.retry),
                   ),
                 ),
               ],
@@ -672,9 +672,18 @@ class WeatherDetailSheet extends ConsumerWidget {
 }
 
 // Global Helper Functions
-String _getWeekdayName(int weekday) {
-  const weekdays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
-  return weekdays[weekday - 1];
+String _getWeekdayName(BuildContext context, int weekday) {
+  final l10n = AppLocalizations.of(context)!;
+  switch (weekday) {
+    case DateTime.monday: return l10n.dayMonFull;
+    case DateTime.tuesday: return l10n.dayTueFull;
+    case DateTime.wednesday: return l10n.dayWedFull;
+    case DateTime.thursday: return l10n.dayThuFull;
+    case DateTime.friday: return l10n.dayFriFull;
+    case DateTime.saturday: return l10n.daySatFull;
+    case DateTime.sunday: return l10n.daySunFull;
+    default: return '';
+  }
 }
 
 String _getWeatherEmoji(String condition) {
@@ -714,20 +723,21 @@ Color _getWeatherColor(String condition) {
 }
 
 String _getLocalizedCondition(BuildContext context, String condition) {
+  final l10n = AppLocalizations.of(context)!;
   switch (condition) {
-    case 'Sunny': return '맑음';
-    case 'PartlyCloudy': return '구름 조금';
-    case 'Cloudy': return '흐림';
-    case 'Foggy': return '안개';
-    case 'Drizzle': return '이슬비';
-    case 'Rainy': return '비';
-    case 'FreezingRain': return '얼어붙는 비';
-    case 'Snowy': return '눈';
-    case 'SnowGrains': return '싸락눈';
-    case 'RainShowers': return '소나기';
-    case 'SnowShowers': return '소낙눈';
-    case 'Thunderstorm': return '뇌우';
-    default: return '흐림';
+    case 'Sunny': return l10n.weatherConditionSunny;
+    case 'PartlyCloudy': return l10n.weatherConditionPartlyCloudy;
+    case 'Cloudy': return l10n.weatherConditionCloudy;
+    case 'Foggy': return l10n.weatherConditionFoggy;
+    case 'Drizzle': return l10n.weatherConditionDrizzle;
+    case 'Rainy': return l10n.weatherConditionRainy;
+    case 'FreezingRain': return l10n.weatherConditionFreezingRain;
+    case 'Snowy': return l10n.weatherConditionSnowy;
+    case 'SnowGrains': return l10n.weatherConditionSnowGrains;
+    case 'RainShowers': return l10n.weatherConditionRainShowers;
+    case 'SnowShowers': return l10n.weatherConditionSnowShowers;
+    case 'Thunderstorm': return l10n.weatherConditionThunderstorm;
+    default: return l10n.weatherConditionCloudy;
   }
 }
 

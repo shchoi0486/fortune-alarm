@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'; // Import Cupertino for Wheel Pickers
+import 'package:intl/intl.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:fortune_alarm/features/fortune/saju/models/saju_profile.dart';
 import 'tojeong_result_screen.dart';
 import 'services/tojeong_service.dart';
@@ -115,7 +117,8 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
   }
 
   void _analyzeProfile(SajuProfile profile) {
-    final result = TojeongService.calculate(profile, _targetYear);
+    final l10n = AppLocalizations.of(context)!;
+    final result = TojeongService.calculate(profile, _targetYear, l10n);
     showFortuneAccessDialog(() {
       Navigator.push(
         context,
@@ -131,6 +134,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
   }
 
   Future<void> _confirmDelete(SajuProfile profile) async {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     
     final bool? result = await showDialog<bool>(
@@ -139,14 +143,14 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
         return AlertDialog(
           backgroundColor: isDarkMode ? const Color(0xFF2C2C2C) : Colors.white,
           title: Text(
-            "사주 정보 삭제",
+            l10n.sajuDeleteTitle,
             style: TextStyle(
               color: isDarkMode ? Colors.white : Colors.black,
               fontWeight: FontWeight.bold,
             ),
           ),
           content: Text(
-            "${profile.name}님의 정보를 삭제하시겠습니까?",
+            l10n.sajuDeleteConfirm(profile.name),
             style: TextStyle(
               color: isDarkMode ? Colors.white70 : Colors.black87,
             ),
@@ -154,11 +158,11 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text("취소", style: TextStyle(color: Colors.grey[500])),
+              child: Text(l10n.cancel, style: TextStyle(color: Colors.grey[500])),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text("삭제", style: TextStyle(color: Colors.red)),
+              child: Text(l10n.delete, style: const TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -172,6 +176,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
   }
 
   void _showTargetYearPicker() {
+    final l10n = AppLocalizations.of(context)!;
     final currentYear = DateTime.now().year;
     final years = List.generate(3, (index) => currentYear + index);
     int selectedIndex = years.indexOf(_targetYear);
@@ -200,12 +205,12 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                      CupertinoButton(
-                      child: const Text('취소', style: TextStyle(fontSize: 18, color: Colors.red)), 
+                      child: Text(l10n.cancel, style: const TextStyle(fontSize: 18, color: Colors.red)), 
                       onPressed: () => Navigator.of(context).pop(),
                     ),
-                    Text("운세 년도 선택", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: textColor)), 
+                    Text(l10n.tojeongYearSelect, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: textColor)), 
                     CupertinoButton(
-                      child: const Text('확인', style: TextStyle(fontSize: 18, color: Colors.blue)), 
+                      child: Text(l10n.confirm, style: const TextStyle(fontSize: 18, color: Colors.blue)), 
                       onPressed: () {
                         setState(() {
                           _targetYear = years[selectedIndex];
@@ -222,7 +227,16 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                     onSelectedItemChanged: (int index) {
                       selectedIndex = index;
                     },
-                    children: years.map((year) => Center(child: Text("$year년", style: TextStyle(fontSize: 20, color: textColor)))).toList(), 
+                    children: years.map((year) {
+                        final locale = Localizations.localeOf(context).languageCode;
+                        final displayYear = locale == 'ko' ? "$year${l10n.year}" : "$year";
+                        return Center(
+                          child: Text(
+                            displayYear,
+                            style: TextStyle(fontSize: 20, color: textColor),
+                          ),
+                        );
+                      }).toList(), 
                   ),
                 ),
               ],
@@ -234,6 +248,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     DateTime tempPickedDate = _birthDate;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF2C2C2C) : Colors.white;
@@ -256,14 +271,19 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CupertinoButton(
-                      child: const Text('취소', style: TextStyle(color: Colors.red)),
+                      child: Text(l10n.cancel, style: const TextStyle(color: Colors.red)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
-                    Text("생년월일 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(l10n.sajuSelectBirthDate, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+                      ),
+                    ),
                     CupertinoButton(
-                      child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                      child: Text(l10n.confirm, style: const TextStyle(color: Colors.blue)),
                       onPressed: () {
                         setState(() {
                           _birthDate = tempPickedDate;
@@ -304,6 +324,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
   }
 
   Future<void> _selectTime(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF2C2C2C) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black;
@@ -329,14 +350,19 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CupertinoButton(
-                      child: const Text('취소', style: TextStyle(color: Colors.red)),
+                      child: Text(l10n.cancel, style: const TextStyle(color: Colors.red)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
-                    Text("태어난 시간 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+                    Expanded(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(l10n.sajuSelectBirthTime, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+                      ),
+                    ),
                     CupertinoButton(
-                      child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                      child: Text(l10n.confirm, style: const TextStyle(color: Colors.blue)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -382,6 +408,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
       );
     }
 
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF121212) : const Color(0xFFF2F4F6);
     final textColor = isDarkMode ? Colors.white : Colors.black87;
@@ -389,7 +416,14 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text('토정비결 정보 입력', style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            l10n.tojeongInputTitle,
+            style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+          ),
+        ),
         backgroundColor: backgroundColor,
         elevation: 0,
         foregroundColor: textColor,
@@ -401,17 +435,21 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                "$_targetYear년\n토정비결을 확인해보세요",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: textColor,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  l10n.tojeongCheckFortune(_targetYear),
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                "정확한 분석을 위해\n생년월일시를 입력해주세요.",
+                l10n.tojeongInputGuide,
                 style: TextStyle(
                   fontSize: 16,
                   color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
@@ -428,6 +466,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
   }
 
   Widget _buildViewMode(bool isDarkMode) {
+    final l10n = AppLocalizations.of(context)!;
     final cardColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
     final borderColor = isDarkMode ? Colors.grey[800]! : Colors.grey[300]!;
@@ -447,19 +486,20 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
               border: Border.all(color: borderColor),
             ),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.calendar_month, color: primaryColor),
                 const SizedBox(width: 8),
-                Text(
-                  "$_targetYear년 토정비결 보기",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: textColor,
+                Expanded(
+                  child: Text(
+                    l10n.tojeongViewResult(_targetYear),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: textColor,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const Spacer(),
                 Icon(Icons.arrow_drop_down, color: textColor),
               ],
             ),
@@ -468,16 +508,22 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
         const SizedBox(height: 24),
 
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              "사주 정보 선택",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: textColor,
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  l10n.sajuProfileSelect,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
+                ),
               ),
             ),
+            const SizedBox(width: 8),
             TextButton.icon(
               onPressed: () {
                 _clearForm();
@@ -486,7 +532,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                 });
               },
               icon: Icon(Icons.add, size: 16, color: buttonTextColor),
-              label: Text("추가", style: TextStyle(color: buttonTextColor)),
+              label: Text(l10n.add, style: TextStyle(color: buttonTextColor)),
             ),
           ],
         ),
@@ -535,17 +581,20 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                               children: [
                                 Row(
                                   children: [
-                                    Text(
-                                      profile.name,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: textColor,
+                                    Flexible(
+                                      child: Text(
+                                        profile.name,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: textColor,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      profile.gender == 'male' ? "남성" : "여성",
+                                      profile.gender == 'male' ? l10n.compatibilityGenderMale : l10n.compatibilityGenderFemale,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey[500],
@@ -554,11 +603,15 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                                   ],
                                 ),
                                 const SizedBox(height: 4),
-                                Text(
-                                  "${profile.birthDate.year}.${profile.birthDate.month}.${profile.birthDate.day} ${profile.birthTime ?? '(시간 모름)'}",
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                  "${DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(profile.birthDate)} ${profile.birthTime ?? (l10n.unknownTime)}",
                                   style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[500],
+                                      fontSize: 14,
+                                      color: Colors.grey[500],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -580,7 +633,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
-                                  "수정",
+                                  l10n.modify,
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[500],
@@ -601,7 +654,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: Text(
-                                  "삭제",
+                                  l10n.delete,
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.red[300],
@@ -635,9 +688,9 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
             ),
             elevation: 0,
           ),
-          child: const Text(
-            "토정비결 확인하기",
-            style: TextStyle(
+          child: Text(
+            l10n.tojeongCheckButton,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -648,6 +701,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
   }
 
   Widget _buildEditForm(bool isDarkMode) {
+    final l10n = AppLocalizations.of(context)!;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
     final borderColor = isDarkMode ? Colors.grey[800]! : Colors.grey[400]!;
     final inputFillColor = isDarkMode ? const Color(0xFF2C2C2C) : Colors.white;
@@ -669,19 +723,20 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                 border: Border.all(color: borderColor),
               ),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.calendar_month, color: primaryColor),
                   const SizedBox(width: 8),
-                  Text(
-                    "$_targetYear년 토정비결 보기",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
+                  Expanded(
+                    child: Text(
+                      l10n.tojeongViewResult(_targetYear),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: textColor,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Spacer(),
                   Icon(Icons.arrow_drop_down, color: textColor),
                 ],
               ),
@@ -695,7 +750,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
             controller: _nameController,
             style: TextStyle(color: textColor), 
             decoration: InputDecoration(
-              labelText: '이름',
+              labelText: l10n.name,
               labelStyle: TextStyle(color: Colors.grey[600]),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -713,7 +768,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return '이름을 입력해주세요';
+                return l10n.nameInputGuide;
               }
               return null;
             },
@@ -724,11 +779,11 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
           Row(
             children: [
               Expanded(
-                child: _buildGenderButton('남성', 'male', isDarkMode),
+                child: _buildGenderButton(l10n.compatibilityGenderMale, 'male', isDarkMode),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: _buildGenderButton('여성', 'female', isDarkMode),
+                child: _buildGenderButton(l10n.compatibilityGenderFemale, 'female', isDarkMode),
               ),
             ],
           ),
@@ -737,13 +792,13 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
           // Lunar/Solar Toggle
           Row(
             children: [
-              Text("양력/음력", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
+              Text(l10n.sajuLunarSolar, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor)),
               const Spacer(),
               CupertinoSlidingSegmentedControl<bool>(
                 groupValue: _isLunar,
-                children: const {
-                  false: Text("양력"),
-                  true: Text("음력"),
+                children: {
+                  false: Text(l10n.sajuSolar),
+                  true: Text(l10n.sajuLunar),
                 },
                 onValueChanged: (bool? value) {
                   if (value != null) {
@@ -770,12 +825,15 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                 border: Border.all(color: borderColor),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "${_birthDate.year}년 ${_birthDate.month}월 ${_birthDate.day}일",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+                  Expanded(
+                    child: Text(
+                      DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(_birthDate),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                  const SizedBox(width: 8),
                   Icon(Icons.calendar_today, color: primaryColor),
                 ],
               ),
@@ -798,19 +856,22 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                       border: Border.all(color: borderColor),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          _isUnknownTime
-                              ? "시간 모름"
-                              : (_birthTime != null
-                                  ? "${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}"
-                                  : "태어난 시간 선택"),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: _isUnknownTime ? Colors.grey : textColor,
+                        Expanded(
+                          child: Text(
+                            _isUnknownTime
+                                ? l10n.unknownTime
+                                : (_birthTime != null
+                                    ? "${_birthTime!.hour.toString().padLeft(2, '0')}:${_birthTime!.minute.toString().padLeft(2, '0')}"
+                                    : l10n.sajuSelectBirthTime),
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: _isUnknownTime ? Colors.grey : textColor,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
+                        const SizedBox(width: 8),
                         Icon(Icons.access_time, 
                           color: _isUnknownTime ? Colors.grey : primaryColor
                         ),
@@ -838,11 +899,17 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                       ),
                     ),
                     child: Center(
-                      child: Text(
-                        "시간 모름",
-                        style: TextStyle(
-                          color: _isUnknownTime ? Colors.white : Colors.grey[600],
-                          fontWeight: FontWeight.bold,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Text(
+                            l10n.unknownTime,
+                            style: TextStyle(
+                              color: _isUnknownTime ? Colors.white : Colors.grey[600],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -866,9 +933,9 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
               ),
               elevation: 0,
             ),
-            child: const Text(
-              "저장하고 토정비결 보기",
-              style: TextStyle(
+            child: Text(
+              l10n.tojeongSaveAndCheckButton,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -885,7 +952,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                     _setFormData(_profiles[_selectedProfileIndex]);
                   });
                 },
-                child: Text("취소", style: TextStyle(color: Colors.grey[600], fontSize: 16)),
+                child: Text(l10n.cancel, style: TextStyle(color: Colors.grey[600], fontSize: 16)),
               ),
             ),
         ],

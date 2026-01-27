@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../services/ad_service.dart';
 
 class BottomBannerAd extends StatefulWidget {
@@ -18,6 +19,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
   bool _isLoaded = false;
   String? _errorMessage;
   Timer? _refreshTimer;
+  int _loadToken = 0;
   
   @override
   void initState() {
@@ -32,24 +34,26 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
       if (AdService.isSubscriber || !AdService.isAdsEnabled) return;
       _loadAd();
     });
-
-    // 타임아웃 10초
-    Future.delayed(const Duration(seconds: 10), () {
-      if (mounted && !_isLoaded && _errorMessage == null) {
-        setState(() {
-          _errorMessage = 'Timeout';
-        });
-      }
-    });
   }
 
   void _loadAd() {
     _errorMessage = null;
+    final currentToken = ++_loadToken; // 토큰 추가하여 타임아웃/지연 로드 관리
 
     _pendingAd?.dispose();
     _pendingAd = null;
 
     final (preloadedAd, loadFuture) = AdService.getTextBannerAd();
+    
+    // 타임아웃 2초 (사용자 요청: 광고가 빨리 안 붙으면 숨김)
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted && _loadToken == currentToken && !_isLoaded && _errorMessage == null) {
+        setState(() {
+          _errorMessage = 'Timeout';
+        });
+      }
+    });
+
     if (preloadedAd != null) {
       final oldAd = _nativeAd;
       _nativeAd = preloadedAd;
@@ -57,13 +61,13 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
       if (mounted) setState(() {});
 
       loadFuture?.then((_) {
-        if (!mounted) return;
+        if (!mounted || _loadToken != currentToken) return;
         setState(() {
           _isLoaded = true;
           _errorMessage = null;
         });
       }).catchError((_) {
-        if (!mounted) return;
+        if (!mounted || _loadToken != currentToken) return;
         if (_nativeAd == preloadedAd) {
           setState(() {
             _isLoaded = false;
@@ -87,7 +91,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           debugPrint('Text Banner Ad loaded');
-          if (!mounted) {
+          if (!mounted || _loadToken != currentToken) {
             ad.dispose();
             return;
           }
@@ -108,7 +112,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
         onAdFailedToLoad: (ad, err) {
           debugPrint('Text Banner Ad failed to load: $err');
           ad.dispose();
-          if (!mounted) return;
+          if (!mounted || _loadToken != currentToken) return;
           if (_nativeAd == null) {
             setState(() {
               _isLoaded = false;
@@ -147,7 +151,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
     // 네이티브 광고는 높이를 직접 지정해야 함 (텍스트 한 줄 + 패딩 고려하여 약 50~60dp)
     // 사용자 피드백: 여백이 너무 많음 -> 높이를 45.0으로 축소했으나, 
     // 광고 validator(dismiss) 창이 내비게이션 바를 침범하는 문제로 인해 50.0으로 재조정 및 패딩 추가
-    const double height = 30.0;
+    const double height = 45.0;
 
     // 1. 로드 실패 시 에러 표시 대신 빈 공간 반환 (사용자 경험 개선)
     if (_errorMessage != null) {
@@ -156,35 +160,7 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
 
     // 2. 로딩 중
     if (!_isLoaded || _nativeAd == null) {
-      return Container(
-        color: backgroundColor,
-        width: double.infinity,
-        height: height,
-        padding: EdgeInsets.zero,
-        alignment: Alignment.center,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: 12, 
-              height: 12, 
-              child: CircularProgressIndicator(
-                strokeWidth: 2, 
-                color: isDarkMode ? Colors.grey[700] : Colors.grey[300]
-              )
-            ),
-            const SizedBox(width: 8),
-            Text(
-              'Loading Ad...', 
-              style: TextStyle(
-                fontSize: 10, 
-                color: isDarkMode ? Colors.grey[600] : Colors.grey,
-                fontWeight: FontWeight.w500
-              )
-            ),
-          ],
-        ),
-      );
+      return const SizedBox.shrink();
     }
     
     // 3. 광고 표시
@@ -200,7 +176,8 @@ class _BottomBannerAdState extends State<BottomBannerAd> {
 }
 
 class DetailedAdWidget extends StatefulWidget {
-  const DetailedAdWidget({super.key});
+  final EdgeInsetsGeometry? margin;
+  const DetailedAdWidget({super.key, this.margin});
 
   @override
   State<DetailedAdWidget> createState() => _DetailedAdWidgetState();
@@ -219,14 +196,7 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
       if (mounted) _loadAd();
     });
 
-    // 10초 타임아웃 처리
-    Future.delayed(const Duration(seconds: 10), () {
-      if (mounted && !_isLoaded && _errorMessage.isEmpty) {
-        setState(() {
-          _errorMessage = '광고 로드 시간이 초과되었습니다.';
-        });
-      }
-    });
+    // 10초 타임아웃 처리는 _loadAd 내부에서 관리하도록 변경함
   }
 
   void _loadAd() async {
@@ -242,6 +212,15 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
         _errorMessage = '';
       });
     }
+
+    // 2초 타임아웃 처리 (사용자 요청: 광고가 빨리 안 붙으면 숨김)
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted && token == _loadToken && !_isLoaded && _errorMessage.isEmpty) {
+        setState(() {
+          _errorMessage = 'Timeout';
+        });
+      }
+    });
 
     if (oldAd != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -328,79 +307,44 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
 
     if (_isLoaded && _nativeAd != null) {
       return Container(
-        height: 72, // 높이 유지 (내부 콘텐츠에 딱 맞음)
-        // margin: const EdgeInsets.symmetric(vertical: 8), // 상하 여백 제거 (사용자 요청)
-        margin: EdgeInsets.zero, // 여백 완전 제거하여 다른 카드들과 간격 통일성 확보
+        height: 80, // 높이 약간 상향 (콘텐츠 여유 확보)
+        margin: widget.margin ?? EdgeInsets.zero,
         decoration: BoxDecoration(
-          color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
-          borderRadius: BorderRadius.circular(16), // 둥근 모서리
+          color: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
+          borderRadius: BorderRadius.circular(20), // 다른 카드와 통일
           border: Border.all(
-            color: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!, // 테두리
-            width: isDarkMode ? 1 : 0.5,
+            color: isDarkMode ? Colors.white.withOpacity(0.15) : Colors.black.withOpacity(0.1),
+            width: 1.2,
           ),
           boxShadow: [
             BoxShadow(
-              color: isDarkMode ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 6),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
           child: AdWidget(ad: _nativeAd!),
         ),
       );
     }
     
-    // 로딩 실패 시 빈 공간 반환 (에러 메시지 숨김)
+    // 1. 로딩 실패 시 빈 공간 반환 (에러 메시지 숨김)
     if (_errorMessage.isNotEmpty) {
       return const SizedBox.shrink();
     }
 
-    // 로딩 중일 때 (스켈레톤 UI 표시로 체감 속도 향상)
-    return Container(
-       height: 72, // 로드 완료 시와 동일한 높이
-       // margin: EdgeInsets.zero,
-       margin: EdgeInsets.zero,
-       decoration: BoxDecoration(
-         color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
-         borderRadius: BorderRadius.circular(16),
-         border: Border.all(
-           color: isDarkMode ? Colors.grey[800]! : Colors.grey[300]!,
-           width: 1,
-         ),
-       ),
-       child: Center(
-         child: Row(
-           mainAxisSize: MainAxisSize.min,
-           children: [
-             SizedBox(
-               width: 12, 
-               height: 12, 
-               child: CircularProgressIndicator(
-                 strokeWidth: 2, 
-                 color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
-               ),
-             ),
-             const SizedBox(width: 8),
-             Text(
-               'AD',
-               style: TextStyle(
-                 color: isDarkMode ? Colors.grey[700] : Colors.grey[300],
-                 fontWeight: FontWeight.bold,
-                 fontSize: 12,
-               ),
-             ),
-           ],
-         ),
-       ),
-    );
+    // 2. 로딩 중일 때 (스켈레톤 UI 표시로 체감 속도 향상)
+    // 사용자 요청: 광고 로드가 안 되면 숨겨야 함. 
+    return const SizedBox.shrink();
   }
 }
 
 class ExitDialogAdWidget extends StatefulWidget {
-  const ExitDialogAdWidget({super.key});
+  final EdgeInsetsGeometry? margin;
+  const ExitDialogAdWidget({super.key, this.margin});
 
   @override
   State<ExitDialogAdWidget> createState() => _ExitDialogAdWidgetState();
@@ -430,11 +374,11 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
       }
     });
 
-    // 안전장치: 10초가 지나도 반응이 없으면 타임아웃 처리 (팩토리 미등록 등 네이티브 통신 문제 의심)
-    Future.delayed(const Duration(seconds: 10), () {
+    // 안전장치: 2초가 지나도 반응이 없으면 타임아웃 처리 (사용자 요청: 광고가 빨리 안 붙으면 숨김)
+    Future.delayed(const Duration(seconds: 2), () {
       if (mounted && !_isAdLoaded && _adLoadError == null) {
         setState(() {
-          _adLoadError = '광고 응답 없음\n앱을 완전히 종료 후 다시 실행해주세요.';
+          _adLoadError = 'Timeout';
         });
       }
     });
@@ -476,10 +420,18 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
   }
 
   void _loadNewAd() {
+    final l10n = AppLocalizations.of(context);
     _nativeAd = NativeAd(
       adUnitId: AdService.nativeAdUnitId, // 네이티브 광고 ID 사용
       factoryId: 'dialogAd', // 이미지/영상이 포함된 팩토리 ID 사용
       request: const AdRequest(),
+      nativeAdOptions: NativeAdOptions(
+        videoOptions: VideoOptions(
+          startMuted: true,
+          customControlsRequested: false,
+          clickToExpandRequested: false,
+        ),
+      ),
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           debugPrint('Exit Dialog Native Ad loaded');
@@ -496,7 +448,7 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
           if (mounted) {
             setState(() {
               _isAdLoaded = false;
-              _adLoadError = '광고 로드 실패: ${error.code}';
+              _adLoadError = '${l10n?.adLoadFailed ?? 'Ad failed to load'}: ${error.code}';
             });
           }
         },
@@ -516,64 +468,37 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return AspectRatio(
-      aspectRatio: 1.0, // 정사각형
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        clipBehavior: Clip.hardEdge,
-        child: _buildContent(),
-      ),
-    );
-  }
-
-  Widget _buildContent() {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     // 1. 광고 로드 완료 및 표시 시점 도달 시 광고 표시 (전체 영역)
     if (_showAd && _isAdLoaded && _nativeAd != null) {
-      return AdWidget(ad: _nativeAd!);
-    }
-
-    // 2. 에러 발생 시 재시도 버튼 표시
-    if (_adLoadError != null) {
-      return Stack(
-        children: [
-          _buildCuteImage(),
-          Container(
-            color: isDarkMode ? Colors.black.withOpacity(0.8) : Colors.white.withOpacity(0.8),
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.error_outline, color: Colors.red[300], size: 32),
-                const SizedBox(height: 8),
-                Text(
-                  _adLoadError!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                const SizedBox(height: 12),
-                ElevatedButton.icon(
-                  onPressed: _loadAd,
-                  icon: const Icon(Icons.refresh, size: 16),
-                  label: const Text('재시도'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isDarkMode ? Colors.grey[800] : Colors.white,
-                    foregroundColor: Colors.blueAccent,
-                    elevation: 2,
-                  ),
-                ),
-              ],
-            ),
+      return Container(
+        margin: widget.margin ?? EdgeInsets.zero,
+        decoration: BoxDecoration(
+          color: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isDarkMode ? Colors.white.withOpacity(0.15) : Colors.black.withOpacity(0.1),
+            width: 1.2,
           ),
-        ],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: AdWidget(ad: _nativeAd!),
+        ),
       );
     }
 
-    // 3. 로딩 중이거나 대기 상태일 때 귀여운 이미지 표시
-    return _buildCuteImage(isLoading: _showAd && !_isAdLoaded);
+    // 2. 로딩 중이거나 에러 발생 시 빈 공간 대신 귀여운 이미지 표시
+    return Container(
+      margin: widget.margin ?? EdgeInsets.zero,
+      child: _buildCuteImage(isLoading: _showAd && !_isAdLoaded && _adLoadError == null),
+    );
   }
 
   Widget _buildCuteImage({bool isLoading = false}) {
@@ -642,7 +567,7 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '광고 로딩 중...',
+                      AppLocalizations.of(context)?.adLoading ?? 'Loading ad...',
                       style: TextStyle(fontSize: 10, color: isDarkMode ? Colors.white70 : Colors.black54),
                     ),
                   ],

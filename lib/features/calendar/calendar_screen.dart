@@ -9,6 +9,7 @@ import 'widgets/add_event_sheet.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../data/models/alarm_model.dart';
 import '../../core/constants/mission_type.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 enum CalendarViewMode { year, month, week, day }
 
@@ -133,13 +134,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   String _getDateTitle() {
+    final locale = AppLocalizations.of(context)?.localeName ?? 'ko';
     switch (_viewMode) {
       case CalendarViewMode.year:
-        return DateFormat('yyyy년', 'ko_KR').format(_focusedDay);
+        return DateFormat.y(locale).format(_focusedDay);
       case CalendarViewMode.week:
-        return DateFormat('yyyy년 MM월', 'ko_KR').format(_focusedDay);
+        return DateFormat.yM(locale).format(_focusedDay);
       case CalendarViewMode.day:
-        return DateFormat('yyyy년 MM월 dd일', 'ko_KR').format(_focusedDay);
+        return DateFormat.yMMMd(locale).format(_focusedDay);
       default:
         return '';
     }
@@ -155,7 +157,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     // 2. IMG 마커를 [사진]으로 대체 (또는 제거하고 싶다면 '')
     // [[IMG_0|0.19...]] -> [사진]
-    cleaned = cleaned.replaceAll(RegExp(r'\[\[IMG_[^|\]]+(?:\|[\d.]+)?\]\]'), '[사진]');
+    cleaned = cleaned.replaceAll(RegExp(r'\[\[IMG_[^|\]]+(?:\|[\d.]+)?\]\]'), '[${AppLocalizations.of(context)!.photo}]');
 
     return cleaned.trim();
   }
@@ -246,20 +248,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Future<bool> _confirmDeleteEvent(CalendarEvent event) async {
+    final l10n = AppLocalizations.of(context)!;
     final result = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('삭제 확인'),
-          content: Text('"${event.title}"을(를) 삭제할까요?'),
+          title: Text(l10n.confirmDelete),
+          content: Text(l10n.deleteConfirmMessage(event.title)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('취소'),
+              child: Text(l10n.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('삭제'),
+              child: Text(l10n.delete),
             ),
           ],
         );
@@ -348,7 +351,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Row(
                 children: [
                   Text(
-                    _isMemoMode ? '메모장' : '캘린더',
+                    _isMemoMode ? AppLocalizations.of(context)!.notepad : AppLocalizations.of(context)!.calendar,
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -403,7 +406,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '오늘',
+                            AppLocalizations.of(context)!.today,
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
@@ -533,6 +536,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildViewSelector(bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -550,10 +554,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildViewOption(Icons.calendar_today_rounded, '연', CalendarViewMode.year, isDark),
-          _buildViewOption(Icons.grid_view_rounded, '월', CalendarViewMode.month, isDark),
-          _buildViewOption(Icons.view_week_rounded, '주', CalendarViewMode.week, isDark),
-          _buildViewOption(Icons.view_day_rounded, '일', CalendarViewMode.day, isDark),
+          _buildViewOption(Icons.calendar_today_rounded, l10n.yearView, CalendarViewMode.year, isDark),
+          _buildViewOption(Icons.grid_view_rounded, l10n.monthView, CalendarViewMode.month, isDark),
+          _buildViewOption(Icons.view_week_rounded, l10n.weekView, CalendarViewMode.week, isDark),
+          _buildViewOption(Icons.view_day_rounded, l10n.dayView, CalendarViewMode.day, isDark),
         ],
       ),
     );
@@ -704,7 +708,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               valueListenable: _selectedEvents,
               builder: (context, value, _) {
                 if (value.isEmpty) {
-                  return const Center(child: Text('일정이 없습니다.', style: TextStyle(fontSize: 13)));
+                  return Center(child: Text(AppLocalizations.of(context)!.noEvents, style: const TextStyle(fontSize: 13)));
                 }
                 return ListView.builder(
                   padding: const EdgeInsets.symmetric(vertical: 2),
@@ -785,13 +789,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
         final year = 1900 + index;
         
         return GridView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
             physics: const AlwaysScrollableScrollPhysics(), // 10~12월까지 보이도록 스크롤 허용
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              childAspectRatio: 0.8, // 카드 높이를 조금 더 확보
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
+              childAspectRatio: 0.95, // 카드 높이를 줄여서 더 많은 달이 보이도록 함
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
             ),
             itemCount: 12,
           itemBuilder: (context, monthIndex) {
@@ -816,9 +820,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      padding: const EdgeInsets.symmetric(vertical: 2.0),
                       child: Text(
-                        DateFormat('M월', 'ko_KR').format(monthDate),
+                        DateFormat.M(AppLocalizations.of(context)?.localeName ?? 'ko').format(monthDate),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -828,7 +832,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 1.0),
                         child: _buildMiniMonthCalendar(monthDate, isDark),
                       ),
                     ),
@@ -856,13 +860,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
         // Weekday Headers
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: ['일', '월', '화', '수', '목', '금', '토'].map((day) => 
+          children: [
+            AppLocalizations.of(context)!.daySun,
+            AppLocalizations.of(context)!.dayMon,
+            AppLocalizations.of(context)!.dayTue,
+            AppLocalizations.of(context)!.dayWed,
+            AppLocalizations.of(context)!.dayThu,
+            AppLocalizations.of(context)!.dayFri,
+            AppLocalizations.of(context)!.daySat,
+          ].map((day) => 
             Text(
               day, 
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 8, 
-                color: day == '일' ? Colors.redAccent : (day == '토' ? Colors.blueAccent : (isDark ? Colors.grey : Colors.black54))
+                color: day == AppLocalizations.of(context)!.daySun ? Colors.redAccent : (day == AppLocalizations.of(context)!.daySat ? Colors.blueAccent : (isDark ? Colors.grey : Colors.black54))
               )
             )
           ).toList(),
@@ -977,7 +989,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 ),
                                 const SizedBox(height: 2),
                                 Text(
-                                  DateFormat.E('ko_KR').format(day),
+                                  DateFormat.E(AppLocalizations.of(context)?.localeName ?? 'ko').format(day),
                                   style: TextStyle(
                                     fontSize: 9,
                                     color: dateColor.withOpacity(0.8),
@@ -1023,7 +1035,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           Padding(
                                             padding: const EdgeInsets.only(left: 4),
                                             child: Text(
-                                              DateFormat('HH:mm', 'ko_KR').format(event.date),
+                                              DateFormat.Hm(AppLocalizations.of(context)?.localeName ?? 'ko').format(event.date),
                                               style: TextStyle(
                                                 fontSize: 9,
                                                 color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -1153,7 +1165,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                overflow: TextOverflow.ellipsis,
                              ),
                              Text(
-                               DateFormat('HH:mm', 'ko_KR').format(event.date),
+                               DateFormat.Hm(AppLocalizations.of(context)?.localeName ?? 'ko').format(event.date),
                                style: const TextStyle(color: Colors.white70, fontSize: 10),
                              ),
                            ],
@@ -1328,8 +1340,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       child: TableCalendar<CalendarEvent>(
         availableGestures: AvailableGestures.horizontalSwipe,
         shouldFillViewport: isExpanded,
-        locale: 'ko_KR',
-        firstDay: DateTime.utc(2020, 1, 1),
+        locale: AppLocalizations.of(context)?.localeName ?? 'ko',
+      firstDay: DateTime.utc(1900, 1, 1),
         lastDay: DateTime.utc(2030, 12, 31),
         focusedDay: _focusedDay,
         calendarFormat: _calendarFormat,
@@ -1434,7 +1446,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           
           // 요일 헤더 커스텀 (토: 파랑, 일: 빨강)
           dowBuilder: (context, day) {
-            final text = DateFormat.E('ko_KR').format(day);
+            final text = DateFormat.E(AppLocalizations.of(context)?.localeName ?? 'ko').format(day);
             Color color;
             if (day.weekday == DateTime.sunday) {
               color = Colors.redAccent;
@@ -1577,7 +1589,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final sortedDates = filteredEventsMap.keys.toList()..sort();
     
     if (sortedDates.isEmpty) {
-      return const Center(child: Text('저장된 메모나 일정이 없습니다.'));
+      return Center(child: Text(AppLocalizations.of(context)!.noSavedMemos));
     }
 
     return ListView.builder(
@@ -1592,7 +1604,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
-                DateFormat('yyyy년 MM월 dd일 (E)', 'ko_KR').format(date),
+                DateFormat.yMMMEd(AppLocalizations.of(context)?.localeName ?? 'ko').format(date),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -1694,10 +1706,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             )
           : (event.type == CalendarEventType.event
               ? Text(
-                  DateFormat('a h:mm', 'ko_KR').format(event.date),
+                  DateFormat.jm(AppLocalizations.of(context)?.localeName ?? 'ko').format(event.date),
                   style: subtitleStyle,
                 )
-              : (event.type == CalendarEventType.holiday ? Text('공휴일', style: subtitleStyle) : null)),
+              : (event.type == CalendarEventType.holiday ? Text(AppLocalizations.of(context)!.holiday, style: subtitleStyle) : null)),
       trailing: event.alarmId != null 
           ? const Icon(Icons.alarm, size: 15, color: Colors.grey) 
           : (event.type == CalendarEventType.routine ? Checkbox(

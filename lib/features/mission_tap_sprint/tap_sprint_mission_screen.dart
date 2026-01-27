@@ -325,21 +325,29 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  l10n.missionTapSprint,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900,
-                                    color: Color(0xFF2C3E50), // 어두운 색으로 변경하여 가독성 확보
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    l10n.missionTapSprint,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w900,
+                                      color: Color(0xFF2C3E50), // 어두운 색으로 변경하여 가독성 확보
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                Text(
-                                  l10n.missionTapSprintDescription(goal),
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFF34495E), // 어두운 색으로 변경
-                                    fontWeight: FontWeight.w600,
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    l10n.missionTapSprintDescription(goal),
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF34495E), // 어두운 색으로 변경
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -418,24 +426,30 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(
-                                          l10n.missionTapSprintTapHere,
-                                          style: const TextStyle(
-                                            fontSize: 22, // 살짝 키움
-                                            fontWeight: FontWeight.w900,
-                                            color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
+                                        FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            l10n.missionTapSprintTapHere,
+                                            style: const TextStyle(
+                                              fontSize: 22, // 살짝 키움
+                                              fontWeight: FontWeight.w900,
+                                              color: Color(0xFF2C3E50), // 어두운 색으로 가독성 확보
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                         const SizedBox(height: 6),
-                                        Text(
-                                          l10n.missionTapSprintHint,
-                                          style: const TextStyle(
-                                            fontSize: 13,
-                                            color: Color(0xFF34495E),
-                                            fontWeight: FontWeight.w600,
+                                        FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Text(
+                                            l10n.missionTapSprintHint,
+                                            style: const TextStyle(
+                                              fontSize: 13,
+                                              color: Color(0xFF34495E),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                       ],
                                     ),
@@ -466,10 +480,13 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
-                    child: Text(
-                      l10n.missionHintInactivity,
-                      style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 11),
-                      textAlign: TextAlign.center,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        l10n.missionHintInactivity,
+                        style: TextStyle(color: Colors.white.withOpacity(0.65), fontSize: 11),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ],

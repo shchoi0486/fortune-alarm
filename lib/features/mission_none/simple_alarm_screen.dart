@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 import '../../providers/alarm_list_provider.dart';
 import '../../services/notification_service.dart';
@@ -196,7 +197,7 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
   }
 
   Future<void> _onFinish() async {
-    _stopAlarm();
+    await _stopAlarm();
 
     if (widget.alarmId != null) {
       ref.read(alarmListProvider.notifier).toggleAlarm(widget.alarmId!);
@@ -261,7 +262,9 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
                     ),
                   ),
                   Text(
-                    DateFormat('a', 'ko_KR').format(_now) == 'AM' ? '오전' : '오후',
+                    _now.hour < 12 
+                        ? AppLocalizations.of(context)!.am 
+                        : AppLocalizations.of(context)!.pm,
                     style: const TextStyle(
                       fontSize: 24,
                       color: Colors.white,
@@ -277,9 +280,9 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
                     shadows: [Shadow(blurRadius: 10, color: Colors.black45)],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    '일어날 시간입니다!',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.itsTimeToWakeUp,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -298,12 +301,12 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                         side: BorderSide(color: Colors.white.withOpacity(0.5)),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.close, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text("알람 끄기", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                          const Icon(Icons.close, color: Colors.white),
+                          const SizedBox(width: 8),
+                          Text(AppLocalizations.of(context)!.dismissAlarm, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -317,7 +320,7 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
                       innerColor: Colors.white,
                       outerColor: Colors.white.withOpacity(0.2),
                       sliderButtonIcon: const Icon(Icons.arrow_forward, color: Colors.black),
-                      text: '밀어서 끄기',
+                      text: AppLocalizations.of(context)!.slideToDismiss,
                       textStyle: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                       onSubmit: () {
                          _handleDismiss();

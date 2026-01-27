@@ -152,9 +152,8 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
           ),
           
           // Native Ad (Top)
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14),
-            child: DetailedAdWidget(),
+          const DetailedAdWidget(
+            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
           
           Expanded(
@@ -203,17 +202,18 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                           return await showDialog(
                             context: context,
                             builder: (BuildContext context) {
+                              final l10n = AppLocalizations.of(context)!;
                               return AlertDialog(
-                                title: const Text('알람 삭제'),
-                                content: const Text('정말 삭제하시겠습니까?'),
+                                title: Text(l10n.deleteAlarm),
+                                content: Text(l10n.confirmDelete),
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () => Navigator.of(context).pop(false),
-                                    child: const Text('아니요', style: TextStyle(color: Colors.grey)),
+                                    child: Text(l10n.no, style: const TextStyle(color: Colors.grey)),
                                   ),
                                   TextButton(
                                     onPressed: () => Navigator.of(context).pop(true),
-                                    child: const Text('예', style: TextStyle(color: Colors.red)),
+                                    child: Text(l10n.yes, style: const TextStyle(color: Colors.red)),
                                   ),
                                 ],
                               );
@@ -344,16 +344,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                             color: isDark ? Colors.grey[700] : Colors.grey[400],
                           ),
                           const SizedBox(width: 8),
-                          Text(
-                            alarm.maxSnoozeCount == 999 
-                                ? '${alarm.snoozeInterval}분, 무제한' 
-                                : '${alarm.snoozeInterval}분, ${alarm.maxSnoozeCount}회',
-                            style: TextStyle(
-                              color: isDark ? Colors.grey[500] : Colors.grey[600],
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
+                          _buildSnoozeInfo(alarm, secondaryTextColor, disabledTextColor),
                         ],
                         const Spacer(),
                       ],
@@ -451,18 +442,46 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
       children: List.generate(7, (index) {
         final modelIndex = (index + 6) % 7;
         final isActive = repeatDays[modelIndex];
+        
+        // 요일별 색상 정의 (활성 상태일 때도 색상 유지)
+        Color getDayColor() {
+          // 사용자 요청: 요일별 색상(빨강/파랑) 제거하고 깔끔하게 통일
+          return isActive ? Colors.cyan : (isDark ? Colors.grey[700]! : Colors.grey[400]!);
+        }
+
         return Padding(
-          padding: const EdgeInsets.only(right: 4),
+          padding: const EdgeInsets.only(right: 6),
           child: Text(
             days[index],
             style: TextStyle(
-              color: isActive ? Colors.cyan : (isDark ? Colors.grey[700] : Colors.grey[400]),
+              color: getDayColor(),
               fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-              fontSize: 13,
+              fontSize: 14,
+              letterSpacing: 0,
             ),
           ),
         );
       }),
+    );
+  }
+
+  Widget _buildSnoozeInfo(AlarmModel alarm, Color secondaryTextColor, Color disabledTextColor) {
+    final l10n = AppLocalizations.of(context)!;
+    final snoozeText = alarm.maxSnoozeCount == 999 
+        ? l10n.snoozeInfoUnlimited(alarm.snoozeInterval)
+        : l10n.snoozeInfo(alarm.snoozeInterval, alarm.maxSnoozeCount);
+
+    return Flexible(
+      child: Text(
+        snoozeText,
+        style: TextStyle(
+          color: alarm.isEnabled ? secondaryTextColor : disabledTextColor, 
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+      ),
     );
   }
 
@@ -558,7 +577,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
             }
           }
 
-          if (nextAlarmTime == null) return '활성화된 알람 없음';
+          if (nextAlarmTime == null) return AppLocalizations.of(context)!.noActiveAlarms;
 
           final difference = nextAlarmTime.difference(now);
           

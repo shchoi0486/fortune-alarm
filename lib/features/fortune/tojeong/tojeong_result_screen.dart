@@ -6,6 +6,7 @@ import 'package:vibration/vibration.dart';
 import '../../../services/sharing_service.dart';
 import 'models/tojeong_result.dart';
 import 'package:fortune_alarm/features/fortune/saju/models/saju_profile.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class TojeongResultScreen extends StatefulWidget {
   final SajuProfile profile;
@@ -52,7 +53,7 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
       await Future.delayed(const Duration(milliseconds: 300));
       if (!mounted) return;
       HapticFeedback.heavyImpact();
-      // 효과음 제거 요청으로 주석 처리
+      // Commented out as sound effects removal was requested
       // _playSfx('ui_tada.mp3');
       if (Platform.isAndroid || Platform.isIOS) {
         Vibration.vibrate(duration: 100);
@@ -62,6 +63,7 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = const Color(0xFF11998e); // Tojeong Theme Color
     final backgroundColor = isDarkMode ? const Color(0xFF121212) : const Color(0xFFF5F7FA);
@@ -71,7 +73,10 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text("${widget.targetYear}년 토정비결"),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(l10n.tojeongResultTitle(widget.targetYear)),
+        ),
         backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -92,12 +97,15 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     children: [
-                      Text(
-                        "${widget.profile.name}님의 ${widget.targetYear}년 운세",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: textColor,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          l10n.tojeongUserFortune(widget.profile.name, widget.targetYear),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -109,7 +117,7 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
                           border: Border.all(color: primaryColor.withOpacity(0.3)),
                         ),
                         child: Text(
-                          "괘: ${widget.result.key}",
+                          l10n.tojeongGua(widget.result.key),
                           style: TextStyle(
                             color: primaryColor,
                             fontWeight: FontWeight.w600,
@@ -124,7 +132,7 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
   
               // Total Luck Section
               Text(
-                "총운 (Total Luck)",
+                l10n.tojeongTotalLuck,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -152,7 +160,7 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
   
               // Monthly Luck Section
               Text(
-                "월별 운세 (Monthly Fortune)",
+                l10n.tojeongMonthlyLuck,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -183,11 +191,17 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
                               color: primaryColor.withOpacity(0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: Text(
-                              "${index + 1}월",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: primaryColor,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "${index + 1}${l10n.month}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: primaryColor,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -240,14 +254,25 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
                     HapticFeedback.mediumImpact();
                     _playSfx('ui_click.ogg');
                     SharingService.showShareOptions(
-                       context: context,
-                       title: '${widget.targetYear}년 토정비결 결과',
-                       description: '${widget.profile.name}님의 토정비결 총평입니다.\n\n${widget.result.totalLuck.substring(0, widget.result.totalLuck.length > 50 ? 50 : widget.result.totalLuck.length)}...',
-                       results: {
-                         '이름': widget.profile.name,
-                         '대상 연도': '${widget.targetYear}년',
-                       },
-                     );
+                      context: context,
+                      title: l10n.tojeongShareTitle(widget.targetYear),
+                      description: l10n.tojeongShareDesc(
+                        widget.profile.name,
+                        widget.result.totalLuck.substring(
+                          0,
+                          widget.result.totalLuck.length > 50
+                              ? 50
+                              : widget.result.totalLuck.length,
+                        ),
+                      ),
+                      results: {
+                        l10n.sajuNameLabel: widget.profile.name,
+                        l10n.tojeongShareTargetYear:
+                            Localizations.localeOf(context).languageCode == 'ko'
+                                ? "${widget.targetYear}${l10n.year}"
+                                : "${widget.targetYear}",
+                      },
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFEE500),
@@ -255,12 +280,12 @@ class _TojeongResultScreenState extends State<TojeongResultScreen> {
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.share, size: 20),
-                      SizedBox(width: 10),
-                      Text("결과 공유하기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Icon(Icons.share, size: 20),
+                      const SizedBox(width: 10),
+                      Text(l10n.tojeongShareResult, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),

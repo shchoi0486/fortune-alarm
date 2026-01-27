@@ -125,8 +125,8 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     const SizedBox(height: 4),
                     Text(
                       allGranted 
-                        ? l10n.optimizationDescription 
-                        : '정확한 시간에 알람을 울리기 위해 권한 설정이 필요합니다.',
+                        ? l10n.allOptimizationsCompleted 
+                        : l10n.optimizationNeeded,
                       style: TextStyle(
                         fontSize: 15,
                         height: 1.3,
@@ -137,7 +137,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     if (!allGranted) ...[
                       const SizedBox(height: 4),
                       Text(
-                        '안정적인 서비스 이용을 위해 모든 항목을 허용으로 설정해 주세요.',
+                        l10n.optimizationDescription,
                         style: TextStyle(
                           fontSize: 13,
                           height: 1.3,
@@ -248,7 +248,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     ),
                   ),
                   child: Text(
-                    allGranted ? l10n.confirm : '모든 항목을 허용해주세요',
+                    allGranted ? l10n.confirm : l10n.allowAllItems,
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),

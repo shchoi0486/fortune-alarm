@@ -127,7 +127,7 @@ abstract class AppLocalizations {
   /// No description provided for @missionWakeUp.
   ///
   /// In en, this message translates to:
-  /// **'Wake-up Mission'**
+  /// **'Alarm Mission'**
   String get missionWakeUp;
 
   /// No description provided for @missionSupplement.
@@ -409,7 +409,7 @@ abstract class AppLocalizations {
   /// No description provided for @todaysAdvice.
   ///
   /// In en, this message translates to:
-  /// **'Today\'s advice from the mysterious stars'**
+  /// **'Today\'s Advice'**
   String get todaysAdvice;
 
   /// No description provided for @viewSpecificDateFortune.
@@ -418,11 +418,11 @@ abstract class AppLocalizations {
   /// **'View Fortune for Specific Date'**
   String get viewSpecificDateFortune;
 
-  /// No description provided for @lottoRecommendation.
+  /// No description provided for @luckyNumberRecommendation.
   ///
   /// In en, this message translates to:
-  /// **'Lotto Number Recommendation'**
-  String get lottoRecommendation;
+  /// **'Lucky Number Recommendation'**
+  String get luckyNumberRecommendation;
 
   /// No description provided for @luckyNumber.
   ///
@@ -463,7 +463,7 @@ abstract class AppLocalizations {
   /// No description provided for @traditionalSaju.
   ///
   /// In en, this message translates to:
-  /// **'Traditional Saju Analysis'**
+  /// **'Traditional Four Pillars Analysis'**
   String get traditionalSaju;
 
   /// No description provided for @faceReading.
@@ -496,6 +496,2856 @@ abstract class AppLocalizations {
   /// **'Relationship Harmony'**
   String get relationshipHarmony;
 
+  /// No description provided for @ohaengWood.
+  ///
+  /// In en, this message translates to:
+  /// **'Wood'**
+  String get ohaengWood;
+
+  /// No description provided for @ohaengFire.
+  ///
+  /// In en, this message translates to:
+  /// **'Fire'**
+  String get ohaengFire;
+
+  /// No description provided for @ohaengEarth.
+  ///
+  /// In en, this message translates to:
+  /// **'Earth'**
+  String get ohaengEarth;
+
+  /// No description provided for @ohaengMetal.
+  ///
+  /// In en, this message translates to:
+  /// **'Metal'**
+  String get ohaengMetal;
+
+  /// No description provided for @ohaengWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get ohaengWater;
+
+  /// No description provided for @ohaengWoodSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'Wood'**
+  String get ohaengWoodSymbol;
+
+  /// No description provided for @ohaengFireSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'Fire'**
+  String get ohaengFireSymbol;
+
+  /// No description provided for @ohaengEarthSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'Earth'**
+  String get ohaengEarthSymbol;
+
+  /// No description provided for @ohaengMetalSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'Metal'**
+  String get ohaengMetalSymbol;
+
+  /// No description provided for @ohaengWaterSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get ohaengWaterSymbol;
+
+  /// No description provided for @ohaengWoodExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'With a strong energy of Wood (Tree), you are full of growth and motivation, possessing a compassionate and enterprising nature.'**
+  String get ohaengWoodExplanation;
+
+  /// No description provided for @ohaengFireExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'With a strong energy of Fire, you are passionate and polite, with a tendency to be active and fond of glamorous things.'**
+  String get ohaengFireExplanation;
+
+  /// No description provided for @ohaengEarthExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'With a strong energy of Earth, you have trust and tolerance, possessing a grave and unchanging nature.'**
+  String get ohaengEarthExplanation;
+
+  /// No description provided for @ohaengMetalExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'With a strong energy of Metal, you have decisiveness and loyalty, possessing a cool-headed nature that values principles.'**
+  String get ohaengMetalExplanation;
+
+  /// No description provided for @ohaengWaterExplanation.
+  ///
+  /// In en, this message translates to:
+  /// **'With a strong energy of Water, you have wisdom and flexibility, possessing a clever and highly adaptable nature.'**
+  String get ohaengWaterExplanation;
+
+  /// No description provided for @cheonganGap.
+  ///
+  /// In en, this message translates to:
+  /// **'Gap'**
+  String get cheonganGap;
+
+  /// No description provided for @cheonganEul.
+  ///
+  /// In en, this message translates to:
+  /// **'Eul'**
+  String get cheonganEul;
+
+  /// No description provided for @cheonganByeong.
+  ///
+  /// In en, this message translates to:
+  /// **'Byeong'**
+  String get cheonganByeong;
+
+  /// No description provided for @cheonganJeong.
+  ///
+  /// In en, this message translates to:
+  /// **'Jeong'**
+  String get cheonganJeong;
+
+  /// No description provided for @cheonganMu.
+  ///
+  /// In en, this message translates to:
+  /// **'Mu'**
+  String get cheonganMu;
+
+  /// No description provided for @cheonganGi.
+  ///
+  /// In en, this message translates to:
+  /// **'Gi'**
+  String get cheonganGi;
+
+  /// No description provided for @cheonganGyeong.
+  ///
+  /// In en, this message translates to:
+  /// **'Gyeong'**
+  String get cheonganGyeong;
+
+  /// No description provided for @cheonganSin.
+  ///
+  /// In en, this message translates to:
+  /// **'Sin'**
+  String get cheonganSin;
+
+  /// No description provided for @cheonganIm.
+  ///
+  /// In en, this message translates to:
+  /// **'Im'**
+  String get cheonganIm;
+
+  /// No description provided for @cheonganGye.
+  ///
+  /// In en, this message translates to:
+  /// **'Gye'**
+  String get cheonganGye;
+
+  /// No description provided for @jijiJa.
+  ///
+  /// In en, this message translates to:
+  /// **'Rat'**
+  String get jijiJa;
+
+  /// No description provided for @jijiChuk.
+  ///
+  /// In en, this message translates to:
+  /// **'Ox'**
+  String get jijiChuk;
+
+  /// No description provided for @jijiIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Tiger'**
+  String get jijiIn;
+
+  /// No description provided for @jijiMyo.
+  ///
+  /// In en, this message translates to:
+  /// **'Rabbit'**
+  String get jijiMyo;
+
+  /// No description provided for @jijiJin.
+  ///
+  /// In en, this message translates to:
+  /// **'Dragon'**
+  String get jijiJin;
+
+  /// No description provided for @jijiSa.
+  ///
+  /// In en, this message translates to:
+  /// **'Snake'**
+  String get jijiSa;
+
+  /// No description provided for @jijiO.
+  ///
+  /// In en, this message translates to:
+  /// **'Horse'**
+  String get jijiO;
+
+  /// No description provided for @jijiMi.
+  ///
+  /// In en, this message translates to:
+  /// **'Goat'**
+  String get jijiMi;
+
+  /// No description provided for @jijiSin.
+  ///
+  /// In en, this message translates to:
+  /// **'Monkey'**
+  String get jijiSin;
+
+  /// No description provided for @jijiYu.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooster'**
+  String get jijiYu;
+
+  /// No description provided for @jijiSul.
+  ///
+  /// In en, this message translates to:
+  /// **'Dog'**
+  String get jijiSul;
+
+  /// No description provided for @jijiHae.
+  ///
+  /// In en, this message translates to:
+  /// **'Pig'**
+  String get jijiHae;
+
+  /// No description provided for @jijiAnimalRat.
+  ///
+  /// In en, this message translates to:
+  /// **'Rat'**
+  String get jijiAnimalRat;
+
+  /// No description provided for @jijiAnimalOx.
+  ///
+  /// In en, this message translates to:
+  /// **'Ox'**
+  String get jijiAnimalOx;
+
+  /// No description provided for @jijiAnimalTiger.
+  ///
+  /// In en, this message translates to:
+  /// **'Tiger'**
+  String get jijiAnimalTiger;
+
+  /// No description provided for @jijiAnimalRabbit.
+  ///
+  /// In en, this message translates to:
+  /// **'Rabbit'**
+  String get jijiAnimalRabbit;
+
+  /// No description provided for @jijiAnimalDragon.
+  ///
+  /// In en, this message translates to:
+  /// **'Dragon'**
+  String get jijiAnimalDragon;
+
+  /// No description provided for @jijiAnimalSnake.
+  ///
+  /// In en, this message translates to:
+  /// **'Snake'**
+  String get jijiAnimalSnake;
+
+  /// No description provided for @jijiAnimalHorse.
+  ///
+  /// In en, this message translates to:
+  /// **'Horse'**
+  String get jijiAnimalHorse;
+
+  /// No description provided for @jijiAnimalSheep.
+  ///
+  /// In en, this message translates to:
+  /// **'Sheep'**
+  String get jijiAnimalSheep;
+
+  /// No description provided for @jijiAnimalMonkey.
+  ///
+  /// In en, this message translates to:
+  /// **'Monkey'**
+  String get jijiAnimalMonkey;
+
+  /// No description provided for @jijiAnimalRooster.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooster'**
+  String get jijiAnimalRooster;
+
+  /// No description provided for @jijiAnimalDog.
+  ///
+  /// In en, this message translates to:
+  /// **'Dog'**
+  String get jijiAnimalDog;
+
+  /// No description provided for @jijiAnimalPig.
+  ///
+  /// In en, this message translates to:
+  /// **'Pig'**
+  String get jijiAnimalPig;
+
+  /// No description provided for @assetDefaultBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Background'**
+  String get assetDefaultBackground;
+
+  /// No description provided for @assetFortuneyFriends.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortuney Friends'**
+  String get assetFortuneyFriends;
+
+  /// No description provided for @assetMongchuny.
+  ///
+  /// In en, this message translates to:
+  /// **'Mongchuny'**
+  String get assetMongchuny;
+
+  /// No description provided for @assetPanchuny.
+  ///
+  /// In en, this message translates to:
+  /// **'Panchuny'**
+  String get assetPanchuny;
+
+  /// No description provided for @assetTochuny.
+  ///
+  /// In en, this message translates to:
+  /// **'Tochuny'**
+  String get assetTochuny;
+
+  /// No description provided for @assetHochuny.
+  ///
+  /// In en, this message translates to:
+  /// **'Hochuny'**
+  String get assetHochuny;
+
+  /// No description provided for @assetBear.
+  ///
+  /// In en, this message translates to:
+  /// **'Bear'**
+  String get assetBear;
+
+  /// No description provided for @assetMoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Moon'**
+  String get assetMoon;
+
+  /// No description provided for @assetBridge.
+  ///
+  /// In en, this message translates to:
+  /// **'Bridge'**
+  String get assetBridge;
+
+  /// No description provided for @assetRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Road'**
+  String get assetRoad;
+
+  /// No description provided for @assetSky.
+  ///
+  /// In en, this message translates to:
+  /// **'Sky'**
+  String get assetSky;
+
+  /// No description provided for @assetMinimalGray.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal Gray'**
+  String get assetMinimalGray;
+
+  /// No description provided for @assetDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get assetDarkMode;
+
+  /// No description provided for @assetSoftBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft Blue'**
+  String get assetSoftBlue;
+
+  /// No description provided for @assetWarmBeige.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm Beige'**
+  String get assetWarmBeige;
+
+  /// No description provided for @assetCat.
+  ///
+  /// In en, this message translates to:
+  /// **'Cat {number}'**
+  String assetCat(int number);
+
+  /// No description provided for @assetDog.
+  ///
+  /// In en, this message translates to:
+  /// **'Dog {number}'**
+  String assetDog(int number);
+
+  /// No description provided for @assetSea.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea {number}'**
+  String assetSea(int number);
+
+  /// No description provided for @categoryCharacter.
+  ///
+  /// In en, this message translates to:
+  /// **'Character'**
+  String get categoryCharacter;
+
+  /// No description provided for @categoryAnimal.
+  ///
+  /// In en, this message translates to:
+  /// **'Animal'**
+  String get categoryAnimal;
+
+  /// No description provided for @categoryIllustration.
+  ///
+  /// In en, this message translates to:
+  /// **'Illustration'**
+  String get categoryIllustration;
+
+  /// No description provided for @categoryLandscape.
+  ///
+  /// In en, this message translates to:
+  /// **'Landscape'**
+  String get categoryLandscape;
+
+  /// No description provided for @categorySimple.
+  ///
+  /// In en, this message translates to:
+  /// **'Simple'**
+  String get categorySimple;
+
+  /// No description provided for @alarmBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm Background'**
+  String get alarmBackground;
+
+  /// No description provided for @random.
+  ///
+  /// In en, this message translates to:
+  /// **'Random'**
+  String get random;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// No description provided for @selectSolidColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Solid Color'**
+  String get selectSolidColor;
+
+  /// No description provided for @deleteColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Color'**
+  String get deleteColor;
+
+  /// No description provided for @deleteColorConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this color from the list?'**
+  String get deleteColorConfirm;
+
+  /// No description provided for @randomBackgroundDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'A new background every time the alarm rings!'**
+  String get randomBackgroundDesc;
+
+  /// No description provided for @backgroundDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Background image deleted.'**
+  String get backgroundDeleted;
+
+  /// No description provided for @pickFromDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick from device'**
+  String get pickFromDevice;
+
+  /// No description provided for @alarmSaveError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save alarm. An unknown error occurred.'**
+  String get alarmSaveError;
+
+  /// No description provided for @errorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred: {error}'**
+  String errorOccurred(String error);
+
+  /// No description provided for @openSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Settings'**
+  String get openSettings;
+
+  /// No description provided for @videoLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load video\nTap to retry'**
+  String get videoLoadFailed;
+
+  /// No description provided for @itsTimeToWakeUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to wake up!'**
+  String get itsTimeToWakeUp;
+
+  /// No description provided for @dismissAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Alarm'**
+  String get dismissAlarm;
+
+  /// No description provided for @slideToDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Swipe to turn off'**
+  String get slideToDismiss;
+
+  /// No description provided for @snoozeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m · {count}'**
+  String snoozeInfo(int minutes, int count);
+
+  /// No description provided for @snoozeInfoUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m · Unlimited'**
+  String snoozeInfoUnlimited(int minutes);
+
+  /// No description provided for @noActiveAlarms.
+  ///
+  /// In en, this message translates to:
+  /// **'No active alarms'**
+  String get noActiveAlarms;
+
+  /// No description provided for @wealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth'**
+  String get wealth;
+
+  /// No description provided for @love.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship'**
+  String get love;
+
+  /// No description provided for @career.
+  ///
+  /// In en, this message translates to:
+  /// **'Career'**
+  String get career;
+
+  /// No description provided for @health.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get health;
+
+  /// No description provided for @faceAnalysisBasic.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Face Analysis'**
+  String get faceAnalysisBasic;
+
+  /// No description provided for @insufficientDataOverallImpression.
+  ///
+  /// In en, this message translates to:
+  /// **'Limited data; interpreting based on overall impression.'**
+  String get insufficientDataOverallImpression;
+
+  /// No description provided for @noseStabilityWealthAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'A clearer nose contour would improve wealth fortune accuracy.'**
+  String get noseStabilityWealthAccuracy;
+
+  /// No description provided for @mouthClarityInterpersonalAccuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'A clearer mouth contour would refine relationship fortune accuracy.'**
+  String get mouthClarityInterpersonalAccuracy;
+
+  /// No description provided for @improveAnalysisQualityAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'Better lighting and facing the camera directly will improve analysis.'**
+  String get improveAnalysisQualityAdvice;
+
+  /// No description provided for @basicAnalysisDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This result is a general interpretation due to limited facial contour data.\nFor more specific scores, please retry in a brighter environment while facing the camera directly.'**
+  String get basicAnalysisDescription;
+
+  /// No description provided for @defaultDailyFortune.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your day with a peaceful mind.\nA smile in the mirror will bring positive energy.\nA moment of calm may bring unexpected luck.'**
+  String get defaultDailyFortune;
+
+  /// No description provided for @dailyFortuneHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'{vibe}Today, your {topKey} luck is strongest, while your {bottomKey} luck requires extra care.'**
+  String dailyFortuneHeadline(String vibe, String topKey, String bottomKey);
+
+  /// No description provided for @faceShapeVLine.
+  ///
+  /// In en, this message translates to:
+  /// **'V-line'**
+  String get faceShapeVLine;
+
+  /// No description provided for @faceShapeSquare.
+  ///
+  /// In en, this message translates to:
+  /// **'Square'**
+  String get faceShapeSquare;
+
+  /// No description provided for @faceShapeBalanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get faceShapeBalanced;
+
+  /// No description provided for @faceShapeRound.
+  ///
+  /// In en, this message translates to:
+  /// **'Round'**
+  String get faceShapeRound;
+
+  /// No description provided for @faceShapeLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Long'**
+  String get faceShapeLong;
+
+  /// No description provided for @faceShapeOval.
+  ///
+  /// In en, this message translates to:
+  /// **'Oval'**
+  String get faceShapeOval;
+
+  /// No description provided for @titleWealthOriented.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth-attracting face'**
+  String get titleWealthOriented;
+
+  /// No description provided for @titleLoveStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Romantic & charming face'**
+  String get titleLoveStrong;
+
+  /// No description provided for @titleCareerNotable.
+  ///
+  /// In en, this message translates to:
+  /// **'Natural leader face'**
+  String get titleCareerNotable;
+
+  /// No description provided for @titleStableEnergy.
+  ///
+  /// In en, this message translates to:
+  /// **'Stable & grounded face'**
+  String get titleStableEnergy;
+
+  /// No description provided for @faceAnalysisComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Face analysis complete!'**
+  String get faceAnalysisComplete;
+
+  /// No description provided for @chooseUnlockMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a method below to unlock your hidden facial fortune.'**
+  String get chooseUnlockMethod;
+
+  /// No description provided for @watchAdForFreeResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch ad for free'**
+  String get watchAdForFreeResult;
+
+  /// No description provided for @useTwoCookies.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 2 Cookies'**
+  String get useTwoCookies;
+
+  /// No description provided for @checkResult.
+  ///
+  /// In en, this message translates to:
+  /// **'View Results'**
+  String get checkResult;
+
+  /// No description provided for @aiAnalyzingFace.
+  ///
+  /// In en, this message translates to:
+  /// **'AI is analyzing your face...'**
+  String get aiAnalyzingFace;
+
+  /// No description provided for @faceRecognitionComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition complete'**
+  String get faceRecognitionComplete;
+
+  /// No description provided for @extractingFeatures.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracting features...'**
+  String get extractingFeatures;
+
+  /// No description provided for @matchingFortuneData.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching data...'**
+  String get matchingFortuneData;
+
+  /// No description provided for @adLoadFailedFreeUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad failed to load. Results unlocked for free!'**
+  String get adLoadFailedFreeUnlock;
+
+  /// No description provided for @insufficientCookies.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Enough Cookies'**
+  String get insufficientCookies;
+
+  /// No description provided for @insufficientCookiesDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have enough cookies.\nWatch an ad to check for free!'**
+  String get insufficientCookiesDesc;
+
+  /// No description provided for @usingTwoCookiesToast.
+  ///
+  /// In en, this message translates to:
+  /// **'Using 2 Cookies to unlock results.'**
+  String get usingTwoCookiesToast;
+
+  /// No description provided for @todaysFaceAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Face Analysis'**
+  String get todaysFaceAnalysis;
+
+  /// No description provided for @totalScoreWithPoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Score: {score} pts'**
+  String totalScoreWithPoints(int score);
+
+  /// No description provided for @adLoadFailFreeAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad failed to load. Results unlocked for free!'**
+  String get adLoadFailFreeAccess;
+
+  /// No description provided for @insufficientCookiesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Enough Fortune Cookies'**
+  String get insufficientCookiesTitle;
+
+  /// No description provided for @insufficientCookiesMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have enough fortune cookies.\nYou can earn more by completing missions or watching ads.'**
+  String get insufficientCookiesMessage;
+
+  /// No description provided for @useCookiesSnackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Using 2 Cookies to check results.'**
+  String get useCookiesSnackbar;
+
+  /// No description provided for @faceAnalysisComplete_v2.
+  ///
+  /// In en, this message translates to:
+  /// **'Face analysis is complete!'**
+  String get faceAnalysisComplete_v2;
+
+  /// No description provided for @chooseMethodToViewResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a method below to check your hidden facial fortune.'**
+  String get chooseMethodToViewResult;
+
+  /// No description provided for @watchAdForFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch ad for free'**
+  String get watchAdForFree;
+
+  /// No description provided for @useTwoCookies_v2.
+  ///
+  /// In en, this message translates to:
+  /// **'Use 2 Cookies'**
+  String get useTwoCookies_v2;
+
+  /// No description provided for @viewResult.
+  ///
+  /// In en, this message translates to:
+  /// **'View Results'**
+  String get viewResult;
+
+  /// No description provided for @aiAnalyzingFace_v2.
+  ///
+  /// In en, this message translates to:
+  /// **'AI is analyzing your face...'**
+  String get aiAnalyzingFace_v2;
+
+  /// No description provided for @faceRecognitionComplete_v2.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition complete'**
+  String get faceRecognitionComplete_v2;
+
+  /// No description provided for @extractingFeatures_v2.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracting features...'**
+  String get extractingFeatures_v2;
+
+  /// No description provided for @matchingFortuneData_v2.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching data...'**
+  String get matchingFortuneData_v2;
+
+  /// No description provided for @wealthLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'💰 Wealth'**
+  String get wealthLuck;
+
+  /// No description provided for @loveLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'❤️ Love'**
+  String get loveLuck;
+
+  /// No description provided for @careerLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'💼 Career'**
+  String get careerLuck;
+
+  /// No description provided for @healthLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'💪 Health'**
+  String get healthLuck;
+
+  /// No description provided for @tojeongMonthlyGood_0.
+  ///
+  /// In en, this message translates to:
+  /// **'A noble person from the east brings good news. Long-awaited plans will come to fruition.'**
+  String get tojeongMonthlyGood_0;
+
+  /// No description provided for @tojeongMonthlyGood_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth flows in like a spring. Worries disappear as everything goes smoothly.'**
+  String get tojeongMonthlyGood_1;
+
+  /// No description provided for @tojeongMonthlyGood_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Efforts bear fruit and you receive congratulations. Promotion or great results are expected.'**
+  String get tojeongMonthlyGood_2;
+
+  /// No description provided for @tojeongMonthlyGood_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning sun rises after a dark night. Hardship ends and happiness arrives.'**
+  String get tojeongMonthlyGood_3;
+
+  /// No description provided for @tojeongMonthlyGood_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected windfall fills your pocket. Small investments lead to big profits.'**
+  String get tojeongMonthlyGood_4;
+
+  /// No description provided for @tojeongMonthlyNeutral_0.
+  ///
+  /// In en, this message translates to:
+  /// **'A peaceful daily life continues. It passes without special events.'**
+  String get tojeongMonthlyNeutral_0;
+
+  /// No description provided for @tojeongMonthlyNeutral_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Contentment brings peace of mind. Enjoy small happiness.'**
+  String get tojeongMonthlyNeutral_1;
+
+  /// No description provided for @tojeongMonthlyNeutral_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a rest in your busy life. Pay attention to health management.'**
+  String get tojeongMonthlyNeutral_2;
+
+  /// No description provided for @tojeongMonthlyNeutral_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain your current work rather than starting something new.'**
+  String get tojeongMonthlyNeutral_3;
+
+  /// No description provided for @tojeongMonthlyNeutral_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Communication is key. Be careful with words to avoid misunderstandings.'**
+  String get tojeongMonthlyNeutral_4;
+
+  /// No description provided for @tojeongMonthlyCaution_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Be cautious in everything. Better safe than sorry.'**
+  String get tojeongMonthlyCaution_0;
+
+  /// No description provided for @tojeongMonthlyCaution_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay attention to health and avoid overexertion.'**
+  String get tojeongMonthlyCaution_1;
+
+  /// No description provided for @tojeongMonthlyCaution_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid gossip and stay out of others\' business.'**
+  String get tojeongMonthlyCaution_2;
+
+  /// No description provided for @tojeongMonthlyCaution_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Excessive greed brings trouble. Live within your means.'**
+  String get tojeongMonthlyCaution_3;
+
+  /// No description provided for @tojeongMonthlyCaution_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid money transactions as you might be disappointed in people you trust.'**
+  String get tojeongMonthlyCaution_4;
+
+  /// No description provided for @tojeongMonthlySpecial_1_0.
+  ///
+  /// In en, this message translates to:
+  /// **'New year\'s clear energy is with you. Plans will start smoothly.'**
+  String get tojeongMonthlySpecial_1_0;
+
+  /// No description provided for @tojeongMonthlySpecial_1_1.
+  ///
+  /// In en, this message translates to:
+  /// **'A helper appears early this year. Value your relationships.'**
+  String get tojeongMonthlySpecial_1_1;
+
+  /// No description provided for @tojeongMonthlySpecial_1_2.
+  ///
+  /// In en, this message translates to:
+  /// **'A fresh start brings unexpected opportunities. Stay open-minded.'**
+  String get tojeongMonthlySpecial_1_2;
+
+  /// No description provided for @tojeongMonthlySpecial_1_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your focus and determination will lead to a significant breakthrough.'**
+  String get tojeongMonthlySpecial_1_3;
+
+  /// No description provided for @tojeongMonthlySpecial_1_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Wisdom from the past will guide you through new challenges.'**
+  String get tojeongMonthlySpecial_1_4;
+
+  /// No description provided for @tojeongMonthlySpecial_2_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet the time. Build strength and wait for the opportunity.'**
+  String get tojeongMonthlySpecial_2_0;
+
+  /// No description provided for @tojeongMonthlySpecial_2_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Old issues may resurface. Solve them head-on.'**
+  String get tojeongMonthlySpecial_2_1;
+
+  /// No description provided for @tojeongMonthlySpecial_2_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Patience is your best ally this month. Observe and learn.'**
+  String get tojeongMonthlySpecial_2_2;
+
+  /// No description provided for @tojeongMonthlySpecial_2_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid hasty decisions. A better moment is approaching soon.'**
+  String get tojeongMonthlySpecial_2_3;
+
+  /// No description provided for @tojeongMonthlySpecial_2_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Small steps today will lead to big gains in the future.'**
+  String get tojeongMonthlySpecial_2_4;
+
+  /// No description provided for @tojeongMonthlySpecial_3_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is reviving. Don\'t hesitate and take on challenges.'**
+  String get tojeongMonthlySpecial_3_0;
+
+  /// No description provided for @tojeongMonthlySpecial_3_1.
+  ///
+  /// In en, this message translates to:
+  /// **'New connections may begin. A positive mind brings good results.'**
+  String get tojeongMonthlySpecial_3_1;
+
+  /// No description provided for @tojeongMonthlySpecial_3_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Growth is happening in unexpected areas. Embrace the change.'**
+  String get tojeongMonthlySpecial_3_2;
+
+  /// No description provided for @tojeongMonthlySpecial_3_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your energy is contagious. Lead with kindness and courage.'**
+  String get tojeongMonthlySpecial_3_3;
+
+  /// No description provided for @tojeongMonthlySpecial_3_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Spring brings a wave of creativity. Express your ideas freely.'**
+  String get tojeongMonthlySpecial_3_4;
+
+  /// No description provided for @tojeongMonthlySpecial_4_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth luck rises with warmth. Efforts lead to financial rewards.'**
+  String get tojeongMonthlySpecial_4_0;
+
+  /// No description provided for @tojeongMonthlySpecial_4_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Good results in contracts or exams. Review carefully.'**
+  String get tojeongMonthlySpecial_4_1;
+
+  /// No description provided for @tojeongMonthlySpecial_4_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Stability in your career is highlighted. Keep up the good work.'**
+  String get tojeongMonthlySpecial_4_2;
+
+  /// No description provided for @tojeongMonthlySpecial_4_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial planning now will yield great benefits later this year.'**
+  String get tojeongMonthlySpecial_4_3;
+
+  /// No description provided for @tojeongMonthlySpecial_4_4.
+  ///
+  /// In en, this message translates to:
+  /// **'A fruitful partnership may develop. Collaborate for success.'**
+  String get tojeongMonthlySpecial_4_4;
+
+  /// No description provided for @tojeongMonthlySpecial_5_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Harmony at home brings stability and joy.'**
+  String get tojeongMonthlySpecial_5_0;
+
+  /// No description provided for @tojeongMonthlySpecial_5_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Kindness to others returns as blessings.'**
+  String get tojeongMonthlySpecial_5_1;
+
+  /// No description provided for @tojeongMonthlySpecial_5_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Peace and tranquility surround you. Cherish these moments.'**
+  String get tojeongMonthlySpecial_5_2;
+
+  /// No description provided for @tojeongMonthlySpecial_5_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Family bonds are strengthened through open communication.'**
+  String get tojeongMonthlySpecial_5_3;
+
+  /// No description provided for @tojeongMonthlySpecial_5_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your inner light shines brightly. Inspire those around you.'**
+  String get tojeongMonthlySpecial_5_4;
+
+  /// No description provided for @tojeongMonthlySpecial_6_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Efforts are recognized. Opportunities for promotion or honor.'**
+  String get tojeongMonthlySpecial_6_0;
+
+  /// No description provided for @tojeongMonthlySpecial_6_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong active energy. Consider expansion or career change.'**
+  String get tojeongMonthlySpecial_6_1;
+
+  /// No description provided for @tojeongMonthlySpecial_6_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your leadership skills are in demand. Take charge with confidence.'**
+  String get tojeongMonthlySpecial_6_2;
+
+  /// No description provided for @tojeongMonthlySpecial_6_3.
+  ///
+  /// In en, this message translates to:
+  /// **'A major goal is within reach. Stay focused on the finish line.'**
+  String get tojeongMonthlySpecial_6_3;
+
+  /// No description provided for @tojeongMonthlySpecial_6_4.
+  ///
+  /// In en, this message translates to:
+  /// **'New professional horizons are opening. Be ready to explore.'**
+  String get tojeongMonthlySpecial_6_4;
+
+  /// No description provided for @tojeongMonthlySpecial_7_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Passion leads to performance. Bold moves achieve goals.'**
+  String get tojeongMonthlySpecial_7_0;
+
+  /// No description provided for @tojeongMonthlySpecial_7_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Meet a helper or find new opportunities while traveling.'**
+  String get tojeongMonthlySpecial_7_1;
+
+  /// No description provided for @tojeongMonthlySpecial_7_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure calls. A change of scenery will refresh your spirit.'**
+  String get tojeongMonthlySpecial_7_2;
+
+  /// No description provided for @tojeongMonthlySpecial_7_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your enthusiasm attracts positive outcomes. Dream big.'**
+  String get tojeongMonthlySpecial_7_3;
+
+  /// No description provided for @tojeongMonthlySpecial_7_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic energy fuels your progress. Keep moving forward.'**
+  String get tojeongMonthlySpecial_7_4;
+
+  /// No description provided for @tojeongMonthlySpecial_8_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Patience pays off. Luck starts to open up gradually.'**
+  String get tojeongMonthlySpecial_8_0;
+
+  /// No description provided for @tojeongMonthlySpecial_8_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Old problems find solutions. Use your wisdom.'**
+  String get tojeongMonthlySpecial_8_1;
+
+  /// No description provided for @tojeongMonthlySpecial_8_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Steadiness and persistence will overcome any obstacle.'**
+  String get tojeongMonthlySpecial_8_2;
+
+  /// No description provided for @tojeongMonthlySpecial_8_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Reflection brings clarity. Understand your true path.'**
+  String get tojeongMonthlySpecial_8_3;
+
+  /// No description provided for @tojeongMonthlySpecial_8_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Good news arrives from a distance. Be prepared for joy.'**
+  String get tojeongMonthlySpecial_8_4;
+
+  /// No description provided for @tojeongMonthlySpecial_9_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth and love are abundant like the harvest season.'**
+  String get tojeongMonthlySpecial_9_0;
+
+  /// No description provided for @tojeongMonthlySpecial_9_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Better than expected results for your hard work.'**
+  String get tojeongMonthlySpecial_9_1;
+
+  /// No description provided for @tojeongMonthlySpecial_9_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Gratitude attracts more abundance. Share your success.'**
+  String get tojeongMonthlySpecial_9_2;
+
+  /// No description provided for @tojeongMonthlySpecial_9_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Emotional fulfillment is at its peak. Enjoy the love.'**
+  String get tojeongMonthlySpecial_9_3;
+
+  /// No description provided for @tojeongMonthlySpecial_9_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your efforts are bearing sweet fruit. Celebrate your wins.'**
+  String get tojeongMonthlySpecial_9_4;
+
+  /// No description provided for @tojeongMonthlySpecial_10_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Honor rises and your name becomes known.'**
+  String get tojeongMonthlySpecial_10_0;
+
+  /// No description provided for @tojeongMonthlySpecial_10_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Great results in intellectual activities. Focus on studies.'**
+  String get tojeongMonthlySpecial_10_1;
+
+  /// No description provided for @tojeongMonthlySpecial_10_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition for your expertise is coming. Speak your truth.'**
+  String get tojeongMonthlySpecial_10_2;
+
+  /// No description provided for @tojeongMonthlySpecial_10_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Academic or professional success is highly likely this month.'**
+  String get tojeongMonthlySpecial_10_3;
+
+  /// No description provided for @tojeongMonthlySpecial_10_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your influence is growing. Use it for the greater good.'**
+  String get tojeongMonthlySpecial_10_4;
+
+  /// No description provided for @tojeongMonthlySpecial_11_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Time for wisdom and reflection. Prepare for the future.'**
+  String get tojeongMonthlySpecial_11_0;
+
+  /// No description provided for @tojeongMonthlySpecial_11_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial stability, but avoid risky investments.'**
+  String get tojeongMonthlySpecial_11_1;
+
+  /// No description provided for @tojeongMonthlySpecial_11_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Inner peace is found through meditation and quiet time.'**
+  String get tojeongMonthlySpecial_11_2;
+
+  /// No description provided for @tojeongMonthlySpecial_11_3.
+  ///
+  /// In en, this message translates to:
+  /// **'Strategic thinking now will set you up for a great next year.'**
+  String get tojeongMonthlySpecial_11_3;
+
+  /// No description provided for @tojeongMonthlySpecial_11_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Trust your intuition. It will guide you to safety and success.'**
+  String get tojeongMonthlySpecial_11_4;
+
+  /// No description provided for @tojeongMonthlySpecial_12_0.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected luck at year-end. Look forward to good news.'**
+  String get tojeongMonthlySpecial_12_0;
+
+  /// No description provided for @tojeongMonthlySpecial_12_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Rewards for long-term efforts. A successful conclusion.'**
+  String get tojeongMonthlySpecial_12_1;
+
+  /// No description provided for @tojeongMonthlySpecial_12_2.
+  ///
+  /// In en, this message translates to:
+  /// **'The year ends on a high note. Be proud of your journey.'**
+  String get tojeongMonthlySpecial_12_2;
+
+  /// No description provided for @tojeongMonthlySpecial_12_3.
+  ///
+  /// In en, this message translates to:
+  /// **'New doors are opening as old ones close. Welcome the future.'**
+  String get tojeongMonthlySpecial_12_3;
+
+  /// No description provided for @tojeongMonthlySpecial_12_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Generosity brings its own rewards. Spread holiday cheer.'**
+  String get tojeongMonthlySpecial_12_4;
+
+  /// No description provided for @todaysFaceFortune.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Face Fortune'**
+  String get todaysFaceFortune;
+
+  /// No description provided for @detailedAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Analysis'**
+  String get detailedAnalysis;
+
+  /// No description provided for @eyeInsight.
+  ///
+  /// In en, this message translates to:
+  /// **'👁️ Eye (Insight)'**
+  String get eyeInsight;
+
+  /// No description provided for @noseWealth.
+  ///
+  /// In en, this message translates to:
+  /// **'👃 Nose (Wealth)'**
+  String get noseWealth;
+
+  /// No description provided for @mouthLateLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'👄 Mouth (Late Luck)'**
+  String get mouthLateLuck;
+
+  /// No description provided for @overallAnalysisTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall Analysis'**
+  String get overallAnalysisTitle;
+
+  /// No description provided for @shareResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Face Result'**
+  String get shareResultTitle;
+
+  /// No description provided for @shareResultDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'AI face analysis result.\n{title}'**
+  String shareResultDesc(String title);
+
+  /// No description provided for @shareResultTotalScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Score'**
+  String get shareResultTotalScore;
+
+  /// No description provided for @shareResultWealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth Luck'**
+  String get shareResultWealth;
+
+  /// No description provided for @shareResultLove.
+  ///
+  /// In en, this message translates to:
+  /// **'Love Luck'**
+  String get shareResultLove;
+
+  /// No description provided for @shareResultCareer.
+  ///
+  /// In en, this message translates to:
+  /// **'Career Luck'**
+  String get shareResultCareer;
+
+  /// No description provided for @shareResultHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Luck'**
+  String get shareResultHealth;
+
+  /// No description provided for @shareResultText.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Result'**
+  String get shareResultText;
+
+  /// No description provided for @wakeUpComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake up complete!'**
+  String get wakeUpComplete;
+
+  /// No description provided for @collapseOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse Options'**
+  String get collapseOptions;
+
+  /// No description provided for @expandOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'More Options'**
+  String get expandOptions;
+
+  /// No description provided for @snoozeAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze Alarm'**
+  String get snoozeAlarm;
+
+  /// No description provided for @interval.
+  ///
+  /// In en, this message translates to:
+  /// **'Interval'**
+  String get interval;
+
+  /// No description provided for @maxSnoozeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Snooze Count'**
+  String get maxSnoozeCount;
+
+  /// No description provided for @unlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited'**
+  String get unlimited;
+
+  /// No description provided for @permissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Required'**
+  String get permissionRequired;
+
+  /// No description provided for @exactAlarmFailMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to register alarm. Exact alarm permission is off and needs setting.'**
+  String get exactAlarmFailMessage;
+
+  /// No description provided for @batteryOptimFailMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to register alarm. Battery optimization exception permission is missing.'**
+  String get batteryOptimFailMessage;
+
+  /// No description provided for @overlayFailMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to register alarm. Display over other apps permission is missing.'**
+  String get overlayFailMessage;
+
+  /// No description provided for @loadingDelay.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading delay'**
+  String get loadingDelay;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @previewFail.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview failed'**
+  String get previewFail;
+
+  /// No description provided for @bgDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Background'**
+  String get bgDefault;
+
+  /// No description provided for @bgFortuneFriends.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune Friends'**
+  String get bgFortuneFriends;
+
+  /// No description provided for @bgMongChuni.
+  ///
+  /// In en, this message translates to:
+  /// **'Mongchuni'**
+  String get bgMongChuni;
+
+  /// No description provided for @bgPanChuni.
+  ///
+  /// In en, this message translates to:
+  /// **'Panchuni'**
+  String get bgPanChuni;
+
+  /// No description provided for @bgToChuni.
+  ///
+  /// In en, this message translates to:
+  /// **'Tochuni'**
+  String get bgToChuni;
+
+  /// No description provided for @bgHoChuni.
+  ///
+  /// In en, this message translates to:
+  /// **'Hochuni'**
+  String get bgHoChuni;
+
+  /// No description provided for @bgBear.
+  ///
+  /// In en, this message translates to:
+  /// **'Bear'**
+  String get bgBear;
+
+  /// No description provided for @bgMoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Moon'**
+  String get bgMoon;
+
+  /// No description provided for @bgSea.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea'**
+  String get bgSea;
+
+  /// No description provided for @bgBridge.
+  ///
+  /// In en, this message translates to:
+  /// **'Bridge'**
+  String get bgBridge;
+
+  /// No description provided for @bgRoad.
+  ///
+  /// In en, this message translates to:
+  /// **'Road'**
+  String get bgRoad;
+
+  /// No description provided for @bgSky.
+  ///
+  /// In en, this message translates to:
+  /// **'Sky'**
+  String get bgSky;
+
+  /// No description provided for @bgMinimalGray.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimal Gray'**
+  String get bgMinimalGray;
+
+  /// No description provided for @bgDarkMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get bgDarkMode;
+
+  /// No description provided for @bgSoftBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft Blue'**
+  String get bgSoftBlue;
+
+  /// No description provided for @bgWarmBeige.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm Beige'**
+  String get bgWarmBeige;
+
+  /// No description provided for @dateFormatMdyE.
+  ///
+  /// In en, this message translates to:
+  /// **'MMM d (E)'**
+  String get dateFormatMdyE;
+
+  /// No description provided for @deleteAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Alarm'**
+  String get deleteAlarm;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete?'**
+  String get confirmDelete;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @wealthLuckWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'💰 Wealth Luck'**
+  String get wealthLuckWithIcon;
+
+  /// No description provided for @loveLuckWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'❤️ Love Luck'**
+  String get loveLuckWithIcon;
+
+  /// No description provided for @careerLuckWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'💼 Career Luck'**
+  String get careerLuckWithIcon;
+
+  /// No description provided for @healthLuckWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'💪 Health Luck'**
+  String get healthLuckWithIcon;
+
+  /// No description provided for @mouthFortune.
+  ///
+  /// In en, this message translates to:
+  /// **'👄 Mouth (Maturity Luck)'**
+  String get mouthFortune;
+
+  /// No description provided for @comprehensiveAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Comprehensive Analysis'**
+  String get comprehensiveAnalysis;
+
+  /// No description provided for @todaysFaceResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Face Analysis Result'**
+  String get todaysFaceResult;
+
+  /// No description provided for @faceAnalysisShareDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the AI face analysis result.\n{title}'**
+  String faceAnalysisShareDesc(String title);
+
+  /// No description provided for @shareResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Result'**
+  String get shareResult;
+
+  /// No description provided for @faceVibeSmile0.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bright smile spreads positive energy to everyone around you. '**
+  String get faceVibeSmile0;
+
+  /// No description provided for @faceVibeSmile1.
+  ///
+  /// In en, this message translates to:
+  /// **'That radiant smile shows you\'re full of vibrant energy today. '**
+  String get faceVibeSmile1;
+
+  /// No description provided for @faceVibeSmile2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your gentle expression has a charming quality that attracts supportive people. '**
+  String get faceVibeSmile2;
+
+  /// No description provided for @faceVibeSmile3.
+  ///
+  /// In en, this message translates to:
+  /// **'A confident smile will be your greatest asset in overcoming any obstacles today. '**
+  String get faceVibeSmile3;
+
+  /// No description provided for @faceVibeSmile4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your refreshing smile is clearing away stale energy, making room for good luck. '**
+  String get faceVibeSmile4;
+
+  /// No description provided for @faceVibeEye0.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sparkling eyes show a strong will to take charge of your day. '**
+  String get faceVibeEye0;
+
+  /// No description provided for @faceVibeEye1.
+  ///
+  /// In en, this message translates to:
+  /// **'Those sharp, focused eyes suggest keen judgment and intuition. '**
+  String get faceVibeEye1;
+
+  /// No description provided for @faceVibeEye2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your clear, deep gaze reflects a sincere heart ready for good news. '**
+  String get faceVibeEye2;
+
+  /// No description provided for @faceVibeEye3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your dignified look and steady gaze will command respect today. '**
+  String get faceVibeEye3;
+
+  /// No description provided for @faceVibeEye4.
+  ///
+  /// In en, this message translates to:
+  /// **'The passion in your eyes inspires trust and confidence in those around you. '**
+  String get faceVibeEye4;
+
+  /// No description provided for @faceVibeNeutral0.
+  ///
+  /// In en, this message translates to:
+  /// **'Your peaceful and stable expression brings a sense of inner calm. '**
+  String get faceVibeNeutral0;
+
+  /// No description provided for @faceVibeNeutral1.
+  ///
+  /// In en, this message translates to:
+  /// **'A calm complexion reflects your prudent and wise energy. '**
+  String get faceVibeNeutral1;
+
+  /// No description provided for @faceVibeNeutral2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your balanced features suggest a smooth and steady day ahead. '**
+  String get faceVibeNeutral2;
+
+  /// No description provided for @faceVibeNeutral3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your serious demeanor is perfect for making important decisions today. '**
+  String get faceVibeNeutral3;
+
+  /// No description provided for @faceVibeNeutral4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your composed expression puts others at ease, favoring smooth cooperation. '**
+  String get faceVibeNeutral4;
+
+  /// No description provided for @dailyFortuneWealth0.
+  ///
+  /// In en, this message translates to:
+  /// **'With a strong focus on your features, a little organization will help your finances grow.'**
+  String get dailyFortuneWealth0;
+
+  /// No description provided for @dailyFortuneWealth1.
+  ///
+  /// In en, this message translates to:
+  /// **'Your wealth-related energy is high today. Take a moment to double-check your calculations for extra profit.'**
+  String get dailyFortuneWealth1;
+
+  /// No description provided for @dailyFortuneWealth2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your balanced features suggest that careful attention to detail will lead to unexpected gains.'**
+  String get dailyFortuneWealth2;
+
+  /// No description provided for @dailyFortuneWealth3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your complexion shows promising wealth luck. Small profits may appear in unexpected places.'**
+  String get dailyFortuneWealth3;
+
+  /// No description provided for @dailyFortuneWealth4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sharp focus today favors smart financial moves. It\'s a great day for investment or purchase decisions.'**
+  String get dailyFortuneWealth4;
+
+  /// No description provided for @dailyFortuneWealth5.
+  ///
+  /// In en, this message translates to:
+  /// **'You have a strong energy for attracting wealth. Try organizing your wallet or reviewing your accounts.'**
+  String get dailyFortuneWealth5;
+
+  /// No description provided for @dailyFortuneWealth6.
+  ///
+  /// In en, this message translates to:
+  /// **'Your features suggest a steady accumulation of wealth. Sincere efforts are beginning to pay off.'**
+  String get dailyFortuneWealth6;
+
+  /// No description provided for @dailyFortuneWealth7.
+  ///
+  /// In en, this message translates to:
+  /// **'Stable financial luck is on your side. Consistent saving will serve you better than big spending.'**
+  String get dailyFortuneWealth7;
+
+  /// No description provided for @dailyFortuneWealth8.
+  ///
+  /// In en, this message translates to:
+  /// **'Your keen observation will help you spot financial opportunities. Keep your ears open.'**
+  String get dailyFortuneWealth8;
+
+  /// No description provided for @dailyFortuneWealth9.
+  ///
+  /// In en, this message translates to:
+  /// **'A prosperous energy surrounds you. Generosity today will return to you as even greater abundance.'**
+  String get dailyFortuneWealth9;
+
+  /// No description provided for @dailyFortuneLove0.
+  ///
+  /// In en, this message translates to:
+  /// **'Your gentle expression suggests that being the first to reach out will soften any relationship tension.'**
+  String get dailyFortuneLove0;
+
+  /// No description provided for @dailyFortuneLove1.
+  ///
+  /// In en, this message translates to:
+  /// **'A clear and honest look reduces misunderstandings. Sincerity is your best approach today.'**
+  String get dailyFortuneLove1;
+
+  /// No description provided for @dailyFortuneLove2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bright complexion attracts supportive energy. Small acts of kindness will lead to great connections.'**
+  String get dailyFortuneLove2;
+
+  /// No description provided for @dailyFortuneLove3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your natural charm is especially noticeable today. Expect positive energy from new encounters.'**
+  String get dailyFortuneLove3;
+
+  /// No description provided for @dailyFortuneLove4.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear relationship energy helps resolve old conflicts and brings harmony.'**
+  String get dailyFortuneLove4;
+
+  /// No description provided for @dailyFortuneLove5.
+  ///
+  /// In en, this message translates to:
+  /// **'Your approachable look opens hearts. Today, listening is your most powerful tool.'**
+  String get dailyFortuneLove5;
+
+  /// No description provided for @dailyFortuneLove6.
+  ///
+  /// In en, this message translates to:
+  /// **'You have a face that naturally draws help. Don\'t hesitate to seek advice instead of worrying alone.'**
+  String get dailyFortuneLove6;
+
+  /// No description provided for @dailyFortuneLove7.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sincere gaze builds deep trust. Honoring your promises will lead to stronger bonds.'**
+  String get dailyFortuneLove7;
+
+  /// No description provided for @dailyFortuneLove8.
+  ///
+  /// In en, this message translates to:
+  /// **'Harmonious energy fills your home and workplace. It\'s a day for laughter and joy.'**
+  String get dailyFortuneLove8;
+
+  /// No description provided for @dailyFortuneLove9.
+  ///
+  /// In en, this message translates to:
+  /// **'The threads of connection are untangling beautifully. Express your gratitude to those you value.'**
+  String get dailyFortuneLove9;
+
+  /// No description provided for @dailyFortuneCareer0.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sharp focus will turn priorities into peak performance today.'**
+  String get dailyFortuneCareer0;
+
+  /// No description provided for @dailyFortuneCareer1.
+  ///
+  /// In en, this message translates to:
+  /// **'Your keen observation stands out. Keep decisions simple and execution steady.'**
+  String get dailyFortuneCareer1;
+
+  /// No description provided for @dailyFortuneCareer2.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear energy in your eyes gives you the power to see every task through to the end.'**
+  String get dailyFortuneCareer2;
+
+  /// No description provided for @dailyFortuneCareer3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your natural leadership is showing. Your opinions will carry significant weight today.'**
+  String get dailyFortuneCareer3;
+
+  /// No description provided for @dailyFortuneCareer4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your judgment is at its peak. Even complex problems will find clear solutions today.'**
+  String get dailyFortuneCareer4;
+
+  /// No description provided for @dailyFortuneCareer5.
+  ///
+  /// In en, this message translates to:
+  /// **'Your efficient work style is being noticed. You\'re in a strong position for promotion or achievement.'**
+  String get dailyFortuneCareer5;
+
+  /// No description provided for @dailyFortuneCareer6.
+  ///
+  /// In en, this message translates to:
+  /// **'You have the perfect energy for starting new projects. Move forward with total confidence.'**
+  String get dailyFortuneCareer6;
+
+  /// No description provided for @dailyFortuneCareer7.
+  ///
+  /// In en, this message translates to:
+  /// **'Work efficiency is rising. It\'s a great day to tackle those postponed tasks.'**
+  String get dailyFortuneCareer7;
+
+  /// No description provided for @dailyFortuneCareer8.
+  ///
+  /// In en, this message translates to:
+  /// **'Creative ideas are flowing. Make it a habit to jot them down for future luck.'**
+  String get dailyFortuneCareer8;
+
+  /// No description provided for @dailyFortuneCareer9.
+  ///
+  /// In en, this message translates to:
+  /// **'Your persistence and patience will be rewarded today. Focus until the end for great results.'**
+  String get dailyFortuneCareer9;
+
+  /// No description provided for @dailyFortuneHealth0.
+  ///
+  /// In en, this message translates to:
+  /// **'A stable complexion suggests a quick recovery if you maintain a steady rhythm.'**
+  String get dailyFortuneHealth0;
+
+  /// No description provided for @dailyFortuneHealth1.
+  ///
+  /// In en, this message translates to:
+  /// **'Your facial vitality is strong. Keep a comfortable pace without overdoing it.'**
+  String get dailyFortuneHealth1;
+
+  /// No description provided for @dailyFortuneHealth2.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear energy in your eyes and skin means a short rest will greatly boost your mood and focus.'**
+  String get dailyFortuneHealth2;
+
+  /// No description provided for @dailyFortuneHealth3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your body\'s rhythm is in perfect harmony. Light exercise will make your energy even clearer.'**
+  String get dailyFortuneHealth3;
+
+  /// No description provided for @dailyFortuneHealth4.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re full of vibrant energy. You can power through the day without feeling drained.'**
+  String get dailyFortuneHealth4;
+
+  /// No description provided for @dailyFortuneHealth5.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical and mental stability are highlighted. Meditation or deep breathing will boost your luck.'**
+  String get dailyFortuneHealth5;
+
+  /// No description provided for @dailyFortuneHealth6.
+  ///
+  /// In en, this message translates to:
+  /// **'Your resilience is high today. You\'ll bounce back quickly from any minor fatigue.'**
+  String get dailyFortuneHealth6;
+
+  /// No description provided for @dailyFortuneHealth7.
+  ///
+  /// In en, this message translates to:
+  /// **'Your healthy glow is noticeable. Expect compliments on your vibrant appearance today.'**
+  String get dailyFortuneHealth7;
+
+  /// No description provided for @dailyFortuneHealth8.
+  ///
+  /// In en, this message translates to:
+  /// **'A balanced diet and proper rest will strengthen your foundation of luck. Take care of your body.'**
+  String get dailyFortuneHealth8;
+
+  /// No description provided for @dailyFortuneHealth9.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh air and staying hydrated are your best medicines today. Enjoy your vitality.'**
+  String get dailyFortuneHealth9;
+
+  /// No description provided for @dailyFortuneTipWealth0.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your spending and subscriptions one more time today.'**
+  String get dailyFortuneTipWealth0;
+
+  /// No description provided for @dailyFortuneTipWealth1.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid impulsive buys; sticking to what you truly need is a major win.'**
+  String get dailyFortuneTipWealth1;
+
+  /// No description provided for @dailyFortuneTipWealth2.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep a record of financial discussions to prevent any future misunderstandings.'**
+  String get dailyFortuneTipWealth2;
+
+  /// No description provided for @dailyFortuneTipWealth3.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep an eye out for small \'leaks\' in your budget.'**
+  String get dailyFortuneTipWealth3;
+
+  /// No description provided for @dailyFortuneTipWealth4.
+  ///
+  /// In en, this message translates to:
+  /// **'Temptation to spend is high today. Wait 10 minutes before making any purchase.'**
+  String get dailyFortuneTipWealth4;
+
+  /// No description provided for @dailyFortuneTipWealth5.
+  ///
+  /// In en, this message translates to:
+  /// **'Be cautious with large transactions today. Seek expert advice if needed.'**
+  String get dailyFortuneTipWealth5;
+
+  /// No description provided for @dailyFortuneTipWealth6.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear up any outstanding debts or money owed to you today.'**
+  String get dailyFortuneTipWealth6;
+
+  /// No description provided for @dailyFortuneTipWealth7.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch your wallet. There\'s a slight energy of loss or waste around you today.'**
+  String get dailyFortuneTipWealth7;
+
+  /// No description provided for @dailyFortuneTipWealth8.
+  ///
+  /// In en, this message translates to:
+  /// **'Prioritize practical gains over spending money just for appearances.'**
+  String get dailyFortuneTipWealth8;
+
+  /// No description provided for @dailyFortuneTipWealth9.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair play is the way to keep your luck. Avoid looking for shortcuts or freebies.'**
+  String get dailyFortuneTipWealth9;
+
+  /// No description provided for @dailyFortuneTipLove0.
+  ///
+  /// In en, this message translates to:
+  /// **'If you\'re feeling on edge, take a breath before you respond to others.'**
+  String get dailyFortuneTipLove0;
+
+  /// No description provided for @dailyFortuneTipLove1.
+  ///
+  /// In en, this message translates to:
+  /// **'A quick check-in is better than a long explanation if a misunderstanding arises.'**
+  String get dailyFortuneTipLove1;
+
+  /// No description provided for @dailyFortuneTipLove2.
+  ///
+  /// In en, this message translates to:
+  /// **'Simply being on time will build significant trust today.'**
+  String get dailyFortuneTipLove2;
+
+  /// No description provided for @dailyFortuneTipLove3.
+  ///
+  /// In en, this message translates to:
+  /// **'Get straight to the point to avoid unnecessary emotional drain.'**
+  String get dailyFortuneTipLove3;
+
+  /// No description provided for @dailyFortuneTipLove4.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay mindful of your manners, even with those you\'re closest to.'**
+  String get dailyFortuneTipLove4;
+
+  /// No description provided for @dailyFortuneTipLove5.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a compliment before a critique. It will open doors that were previously closed.'**
+  String get dailyFortuneTipLove5;
+
+  /// No description provided for @dailyFortuneTipLove6.
+  ///
+  /// In en, this message translates to:
+  /// **'Think before you speak. Confirm important details in writing to be safe.'**
+  String get dailyFortuneTipLove6;
+
+  /// No description provided for @dailyFortuneTipLove7.
+  ///
+  /// In en, this message translates to:
+  /// **'Staying out of other people\'s business is the best way to avoid rumors.'**
+  String get dailyFortuneTipLove7;
+
+  /// No description provided for @dailyFortuneTipLove8.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it rational. Calm conversation is the key to healthy relationships today.'**
+  String get dailyFortuneTipLove8;
+
+  /// No description provided for @dailyFortuneTipLove9.
+  ///
+  /// In en, this message translates to:
+  /// **'Double-check your schedule. Reliability is your most valuable asset today.'**
+  String get dailyFortuneTipLove9;
+
+  /// No description provided for @dailyFortuneTipCareer0.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on finishing one task completely rather than starting several new ones.'**
+  String get dailyFortuneTipCareer0;
+
+  /// No description provided for @dailyFortuneTipCareer1.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress is better than perfection. Aim for \'done\' rather than \'flawless\' today.'**
+  String get dailyFortuneTipCareer1;
+
+  /// No description provided for @dailyFortuneTipCareer2.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear your head by finishing that one thing you\'ve been putting off.'**
+  String get dailyFortuneTipCareer2;
+
+  /// No description provided for @dailyFortuneTipCareer3.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on your own responsibilities to keep your stress levels low.'**
+  String get dailyFortuneTipCareer3;
+
+  /// No description provided for @dailyFortuneTipCareer4.
+  ///
+  /// In en, this message translates to:
+  /// **'Small errors can snowball. Don\'t skip your final review today.'**
+  String get dailyFortuneTipCareer4;
+
+  /// No description provided for @dailyFortuneTipCareer5.
+  ///
+  /// In en, this message translates to:
+  /// **'Respect different opinions to avoid friction with colleagues or bosses.'**
+  String get dailyFortuneTipCareer5;
+
+  /// No description provided for @dailyFortuneTipCareer6.
+  ///
+  /// In en, this message translates to:
+  /// **'Concentration might waver. Try working in 50-minute blocks with 10-minute breaks.'**
+  String get dailyFortuneTipCareer6;
+
+  /// No description provided for @dailyFortuneTipCareer7.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t take on more than you can handle. Knowing your limits is a strength.'**
+  String get dailyFortuneTipCareer7;
+
+  /// No description provided for @dailyFortuneTipCareer8.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your professional and personal lives separate today.'**
+  String get dailyFortuneTipCareer8;
+
+  /// No description provided for @dailyFortuneTipCareer9.
+  ///
+  /// In en, this message translates to:
+  /// **'Double-check recipients and attachments before hitting \'send\'.'**
+  String get dailyFortuneTipCareer9;
+
+  /// No description provided for @dailyFortuneTipHealth0.
+  ///
+  /// In en, this message translates to:
+  /// **'Prioritize sleep and avoid overeating or too much caffeine today.'**
+  String get dailyFortuneTipHealth0;
+
+  /// No description provided for @dailyFortuneTipHealth1.
+  ///
+  /// In en, this message translates to:
+  /// **'Stretching your neck and shoulders will significantly reduce your fatigue.'**
+  String get dailyFortuneTipHealth1;
+
+  /// No description provided for @dailyFortuneTipHealth2.
+  ///
+  /// In en, this message translates to:
+  /// **'A short walk will clear your head and refresh your energy levels.'**
+  String get dailyFortuneTipHealth2;
+
+  /// No description provided for @dailyFortuneTipHealth3.
+  ///
+  /// In en, this message translates to:
+  /// **'A glass of water and a quick stretch will set a positive tone for your day.'**
+  String get dailyFortuneTipHealth3;
+
+  /// No description provided for @dailyFortuneTipHealth4.
+  ///
+  /// In en, this message translates to:
+  /// **'Give your eyes a break. Try to limit your screen time today.'**
+  String get dailyFortuneTipHealth4;
+
+  /// No description provided for @dailyFortuneTipHealth5.
+  ///
+  /// In en, this message translates to:
+  /// **'Warm up properly before any intense physical activity.'**
+  String get dailyFortuneTipHealth5;
+
+  /// No description provided for @dailyFortuneTipHealth6.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring a light layer. You might be more sensitive to temperature changes today.'**
+  String get dailyFortuneTipHealth6;
+
+  /// No description provided for @dailyFortuneTipHealth7.
+  ///
+  /// In en, this message translates to:
+  /// **'Stick to light, healthy foods for the sake of your gut and skin.'**
+  String get dailyFortuneTipHealth7;
+
+  /// No description provided for @dailyFortuneTipHealth8.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep is your best medicine. Try to get to bed a bit earlier tonight.'**
+  String get dailyFortuneTipHealth8;
+
+  /// No description provided for @dailyFortuneTipHealth9.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to your favorite music or find a pleasant scent to keep stress at bay.'**
+  String get dailyFortuneTipHealth9;
+
+  /// No description provided for @eyeAnalysisTypeSharp.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sharp, clear eyes reflect quick judgment and strong determination.'**
+  String get eyeAnalysisTypeSharp;
+
+  /// No description provided for @eyeAnalysisTypeDeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Your calm and deep gaze suggests a wise and thoughtful personality.'**
+  String get eyeAnalysisTypeDeep;
+
+  /// No description provided for @eyeAnalysisTypeBalanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Your eyes show a perfect balance of emotion and reason, projecting a sense of stability.'**
+  String get eyeAnalysisTypeBalanced;
+
+  /// No description provided for @eyeExpressionBright.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bright eyes and warm smile create an inviting aura that naturally draws people to you.'**
+  String get eyeExpressionBright;
+
+  /// No description provided for @eyeExpressionGentle.
+  ///
+  /// In en, this message translates to:
+  /// **'A gentle smile within your calm gaze reflects a quiet but strong charisma.'**
+  String get eyeExpressionGentle;
+
+  /// No description provided for @eyeExpressionStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Your intense, focused gaze symbolizes strong leadership and the drive to achieve your goals.'**
+  String get eyeExpressionStrong;
+
+  /// No description provided for @eyeExpressionSteady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your calm and serious demeanor inspires trust and respect.'**
+  String get eyeExpressionSteady;
+
+  /// No description provided for @eyePostureTilt.
+  ///
+  /// In en, this message translates to:
+  /// **'A slightly tilted head can signal uncertainty; keeping your head held high and looking straight ahead will bring better focus and luck.'**
+  String get eyePostureTilt;
+
+  /// No description provided for @eyePostureStraight.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking straight ahead projects confidence and clears your path for success.'**
+  String get eyePostureStraight;
+
+  /// No description provided for @noseInsufficient.
+  ///
+  /// In en, this message translates to:
+  /// **'Nose analysis is limited due to image clarity; providing a general interpretation.'**
+  String get noseInsufficient;
+
+  /// No description provided for @noseWealthRich.
+  ///
+  /// In en, this message translates to:
+  /// **'A strong and well-defined nose suggests great potential for accumulating and protecting wealth.'**
+  String get noseWealthRich;
+
+  /// No description provided for @noseWealthPlanner.
+  ///
+  /// In en, this message translates to:
+  /// **'A sharp, well-proportioned nose indicates a practical mind for managing and growing your finances.'**
+  String get noseWealthPlanner;
+
+  /// No description provided for @noseWealthBalanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Your balanced features suggest a steady and stable flow of financial luck.'**
+  String get noseWealthBalanced;
+
+  /// No description provided for @mouthExpressionBlessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Your upturned corners suggest a positive nature that naturally attracts good fortune and favor from others.'**
+  String get mouthExpressionBlessing;
+
+  /// No description provided for @mouthExpressionReliable.
+  ///
+  /// In en, this message translates to:
+  /// **'A firm, closed mouth reflects reliability and a preference for action over empty words.'**
+  String get mouthExpressionReliable;
+
+  /// No description provided for @mouthExpressionLucky.
+  ///
+  /// In en, this message translates to:
+  /// **'A bright, open smile radiates positive energy, bringing luck to your relationships.'**
+  String get mouthExpressionLucky;
+
+  /// No description provided for @mouthExpressionOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Your open expression suggests honesty, but be mindful of your words in sensitive situations.'**
+  String get mouthExpressionOpen;
+
+  /// No description provided for @overallHeadlineSimple.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s focus is {topKey}, and the point to be careful of is {bottomKey}.'**
+  String overallHeadlineSimple(String topKey, String bottomKey);
+
+  /// No description provided for @overallVibeWealthRich.
+  ///
+  /// In en, this message translates to:
+  /// **'Your features radiate financial vitality, making this an excellent day to seize new opportunities.'**
+  String get overallVibeWealthRich;
+
+  /// No description provided for @overallVibeWealthSteady.
+  ///
+  /// In en, this message translates to:
+  /// **'A calm and steady focus will help you manage your finances wisely and build lasting wealth.'**
+  String get overallVibeWealthSteady;
+
+  /// No description provided for @overallVibeLoveCharisma.
+  ///
+  /// In en, this message translates to:
+  /// **'Your bright smile naturally attracts positive people and helpful connections today.'**
+  String get overallVibeLoveCharisma;
+
+  /// No description provided for @overallVibeLoveTrust.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sincere and steady gaze builds deep trust, making it a perfect time for meaningful connections.'**
+  String get overallVibeLoveTrust;
+
+  /// No description provided for @overallVibeCareerSmart.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sharp focus enhances your judgment, making it the perfect time for complex tasks or big decisions.'**
+  String get overallVibeCareerSmart;
+
+  /// No description provided for @overallVibeCareerSteady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your steady energy supports persistence; staying focused on your goals will lead to great results.'**
+  String get overallVibeCareerSteady;
+
+  /// No description provided for @overallVibeHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Your clear complexion reflects a balanced internal rhythm, making it a great day for physical activities.'**
+  String get overallVibeHealth;
+
+  /// No description provided for @overallActionPrudent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your composed expression suggests wisdom. Today, let your actions speak louder than your words.'**
+  String get overallActionPrudent;
+
+  /// No description provided for @overallActionConfident.
+  ///
+  /// In en, this message translates to:
+  /// **'A confident and open expression attracts positive results. Speak your mind with clarity and confidence.'**
+  String get overallActionConfident;
+
+  /// No description provided for @adviceHealth0.
+  ///
+  /// In en, this message translates to:
+  /// **'A healthy routine is the foundation of good luck. Avoid overcommitting yourself today.'**
+  String get adviceHealth0;
+
+  /// No description provided for @adviceHealth1.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay attention to your body\'s needs. A short break now will lead to better results later.'**
+  String get adviceHealth1;
+
+  /// No description provided for @adviceHealth2.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay hydrated and get enough rest; simplicity is the key to refreshing your luck.'**
+  String get adviceHealth2;
+
+  /// No description provided for @adviceWealth0.
+  ///
+  /// In en, this message translates to:
+  /// **'Be careful with your spending today. Double-check all expenses and contracts.'**
+  String get adviceWealth0;
+
+  /// No description provided for @adviceWealth1.
+  ///
+  /// In en, this message translates to:
+  /// **'Cutting back on minor expenses today is the first step toward building significant wealth.'**
+  String get adviceWealth1;
+
+  /// No description provided for @adviceWealth2.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting until tomorrow to make financial decisions may work in your favor.'**
+  String get adviceWealth2;
+
+  /// No description provided for @adviceLove0.
+  ///
+  /// In en, this message translates to:
+  /// **'A kind word and a gentle expression can improve your luck in relationships.'**
+  String get adviceLove0;
+
+  /// No description provided for @adviceLove1.
+  ///
+  /// In en, this message translates to:
+  /// **'Being a good listener is the secret to winning over others today.'**
+  String get adviceLove1;
+
+  /// No description provided for @adviceLove2.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintaining courtesy even with those close to you will preserve your positive energy.'**
+  String get adviceLove2;
+
+  /// No description provided for @adviceCareer0.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on one key goal today instead of trying to do everything at once.'**
+  String get adviceCareer0;
+
+  /// No description provided for @adviceCareer1.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t rush. Taking things one step at a time is the quickest way to success.'**
+  String get adviceCareer1;
+
+  /// No description provided for @adviceCareer2.
+  ///
+  /// In en, this message translates to:
+  /// **'Consider the advice of others, but trust your intuition for the final decision.'**
+  String get adviceCareer2;
+
+  /// No description provided for @sajuFortune2024Gap.
+  ///
+  /// In en, this message translates to:
+  /// **'🌿 2024 Year of the Wood Dragon (Yang Wood): \'A Year of New Beginnings and Growth\'\n\n2024 brings the energy of \'Peers\' and \'Windfalls.\' Like a new tree in a lush forest, this is a time for self-discovery and planning for the future.\n\n💼 [Career & Business]\nYour confidence and drive will be at their peak. You\'ll find opportunities to succeed in large projects through collaboration. If you\'ve been considering a career change or starting a business, now is the time. Stay open to others\' ideas to avoid becoming overly stubborn.\n\n💰 [Wealth]\nExpect opportunities for significant financial gain or unexpected windfalls. While wealth flows in, expenses may also rise, so careful asset management is key. Long-term investments are highly recommended.\n\n❤️ [Love & Relationships]\nA great time to expand your social circle. Singles may find an attractive partner, and couples will see their bonds deepen. Be mindful of potential rivalries in your personal life.\n\n⚠️ [Cautions]\nPrioritize your physical health and manage stress. Avoid making impulsive decisions based on overconfidence.'**
+  String get sajuFortune2024Gap;
+
+  /// No description provided for @sajuFortune2024Eul.
+  ///
+  /// In en, this message translates to:
+  /// **'🌿 2024 Year of the Wood Dragon (Yin Wood): \'A Year of Growth through Collaboration\'\n\n2024 brings the energy of \'Competitors\' and \'Stable Wealth.\' Like ivy climbing a great tree, you will achieve more by working with others than by going it alone.\n\n💼 [Career & Business]\nNetworking is your greatest asset this year. You\'ll meet influential mentors who will help you gain recognition. Be prepared to share your success with those who helped you. This is a strong year for establishing your presence in competitive environments.\n\n💰 [Wealth]\nA stable and consistent income is expected. Your hard work will be rewarded, making it an ideal time for savings or real estate. Avoid lending money to friends or acquaintances to prevent future conflict.\n\n❤️ [Love & Relationships]\nYour social life will flourish, and your popularity will grow. While romance looks promising, honest communication is necessary to avoid misunderstandings. New connections will likely form through your existing social circles.\n\n⚠️ [Cautions]\nWatch out for stress-related headaches or nervous tension. Stay flexible in your interactions to avoid unnecessary friction with others.'**
+  String get sajuFortune2024Eul;
+
+  /// No description provided for @sajuFortune2024Byeong.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 2024 Year of the Wood Dragon (Yang Fire): \'A Year for Passion and Creative Wisdom\'\n\n2024 brings the energy of \'Intuition\' and \'Creativity.\' Like the sun breathing life into a forest, your original ideas and talents will shine brightly this year.\n\n💼 [Career & Business]\nYou will excel in specialized fields, especially those involving research, art, or technology. Your original approach will bring unique results. To succeed, focus on turning your many ideas into immediate action.\n\n💰 [Wealth]\nYour talents and ideas will be your primary source of income. Side projects or hobbies could turn into profitable ventures. Be sure to review all contracts and investment plans carefully to avoid potential losses.\n\n❤️ [Love & Relationships]\nYour charm and eloquence will be at their peak, making you a natural leader in social settings. You\'ll enjoy a vibrant romantic life with many memorable dates and events.\n\n⚠️ [Cautions]\nPay attention to your digestive and cardiovascular health. Stay active outdoors to help clear your mind if you feel overwhelmed by deep thoughts.'**
+  String get sajuFortune2024Byeong;
+
+  /// No description provided for @sajuFortune2024Jeong.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 2024 Year of the Wood Dragon (Yin Fire): \'A Year of Inner Strength and Stability\'\n\n2024 brings the energy of \'Academic Success\' and \'Expression.\' Like a lamp illuminating a forest, this is a perfect year to focus on self-development, studies, or obtaining new certifications.\n\n💼 [Career & Business]\nSupport from mentors or seniors will improve your work environment, opening doors for promotions or transfers. Your ability to persuade others will be strong. Be mindful of your words to avoid being misunderstood by colleagues.\n\n💰 [Wealth]\nLuck is on your side regarding contracts and legal documents. Expect gains from real estate or career-related certifications. Focus on stable asset management and avoid impulsive purchases.\n\n❤️ [Love & Relationships]\nYour warm and polite demeanor will earn you the trust of those around you. Couples will experience a stable and nurturing period, making it a good year to plan for the future, including marriage.\n\n⚠️ [Cautions]\nTake care of your vision and manage mental fatigue. A humble attitude will help you avoid resentment from others who may be envious of your success.'**
+  String get sajuFortune2024Jeong;
+
+  /// No description provided for @sajuFortune2024Mu.
+  ///
+  /// In en, this message translates to:
+  /// **'⛰️ 2024 Year of the Wood Dragon (Yang Earth): \'A Year of Responsibility and Growth\'\n\n2024 brings the energy of \'Authority\' and \'Peers.\' Like a great mountain standing firm in a forest, you will face new responsibilities that will ultimately lead to significant personal growth.\n\n💼 [Career & Business]\nYou\'ll be called upon to lead and handle challenging assignments. Competitive environments will provide the perfect stage to prove your skills. Persistence will be your greatest ally in achieving long-term success.\n\n💰 [Wealth]\nExpect some increase in your expenses this year. Focus on protecting your current assets rather than taking big risks. Be cautious with financial transactions involving friends or family, and plan your budget with a long-term view.\n\n❤️ [Love & Relationships]\nYour strong charisma will attract attention from others. However, be careful not to let stubbornness cause friction with your partner. This is a great year for deepening friendships and building strong bonds.\n\n⚠️ [Cautions]\nBeware of physical overwork, specifically digestive issues or muscle pain. Prioritize rest and stretching, and find a hobby to help relieve mental pressure.'**
+  String get sajuFortune2024Mu;
+
+  /// No description provided for @sajuFortune2024Gi.
+  ///
+  /// In en, this message translates to:
+  /// **'🌾 2024 Year of the Wood Dragon (Yin Earth): \'A Year of Achievement and Harmony\'\n\n2024 brings the energy of \'Stability\' and \'Sharing.\' Like a fertile field bearing fruit, this will be a rewarding year where your social status rises and you gain well-deserved recognition.\n\n💼 [Career & Business]\nYou will be recognized for your hard work and may step into a significant new role. This is an exceptionally lucky year for employment and promotions. By following your principles, you will achieve results beyond your expectations.\n\n💰 [Wealth]\nA stable income and steady accumulation of wealth are in the cards. You may receive rewards for your past performance or honor. Be mindful of spending too much on others, and keep a balanced budget.\n\n❤️ [Love & Relationships]\nMarriage luck is strong this year. Singles may find a reliable partner for a serious relationship. Clear communication will help you gain support and affection from those around you.\n\n⚠️ [Cautions]\nMaintain regular eating habits and take care of your digestive health. Avoid getting too involved in other people\'s problems at the expense of your own well-being.'**
+  String get sajuFortune2024Gi;
+
+  /// No description provided for @sajuFortune2024Gyeong.
+  ///
+  /// In en, this message translates to:
+  /// **'⚔️ 2024 Year of the Wood Dragon (Yang Metal): \'A Year of Innovation and Change\'\n\n2024 brings the energy of \'Windfalls\' and \'Intuition.\' Like a sharp sword clearing a path through a forest, you will break old patterns and embrace exciting new challenges.\n\n💼 [Career & Business]\nYour bold decisiveness and fresh ideas will lead to success in new ventures. You may find opportunities for travel or work abroad. Embrace change, but remember to coordinate with others to avoid unnecessary conflict within your team.\n\n💰 [Wealth]\nYour financial situation may see significant fluctuations. While there is potential for large profits, avoid speculative investments without a solid plan. Thorough analysis will be your best protection against losses.\n\n❤️ [Love & Relationships]\nYou\'ll have many opportunities to meet new people and expand your social life. Your curiosity in dating will be high, but try to maintain a serious and consistent attitude to build lasting connections.\n\n⚠️ [Cautions]\nPay attention to your respiratory and digestive health. Stay calm and avoid rushing into decisions to prevent accidents or mistakes caused by impatience.'**
+  String get sajuFortune2024Gyeong;
+
+  /// No description provided for @sajuFortune2024Sin.
+  ///
+  /// In en, this message translates to:
+  /// **'💎 2024 Year of the Wood Dragon (Yin Metal): \'A Year of Recognition and Honor\'\n\n2024 brings the energy of \'Stable Wealth\' and \'Academic Success.\' Like a jewel discovered in a forest, your value will be recognized, and you will receive just rewards for your efforts.\n\n💼 [Career & Business]\nYour meticulous nature and sincerity will earn you deep trust. You may be put in charge of important projects or enjoy a promotion. This is a stable period where your plans will likely go exactly as intended.\n\n💰 [Wealth]\nYour financial outlook is stable and positive. Expect consistent income and success in savings or smart financial planning. You may also receive support or an inheritance from family or mentors.\n\n❤️ [Love & Relationships]\nYour polite and dignified manner will be very attractive to others. Trust will deepen in your romantic relationships, making this a great year for marriage or long-term commitments.\n\n⚠️ [Cautions]\nTake care of your skin and respiratory health. Don\'t let perfectionism cause unnecessary stress; remember to take time for yourself and relax.'**
+  String get sajuFortune2024Sin;
+
+  /// No description provided for @sajuFortune2024Im.
+  ///
+  /// In en, this message translates to:
+  /// **'🌊 2024 Year of the Wood Dragon (Yang Water): \'A Year of Flexible Growth and Wisdom\'\n\n2024 brings the energy of \'Creativity\' and \'Authority.\' Like a vast sea nurturing a forest, your wisdom will help you solve difficult problems and expand your influence.\n\n💼 [Career & Business]\nYour creative problem-solving skills will be your greatest strength. You\'ll find breakthroughs in challenging situations and gain recognition for your abilities, especially in education, planning, or consulting. Manage your workload to avoid burnout.\n\n💰 [Wealth]\nThis is a good year to increase your income through your unique skills and talents. While wealth flows in, sudden expenses may arise, so it\'s wise to keep an emergency fund for peace of mind.\n\n❤️ [Love & Relationships]\nYour increased understanding and tolerance will help you maintain excellent relationships. Deep conversations will strengthen your romantic bonds. Singles are likely to find a partner who brings them a sense of comfort.\n\n⚠️ [Cautions]\nPay attention to your kidney and bladder health. Avoid taking on too many responsibilities at once, as overcommitting can affect your physical well-being.'**
+  String get sajuFortune2024Im;
+
+  /// No description provided for @sajuFortune2024Gye.
+  ///
+  /// In en, this message translates to:
+  /// **'💧 2024 Year of the Wood Dragon (Yin Water): \'A Year of Seizing New Opportunities\'\n\n2024 brings the energy of \'Innovation\' and \'Stability.\' Like a gentle rain reviving a forest, your voice will be heard, and you will find new opportunities to showcase your presence.\n\n💼 [Career & Business]\nYour communication skills and creative ideas will be highly effective, especially in marketing, PR, or the arts. Be mindful of how you handle authority to ensure your innovative ideas are well-received by your organization.\n\n💰 [Wealth]\nYour financial flow will be active this year. Quick thinking and wit will help you increase your income. Be careful with impulsive spending on luxury items, and focus on maintaining a balanced budget.\n\n❤️ [Love & Relationships]\nYour charm and conversational skills will make you very popular. In relationships, your honesty will be refreshing, but remember to choose your words carefully to avoid hurting those you care about.\n\n⚠️ [Cautions]\nWatch out for issues with blood circulation or urological health. Stay humble and avoid gossip to protect your reputation and maintain positive relationships.'**
+  String get sajuFortune2024Gye;
+
+  /// No description provided for @sajuFortune2025Gap.
+  ///
+  /// In en, this message translates to:
+  /// **'🌿 2025 Year of the Wood Snake (Yang Wood): \'Growth through New Opportunities and Competition\'\n\n2025 brings the energy of \'Competitors\' and \'Productivity.\' Like a great tree growing alongside ivy, you will find success through synergy, though you must also navigate a year of healthy competition.\n\n💼 [Career & Business]\nYour activity and desire to express your ideas will be strong. This is a great year to showcase your talents to the world, especially for freelancers, artists, or those in sales. Build alliances with colleagues to turn potential rivals into collaborators.\n\n💰 [Wealth]\nWhile your financial flow is active, you may see money going out as quickly as it comes in. Be cautious of investment advice from friends or colleagues. In the long run, investing in your own growth or business expansion will be more rewarding than simply saving.\n\n❤️ [Love & Relationships]\nYour social life will be vibrant, and you\'ll meet many new people. Your charm will be highly effective in social settings. If you\'re interested in someone, be proactive in expressing your feelings, as you may face competition.\n\n⚠️ [Cautions]\nAvoid letting a competitive spirit lead to unnecessary conflict. With the active energy of the year, prioritize your physical stamina and stay safe while traveling.'**
+  String get sajuFortune2025Gap;
+
+  /// No description provided for @sajuFortune2025Eul.
+  ///
+  /// In en, this message translates to:
+  /// **'🌿 2025 Year of the Wood Snake (Yin Wood): \'A Brilliant Leap Forward\'\n\n2025 brings the energy of \'Peers\' and \'Expression.\' Like flowers in full bloom under the sun, this will be a dynamic year where your unique personality and talents receive the recognition they deserve.\n\n💼 [Career & Business]\nYour creativity and artistic sense will be at their peak. You\'ll excel in roles that involve planning and presenting fresh ideas. This is a strong year for independence or leading new projects. Remember to coordinate with others to ensure your innovations are well-received.\n\n💰 [Wealth]\nExpect income generated from your wit and specialized skills. Side projects or creative activities may bring unexpected financial gains. Manage your budget carefully to avoid overspending on luxury items or entertainment.\n\n❤️ [Love & Relationships]\nYour charm will attract significant attention from others. While you\'ll enjoy a lively romantic life, be mindful of your stubbornness in relationships. Singles can look forward to a potentially life-changing meeting.\n\n⚠️ [Cautions]\nChoose your words carefully to avoid gossip or misunderstandings. Prioritize regular rest and sleep to manage your energy levels throughout the year.'**
+  String get sajuFortune2025Eul;
+
+  /// No description provided for @sajuFortune2026Gap.
+  ///
+  /// In en, this message translates to:
+  /// **'🌳 2026 Byeong-oh Year Gap-Wood General Fortune: \'Flame of Passion, Maximization of Activity\'\n\n2026 is a year where the energy of \'Sik-sin\' (Productivity) and \'Sang-gwan\' (Expression) is very strong for you, a Gap-Wood. It is a situation where wood meets fire and burns vigorously, a period where your talent and expression burst out into the world without hesitation. Your presence is revealed even if you stay still, and your range of activities expands dramatically.\n\n💼 [Career & Business]\nIt is a very good time to start new projects or a business. Your ideas are realized, and you will be passionately immersed in work. You can achieve great results in fields that express yourself, such as art, broadcasting, sales, and education. However, you need to be cautious and double-check everything as you may make mistakes if you only run forward.\n\n💰 [Wealth]\nWealth follows as much as you are active. Income from business or side jobs may increase. However, as much as you earn, a lot of money may go out for investment or consumption. Investment for the future is good, but impulsive spending should be guarded against.\n\n❤️ [Love & Relationships]\nAppeal to the opposite sex with an honest and active attitude. Romantic luck heats up, but excessive emotional expression may burden the partner. It is also a year where children\'s luck enters very strongly.\n\n⚠️ [Precautions]\nIt is a year of extreme energy consumption. \'Burnout\' may come, so physical strength management is essential. Be careful of rumors caused by slips of the tongue, and try not to insist only on your own arguments.'**
+  String get sajuFortune2026Gap;
+
+  /// No description provided for @sajuFortune2026Eul.
+  ///
+  /// In en, this message translates to:
+  /// **'🌸 2026 Byeong-oh Year Eul-Wood General Fortune: \'Brilliant Blooming, Full Flowering of Talent\'\n\n2026 is a year where \'Sang-gwan\' (Expression) is heavy for you, an Eul-Wood. It is a situation where flowers bloom under the hot sun, a period where your charm and talent reach their peak. You will be the protagonist who receives attention everywhere and taste brilliant achievements.\n\n💼 [Career & Business]\nUnconventional attempts that break existing frameworks succeed. You will stand out in design, fashion, beauty, and entertainment. You may receive promotion or scout offers at work, but be careful of friction with superiors. Your ability doubles in a free environment.\n\n💰 [Wealth]\nThe ability to create wealth becomes excellent. Your brand value rises and your worth increases. However, chasing glamour may lead to luxury or waste, so you must guard your wallet well.\n\n❤️ [Love & Relationships]\nPopularity with the opposite sex explodes. You will have a brilliant and passionate romance, but it may end shortly and intensely. Married people may have a lot to worry about regarding children.\n\n⚠️ [Precautions]\nEmotional ups and downs may become severe. If you cannot control your temper, hard-earned achievements may collapse. Have a law-abiding spirit to avoid legal issues or rumors.'**
+  String get sajuFortune2026Eul;
+
+  /// No description provided for @sajuFortune2026Byeong.
+  ///
+  /// In en, this message translates to:
+  /// **'☀️ 2026 Byeong-oh Year Byeong-Fire General Fortune: \'Two Suns, Intense Competition and Leap\'\n\n2026 is a year where \'Bi-gyeon\' (Friend) and \'Geob-jae\' (Competitor) are very strong for you, a Byeong-Fire. It is a situation where two suns appear in the sky, a period where pride and competitive spirit reach the sky. Subjectivity becomes strong, you hate any interference, and you push through your path with determination.\n\n💼 [Career & Business]\nIt is a luck to win and achieve in competitive places. You can increase the scale through partnership or collaboration, but conflicts may arise due to profit distribution issues. It is a good opportunity for freelancers or professionals to make their names widely known.\n\n💰 [Wealth]\nMoney comes in, but there are also large holes for it to go out. Money may go out due to siblings, friends, or colleagues. Guaranteeing or lending money is absolutely forbidden. It is better to invest in honor or growing power rather than saving money.\n\n❤️ [Love & Relationships]\nYou may meet a lover like a friend or develop from a friend to a lover. However, if you have a partner, be careful as a love triangle or competitor may appear.\n\n⚠️ [Precautions]\nDogmatic actions may cause resentment from those around you. \'Humility\' is the best tactic. Pay attention to cardiovascular disease or eye health.'**
+  String get sajuFortune2026Byeong;
+
+  /// No description provided for @sajuFortune2026Jeong.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 2026 Byeong-oh Year Jeong-Fire General Fortune: \'Giant Flame, Expansion of Power\'\n\n2026 is a year of \'Geob-jae\' (Competitor) and \'Bi-gyeon\' (Friend) for you, a Jeong-Fire. Like a candle meeting a furnace, it is a period where your power becomes massive. You can achieve things that were impossible alone through help or cooperation from those around you.\n\n💼 [Career & Business]\nA strong driving force arises. You will have the wisdom to overwhelm competitors or turn them into your side. Opportunities to exercise leadership in team projects or organizational life will come. However, if you try to monopolize results, you may be betrayed, so a posture of sharing credit is necessary.\n\n💰 [Wealth]\nSpeculative tendencies become strong. You will pursue \'high risk, high return,\' and if lucky, you will touch a lot of money, but failure also has a large impact. Unexpected expenses may occur, so it is good to prepare an emergency fund.\n\n❤️ [Love & Relationships]\nThere is a high probability of meeting connections in social gatherings or group activities. Men should be careful as they may neglect their wives or girlfriends. Relationships with people around you become assets this year.\n\n⚠️ [Precautions]\nGreed leads to trouble. Refrain from unreasonable expansion or investment. Be careful of diseases caused by anger or stress.'**
+  String get sajuFortune2026Jeong;
+
+  /// No description provided for @sajuFortune2026Mu.
+  ///
+  /// In en, this message translates to:
+  /// **'🌋 2026 Byeong-oh Year Mu-Earth General Fortune: \'Patience and Preparation Amidst Intense Heat\'\n\n2026 is a year where the energy of \'Pyeon-in\' (Intuition) and \'Jeong-in\' (Knowledge) is strong for you, a Mu-Earth. It is like condensed energy just before a volcano erupts. It is the optimal time to fill your inner self and grow skills through study, art, and obtaining certifications.\n\n💼 [Career & Business]\nMental labor such as planning, research, and strategy establishment shines rather than active work. Document luck is good, so there are results in contracts or permit-related tasks. However, if you only think and postpone execution, you may miss opportunities, so bold decisiveness is also needed.\n\n💰 [Wealth]\nReal estate document luck is very strong. It is an opportunity to increase assets through sale or contract. Cash flow may be somewhat frustrating, but investment from a long-term perspective is promising.\n\n❤️ [Love & Relationships]\nInterference from mothers or superiors may increase. In romance, you will value mental communion, and connections with older people may be made.\n\n⚠️ [Precautions]\nToo many thoughts can lead to depression or lethargy. Outdoor activities or sweating through exercise help improve luck. As the ground cracks due to too much heat, be careful of dry skin or stomach disorders.'**
+  String get sajuFortune2026Mu;
+
+  /// No description provided for @sajuFortune2026Gi.
+  ///
+  /// In en, this message translates to:
+  /// **'🌾 2026 Byeong-oh Year Gi-Earth General Fortune: \'Solid Foundation and Definite Support\'\n\n2026 is a year of \'Jeong-in\' (Knowledge) and \'Pyeon-in\' (Intuition) for you, a Gi-Earth. It is a situation where warm sunlight shines on the earth and ripens grains. It is a period of solidifying a stable foundation while receiving full support and love from superiors.\n\n💼 [Career & Business]\nYou will achieve the best results in everything related to study, such as promotion exams, certification exams, and degree attainment. At work, you will gain the trust of superiors and take on important positions. You will stand out in education, real estate, counseling, and welfare fields.\n\n💰 [Wealth]\nIt is a luck to hold documents. You may achieve the goal of owning a home or receive inheritance or gifts. Stable asset growth is possible, and it is a year where honor shines more than wealth.\n\n❤️ [Love & Relationships]\nIt is a year to be loved. You will receive dependable love from your lover or meet a partner with good conditions. Marriage luck also enters, and family life becomes harmonious.\n\n⚠️ [Precautions]\nIf you only try to receive, you may become lazy. A posture of sharing as much as you received is necessary. Discard dependency and grow self-reliance.'**
+  String get sajuFortune2026Gi;
+
+  /// No description provided for @sajuFortune2026Gyeong.
+  ///
+  /// In en, this message translates to:
+  /// **'⚔️ 2026 Byeong-oh Year Gyeong-Metal General Fortune: \'Birth of a Masterpiece Beyond Ordeal\'\n\n2026 is a year where \'Pyeon-gwan\' (Pressure) and \'Jeong-gwan\' (Authority) are very powerful for you, a Gyeong-Metal. It is a situation of melting raw ore in a furnace to make a masterpiece sword. There may be strong pressure and stress, but if you endure it, you will gain immense authority and honor.\n\n💼 [Career & Business]\nYou may take on positions with heavy responsibility or handle difficult projects. However, this is a process of testing you, and if successfully completed, your status rises instantly. It is an opportunity for promotion for those in public office, military, police, and legal fields.\n\n💰 [Wealth]\nIt is a luck of honor and titles rather than money. As status rises, wealth will naturally follow, but money going out for dignity maintenance or entertainment is also significant.\n\n❤️ [Love & Relationships]\nFor women, it is a luck where a charismatic and capable man appears. Men have strong children\'s luck. Relationships with work superiors or elders become important.\n\n⚠️ [Precautions]\nHealth management is the top priority. Be careful of diseases or accidents caused by overwork. Especially lungs and large intestines may weaken. Find ways to relieve stress.'**
+  String get sajuFortune2026Gyeong;
+
+  /// No description provided for @sajuFortune2026Sin.
+  ///
+  /// In en, this message translates to:
+  /// **'💎 2026 Byeong-oh Year Sin-Metal General Fortune: \'Shining Jewel, Peak of Honor\'\n\n2026 is a year of \'Jeong-gwan\' (Authority) and \'Pyeon-gwan\' (Pressure) for you, a Sin-Metal. Like a jewel shining under lights, it is a period where your value is revealed to the world and honor is elevated. You have deep connections with upright and stable workplaces or organizations.\n\n💼 [Career & Business]\nJob hunting, promotion, and transfer luck are very good. You may also receive scout offers by being recognized for your skills. If you follow principles and handle work correctly, you will receive respect from everyone.\n\n💰 [Wealth]\nStable salary or fixed income is guaranteed. If you protect honor rather than chasing wealth, wealth will naturally follow. You can benefit from your husband or workplace.\n\n❤️ [Love & Relationships]\nIt is the best marriage and dating luck for women. You can meet an upright and capable spouse. Men gain children or have joyful events due to children.\n\n⚠️ [Precautions]\nToo much heat can melt the jewel. Excessive work or stress may cause nervousness. You may appear inflexible due to strong principle-oriented tendencies, so be careful.'**
+  String get sajuFortune2026Sin;
+
+  /// No description provided for @sajuFortune2026Im.
+  ///
+  /// In en, this message translates to:
+  /// **'🌊 2026 Byeongo Year Im-Water General Fortune: \'A Dynamic Year of Expanding Activity Range\'\n\n2026 is a year where the energy of \'Pyeon-jae\' and \'Jeong-jae\' enters for you. It\'s like a huge sea circulating actively by receiving the sun\'s heat and moving towards the wide world. It will be a dynamic year where economic activities become vigorous and opportunities to touch large wealth come.\n\n💼 [Career & Business]\nBusiness acumen is maximized. A very good year to pioneer new markets or reap large profits from investments. Luck where activity range can expand beyond domestic to overseas. Bold decisions lead to great results, but detailed review is essential.\n\n💰 [Wealth]\nWealth luck reaches its peak. Unexpected windfalls or large-scale business profits are expected. If you ride the flow of money well, you can form large assets. However, management is important as money going out can be as large as money coming in.\n\n❤️ [Love & Relationships]\nSociability improves and many people of the opposite sex gather around with overflowing charm. A good time to enjoy active dating. In romantic relationships, you spend happy times enjoying fancy dates and trips. However, be careful as you may neglect partners due to a too busy schedule.\n\n⚠️ [Cautions]\nPay attention to kidney function or blood circulation. Also, wisdom to know how to be satisfied at an appropriate level is needed as excessive greed may lead to trouble.'**
+  String get sajuFortune2026Im;
+
+  /// No description provided for @sajuFortune2026Gye.
+  ///
+  /// In en, this message translates to:
+  /// **'💧 2026 Byeongo Year Gye-Water General Fortune: \'Gaining Practical Interests while Strengthening Internal Foundations\'\n\n2026 is a year where the energy of \'Jeong-jae\' and \'Pyeon-jae\' enters for you. It\'s like sunshine shining after sweet rain, making the land full of life and abundance. You will achieve economic stability based on stable income and find small happinesses.\n\n💼 [Career & Business]\nYou handle assigned tasks perfectly with sincerity and meticulousness. Display excellent ability in finance, accounting, or management tasks. Recognition and rewards follow when you do your best in assigned work rather than excessive greed. You can grow step by step while building skills in a stable environment.\n\n💰 [Wealth]\nWealth luck is very good. Steady and stable income occurs, and you enjoy the joy of increasing assets through financial technology or savings. Small but definite profits gather to give great reward. Frugal spending habits shine this year.\n\n❤️ [Love & Relationships]\nYou give deep trust to partners with kindhearted and meticulous consideration. You grow a small but warm love while sharing daily lives. Relationships are also smooth and peaceful. You will play the role of a trusted advisor to people around you.\n\n⚠️ [Cautions]\nPay attention to eye diseases or urological system health. Also, sometimes practice looking at the world with a wide perspective as you may miss the big flow by paying attention to too detailed things.'**
+  String get sajuFortune2026Gye;
+
+  /// No description provided for @sajuFortune2025Byeong.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 2025 Year of the Wood Snake (Yang Fire): \'Passion and Achievement\'\n\n2025 brings the energy of \'Academic Success\' and \'Peers.\' Like the sun meeting the warmth of the earth, this year you\'ll find strong support and the confidence to achieve your goals.\n\n💼 [Career & Business]\nSupport from mentors or reliable partners will help you reach new heights. This is a great year for academic pursuits or professional certifications. While collaboration will lead to success, be mindful that excessive competition doesn\'t strain your professional relationships.\n\n💰 [Wealth]\nSharing information with your network will lead to financial growth. Joint ventures or collaborative investments look promising. Avoid overspending for the sake of appearance or pride; focus on practical gains.\n\n❤️ [Love & Relationships]\nYour social circle will deepen, and you\'ll find comfort in friendships. In romantic relationships, a sense of familiarity and friendship will strengthen your bond. Balance your time between friends and your partner to maintain harmony.\n\n⚠️ [Cautions]\nPay attention to your heart and circulatory health. Stay calm and manage your emotions, as impulsive reactions could lead to unnecessary setbacks.'**
+  String get sajuFortune2025Byeong;
+
+  /// No description provided for @sajuFortune2025Jeong.
+  ///
+  /// In en, this message translates to:
+  /// **'🔥 2025 Year of the Wood Snake (Yin Fire): \'Opportunities in Times of Change\'\n\n2025 brings the energy of \'Intuition\' and \'Competitors.\' Like a candle that continues to shine despite the wind, you will wisely overcome challenges and turn them into opportunities for success.\n\n💼 [Career & Business]\nYour original ideas and sharp intuition will shine. You\'ll find success in niche markets or specialized fields where others haven\'t looked. Be mindful of competition within your organization, and protect your ideas while maintaining good relationships.\n\n💰 [Wealth]\nExpect some fluctuations in your finances this year. A conservative approach to asset management is recommended, as unexpected expenses could arise. However, your professional skills will provide a stable source of income. Avoid risky financial transactions.\n\n❤️ [Love & Relationships]\nYou may find yourself being more reflective or passive in your romantic life. Trust is essential; try to approach your relationships with an open heart. Taking time for yourself will help you maintain your inner balance.\n\n⚠️ [Cautions]\nWatch out for stress-related fatigue or sleep issues. Practice mindfulness or light exercise to stay positive and clear-headed throughout the year.'**
+  String get sajuFortune2025Jeong;
+
+  /// No description provided for @sajuFortune2025Mu.
+  ///
+  /// In en, this message translates to:
+  /// **'⛰️ 2025 Year of the Wood Snake (Yang Earth): \'Wisdom and Maturity\'\n\n2025 brings the energy of \'Honor\' and \'Intuition.\' Like a great mountain embracing the warmth of the earth, this will be a year for deepening your knowledge while maintaining your social standing.\n\n💼 [Career & Business]\nYou\'re likely to step into a role of responsibility or find opportunities for promotion. By valuing principles and working sincerely, you\'ll earn significant recognition. This is also an excellent year for research or specialized studies. Stay open to new ideas to avoid becoming stuck in old patterns.\n\n💰 [Wealth]\nA stable income is expected. Focus on saving and careful asset management. Luck is on your side regarding real estate or legal documents, making it a good time for long-term investments. Avoid being swayed by risky temptations.\n\n❤️ [Love & Relationships]\nYour dignified and reliable manner will earn you the trust of others. This is a perfect time for couples to build a deeper, more serious relationship. If you\'re considering marriage, this is a great year to make specific plans.\n\n⚠️ [Cautions]\nTake care of your digestive health and skin. Don\'t let overthinking lead to indecision; listen to trusted advice to help you move forward with confidence.'**
+  String get sajuFortune2025Mu;
+
+  /// No description provided for @sajuFortune2025Gi.
+  ///
+  /// In en, this message translates to:
+  /// **'🌾 2025 Year of the Wood Snake (Yin Earth): \'Achieving Goals through Persistence\'\n\n2025 brings the energy of \'Authority\' and \'Academic Success.\' Like sunshine after a rain, this year will bring the recognition and honor you\'ve worked so hard to achieve.\n\n💼 [Career & Business]\nYour workload and responsibilities may increase, but you\'ll prove your leadership skills by overcoming these challenges with patience. Support from mentors or seniors will help you navigate difficult situations, leading to a great sense of accomplishment.\n\n💰 [Wealth]\nCareful budget management is essential this year, as you may face unexpected taxes or public fees. However, your steady efforts will likely be rewarded with bonuses or incentives. Persistence is your key to financial success.\n\n❤️ [Love & Relationships]\nYour responsible nature will be very attractive to others. Shared challenges will strengthen the bond between couples as you support each other. Even with a busy schedule, make time for meaningful communication with your partner.\n\n⚠️ [Cautions]\nAvoid burnout by prioritizing your physical health. Maintain a regular routine of healthy meals and exercise, and keep a positive mindset to manage stress effectively.'**
+  String get sajuFortune2025Gi;
+
+  /// No description provided for @sajuFortune2025Gyeong.
+  ///
+  /// In en, this message translates to:
+  /// **'⚔️ 2025 Year of the Wood Snake (Yang Metal): \'Earning Honor and Practical Gains\'\n\n2025 brings the energy of \'Stable Wealth\' and \'Authority.\' Like raw metal being refined into a master sword, your hard work will be rewarded with both social status and financial gains.\n\n💼 [Career & Business]\nYour focus on results and strong drive will lead to significant achievements, especially in finance, management, or technology. You\'ll gain recognition for solving complex problems, though the increased responsibility may bring some pressure. Trust in your abilities and move forward boldly.\n\n💰 [Wealth]\nYour financial outlook is very positive. In addition to a stable income, you may see gains from side projects or smart investments. You\'ll have a keen eye for managing your assets efficiently. Avoid spending too much solely for the sake of your reputation.\n\n❤️ [Love & Relationships]\nYour sincere and reliable nature will be your greatest asset in relationships. You provide a sense of security for your partner with your responsible attitude. Try to add a touch of humor to your interactions to soften your professional image.\n\n⚠️ [Cautions]\nTake care of your respiratory health and joints. Don\'t let perfectionism cause unnecessary stress; remember to be kind to yourself as you strive for your goals.'**
+  String get sajuFortune2025Gyeong;
+
+  /// No description provided for @sajuFortune2025Sin.
+  ///
+  /// In en, this message translates to:
+  /// **'💎 2025 Year of the Wood Snake (Yin Metal): \'Wisdom and Success in Times of Change\'\n\n2025 brings the energy of \'Windfalls\' and \'Honor.\' Like a fine jewel under a spotlight, your value will be recognized, and you\'ll experience both a rise in social status and unexpected financial gains.\n\n💼 [Career & Business]\nYour business acumen will be sharp, and you\'ll excel at capturing new opportunities. Bold challenges are likely to bring significant rewards. Within your organization, your rational judgment will earn you the trust of others and potentially a promotion.\n\n💰 [Wealth]\nFinancial luck is on your side this year. You may see unexpected gains from investments or family support. While wealth flows in, maintain a planned budget to avoid overspending on luxury items.\n\n❤️ [Love & Relationships]\nYou\'ll be the center of attention in social settings with your attractive presence. This is a very strong year for romance, with many people drawn to your charm. Couples can look forward to a passionate and meaningful year together.\n\n⚠️ [Cautions]\nPay attention to your respiratory and skin health. Maintain a humble attitude to ensure your confidence isn\'t mistaken for arrogance by those around you.'**
+  String get sajuFortune2025Sin;
+
+  /// No description provided for @sajuFortune2025Im.
+  ///
+  /// In en, this message translates to:
+  /// **'🌊 2025 Year of the Wood Snake (Yang Water): \'Expanding Your Influence through Wisdom\'\n\n2025 brings the energy of \'Expression\' and \'Windfalls.\' Like a winding river nurturing a field, this will be a dynamic year for expanding your activities and achieving significant financial success through your unique talents.\n\n💼 [Career & Business]\nYour communication skills will be highly effective, especially in marketing, PR, or creative fields. This is the perfect time to commercialize your ideas and explore new markets. Stay professional in your interactions with authority to ensure your ideas are well-received.\n\n💰 [Wealth]\nYour financial situation will be active and promising. You\'ll find opportunities to earn money through your specialized skills and capture large financial gains. Remember to share your success with others to maintain your positive financial flow.\n\n❤️ [Love & Relationships]\nYour humor and charm will make you very popular. You\'ll enjoy a vibrant social life with many interesting dates. In relationships, variety and creativity will keep things exciting. Be mindful that your words are understood as intended to avoid simple misunderstandings.\n\n⚠️ [Cautions]\nTake care of your kidney and urological health. Prioritize rest and proper nutrition to maintain your energy levels as you expand your range of activities.'**
+  String get sajuFortune2025Im;
+
+  /// No description provided for @sajuFortune2025Gye.
+  ///
+  /// In en, this message translates to:
+  /// **'💧 2025 Year of the Wood Snake (Yin Water): \'A Year of Stability and Reward\'\n\n2025 brings the energy of \'Productivity\' and \'Stable Wealth.\' Like a gentle rain preparing the land for a rich harvest, your steady efforts will lead to lasting wealth and happiness.\n\n💼 [Career & Business]\nSincerity is your greatest strength this year. By fulfilling your responsibilities, you\'ll earn the deep trust of your colleagues. This is a great time to focus on your favorite projects and grow your expertise in a stable environment.\n\n💰 [Wealth]\nExpect a stable and comfortable financial year. You\'ll find satisfaction in steadily building your assets through careful planning. Abundance is the theme for your year; focus on safe investments and savings rather than taking risks.\n\n❤️ [Love & Relationships]\nYour warm-hearted and considerate nature will bring comfort to your partner. This is a year for nurturing your relationships with care and attention. Singles are likely to meet someone who shares their values and communicates well.\n\n⚠️ [Cautions]\nPay attention to your digestive health and maintain healthy eating habits. Find new ways to stay active and engaged to avoid becoming too comfortable or settled in your routine.'**
+  String get sajuFortune2025Gye;
+
+  /// No description provided for @preparationForTomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparation for Tomorrow'**
+  String get preparationForTomorrow;
+
+  /// No description provided for @howToMeetMoreLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'How to meet more luck'**
+  String get howToMeetMoreLuck;
+
+  /// No description provided for @enterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get enterName;
+
+  /// No description provided for @fortuneDateConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to check the fortune for {date}?'**
+  String fortuneDateConfirm(String date);
+
+  /// No description provided for @colorPurple.
+  ///
+  /// In en, this message translates to:
+  /// **'Purple'**
+  String get colorPurple;
+
+  /// No description provided for @colorBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get colorBlue;
+
+  /// No description provided for @colorYellow.
+  ///
+  /// In en, this message translates to:
+  /// **'Yellow'**
+  String get colorYellow;
+
+  /// No description provided for @colorRed.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get colorRed;
+
+  /// No description provided for @colorGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get colorGreen;
+
+  /// No description provided for @colorPink.
+  ///
+  /// In en, this message translates to:
+  /// **'Pink'**
+  String get colorPink;
+
+  /// No description provided for @colorOrange.
+  ///
+  /// In en, this message translates to:
+  /// **'Orange'**
+  String get colorOrange;
+
+  /// No description provided for @colorWhite.
+  ///
+  /// In en, this message translates to:
+  /// **'White'**
+  String get colorWhite;
+
+  /// No description provided for @colorBlack.
+  ///
+  /// In en, this message translates to:
+  /// **'Black'**
+  String get colorBlack;
+
+  /// No description provided for @itemPerfume.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfume'**
+  String get itemPerfume;
+
+  /// No description provided for @itemHandkerchief.
+  ///
+  /// In en, this message translates to:
+  /// **'Handkerchief'**
+  String get itemHandkerchief;
+
+  /// No description provided for @itemRing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ring'**
+  String get itemRing;
+
+  /// No description provided for @itemWatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch'**
+  String get itemWatch;
+
+  /// No description provided for @itemGlasses.
+  ///
+  /// In en, this message translates to:
+  /// **'Glasses'**
+  String get itemGlasses;
+
+  /// No description provided for @itemHat.
+  ///
+  /// In en, this message translates to:
+  /// **'Hat'**
+  String get itemHat;
+
+  /// No description provided for @itemBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Book'**
+  String get itemBook;
+
+  /// No description provided for @itemEarphones.
+  ///
+  /// In en, this message translates to:
+  /// **'Earphones'**
+  String get itemEarphones;
+
+  /// No description provided for @itemMirror.
+  ///
+  /// In en, this message translates to:
+  /// **'Mirror'**
+  String get itemMirror;
+
+  /// No description provided for @itemPen.
+  ///
+  /// In en, this message translates to:
+  /// **'Pen'**
+  String get itemPen;
+
+  /// No description provided for @itemCoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Coin'**
+  String get itemCoin;
+
+  /// No description provided for @itemKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Key'**
+  String get itemKey;
+
+  /// No description provided for @dirEast.
+  ///
+  /// In en, this message translates to:
+  /// **'East'**
+  String get dirEast;
+
+  /// No description provided for @dirWest.
+  ///
+  /// In en, this message translates to:
+  /// **'West'**
+  String get dirWest;
+
+  /// No description provided for @dirSouth.
+  ///
+  /// In en, this message translates to:
+  /// **'South'**
+  String get dirSouth;
+
+  /// No description provided for @dirNorth.
+  ///
+  /// In en, this message translates to:
+  /// **'North'**
+  String get dirNorth;
+
+  /// No description provided for @dirNorthEast.
+  ///
+  /// In en, this message translates to:
+  /// **'North-East'**
+  String get dirNorthEast;
+
+  /// No description provided for @dirSouthEast.
+  ///
+  /// In en, this message translates to:
+  /// **'South-East'**
+  String get dirSouthEast;
+
+  /// No description provided for @dirNorthWest.
+  ///
+  /// In en, this message translates to:
+  /// **'North-West'**
+  String get dirNorthWest;
+
+  /// No description provided for @dirSouthWest.
+  ///
+  /// In en, this message translates to:
+  /// **'South-West'**
+  String get dirSouthWest;
+
   /// No description provided for @general.
   ///
   /// In en, this message translates to:
@@ -511,7 +3361,7 @@ abstract class AppLocalizations {
   /// No description provided for @darkModeDescription.
   ///
   /// In en, this message translates to:
-  /// **'Set the screen to dark.'**
+  /// **'Enable dark mode for a more comfortable viewing experience.'**
   String get darkModeDescription;
 
   /// No description provided for @alarmSettings.
@@ -544,6 +3394,12 @@ abstract class AppLocalizations {
   /// **'Sunny'**
   String get weatherConditionSunny;
 
+  /// No description provided for @weatherConditionPartlyCloudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Partly Cloudy'**
+  String get weatherConditionPartlyCloudy;
+
   /// No description provided for @weatherConditionCloudy.
   ///
   /// In en, this message translates to:
@@ -556,17 +3412,47 @@ abstract class AppLocalizations {
   /// **'Foggy'**
   String get weatherConditionFoggy;
 
+  /// No description provided for @weatherConditionDrizzle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drizzle'**
+  String get weatherConditionDrizzle;
+
   /// No description provided for @weatherConditionRainy.
   ///
   /// In en, this message translates to:
   /// **'Rainy'**
   String get weatherConditionRainy;
 
+  /// No description provided for @weatherConditionFreezingRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Freezing Rain'**
+  String get weatherConditionFreezingRain;
+
   /// No description provided for @weatherConditionSnowy.
   ///
   /// In en, this message translates to:
   /// **'Snowy'**
   String get weatherConditionSnowy;
+
+  /// No description provided for @weatherConditionSnowGrains.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow Grains'**
+  String get weatherConditionSnowGrains;
+
+  /// No description provided for @weatherConditionRainShowers.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain Showers'**
+  String get weatherConditionRainShowers;
+
+  /// No description provided for @weatherConditionSnowShowers.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow Showers'**
+  String get weatherConditionSnowShowers;
 
   /// No description provided for @weatherConditionThunderstorm.
   ///
@@ -655,37 +3541,37 @@ abstract class AppLocalizations {
   /// No description provided for @alarmOptimization.
   ///
   /// In en, this message translates to:
-  /// **'Alarm Sound Optimization'**
+  /// **'Alarm Optimization'**
   String get alarmOptimization;
 
   /// No description provided for @allOptimizationsCompleted.
   ///
   /// In en, this message translates to:
-  /// **'All optimization settings completed'**
+  /// **'All settings optimized.'**
   String get allOptimizationsCompleted;
 
   /// No description provided for @optimizationNeeded.
   ///
   /// In en, this message translates to:
-  /// **'Settings are required for accurate alarms.'**
+  /// **'Additional settings are required for accurate alarms.'**
   String get optimizationNeeded;
 
   /// No description provided for @optimizationDescription.
   ///
   /// In en, this message translates to:
-  /// **'Alarms may be delayed or not sound due to Android system settings. Please set all items to allowed.'**
+  /// **'To ensure your alarms ring on time, please allow the following permissions in your system settings.'**
   String get optimizationDescription;
 
   /// No description provided for @allowNotificationPermission.
   ///
   /// In en, this message translates to:
-  /// **'Allow Notification Permission'**
+  /// **'Allow Notifications'**
   String get allowNotificationPermission;
 
   /// No description provided for @notificationPermissionDescription.
   ///
   /// In en, this message translates to:
-  /// **'Required to display notifications when an alarm occurs.'**
+  /// **'Enables notifications for alarms and fortune updates.'**
   String get notificationPermissionDescription;
 
   /// No description provided for @excludeBatteryOptimization.
@@ -697,19 +3583,19 @@ abstract class AppLocalizations {
   /// No description provided for @batteryOptimizationDescription.
   ///
   /// In en, this message translates to:
-  /// **'Ensures the alarm sounds immediately even in power saving mode.'**
+  /// **'Prevents the system from delaying alarms to save power.'**
   String get batteryOptimizationDescription;
 
   /// No description provided for @allowExactAlarm.
   ///
   /// In en, this message translates to:
-  /// **'Allow Exact Alarm'**
+  /// **'Allow Exact Alarms'**
   String get allowExactAlarm;
 
   /// No description provided for @exactAlarmDescription.
   ///
   /// In en, this message translates to:
-  /// **'Sounds the alarm on time without being delayed by the system.'**
+  /// **'Ensures alarms trigger precisely at the scheduled time.'**
   String get exactAlarmDescription;
 
   /// No description provided for @drawOverOtherApps.
@@ -727,13 +3613,19 @@ abstract class AppLocalizations {
   /// No description provided for @allSettingsCompleted.
   ///
   /// In en, this message translates to:
-  /// **'All settings are completed.'**
+  /// **'All settings updated.'**
   String get allSettingsCompleted;
+
+  /// No description provided for @allowAllItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable all permissions.'**
+  String get allowAllItems;
 
   /// No description provided for @manualSettingsInfo.
   ///
   /// In en, this message translates to:
-  /// **'You can disable settings directly in Android system settings.'**
+  /// **'You can manage these settings anytime in your Android system menu.'**
   String get manualSettingsInfo;
 
   /// No description provided for @takePhoto.
@@ -769,19 +3661,13 @@ abstract class AppLocalizations {
   /// No description provided for @addAssetInstructions.
   ///
   /// In en, this message translates to:
-  /// **'Put the image in assets/images/ folder and register it in pubspec.yaml.'**
+  /// **'Add images to the \'assets/images/\' folder and update \'pubspec.yaml\'.'**
   String get addAssetInstructions;
-
-  /// No description provided for @gallery.
-  ///
-  /// In en, this message translates to:
-  /// **'Gallery'**
-  String get gallery;
 
   /// No description provided for @ringingNow.
   ///
   /// In en, this message translates to:
-  /// **'Ringing Now'**
+  /// **'Alarm Ringing'**
   String get ringingNow;
 
   /// No description provided for @setTime.
@@ -808,76 +3694,106 @@ abstract class AppLocalizations {
   /// **'Snooze Settings'**
   String get snoozeSettings;
 
-  /// No description provided for @interval.
-  ///
-  /// In en, this message translates to:
-  /// **'Interval'**
-  String get interval;
-
   /// No description provided for @wakeUpAlarm.
   ///
   /// In en, this message translates to:
-  /// **'Wake-up Alarm'**
+  /// **'Alarm Mission'**
   String get wakeUpAlarm;
-
-  /// No description provided for @snoozeInfo.
-  ///
-  /// In en, this message translates to:
-  /// **'{interval} min, {count} times'**
-  String snoozeInfo(int interval, int count);
 
   /// No description provided for @daySun.
   ///
   /// In en, this message translates to:
-  /// **'Sun'**
+  /// **'S'**
   String get daySun;
 
   /// No description provided for @dayMon.
   ///
   /// In en, this message translates to:
-  /// **'Mon'**
+  /// **'M'**
   String get dayMon;
 
   /// No description provided for @dayTue.
   ///
   /// In en, this message translates to:
-  /// **'Tue'**
+  /// **'T'**
   String get dayTue;
 
   /// No description provided for @dayWed.
   ///
   /// In en, this message translates to:
-  /// **'Wed'**
+  /// **'W'**
   String get dayWed;
 
   /// No description provided for @dayThu.
   ///
   /// In en, this message translates to:
-  /// **'Thu'**
+  /// **'T'**
   String get dayThu;
 
   /// No description provided for @dayFri.
   ///
   /// In en, this message translates to:
-  /// **'Fri'**
+  /// **'F'**
   String get dayFri;
 
   /// No description provided for @daySat.
   ///
   /// In en, this message translates to:
-  /// **'Sat'**
+  /// **'S'**
   String get daySat;
+
+  /// No description provided for @daySunFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get daySunFull;
+
+  /// No description provided for @dayMonFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get dayMonFull;
+
+  /// No description provided for @dayTueFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get dayTueFull;
+
+  /// No description provided for @dayWedFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get dayWedFull;
+
+  /// No description provided for @dayThuFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get dayThuFull;
+
+  /// No description provided for @dayFriFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get dayFriFull;
+
+  /// No description provided for @daySatFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get daySatFull;
 
   /// No description provided for @missionRewardEarned.
   ///
   /// In en, this message translates to:
-  /// **'Congratulations! You have completed 5 missions today and earned 1 Fortune Cookie!'**
+  /// **'Great job! You\'ve completed 5 missions and earned a Fortune Cookie!'**
   String get missionRewardEarned;
 
   /// No description provided for @missionRewardEarnedWithCount.
   ///
   /// In en, this message translates to:
-  /// **'Congratulations! You completed {missions} missions today and earned {cookies} Fortune Cookie(s)!'**
+  /// **'Well done! You\'ve completed {missions} missions and earned {cookies} Fortune Cookie(s)!'**
   String missionRewardEarnedWithCount(int missions, int cookies);
 
   /// No description provided for @daysCount.
@@ -892,11 +3808,401 @@ abstract class AppLocalizations {
   /// **'User'**
   String get user;
 
+  /// No description provided for @member.
+  ///
+  /// In en, this message translates to:
+  /// **'Member'**
+  String get member;
+
+  /// No description provided for @manageSajuInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Birth Info'**
+  String get manageSajuInfo;
+
+  /// No description provided for @freeCharge.
+  ///
+  /// In en, this message translates to:
+  /// **'Free Refill'**
+  String get freeCharge;
+
+  /// No description provided for @fortunePass.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune Pass'**
+  String get fortunePass;
+
+  /// No description provided for @unlimitedNotSubscribed.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription inactive'**
+  String get unlimitedNotSubscribed;
+
+  /// No description provided for @unlimitedInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription active'**
+  String get unlimitedInUse;
+
+  /// No description provided for @subscribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe'**
+  String get subscribe;
+
+  /// No description provided for @manageSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Subscription'**
+  String get manageSubscription;
+
+  /// No description provided for @purchaseHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase History'**
+  String get purchaseHistory;
+
+  /// No description provided for @customerCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get customerCenter;
+
+  /// No description provided for @noNewNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No new notifications.'**
+  String get noNewNotifications;
+
+  /// No description provided for @noPurchaseHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No purchase history.'**
+  String get noPurchaseHistory;
+
   /// No description provided for @none.
   ///
   /// In en, this message translates to:
   /// **'None'**
   String get none;
+
+  /// No description provided for @deleteConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete \"{title}\"?'**
+  String deleteConfirmMessage(String title);
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @notepad.
+  ///
+  /// In en, this message translates to:
+  /// **'Notepad'**
+  String get notepad;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @yearView.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get yearView;
+
+  /// No description provided for @monthView.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get monthView;
+
+  /// No description provided for @weekView.
+  ///
+  /// In en, this message translates to:
+  /// **'Week'**
+  String get weekView;
+
+  /// No description provided for @dayView.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get dayView;
+
+  /// No description provided for @noEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'No events scheduled.'**
+  String get noEvents;
+
+  /// No description provided for @noSavedMemos.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved memos or events.'**
+  String get noSavedMemos;
+
+  /// No description provided for @holiday.
+  ///
+  /// In en, this message translates to:
+  /// **'Holiday'**
+  String get holiday;
+
+  /// No description provided for @photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get photo;
+
+  /// No description provided for @drawing.
+  ///
+  /// In en, this message translates to:
+  /// **'Drawing'**
+  String get drawing;
+
+  /// No description provided for @drawingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drawing'**
+  String get drawingTitle;
+
+  /// No description provided for @pencil.
+  ///
+  /// In en, this message translates to:
+  /// **'Pencil'**
+  String get pencil;
+
+  /// No description provided for @marker.
+  ///
+  /// In en, this message translates to:
+  /// **'Marker'**
+  String get marker;
+
+  /// No description provided for @eraser.
+  ///
+  /// In en, this message translates to:
+  /// **'Eraser'**
+  String get eraser;
+
+  /// No description provided for @adjustThickness.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust {label} thickness'**
+  String adjustThickness(String label);
+
+  /// No description provided for @sticker.
+  ///
+  /// In en, this message translates to:
+  /// **'Sticker'**
+  String get sticker;
+
+  /// No description provided for @event.
+  ///
+  /// In en, this message translates to:
+  /// **'Event'**
+  String get event;
+
+  /// No description provided for @memo.
+  ///
+  /// In en, this message translates to:
+  /// **'Memo'**
+  String get memo;
+
+  /// No description provided for @routineExercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise'**
+  String get routineExercise;
+
+  /// No description provided for @routineHiking.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiking'**
+  String get routineHiking;
+
+  /// No description provided for @routineCleaning.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning'**
+  String get routineCleaning;
+
+  /// No description provided for @routineTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Travel'**
+  String get routineTravel;
+
+  /// No description provided for @routineDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get routineDate;
+
+  /// No description provided for @routineConcert.
+  ///
+  /// In en, this message translates to:
+  /// **'Concert'**
+  String get routineConcert;
+
+  /// No description provided for @routineMovie.
+  ///
+  /// In en, this message translates to:
+  /// **'Movie'**
+  String get routineMovie;
+
+  /// No description provided for @routineMeeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting'**
+  String get routineMeeting;
+
+  /// No description provided for @howIsYourMoodToday.
+  ///
+  /// In en, this message translates to:
+  /// **'How is your mood today?'**
+  String get howIsYourMoodToday;
+
+  /// No description provided for @complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get complete;
+
+  /// No description provided for @amWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'☀️ AM'**
+  String get amWithIcon;
+
+  /// No description provided for @pmWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'🌙 PM'**
+  String get pmWithIcon;
+
+  /// No description provided for @photoPermissionDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'To add photos, you must allow photo access in settings.'**
+  String get photoPermissionDescription;
+
+  /// No description provided for @goToSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Settings'**
+  String get goToSettings;
+
+  /// No description provided for @photoPermissionNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo access permission is required.'**
+  String get photoPermissionNeeded;
+
+  /// No description provided for @fontSize.
+  ///
+  /// In en, this message translates to:
+  /// **'Font Size'**
+  String get fontSize;
+
+  /// No description provided for @fontFamily.
+  ///
+  /// In en, this message translates to:
+  /// **'Font'**
+  String get fontFamily;
+
+  /// No description provided for @textColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Color'**
+  String get textColor;
+
+  /// No description provided for @textAlign.
+  ///
+  /// In en, this message translates to:
+  /// **'Alignment'**
+  String get textAlign;
+
+  /// No description provided for @alignLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get alignLeft;
+
+  /// No description provided for @alignCenter.
+  ///
+  /// In en, this message translates to:
+  /// **'Center'**
+  String get alignCenter;
+
+  /// No description provided for @alignRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get alignRight;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @fontSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Font Settings'**
+  String get fontSettings;
+
+  /// No description provided for @imageAddedFromKeyboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Image added from keyboard.'**
+  String get imageAddedFromKeyboard;
+
+  /// No description provided for @cancelWriting.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Writing'**
+  String get cancelWriting;
+
+  /// No description provided for @cancelWritingConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'There is content being written. Do you want to cancel and exit?'**
+  String get cancelWritingConfirm;
+
+  /// No description provided for @continueWriting.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Writing'**
+  String get continueWriting;
+
+  /// No description provided for @title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get title;
+
+  /// No description provided for @content.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get content;
+
+  /// No description provided for @selectTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Time'**
+  String get selectTime;
+
+  /// No description provided for @noTime.
+  ///
+  /// In en, this message translates to:
+  /// **'No Time'**
+  String get noTime;
 
   /// No description provided for @minutesLater.
   ///
@@ -963,6 +4269,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter alarm name'**
   String get enterAlarmName;
+
+  /// No description provided for @routineSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine Summary'**
+  String get routineSummary;
+
+  /// No description provided for @alarmOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm ON'**
+  String get alarmOn;
+
+  /// No description provided for @alarmOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm OFF'**
+  String get alarmOff;
+
+  /// No description provided for @contentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add content'**
+  String get contentHint;
+
+  /// No description provided for @addEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Event'**
+  String get addEvent;
+
+  /// No description provided for @manageItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Item'**
+  String get manageItem;
+
+  /// No description provided for @manageItemDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to do with this item?'**
+  String get manageItemDescription;
+
+  /// No description provided for @noTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Title'**
+  String get noTitle;
+
+  /// No description provided for @selectTitleColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Title Color'**
+  String get selectTitleColor;
 
   /// No description provided for @save.
   ///
@@ -1093,13 +4453,13 @@ abstract class AppLocalizations {
   /// No description provided for @missionHiddenButton.
   ///
   /// In en, this message translates to:
-  /// **'Position Memory'**
+  /// **'Memory Tiles'**
   String get missionHiddenButton;
 
   /// No description provided for @missionHiddenButtonDescription.
   ///
   /// In en, this message translates to:
-  /// **'Memorize the lit tiles in order and tap them within 10 seconds.'**
+  /// **'Memorize the pattern of the tiles and tap them in order within 10 seconds.'**
   String get missionHiddenButtonDescription;
 
   /// No description provided for @missionHiddenButtonDifficulty.
@@ -1111,13 +4471,13 @@ abstract class AppLocalizations {
   /// No description provided for @missionTapSprint.
   ///
   /// In en, this message translates to:
-  /// **'Tap Sprint'**
+  /// **'Rapid Tap'**
   String get missionTapSprint;
 
   /// No description provided for @missionTapSprintDescriptionShort.
   ///
   /// In en, this message translates to:
-  /// **'Tap to fill the meter.'**
+  /// **'Tap quickly to fill the meter.'**
   String get missionTapSprintDescriptionShort;
 
   /// No description provided for @missionTapSprintDescription.
@@ -1135,7 +4495,7 @@ abstract class AppLocalizations {
   /// No description provided for @missionTapSprintHint.
   ///
   /// In en, this message translates to:
-  /// **'Fills up fast, drains if you pause.'**
+  /// **'The meter drains if you stop tapping!'**
   String get missionTapSprintHint;
 
   /// No description provided for @missionLeftRight.
@@ -1204,6 +4564,42 @@ abstract class AppLocalizations {
   /// **'(Catches: {count}/{min})'**
   String fortuneCatchGoalDetail(int count, int min);
 
+  /// No description provided for @fortuneCatchTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time: {seconds}s'**
+  String fortuneCatchTime(int seconds);
+
+  /// No description provided for @fortuneCatchBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best: {seconds}s'**
+  String fortuneCatchBest(int seconds);
+
+  /// No description provided for @fortuneCatchAngryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Avoid the angry Fortuni to prevent penalties!'**
+  String get fortuneCatchAngryHint;
+
+  /// No description provided for @fortuneCatchInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Catch the happy Fortuni and avoid the angry ones!'**
+  String get fortuneCatchInstruction;
+
+  /// No description provided for @fortuneCatchPointMinus.
+  ///
+  /// In en, this message translates to:
+  /// **'{points} points deducted'**
+  String fortuneCatchPointMinus(int points);
+
+  /// No description provided for @fortuneCatchPointPlus.
+  ///
+  /// In en, this message translates to:
+  /// **'+{points} points'**
+  String fortuneCatchPointPlus(int points);
+
   /// No description provided for @fortuneCatchCombo.
   ///
   /// In en, this message translates to:
@@ -1246,6 +4642,180 @@ abstract class AppLocalizations {
   /// **'{count} Problems'**
   String problemsCount(int count);
 
+  /// No description provided for @missionAnalyzing.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission {index}/{total} Analyzing...'**
+  String missionAnalyzing(int index, int total);
+
+  /// No description provided for @missionPointObject.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission {index}/{total}: Point at the object in the guide.'**
+  String missionPointObject(int index, int total);
+
+  /// No description provided for @missionPointSink.
+  ///
+  /// In en, this message translates to:
+  /// **'Point at the sink.'**
+  String get missionPointSink;
+
+  /// No description provided for @missionPointRefrigerator.
+  ///
+  /// In en, this message translates to:
+  /// **'Point at the refrigerator.'**
+  String get missionPointRefrigerator;
+
+  /// No description provided for @missionPointScale.
+  ///
+  /// In en, this message translates to:
+  /// **'Point at the scale.'**
+  String get missionPointScale;
+
+  /// No description provided for @missionPointFace.
+  ///
+  /// In en, this message translates to:
+  /// **'Point at your face.'**
+  String get missionPointFace;
+
+  /// No description provided for @missionPointObjectGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Point at the specified object.'**
+  String get missionPointObjectGeneric;
+
+  /// No description provided for @missionRecognizeObject.
+  ///
+  /// In en, this message translates to:
+  /// **'Please recognize the object.'**
+  String get missionRecognizeObject;
+
+  /// No description provided for @missionPerform.
+  ///
+  /// In en, this message translates to:
+  /// **'Please perform the mission.'**
+  String get missionPerform;
+
+  /// No description provided for @initError.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred during initialization.'**
+  String get initError;
+
+  /// No description provided for @analyzingNextTarget.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing next target...'**
+  String get analyzingNextTarget;
+
+  /// No description provided for @errorOccurredGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Error occurred'**
+  String get errorOccurredGeneric;
+
+  /// No description provided for @missionSuccessWithCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed}/{total} Success!'**
+  String missionSuccessWithCount(int completed, int total);
+
+  /// No description provided for @missionMatchSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'{total}/{total} Success! Matching success!'**
+  String missionMatchSuccess(int total);
+
+  /// No description provided for @escape.
+  ///
+  /// In en, this message translates to:
+  /// **'Escape'**
+  String get escape;
+
+  /// No description provided for @pointObjectClearly.
+  ///
+  /// In en, this message translates to:
+  /// **'Take a photo where the target is clearly visible'**
+  String get pointObjectClearly;
+
+  /// No description provided for @matchingSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching Success!'**
+  String get matchingSuccess;
+
+  /// No description provided for @missionComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission Complete!'**
+  String get missionComplete;
+
+  /// No description provided for @allMissionsComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'All Missions Complete!'**
+  String get allMissionsComplete;
+
+  /// No description provided for @missionSnoozeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission Success! But it will ring again in {minutes} minutes according to settings.'**
+  String missionSnoozeMessage(int minutes);
+
+  /// No description provided for @showFace.
+  ///
+  /// In en, this message translates to:
+  /// **'Please show your face'**
+  String get showFace;
+
+  /// No description provided for @keepWatching.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep watching the screen'**
+  String get keepWatching;
+
+  /// No description provided for @recognizingFaceForFortune.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognizing face for physiognomy analysis'**
+  String get recognizingFaceForFortune;
+
+  /// No description provided for @dataNotStored.
+  ///
+  /// In en, this message translates to:
+  /// **'Data is not stored'**
+  String get dataNotStored;
+
+  /// No description provided for @solveProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Please solve the problem.'**
+  String get solveProblem;
+
+  /// No description provided for @correctAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct answer!'**
+  String get correctAnswer;
+
+  /// No description provided for @wrongAnswerRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong. Please try again.'**
+  String get wrongAnswerRetry;
+
+  /// No description provided for @correct.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct!'**
+  String get correct;
+
+  /// No description provided for @walkToDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Please walk while holding your smartphone'**
+  String get walkToDismiss;
+
   /// No description provided for @shakeCount.
   ///
   /// In en, this message translates to:
@@ -1255,8 +4825,14 @@ abstract class AppLocalizations {
   /// No description provided for @shakeTimes.
   ///
   /// In en, this message translates to:
-  /// **'{count} times'**
+  /// **'{count} Shakes'**
   String shakeTimes(int count);
+
+  /// No description provided for @tapTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Taps'**
+  String tapTimes(int count);
 
   /// No description provided for @missionNumber.
   ///
@@ -1294,6 +4870,84 @@ abstract class AppLocalizations {
   /// **'Select Vibration Pattern'**
   String get vibrationSelect;
 
+  /// No description provided for @selectMissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an alarm mission'**
+  String get selectMissionTitle;
+
+  /// No description provided for @ringtoneCategoryStandard.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get ringtoneCategoryStandard;
+
+  /// No description provided for @ringtoneCategoryCalm.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm'**
+  String get ringtoneCategoryCalm;
+
+  /// No description provided for @ringtoneCategoryUpbeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Upbeat'**
+  String get ringtoneCategoryUpbeat;
+
+  /// No description provided for @ringtoneCategoryLoud.
+  ///
+  /// In en, this message translates to:
+  /// **'Loud'**
+  String get ringtoneCategoryLoud;
+
+  /// No description provided for @noRingtones.
+  ///
+  /// In en, this message translates to:
+  /// **'No ringtones found.'**
+  String get noRingtones;
+
+  /// No description provided for @photoPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo access permission is required.'**
+  String get photoPermissionRequired;
+
+  /// No description provided for @deleteImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Image'**
+  String get deleteImage;
+
+  /// No description provided for @longPressToDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press to delete.'**
+  String get longPressToDelete;
+
+  /// No description provided for @videoLoadFail.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load video\nTap to retry'**
+  String get videoLoadFail;
+
+  /// No description provided for @existingCapturedImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Existing Captured Images'**
+  String get existingCapturedImages;
+
+  /// No description provided for @deleteCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {count}'**
+  String deleteCount(int count);
+
+  /// No description provided for @deleteSelectedImagesConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {count} images?\nThis action cannot be undone.'**
+  String deleteSelectedImagesConfirm(int count);
+
   /// No description provided for @defaultRingtone.
   ///
   /// In en, this message translates to:
@@ -1324,11 +4978,65 @@ abstract class AppLocalizations {
   /// **'Ocean Waves'**
   String get wavesSound;
 
-  /// No description provided for @defaultVibration.
+  /// No description provided for @cuckooClock.
   ///
   /// In en, this message translates to:
-  /// **'Default Vibration'**
-  String get defaultVibration;
+  /// **'Cuckoo Clock'**
+  String get cuckooClock;
+
+  /// No description provided for @calmAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Calm Alarm'**
+  String get calmAlarm;
+
+  /// No description provided for @doorKnock.
+  ///
+  /// In en, this message translates to:
+  /// **'Door Knock'**
+  String get doorKnock;
+
+  /// No description provided for @earlySunrise.
+  ///
+  /// In en, this message translates to:
+  /// **'Early Sunrise'**
+  String get earlySunrise;
+
+  /// No description provided for @goodMorningSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Morning'**
+  String get goodMorningSound;
+
+  /// No description provided for @inAHurry.
+  ///
+  /// In en, this message translates to:
+  /// **'In a Hurry'**
+  String get inAHurry;
+
+  /// No description provided for @lovingYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Loving You'**
+  String get lovingYou;
+
+  /// No description provided for @sirenSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Siren'**
+  String get sirenSound;
+
+  /// No description provided for @swingingSound.
+  ///
+  /// In en, this message translates to:
+  /// **'Swinging'**
+  String get swingingSound;
+
+  /// No description provided for @telephoneBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Telephone Busy'**
+  String get telephoneBusy;
 
   /// No description provided for @shortVibration.
   ///
@@ -1360,12 +5068,6 @@ abstract class AppLocalizations {
   /// **'Quick Beat'**
   String get quickVibration;
 
-  /// No description provided for @permissionRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Permission Required'**
-  String get permissionRequired;
-
   /// No description provided for @exactAlarmPermissionDesc.
   ///
   /// In en, this message translates to:
@@ -1390,23 +5092,11 @@ abstract class AppLocalizations {
   /// **'Please set at least the first mission image.'**
   String get cameraMissionFirstImageError;
 
-  /// No description provided for @cameraMissionSequentialImageError.
+  /// No description provided for @retry.
   ///
   /// In en, this message translates to:
-  /// **'Please set mission images in order.'**
-  String get cameraMissionSequentialImageError;
-
-  /// No description provided for @errorOccurred.
-  ///
-  /// In en, this message translates to:
-  /// **'Error occurred: {error}'**
-  String errorOccurred(String error);
-
-  /// No description provided for @openSettings.
-  ///
-  /// In en, this message translates to:
-  /// **'Open Settings'**
-  String get openSettings;
+  /// **'Retry'**
+  String get retry;
 
   /// No description provided for @exactAlarmPermissionFail.
   ///
@@ -1471,8 +5161,62 @@ abstract class AppLocalizations {
   /// No description provided for @alarmSnooze.
   ///
   /// In en, this message translates to:
-  /// **'Snooze Alarm'**
+  /// **'Snooze'**
   String get alarmSnooze;
+
+  /// No description provided for @snoozeMinutesUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m (Unlimited)'**
+  String snoozeMinutesUnlimited(int minutes);
+
+  /// No description provided for @snoozeMinutesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m ({current}/{total})'**
+  String snoozeMinutesCount(int minutes, int current, int total);
+
+  /// No description provided for @ringtone_fluttering_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Fluttering Day'**
+  String get ringtone_fluttering_day;
+
+  /// No description provided for @ringtone_cozy_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Cozy Day'**
+  String get ringtone_cozy_day;
+
+  /// No description provided for @ringtone_sensible_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensible Day'**
+  String get ringtone_sensible_day;
+
+  /// No description provided for @ringtone_play_with_me.
+  ///
+  /// In en, this message translates to:
+  /// **'Play with Me'**
+  String get ringtone_play_with_me;
+
+  /// No description provided for @ringtone_refreshing_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshing Day'**
+  String get ringtone_refreshing_day;
+
+  /// No description provided for @ringtone_new_beginning.
+  ///
+  /// In en, this message translates to:
+  /// **'New Beginning'**
+  String get ringtone_new_beginning;
+
+  /// No description provided for @ringtone_self_love.
+  ///
+  /// In en, this message translates to:
+  /// **'Self Love'**
+  String get ringtone_self_love;
 
   /// No description provided for @fortuneTitle.
   ///
@@ -1495,13 +5239,13 @@ abstract class AppLocalizations {
   /// No description provided for @fortuneLoadingMessage.
   ///
   /// In en, this message translates to:
-  /// **'Experience the special tarot interpretation of the fortune teller.'**
+  /// **'Experience a special Tarot reading from our fortune teller.'**
   String get fortuneLoadingMessage;
 
   /// No description provided for @fortuneAnalyzing.
   ///
   /// In en, this message translates to:
-  /// **'Analyzing your selected tarot... {progress}%'**
+  /// **'Analyzing your selected Tarot card... {progress}%'**
   String fortuneAnalyzing(int progress);
 
   /// No description provided for @fortuneSelectTitle.
@@ -1513,8 +5257,8 @@ abstract class AppLocalizations {
   /// No description provided for @fortuneSelectTitleDate.
   ///
   /// In en, this message translates to:
-  /// **'Think about the energy of {month}/{day}\nand select 3 cards.'**
-  String fortuneSelectTitleDate(int month, int day);
+  /// **'Think about the energy of {month, select, 1{January} 2{February} 3{March} 4{April} 5{May} 6{June} 7{July} 8{August} 9{September} 10{October} 11{November} 12{December} other{Month}} {day}\nand select 3 cards.'**
+  String fortuneSelectTitleDate(String month, int day);
 
   /// No description provided for @fortuneNewYearButton.
   ///
@@ -1549,14 +5293,194 @@ abstract class AppLocalizations {
   /// No description provided for @fortuneResultTitleDate.
   ///
   /// In en, this message translates to:
-  /// **'Fortune for {year}/{month}/{day}'**
-  String fortuneResultTitleDate(int year, int month, int day);
+  /// **'Fortune for {month, select, 1{January} 2{February} 3{March} 4{April} 5{May} 6{June} 7{July} 8{August} 9{September} 10{October} 11{November} 12{December} other{Month}} {day}, {year}'**
+  String fortuneResultTitleDate(int year, String month, int day);
 
   /// No description provided for @startDayButton.
   ///
   /// In en, this message translates to:
   /// **'Start Your Day'**
   String get startDayButton;
+
+  /// No description provided for @tarotName0.
+  ///
+  /// In en, this message translates to:
+  /// **'The Fool'**
+  String get tarotName0;
+
+  /// No description provided for @tarotName1.
+  ///
+  /// In en, this message translates to:
+  /// **'The Magician'**
+  String get tarotName1;
+
+  /// No description provided for @tarotName2.
+  ///
+  /// In en, this message translates to:
+  /// **'The High Priestess'**
+  String get tarotName2;
+
+  /// No description provided for @tarotName3.
+  ///
+  /// In en, this message translates to:
+  /// **'The Empress'**
+  String get tarotName3;
+
+  /// No description provided for @tarotName4.
+  ///
+  /// In en, this message translates to:
+  /// **'The Emperor'**
+  String get tarotName4;
+
+  /// No description provided for @tarotName5.
+  ///
+  /// In en, this message translates to:
+  /// **'The Hierophant'**
+  String get tarotName5;
+
+  /// No description provided for @tarotName6.
+  ///
+  /// In en, this message translates to:
+  /// **'The Lovers'**
+  String get tarotName6;
+
+  /// No description provided for @tarotName7.
+  ///
+  /// In en, this message translates to:
+  /// **'The Chariot'**
+  String get tarotName7;
+
+  /// No description provided for @tarotName8.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength'**
+  String get tarotName8;
+
+  /// No description provided for @tarotName9.
+  ///
+  /// In en, this message translates to:
+  /// **'The Hermit'**
+  String get tarotName9;
+
+  /// No description provided for @tarotName10.
+  ///
+  /// In en, this message translates to:
+  /// **'Wheel of Fortune'**
+  String get tarotName10;
+
+  /// No description provided for @tarotName11.
+  ///
+  /// In en, this message translates to:
+  /// **'Justice'**
+  String get tarotName11;
+
+  /// No description provided for @tarotName12.
+  ///
+  /// In en, this message translates to:
+  /// **'The Hanged Man'**
+  String get tarotName12;
+
+  /// No description provided for @tarotName13.
+  ///
+  /// In en, this message translates to:
+  /// **'Death'**
+  String get tarotName13;
+
+  /// No description provided for @tarotName14.
+  ///
+  /// In en, this message translates to:
+  /// **'Temperance'**
+  String get tarotName14;
+
+  /// No description provided for @tarotName15.
+  ///
+  /// In en, this message translates to:
+  /// **'The Devil'**
+  String get tarotName15;
+
+  /// No description provided for @tarotName16.
+  ///
+  /// In en, this message translates to:
+  /// **'The Tower'**
+  String get tarotName16;
+
+  /// No description provided for @tarotName17.
+  ///
+  /// In en, this message translates to:
+  /// **'The Star'**
+  String get tarotName17;
+
+  /// No description provided for @tarotName18.
+  ///
+  /// In en, this message translates to:
+  /// **'The Moon'**
+  String get tarotName18;
+
+  /// No description provided for @tarotName19.
+  ///
+  /// In en, this message translates to:
+  /// **'The Sun'**
+  String get tarotName19;
+
+  /// No description provided for @tarotName20.
+  ///
+  /// In en, this message translates to:
+  /// **'Judgement'**
+  String get tarotName20;
+
+  /// No description provided for @tarotName21.
+  ///
+  /// In en, this message translates to:
+  /// **'The World'**
+  String get tarotName21;
+
+  /// No description provided for @tarotKeywords1.
+  ///
+  /// In en, this message translates to:
+  /// **'Creation, Will, Ability, Realization, Versatility'**
+  String get tarotKeywords1;
+
+  /// No description provided for @tarotDescription1.
+  ///
+  /// In en, this message translates to:
+  /// **'The magician is wearing a red robe, one hand pointing to the sky and the other to the ground, bringing heavenly power to the ground. There are four elements (staff, cup, sword, coin) on the table, which means you already have all the tools and abilities to achieve your goals.'**
+  String get tarotDescription1;
+
+  /// No description provided for @tarotLoveMeaning1.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a time when your charm is at its peak and you are popular with others. If you\'re seeing someone or have a spark with someone, you can develop the relationship with your witty speech and lead.'**
+  String get tarotLoveMeaning1;
+
+  /// No description provided for @tarotLoveDetail1.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a great opportunity to capture someone\'s heart as your charm and talent shine. If there\'s someone you like, don\'t hesitate to approach them actively. Your sense of humor and sensible conversation will delight the other person and allow you to lead the relationship proactively. If you\'re single, you may be approached by several people, and if you\'re in a relationship, the other person will be greatly moved if you lead the date plans or prepare an event. Win love with confidence.'**
+  String get tarotLoveDetail1;
+
+  /// No description provided for @tarotWealthMeaning1.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the right time to generate revenue using your abilities and skills. If you materialize the ideas in your head into reality, it will lead to financial results.'**
+  String get tarotWealthMeaning1;
+
+  /// No description provided for @tarotWealthDetail1.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the time when your knowledge, skills, and ideas become money. Don\'t just settle for a salary; generate extra income through side jobs, two jobs, or freelance activities. Creative planning, sales ability, and speaking ability will be demonstrated excellently, resulting in higher-than-expected revenue. Since your judgment is likely to hit the mark in fund management, you will get good results if you proactively set up a financial plan and put it into practice.'**
+  String get tarotWealthDetail1;
+
+  /// No description provided for @tarotSuccessMeaning1.
+  ///
+  /// In en, this message translates to:
+  /// **'Your work ability will be excellently demonstrated and recognized by those around you. If you have something planned, now is the time to put it into practice.'**
+  String get tarotSuccessMeaning1;
+
+  /// No description provided for @tarotSuccessDetail1.
+  ///
+  /// In en, this message translates to:
+  /// **'You can stand out in your workplace or studies by making full use of your abilities. No matter what problem you face, you can solve it with your own wit and humor, and you will be recognized as a \'capable person\' by your colleagues or superiors. If you take the lead in a new project or give an important presentation, you can finish it successfully. Just as opportunities come to those who are prepared, you are already fully prepared. Believe in yourself and show off your skills confidently like a protagonist on stage.'**
+  String get tarotSuccessDetail1;
 
   /// No description provided for @policy.
   ///
@@ -1593,6 +5517,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sets the alarm sound to gradually increase.'**
   String get gradualVolumeDescription;
+
+  /// No description provided for @defaultVibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Vibration'**
+  String get defaultVibration;
 
   /// No description provided for @defaultVibrationDescription.
   ///
@@ -1882,11 +5812,155 @@ abstract class AppLocalizations {
   /// **'Inquiry content has been copied to clipboard.\\nWould you like to send an email to {email}?'**
   String supportCopySuccessMessage(String email);
 
+  /// No description provided for @selectionComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Selection Complete'**
+  String get selectionComplete;
+
+  /// No description provided for @selectVibration.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Vibration Pattern'**
+  String get selectVibration;
+
+  /// No description provided for @cameraMissionSequentialImageError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please set mission images in order.'**
+  String get cameraMissionSequentialImageError;
+
   /// No description provided for @copyEmailAction.
   ///
   /// In en, this message translates to:
   /// **'Copy Email Address'**
   String get copyEmailAction;
+
+  /// No description provided for @addMissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Mission'**
+  String get addMissionTitle;
+
+  /// No description provided for @recommendedMissionList.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Missions'**
+  String get recommendedMissionList;
+
+  /// No description provided for @recommendedMissionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended missions for a healthy day.'**
+  String get recommendedMissionDesc;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @allMissions.
+  ///
+  /// In en, this message translates to:
+  /// **'All Missions'**
+  String get allMissions;
+
+  /// No description provided for @categoryMissions.
+  ///
+  /// In en, this message translates to:
+  /// **'{category} Missions'**
+  String categoryMissions(Object category);
+
+  /// No description provided for @deselectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Deselect All'**
+  String get deselectAll;
+
+  /// No description provided for @selectAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Select All'**
+  String get selectAll;
+
+  /// No description provided for @myCustomMissions.
+  ///
+  /// In en, this message translates to:
+  /// **'My Custom Missions'**
+  String get myCustomMissions;
+
+  /// No description provided for @myCustomMissionsDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Add missions you\'ve created before.'**
+  String get myCustomMissionsDesc;
+
+  /// No description provided for @createYourOwnMission.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Your Own Mission'**
+  String get createYourOwnMission;
+
+  /// No description provided for @createYourOwnMissionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a mission if you don\'t find what you want.'**
+  String get createYourOwnMissionDesc;
+
+  /// No description provided for @missionNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter mission name (e.g. Go to gym)'**
+  String get missionNameHint;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Category'**
+  String get selectCategory;
+
+  /// No description provided for @getNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Notification'**
+  String get getNotification;
+
+  /// No description provided for @notificationTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Time'**
+  String get notificationTime;
+
+  /// No description provided for @missionCategoryHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get missionCategoryHealth;
+
+  /// No description provided for @missionCategoryStudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Study'**
+  String get missionCategoryStudy;
+
+  /// No description provided for @missionCategoryRoutine.
+  ///
+  /// In en, this message translates to:
+  /// **'Routine'**
+  String get missionCategoryRoutine;
+
+  /// No description provided for @missionCategoryHobby.
+  ///
+  /// In en, this message translates to:
+  /// **'Hobby'**
+  String get missionCategoryHobby;
+
+  /// No description provided for @missionCategoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get missionCategoryOther;
 
   /// No description provided for @copyEmailSuccessMessage.
   ///
@@ -1983,6 +6057,1800 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Required to display weather information.'**
   String get locationPermissionDesc;
+
+  /// No description provided for @hourlyForecast.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly Forecast'**
+  String get hourlyForecast;
+
+  /// No description provided for @weeklyForecast.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Forecast'**
+  String get weeklyForecast;
+
+  /// No description provided for @hourFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'{hour}h'**
+  String hourFormat(Object hour);
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No new notifications.'**
+  String get noNotifications;
+
+  /// No description provided for @adLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad failed to load'**
+  String get adLoadFailed;
+
+  /// No description provided for @adLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading ad...'**
+  String get adLoading;
+
+  /// No description provided for @removeAds.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Ads'**
+  String get removeAds;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @exitQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to exit?'**
+  String get exitQuestion;
+
+  /// No description provided for @exitApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exitApp;
+
+  /// No description provided for @shareResultDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'This is your fortune result analyzed by Fortune Alarm.'**
+  String get shareResultDescription;
+
+  /// No description provided for @shareResultButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Result'**
+  String get shareResultButton;
+
+  /// No description provided for @unknownTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Time'**
+  String get unknownTime;
+
+  /// No description provided for @adLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the ad. Please try again in a moment.'**
+  String get adLoadError;
+
+  /// No description provided for @adShowError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not display the ad. Please try again in a moment.'**
+  String get adShowError;
+
+  /// No description provided for @earnCookies.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve earned {count} fortune cookies! 🎉'**
+  String earnCookies(int count);
+
+  /// No description provided for @freePassAfterTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing results for free without an ad! 🎉'**
+  String get freePassAfterTimeout;
+
+  /// No description provided for @adLoadDelay.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading is delayed.\nPlease try again in a moment.'**
+  String get adLoadDelay;
+
+  /// No description provided for @fortuneAccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Fortune'**
+  String get fortuneAccessTitle;
+
+  /// No description provided for @fortuneAccessSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your fortune results\nand get hidden gifts!'**
+  String get fortuneAccessSubtitle;
+
+  /// No description provided for @watchAdButtonText.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad for Free Results'**
+  String get watchAdButtonText;
+
+  /// No description provided for @useCookiesButtonText.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {count} Fortune Cookies'**
+  String useCookiesButtonText(int count);
+
+  /// No description provided for @adFailFreePass.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the ad, so we\'ll let you through for free this time.'**
+  String get adFailFreePass;
+
+  /// No description provided for @luckyNumberTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Lucky Numbers'**
+  String get luckyNumberTitle;
+
+  /// No description provided for @luckyNumberSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI-powered lucky numbers for your day'**
+  String get luckyNumberSubtitle;
+
+  /// No description provided for @luckyNumberGenerateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate Lucky Numbers'**
+  String get luckyNumberGenerateButton;
+
+  /// No description provided for @luckyNumberGuideText.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover your own lucky numbers\nthrough Fortune Alarm\'s AI algorithm'**
+  String get luckyNumberGuideText;
+
+  /// No description provided for @luckyNumberAnalysisStep1.
+  ///
+  /// In en, this message translates to:
+  /// **'Gathering fortune data...'**
+  String get luckyNumberAnalysisStep1;
+
+  /// No description provided for @luckyNumberAnalysisStep2.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewing recent number patterns...'**
+  String get luckyNumberAnalysisStep2;
+
+  /// No description provided for @luckyNumberAnalysisStep3.
+  ///
+  /// In en, this message translates to:
+  /// **'Evaluating number probabilities...'**
+  String get luckyNumberAnalysisStep3;
+
+  /// No description provided for @luckyNumberAnalysisStep4.
+  ///
+  /// In en, this message translates to:
+  /// **'Studying geometric sequences...'**
+  String get luckyNumberAnalysisStep4;
+
+  /// No description provided for @luckyNumberAnalysisStep5.
+  ///
+  /// In en, this message translates to:
+  /// **'Applying AI prediction weights...'**
+  String get luckyNumberAnalysisStep5;
+
+  /// No description provided for @luckyNumberAnalysisStep6.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating optimal combinations...'**
+  String get luckyNumberAnalysisStep6;
+
+  /// No description provided for @luckyNumberAnalysisStep7.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis complete! Generating numbers...'**
+  String get luckyNumberAnalysisStep7;
+
+  /// No description provided for @luckyNumberAnalysisFinal.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing final data...'**
+  String get luckyNumberAnalysisFinal;
+
+  /// No description provided for @luckyNumberGenerating.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating lucky numbers...'**
+  String get luckyNumberGenerating;
+
+  /// No description provided for @luckyNumberResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lucky number generation complete'**
+  String get luckyNumberResultTitle;
+
+  /// No description provided for @luckyNumberResultSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'6 numbers + bonus number'**
+  String get luckyNumberResultSubtitle;
+
+  /// No description provided for @luckyNumberDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'* This service is for entertainment purposes. Numbers provided are for reference generated by AI algorithms and do not guarantee a win.'**
+  String get luckyNumberDisclaimer;
+
+  /// No description provided for @luckyNumberShareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Lucky Numbers'**
+  String get luckyNumberShareTitle;
+
+  /// No description provided for @luckyNumberShareDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Lucky numbers analyzed by Fortune Alarm.'**
+  String get luckyNumberShareDescription;
+
+  /// No description provided for @luckyNumberSetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Set {label}'**
+  String luckyNumberSetLabel(String label);
+
+  /// No description provided for @luckyNumberRegenerateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Regenerate numbers'**
+  String get luckyNumberRegenerateButton;
+
+  /// No description provided for @luckyNumberFeatureAiTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Recommendation'**
+  String get luckyNumberFeatureAiTitle;
+
+  /// No description provided for @luckyNumberFeatureAiDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart AI Algorithm'**
+  String get luckyNumberFeatureAiDesc;
+
+  /// No description provided for @luckyNumberFeatureSmartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart'**
+  String get luckyNumberFeatureSmartTitle;
+
+  /// No description provided for @luckyNumberFeatureSmartDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Personalized Recommendations'**
+  String get luckyNumberFeatureSmartDesc;
+
+  /// No description provided for @luckyNumberFeatureDataTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Analysis'**
+  String get luckyNumberFeatureDataTitle;
+
+  /// No description provided for @luckyNumberFeatureDataDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Probability Analysis'**
+  String get luckyNumberFeatureDataDesc;
+
+  /// No description provided for @fortunePassTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune Pass Premium'**
+  String get fortunePassTitle;
+
+  /// No description provided for @fortunePassTabFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free Charge'**
+  String get fortunePassTabFree;
+
+  /// No description provided for @fortunePassTabPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune Pass'**
+  String get fortunePassTabPremium;
+
+  /// No description provided for @fortunePassFreeChargeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch an ad to charge fortune cookies for free!'**
+  String get fortunePassFreeChargeTitle;
+
+  /// No description provided for @fortunePassFreeChargeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch Ad & Charge (+1)'**
+  String get fortunePassFreeChargeButton;
+
+  /// No description provided for @fortunePassActivePlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Subscription Plan'**
+  String get fortunePassActivePlan;
+
+  /// No description provided for @fortunePassNoSubscription.
+  ///
+  /// In en, this message translates to:
+  /// **'No Subscription Found'**
+  String get fortunePassNoSubscription;
+
+  /// No description provided for @fortunePassRestore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get fortunePassRestore;
+
+  /// No description provided for @fortunePassMonth1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Month Subscription'**
+  String get fortunePassMonth1Title;
+
+  /// No description provided for @fortunePassMonth1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Plan'**
+  String get fortunePassMonth1Desc;
+
+  /// No description provided for @fortunePassMonth6Title.
+  ///
+  /// In en, this message translates to:
+  /// **'6 Month Subscription'**
+  String get fortunePassMonth6Title;
+
+  /// No description provided for @fortunePassMonth6Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'180 Days Plan'**
+  String get fortunePassMonth6Desc;
+
+  /// No description provided for @fortunePassYear1Title.
+  ///
+  /// In en, this message translates to:
+  /// **'12 Month Subscription'**
+  String get fortunePassYear1Title;
+
+  /// No description provided for @fortunePassYear1Desc.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Year Plan'**
+  String get fortunePassYear1Desc;
+
+  /// No description provided for @fortunePassBestPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular'**
+  String get fortunePassBestPlan;
+
+  /// No description provided for @fortunePassTimeSaleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% Time Sale!'**
+  String fortunePassTimeSaleLabel(int percent);
+
+  /// No description provided for @fortunePassOffLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}% OFF'**
+  String fortunePassOffLabel(int percent);
+
+  /// No description provided for @fortunePassPerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **' /mo'**
+  String get fortunePassPerMonth;
+
+  /// No description provided for @fortunePassTotalPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Total {price} / {unit}'**
+  String fortunePassTotalPrice(String price, String unit);
+
+  /// No description provided for @fortunePassUnitMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get fortunePassUnitMonth;
+
+  /// No description provided for @fortunePassUnit6Months.
+  ///
+  /// In en, this message translates to:
+  /// **'6 Months'**
+  String get fortunePassUnit6Months;
+
+  /// No description provided for @fortunePassUnitYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get fortunePassUnitYear;
+
+  /// No description provided for @fortunePassMyCookies.
+  ///
+  /// In en, this message translates to:
+  /// **'My Fortune Cookies'**
+  String get fortunePassMyCookies;
+
+  /// No description provided for @fortunePassCurrentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Pass Status'**
+  String get fortunePassCurrentStatus;
+
+  /// No description provided for @fortunePassStatusPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium Pass Active'**
+  String get fortunePassStatusPremium;
+
+  /// No description provided for @fortunePassStatusFree.
+  ///
+  /// In en, this message translates to:
+  /// **'Free User'**
+  String get fortunePassStatusFree;
+
+  /// No description provided for @fortunePassStoreErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unavailable'**
+  String get fortunePassStoreErrorTitle;
+
+  /// No description provided for @fortunePassStoreErrorContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot retrieve product information from the store.\n\n[Checklist]\n1. Google Play / App Store Login\n2. Internet Connection\n3. Test Device Registration'**
+  String get fortunePassStoreErrorContent;
+
+  /// No description provided for @fortunePassSubscribeSale.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe with {percent}% OFF'**
+  String fortunePassSubscribeSale(int percent);
+
+  /// No description provided for @fortunePassSubscribeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe Now'**
+  String get fortunePassSubscribeNow;
+
+  /// No description provided for @fortunePassApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune Pass subscription applied.'**
+  String get fortunePassApplied;
+
+  /// No description provided for @fortunePassApplyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to apply subscription. Check your network.'**
+  String get fortunePassApplyFailed;
+
+  /// No description provided for @fortunePassRestored.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchases restored.'**
+  String get fortunePassRestored;
+
+  /// No description provided for @fortunePassRestoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to restore purchases.'**
+  String get fortunePassRestoreFailed;
+
+  /// No description provided for @fortunePassTimeSaleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wait! A gift has arrived 🎁'**
+  String get fortunePassTimeSaleTitle;
+
+  /// No description provided for @fortunePassTimeSalePriceOriginal.
+  ///
+  /// In en, this message translates to:
+  /// **'Original price ₩{price}/year'**
+  String fortunePassTimeSalePriceOriginal(String price);
+
+  /// No description provided for @fortunePassTimeSalePriceDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'₩{price}/year'**
+  String fortunePassTimeSalePriceDiscount(String price);
+
+  /// No description provided for @fortunePassTimeSaleBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'50% off if you subscribe within 3 minutes!'**
+  String get fortunePassTimeSaleBadge;
+
+  /// No description provided for @fortunePassTimeSaleButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Discount and Start Pro'**
+  String get fortunePassTimeSaleButton;
+
+  /// No description provided for @fortunePassTimeSaleCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Maybe next time'**
+  String get fortunePassTimeSaleCancel;
+
+  /// No description provided for @fortunePassTimeSaleStartMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'3-minute discount has started! Check the top banner.'**
+  String get fortunePassTimeSaleStartMessage;
+
+  /// No description provided for @fortunePassSubscribeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe Now'**
+  String get fortunePassSubscribeButton;
+
+  /// No description provided for @fortunePassSubscribeDiscountButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe with 50% Off'**
+  String get fortunePassSubscribeDiscountButton;
+
+  /// No description provided for @fortunePassCookieBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Fortune Cookies'**
+  String get fortunePassCookieBalance;
+
+  /// No description provided for @fortunePassCookieCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}'**
+  String fortunePassCookieCount(int count);
+
+  /// No description provided for @fortunePassActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Pass Active'**
+  String get fortunePassActive;
+
+  /// No description provided for @fortunePassTotalFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Total ₩{price} / {unit}'**
+  String fortunePassTotalFormat(String price, String unit);
+
+  /// No description provided for @fortunePassPopularPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Plan'**
+  String get fortunePassPopularPlan;
+
+  /// No description provided for @fortunePassPricePerMonth.
+  ///
+  /// In en, this message translates to:
+  /// **' /mo'**
+  String get fortunePassPricePerMonth;
+
+  /// No description provided for @fortunePassPaymentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment request failed.'**
+  String get fortunePassPaymentFailed;
+
+  /// No description provided for @fortunePassSubscriptionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to apply subscription. Please check your network.'**
+  String get fortunePassSubscriptionFailed;
+
+  /// No description provided for @fortunePassSubscriptionSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune Pass subscription has been applied.'**
+  String get fortunePassSubscriptionSuccess;
+
+  /// No description provided for @fortunePassCannotSubscribeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot Subscribe'**
+  String get fortunePassCannotSubscribeTitle;
+
+  /// No description provided for @fortunePassCannotSubscribeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to retrieve product information from the store at this time.\n\n[Check List]\n1. Google Play / App Store login status\n2. Internet connection\n3. Test device registration status'**
+  String get fortunePassCannotSubscribeMessage;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Y'**
+  String get year;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'M'**
+  String get month;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'D'**
+  String get day;
+
+  /// No description provided for @sajuProfileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Main Four Pillars of Destiny Profile'**
+  String get sajuProfileTitle;
+
+  /// No description provided for @sajuNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get sajuNameLabel;
+
+  /// No description provided for @sajuNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get sajuNameHint;
+
+  /// No description provided for @sajuNameHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 6 characters'**
+  String get sajuNameHelper;
+
+  /// No description provided for @sajuGenderLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get sajuGenderLabel;
+
+  /// No description provided for @sajuGenderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get sajuGenderMale;
+
+  /// No description provided for @sajuGenderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get sajuGenderFemale;
+
+  /// No description provided for @sajuBirthDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth Date'**
+  String get sajuBirthDateLabel;
+
+  /// No description provided for @sajuBirthTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth Time'**
+  String get sajuBirthTimeLabel;
+
+  /// No description provided for @sajuUnknownTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Time'**
+  String get sajuUnknownTime;
+
+  /// No description provided for @sajuEditComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Complete'**
+  String get sajuEditComplete;
+
+  /// No description provided for @sajuSolar.
+  ///
+  /// In en, this message translates to:
+  /// **'Solar'**
+  String get sajuSolar;
+
+  /// No description provided for @sajuLunar.
+  ///
+  /// In en, this message translates to:
+  /// **'Lunar'**
+  String get sajuLunar;
+
+  /// No description provided for @sajuSelectBirthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Birth Date'**
+  String get sajuSelectBirthDate;
+
+  /// No description provided for @sajuSelectBirthTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Birth Time'**
+  String get sajuSelectBirthTime;
+
+  /// No description provided for @compatibilityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Compatibility'**
+  String get compatibilityTitle;
+
+  /// No description provided for @compatibilityInputHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter information for both'**
+  String get compatibilityInputHeader;
+
+  /// No description provided for @compatibilityInputSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We will analyze the exact compatibility based on Four Pillars of Destiny information.'**
+  String get compatibilityInputSubtitle;
+
+  /// No description provided for @compatibilityMyInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'My Information'**
+  String get compatibilityMyInfo;
+
+  /// No description provided for @compatibilityInputMyNameGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name.'**
+  String get compatibilityInputMyNameGuide;
+
+  /// No description provided for @compatibilityInputPartnerNameGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter partner\'s name.'**
+  String get compatibilityInputPartnerNameGuide;
+
+  /// No description provided for @compatibilityPartnerInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Partner\'s Information'**
+  String get compatibilityPartnerInfo;
+
+  /// No description provided for @compatibilityLoadSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Load Saved Info'**
+  String get compatibilityLoadSaved;
+
+  /// No description provided for @compatibilityTitleBest.
+  ///
+  /// In en, this message translates to:
+  /// **'A match made in heaven! ❤️'**
+  String get compatibilityTitleBest;
+
+  /// No description provided for @compatibilityDescBest.
+  ///
+  /// In en, this message translates to:
+  /// **'The best compatibility you could ask for. Don\'t let each other go!'**
+  String get compatibilityDescBest;
+
+  /// No description provided for @compatibilityTitleGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'A very good relationship 💕'**
+  String get compatibilityTitleGreat;
+
+  /// No description provided for @compatibilityDescGreat.
+  ///
+  /// In en, this message translates to:
+  /// **'A great partner who is a huge support to each other.'**
+  String get compatibilityDescGreat;
+
+  /// No description provided for @compatibilityTitleGood.
+  ///
+  /// In en, this message translates to:
+  /// **'A well-matched couple 😊'**
+  String get compatibilityTitleGood;
+
+  /// No description provided for @compatibilityDescGood.
+  ///
+  /// In en, this message translates to:
+  /// **'There are some differences, but you can have a beautiful love while adjusting to each other.'**
+  String get compatibilityDescGood;
+
+  /// No description provided for @compatibilityTitleEffort.
+  ///
+  /// In en, this message translates to:
+  /// **'Effort is needed 🧐'**
+  String get compatibilityTitleEffort;
+
+  /// No description provided for @compatibilityDescEffort.
+  ///
+  /// In en, this message translates to:
+  /// **'There are many differences. Understanding and consideration are key to the relationship.'**
+  String get compatibilityDescEffort;
+
+  /// No description provided for @compatibilityTitleDifficult.
+  ///
+  /// In en, this message translates to:
+  /// **'Need to adjust a lot 😅'**
+  String get compatibilityTitleDifficult;
+
+  /// No description provided for @compatibilityDescDifficult.
+  ///
+  /// In en, this message translates to:
+  /// **'Personality differences can be large. You need to deeply understand each other\'s differences.'**
+  String get compatibilityDescDifficult;
+
+  /// No description provided for @compatibilityResultButton.
+  ///
+  /// In en, this message translates to:
+  /// **'View Compatibility Result'**
+  String get compatibilityResultButton;
+
+  /// No description provided for @compatibilityDeleteTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get compatibilityDeleteTooltip;
+
+  /// No description provided for @compatibilityGenderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get compatibilityGenderMale;
+
+  /// No description provided for @compatibilityGenderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get compatibilityGenderFemale;
+
+  /// No description provided for @tojeongInputTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tojeong Yearly Oracle Information Input'**
+  String get tojeongInputTitle;
+
+  /// No description provided for @tojeongCheckFortune.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your {year}\nTojeong Yearly Oracle'**
+  String tojeongCheckFortune(int year);
+
+  /// No description provided for @tojeongInputGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your birth date and time\nfor an accurate analysis.'**
+  String get tojeongInputGuide;
+
+  /// No description provided for @tojeongViewResult.
+  ///
+  /// In en, this message translates to:
+  /// **'View {year} Tojeong Yearly Oracle'**
+  String tojeongViewResult(int year);
+
+  /// No description provided for @tojeongCheckButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Tojeong Yearly Oracle'**
+  String get tojeongCheckButton;
+
+  /// No description provided for @tojeongSaveAndCheck.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and View Tojeong Yearly Oracle'**
+  String get tojeongSaveAndCheck;
+
+  /// No description provided for @tojeongYearSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Fortune Year'**
+  String get tojeongYearSelect;
+
+  /// No description provided for @tojeongResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{year} Tojeong Yearly Oracle'**
+  String tojeongResultTitle(int year);
+
+  /// No description provided for @tojeongUserFortune.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s {year} Fortune'**
+  String tojeongUserFortune(String name, int year);
+
+  /// No description provided for @tojeongGua.
+  ///
+  /// In en, this message translates to:
+  /// **'Gua: {gua}'**
+  String tojeongGua(String gua);
+
+  /// No description provided for @tojeongTotalLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Luck'**
+  String get tojeongTotalLuck;
+
+  /// No description provided for @tojeongProcess.
+  ///
+  /// In en, this message translates to:
+  /// **'Process'**
+  String get tojeongProcess;
+
+  /// No description provided for @tojeongResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Result'**
+  String get tojeongResult;
+
+  /// No description provided for @tojeongMonthlyLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Fortune'**
+  String get tojeongMonthlyLuck;
+
+  /// No description provided for @tojeongShareResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Results'**
+  String get tojeongShareResult;
+
+  /// No description provided for @tojeongShareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{year} Tojeong Yearly Oracle Results'**
+  String tojeongShareTitle(Object year);
+
+  /// No description provided for @tojeongShareDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'{name}\'s Tojeong Yearly Oracle overall review.\n\n{desc}...'**
+  String tojeongShareDesc(String name, String desc);
+
+  /// No description provided for @tojeongShareTargetYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Year'**
+  String get tojeongShareTargetYear;
+
+  /// No description provided for @sajuDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Four Pillars of Destiny Info'**
+  String get sajuDeleteTitle;
+
+  /// No description provided for @sajuDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {name}\'s info?'**
+  String sajuDeleteConfirm(String name);
+
+  /// No description provided for @sajuProfileSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Four Pillars of Destiny Info'**
+  String get sajuProfileSelect;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @modify.
+  ///
+  /// In en, this message translates to:
+  /// **'Modify'**
+  String get modify;
+
+  /// No description provided for @fortuneUnderConstructionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{title}\nService is under preparation.'**
+  String fortuneUnderConstructionTitle(String title);
+
+  /// No description provided for @fortuneUnderConstructionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'We are working hard to provide you with\nmore accurate and useful fortune information!'**
+  String get fortuneUnderConstructionSubtitle;
+
+  /// No description provided for @goBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get goBack;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @nameInputGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get nameInputGuide;
+
+  /// No description provided for @sajuLunarSolar.
+  ///
+  /// In en, this message translates to:
+  /// **'Solar/Lunar'**
+  String get sajuLunarSolar;
+
+  /// No description provided for @sajuBirthDateDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'{year}.{month}.{day}'**
+  String sajuBirthDateDisplay(int year, int month, int day);
+
+  /// No description provided for @sajuSelectFortuneYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Fortune Year'**
+  String get sajuSelectFortuneYear;
+
+  /// No description provided for @sajuYearDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'{year}'**
+  String sajuYearDisplay(int year);
+
+  /// No description provided for @sajuSelectProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Profile'**
+  String get sajuSelectProfile;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @newYearFortuneInputTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Year Fortune Info'**
+  String get newYearFortuneInputTitle;
+
+  /// No description provided for @newYearFortuneHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'How will your {year}\nfortune be?'**
+  String newYearFortuneHeader(int year);
+
+  /// No description provided for @newYearFortuneSubHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your birth date and time\nfor accurate Four Pillars of Destiny analysis.'**
+  String get newYearFortuneSubHeader;
+
+  /// No description provided for @newYearFortuneViewButton.
+  ///
+  /// In en, this message translates to:
+  /// **'View {year} Fortune'**
+  String newYearFortuneViewButton(int year);
+
+  /// No description provided for @newYearFortuneCheckButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Fortune'**
+  String get newYearFortuneCheckButton;
+
+  /// No description provided for @newYearFortuneSaveAndCheckButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and View Fortune'**
+  String get newYearFortuneSaveAndCheckButton;
+
+  /// No description provided for @newYearFortuneResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My {year} New Year Fortune'**
+  String newYearFortuneResultTitle(int year);
+
+  /// No description provided for @newYearFortuneShareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My {year} New Year Fortune Result'**
+  String newYearFortuneShareTitle(int year);
+
+  /// No description provided for @newYearFortuneShareDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'New Year fortune for {name}.\n\n{desc}...'**
+  String newYearFortuneShareDesc(String name, String desc);
+
+  /// No description provided for @sajuChartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Four Pillars of Destiny Chart'**
+  String get sajuChartTitle;
+
+  /// No description provided for @sajuHour.
+  ///
+  /// In en, this message translates to:
+  /// **'Hour'**
+  String get sajuHour;
+
+  /// No description provided for @sajuDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get sajuDay;
+
+  /// No description provided for @sajuMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get sajuMonth;
+
+  /// No description provided for @sajuYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get sajuYear;
+
+  /// No description provided for @ohaengAnalysisTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Five Elements Analysis'**
+  String get ohaengAnalysisTitle;
+
+  /// No description provided for @dominantOhaeng.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Dominant Element: {name}({symbol})'**
+  String dominantOhaeng(String name, String symbol);
+
+  /// No description provided for @ohaengDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'※ Five Elements (Wood, Fire, Earth, Metal, Water) are the basic energies of Four Pillars of Destiny. While balance is ideal, you can understand your tendencies through these elements.'**
+  String get ohaengDisclaimer;
+
+  /// No description provided for @yearlyTotalLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'{year} Total Luck'**
+  String yearlyTotalLuck(int year);
+
+  /// No description provided for @fortuneDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'This fortune is for entertainment purposes. Your life depends on your own will.'**
+  String get fortuneDisclaimer;
+
+  /// No description provided for @compatibilityResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Compatibility Result'**
+  String get compatibilityResultTitle;
+
+  /// No description provided for @compatibilityScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Compatibility Score'**
+  String get compatibilityScore;
+
+  /// No description provided for @compatibilityScoreDisplay.
+  ///
+  /// In en, this message translates to:
+  /// **'{score}'**
+  String compatibilityScoreDisplay(int score);
+
+  /// No description provided for @compatibilityShareTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Compatibility'**
+  String get compatibilityShareTitle;
+
+  /// No description provided for @compatibilityShareResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Result'**
+  String get compatibilityShareResult;
+
+  /// No description provided for @compatibilityRetryButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Check with Someone Else'**
+  String get compatibilityRetryButton;
+
+  /// No description provided for @compatibilitySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get compatibilitySummary;
+
+  /// No description provided for @tojeongSaveAndCheckButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and View Tojeong Yearly Oracle'**
+  String get tojeongSaveAndCheckButton;
+
+  /// No description provided for @tojeongSangsuKeyword1.
+  ///
+  /// In en, this message translates to:
+  /// **'a period requiring strong drive and leadership'**
+  String get tojeongSangsuKeyword1;
+
+  /// No description provided for @tojeongSangsuKeyword2.
+  ///
+  /// In en, this message translates to:
+  /// **'a period full of active relationships and joy'**
+  String get tojeongSangsuKeyword2;
+
+  /// No description provided for @tojeongSangsuKeyword3.
+  ///
+  /// In en, this message translates to:
+  /// **'a period where intelligence and passion shine'**
+  String get tojeongSangsuKeyword3;
+
+  /// No description provided for @tojeongSangsuKeyword4.
+  ///
+  /// In en, this message translates to:
+  /// **'a period of rapid changes and new beginnings'**
+  String get tojeongSangsuKeyword4;
+
+  /// No description provided for @tojeongSangsuKeyword5.
+  ///
+  /// In en, this message translates to:
+  /// **'a period requiring a flexible attitude and soft communication'**
+  String get tojeongSangsuKeyword5;
+
+  /// No description provided for @tojeongSangsuKeyword6.
+  ///
+  /// In en, this message translates to:
+  /// **'a period to overcome difficulties with wisdom and patience'**
+  String get tojeongSangsuKeyword6;
+
+  /// No description provided for @tojeongSangsuKeyword7.
+  ///
+  /// In en, this message translates to:
+  /// **'a period to seek stability and build inner strength'**
+  String get tojeongSangsuKeyword7;
+
+  /// No description provided for @tojeongSangsuKeyword8.
+  ///
+  /// In en, this message translates to:
+  /// **'a period to build virtue with inclusivity and a warm heart'**
+  String get tojeongSangsuKeyword8;
+
+  /// No description provided for @tojeongJungsuKeyword1.
+  ///
+  /// In en, this message translates to:
+  /// **'you will encounter a helpful mentor'**
+  String get tojeongJungsuKeyword1;
+
+  /// No description provided for @tojeongJungsuKeyword2.
+  ///
+  /// In en, this message translates to:
+  /// **'you will find success in contracts and agreements'**
+  String get tojeongJungsuKeyword2;
+
+  /// No description provided for @tojeongJungsuKeyword3.
+  ///
+  /// In en, this message translates to:
+  /// **'you will face new and exciting challenges'**
+  String get tojeongJungsuKeyword3;
+
+  /// No description provided for @tojeongJungsuKeyword4.
+  ///
+  /// In en, this message translates to:
+  /// **'professional success and honor await you'**
+  String get tojeongJungsuKeyword4;
+
+  /// No description provided for @tojeongJungsuKeyword5.
+  ///
+  /// In en, this message translates to:
+  /// **'you should practice careful financial management'**
+  String get tojeongJungsuKeyword5;
+
+  /// No description provided for @tojeongJungsuKeyword6.
+  ///
+  /// In en, this message translates to:
+  /// **'you should prioritize your health and well-being'**
+  String get tojeongJungsuKeyword6;
+
+  /// No description provided for @tojeongHasuKeyword1.
+  ///
+  /// In en, this message translates to:
+  /// **'you will achieve significant success.'**
+  String get tojeongHasuKeyword1;
+
+  /// No description provided for @tojeongHasuKeyword2.
+  ///
+  /// In en, this message translates to:
+  /// **'you will reap the rewards of your steady efforts.'**
+  String get tojeongHasuKeyword2;
+
+  /// No description provided for @tojeongHasuKeyword3.
+  ///
+  /// In en, this message translates to:
+  /// **'you will turn challenges into opportunities through patience.'**
+  String get tojeongHasuKeyword3;
+
+  /// No description provided for @tojeongCoreMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This year\'s journey: {sangsu}, followed by {jungsu}, leading to {hasu}.'**
+  String tojeongCoreMessage(Object hasu, Object jungsu, Object sangsu);
+
+  /// No description provided for @tojeongSangsuDetail1.
+  ///
+  /// In en, this message translates to:
+  /// **'You are supported by both heaven and earth. This is a year where your strong determination will lead to great achievements. Like a dragon ascending to the sky, your energy is vibrant and powerful. You\'ll have many chances to lead and gain recognition. Just remember to stay humble and inclusive to avoid unnecessary friction.'**
+  String get tojeongSangsuDetail1;
+
+  /// No description provided for @tojeongSangsuDetail2.
+  ///
+  /// In en, this message translates to:
+  /// **'Like a stone creating ripples in a calm lake, this year will be full of social activity and joy. Your popularity will rise, but be mindful of your words to avoid gossip. You may meet a significant partner at a social gathering or event.'**
+  String get tojeongSangsuDetail2;
+
+  /// No description provided for @tojeongSangsuDetail3.
+  ///
+  /// In en, this message translates to:
+  /// **'Like the sun shining upon the world, your intellect and passion will be at their peak. You\'ll excel in academic or creative pursuits, earning a great reputation. Stay calm and focused to manage your energy effectively and avoid burnout.'**
+  String get tojeongSangsuDetail3;
+
+  /// No description provided for @tojeongSangsuDetail4.
+  ///
+  /// In en, this message translates to:
+  /// **'Expect rapid and exciting changes this year. Your enterprising energy makes it the perfect time to start new ventures. While you\'ll be busy with transitions, your persistence will be key to finishing what you start and achieving lasting results.'**
+  String get tojeongSangsuDetail4;
+
+  /// No description provided for @tojeongSangsuDetail5.
+  ///
+  /// In en, this message translates to:
+  /// **'Like a gentle spring breeze reviving the land, your flexible attitude will help you overcome any obstacles. This is a great year for business and building new connections. Stay decisive to ensure you capture the best opportunities as they arise.'**
+  String get tojeongSangsuDetail5;
+
+  /// No description provided for @tojeongSangsuDetail6.
+  ///
+  /// In en, this message translates to:
+  /// **'This year requires wisdom and patience, like navigating deep waters. While things may seem quiet, use this time to build your inner strength. Avoid risky investments and wait for the right moment to act; your patience will eventually be rewarded.'**
+  String get tojeongSangsuDetail6;
+
+  /// No description provided for @tojeongSangsuDetail7.
+  ///
+  /// In en, this message translates to:
+  /// **'You may face challenges that feel like crossing a great mountain, but a vast plain of opportunity awaits on the other side. Focus on inner stability and maintaining your current progress. Building trust and staying consistent will lead to great fruit in the long run.'**
+  String get tojeongSangsuDetail7;
+
+  /// No description provided for @tojeongSangsuDetail8.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a time for sowing the seeds of your future success. By embracing others with a warm and patient heart, you will build a strong foundation of trust and respect. Your long-term investments and focus on family will bring lasting peace and prosperity.'**
+  String get tojeongSangsuDetail8;
+
+  /// No description provided for @tojeongJungsuDetail1.
+  ///
+  /// In en, this message translates to:
+  /// **'A helpful mentor will appear, bringing positive news and opportunities. Any previous obstacles will resolve, and your financial outlook will improve. Collaboration will be your key to success this year.'**
+  String get tojeongJungsuDetail1;
+
+  /// No description provided for @tojeongJungsuDetail2.
+  ///
+  /// In en, this message translates to:
+  /// **'You may experience joyful events within your family or home. This is a favorable time for legal documents, contracts, or sales. Maintain clear and kind communication to ensure all interactions remain positive.'**
+  String get tojeongJungsuDetail2;
+
+  /// No description provided for @tojeongJungsuDetail3.
+  ///
+  /// In en, this message translates to:
+  /// **'New horizons await you, potentially through travel or work in new locations. Embrace these changes with confidence; your willingness to explore new opportunities will lead to rewarding results.'**
+  String get tojeongJungsuDetail3;
+
+  /// No description provided for @tojeongJungsuDetail4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your hard work will be recognized with honor or a promotion at work. This is an excellent time for exams or certifications. Showcase your abilities with confidence, and you\'ll achieve great success.'**
+  String get tojeongJungsuDetail4;
+
+  /// No description provided for @tojeongJungsuDetail5.
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial potential is strong, but so is the temptation to spend. Practice thorough money management and avoid impulsive purchases. It\'s wise to keep your financial dealings professional and clear.'**
+  String get tojeongJungsuDetail5;
+
+  /// No description provided for @tojeongJungsuDetail6.
+  ///
+  /// In en, this message translates to:
+  /// **'Prioritize your physical and mental well-being this year. Avoid overworking and ensure you get plenty of rest. Taking proactive steps for your health now will prevent future issues and keep your energy high.'**
+  String get tojeongJungsuDetail6;
+
+  /// No description provided for @tojeongHasuDetail1.
+  ///
+  /// In en, this message translates to:
+  /// **'Ultimately, your efforts will lead to success and your goals will be achieved. You will be rewarded for your hard work and admired by those around you. Stay true to your original vision to ensure your success lasts.'**
+  String get tojeongHasuDetail1;
+
+  /// No description provided for @tojeongHasuDetail2.
+  ///
+  /// In en, this message translates to:
+  /// **'You may face some challenges along the way, but your perseverance will lead you to your goal. The rewards of your hard work will be all the sweeter for the effort you put in. Success will bloom in its own time.'**
+  String get tojeongHasuDetail2;
+
+  /// No description provided for @tojeongHasuDetail3.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected obstacles may arise, but your resilience will turn these challenges into opportunities. By staying calm and focused, you\'ll find that misfortune can be turned into a blessing. Wisdom is your greatest ally this year.'**
+  String get tojeongHasuDetail3;
+
+  /// No description provided for @tojeongGeneralWealthGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth luck is good. Income may arise from unexpected places, or investments may yield good results. However, as much as money comes in, it can also go out, so focus on saving.'**
+  String get tojeongGeneralWealthGood;
+
+  /// No description provided for @tojeongGeneralWealthBad.
+  ///
+  /// In en, this message translates to:
+  /// **'The flow of wealth may not be smooth. You should reduce unnecessary spending and develop a habit of saving. Be cautious with financial transactions and consult experts for investments.'**
+  String get tojeongGeneralWealthBad;
+
+  /// No description provided for @tojeongGeneralCareerGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Opportunities to gain recognition in your career or business will come. It\'s a good time for promotions, career changes, or starting a business. Better results can be achieved with good relationships.'**
+  String get tojeongGeneralCareerGood;
+
+  /// No description provided for @tojeongGeneralCareerBad.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s best to maintain the current state. Focus on your current tasks and build your skills rather than starting new ventures. You might feel stressed in relationships with colleagues or superiors, so keep your mind at ease.'**
+  String get tojeongGeneralCareerBad;
+
+  /// No description provided for @tojeongGeneralLoveGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Love luck rises, so singles may meet a good partner and couples\' love will deepen. Laughter and harmony will fill the home. It\'s a good time for marriage talks.'**
+  String get tojeongGeneralLoveGood;
+
+  /// No description provided for @tojeongGeneralLoveBad.
+  ///
+  /// In en, this message translates to:
+  /// **'Arguments may arise due to trivial misunderstandings. Understanding and consideration for each other\'s positions are needed. Try to resolve problems through rational dialogue rather than emotional responses.'**
+  String get tojeongGeneralLoveBad;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional'**
+  String get optional;
+
+  /// No description provided for @sajuSolarHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tojeong Yearly Oracle is most accurate when analyzed based on the lunar birthday.'**
+  String get sajuSolarHint;
+
+  /// No description provided for @yourFortune.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Fortune'**
+  String get yourFortune;
+
+  /// No description provided for @guaUpper.
+  ///
+  /// In en, this message translates to:
+  /// **'Upper'**
+  String get guaUpper;
+
+  /// No description provided for @guaMiddle.
+  ///
+  /// In en, this message translates to:
+  /// **'Middle'**
+  String get guaMiddle;
+
+  /// No description provided for @guaLower.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower'**
+  String get guaLower;
+
+  /// No description provided for @guaCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Gua Code'**
+  String get guaCode;
+
+  /// No description provided for @viewAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Again'**
+  String get viewAgain;
+
+  /// No description provided for @zodiacAries.
+  ///
+  /// In en, this message translates to:
+  /// **'Aries'**
+  String get zodiacAries;
+
+  /// No description provided for @zodiacTaurus.
+  ///
+  /// In en, this message translates to:
+  /// **'Taurus'**
+  String get zodiacTaurus;
+
+  /// No description provided for @zodiacGemini.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini'**
+  String get zodiacGemini;
+
+  /// No description provided for @zodiacCancer.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancer'**
+  String get zodiacCancer;
+
+  /// No description provided for @zodiacLeo.
+  ///
+  /// In en, this message translates to:
+  /// **'Leo'**
+  String get zodiacLeo;
+
+  /// No description provided for @zodiacVirgo.
+  ///
+  /// In en, this message translates to:
+  /// **'Virgo'**
+  String get zodiacVirgo;
+
+  /// No description provided for @zodiacLibra.
+  ///
+  /// In en, this message translates to:
+  /// **'Libra'**
+  String get zodiacLibra;
+
+  /// No description provided for @zodiacScorpio.
+  ///
+  /// In en, this message translates to:
+  /// **'Scorpio'**
+  String get zodiacScorpio;
+
+  /// No description provided for @zodiacSagittarius.
+  ///
+  /// In en, this message translates to:
+  /// **'Sagittarius'**
+  String get zodiacSagittarius;
+
+  /// No description provided for @zodiacCapricorn.
+  ///
+  /// In en, this message translates to:
+  /// **'Capricorn'**
+  String get zodiacCapricorn;
+
+  /// No description provided for @zodiacAquarius.
+  ///
+  /// In en, this message translates to:
+  /// **'Aquarius'**
+  String get zodiacAquarius;
+
+  /// No description provided for @zodiacPisces.
+  ///
+  /// In en, this message translates to:
+  /// **'Pisces'**
+  String get zodiacPisces;
+
+  /// No description provided for @elementFire.
+  ///
+  /// In en, this message translates to:
+  /// **'Fire'**
+  String get elementFire;
+
+  /// No description provided for @elementEarth.
+  ///
+  /// In en, this message translates to:
+  /// **'Earth'**
+  String get elementEarth;
+
+  /// No description provided for @elementAir.
+  ///
+  /// In en, this message translates to:
+  /// **'Air'**
+  String get elementAir;
+
+  /// No description provided for @elementWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get elementWater;
+
+  /// No description provided for @compatibilityCategoryZodiac.
+  ///
+  /// In en, this message translates to:
+  /// **'Zodiac Compatibility'**
+  String get compatibilityCategoryZodiac;
+
+  /// No description provided for @compatibilityCategoryInner.
+  ///
+  /// In en, this message translates to:
+  /// **'Inner Compatibility'**
+  String get compatibilityCategoryInner;
+
+  /// No description provided for @compatibilityCategoryConstellation.
+  ///
+  /// In en, this message translates to:
+  /// **'Constellation Compatibility'**
+  String get compatibilityCategoryConstellation;
+
+  /// No description provided for @compatibilitySummarySamhap.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Zodiac Match (Samhap)'**
+  String get compatibilitySummarySamhap;
+
+  /// No description provided for @compatibilityDescSamhap.
+  ///
+  /// In en, this message translates to:
+  /// **'The {animal1} and {animal2} are a perfect match, complementing each other\'s weaknesses. This relationship creates great synergy when together.'**
+  String compatibilityDescSamhap(String animal1, String animal2);
+
+  /// No description provided for @compatibilitySummaryYukhap.
+  ///
+  /// In en, this message translates to:
+  /// **'Great Zodiac Match (Yukhap)'**
+  String get compatibilitySummaryYukhap;
+
+  /// No description provided for @compatibilityDescYukhap.
+  ///
+  /// In en, this message translates to:
+  /// **'The {animal1} and {animal2} have a strong mutual attraction. It\'s easy to feel a connection from the very beginning.'**
+  String compatibilityDescYukhap(String animal1, String animal2);
+
+  /// No description provided for @compatibilitySummaryChung.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship Requiring Effort (Chung)'**
+  String get compatibilitySummaryChung;
+
+  /// No description provided for @compatibilityDescChung.
+  ///
+  /// In en, this message translates to:
+  /// **'The {animal1} and {animal2} have different temperaments and may clash. Respecting each other\'s differences and showing consideration is necessary.'**
+  String compatibilityDescChung(String animal1, String animal2);
+
+  /// No description provided for @compatibilitySummaryWonjin.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship Requiring Understanding (Wonjin)'**
+  String get compatibilitySummaryWonjin;
+
+  /// No description provided for @compatibilityDescWonjin.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a relationship where you might occasionally feel resentment or sadness without a clear reason. Frequent communication is recommended to reduce misunderstandings.'**
+  String get compatibilityDescWonjin;
+
+  /// No description provided for @compatibilitySummaryDefaultZodiac.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Zodiac Match'**
+  String get compatibilitySummaryDefaultZodiac;
+
+  /// No description provided for @compatibilityDescDefaultZodiac.
+  ///
+  /// In en, this message translates to:
+  /// **'The {animal1} and {animal2} have a smooth relationship without major conflicts.'**
+  String compatibilityDescDefaultZodiac(String animal1, String animal2);
+
+  /// No description provided for @compatibilitySummaryCheonganHap.
+  ///
+  /// In en, this message translates to:
+  /// **'Destined Soulmates'**
+  String get compatibilitySummaryCheonganHap;
+
+  /// No description provided for @compatibilityDescCheonganHap.
+  ///
+  /// In en, this message translates to:
+  /// **'Your personalities and values are perfectly aligned. You are soulmates who understand each other even without words.'**
+  String get compatibilityDescCheonganHap;
+
+  /// No description provided for @compatibilitySummarySangsaeng.
+  ///
+  /// In en, this message translates to:
+  /// **'Supportive Partnership'**
+  String get compatibilitySummarySangsaeng;
+
+  /// No description provided for @compatibilityDescSangsaeng.
+  ///
+  /// In en, this message translates to:
+  /// **'A positive relationship where you naturally support each other and help one another grow.'**
+  String get compatibilityDescSangsaeng;
+
+  /// No description provided for @compatibilitySummarySanggeuk.
+  ///
+  /// In en, this message translates to:
+  /// **'Dynamic Balance Required'**
+  String get compatibilitySummarySanggeuk;
+
+  /// No description provided for @compatibilityDescSanggeuk.
+  ///
+  /// In en, this message translates to:
+  /// **'While there may be personality differences, you have the unique potential to complement each other\'s strengths and weaknesses.'**
+  String get compatibilityDescSanggeuk;
+
+  /// No description provided for @compatibilitySummaryDefaultInner.
+  ///
+  /// In en, this message translates to:
+  /// **'Natural Friends'**
+  String get compatibilitySummaryDefaultInner;
+
+  /// No description provided for @compatibilityDescDefaultInner.
+  ///
+  /// In en, this message translates to:
+  /// **'A relationship built on similar tendencies and shared interests, making your time together easy and comfortable.'**
+  String get compatibilityDescDefaultInner;
+
+  /// No description provided for @compatibilitySummarySameElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting of Similar Minds'**
+  String get compatibilitySummarySameElement;
+
+  /// No description provided for @compatibilityDescSameElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharing the \'{element}\' tendency means your values and ways of acting are very much in sync.'**
+  String compatibilityDescSameElement(String element);
+
+  /// No description provided for @compatibilitySummaryCompatibleElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Harmonious Balance'**
+  String get compatibilitySummaryCompatibleElement;
+
+  /// No description provided for @compatibilityDescCompatibleElement.
+  ///
+  /// In en, this message translates to:
+  /// **'A beautiful relationship where your different charms blend together in perfect harmony.'**
+  String get compatibilityDescCompatibleElement;
+
+  /// No description provided for @compatibilitySummaryIncompatibleElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Fascinating Differences'**
+  String get compatibilitySummaryIncompatibleElement;
+
+  /// No description provided for @compatibilityDescIncompatibleElement.
+  ///
+  /// In en, this message translates to:
+  /// **'Your different temperaments may feel unfamiliar at first, but they offer endless opportunities for growth and discovery together.'**
+  String get compatibilityDescIncompatibleElement;
+
+  /// No description provided for @compatibilitySummaryDefaultConstellation.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Harmony'**
+  String get compatibilitySummaryDefaultConstellation;
+
+  /// No description provided for @compatibilityDescDefaultConstellation.
+  ///
+  /// In en, this message translates to:
+  /// **'A relationship that matches reasonably well based on zodiac signs.'**
+  String get compatibilityDescDefaultConstellation;
 }
 
 class _AppLocalizationsDelegate

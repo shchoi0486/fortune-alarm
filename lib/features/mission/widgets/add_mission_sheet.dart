@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../../core/constants/mission_category.dart';
 import '../../../data/models/mission_model.dart';
 import '../../../providers/mission_provider.dart';
@@ -94,6 +95,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final recommendedMissions = MissionNotifier.defaultMissions;
     final customMissions = ref.watch(missionProvider).customMissions;
@@ -157,14 +159,14 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  '새로운 미션 추가',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Text(
+                  l10n.addMissionTitle,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 TextButton(
                   onPressed: canSubmit ? _handleSubmit : null,
                   child: Text(
-                    '완료', 
+                    l10n.complete, 
                     style: TextStyle(
                       fontSize: 16, 
                       fontWeight: FontWeight.bold,
@@ -183,13 +185,13 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                 const SizedBox(height: 12),
                 
                 // 1. 추천 미션 섹션
-                const Text(
-                  '추천 미션 목록',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  l10n.recommendedMissionList,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '건강한 하루를 위한 추천 미션들입니다.',
+                  l10n.recommendedMissionDesc,
                   style: TextStyle(
                     fontSize: 13,
                     color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -205,7 +207,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                     // '전체' 필터
                     ChoiceChip(
                       label: Text(
-                        '✨ 전체',
+                        '✨ ${l10n.all}',
                         style: TextStyle(
                           color: _selectedCategoryFilter == null ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
                           fontSize: 13,
@@ -233,7 +235,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                       final isSelected = _selectedCategoryFilter == category;
                       return ChoiceChip(
                         label: Text(
-                          '${_categoryIcons[category]} ${_getCategoryName(category)}',
+                          '${_categoryIcons[category]} ${_getCategoryName(category, context)}',
                           style: TextStyle(
                             color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
                             fontSize: 13,
@@ -278,8 +280,8 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                             children: [
                               Text(
                                 _selectedCategoryFilter == null 
-                                  ? '✨ 전체 미션'
-                                  : '${_categoryIcons[_selectedCategoryFilter!]} ${_getCategoryName(_selectedCategoryFilter!)} 미션',
+                                  ? '✨ ${l10n.allMissions}'
+                                  : '${_categoryIcons[_selectedCategoryFilter!]} ${l10n.categoryMissions(_getCategoryName(_selectedCategoryFilter!, context))}',
                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                               ),
                               TextButton(
@@ -299,8 +301,8 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                 },
                                 child: Text(
                                   filteredRecommendedMissions.every((m) => _selectedRecommendedMissions.contains(m))
-                                      ? '전체 해제'
-                                      : '전체 선택',
+                                      ? l10n.deselectAll
+                                      : l10n.selectAll,
                                   style: const TextStyle(fontSize: 12, color: Colors.blueAccent),
                                 ),
                               ),
@@ -325,7 +327,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                   });
                                 },
                                 title: Text(
-                                  mission.title,
+                                  _getMissionTitle(mission, context),
                                   style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
@@ -360,13 +362,13 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
 
                 // 2. 내가 만든 미션 목록
                 if (customMissions.isNotEmpty) ...[
-                  const Text(
-                    '내가 만든 목록',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  Text(
+                    l10n.myCustomMissions,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '직접 만들었던 미션들을 다시 추가해보세요.',
+                    l10n.myCustomMissionsDesc,
                     style: TextStyle(
                       fontSize: 13,
                       color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -432,13 +434,13 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                 ],
 
                 // 3. 직접 입력 섹션
-                const Text(
-                  '나만의 미션 만들기',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Text(
+                  l10n.createYourOwnMission,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '원하는 미션이 없다면 직접 만들어보세요.',
+                  l10n.createYourOwnMissionDesc,
                   style: TextStyle(
                     fontSize: 13,
                     color: isDark ? Colors.grey[400] : Colors.grey[600],
@@ -449,7 +451,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                   controller: _titleController,
                   onChanged: (_) => setState(() {}),
                   decoration: InputDecoration(
-                    hintText: '미션 이름을 입력하세요 (예: 헬스장 가기)',
+                    hintText: l10n.missionNameHint,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -460,9 +462,9 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  '카테고리 선택',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                Text(
+                  l10n.selectCategory,
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
                 SingleChildScrollView(
@@ -474,7 +476,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                         padding: const EdgeInsets.only(right: 8),
                         child: ChoiceChip(
                           label: Text(
-                            '${_categoryIcons[category]} ${_getCategoryName(category)}',
+                            '${_categoryIcons[category]} ${_getCategoryName(category, context)}',
                             style: TextStyle(
                               color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.black87),
                               fontSize: 13,
@@ -515,11 +517,11 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Row(
+                          Row(
                             children: [
-                              Icon(Icons.notifications_outlined, size: 20),
-                              SizedBox(width: 8),
-                              Text('알림 받기', style: TextStyle(fontWeight: FontWeight.bold)),
+                              const Icon(Icons.notifications_outlined, size: 20),
+                              const SizedBox(width: 8),
+                              Text(l10n.getNotification, style: const TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
                           Transform.scale(
@@ -564,7 +566,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text('알림 시간', style: TextStyle(fontSize: 14)),
+                                Text(l10n.notificationTime, style: const TextStyle(fontSize: 14)),
                                 Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                   decoration: BoxDecoration(
@@ -604,13 +606,39 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
   );
   }
 
-  String _getCategoryName(MissionCategory category) {
+  String _getCategoryName(MissionCategory category, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (category) {
-      case MissionCategory.health: return '건강';
-      case MissionCategory.study: return '학습';
-      case MissionCategory.routine: return '루틴';
-      case MissionCategory.hobby: return '취미';
-      case MissionCategory.other: return '기타';
+      case MissionCategory.health: return l10n.missionCategoryHealth;
+      case MissionCategory.study: return l10n.missionCategoryStudy;
+      case MissionCategory.routine: return l10n.missionCategoryRoutine;
+      case MissionCategory.hobby: return l10n.missionCategoryHobby;
+      case MissionCategory.other: return l10n.missionCategoryOther;
+    }
+  }
+
+  String _getMissionTitle(MissionModel mission, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    // 시스템 미션인 경우 번역된 타이틀 반환
+    switch (mission.id) {
+      case 'water_2l': return l10n.missionWater;
+      case 'supplement': return l10n.missionSupplement;
+      case 'wakeup': return l10n.missionWakeUp;
+      case 'gym': return l10n.missionGym;
+      case 'workout': return l10n.missionWorkout;
+      case 'diary': return l10n.missionDiary;
+      case 'bed_making': return l10n.missionBedMaking;
+      case 'stretching': return l10n.missionStretching;
+      case 'reading': return l10n.missionReading;
+      case 'planning': return l10n.missionPlanning;
+      case 'breakfast': return l10n.missionBreakfast;
+      case 'meditation': return l10n.missionMeditation;
+      case 'english_words': return l10n.missionLearnWords;
+      case 'ventilation': return l10n.missionVentilation;
+      case 'cleaning': return l10n.missionCleaning;
+      case 'gratitude_diary': return l10n.missionGratitudeDiary;
+      default: return mission.title;
     }
   }
 }

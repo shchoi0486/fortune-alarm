@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 
@@ -66,7 +67,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
     
     setState(() => _isRewardedAdLoading = true);
 
-    // 1. AdService에서 사전 로드된 광고 가져오기 시도
+    // 1. Try to get preloaded ad from AdService
     final preloadedAd = await AdService.getPreloadedRewardedAd();
     
     if (preloadedAd != null) {
@@ -79,7 +80,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
       return;
     }
 
-    // 2. 없으면 새로 로드 (AdService를 통하지 않고 직접 로드하는 것은 폴백용)
+    // 2. If not, load new one (fallback)
     RewardedAd.load(
       adUnitId: AdService.rewardedAdUnitId,
       request: const AdRequest(),
@@ -113,6 +114,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
           setState(() {
             _rewardedAd = null;
             _isRewardedAdLoaded = false;
+            _isRewardedAdLoading = false;
           });
         }
         if (_rewardEarned) {
@@ -127,6 +129,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
           setState(() {
             _rewardedAd = null;
             _isRewardedAdLoaded = false;
+            _isRewardedAdLoading = false;
           });
         }
         _loadRewardedAd();
@@ -143,7 +146,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
   void _showRewardedAd() {
     if (_rewardedAd == null || !_isRewardedAdLoaded) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('광고를 불러오는 중입니다. 잠시 후 다시 시도해주세요.')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.adLoadError)),
       );
       _loadRewardedAd();
       return;
@@ -162,7 +165,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('포춘쿠키를 획득했습니다! (현재: $_cookieCount개)'),
+        content: Text(AppLocalizations.of(context)!.earnCookies(1)),
         backgroundColor: Colors.green,
       ),
     );
@@ -225,7 +228,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
 
   Future<void> _refreshSubscriptionStatus() async {
     final hasActive = await _cookieService.hasActiveFortunePassSubscription();
-    // 광고 서비스의 구독 상태도 함께 업데이트합니다.
+    // Update subscription status in AdService
     AdService.isSubscriber = hasActive;
     
     if (!mounted) return;
@@ -268,7 +271,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
       if (!mounted) return;
       setState(() => _isPurchasing = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('결제 요청에 실패했습니다.')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.fortunePassPaymentFailed)),
       );
     }
   }
@@ -284,7 +287,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
       if (purchase.status == PurchaseStatus.error) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('결제에 실패했습니다.')),
+            SnackBar(content: Text(AppLocalizations.of(context)!.fortunePassPaymentFailed)),
           );
         }
       }
@@ -331,12 +334,12 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
       if (!mounted) return;
       if (!applied) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('구독 적용에 실패했습니다. 네트워크를 확인해주세요.')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.fortunePassApplyFailed)),
         );
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('포춘패스 구독이 적용되었습니다.')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.fortunePassApplied)),
       );
     } finally {
       if (mounted) setState(() => _isPurchasing = false);
@@ -346,11 +349,22 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
   Future<void> _restorePurchases() async {
     if (_isPurchasing) return;
     setState(() => _isPurchasing = true);
-    await _iap.restorePurchases();
-    if (!mounted) return;
-    await _refreshSubscriptionStatus();
-    if (!mounted) return;
-    setState(() => _isPurchasing = false);
+    try {
+      await _iap.restorePurchases();
+      if (!mounted) return;
+      await _refreshSubscriptionStatus();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.fortunePassRestored)),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.fortunePassRestoreFailed)),
+      );
+    } finally {
+      if (mounted) setState(() => _isPurchasing = false);
+    }
   }
 
   static bool _hasShownDiscountPopup = false;
@@ -368,6 +382,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
   }
 
   Widget _buildDiscountPopup(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -397,9 +412,9 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                 ),
               ],
             ),
-            const Text(
-              "잠깐만요! 선물이 도착했어요 🎁",
-              style: TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              l10n.fortunePassTimeSaleTitle,
+              style: const TextStyle(color: Colors.black87, fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Stack(
@@ -416,27 +431,27 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                       "50%",
                       style: TextStyle(color: Colors.redAccent, fontSize: 60, fontWeight: FontWeight.w900),
                     ),
-                    const Text(
-                      "OFF",
-                      style: TextStyle(color: Colors.redAccent, fontSize: 24, fontWeight: FontWeight.bold),
+                    Text(
+                      l10n.fortunePassOffLabel(50).split(" ").last,
+                      style: const TextStyle(color: Colors.redAccent, fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            const Text(
-                  "기본 가격 연 ₩58,800",
-                  style: TextStyle(color: Colors.grey, fontSize: 14, decoration: TextDecoration.lineThrough),
-                ),
-                const Text(
-                  "연 ₩29,400",
-                  style: TextStyle(color: Colors.redAccent, fontSize: 32, fontWeight: FontWeight.bold),
-                ),
+            Text(
+              l10n.fortunePassTimeSalePriceOriginal("58,800"),
+              style: const TextStyle(color: Colors.grey, fontSize: 14, decoration: TextDecoration.lineThrough),
+            ),
+            Text(
+              l10n.fortunePassTimeSalePriceDiscount("29,400"),
+              style: const TextStyle(color: Colors.redAccent, fontSize: 32, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
-            const Text(
-              "3분 내 구독 시 50% 할인 혜택!",
-              style: TextStyle(color: Colors.orange, fontSize: 14, fontWeight: FontWeight.bold),
+            Text(
+              l10n.fortunePassTimeSaleBadge,
+              style: const TextStyle(color: Colors.orange, fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -453,17 +468,17 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   elevation: 0,
                 ),
-                child: const Text(
-                  "할인받고 프로 시작하기",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: Text(
+                  l10n.fortunePassTimeSaleButton,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text(
-                "아쉽지만 다음에 할게요",
-                style: TextStyle(color: Colors.grey),
+              child: Text(
+                l10n.fortunePassTimeSaleCancel,
+                style: const TextStyle(color: Colors.grey),
               ),
             ),
           ],
@@ -473,10 +488,11 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
   }
 
   void _startCountdown() {
+    final l10n = AppLocalizations.of(context)!;
     _cookieService.startDiscountTimer(const Duration(minutes: 3));
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('3분 할인 혜택이 시작되었습니다! 상단 배너를 확인하세요.'),
+      SnackBar(
+        content: Text(l10n.fortunePassTimeSaleStartMessage),
         backgroundColor: Colors.redAccent,
       ),
     );
@@ -484,6 +500,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDark ? const Color(0xFF1A1A2E) : Colors.white;
     final cardColor = isDark ? Colors.white.withOpacity(0.05) : const Color(0xFFF8F9FA);
@@ -498,16 +515,16 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
         appBar: AppBar(
           backgroundColor: backgroundColor,
           elevation: 0,
-          title: Text("포춘패스 프리미엄", style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+          title: Text(l10n.fortunePassTitle, style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
           iconTheme: IconThemeData(color: textColor),
           bottom: TabBar(
             controller: _tabController,
             indicatorColor: Colors.blueAccent,
             labelColor: isDark ? Colors.white : Colors.blueAccent,
             unselectedLabelColor: isDark ? Colors.grey : Colors.grey[400],
-            tabs: const [
-              Tab(text: "무료 충전소"),
-              Tab(text: "포춘패스 구독"),
+            tabs: [
+              Tab(text: l10n.fortunePassTabFree),
+              Tab(text: l10n.fortunePassTabPremium),
             ],
           ),
         ),
@@ -526,6 +543,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
   }
 
   Widget _buildFreeChargeTab(bool isDark, Color cardColor, Color borderColor, Color textColor, Color subTextColor) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -534,7 +552,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
           _buildCurrentPassCard(isDark, cardColor, borderColor, textColor, subTextColor),
           const SizedBox(height: 20),
           Text(
-            "광고를 보고 무료로 포춘쿠키를 충전하세요!",
+            l10n.fortunePassFreeChargeTitle,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: textColor),
             textAlign: TextAlign.center,
           ),
@@ -542,7 +560,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
           ElevatedButton.icon(
             onPressed: _showRewardedAd,
             icon: const Icon(Icons.play_circle_filled),
-            label: const Text("광고 보고 무료 충전 (+1개)"),
+            label: Text(l10n.fortunePassFreeChargeButton),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               backgroundColor: Colors.amber,
@@ -556,6 +574,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
   }
 
   Widget _buildSubscriptionTab(bool isDark, Color cardColor, Color borderColor, Color textColor, Color subTextColor) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
         Expanded(
@@ -581,12 +600,12 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _hasActiveSubscription ? "현재 구독 중인 요금제" : "구독 정보가 없습니다",
+                          _hasActiveSubscription ? l10n.fortunePassActivePlan : l10n.fortunePassNoSubscription,
                           style: TextStyle(fontWeight: FontWeight.bold, color: subTextColor),
                         ),
                         TextButton(
                           onPressed: _isStoreAvailable ? _restorePurchases : null,
-                          child: const Text("복원하기", style: TextStyle(color: Colors.blueAccent)),
+                          child: Text(l10n.fortunePassRestore, style: const TextStyle(color: Colors.blueAccent)),
                         ),
                       ],
                     ),
@@ -594,9 +613,9 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                   const SizedBox(height: 16),
                 ],
                 _buildSubscriptionCard(
-                  title: "1개월 구독",
+                  title: l10n.fortunePassMonth1Title,
                   productId: 'fortune_pass_monthly',
-                  description: "월 정액제",
+                  description: l10n.fortunePassMonth1Desc,
                   isDark: isDark,
                   cardColor: cardColor,
                   borderColor: borderColor,
@@ -604,9 +623,9 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                   subTextColor: subTextColor,
                 ),
                 _buildSubscriptionCard(
-                  title: "6개월 구독",
+                  title: l10n.fortunePassMonth6Title,
                   productId: 'fortune_pass_6months',
-                  description: "180일 정액제",
+                  description: l10n.fortunePassMonth6Desc,
                   isDark: isDark,
                   cardColor: cardColor,
                   borderColor: borderColor,
@@ -614,9 +633,9 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                   subTextColor: subTextColor,
                 ),
                 _buildSubscriptionCard(
-                  title: "12개월 구독",
+                  title: l10n.fortunePassYear1Title,
                   productId: 'fortune_pass_yearly',
-                  description: "1년 정액제",
+                  description: l10n.fortunePassYear1Desc,
                   isBest: true,
                   isDark: isDark,
                   cardColor: cardColor,
@@ -637,7 +656,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
               child: ElevatedButton(
                 onPressed: _isPurchasing ? null : () {
                   String targetId = _selectedProductId;
-                  // 타임세일 중이고 12개월권 선택 시 할인용 상품 ID로 변경
+                  // Change to sale product ID if time sale is active
                   if (_remainingDiscountSeconds > 0 && targetId == 'fortune_pass_yearly') {
                     targetId = 'fortune_pass_yearly_sale';
                   }
@@ -646,16 +665,16 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                   if (product != null) {
                     _buy(product);
                   } else {
-                    // 스토어 정보가 없을 때 안내 팝업 표시
+                    // Show error dialog if store info is missing
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: const Text("구독 불가"),
-                        content: const Text("현재 스토어에서 상품 정보를 가져올 수 없습니다.\n\n[확인 사항]\n1. Google Play / App Store 로그인 상태\n2. 인터넷 연결 확인\n3. 테스트 기기 등록 여부"),
+                        title: Text(l10n.fortunePassStoreErrorTitle),
+                        content: Text(l10n.fortunePassStoreErrorContent),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text("확인"),
+                            child: Text(l10n.confirm),
                           ),
                         ],
                       ),
@@ -670,7 +689,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                 ),
                 child: _isPurchasing 
                     ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
-                    : Text(_remainingDiscountSeconds > 0 ? "50% 할인 받고 구독하기" : "지금 바로 구독하기", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    : Text(_remainingDiscountSeconds > 0 ? l10n.fortunePassSubscribeSale(50) : l10n.fortunePassSubscribeNow, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               ),
             ),
           ),
@@ -679,52 +698,60 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
   }
 
   Widget _buildCurrentPassCard(bool isDark, Color cardColor, Color borderColor, Color textColor, Color subTextColor) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: borderColor),
       ),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.blueAccent.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.cookie, color: Colors.blueAccent),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "보유 중인 포춘쿠키",
-                  style: TextStyle(color: subTextColor, fontSize: 13),
-                ),
-                Text(
-                  "$_cookieCount개",
-                  style: TextStyle(color: textColor, fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          if (_hasActiveSubscription)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                l10n.fortunePassMyCookies,
+                style: TextStyle(fontSize: 14, color: subTextColor),
               ),
-              child: const Text(
-                "패스 사용 중",
-                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.amber.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    const Text("🍪", style: TextStyle(fontSize: 14)),
+                    const SizedBox(width: 4),
+                    Text(
+                      "$_cookieCount",
+                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.amber),
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                l10n.fortunePassCurrentStatus,
+                style: TextStyle(fontSize: 14, color: subTextColor),
+              ),
+              Text(
+                _hasActiveSubscription ? l10n.fortunePassStatusPremium : l10n.fortunePassStatusFree,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: _hasActiveSubscription ? Colors.blueAccent : subTextColor,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -741,55 +768,56 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
     required Color subTextColor,
     bool isBest = false,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     final product = _productById(productId);
     
-    // 가격 설정 (4,900원 기준)
+    // Price setting (Based on 4,900 KRW)
     int originalMonthlyPrice = 4900;
     int currentMonthlyPrice = 0;
     int totalPlanPrice = 0;
-    int originalTotalPlanPrice = 0; // 정가 추가
+    int originalTotalPlanPrice = 0; // Add regular price
     String planUnit = "";
     String discountLabel = "";
     bool isDiscountedPlan = false;
 
     if (productId == 'fortune_pass_monthly') {
       currentMonthlyPrice = 4900;
-      planUnit = "월 정가";
+      planUnit = l10n.fortunePassUnitMonth;
     } else if (productId == 'fortune_pass_6months') {
       currentMonthlyPrice = 3900; 
       totalPlanPrice = 23400;
       originalTotalPlanPrice = 29400; // 4900 * 6
-      planUnit = "6개월";
-      discountLabel = "20% OFF";
+      planUnit = l10n.fortunePassUnit6Months;
+      discountLabel = l10n.fortunePassOffLabel(20);
       isDiscountedPlan = true;
     } else if (productId == 'fortune_pass_yearly') {
       currentMonthlyPrice = 3200; 
       totalPlanPrice = 38400;
       originalTotalPlanPrice = 58800; // 4900 * 12
-      planUnit = "년";
-      discountLabel = "35% OFF";
+      planUnit = l10n.fortunePassUnitYear;
+      discountLabel = l10n.fortunePassOffLabel(35);
       isDiscountedPlan = true;
     }
 
-    // 3분 타임세일 적용 (12개월 상품만 50% 할인)
+    // Apply 3-minute time sale (50% discount for 12-month plan only)
     final isTimeSaleActive = _remainingDiscountSeconds > 0;
     if (isTimeSaleActive && productId == 'fortune_pass_yearly') {
       currentMonthlyPrice = 2450; 
       totalPlanPrice = 29400;     
-      originalTotalPlanPrice = 58800; // 타임세일 시에도 원래 정가는 58800원
-      discountLabel = "50% 타임세일!";
+      originalTotalPlanPrice = 58800; // Regular price is still 58,800 KRW during time sale
+      discountLabel = l10n.fortunePassTimeSaleLabel(50);
       isDiscountedPlan = true;
     }
 
     String priceText = "₩${currentMonthlyPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}";
     
-    // 정가 텍스트 생성
+    // Generate regular price text
     String originalPriceText = originalTotalPlanPrice > 0 
         ? "₩${originalTotalPlanPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}"
         : "";
 
     String detailPriceText = totalPlanPrice > 0 
-        ? "총 ₩${totalPlanPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')} / $planUnit"
+        ? l10n.fortunePassTotalPrice("₩${totalPlanPrice.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}", planUnit)
         : planUnit;
 
     final isSelected = _selectedProductId == productId;
@@ -837,9 +865,9 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                     ),
                   ],
                 ),
-                child: const Text(
-                  "인기 요금제",
-                  style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                child: Text(
+                  l10n.fortunePassBestPlan,
+                  style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -877,7 +905,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Row(
                 children: [
-                  // 선택 라디오 버튼
+                  // Selection radio button
                   Container(
                     width: 22,
                     height: 22,
@@ -896,7 +924,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                         : null,
                   ),
                   const SizedBox(width: 14),
-                  // 상품명 및 설명
+                  // Product name and description
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -917,7 +945,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                       ],
                     ),
                   ),
-                  // 가격 정보
+                  // Price information
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -947,7 +975,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                             ),
                           ),
                           Text(
-                            " /월",
+                            l10n.fortunePassPerMonth,
                             style: TextStyle(
                               color: subTextColor, 
                               fontSize: 13, 

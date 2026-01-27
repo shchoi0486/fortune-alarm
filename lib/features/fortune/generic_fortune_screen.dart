@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class GenericFortuneScreen extends StatelessWidget {
   final String title;
@@ -7,6 +8,7 @@ class GenericFortuneScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? Colors.white70 : Colors.black54;
     final subTextColor = isDarkMode ? Colors.grey[400] : Colors.grey;
@@ -26,7 +28,7 @@ class GenericFortuneScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              "$title\n서비스 준비 중입니다.",
+              l10n.fortuneUnderConstructionTitle(title),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -36,7 +38,7 @@ class GenericFortuneScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              "더 정확하고 유용한 운세 정보를 위해\n열심히 준비하고 있어요!",
+              l10n.fortuneUnderConstructionSubtitle,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -46,7 +48,7 @@ class GenericFortuneScreen extends StatelessWidget {
             const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("돌아가기"),
+              child: Text(l10n.goBack),
             ),
           ],
         ),

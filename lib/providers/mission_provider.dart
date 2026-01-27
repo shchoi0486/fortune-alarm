@@ -463,7 +463,7 @@ class MissionNotifier extends ChangeNotifier {
       title: title,
       icon: icon,
       category: category,
-      isSystemMission: !isCustom && (id == 'water_2l' || id == 'supplement'),
+      isSystemMission: !isCustom && (id != null && defaultMissions.any((m) => m.id == id)),
       alarmTime: alarmTime,
       isAlarmEnabled: isAlarmEnabled,
     );

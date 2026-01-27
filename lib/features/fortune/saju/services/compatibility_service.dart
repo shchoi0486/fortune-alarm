@@ -1,3 +1,4 @@
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../models/saju_data.dart';
 import '../models/saju_profile.dart';
 import 'saju_service.dart';
@@ -83,37 +84,83 @@ class CompatibilityService {
     Cheongan.mu: Cheongan.gye, Cheongan.gye: Cheongan.mu,
   };
 
-  // Simplified Zodiac Date Ranges
-  static String getZodiacSign(DateTime date) {
-    int day = date.day;
-    switch (date.month) {
-      case 1: return day >= 20 ? "물병자리" : "염소자리";
-      case 2: return day >= 19 ? "물고기자리" : "물병자리";
-      case 3: return day >= 21 ? "양자리" : "물고기자리";
-      case 4: return day >= 20 ? "황소자리" : "양자리";
-      case 5: return day >= 21 ? "쌍둥이자리" : "황소자리";
-      case 6: return day >= 22 ? "게자리" : "쌍둥이자리";
-      case 7: return day >= 23 ? "사자자리" : "게자리";
-      case 8: return day >= 23 ? "처녀자리" : "사자자리";
-      case 9: return day >= 23 ? "천칭자리" : "처녀자리";
-      case 10: return day >= 23 ? "전갈자리" : "천칭자리";
-      case 11: return day >= 23 ? "사수자리" : "전갈자리";
-      case 12: return day >= 25 ? "염소자리" : "사수자리";
-      default: return "알 수 없음";
+  static String getZodiacSign(DateTime birthDate) {
+    int month = birthDate.month;
+    int day = birthDate.day;
+
+    switch (month) {
+      case 1: return day >= 20 ? "aquarius" : "capricorn";
+      case 2: return day >= 19 ? "pisces" : "aquarius";
+      case 3: return day >= 21 ? "aries" : "pisces";
+      case 4: return day >= 20 ? "taurus" : "aries";
+      case 5: return day >= 21 ? "gemini" : "taurus";
+      case 6: return day >= 22 ? "cancer" : "gemini";
+      case 7: return day >= 23 ? "leo" : "cancer";
+      case 8: return day >= 23 ? "virgo" : "leo";
+      case 9: return day >= 23 ? "libra" : "virgo";
+      case 10: return day >= 24 ? "scorpio" : "libra";
+      case 11: return day >= 23 ? "sagittarius" : "scorpio";
+      case 12: return day >= 22 ? "capricorn" : "sagittarius";
+      default: return "unknown";
+    }
+  }
+
+  static String getLocalizedZodiacSign(String sign, AppLocalizations l10n) {
+    switch (sign) {
+      case "aries": return l10n.zodiacAries;
+      case "taurus": return l10n.zodiacTaurus;
+      case "gemini": return l10n.zodiacGemini;
+      case "cancer": return l10n.zodiacCancer;
+      case "leo": return l10n.zodiacLeo;
+      case "virgo": return l10n.zodiacVirgo;
+      case "libra": return l10n.zodiacLibra;
+      case "scorpio": return l10n.zodiacScorpio;
+      case "sagittarius": return l10n.zodiacSagittarius;
+      case "capricorn": return l10n.zodiacCapricorn;
+      case "aquarius": return l10n.zodiacAquarius;
+      case "pisces": return l10n.zodiacPisces;
+      default: return "";
     }
   }
 
   static String getZodiacElement(String sign) {
     switch (sign) {
-      case "양자리": case "사자자리": case "사수자리": return "불";
-      case "황소자리": case "처녀자리": case "염소자리": return "흙";
-      case "쌍둥이자리": case "천칭자리": case "물병자리": return "공기";
-      case "게자리": case "전갈자리": case "물고기자리": return "물";
-      default: return "알 수 없음";
+      case "aries": case "leo": case "sagittarius": return "fire";
+      case "taurus": case "virgo": case "capricorn": return "earth";
+      case "gemini": case "libra": case "aquarius": return "air";
+      case "cancer": case "scorpio": case "pisces": return "water";
+      default: return "unknown";
     }
   }
 
-  static CompatibilityScore analyze(SajuProfile p1, SajuProfile p2) {
+  static String getLocalizedElement(String element, AppLocalizations l10n) {
+    switch (element) {
+      case "fire": return l10n.elementFire;
+      case "earth": return l10n.elementEarth;
+      case "air": return l10n.elementAir;
+      case "water": return l10n.elementWater;
+      default: return "";
+    }
+  }
+
+  static String _getLocalizedAnimal(Jiji jiji, AppLocalizations l10n) {
+    switch (jiji) {
+      case Jiji.ja: return l10n.jijiJa;
+      case Jiji.chuk: return l10n.jijiChuk;
+      case Jiji.in_: return l10n.jijiIn;
+      case Jiji.myo: return l10n.jijiMyo;
+      case Jiji.jin: return l10n.jijiJin;
+      case Jiji.sa: return l10n.jijiSa;
+      case Jiji.o: return l10n.jijiO;
+      case Jiji.mi: return l10n.jijiMi;
+      case Jiji.sin: return l10n.jijiSin;
+      case Jiji.yu: return l10n.jijiYu;
+      case Jiji.sul: return l10n.jijiSul;
+      case Jiji.hae: return l10n.jijiHae;
+    }
+  }
+
+  static CompatibilityScore analyze(SajuProfile p1, SajuProfile p2, AppLocalizations l10n) {
     int score = 50; // Base score
     List<CompatibilityDetail> details = [];
 
@@ -124,48 +171,51 @@ class CompatibilityService {
     final year1 = saju1['year']!.jiji;
     final year2 = saju2['year']!.jiji;
     
+    final animal1 = _getLocalizedAnimal(year1, l10n);
+    final animal2 = _getLocalizedAnimal(year2, l10n);
+
     if (_samhap[year1]?.contains(year2) ?? false) {
       score += 20;
       details.add(CompatibilityDetail(
-        category: "띠 궁합",
-        summary: "최고의 띠 궁합 (삼합)",
-        description: "${year1.animal}띠와 ${year2.animal}띠는 서로 부족한 점을 채워주는 최고의 궁합입니다. 함께하면 시너지가 나는 관계입니다.",
+        category: l10n.compatibilityCategoryZodiac,
+        summary: l10n.compatibilitySummarySamhap,
+        description: l10n.compatibilityDescSamhap(animal1, animal2),
         score: 9,
         isPositive: true,
       ));
     } else if (_yukhap[year1] == year2) {
       score += 15;
       details.add(CompatibilityDetail(
-        category: "띠 궁합",
-        summary: "아주 좋은 띠 궁합 (육합)",
-        description: "${year1.animal}띠와 ${year2.animal}띠는 서로 끌리는 매력이 강한 궁합입니다. 처음부터 호감을 느끼기 쉽습니다.",
+        category: l10n.compatibilityCategoryZodiac,
+        summary: l10n.compatibilitySummaryYukhap,
+        description: l10n.compatibilityDescYukhap(animal1, animal2),
         score: 8,
         isPositive: true,
       ));
     } else if (_chung[year1] == year2) {
       score -= 10;
       details.add(CompatibilityDetail(
-        category: "띠 궁합",
-        summary: "노력이 필요한 관계 (상충)",
-        description: "${year1.animal}띠와 ${year2.animal}띠는 서로의 기질이 달라 부딪힐 수 있습니다. 서로 다름을 인정하고 배려가 필요합니다.",
+        category: l10n.compatibilityCategoryZodiac,
+        summary: l10n.compatibilitySummaryChung,
+        description: l10n.compatibilityDescChung(animal1, animal2),
         score: 3,
         isPositive: false,
       ));
     } else if (_wonjin[year1] == year2) {
       score -= 10;
       details.add(CompatibilityDetail(
-        category: "띠 궁합",
-        summary: "이해와 배려가 필요한 관계 (원진)",
-        description: "가끔 이유 없이 미워지거나 서운할 수 있는 관계입니다. 오해를 줄이도록 대화를 많이 하는 것이 좋습니다.",
+        category: l10n.compatibilityCategoryZodiac,
+        summary: l10n.compatibilitySummaryWonjin,
+        description: l10n.compatibilityDescWonjin,
         score: 3,
         isPositive: false,
       ));
     } else {
       score += 5;
       details.add(CompatibilityDetail(
-        category: "띠 궁합",
-        summary: "무난한 띠 궁합",
-        description: "${year1.animal}띠와 ${year2.animal}띠는 크게 부딪힘 없이 무난하게 잘 어울리는 관계입니다.",
+        category: l10n.compatibilityCategoryZodiac,
+        summary: l10n.compatibilitySummaryDefaultZodiac,
+        description: l10n.compatibilityDescDefaultZodiac(animal1, animal2),
         score: 6,
         isPositive: true,
       ));
@@ -178,9 +228,9 @@ class CompatibilityService {
     if (_cheonganHap[dayStem1] == dayStem2) {
       score += 25;
       details.add(CompatibilityDetail(
-        category: "속마음 궁합",
-        summary: "영혼의 단짝 (천간합)",
-        description: "두 사람의 성격과 가치관이 찰떡궁합입니다. 말하지 않아도 서로의 마음을 잘 알아주는 소울메이트입니다.",
+        category: l10n.compatibilityCategoryInner,
+        summary: l10n.compatibilitySummaryCheonganHap,
+        description: l10n.compatibilityDescCheonganHap,
         score: 10,
         isPositive: true,
       ));
@@ -192,27 +242,27 @@ class CompatibilityService {
       if (_isSangsaeng(ohaeng1, ohaeng2)) {
         score += 15;
         details.add(CompatibilityDetail(
-          category: "속마음 궁합",
-          summary: "서로 돕는 관계 (상생)",
-          description: "서로에게 힘이 되어주고 발전할 수 있도록 돕는 긍정적인 관계입니다.",
+          category: l10n.compatibilityCategoryInner,
+          summary: l10n.compatibilitySummarySangsaeng,
+          description: l10n.compatibilityDescSangsaeng,
           score: 8,
           isPositive: true,
         ));
       } else if (_isSanggeuk(ohaeng1, ohaeng2)) {
         score -= 5;
         details.add(CompatibilityDetail(
-          category: "속마음 궁합",
-          summary: "조율이 필요한 관계 (상극)",
-          description: "성격 차이가 있을 수 있으나, 서로의 단점을 보완해줄 수 있는 관계이기도 합니다.",
+          category: l10n.compatibilityCategoryInner,
+          summary: l10n.compatibilitySummarySanggeuk,
+          description: l10n.compatibilityDescSanggeuk,
           score: 4,
           isPositive: false,
         ));
       } else {
         score += 5;
         details.add(CompatibilityDetail(
-          category: "속마음 궁합",
-          summary: "친구 같은 편안함",
-          description: "비슷한 성향을 가지고 있어 친구처럼 편안하게 지낼 수 있는 관계입니다.",
+          category: l10n.compatibilityCategoryInner,
+          summary: l10n.compatibilitySummaryDefaultInner,
+          description: l10n.compatibilityDescDefaultInner,
           score: 6,
           isPositive: true,
         ));
@@ -220,44 +270,45 @@ class CompatibilityService {
     }
 
     // 3. 별자리 궁합
-    final sign1 = getZodiacSign(p1.birthDate);
-    final sign2 = getZodiacSign(p2.birthDate);
-    final elem1 = getZodiacElement(sign1);
-    final elem2 = getZodiacElement(sign2);
+    final sign1Key = getZodiacSign(p1.birthDate);
+    final sign2Key = getZodiacSign(p2.birthDate);
+    final elem1Key = getZodiacElement(sign1Key);
+    final elem2Key = getZodiacElement(sign2Key);
 
-    if (elem1 == elem2) {
+    if (elem1Key == elem2Key) {
       score += 15;
+      final localizedElem = getLocalizedElement(elem1Key, l10n);
       details.add(CompatibilityDetail(
-        category: "별자리 궁합",
-        summary: "같은 성향의 만남",
-        description: "두 분 다 '$elem1'의 성향을 가지고 있어 가치관이나 행동 방식이 매우 비슷합니다.",
+        category: l10n.compatibilityCategoryConstellation,
+        summary: l10n.compatibilitySummarySameElement,
+        description: l10n.compatibilityDescSameElement(localizedElem),
         score: 8,
         isPositive: true,
       ));
-    } else if (_isCompatibleElement(elem1, elem2)) {
+    } else if (_isCompatibleElement(elem1Key, elem2Key)) {
       score += 10;
       details.add(CompatibilityDetail(
-        category: "별자리 궁합",
-        summary: "잘 어울리는 조화",
-        description: "서로 다른 매력이 있지만 조화롭게 어우러지는 관계입니다.",
+        category: l10n.compatibilityCategoryConstellation,
+        summary: l10n.compatibilitySummaryCompatibleElement,
+        description: l10n.compatibilityDescCompatibleElement,
         score: 7,
         isPositive: true,
       ));
-    } else if (_isIncompatibleElement(elem1, elem2)) {
+    } else if (_isIncompatibleElement(elem1Key, elem2Key)) {
       score -= 5;
-       details.add(CompatibilityDetail(
-        category: "별자리 궁합",
-        summary: "다른 매력의 만남",
-        description: "서로 정반대의 성향을 가질 수 있습니다. 서로의 차이를 즐기면 더욱 깊은 관계가 될 수 있습니다.",
+      details.add(CompatibilityDetail(
+        category: l10n.compatibilityCategoryConstellation,
+        summary: l10n.compatibilitySummaryIncompatibleElement,
+        description: l10n.compatibilityDescIncompatibleElement,
         score: 4,
         isPositive: false,
       ));
     } else {
       score += 5;
       details.add(CompatibilityDetail(
-        category: "별자리 궁합",
-        summary: "평범한 조화",
-        description: "별자리로 보았을 때 무난하게 어울리는 관계입니다.",
+        category: l10n.compatibilityCategoryConstellation,
+        summary: l10n.compatibilitySummaryDefaultConstellation,
+        description: l10n.compatibilityDescDefaultConstellation,
         score: 6,
         isPositive: true,
       ));
@@ -271,20 +322,20 @@ class CompatibilityService {
     String description;
 
     if (score >= 90) {
-      title = "천생연분이에요! ❤️";
-      description = "더 이상 바랄 게 없는 최고의 궁합입니다. 서로를 놓치지 마세요!";
+      title = l10n.compatibilityTitleBest;
+      description = l10n.compatibilityDescBest;
     } else if (score >= 80) {
-      title = "아주 좋은 인연이에요 💕";
-      description = "서로에게 큰 힘이 되는 훌륭한 파트너입니다.";
+      title = l10n.compatibilityTitleGreat;
+      description = l10n.compatibilityDescGreat;
     } else if (score >= 60) {
-      title = "잘 어울리는 커플이에요 😊";
-      description = "약간의 차이는 있지만 서로 맞춰가며 예쁜 사랑을 할 수 있습니다.";
+      title = l10n.compatibilityTitleGood;
+      description = l10n.compatibilityDescGood;
     } else if (score >= 40) {
-      title = "노력이 필요해요 🧐";
-      description = "서로 다른 점이 많습니다. 이해와 배려가 관계의 핵심입니다.";
+      title = l10n.compatibilityTitleEffort;
+      description = l10n.compatibilityDescEffort;
     } else {
-      title = "많이 맞춰가야 해요 😅";
-      description = "성격 차이가 클 수 있습니다. 서로의 다름을 깊이 이해해야 합니다.";
+      title = l10n.compatibilityTitleDifficult;
+      description = l10n.compatibilityDescDifficult;
     }
 
     return CompatibilityScore(
@@ -328,14 +379,14 @@ class CompatibilityService {
   }
 
   static bool _isCompatibleElement(String e1, String e2) {
-    if ((e1 == '불' && e2 == '공기') || (e1 == '공기' && e2 == '불')) return true;
-    if ((e1 == '흙' && e2 == '물') || (e1 == '물' && e2 == '흙')) return true;
+    if ((e1 == 'fire' && e2 == 'air') || (e1 == 'air' && e2 == 'fire')) return true;
+    if ((e1 == 'earth' && e2 == 'water') || (e1 == 'water' && e2 == 'earth')) return true;
     return false;
   }
 
   static bool _isIncompatibleElement(String e1, String e2) {
-    if ((e1 == '불' && e2 == '물') || (e1 == '물' && e2 == '불')) return true;
-    if ((e1 == '흙' && e2 == '공기') || (e1 == '공기' && e2 == '흙')) return true;
+    if ((e1 == 'fire' && e2 == 'water') || (e1 == 'water' && e2 == 'fire')) return true;
+    if ((e1 == 'earth' && e2 == 'air') || (e1 == 'air' && e2 == 'earth')) return true;
     return false;
   }
 }

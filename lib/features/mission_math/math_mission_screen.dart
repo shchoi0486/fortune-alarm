@@ -9,6 +9,7 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:vibration/vibration.dart';
 import 'package:collection/collection.dart'; // for firstWhereOrNull
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
 import '../../data/models/math_difficulty.dart';
@@ -37,7 +38,15 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   late int _answer;
   String? _expression; // (12+3) x 5 형태의 복합 수식을 저장하기 위한 변수
   String _input = '';
-  String _feedback = '문제를 풀어주세요.';
+  String _feedback = '';
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_feedback.isEmpty) {
+      _feedback = AppLocalizations.of(context)!.solveProblem;
+    }
+  }
   
   bool _showCorrectAnimation = false;
   bool _isSuccess = false;
@@ -62,8 +71,14 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     
     WidgetsBinding.instance.addObserver(this);
     
-    _loadAlarmSettings();
-    _generateProblem(); // 초기 문제 생성 (기본값)
+    // 비동기 설정 로드 및 초기화 (Context 안전하게 접근)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _loadAlarmSettings();
+      }
+    });
+    
+    _generateProblem(isInit: true); // 초기 문제 생성 (Context 접근 회피)
     _startInactivityTimer();
     
     _pulseController = AnimationController(
@@ -155,7 +170,9 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     }
   }
 
-  void _generateProblem() {
+  void _generateProblem({bool isInit = false}) {
+    // 초기화 시에는 context 접근 불가하므로 l10n 가져오지 않음
+    final l10n = isInit ? null : AppLocalizations.of(context)!;
     final random = Random();
     
     // 1자리(1~9) 숫자 생성
@@ -258,10 +275,15 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
         break;
     }
     
-    setState(() {
+    if (isInit) {
       _input = '';
-      _feedback = '문제를 풀어주세요.';
-    });
+      _feedback = ''; // didChangeDependencies에서 설정됨
+    } else {
+      setState(() {
+        _input = '';
+        _feedback = l10n!.solveProblem;
+      });
+    }
   }
 
   Future<void> _playAlarm() async {
@@ -345,15 +367,16 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
       _playCorrectFeedback(isLast);
 
       // 정답 애니메이션 시작
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
         _showCorrectAnimation = true;
         _isLastProblem = isLast;
         if (isLast) {
           final random = Random();
           _lastMessage = PositiveMessages.messages[random.nextInt(PositiveMessages.messages.length)];
-          _feedback = '미션 완료!';
+          _feedback = l10n.missionComplete;
         } else {
-          _feedback = '정답입니다!';
+          _feedback = l10n.correctAnswer;
         }
       });
 
@@ -380,8 +403,9 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     } else {
       if (!isAuto) {
         _playWrongFeedback();
+        final l10n = AppLocalizations.of(context)!;
         setState(() {
-          _feedback = '틀렸습니다. 다시 시도하세요.';
+          _feedback = l10n.wrongAnswerRetry;
           _input = '';
         });
       }
@@ -476,6 +500,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     bool isLightBg = true; // 기본적으로 밝은 배경(노란색)으로 가정
     BoxDecoration? bgDecoration;
     Widget? bgWidget;
@@ -546,6 +571,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
           systemNavigationBarIconBrightness: Brightness.dark,
         ),
         child: Scaffold(
+          backgroundColor: Colors.black, // fallback
           extendBodyBehindAppBar: true, // 시스템 바가 배경 위에 나타나도록 함
           body: Stack(
             children: [
@@ -555,55 +581,62 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                       decoration: bgDecoration,
                     ),
               ),
-            SafeArea(
-              bottom: false, // 하단 키패드는 자체 패딩 사용
-              child: Column(
-                children: [
-                  // 상단 상태바 및 진행도
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: isLightBg ? Colors.black.withOpacity(0.05) : Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: isLightBg ? Colors.black12 : Colors.white.withOpacity(0.3)),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.calculate, size: 16, color: textColor),
-                              const SizedBox(width: 6),
-                              Text(
-                                '${_solvedCount >= _targetCount ? _targetCount : _solvedCount + 1} / $_targetCount',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor,
+            Positioned.fill(
+              child: SafeArea(
+                bottom: false, // 하단 키패드는 자체 패딩 사용
+                child: Column(
+                  children: [
+                    // 상단 상태바 및 진행도
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: isLightBg ? Colors.black.withOpacity(0.05) : Colors.white.withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: isLightBg ? Colors.black12 : Colors.white.withOpacity(0.3)),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(Icons.calculate, size: 16, color: textColor),
+                                          const SizedBox(width: 6),
+                                          FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              '${_solvedCount >= _targetCount ? _targetCount : _solvedCount + 1} / $_targetCount',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                color: textColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                const SizedBox(width: 10),
+                                Container(
+                                  width: 36,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                    color: isLightBg ? Colors.black.withOpacity(0.05) : Colors.white.withOpacity(0.2),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(Icons.close, color: textColor, size: 18),
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(
-                          width: 36,
-                          height: 36,
-                          decoration: BoxDecoration(
-                            color: isLightBg ? Colors.black.withOpacity(0.05) : Colors.white.withOpacity(0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.close, color: textColor, size: 18),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
 
                   // 문제 영역 (상단으로 정렬하여 키패드와 거리 확보)
                   Expanded(
@@ -708,16 +741,19 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                 // 피드백 메시지
                                 AnimatedSwitcher(
                                   duration: const Duration(milliseconds: 300),
-                                  child: Text(
-                                    _feedback,
-                                    key: ValueKey(_feedback),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 18, // 15 -> 18로 키움
-                                      color: _feedback.startsWith('정답') 
-                                          ? Colors.green[700] 
-                                          : (_feedback == '문제를 풀어주세요.' ? (isLightBg ? Colors.black : Colors.white) : Colors.redAccent),
-                                      fontWeight: FontWeight.w800, // 더 두껍게
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      _feedback,
+                                      key: ValueKey(_feedback),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 18, // 15 -> 18로 키움
+                                        color: _feedback.startsWith('정답') 
+                                            ? Colors.green[700] 
+                                            : (_feedback == '문제를 풀어주세요.' ? (isLightBg ? Colors.black : Colors.white) : Colors.redAccent),
+                                        fontWeight: FontWeight.w800, // 더 두껍게
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -791,6 +827,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                 ],
               ),
             ),
+          ),
             
             // 정답 오버레이 애니메이션 (기존 로직 유지)
             if (_showCorrectAnimation)
@@ -829,18 +866,21 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                               ),
                             ),
                             const SizedBox(height: 20),
-                            Text(
-                              '정답!',
-                              style: const TextStyle(
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.green,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.white,
-                                    blurRadius: 10,
-                                  ),
-                                ],
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                '정답!',
+                                style: const TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.white,
+                                      blurRadius: 10,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],

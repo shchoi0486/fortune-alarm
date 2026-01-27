@@ -75,23 +75,25 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
   bool _isMissionCompleted = false;
 
   void _closeToMain({bool showAdAfterClose = false}) {
-    if (!mounted) return;
-    if (showAdAfterClose) {
-      ref.read(bottomNavProvider.notifier).state = 0;
-    }
+    // 메인 화면으로 이동 시 알람 탭(0번)으로 설정
+    ref.read(bottomNavProvider.notifier).state = 0;
 
-    final navigator = Navigator.of(context);
-    if (navigator.canPop()) {
-      navigator.pop();
-    } else {
-      navigator.pushNamedAndRemoveUntil('/main', (route) => false);
-    }
+    // [사용자 요청] pop() 대신 명확하게 메인 화면으로 이동하여 회색 화면(Route 빈 상태) 방지
+    // pushAndRemoveUntil을 사용하여 기존의 모든 알람 관련 스택을 깨끗이 정리함
+    navigatorKey.currentState?.pushNamedAndRemoveUntil('/main', (route) => false);
 
     if (showAdAfterClose && !AdService.isSubscriber) {
+      // 메인 화면이 빌드된 후 다이얼로그를 띄우도록 지연 실행
       WidgetsBinding.instance.addPostFrameCallback((_) async {
+        // 충분한 시간 대기 후 다이얼로그 표시 (메인 화면의 초기화 로직과 충돌 방지)
+        await Future.delayed(const Duration(milliseconds: 500));
+        
         final dialogContext = navigatorKey.currentContext;
         if (dialogContext == null) return;
-        await showDialog(
+        
+        // [수정] mounted 체크를 제거하여 화면이 전환된 후에도 다이얼로그가 정상적으로 뜨도록 함
+        // (navigatorKey.currentContext를 사용하므로 안전함)
+        showDialog(
           context: dialogContext,
           barrierDismissible: false,
           builder: (context) => const MissionResultDialog(),
@@ -615,6 +617,16 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
   Future<void> _stopAlarm() async {
     debugPrint('[AlarmRingingScreen] _stopAlarm called');
     try {
+      // 1. 소리/진동 즉시 중지 (사용자 체감 속도 향상)
+      _volumeTimer?.cancel();
+      _volumeEnforcementTimer?.cancel();
+      
+      // await 없이 실행하여 소리를 최대한 빨리 끔
+      _audioPlayer.stop();
+      FlutterRingtonePlayer().stop();
+      Vibration.cancel();
+
+      // 2. 데이터베이스 및 상태 정리
       try {
         final box = await Hive.openBox('app_state');
         await box.delete('active_ringing_alarm_id');
@@ -624,11 +636,6 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
         await box.delete('active_alarm_mission_background_path');
         await box.flush();
       } catch (_) {}
-
-      _volumeTimer?.cancel();
-      await _audioPlayer.stop();
-      await FlutterRingtonePlayer().stop();
-      Vibration.cancel();
 
       final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
       await NotificationService().cancelNotification(stableId);
@@ -821,7 +828,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                         ? ''
                         : (() {
                             if (alarm.maxSnoozeCount == 999) {
-                              return '${l10n.alarmSnooze} ${alarm.snoozeInterval}분(무제한)';
+                              return l10n.snoozeMinutesUnlimited(alarm.snoozeInterval);
                             }
                             final maxCount = alarm.maxSnoozeCount;
                             final remainingAfterTap = _snoozeRemainingAfterTap!;
@@ -831,7 +838,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                             var currentCount = maxCount - clampedRemaining;
                             if (currentCount < 1) currentCount = 1;
                             if (currentCount > maxCount) currentCount = maxCount;
-                            return '${l10n.alarmSnooze} ${alarm.snoozeInterval}분($currentCount/$maxCount)';
+                            return l10n.snoozeMinutesCount(alarm.snoozeInterval, currentCount, maxCount);
                           })();
 
                     return Column(
@@ -933,6 +940,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                           ),
                           child: Text(
                             (() {
+                              final l10n = AppLocalizations.of(context)!;
                               final bool isFirstSnooze = !_alarm!.id.endsWith('_snooze');
                               final int maxCount = _alarm!.maxSnoozeCount;
                               final int currentRemaining = isFirstSnooze
@@ -941,13 +949,13 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                               final minutes = _alarm!.snoozeInterval;
 
                               if (maxCount == 999) {
-                                return '${AppLocalizations.of(context)!.alarmSnooze} $minutes분(무제한)';
+                                return '${l10n.alarmSnooze} ${l10n.snoozeMinutesUnlimited(minutes)}';
                               }
 
                               int currentCount = maxCount - currentRemaining + 1;
                               if (currentCount < 1) currentCount = 1;
                               if (currentCount > maxCount) currentCount = maxCount;
-                              return '${AppLocalizations.of(context)!.alarmSnooze} $minutes분($currentCount/$maxCount)';
+                              return '${l10n.alarmSnooze} ${l10n.snoozeMinutesCount(minutes, currentCount, maxCount)}';
                             })(),
                             style: const TextStyle(
                               color: Colors.white,
@@ -960,7 +968,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                     
                     // 미션 시작 버튼
                     SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
+                      width: double.infinity,
                       height: 54,
                       child: ElevatedButton(
                         onPressed: () async {
@@ -1025,12 +1033,11 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                       ),
                     ),
 
-                    // 버튼과 광고 사이의 간격
-                    if (!AdService.isSubscriber) const SizedBox(height: 30),
-
                     // [Bottom Ad] 박스형 배너 광고 (구독자 제외)
                     if (!AdService.isSubscriber)
-                      const DetailedAdWidget(),
+                      const DetailedAdWidget(
+                        margin: EdgeInsets.only(top: 30, left: 0, right: 0, bottom: 8),
+                      ),
                   ],
                 ),
               ),
@@ -1146,7 +1153,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     await _setMissionActive(false);
 
     if (result == 'timeout') {
-      // 2분간 활동 없음 -> 다시 알람 울림
+      // 2분간 활동 없음 -> 알람 미루기
       debugPrint('[AlarmRingingScreen] Mission timeout - Resetting snooze and re-ringing');
       
       // 스누즈 횟수 초기화 (사용자 요청: 미션 실패 시 1회부터 다시 시작)

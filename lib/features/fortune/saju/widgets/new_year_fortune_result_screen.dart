@@ -3,6 +3,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vibration/vibration.dart';
+import 'package:intl/intl.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../../../services/sharing_service.dart';
 import '../models/saju_data.dart';
 import '../models/saju_profile.dart';
@@ -31,8 +33,13 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
   void initState() {
     super.initState();
     _saju = SajuService.calculateSaju(widget.profile);
-    _fortuneText = SajuService.getYearlyFortune(widget.profile, _saju, widget.targetYear);
     _playRevealFeedback();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fortuneText = SajuService.getYearlyFortune(context, widget.profile, _saju, widget.targetYear);
   }
 
   @override
@@ -65,13 +72,19 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '나의 ${widget.targetYear}년 신년운세',
-          style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            l10n.newYearFortuneResultTitle(widget.targetYear),
+            style: TextStyle(color: isDarkMode ? Colors.white : Colors.black),
+          ),
         ),
+        centerTitle: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -113,11 +126,14 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
                       HapticFeedback.lightImpact();
                       SharingService.showShareOptions(
                          context: context,
-                         title: '나의 ${widget.targetYear}년 신년운세 결과',
-                         description: '${widget.profile.name}님의 신년운세 총평입니다.\n\n${_fortuneText.substring(0, _fortuneText.length > 50 ? 50 : _fortuneText.length)}...',
+                         title: l10n.newYearFortuneShareTitle(widget.targetYear),
+                         description: l10n.newYearFortuneShareDesc(widget.profile.name, _fortuneText.substring(0, _fortuneText.length > 50 ? 50 : _fortuneText.length)),
                          results: {
-                           '이름': widget.profile.name,
-                           '대상 연도': '${widget.targetYear}년',
+                           l10n.name: widget.profile.name,
+                           l10n.tojeongShareTargetYear: 
+                               Localizations.localeOf(context).languageCode == 'ko'
+                                   ? '${widget.targetYear}${l10n.year}'
+                                   : '${widget.targetYear}',
                          },
                        );
                     },
@@ -127,12 +143,12 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
                       elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.share, size: 20),
-                        SizedBox(width: 10),
-                        Text("결과 공유하기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        const Icon(Icons.share, size: 20),
+                        const SizedBox(width: 10),
+                        Text(l10n.compatibilityShareResult, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
@@ -147,6 +163,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
   }
 
   Widget _buildHeader() {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(20),
@@ -174,8 +191,8 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
           ),
           const SizedBox(height: 8),
           Text(
-            "${widget.profile.birthDate.year}년 ${widget.profile.birthDate.month}월 ${widget.profile.birthDate.day}일 "
-            "(${widget.profile.isLunar ? '음력' : '양력'}, ${widget.profile.birthTime})",
+            "${DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(widget.profile.birthDate)} "
+            "(${widget.profile.isLunar ? l10n.sajuLunar : l10n.sajuSolar}, ${widget.profile.birthTime})",
             style: TextStyle(
               fontSize: 14, 
               color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
@@ -187,6 +204,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
   }
 
   Widget _buildSajuChart() {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +212,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 12),
           child: Text(
-            "사주 명식 (Saju Chart)",
+            l10n.sajuChartTitle,
             style: TextStyle(
               fontSize: 18, 
               fontWeight: FontWeight.bold,
@@ -204,10 +222,10 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
         ),
         Row(
           children: [
-            _buildSajuColumn("시주", _saju['hour']!, isDarkMode),
-            _buildSajuColumn("일주", _saju['day']!, isDarkMode),
-            _buildSajuColumn("월주", _saju['month']!, isDarkMode),
-            _buildSajuColumn("년주", _saju['year']!, isDarkMode),
+            _buildSajuColumn(l10n.sajuHour, _saju['hour']!, isDarkMode),
+            _buildSajuColumn(l10n.sajuDay, _saju['day']!, isDarkMode),
+            _buildSajuColumn(l10n.sajuMonth, _saju['month']!, isDarkMode),
+            _buildSajuColumn(l10n.sajuYear, _saju['year']!, isDarkMode),
           ],
         ),
       ],
@@ -259,7 +277,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
             ),
           ),
           Text(
-            element.koreanName,
+            SajuService.getLocalizedOhaengName(context, element),
             style: TextStyle(
               fontSize: 12, 
               color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
@@ -271,10 +289,11 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
   }
 
   Widget _buildOhaengAnalysis() {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final counts = SajuService.countOhaeng(_saju);
     final dominant = SajuService.getDominantOhaeng(counts);
-    final explanation = SajuService.getOhaengExplanation(dominant);
+    final explanation = SajuService.getOhaengExplanation(context, dominant);
 
     return Card(
       elevation: 0,
@@ -289,7 +308,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "오행 분석 (Five Elements)",
+              l10n.ohaengAnalysisTitle,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -308,7 +327,10 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                    Text(
-                    "당신의 대표 오행: ${dominant.koreanName}(${dominant.symbol})",
+                    l10n.dominantOhaeng(
+                      SajuService.getLocalizedOhaengName(context, dominant), 
+                      SajuService.getLocalizedOhaengSymbol(context, dominant)
+                    ),
                     style: TextStyle(
                       fontSize: 16, 
                       fontWeight: FontWeight.bold, 
@@ -352,7 +374,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      "${e.koreanName} : ${counts[e]}",
+                      "${SajuService.getLocalizedOhaengName(context, e)} : ${counts[e]}",
                       style: TextStyle(
                         fontSize: 12, 
                         color: isDarkMode ? Colors.grey[400] : Colors.black87,
@@ -371,7 +393,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                "※ 오행은 사주를 구성하는 다섯 가지 기운(목, 화, 토, 금, 수)을 의미합니다. 균형 잡힌 오행이 이상적이지만, 부족하거나 넘치는 기운을 통해 자신의 성향을 파악할 수 있습니다.",
+                l10n.ohaengDisclaimer,
                 style: TextStyle(
                   fontSize: 12, 
                   color: isDarkMode ? Colors.grey[500] : Colors.grey,
@@ -386,6 +408,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
   }
 
   Widget _buildFortuneCard() {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Card(
       elevation: 0,
@@ -407,7 +430,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
                 const Icon(Icons.auto_awesome, color: Colors.amber, size: 28),
                 const SizedBox(width: 12),
                 Text(
-                  "${widget.targetYear}년 총운",
+                  l10n.yearlyTotalLuck(widget.targetYear),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -443,7 +466,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      "이 운세는 재미로 보는 것이며, 실제 삶은 본인의 의지에 달려있습니다.",
+                      l10n.fortuneDisclaimer,
                       style: TextStyle(
                         color: isDarkMode ? Colors.grey[500] : Colors.grey[600], 
                         fontSize: 12,

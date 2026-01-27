@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'tojeong_service.dart';
 
 class TojeongScreen extends StatefulWidget {
@@ -22,6 +24,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF121212) : const Color(0xFFF2F4F6);
     final cardColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
@@ -30,7 +33,10 @@ class _TojeongScreenState extends State<TojeongScreen> {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text("2026년 토정비결"),
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(l10n.tojeongResultTitle(2026)),
+        ),
         backgroundColor: backgroundColor,
         foregroundColor: textColor,
         elevation: 0,
@@ -40,15 +46,15 @@ class _TojeongScreenState extends State<TojeongScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (!_showResult) _buildInputForm(cardColor, textColor),
-            if (_showResult) _buildResultView(cardColor, textColor),
+            if (!_showResult) _buildInputForm(cardColor, textColor, l10n),
+            if (_showResult) _buildResultView(cardColor, textColor, l10n),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInputForm(Color cardColor, Color textColor) {
+  Widget _buildInputForm(Color cardColor, Color textColor, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -67,13 +73,16 @@ class _TojeongScreenState extends State<TojeongScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "생년월일을 입력해주세요",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                l10n.sajuSelectBirthDate,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: textColor),
+              ),
             ),
             const SizedBox(height: 8),
             Text(
-              "토정비결은 음력 생일을 기준으로 합니다.",
+              l10n.tojeongInputGuide,
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
@@ -82,7 +91,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
             TextFormField(
               controller: _nameController,
               decoration: InputDecoration(
-                labelText: "이름 (선택)",
+                labelText: "${l10n.sajuNameLabel} (${l10n.optional})",
                 filled: true,
                 fillColor: Theme.of(context).brightness == Brightness.dark ? Colors.grey[800] : Colors.grey[100],
                 border: OutlineInputBorder(
@@ -97,7 +106,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
 
             // Date Selection
             InkWell(
-              onTap: () => _selectDate(context),
+              onTap: () => _selectDate(context, l10n),
               borderRadius: BorderRadius.circular(12),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -109,7 +118,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${_birthDate.year}년 ${_birthDate.month}월 ${_birthDate.day}일",
+                      DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(_birthDate),
                       style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     const Icon(Icons.calendar_today, size: 20, color: Colors.grey),
@@ -131,14 +140,14 @@ class _TojeongScreenState extends State<TojeongScreen> {
                   },
                   activeColor: const Color(0xFF11998e),
                 ),
-                Text("음력 생일입니다", style: TextStyle(color: textColor)),
+                Text(l10n.sajuLunar, style: TextStyle(color: textColor)),
               ],
             ),
             if (!_isLunar)
               Padding(
                 padding: const EdgeInsets.only(left: 12, top: 4),
                 child: Text(
-                  "* 양력 생일 입력 시 정확도가 떨어질 수 있습니다.",
+                  "* ${l10n.sajuSolarHint}",
                   style: TextStyle(fontSize: 12, color: Colors.red[400]),
                 ),
               ),
@@ -159,9 +168,12 @@ class _TojeongScreenState extends State<TojeongScreen> {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
-                  "토정비결 보기",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    l10n.tojeongCheckButton,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
@@ -171,7 +183,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
     );
   }
 
-  Widget _buildResultView(Color cardColor, Color textColor) {
+  Widget _buildResultView(Color cardColor, Color textColor, AppLocalizations l10n) {
     return Column(
       children: [
         Container(
@@ -189,14 +201,20 @@ class _TojeongScreenState extends State<TojeongScreen> {
           ),
               child: Column(
             children: [
-              Text(
-                "2026년 병오년 토정비결",
-                style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  l10n.tojeongResultTitle(2026),
+                  style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                ),
               ),
               const SizedBox(height: 8),
-              Text(
-                _nameController.text.isEmpty ? "당신의 운세" : "${_nameController.text}님의 운세",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textColor),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  _nameController.text.isEmpty ? l10n.yourFortune : l10n.tojeongUserFortune(_nameController.text, 2026),
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textColor),
+                ),
               ),
               const SizedBox(height: 24),
               
@@ -204,17 +222,17 @@ class _TojeongScreenState extends State<TojeongScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildGuaCircle("상", _resultGua!['upper']!),
+                  _buildGuaCircle(l10n.guaUpper, _resultGua!['upper']!),
                   const SizedBox(width: 16),
-                  _buildGuaCircle("중", _resultGua!['middle']!),
+                  _buildGuaCircle(l10n.guaMiddle, _resultGua!['middle']!),
                   const SizedBox(width: 16),
-                  _buildGuaCircle("하", _resultGua!['lower']!),
+                  _buildGuaCircle(l10n.guaLower, _resultGua!['lower']!),
                 ],
               ),
               const SizedBox(height: 12),
               Text(
-                "괘코드: ${_resultGua!['code']}",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: const Color(0xFF11998e)),
+                "${l10n.guaCode}: ${_resultGua!['code']}",
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF11998e)),
               ),
               
               const SizedBox(height: 32),
@@ -236,7 +254,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
               _showResult = false;
             });
           },
-          child: const Text("다시 보기", style: TextStyle(fontSize: 16, color: Colors.grey)),
+          child: Text(l10n.viewAgain, style: const TextStyle(fontSize: 16, color: Colors.grey)),
         ),
       ],
     );
@@ -284,7 +302,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
     }
   }
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context, AppLocalizations l10n) async {
     DateTime tempPickedDate = _birthDate;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     
@@ -304,12 +322,12 @@ class _TojeongScreenState extends State<TojeongScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CupertinoButton(
-                      child: const Text('취소', style: TextStyle(color: Colors.red)),
+                      child: Text(l10n.cancel, style: const TextStyle(color: Colors.red)),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
-                    Text("생년월일 선택", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black)),
+                    Text(l10n.sajuSelectBirthDate, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: isDarkMode ? Colors.white : Colors.black)),
                     CupertinoButton(
-                      child: const Text('확인', style: TextStyle(color: Colors.blue)),
+                      child: Text(l10n.confirm, style: const TextStyle(color: Colors.blue)),
                       onPressed: () {
                         setState(() {
                           _birthDate = tempPickedDate;

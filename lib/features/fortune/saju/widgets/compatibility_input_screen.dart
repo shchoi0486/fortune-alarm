@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'; // Import for CupertinoDatePicker
 import 'package:intl/intl.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../models/saju_profile.dart';
 import 'compatibility_result_screen.dart';
 import '../../mixins/fortune_access_mixin.dart';
@@ -64,6 +65,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF121212) : const Color(0xFFFFF0F5); // Lavender Blush
     final textColor = isDarkMode ? Colors.white : Colors.black87;
@@ -71,7 +73,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text("궁합 보기", style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+        title: Text(l10n.compatibilityTitle, style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
         backgroundColor: backgroundColor,
         elevation: 0,
         leading: IconButton(
@@ -85,7 +87,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              "두 분의 정보를 입력해주세요",
+              l10n.compatibilityInputHeader,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -95,7 +97,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
             ),
             const SizedBox(height: 8),
             Text(
-              "사주 정보를 바탕으로 정확한 궁합을 분석해드립니다.",
+              l10n.compatibilityInputSubtitle,
               style: TextStyle(
                 fontSize: 14,
                 color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
@@ -107,7 +109,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
             // My Info Card
             _buildProfileCard(
               context,
-              title: "나의 정보",
+              title: l10n.compatibilityMyInfo,
               nameController: _myNameController,
               birthDate: _myBirthDate,
               birthTime: _myBirthTime,
@@ -148,7 +150,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
             // Partner Info Card
             _buildProfileCard(
               context,
-              title: "상대방 정보",
+              title: l10n.compatibilityPartnerInfo,
               nameController: _partnerNameController,
               birthDate: _partnerBirthDate,
               birthTime: _partnerBirthTime,
@@ -194,9 +196,9 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
                 elevation: 8,
                 shadowColor: Colors.pinkAccent.withOpacity(0.4),
               ),
-              child: const Text(
-                "궁합 결과 보기",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              child: Text(
+                l10n.compatibilityResultButton,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 40),
@@ -223,6 +225,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
     required IconData icon,
     required Color color,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
     final hintColor = isDarkMode ? Colors.grey[600] : Colors.grey[400];
@@ -278,7 +281,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
           if (_savedProfiles.isNotEmpty) ...[
             const SizedBox(height: 16),
             Text(
-              "저장된 정보 불러오기",
+              l10n.compatibilityLoadSaved,
               style: TextStyle(fontSize: 12, color: color.withOpacity(0.8), fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
@@ -308,7 +311,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
                       onPressed: () => onProfileSelected(profile),
                       onDeleted: () => onProfileDeleted(profile),
                       deleteIcon: Icon(Icons.close, size: 14, color: isDarkMode ? Colors.grey[500] : Colors.grey[600]),
-                      deleteButtonTooltipMessage: "삭제",
+                      deleteButtonTooltipMessage: l10n.compatibilityDeleteTooltip,
                     ),
                   );
                 },
@@ -330,12 +333,12 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 14, top: 10),
-                  child: Text("이름", style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
+                  child: Text(l10n.sajuNameLabel, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 0.5)),
                 ),
                 TextField(
                   controller: nameController,
                   decoration: InputDecoration(
-                    hintText: "이름을 입력하세요",
+                    hintText: l10n.sajuNameHint,
                     hintStyle: TextStyle(color: hintColor, fontSize: 15),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -358,7 +361,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
 
           // Date Picker Row
           Text(
-            "생년월일",
+            l10n.sajuBirthDateLabel,
             style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.grey[400] : Colors.grey[600], fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 10),
@@ -392,8 +395,8 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildToggleItem("양력", !isLunar, () => onLunarChanged(false), isDarkMode),
-                    _buildToggleItem("음력", isLunar, () => onLunarChanged(true), isDarkMode),
+                    _buildToggleItem(l10n.sajuSolar, !isLunar, () => onLunarChanged(false), isDarkMode),
+                    _buildToggleItem(l10n.sajuLunar, isLunar, () => onLunarChanged(true), isDarkMode),
                   ],
                 ),
               ),
@@ -403,7 +406,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
 
           // Time Picker Row
           Text(
-            "태어난 시간",
+            l10n.sajuBirthTimeLabel,
             style: TextStyle(fontSize: 13, color: isDarkMode ? Colors.grey[400] : Colors.grey[600], fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 10),
@@ -420,7 +423,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
                     child: Text(
                       birthTime != null 
                         ? birthTime.format(context) 
-                        : "시간 모름",
+                        : l10n.sajuUnknownTime,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -462,7 +465,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        "시간 모름",
+                        l10n.sajuUnknownTime,
                         style: TextStyle(
                           fontSize: 14,
                           color: textColor,
@@ -486,6 +489,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
     Function(String) onChanged,
     bool isDarkMode,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: isDarkMode ? Colors.black54 : Colors.grey[100],
@@ -495,11 +499,11 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
       child: Row(
         children: [
           Expanded(
-            child: _buildGenderButton("남성", 'male', currentGender, onChanged, isDarkMode),
+            child: _buildGenderButton(l10n.compatibilityGenderMale, 'male', currentGender, onChanged, isDarkMode),
           ),
           Container(width: 1, height: 24, color: Colors.grey.withOpacity(0.3)),
           Expanded(
-            child: _buildGenderButton("여성", 'female', currentGender, onChanged, isDarkMode),
+            child: _buildGenderButton(l10n.compatibilityGenderFemale, 'female', currentGender, onChanged, isDarkMode),
           ),
         ],
       ),
@@ -574,6 +578,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
   }
 
   void _showCupertinoDatePicker(BuildContext context, DateTime initialDate, Function(DateTime) onConfirm) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     
     showCupertinoModalPopup(
@@ -601,10 +606,10 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
                   children: [
                     CupertinoButton(
                       padding: EdgeInsets.zero,
-                      child: const Text("취소", style: TextStyle(color: Colors.redAccent)),
+                      child: Text(l10n.cancel, style: const TextStyle(color: Colors.redAccent)),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
-                    Text("생년월일 선택", 
+                    Text(l10n.sajuSelectBirthDate, 
                       style: TextStyle(
                         fontSize: 16, 
                         fontWeight: FontWeight.bold,
@@ -613,7 +618,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
                     ),
                     CupertinoButton(
                       padding: EdgeInsets.zero,
-                      child: const Text("확인", style: TextStyle(color: Colors.blueAccent)),
+                      child: Text(l10n.confirm, style: const TextStyle(color: Colors.blueAccent)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -642,6 +647,7 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
   }
 
   void _showCupertinoTimePicker(BuildContext context, TimeOfDay initialTime, Function(TimeOfDay) onConfirm) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     
     // Convert TimeOfDay to DateTime for initial value
@@ -673,19 +679,19 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
                   children: [
                     CupertinoButton(
                       padding: EdgeInsets.zero,
-                      child: const Text("취소", style: TextStyle(color: Colors.redAccent)),
+                      child: Text(l10n.cancel, style: const TextStyle(color: Colors.redAccent)),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
-                    Text("태어난 시간 선택", 
+                    Text(l10n.sajuSelectBirthTime, 
                       style: TextStyle(
                         fontSize: 16, 
                         fontWeight: FontWeight.bold,
                         color: isDarkMode ? Colors.white : Colors.black,
                       )
                     ),
-                    CupertinoButton( 
+                    CupertinoButton(
                       padding: EdgeInsets.zero,
-                      child: const Text("확인", style: TextStyle(color: Colors.blueAccent)),
+                      child: Text(l10n.confirm, style: const TextStyle(color: Colors.blueAccent)),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
@@ -713,15 +719,16 @@ class _CompatibilityInputScreenState extends State<CompatibilityInputScreen> wit
   }
 
   void _validateAndAnalyze() {
+    final l10n = AppLocalizations.of(context)!;
     if (_myNameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("나의 이름을 입력해주세요")),
+        SnackBar(content: Text(l10n.compatibilityInputMyNameGuide)),
       );
       return;
     }
     if (_partnerNameController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("상대방의 이름을 입력해주세요")),
+        SnackBar(content: Text(l10n.compatibilityInputPartnerNameGuide)),
       );
       return;
     }

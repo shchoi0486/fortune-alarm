@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import '../../l10n/app_localizations.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../providers/saju_provider.dart';
 import '../../providers/mission_provider.dart';
 import 'saju/widgets/saju_profile_screen.dart';
@@ -59,8 +59,9 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final sajuState = ref.watch(sajuProvider);
-    final userName = sajuState.mainProfile?.name ?? "사용자";
+    final userName = sajuState.mainProfile?.name ?? l10n.user;
     final birthDate = sajuState.mainProfile?.birthDate;
     final zodiacIcon = _getZodiacAnimal(birthDate);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
@@ -82,7 +83,7 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
             icon: Icon(Icons.notifications_none, color: textColor),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('새로운 알림이 없습니다.')),
+                SnackBar(content: Text(l10n.noNewNotifications)),
               );
             },
           ),
@@ -126,7 +127,7 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "회원",
+                          l10n.member,
                           style: TextStyle(color: Colors.grey[500], fontSize: 14),
                         ),
                         Text(
@@ -148,7 +149,7 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                       );
                     },
                     child: Text(
-                      "사주정보 관리",
+                      l10n.manageSajuInfo,
                       style: TextStyle(color: Colors.grey[400], fontSize: 14),
                     ),
                   ),
@@ -180,7 +181,7 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("포춘쿠키", style: TextStyle(color: Colors.grey[500], fontSize: 14)),
+                          Text(l10n.fortuneCookie, style: TextStyle(color: Colors.grey[500], fontSize: 14)),
                           const SizedBox(height: 4),
                           Row(
                             children: [
@@ -213,7 +214,7 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                         ),
-                        child: const Text("무료충전", style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(l10n.freeCharge, style: const TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -227,12 +228,12 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("포춘패스", style: TextStyle(color: Colors.grey[500], fontSize: 14)),
+                          Text(l10n.fortunePass, style: TextStyle(color: Colors.grey[500], fontSize: 14)),
                           const SizedBox(height: 4),
                           Row(
                             children: [
                               Text(
-                                _hasActivePass ? "무제한 이용 중" : "무제한 미구독",
+                                _hasActivePass ? l10n.unlimitedInUse : l10n.unlimitedNotSubscribed,
                                 style: TextStyle(
                                   color: _hasActivePass ? Colors.blue[600] : textColor,
                                   fontSize: 18,
@@ -263,7 +264,7 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                         ),
-                        child: Text(_hasActivePass ? "구독 관리" : "구독하기", style: const TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(_hasActivePass ? l10n.manageSubscription : l10n.subscribe, style: const TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -279,17 +280,17 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                 children: [
                   _buildActionButton(
                     Icons.assignment_outlined,
-                    "구매내역",
+                    l10n.purchaseHistory,
                     textColor,
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('구매 내역이 없습니다.')),
+                        SnackBar(content: Text(l10n.noPurchaseHistory)),
                       );
                     },
                   ),
                   _buildActionButton(
                     Icons.campaign_outlined,
-                    "공지사항",
+                    l10n.notice,
                     textColor,
                     onTap: () {
                       Navigator.push(
@@ -300,7 +301,7 @@ class _AccountManagementScreenState extends ConsumerState<AccountManagementScree
                   ),
                   _buildActionButton(
                     Icons.help_outline,
-                    "고객센터",
+                    l10n.customerCenter,
                     textColor,
                     onTap: () {
                       Navigator.push(

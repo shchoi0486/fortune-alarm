@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vibration/vibration.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../../../services/sharing_service.dart';
 import '../models/saju_profile.dart';
 import '../services/compatibility_service.dart';
@@ -27,23 +28,39 @@ class _CompatibilityResultScreenState extends State<CompatibilityResultScreen> w
   late CompatibilityScore _result;
   late AnimationController _animationController;
   late Animation<double> _scoreAnimation;
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _result = CompatibilityService.analyze(widget.myProfile, widget.partnerProfile);
-    
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     );
+  }
 
-    _scoreAnimation = Tween<double>(begin: 0, end: _result.totalScore.toDouble()).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
-    );
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final l10n = AppLocalizations.of(context)!;
+      _result = CompatibilityService.analyze(
+        widget.myProfile,
+        widget.partnerProfile,
+        l10n,
+      );
 
-    _animationController.forward();
-    _playRevealFeedback();
+      _scoreAnimation = Tween<double>(
+        begin: 0,
+        end: _result.totalScore.toDouble(),
+      ).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
+      );
+
+      _animationController.forward();
+      _playRevealFeedback();
+      _isInitialized = true;
+    }
   }
 
   @override
@@ -77,6 +94,7 @@ class _CompatibilityResultScreenState extends State<CompatibilityResultScreen> w
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF121212) : const Color(0xFFFFF0F5);
     final textColor = isDarkMode ? Colors.white : Colors.black87;
@@ -84,7 +102,7 @@ class _CompatibilityResultScreenState extends State<CompatibilityResultScreen> w
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: Text("궁합 결과", style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+        title: Text(l10n.compatibilityResultTitle, style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
         backgroundColor: backgroundColor,
         elevation: 0,
         leading: IconButton(
@@ -142,11 +160,11 @@ class _CompatibilityResultScreenState extends State<CompatibilityResultScreen> w
                     HapticFeedback.lightImpact();
                     SharingService.showShareOptions(
                       context: context,
-                      title: '우리의 궁합 결과',
+                      title: l10n.compatibilityShareTitle,
                       description: '${widget.myProfile.name} ❤️ ${widget.partnerProfile.name}\n${_result.title}',
                       results: {
-                        '궁합 점수': '${_result.totalScore}점',
-                        '결과 요약': '${_result.description.substring(0, _result.description.length > 30 ? 30 : _result.description.length)}...',
+                        l10n.compatibilityScore: l10n.compatibilityScoreDisplay(_result.totalScore),
+                        l10n.compatibilitySummary: '${_result.description.substring(0, _result.description.length > 30 ? 30 : _result.description.length)}...',
                       },
                     );
                   },
@@ -156,12 +174,12 @@ class _CompatibilityResultScreenState extends State<CompatibilityResultScreen> w
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.share, size: 20),
-                      SizedBox(width: 10),
-                      Text("결과 공유하기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Icon(Icons.share, size: 20),
+                      const SizedBox(width: 10),
+                      Text(l10n.compatibilityShareResult, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -183,9 +201,9 @@ class _CompatibilityResultScreenState extends State<CompatibilityResultScreen> w
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    "다른 사람과의 궁합 보기",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  child: Text(
+                    l10n.compatibilityRetryButton,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -258,53 +276,76 @@ class _CompatibilityResultScreenState extends State<CompatibilityResultScreen> w
   }
 
   Widget _buildScoreCircle(bool isDarkMode) {
+    final l10n = AppLocalizations.of(context)!;
     return AnimatedBuilder(
       animation: _scoreAnimation,
       builder: (context, child) {
-        return Stack(
-          alignment: Alignment.center,
-          children: [
-            SizedBox(
-              width: 200,
-              height: 200,
-              child: CircularProgressIndicator(
-                value: 1.0,
-                strokeWidth: 15,
-                color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+        return Container(
+          width: 200,
+          height: 200,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isDarkMode ? Colors.grey[900] : Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.pinkAccent.withOpacity(0.2),
+                blurRadius: 20,
+                spreadRadius: 5,
               ),
-            ),
-            SizedBox(
-              width: 200,
-              height: 200,
-              child: CircularProgressIndicator(
-                value: _scoreAnimation.value / 100,
-                strokeWidth: 15,
-                backgroundColor: Colors.transparent,
-                color: Colors.pinkAccent,
-                strokeCap: StrokeCap.round,
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 180,
+                height: 180,
+                child: CircularProgressIndicator(
+                  value: _scoreAnimation.value / 100,
+                  strokeWidth: 12,
+                  backgroundColor: Colors.pinkAccent.withOpacity(0.1),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.pinkAccent),
+                ),
               ),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  "궁합 점수",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    l10n.compatibilityScore,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                    ),
                   ),
-                ),
-                Text(
-                  "${_scoreAnimation.value.toInt()}점",
-                  style: TextStyle(
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                    color: isDarkMode ? Colors.white : Colors.black87,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${_scoreAnimation.value.toInt()}',
+                        style: TextStyle(
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                          color: isDarkMode ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10, left: 2),
+                        child: Text(
+                          l10n.compatibilityScoreDisplay(0).replaceAll('0', ''),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         );
       },
     );

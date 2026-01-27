@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class LottoService {
+class LuckyNumberService {
+  // External API URL (dhLottery) for analysis data
   static const String _baseUrl = 'https://www.dhlottery.co.kr/common.do?method=getLottoNumber';
 
   // Calculate the most recent round number based on the current date
@@ -12,13 +13,13 @@ class LottoService {
     // Calculate difference in days
     final int differenceDays = now.difference(baseDate).inDays;
     
-    // Lotto is drawn every 7 days
+    // Numbers are updated every 7 days
     // Add 1 because it started at round 1
     return (differenceDays / 7).floor() + 1;
   }
 
   // Fetch data for a specific round
-  static Future<Map<String, dynamic>?> fetchLottoData(int round) async {
+  static Future<Map<String, dynamic>?> fetchAnalysisData(int round) async {
     try {
       final response = await http.get(
         Uri.parse('$_baseUrl&drwNo=$round')
@@ -51,7 +52,7 @@ class LottoService {
     for (int i = 0; i < count; i += batchSize) {
       final List<Future<Map<String, dynamic>?>> batchFutures = [];
       for (int j = i; j < i + batchSize && j < count; j++) {
-        batchFutures.add(fetchLottoData(latestRound - j));
+        batchFutures.add(fetchAnalysisData(latestRound - j));
       }
 
       final List<Map<String, dynamic>?> results = await Future.wait(batchFutures);

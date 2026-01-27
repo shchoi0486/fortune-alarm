@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:fortune_alarm/features/fortune/mixins/fortune_access_mixin.dart';
 import 'package:fortune_alarm/services/cookie_service.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -24,6 +25,16 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
   late AnimationController _controller;
   late FaceReadingResult _result;
   final CookieService _localCookieService = CookieService();
+  bool _isResultInitialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isResultInitialized) {
+      _result = _buildResult(context, widget.analysis);
+      _isResultInitialized = true;
+    }
+  }
 
   @override
   void initState() {
@@ -38,7 +49,22 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     }
 
     // 초기값 설정 (late 초기화 오류 방지)
-    _result = _buildResult(widget.analysis);
+    // context를 initState에서 직접 사용하면 Localization 오류가 발생하므로 
+    // didChangeDependencies에서 초기화하거나 임시 데이터로 세팅
+    _result = FaceReadingResult(
+      title: "",
+      totalScore: 0,
+      wealthScore: 0,
+      loveScore: 0,
+      careerScore: 0,
+      healthScore: 0,
+      eyeAnalysis: "",
+      noseAnalysis: "",
+      mouthAnalysis: "",
+      overallAdvice: "",
+      overallAnalysis: "",
+      dailyFortune: "",
+    );
     
     _controller = AnimationController(
       vsync: this,
@@ -55,31 +81,32 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         setState(() {
           _isAnalyzing = false;
           _isLocked = !isSubscriber; // 구독자면 잠금 해제 상태로 시작
-          _result = _buildResult(widget.analysis);
+          _result = _buildResult(context, widget.analysis);
         });
       }
     });
   }
 
-  FaceReadingResult _buildResult(FaceAnalysisMetrics? analysis) {
+  FaceReadingResult _buildResult(BuildContext context, FaceAnalysisMetrics? analysis) {
+    final l10n = AppLocalizations.of(context)!;
     if (analysis == null) {
       return FaceReadingResult(
-        title: "관상 분석(기본)",
+        title: l10n.faceAnalysisBasic,
         totalScore: 65,
         wealthScore: 62,
         loveScore: 64,
         careerScore: 66,
         healthScore: 68,
-        eyeAnalysis: "측정값이 충분하지 않아, 전체적인 인상 중심으로 해석했습니다.",
-        noseAnalysis: "코 윤곽이 안정적으로 잡히면 재물운 해석의 정확도가 올라갑니다.",
-        mouthAnalysis: "입 주변 윤곽이 뚜렷할수록 말운·대인운 해석이 구체화됩니다.",
-        overallAdvice: "조명을 밝게 하고 정면을 바라보면 분석 품질이 좋아집니다.",
-        overallAnalysis: "이번 결과는 얼굴 윤곽/표정 측정이 충분하지 않아 기본 해석으로 표시됩니다.\n정면 응시와 조명 상태가 좋아지면, 눈 뜸·코 윤곽·입 주변 지표가 더 안정적으로 측정됩니다.\n다시 시도하면 점수 분포와 문장이 더 구체적으로 바뀝니다.",
-        dailyFortune: "오늘은 평온한 마음으로 하루를 시작하기 좋은 날입니다.\n거울 속 미소로 긍정적인 기운을 채워보세요.\n작은 여유가 뜻밖의 행운을 불러옵니다.",
+        eyeAnalysis: l10n.insufficientDataOverallImpression,
+        noseAnalysis: l10n.noseStabilityWealthAccuracy,
+        mouthAnalysis: l10n.mouthClarityInterpersonalAccuracy,
+        overallAdvice: l10n.improveAnalysisQualityAdvice,
+        overallAnalysis: l10n.basicAnalysisDescription,
+        dailyFortune: l10n.defaultDailyFortune,
       );
     }
 
-    final faceShape = _faceShapeLabel(analysis);
+    final faceShape = _faceShapeLabel(context, analysis);
     final eyeOpen = (analysis.eyeOpenProbability ?? 0.5).clamp(0.0, 1.0);
     final smile = (analysis.smileProbability ?? 0.3).clamp(0.0, 1.0);
     final mouthOpen = (analysis.mouthOpenRatio ?? 0.0).clamp(0.0, 0.25);
@@ -95,7 +122,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     final wealth = clampScore(
       55 +
           _wealthDeltaFromNose(noseWidth: noseWidth, noseLength: noseLength) +
-          _faceShapeWealthBias(faceShape),
+          _faceShapeWealthBias(context, faceShape),
     );
 
     final love = clampScore(
@@ -103,7 +130,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
           (smile * 35) +
           ((eyeOpen - 0.5) * 20) +
           (mouthOpen >= 0.04 && smile >= 0.55 ? 5 : 0) +
-          _faceShapeLoveBias(faceShape),
+          _faceShapeLoveBias(context, faceShape),
     );
 
     final career = clampScore(
@@ -111,7 +138,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
           ((1 - clamp01(yawAbs / 25)) * 15) +
           ((1 - clamp01(rollAbs / 20)) * 8) +
           ((eyeOpen - 0.5) * 10) +
-          _faceShapeCareerBias(faceShape),
+          _faceShapeCareerBias(context, faceShape),
     );
 
     final health = clampScore(
@@ -122,19 +149,20 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     );
 
     final total = clampScore((wealth * 0.27) + (love * 0.23) + (career * 0.30) + (health * 0.20));
-    final title = _titleFromScores(wealth: wealth, love: love, career: career, health: health);
+    final title = _titleFromScores(context, wealth: wealth, love: love, career: career, health: health);
 
     final scoreMap = {
-      "재물": wealth,
-      "인연": love,
-      "직업": career,
-      "건강": health,
+      l10n.wealth: wealth,
+      l10n.love: love,
+      l10n.career: career,
+      l10n.health: health,
     };
     final sorted = scoreMap.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
     final topKey = sorted.first.key;
     final bottomKey = sorted.last.key;
 
     final dailyFortune = _generateDailyFortune(
+      context,
       topKey: topKey,
       bottomKey: bottomKey,
       smile: smile,
@@ -146,6 +174,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     );
 
     final overallAnalysis = _overallAnalysisText(
+      context,
       topKey: topKey,
       bottomKey: bottomKey,
       wealth: wealth,
@@ -166,16 +195,17 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
       loveScore: love,
       careerScore: career,
       healthScore: health,
-      eyeAnalysis: _eyeAnalysisText(eyeOpen: eyeOpen, yawAbs: yawAbs, rollAbs: rollAbs, smile: smile),
-      noseAnalysis: _noseAnalysisText(noseWidth: noseWidth, noseLength: noseLength),
-      mouthAnalysis: _mouthAnalysisText(mouthOpen: mouthOpen, smile: smile),
-      overallAdvice: _adviceText(wealth: wealth, love: love, career: career, health: health),
+      eyeAnalysis: _eyeAnalysisText(context, eyeOpen: eyeOpen, yawAbs: yawAbs, rollAbs: rollAbs, smile: smile),
+      noseAnalysis: _noseAnalysisText(context, noseWidth: noseWidth, noseLength: noseLength),
+      mouthAnalysis: _mouthAnalysisText(context, mouthOpen: mouthOpen, smile: smile),
+      overallAdvice: _adviceText(context, wealth: wealth, love: love, career: career, health: health),
       overallAnalysis: overallAnalysis,
       dailyFortune: dailyFortune,
     );
   }
 
-  String _generateDailyFortune({
+  String _generateDailyFortune(
+    BuildContext context, {
     required String topKey,
     required String bottomKey,
     required double smile,
@@ -185,6 +215,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     required int career,
     required int health,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     // 날짜, 시간, 점수를 조합하여 더 다양한 인덱스 생성
     final daySeed = now.day + now.month + now.year;
@@ -199,149 +230,149 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     String faceVibe = "";
     if (smile >= 0.6) {
       final options = [
-        "입가에 머문 밝은 미소가 주변에 긍정적인 에너지를 전파하네요. ",
-        "화사하게 피어난 미소에서 오늘 하루의 밝은 운기가 느껴집니다. ",
-        "부드러운 입매가 귀인을 부르는 매력적인 기운을 뿜어내고 있습니다. ",
-        "자신감 넘치는 미소는 오늘 어떤 난관도 쉽게 풀어낼 열쇠가 될 것입니다. ",
-        "시원한 미소 덕분에 막혔던 기운이 뚫리고 행운이 찾아올 준비를 마쳤습니다. ",
+        l10n.faceVibeSmile0,
+        l10n.faceVibeSmile1,
+        l10n.faceVibeSmile2,
+        l10n.faceVibeSmile3,
+        l10n.faceVibeSmile4,
       ];
       faceVibe = options[vibeIndex];
     } else if (eyeOpen >= 0.6) {
       final options = [
-        "초롱초롱하게 빛나는 눈빛에서 오늘 하루를 이끌어갈 강한 의지가 느껴집니다. ",
-        "총기 어린 눈매가 날카로운 판단력과 직관을 예고하고 있습니다. ",
-        "맑고 깊은 눈동자가 진실한 기운을 담아 좋은 소식을 기다리고 있네요. ",
-        "정면을 응시하는 당당한 눈빛이 오늘 당신의 존재감을 드높여줄 것입니다. ",
-        "눈빛에 서린 열정이 주변 사람들에게 강한 신뢰를 심어주는 하루입니다. ",
+        l10n.faceVibeEye0,
+        l10n.faceVibeEye1,
+        l10n.faceVibeEye2,
+        l10n.faceVibeEye3,
+        l10n.faceVibeEye4,
       ];
       faceVibe = options[vibeIndex];
     } else {
       final options = [
-        "전체적으로 평온하고 안정된 얼굴의 기운이 마음의 여유를 가져다줍니다. ",
-        "차분하게 가라앉은 안색에서 신중하고 지혜로운 기운이 엿보입니다. ",
-        "균형 잡힌 얼굴의 조화가 오늘 하루의 기복 없는 평탄함을 상징하네요. ",
-        "진중한 분위기가 느껴지는 얼굴은 오늘 중요한 결정을 내리기에 최적입니다. ",
-        "편안한 얼굴 기운이 주변 사람들에게 안도감을 주어 협력이 잘 이루어질 상입니다. ",
+        l10n.faceVibeNeutral0,
+        l10n.faceVibeNeutral1,
+        l10n.faceVibeNeutral2,
+        l10n.faceVibeNeutral3,
+        l10n.faceVibeNeutral4,
       ];
       faceVibe = options[vibeIndex];
     }
-
-    String headline = "$faceVibe오늘은 $topKey 운이 가장 돋보이는 날입니다. 반면 $bottomKey 쪽은 세심한 주의가 필요해 보이네요.";
+    
+    String headline = l10n.dailyFortuneHeadline(faceVibe, topKey, bottomKey);
 
     String mid;
-    if (topKey == "재물") {
+    if (topKey == l10n.wealth) {
       final options = [
-        "콧망울의 기운이 단단하니, 작은 정리와 확인이 돈의 흐름을 더 크게 만들어줍니다.",
-        "재백궁(코)에 힘이 실리는 날입니다. 급할수록 계산을 한 번 더 하면 이득이 남습니다.",
-        "얼굴의 중심인 코의 기운이 좋아 알뜰하게 챙긴 한 가지가 예상 밖의 성과로 이어집니다.",
-        "금전운이 깃든 안색입니다. 생각지 못한 곳에서 작은 수익이 발생할 수 있는 흐름입니다.",
-        "코 끝의 생기가 좋아 경제적인 감각이 예리해집니다. 투가나 구매 결정에 유리한 날입니다.",
-        "돈을 부르는 기운이 강합니다. 지갑을 정리하거나 통장 내역을 살피면 행운이 따릅니다.",
-        "재물 창고가 든든하게 채워지는 상입니다. 성실하게 쌓아온 노력이 결실을 맺기 시작합니다.",
-        "안정적인 재물운이 들어오고 있습니다. 큰 지출보다는 꾸준한 저축이 운을 더 키워줍니다.",
-        "경제적 기회를 포착하는 눈이 밝아집니다. 주변의 정보에 귀를 기울여보세요.",
-        "풍요로운 기운이 얼굴 가득합니다. 나누는 마음이 더 큰 재물로 돌아오는 신비한 날입니다.",
+        l10n.dailyFortuneWealth0,
+        l10n.dailyFortuneWealth1,
+        l10n.dailyFortuneWealth2,
+        l10n.dailyFortuneWealth3,
+        l10n.dailyFortuneWealth4,
+        l10n.dailyFortuneWealth5,
+        l10n.dailyFortuneWealth6,
+        l10n.dailyFortuneWealth7,
+        l10n.dailyFortuneWealth8,
+        l10n.dailyFortuneWealth9,
       ];
       mid = options[toneIndex];
-    } else if (topKey == "인연") {
+    } else if (topKey == l10n.love) {
       final options = [
-        "입꼬리의 기운이 부드러우니, 먼저 한마디 건네면 관계가 풀립니다.",
-        "말을 담는 입매가 정갈합니다. 진심을 짧게 전하는 것이 오해를 줄여줍니다.",
-        "밝은 안색이 귀인의 기운을 끌어옵니다. 작은 배려가 큰 인연으로 돌아옵니다.",
-        "사람을 끄는 매력이 돋보이는 날입니다. 새로운 만남에서 긍정적인 기운을 얻겠네요.",
-        "대인관계의 기운이 맑아 갈등이 해결되고 화합이 이루어지는 흐름입니다.",
-        "입매의 부드러움이 상대의 마음을 엽니다. 오늘은 경청이 최고의 대화법입니다.",
-        "주변의 도움을 받을 수 있는 상입니다. 혼자 고민하기보다 조언을 구해보세요.",
-        "진실된 눈빛이 신뢰를 쌓습니다. 약속을 소중히 하면 더 큰 인연이 닿습니다.",
-        "화목한 기운이 가정과 직장에 가득합니다. 웃음이 끊이지 않는 하루가 되겠네요.",
-        "인연의 실타래가 예쁘게 풀리는 날입니다. 소중한 사람에게 고마움을 전해보세요.",
+        l10n.dailyFortuneLove0,
+        l10n.dailyFortuneLove1,
+        l10n.dailyFortuneLove2,
+        l10n.dailyFortuneLove3,
+        l10n.dailyFortuneLove4,
+        l10n.dailyFortuneLove5,
+        l10n.dailyFortuneLove6,
+        l10n.dailyFortuneLove7,
+        l10n.dailyFortuneLove8,
+        l10n.dailyFortuneLove9,
       ];
       mid = options[toneIndex];
-    } else if (topKey == "직업") {
+    } else if (topKey == l10n.career) {
       final options = [
-        "눈빛의 총기가 예리하니, 우선순위를 좁히면 집중력이 성과로 바뀝니다.",
-        "관찰력이 돋보이는 눈매입니다. 결정은 간단히, 실행은 꾸준히가 통하는 날입니다.",
-        "이마와 눈의 기운이 맑아 오늘은 맡은 일을 끝까지 마무리하는 힘이 큽니다.",
-        "리더십이 발휘되는 상입니다. 당신의 의견이 주변에 큰 영향력을 미치겠네요.",
-        "판단력이 정점에 달하는 하루입니다. 복잡한 문제도 명쾌하게 해결할 수 있습니다.",
-        "일 처리가 깔끔하여 주변의 인정을 받습니다. 승진이나 성취의 기운이 강합니다.",
-        "새로운 프로젝트나 일을 시작하기에 최적인 기운입니다. 자신 있게 도전하세요.",
-        "업무 효율이 비약적으로 상승하는 날입니다. 미뤄둔 일을 처리하기에 좋습니다.",
-        "창의적인 아이디어가 솟아나는 눈빛입니다. 메모하는 습관이 행운을 가져옵니다.",
-        "끈기와 인내가 빛을 발하는 하루입니다. 마지막까지 집중하면 큰 보람이 따릅니다.",
+        l10n.dailyFortuneCareer0,
+        l10n.dailyFortuneCareer1,
+        l10n.dailyFortuneCareer2,
+        l10n.dailyFortuneCareer3,
+        l10n.dailyFortuneCareer4,
+        l10n.dailyFortuneCareer5,
+        l10n.dailyFortuneCareer6,
+        l10n.dailyFortuneCareer7,
+        l10n.dailyFortuneCareer8,
+        l10n.dailyFortuneCareer9,
       ];
       mid = options[toneIndex];
     } else {
       final options = [
-        "전체적인 안색이 안정적이니, 리듬을 고르면 컨디션이 금방 회복됩니다.",
-        "얼굴의 활력이 돋보입니다. 무리하지 않고 템포를 지키면 하루가 편안해집니다.",
-        "눈과 피부의 기운이 맑아 작은 휴식이 집중력과 기분을 함께 끌어올립니다.",
-        "신체 리듬이 최상의 조화를 이룹니다. 가벼운 운동이 기운을 더 맑게 해줍니다.",
-        "충전된 에너지가 얼굴 가득합니다. 오늘 하루는 지치지 않고 즐겁게 보낼 수 있습니다.",
-        "심신의 안정이 돋보이는 상입니다. 명상이나 깊은 호흡이 운기를 더 높여줍니다.",
-        "회복 탄력성이 좋은 날입니다. 약간의 피로도 금방 씻어낼 수 있는 활력이 있네요.",
-        "피부의 생기가 좋아 주변에서 건강해 보인다는 인사를 듣게 될 흐름입니다.",
-        "절제된 식단과 휴식이 운의 근본을 튼튼하게 합니다. 몸을 아끼는 하루가 되세요.",
-        "맑은 공기와 수분 섭취가 오늘의 보약입니다. 생기 넘치는 하루를 만끽하세요.",
+        l10n.dailyFortuneHealth0,
+        l10n.dailyFortuneHealth1,
+        l10n.dailyFortuneHealth2,
+        l10n.dailyFortuneHealth3,
+        l10n.dailyFortuneHealth4,
+        l10n.dailyFortuneHealth5,
+        l10n.dailyFortuneHealth6,
+        l10n.dailyFortuneHealth7,
+        l10n.dailyFortuneHealth8,
+        l10n.dailyFortuneHealth9,
       ];
       mid = options[toneIndex];
     }
 
     String tip;
-    if (bottomKey == "재물") {
+    if (bottomKey == l10n.wealth) {
       final options = [
-        "지출·구독·결제는 ‘지금’보다 ‘내일’ 한 번 더 확인하세요.",
-        "약속 없는 소비는 피하고, 필요한 것만 담는 게 이득입니다.",
-        "금전 관련 대화는 기록을 남기면 불필요한 손해를 막습니다.",
-        "작은 금액이라도 새는 구멍이 없는지 체크해보세요.",
-        "충동구매의 유혹이 강한 날입니다. 결제 전 10분만 고민해보세요.",
-        "투자나 큰 거래는 오늘은 신중해야 합니다. 전문가의 조언을 참고하세요.",
-        "빌려준 돈이나 받아야 할 돈에 대해 명확하게 정리할 필요가 있습니다.",
-        "지갑 관리에 신경 쓰세요. 분실이나 낭비의 기운이 살짝 보입니다.",
-        "겉모습에 치중한 소비보다는 실속을 챙기는 지혜가 필요합니다.",
-        "공짜를 기대하기보다 정당한 대가를 지불하는 것이 운을 지키는 길입니다.",
+        l10n.dailyFortuneTipWealth0,
+        l10n.dailyFortuneTipWealth1,
+        l10n.dailyFortuneTipWealth2,
+        l10n.dailyFortuneTipWealth3,
+        l10n.dailyFortuneTipWealth4,
+        l10n.dailyFortuneTipWealth5,
+        l10n.dailyFortuneTipWealth6,
+        l10n.dailyFortuneTipWealth7,
+        l10n.dailyFortuneTipWealth8,
+        l10n.dailyFortuneTipWealth9,
       ];
       tip = options[tipIndex];
-    } else if (bottomKey == "인연") {
+    } else if (bottomKey == l10n.love) {
       final options = [
-        "말투가 날카로워지기 쉬우니 ‘한 박자 쉬고’ 답하세요.",
-        "오해가 생기면 길게 설명보다 짧게 확인이 더 좋습니다.",
-        "오늘은 약속 시간을 지키는 것만으로도 신뢰가 쌓입니다.",
-        "대화는 결론부터 말하면 감정 소모가 줄어듭니다.",
-        "가까운 사람일수록 예의를 갖추세요. 익숙함에 속아 상처를 줄 수 있습니다.",
-        "비판보다는 칭찬을 먼저 건네보세요. 닫혔던 상대의 마음이 열립니다.",
-        "말실수가 걱정되는 날입니다. 중요한 이야기는 문자로 한 번 더 정리하세요.",
-        "타인의 일에 지나치게 간섭하지 않는 것이 구설수를 막는 비책입니다.",
-        "감정적인 대응보다는 이성적인 대화가 관계를 건강하게 유지해줍니다.",
-        "약속을 겹치게 잡지 않도록 일정을 잘 살피세요. 신뢰가 밑천입니다.",
+        l10n.dailyFortuneTipLove0,
+        l10n.dailyFortuneTipLove1,
+        l10n.dailyFortuneTipLove2,
+        l10n.dailyFortuneTipLove3,
+        l10n.dailyFortuneTipLove4,
+        l10n.dailyFortuneTipLove5,
+        l10n.dailyFortuneTipLove6,
+        l10n.dailyFortuneTipLove7,
+        l10n.dailyFortuneTipLove8,
+        l10n.dailyFortuneTipLove9,
       ];
       tip = options[tipIndex];
-    } else if (bottomKey == "직업") {
+    } else if (bottomKey == l10n.career) {
       final options = [
-        "일을 벌리기보다 ‘하나를 끝내는 것’이 운을 키웁니다.",
-        "완벽보다 마감이 먼저입니다. 오늘은 80%에서 확정하세요.",
-        "미루고 있던 한 가지를 정리하면 머리가 맑아집니다.",
-        "내가 할 일과 남의 일을 분리하면 스트레스가 줄어듭니다.",
-        "사소한 실수로 업무가 꼬일 수 있습니다. 마지막 확인을 잊지 마세요.",
-        "상사나 동료와의 마찰이 예상됩니다. 의견 차이를 존중하는 자세가 필요합니다.",
-        "집중력이 흐트러지기 쉬운 날입니다. 50분 일하고 10분 쉬는 리듬을 지키세요.",
-        "과도한 책임감은 독이 될 수 있습니다. 할 수 있는 만큼만 맡으세요.",
-        "공적인 일에 사적인 감정을 섞지 않도록 주의해야 하는 하루입니다.",
-        "문서나 이메일 발송 전, 수신인과 첨부파일을 다시 한 번 체크하세요.",
+        l10n.dailyFortuneTipCareer0,
+        l10n.dailyFortuneTipCareer1,
+        l10n.dailyFortuneTipCareer2,
+        l10n.dailyFortuneTipCareer3,
+        l10n.dailyFortuneTipCareer4,
+        l10n.dailyFortuneTipCareer5,
+        l10n.dailyFortuneTipCareer6,
+        l10n.dailyFortuneTipCareer7,
+        l10n.dailyFortuneTipCareer8,
+        l10n.dailyFortuneTipCareer9,
       ];
       tip = options[tipIndex];
     } else {
       final options = [
-        "수면·과식·카페인 과다만 피하면 컨디션이 안정됩니다.",
-        "목·어깨 긴장을 풀어주면 하루 피로가 확 줄어듭니다.",
-        "짧은 산책이 생각을 정리해주고 기운을 환기합니다.",
-        "물 한 잔, 스트레칭 1분이 운의 바닥을 받칩니다.",
-        "눈의 피로가 심해질 수 있습니다. 스마트폰 사용을 잠시 줄여보세요.",
-        "갑작스러운 활동보다는 몸을 충분히 예열한 뒤 움직이는 게 좋습니다.",
-        "기온 변화에 민감할 수 있으니 겉옷을 챙겨 체온을 조절하세요.",
-        "자극적인 음식은 오늘 피하는 것이 장 건강과 피부에 이롭습니다.",
-        "충분한 수면이 최고의 보약입니다. 오늘은 평소보다 일찍 잠자리에 드세요.",
-        "스트레스가 쌓이지 않도록 좋아하는 음악이나 향기로 기분을 전환하세요.",
+        l10n.dailyFortuneTipHealth0,
+        l10n.dailyFortuneTipHealth1,
+        l10n.dailyFortuneTipHealth2,
+        l10n.dailyFortuneTipHealth3,
+        l10n.dailyFortuneTipHealth4,
+        l10n.dailyFortuneTipHealth5,
+        l10n.dailyFortuneTipHealth6,
+        l10n.dailyFortuneTipHealth7,
+        l10n.dailyFortuneTipHealth8,
+        l10n.dailyFortuneTipHealth9,
       ];
       tip = options[tipIndex];
     }
@@ -357,142 +388,151 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     return wDelta + lDelta;
   }
 
-  int _faceShapeWealthBias(String faceShape) {
-    if (faceShape == "각진형") return 2;
+  int _faceShapeWealthBias(BuildContext context, String faceShape) {
+    final l10n = AppLocalizations.of(context)!;
+    if (faceShape == l10n.faceShapeSquare) return 2;
     return 0;
   }
 
-  int _faceShapeLoveBias(String faceShape) {
-    if (faceShape == "둥근형") return 2;
+  int _faceShapeLoveBias(BuildContext context, String faceShape) {
+    final l10n = AppLocalizations.of(context)!;
+    if (faceShape == l10n.faceShapeRound) return 2;
     return 0;
   }
 
-  int _faceShapeCareerBias(String faceShape) {
-    if (faceShape == "긴형" || faceShape == "V라인형") return 2;
+  int _faceShapeCareerBias(BuildContext context, String faceShape) {
+    final l10n = AppLocalizations.of(context)!;
+    if (faceShape == l10n.faceShapeLong || faceShape == l10n.faceShapeVLine) return 2;
     return 0;
   }
 
-  String _faceShapeLabel(FaceAnalysisMetrics analysis) {
+  String _faceShapeLabel(BuildContext context, FaceAnalysisMetrics analysis) {
+    final l10n = AppLocalizations.of(context)!;
     final aspect = analysis.faceAspectRatio;
     final jawToCheek = analysis.jawToCheekRatio;
     
     // jawToCheekRatio: 턱 너비 / 광대 너비
     // 0.82 미만: 턱이 매우 좁음 (V라인)
-    if (jawToCheek != null && jawToCheek < 0.82) return "V라인형";
+    if (jawToCheek != null && jawToCheek < 0.82) return l10n.faceShapeVLine;
     
     // 0.94 이상: 턱과 광대 너비가 비슷함 (각진형/사각형)
-    if (jawToCheek != null && jawToCheek > 0.94) return "각진형";
+    if (jawToCheek != null && jawToCheek > 0.94) return l10n.faceShapeSquare;
     
     // aspect ratio: 너비 / 높이
-    if (aspect == null) return "균형형";
+    if (aspect == null) return l10n.faceShapeBalanced;
     
     // 0.88 이상: 가로 너비가 넓음 (둥근형)
-    if (aspect >= 0.88) return "둥근형";
+    if (aspect >= 0.88) return l10n.faceShapeRound;
     
     // 0.75 이하: 세로가 매우 김 (긴형)
-    if (aspect <= 0.75) return "긴형";
+    if (aspect <= 0.75) return l10n.faceShapeLong;
     
-    return "타원형";
+    return l10n.faceShapeOval;
   }
 
-  String _titleFromScores({
+  String _titleFromScores(BuildContext context, {
     required int wealth,
     required int love,
     required int career,
     required int health,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     final scores = {
-      "재물운": wealth,
-      "인연운": love,
-      "직업운": career,
-      "건강운": health,
+      l10n.wealth: wealth,
+      l10n.love: love,
+      l10n.career: career,
+      l10n.health: health,
     };
     
     final sorted = scores.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
     final topType = sorted.first.key;
     
-    if (topType == "재물운") return "재물운 중심의 상";
-    if (topType == "인연운") return "인연운이 강한 상";
-    if (topType == "직업운") return "직업운이 돋보이는 상";
-    return "기운이 안정된 상";
+    if (topType == l10n.wealth) return l10n.titleWealthOriented;
+    if (topType == l10n.love) return l10n.titleLoveStrong;
+    if (topType == l10n.career) return l10n.titleCareerNotable;
+    return l10n.titleStableEnergy;
   }
 
-  String _eyeAnalysisText({required double eyeOpen, required double yawAbs, required double rollAbs, required double smile}) {
+  String _eyeAnalysisText(BuildContext context, {required double eyeOpen, required double yawAbs, required double rollAbs, required double smile}) {
+    final l10n = AppLocalizations.of(context)!;
     // 1. 눈의 크기/뜸 정도에 따른 기본 성향 (Physiognomy)
     String eyeTypeDesc;
     if (eyeOpen >= 0.65) {
-      eyeTypeDesc = "눈빛이 강렬하고 또렷하여, 순간적인 판단력과 추진력이 매우 돋보이는 상입니다.";
+      eyeTypeDesc = l10n.eyeAnalysisTypeSharp;
     } else if (eyeOpen <= 0.35) {
-      eyeTypeDesc = "눈매가 차분하고 깊어, 신중하게 관찰하고 생각한 뒤 움직이는 현명한 상입니다.";
+      eyeTypeDesc = l10n.eyeAnalysisTypeDeep;
     } else {
-      eyeTypeDesc = "눈의 기운이 균형 잡혀 있어, 감정과 이성을 적절히 조율하며 안정감을 주는 상입니다.";
+      eyeTypeDesc = l10n.eyeAnalysisTypeBalanced;
     }
 
     // 2. 표정(웃음)과의 조화 (Dynamic Expression)
     String expressionDesc;
     if (smile >= 0.6) {
       if (eyeOpen >= 0.55) {
-        expressionDesc = "특히 밝은 눈빛과 미소가 어우러져, 사람을 끄는 도화(桃花)의 기운이 강하게 발현됩니다.";
+        expressionDesc = l10n.eyeExpressionBright;
       } else {
-        expressionDesc = "차분한 눈매 속에 은은한 미소가 서려 있어, 외유내강형의 부드러운 카리스마가 느껴집니다.";
+        expressionDesc = l10n.eyeExpressionGentle;
       }
     } else {
       if (eyeOpen >= 0.55) {
-        expressionDesc = "웃음기 없는 강한 눈빛은 결단력과 리더십을 상징하며, 목표를 향해 직진하는 힘이 느껴집니다.";
+        expressionDesc = l10n.eyeExpressionStrong;
       } else {
-        expressionDesc = "전체적으로 차분하고 진중한 분위기라, 가벼운 언행보다는 무게감 있는 태도로 신뢰를 얻습니다.";
+        expressionDesc = l10n.eyeExpressionSteady;
       }
     }
 
     // 3. 자세(고개 각도)에 따른 조언
     String postureAdvice;
     if (yawAbs > 15 || rollAbs > 12) {
-      postureAdvice = "다만 고개가 다소 기울어 있어 마음의 중심이 흔들릴 수 있으니, 정면을 응시하면 운기가 더 맑아집니다.";
+      postureAdvice = l10n.eyePostureTilt;
     } else {
-      postureAdvice = "정면을 바르게 응시하는 자세가 눈의 기운을 더욱 맑고 올곧게 만들어줍니다.";
+      postureAdvice = l10n.eyePostureStraight;
     }
 
     return "$eyeTypeDesc $expressionDesc $postureAdvice";
   }
 
-  String _noseAnalysisText({required double? noseWidth, required double? noseLength}) {
+  String _noseAnalysisText(BuildContext context, {required double? noseWidth, required double? noseLength}) {
+    final l10n = AppLocalizations.of(context)!;
     if (noseWidth == null && noseLength == null) {
-      return "코 윤곽 측정이 충분하지 않아, 코에 대한 해석은 절제해 표시합니다.";
+      return l10n.noseInsufficient;
     }
     final w = (noseWidth ?? 0.25);
     final l = (noseLength ?? 0.30);
     
     String noseDesc;
     if (w >= 0.28 && l >= 0.33) {
-      noseDesc = "콧망울이 두툼하고 코 길이가 길어, 재물을 모으고 지키는 '재백궁(제물창고)'의 기운이 아주 좋습니다.";
+      noseDesc = l10n.noseWealthRich;
     } else if (w <= 0.22) {
-      noseDesc = "코가 날렵하고 정갈하여, 재물을 꼼꼼하게 관리하고 계획적으로 불려나가는 실속파입니다.";
+      noseDesc = l10n.noseWealthPlanner;
     } else {
-      noseDesc = "코의 비율이 적당하고 균형이 잡혀 있어, 들어오는 재물을 안정적으로 유지하는 힘이 있습니다.";
+      noseDesc = l10n.noseWealthBalanced;
     }
 
     return noseDesc;
   }
 
-  String _mouthAnalysisText({required double mouthOpen, required double smile}) {
+  String _mouthAnalysisText(BuildContext context, {required double mouthOpen, required double smile}) {
+    final l10n = AppLocalizations.of(context)!;
     String mouthDesc;
     if (mouthOpen < 0.03) {
       if (smile >= 0.55) {
-         mouthDesc = "입을 다물고 있지만 입꼬리가 올라가 있어, 말 한마디에 복이 깃들고 주변의 호감을 사는 상입니다.";
+         mouthDesc = l10n.mouthExpressionBlessing;
       } else {
-         mouthDesc = "입을 굳게 다문 모습에서 신뢰감과 책임감이 느껴지며, 가벼운 말보다 행동으로 보여주는 타입입니다.";
+         mouthDesc = l10n.mouthExpressionReliable;
       }
     } else {
       if (smile >= 0.55) {
-         mouthDesc = "활짝 웃는 입매가 시원하여, 긍정적인 에너지를 발산하고 대인관계에서 행운을 불러옵니다.";
+         mouthDesc = l10n.mouthExpressionLucky;
       } else {
-         mouthDesc = "입이 살짝 벌어져 있어 개방적이고 솔직한 성격이 보이지만, 때로는 말실수를 조심해야 합니다.";
+         mouthDesc = l10n.mouthExpressionOpen;
       }
     }
     return mouthDesc;
   }
 
-  String _overallAnalysisText({
+  String _overallAnalysisText(
+    BuildContext context, {
     required String topKey,
     required String bottomKey,
     required int wealth,
@@ -505,32 +545,32 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     required double? noseWidth,
     required double? noseLength,
   }) {
-    final headline = "오늘의 중심은 $topKey, 조심할 포인트는 $bottomKey 입니다.";
+    final l10n = AppLocalizations.of(context)!;
+    final headline = l10n.overallHeadlineSimple(topKey, bottomKey);
 
-    final top = topKey;
     String vibeDesc;
-    if (top == "재물") {
+    if (topKey == l10n.wealth) {
       vibeDesc = (noseWidth ?? 0.25) >= 0.28 
-          ? "재백궁(코)의 기운이 두툼하게 살아있어 금전적인 기회를 포착하기에 아주 좋은 안색입니다."
-          : "얼굴의 중심인 코 주변의 기운이 차분하여 실속을 챙기며 재물을 차곡차곡 모으기에 적합한 흐름입니다.";
-    } else if (top == "인연") {
+          ? l10n.overallVibeWealthRich
+          : l10n.overallVibeWealthSteady;
+    } else if (topKey == l10n.love) {
       vibeDesc = smile >= 0.5 
-          ? "입꼬리에서 시작된 밝은 미소가 도화의 기운을 증폭시켜, 주변에 사람이 모이고 귀인을 만날 수 있는 상입니다."
-          : "눈매의 진중함이 상대에게 깊은 신뢰를 주어, 가벼운 만남보다 깊이 있는 관계를 형성하기 좋은 날입니다.";
-    } else if (top == "직업") {
+          ? l10n.overallVibeLoveCharisma
+          : l10n.overallVibeLoveTrust;
+    } else if (topKey == l10n.career) {
       vibeDesc = eyeOpen >= 0.55
-          ? "눈빛에 서린 총명한 기운이 판단력을 높여주니, 복잡한 업무나 중요한 결정을 내리기에 최적의 상태입니다."
-          : "하관의 안정적인 기운이 끈기를 뒷받침해주어, 묵묵히 자리를 지키는 노력이 큰 성과로 이어지는 하루입니다.";
+          ? l10n.overallVibeCareerSmart
+          : l10n.overallVibeCareerSteady;
     } else { // 건강
-      vibeDesc = "얼굴 전체에 도는 생기와 맑은 안색이 신체의 리듬이 안정적임을 보여주니, 활력을 충전하기 좋습니다.";
+      vibeDesc = l10n.overallVibeHealth;
     }
 
     // 3. 행동 가이드
     String actionDesc;
     if (mouthOpen < 0.05) {
-      actionDesc = "입을 다문 신중한 모습에서 말년의 복이 느껴집니다. 오늘은 말보다는 행동으로 실천할 때 행운이 따릅니다.";
+      actionDesc = l10n.overallActionPrudent;
     } else {
-      actionDesc = "시원하게 열린 입매가 긍정적인 기운을 부릅니다. 자신감 있는 목소리로 의견을 개진하면 좋은 반응을 얻습니다.";
+      actionDesc = l10n.overallActionConfident;
     }
 
     return "$headline\n$vibeDesc\n$actionDesc";
@@ -621,47 +661,34 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     );
   }
 
-  String _adviceText({required int wealth, required int love, required int career, required int health}) {
+  String _adviceText(BuildContext context, {required int wealth, required int love, required int career, required int health}) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final daySeed = now.day + now.month + now.year;
-    
-    final minScore = [wealth, love, career, health].reduce((a, b) => a < b ? a : b);
-    final variantIndex = (daySeed + minScore) % 3;
+    final index = daySeed % 3;
 
-    if (minScore == health) {
-      final options = [
-        "컨디션 관리가 운의 바닥을 받칩니다. 오늘은 무리한 일정부터 정리하세요.",
-        "몸의 신호에 귀를 기울이세요. 짧은 휴식이 더 큰 성과를 가져옵니다.",
-        "충분한 수면과 수분 섭취만으로도 오늘의 운기가 맑아집니다.",
-      ];
-      return options[variantIndex];
+    final scores = {
+      l10n.wealth: wealth,
+      l10n.love: love,
+      l10n.career: career,
+      l10n.health: health,
+    };
+    final sorted = scores.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    final topKey = sorted.first.key;
+
+    if (topKey == l10n.wealth) {
+      return [l10n.adviceWealth0, l10n.adviceWealth1, l10n.adviceWealth2][index];
+    } else if (topKey == l10n.love) {
+      return [l10n.adviceLove0, l10n.adviceLove1, l10n.adviceLove2][index];
+    } else if (topKey == l10n.career) {
+      return [l10n.adviceCareer0, l10n.adviceCareer1, l10n.adviceCareer2][index];
+    } else {
+      return [l10n.adviceHealth0, l10n.adviceHealth1, l10n.adviceHealth2][index];
     }
-    if (minScore == wealth) {
-      final options = [
-        "돈은 들어오는 만큼 새기 쉽습니다. 지출·계약은 한 번 더 확인하세요.",
-        "작은 지출을 줄이는 것이 큰 재물을 모으는 시작입니다.",
-        "금전적인 결정은 내일로 미루는 것이 이득이 될 수 있습니다.",
-      ];
-      return options[variantIndex];
-    }
-    if (minScore == love) {
-      final options = [
-        "말투 한 번, 표정 한 번이 인연운을 좌우합니다. 먼저 부드럽게 시작하세요.",
-        "경청하는 자세가 상대방의 마음을 여는 열쇠가 됩니다.",
-        "가까운 사람일수록 예의를 지키는 것이 운을 지키는 길입니다.",
-      ];
-      return options[variantIndex];
-    }
-    
-    final options = [
-      "목표를 넓히기보다 '하나를 확실히' 잡는 날입니다. 우선순위를 줄이세요.",
-      "서두르지 마세요. 차근차근 진행하는 것이 가장 빠른 길입니다.",
-      "주변의 조언을 참고하되, 최종 결정은 본인의 직관을 믿으세요.",
-    ];
-    return options[variantIndex];
   }
 
   Future<void> _unlockWithAd() async {
+    final l10n = AppLocalizations.of(context)!;
     final granted = await showRewardedAd(() {
       setState(() {
         _isLocked = false;
@@ -678,14 +705,15 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('광고를 불러오지 못해 이번에는 무료로 열어드렸어요.'),
-        duration: Duration(seconds: 3),
+      SnackBar(
+        content: Text(l10n.adLoadFailFreeAccess),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
 
   Future<void> _unlockWithCookies() async {
+    final l10n = AppLocalizations.of(context)!;
     final count = await _localCookieService.getCookieCount();
     if (!mounted) return;
 
@@ -695,15 +723,15 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         builder: (ctx) => AlertDialog(
           backgroundColor: const Color(0xFF1E1E1E),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text('포춘쿠키 부족', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-          content: const Text(
-            '보유한 포춘쿠키가 부족합니다.\n광고를 보고 무료로 확인해보세요!',
-            style: TextStyle(color: Colors.white70),
+          title: Text(l10n.insufficientCookiesTitle, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          content: Text(
+            l10n.insufficientCookiesMessage,
+            style: const TextStyle(color: Colors.white70),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('확인', style: TextStyle(color: Colors.amber)),
+              child: Text(l10n.confirm, style: const TextStyle(color: Colors.amber)),
             ),
           ],
         ),
@@ -718,7 +746,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         _isLocked = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('포춘쿠키 2개를 사용하여 결과를 확인합니다.')),
+        SnackBar(content: Text(l10n.useCookiesSnackbar)),
       );
     }
   }
@@ -754,6 +782,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
   }
 
   Widget _buildLockScreen() {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -776,20 +805,20 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             child: const Icon(Icons.lock_outline, size: 60, color: Colors.purple),
           ),
           const SizedBox(height: 32),
-          const Text(
-            "관상 분석이 완료되었습니다!",
+          Text(
+            l10n.faceAnalysisComplete,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black87,
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            "당신의 얼굴에 숨겨진 운세를 확인하려면\n아래 방법 중 하나를 선택해주세요.",
+          Text(
+            l10n.chooseMethodToViewResult,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black54,
               fontSize: 16,
               height: 1.5,
@@ -811,9 +840,12 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
                 icon: const Icon(Icons.play_circle_filled),
-                label: const Text(
-                  "광고 보고 무료로 결과 보기",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                label: Flexible(
+                  child: Text(
+                    l10n.watchAdForFree,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ),
@@ -834,9 +866,12 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
                 icon: const Icon(Icons.cookie, color: Colors.amber),
-                label: const Text(
-                  "포춘쿠키 2개 사용하기",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                label: Flexible(
+                  child: Text(
+                    l10n.useTwoCookies,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ),
             ),
@@ -853,9 +888,9 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                   elevation: 4,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),
-                child: const Text(
-                  "결과 확인하기",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                child: Text(
+                  l10n.viewResult,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -865,6 +900,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
   }
 
   Widget _buildAnalyzingView() {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -893,17 +929,17 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             },
           ),
           const SizedBox(height: 30),
-          const Text(
-            "AI가 관상을 분석 중입니다...",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+          Text(
+            l10n.aiAnalyzingFace,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
           ),
           const SizedBox(height: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildCheckItem("얼굴 인식 완료", true),
-              _buildCheckItem("특징점 추출 중...", true),
-              _buildCheckItem("운세 데이터 대조 중...", false),
+              _buildCheckItem(l10n.faceRecognitionComplete, true),
+              _buildCheckItem(l10n.extractingFeatures, true),
+              _buildCheckItem(l10n.matchingFortuneData, false),
             ],
           ),
         ],
@@ -923,13 +959,20 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             size: 20,
           ),
           const SizedBox(width: 8),
-          Text(text, style: const TextStyle(color: Colors.black54, fontSize: 15)),
+          Flexible(
+            child: Text(
+              text, 
+              style: const TextStyle(color: Colors.black54, fontSize: 15),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildResultView() {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -953,10 +996,10 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              "오늘의 관상 분석",
+            Text(
+              l10n.todaysFaceAnalysis,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w600, letterSpacing: 1.2),
+              style: const TextStyle(fontSize: 13, color: Colors.grey, fontWeight: FontWeight.w600, letterSpacing: 1.2),
             ),
             const SizedBox(height: 6),
             Text(
@@ -976,7 +1019,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                   ],
                 ),
                 child: Text(
-                  "총점 ${_result.totalScore}점",
+                  l10n.totalScoreWithPoints(_result.totalScore),
                   style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 17),
                 ),
               ),
@@ -984,10 +1027,10 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
             const SizedBox(height: 36),
             
             // 4대 운세 그래프
-            _buildLuckBar("💰 재물운", _result.wealthScore, Colors.amber),
-            _buildLuckBar("❤️ 애정운", _result.loveScore, Colors.pinkAccent),
-            _buildLuckBar("💼 직업운", _result.careerScore, Colors.blueAccent),
-            _buildLuckBar("💪 건강운", _result.healthScore, Colors.green),
+            _buildLuckBar(l10n.wealthLuck, _result.wealthScore, Colors.amber),
+            _buildLuckBar(l10n.loveLuck, _result.loveScore, Colors.pinkAccent),
+            _buildLuckBar(l10n.careerLuck, _result.careerScore, Colors.blueAccent),
+            _buildLuckBar(l10n.healthLuck, _result.healthScore, Colors.green),
             
             const SizedBox(height: 32),
             const Divider(height: 1, thickness: 1, color: Color(0xFFEEEEEE)),
@@ -1017,9 +1060,9 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                         child: const Icon(Icons.auto_awesome, color: Colors.deepPurpleAccent, size: 18),
                       ),
                       const SizedBox(width: 10),
-                      const Text(
-                        "오늘의 관상 운세",
-                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black87),
+                      Text(
+                        l10n.todaysFaceFortune,
+                        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                     ],
                   ),
@@ -1034,22 +1077,24 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
 
             const SizedBox(height: 24),
             // 결과 화면 네이티브 광고 추가 (수익화 강화)
-            const DetailedAdWidget(),
+            const DetailedAdWidget(
+              margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+            ),
             const SizedBox(height: 32),
 
-            const Text(
-              "상세 분석",
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black87),
+            Text(
+              l10n.detailedAnalysis,
+              style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black87),
             ),
             const SizedBox(height: 14),
-            _buildFeatureItem("👁️ 눈 (통찰력)", _result.eyeAnalysis),
-            _buildFeatureItem("👃 코 (재물복)", _result.noseAnalysis),
-            _buildFeatureItem("👄 입 (말년운)", _result.mouthAnalysis),
+            _buildFeatureItem(l10n.eyeInsight, _result.eyeAnalysis),
+            _buildFeatureItem(l10n.noseWealth, _result.noseAnalysis),
+            _buildFeatureItem(l10n.mouthLateLuck, _result.mouthAnalysis),
 
             const SizedBox(height: 32),
-            const Text(
-              "종합 분석",
-              style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black87),
+            Text(
+              l10n.overallAnalysisTitle,
+              style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold, color: Colors.black87),
             ),
             const SizedBox(height: 14),
             Container(
@@ -1086,7 +1131,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                       Icon(Icons.lightbulb_outline, color: Colors.purple[400], size: 20),
                       const SizedBox(width: 8),
                       Text(
-                        "오늘의 조언",
+                        l10n.todaysAdvice,
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.purple[700]),
                       ),
                     ],
@@ -1113,14 +1158,14 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                       onPressed: () {
                         SharingService.showShareOptions(
                           context: context,
-                          title: '오늘의 관상 결과',
-                          description: 'AI 관상 분석 결과입니다.\n${_result.title}',
+                          title: l10n.shareResultTitle,
+                          description: l10n.shareResultDesc(_result.title),
                           results: {
-                            '종합 점수': '${_result.totalScore}점',
-                            '재물운': '${_result.wealthScore}점',
-                            '애정운': '${_result.loveScore}점',
-                            '직업운': '${_result.careerScore}점',
-                            '건강운': '${_result.healthScore}점',
+                            l10n.shareResultTotalScore: l10n.totalScoreWithPoints(_result.totalScore),
+                            l10n.shareResultWealth: '${_result.wealthScore}',
+                            l10n.shareResultLove: '${_result.loveScore}',
+                            l10n.shareResultCareer: '${_result.careerScore}',
+                            l10n.shareResultHealth: '${_result.healthScore}',
                           },
                         );
                       },
@@ -1130,12 +1175,12 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                         elevation: 0,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.share, size: 20),
-                          SizedBox(width: 10),
-                          Text("결과 공유하기", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          const Icon(Icons.share, size: 20),
+                          const SizedBox(width: 10),
+                          Text(l10n.shareResultText, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -1155,7 +1200,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
                         shadowColor: Colors.purple.withOpacity(0.3),
                       ),
                       child: Text(
-                        widget.alarmId != null ? "기상 완료!" : "확인",
+                        widget.alarmId != null ? l10n.wakeUpComplete : l10n.confirm,
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -1175,7 +1220,17 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         children: [
-          SizedBox(width: 80, child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15))),
+          SizedBox(
+            width: 80, 
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                label, 
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+            ),
+          ),
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
@@ -1209,13 +1264,19 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
         children: [
           Row(
             children: [
-              Text(
-                label, 
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold, 
-                  fontSize: 16, 
-                  color: Colors.black87,
-                )
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    label, 
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold, 
+                      fontSize: 16, 
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

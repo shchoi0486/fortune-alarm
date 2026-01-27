@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class DrawingScreen extends StatefulWidget {
   final String? initialDrawingData;
@@ -102,7 +103,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
           icon: const Icon(Icons.close, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('필기', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: Text(AppLocalizations.of(context)!.drawingTitle, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             icon: const Icon(Icons.undo, color: Colors.black54),
@@ -124,7 +125,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
                 Navigator.pop(context, data);
               }
             },
-            child: const Text('완료', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16)),
+            child: Text(AppLocalizations.of(context)!.complete, style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16)),
           ),
         ],
       ),
@@ -245,9 +246,9 @@ class _DrawingScreenState extends State<DrawingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildToolItem(Icons.edit, '연필', (_strokeWidth >= 1.0 && _strokeWidth <= 5.0) && _selectedColor != Colors.white),
-              _buildToolItem(Icons.brush, '사인펜', (_strokeWidth > 5.0 && _strokeWidth <= 15.0) && _selectedColor != Colors.white),
-              _buildToolItem(Icons.cleaning_services, '지우개', _selectedColor == Colors.white),
+              _buildToolItem(Icons.edit, 'pencil', (_strokeWidth >= 1.0 && _strokeWidth <= 5.0) && _selectedColor != Colors.white),
+              _buildToolItem(Icons.brush, 'marker', (_strokeWidth > 5.0 && _strokeWidth <= 15.0) && _selectedColor != Colors.white),
+              _buildToolItem(Icons.cleaning_services, 'eraser', _selectedColor == Colors.white),
             ],
           ),
         ],
@@ -255,7 +256,13 @@ class _DrawingScreenState extends State<DrawingScreen> {
     );
   }
 
-  void _showWidthPicker(String label) {
+  void _showWidthPicker(String toolId) {
+    String label = '';
+    final l10n = AppLocalizations.of(context)!;
+    if (toolId == 'pencil') label = l10n.pencil;
+    else if (toolId == 'marker') label = l10n.marker;
+    else if (toolId == 'eraser') label = l10n.eraser;
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -269,7 +276,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('$label 두께 조절', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                          Text(l10n.adjustThickness(label), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                           const SizedBox(height: 20),
                           Slider(
                             value: _strokeWidth,
@@ -303,23 +310,29 @@ class _DrawingScreenState extends State<DrawingScreen> {
     );
   }
 
-  Widget _buildToolItem(IconData icon, String label, bool isSelected) {
+  Widget _buildToolItem(IconData icon, String toolId, bool isSelected) {
+    String label = '';
+    final l10n = AppLocalizations.of(context)!;
+    if (toolId == 'pencil') label = l10n.pencil;
+    else if (toolId == 'marker') label = l10n.marker;
+    else if (toolId == 'eraser') label = l10n.eraser;
+
     return GestureDetector(
       onTap: () {
         setState(() {
-          if (label == '연필') {
+          if (toolId == 'pencil') {
             _strokeWidth = 3.0;
             if (_selectedColor == Colors.white) _selectedColor = Colors.black;
-          } else if (label == '사인펜') {
+          } else if (toolId == 'marker') {
             _strokeWidth = 8.0;
             if (_selectedColor == Colors.white) _selectedColor = Colors.black;
-          } else if (label == '지우개') {
+          } else if (toolId == 'eraser') {
             _selectedColor = Colors.white;
             _strokeWidth = 20.0;
           }
         });
       },
-      onLongPress: label == '지우개' ? null : () => _showWidthPicker(label),
+      onLongPress: toolId == 'eraser' ? null : () => _showWidthPicker(toolId),
       child: Column(
         children: [
           Container(

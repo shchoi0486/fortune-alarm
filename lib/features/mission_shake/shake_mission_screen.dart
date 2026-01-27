@@ -322,29 +322,34 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
     return Listener(
       onPointerDown: (_) => _resetInactivityTimer(),
       child: Scaffold(
+        backgroundColor: Colors.black, // fallback
         body: Stack(
         children: [
           Positioned.fill(
             child: bgWidget ?? Container(decoration: bgDecoration),
           ),
-          SafeArea(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.vibration, size: 100, color: Colors.white, shadows: [Shadow(blurRadius: 10, color: Colors.black45)]),
-                  const SizedBox(height: 30),
-                  Text(
-                    AppLocalizations.of(context)!.shakePhone,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 28, 
-                      fontWeight: FontWeight.bold, 
-                      color: Colors.white,
-                      shadows: [Shadow(blurRadius: 10, color: Colors.black, offset: Offset(2, 2))]
+          Positioned.fill(
+            child: SafeArea(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.vibration, size: 100, color: Colors.white, shadows: [Shadow(blurRadius: 10, color: Colors.black45)]),
+                    const SizedBox(height: 30),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        AppLocalizations.of(context)!.shakePhone,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 28, 
+                          fontWeight: FontWeight.bold, 
+                          color: Colors.white,
+                          shadows: [Shadow(blurRadius: 10, color: Colors.black, offset: Offset(2, 2))]
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 40),
+                    const SizedBox(height: 40),
                   Stack(
                     alignment: Alignment.center,
                     children: [
@@ -373,6 +378,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
               ),
             ),
           ),
+        ),
           
           // 성공 애니메이션 오버레이
           if (_isSuccess)
@@ -380,7 +386,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
               child: MissionSuccessOverlay(
                 onFinish: () async {
                   if (mounted) {
-                    _stopAlarm();
+                    await _stopAlarm();
                     
                     if (mounted) {
                       Navigator.of(context).pop(true);
