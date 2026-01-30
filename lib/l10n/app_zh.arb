@@ -7,6 +7,16 @@
   "missionWater": "喝2升以上水",
   "fortuneCookie": "幸运饼干",
   "settings": "设置",
+  "language": "语言",
+  "languageKorean": "韩语",
+  "languageEnglish": "英语",
+  "languageJapanese": "日语",
+  "languageChinese": "中文",
+  "languageRussian": "俄语",
+  "languageHindi": "印地语",
+  "languageSpanish": "西班牙语",
+  "languageFrench": "法语",
+  "languageGerman": "德语",
   "alarm": "闹钟",
   "calendar": "日历",
   "mission": "任务",
@@ -15,7 +25,16 @@
   "allMissionsCompleted": "今日5项任务全部完成！",
   "rewardReceived": "获得1个幸运饼干奖励！ 🥠",
   "confirm": "确认",
-
+  "missionSuccess": "任务成功！",
+  "cheeringMessage1": "祝您今天度过愉快的一天！",
+  "cheeringMessage2": "今天也为您加油！",
+  "cheeringMessage3": "今天会是美好的一天。",
+  "todaysCheering": "今日寄语",
+  "notificationWakeUpBody": "该起床了！",
+  "notificationMissionBody": "请执行任务并关闭闹钟！",
+  "notificationSafetyBody": "闹钟已被强制关闭！请完成任务。",
+  "notificationRingingBody": "闹钟正在响铃！",
+  "snoozePrefix": "[稍后提醒]",
   "exactAlarmPermissionRequired": "为了确保闹钟准时响铃，请开启“精确闹钟”权限。",
   "overlayPermissionRequired": "为了显示全屏通知，需要“在其他应用上层显示”权限。",
   "deleteAllAlarms": "删除所有闹钟",
@@ -24,32 +43,41 @@
   "hoursMinutesRemaining": "{hours}小时{minutes}分钟后响铃",
   "@hoursMinutesRemaining": {
     "placeholders": {
-      "hours": { "type": "int" },
-      "minutes": { "type": "int" }
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
     }
   },
   "minutesRemaining": "{minutes}分钟后响铃",
   "@minutesRemaining": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
   "am": "上午",
   "pm": "下午",
-
   "dailyFortuneCookieReward": "今日幸运饼干奖励",
   "missionRewardInfo": "完成5个任务得1个，10个得2个！",
   "dailyMission": "今日任务",
   "goalAchieved": "🎉 已达成 {completed}/5 目标！",
   "@goalAchieved": {
     "placeholders": {
-      "completed": { "type": "int" }
+      "completed": {
+        "type": "int"
+      }
     }
   },
   "missionProgress": "已达成 {completed}/5",
   "@missionProgress": {
     "placeholders": {
-      "completed": { "type": "int" }
+      "completed": {
+        "type": "int"
+      }
     }
   },
   "myMissionRecord": "我的任务记录",
@@ -64,11 +92,12 @@
   "addMission": "添加任务",
   "completedMissions": "已完成的任务",
   "noCompletedMissionsHint": "暂无已完成任务。去完成今日目标吧。",
-
   "greeting": "您好，{userName}",
   "@greeting": {
     "placeholders": {
-      "userName": { "type": "String" }
+      "userName": {
+        "type": "String"
+      }
     }
   },
   "welcomeFortune": "欢迎来到神秘的运势世界",
@@ -108,342 +137,348 @@
   "ohaengEarthExplanation": "您的土气较强，值得信赖且包容力强，性格稳重，持之以恒。",
   "ohaengMetalExplanation": "您的金气较强，果断且讲义气，性格冷静，非常重视原则。",
   "ohaengWaterExplanation": "您的水气较强，富有智慧且灵活，聪明伶俐，适应能力极强。",
-  "airQualityBad": "差",
-  "airQualityGood": "优",
-  "airQualityNormal": "良",
-  "airQualityVeryBad": "很差",
-  "fortuneCatchCombo": "{combo} 连击！",
-  "fortuneCatchGoal": "目标：100",
-  "fortuneCatchGoalDetail": "（捕捉：{count}/{min}）",
-  "fortuneCatchScore": "得分：{score}",
-  "fortuneCheckButton": "查看运势",
-  "fortuneDetailTitle": "详细解读",
-  "fortuneDragCards": "拖动并选择3张牌",
-  "fortuneSelectCards": "选择3张牌",
-  "labelFineDust": "PM10",
-  "labelUltraFineDust": "PM2.5",
-  "left": "左",
-  "locationError": "定位错误",
-  "locationUnknown": "未知位置",
-  "missionFaceDescription": "将脸保持在画面中5秒。",
-  "missionFortuneCatch": "运势捕捉",
-  "missionFortuneCatchDescription": "抓住移动的 Fortuni！",
-  "missionHiddenButton": "位置记忆",
-  "missionHiddenButtonDescription": "按顺序记住亮起的方块，并在10秒内点击它们。",
-  "missionHiddenButtonDifficulty": "Δ{delta}",
-  "missionHintInactivity": "停止2分钟会重置。",
-  "missionLeftRight": "左 / 右",
-  "missionLeftRightDescription": "连续答对{targetStreak}次。",
-  "missionLeftRightDescriptionShort": "按提示选择左或右。",
-  "missionLeftRightPromptLeft": "点击左边",
-  "missionLeftRightPromptRight": "点击右边",
-  "missionNumber": "任务 {number}",
-  "missionNumberOrder": "数字顺序",
-  "missionNumberOrderDescription": "按顺序点击1到9。",
-  "missionNumberOrderGuide": "下一个：{nextNumber}",
-  "missionRewardEarnedWithCount": "干得漂亮！您今天完成了{missions}个任务，获得{cookies}个幸运饼干！",
-  "missionTapSprint": "连点冲刺",
-  "missionTapSprintDescription": "点击{goalTaps}次以上填满进度条。",
-  "missionTapSprintDescriptionShort": "连点填满进度条。",
-  "missionTapSprintHint": "快速增长，停下会下降。",
-  "missionTapSprintTapHere": "点击",
-  "missionWalk": "走路",
-  "missionWalkDescription": "走路即可关闭闹钟！",
-  "right": "右",
-  "shakeCount": "摇动次数",
-  "shakeTimes": "{count}次",
-  "soundBirds": "鸟鸣声",
-  "walkStepCount": "目标步数",
-  "walkSteps": "{count}步",
-  "weatherConditionCloudy": "多云",
-  "weatherConditionFoggy": "雾",
-  "weatherConditionRainy": "雨",
-  "weatherConditionSnowy": "雪",
-  "weatherConditionSunny": "晴",
-  "weatherConditionThunderstorm": "雷暴",
-  "weatherDisclaimer": "观测数据可能因当地条件或信号接收情况而有所不同。",
-  "weatherSource": "气象数据来源：权威气象机构",
-  "weatherToday": "今日天气",
-  "weatherUpdateMessage": "正在更新当前位置的天气信息。",
-
-  "general": "常规",
-  "darkMode": "深色模式",
-  "darkModeDescription": "开启深色模式，享受更舒适的视觉体验。",
-  "alarmSettings": "闹钟设置",
-  "information": "信息",
-  "notice": "公告",
-  "faq": "常见问题",
-  "sendFeedback": "发送反馈",
-  "feedbackDescription": "如果您在使用幸运闹钟时遇到任何不便或有建议的功能，请随时告知我们。\n您的宝贵意见将帮助我们提供更好的服务。",
-  "reportCopyright": "报告版权侵权",
-  "copyrightDescription": "如果您认为幸运闹钟内的内容侵犯了版权，请通过电子邮件举报。\n核实后我们将立即采取行动。",
-  "termsOfService": "服务条款",
-  "privacyPolicy": "服务条款与隐私政策\n\n1. 总则\n\n第1条（目的）\n本条款旨在规定“幸运闹钟”（以下简称“本服务”）所提供服务的使用条件与流程，以及用户与开发者的权利、义务与责任等事项。\n\n第2条（隐私政策）\n\n1. 个人信息收集项目与方式\n本服务无需注册即可使用，不会在独立服务器上保存或收集用户的个人信息。\n但在使用过程中，以下信息可能会在设备上生成并本地保存：\n- 闹钟设置、任务完成记录、幸运饼干获取记录等\n\n2. 设备权限使用说明\n为提供服务，本服务仅在必要范围内使用以下权限：\n- 通知（必需）：用于闹钟运行及幸运饼干通知\n- 精确闹钟与电池优化排除（必需）：用于确保在省电模式下闹钟也能准时响铃\n- 在其他应用上层显示（必需）：用于在锁屏或使用其他应用时显示闹钟界面\n- 相机（可选）：仅用于“物体拍摄”任务；拍摄图片仅在设备上处理，不会上传至服务器\n\n3. 广告服务与数据处理\n为免费提供服务，本服务使用 Google AdMob 投放广告。\nGoogle 可能会为广告个性化设置收集广告标识符（ADID）等非个人身份信息。\n- Google 隐私政策：https://policies.google.com/privacy\n\n第3条（数据存储与删除）\n本服务为本地应用，数据存储在用户设备中。\n如删除应用，设备中保存的所有数据（闹钟、任务记录等）将立即删除且无法恢复。\n\n第4条（免责声明）\n1. 本服务提供的运势信息仅供娱乐参考，不保证其准确性或可靠性。\n2. 因设备设置变更（关闭通知、启用电池优化等）或系统错误导致闹钟未响，开发者不承担责任。\n\n第5条（联系方式）\n如有任何问题或意见，请通过以下邮箱联系我们：\n邮箱：seriessnap.co@gmail.com",
-  "alarmOptimization": "闹钟运行优化",
-  "allOptimizationsCompleted": "所有设置已优化。",
-  "optimizationNeeded": "为了确保闹钟准时响铃，需要进行必要设置。",
-  "optimizationDescription": "受系统设置影响，闹钟可能会延迟或无法响铃。请允许以下所有权限。",
-  "allowNotificationPermission": "允许通知",
-  "notificationPermissionDescription": "用于在闹钟响铃及运势更新时提醒您。",
-  "excludeBatteryOptimization": "电池优化排除",
-  "batteryOptimizationDescription": "防止系统为省电而延迟闹钟响铃。",
-  "allowExactAlarm": "允许精确闹钟",
-  "exactAlarmDescription": "确保闹钟在设定时间准时触发。",
-  "drawOverOtherApps": "在其他应用上层显示",
-  "overlayDescription": "即使在锁屏或使用其他应用时也能显示闹钟界面。",
-  "allSettingsCompleted": "所有设置已完成。",
-  "manualSettingsInfo": "您可以在系统设置菜单中随时管理这些权限。",
-
-  "takePhoto": "拍照",
-  "selectPhoto": "选择照片",
-  "selectAlarmBackground": "选择闹钟背景",
-  "defaultLabel": "默认",
-  "howToAdd": "如何添加",
-  "addAssetInstructions": "将图片放入 assets/images/ 文件夹并在 pubspec.yaml 中注册。",
+  "cheonganGap": "甲",
+  "cheonganEul": "乙",
+  "cheonganByeong": "丙",
+  "cheonganJeong": "丁",
+  "cheonganMu": "戊",
+  "cheonganGi": "己",
+  "cheonganGyeong": "庚",
+  "cheonganSin": "辛",
+  "cheonganIm": "壬",
+  "cheonganGye": "癸",
+  "jijiJa": "子",
+  "jijiChuk": "丑",
+  "jijiIn": "寅",
+  "jijiMyo": "卯",
+  "jijiJin": "辰",
+  "jijiSa": "巳",
+  "jijiO": "午",
+  "jijiMi": "未",
+  "jijiSin": "申",
+  "jijiYu": "酉",
+  "jijiSul": "戌",
+  "jijiHae": "亥",
+  "jijiAnimalRat": "鼠",
+  "jijiAnimalOx": "牛",
+  "jijiAnimalTiger": "虎",
+  "jijiAnimalRabbit": "兔",
+  "jijiAnimalDragon": "龙",
+  "jijiAnimalSnake": "蛇",
+  "jijiAnimalHorse": "马",
+  "jijiAnimalSheep": "羊",
+  "jijiAnimalMonkey": "猴",
+  "jijiAnimalRooster": "鸡",
+  "jijiAnimalDog": "狗",
+  "jijiAnimalPig": "猪",
+  "assetDefaultBackground": "默认背景",
+  "assetFortuneyFriends": "福妮伙伴们",
+  "assetMongchuny": "梦春妮",
+  "assetPanchuny": "盼春妮",
+  "assetTochuny": "土春妮",
+  "assetHochuny": "虎春妮",
+  "assetBear": "小熊",
+  "assetMoon": "月亮",
+  "assetBridge": "桥",
+  "assetRoad": "路",
+  "assetSky": "天空",
+  "assetMinimalGray": "极简灰",
+  "assetDarkMode": "暗色模式",
+  "assetSoftBlue": "柔和蓝",
+  "assetWarmBeige": "暖米色",
+  "assetCat": "猫 {number}",
+  "@assetCat": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "assetDog": "狗 {number}",
+  "@assetDog": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "assetSea": "海 {number}",
+  "@assetSea": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "categoryCharacter": "角色",
+  "categoryAnimal": "动物",
+  "categoryIllustration": "插画",
+  "categoryLandscape": "风景",
+  "categorySimple": "简约",
+  "alarmBackground": "闹钟背景",
+  "random": "随机",
   "gallery": "相册",
-  "ringingNow": "闹钟响铃中",
-  "setTime": "设置时间",
-  "repeatDays": "重复日期",
-  "repeatDaily": "每天重复",
-  "snoozeSettings": "贪睡设置",
-  "interval": "间隔",
-  "wakeUpAlarm": "起床闹钟",
-  "snoozeInfo": "{interval}分钟, {count}次",
-  "@snoozeInfo": {
-    "placeholders": {
-      "interval": { "type": "int" },
-      "count": { "type": "int" }
-    }
-  },
-  "daySun": "日",
-  "dayMon": "一",
-  "dayTue": "二",
-  "dayWed": "三",
-  "dayThu": "四",
-  "dayFri": "五",
-  "daySat": "六",
-  "missionRewardEarned": "太棒了！您已完成今日的5个任务，获得1个幸运饼干！",
-  "daysCount": "{count}天",
-  "@daysCount": {
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "user": "用户",
-  "none": "无",
-  "minutesLater": "{minutes}分钟后",
-  "@minutesLater": {
-    "placeholders": {
-      "minutes": { "type": "int" }
-    }
-  },
-  "countLabel": "次数",
-  "timesCount": "{count}次 (共{count}次)",
-  "@timesCount": {
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "wakeUpMission": "起床任务",
-  "alarmSound": "闹钟声音",
-  "gradualVolume": "音量渐强",
-  "vibration": "震动",
-  "alarmNameAndBackground": "闹钟名称和背景",
-  "customStyle": "自定义样式",
-  "alarmName": "闹钟名称",
-  "enterAlarmName": "请输入闹钟名称",
-  "save": "保存",
-  "missionNone": "无任务",
-  "missionSnap": "Snap",
-  "missionMath": "计算",
-  "missionFortune": "运势",
-  "missionShake": "摇晃",
-  "missionNoDescription": "无任务直接响铃。",
-  "missionCameraDescription": "按顺序拍摄指定物品以关闭闹钟。",
-  "missionMathDescription": "解决数学题以关闭闹钟。",
-  "missionFortuneDescription": "已选择运势任务。",
-  "missionShakeDescription": "摇晃手机以关闭闹钟。",
-  "difficulty": "难度",
-  "difficultyEasy": "简单",
-  "difficultyNormal": "普通",
-  "difficultyHard": "困难",
-  "problemCount": "题目数量",
-  "problemsCount": "{count}题",
-  "@problemsCount": {
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "shakeCountLabel": "摇晃次数",
-  "missionIndex": "任务 {index}",
-  "@missionIndex": {
-    "placeholders": {
-      "index": { "type": "int" }
-    }
-  },
-  "ringtoneSelect": "选择铃声",
-  "vibrationSelect": "选择震动模式",
-  "defaultRingtone": "默认铃声",
-  "classicAlarm": "经典闹钟",
-  "digitalAlarm": "数字闹钟",
-  "birdsSound": "鸟鸣声",
-  "wavesSound": "海浪声",
-  "defaultVibration": "默认震动",
-  "shortVibration": "短促重复",
-  "longVibration": "长震动重复",
-  "heartbeatVibration": "心跳震动",
-  "sosVibration": "SOS",
-  "quickVibration": "快速跳动",
-  "permissionRequired": "需要权限",
-  "exactAlarmPermissionDesc": "为了在准确时间响铃，需要“日程与提醒”权限。",
-  "batteryOptimizationPermissionDesc": "为了确保闹钟准时，需要关闭电池优化。",
-  "overlayPermissionDesc": "为了在响铃时显示任务界面，需要“在其他应用上层显示”权限。",
-  "cameraMissionFirstImageError": "请至少设置第一张任务图片。",
-  "cameraMissionSequentialImageError": "请按顺序设置任务图片。",
+  "selectSolidColor": "选择纯色",
+  "deleteColor": "删除颜色",
+  "deleteColorConfirm": "确定要从列表中删除该颜色吗？",
+  "randomBackgroundDesc": "每次闹钟响起都会换一张新背景！",
+  "backgroundDeleted": "背景已删除。",
+  "pickFromDevice": "从设备选择",
+  "alarmSaveError": "闹钟保存失败，发生未知错误。",
   "errorOccurred": "发生错误: {error}",
   "@errorOccurred": {
     "placeholders": {
-      "error": { "type": "String" }
+      "error": {
+        "type": "String"
+      }
     }
   },
   "openSettings": "打开设置",
-  "exactAlarmPermissionFail": "闹钟设置失败。需要开启准确闹钟权限。",
-  "batteryOptimizationPermissionFail": "闹钟设置失败。需要关闭电池优化。",
-  "overlayPermissionFail": "闹钟设置失败。需要开启“在其他应用上层显示”权限。",
-  "unknownAlarmError": "闹钟设置失败。发生未知错误。",
-  "resetTooltip": "重置",
-  "errorLoadingAlarm": "无法加载闹钟信息。",
-  "alarmNotFound": "未找到闹钟信息。",
-  "repeatAlarmCount": "重复闹钟 ({current}/{max})",
-  "@repeatAlarmCount": {
+  "videoLoadFailed": "视频加载失败\n点击重试",
+  "itsTimeToWakeUp": "该起床了！",
+  "dismissAlarm": "关闭闹钟",
+  "slideToDismiss": "滑动关闭",
+  "snoozeInfo": "{minutes}分钟 x {count}次",
+  "@snoozeInfo": {
     "placeholders": {
-      "current": { "type": "int" },
-      "max": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
     }
   },
-  "turnOffAlarm": "关闭闹钟",
-  "startMission": "开始任务",
-  "alarmSnooze": "闹钟延后",
-  "fortuneTitle": "查看运势",
-  "fortuneMessage": "查看您的运势结果\n并获得隐藏的礼物！",
-  "fortuneAdButton": "观看广告并查看结果",
-  "fortuneLoadingMessage": "体验占卜师特别的塔罗牌解读。",
-  "fortuneAnalyzing": "正在分析您选择的塔罗牌... {progress}%",
-  "@fortuneAnalyzing": {
+  "snoozeInfoUnlimited": "{minutes} 分钟 · 不限次数",
+  "@snoozeInfoUnlimited": {
     "placeholders": {
-      "progress": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
-  "fortuneSelectTitle": "思考今天的能量\n并选择3张牌。",
-  "fortuneSelectTitleDate": "思考 {month}月{day}日的能量\n并选择3张牌。",
-  "@fortuneSelectTitleDate": {
+  "noActiveAlarms": "没有正在响的闹钟",
+  "wealth": "财运",
+  "love": "感情",
+  "career": "事业",
+  "health": "健康",
+  "faceAnalysisBasic": "基础面相分析",
+  "insufficientDataOverallImpression": "整体信息不足",
+  "noseStabilityWealthAccuracy": "鼻部稳定度：财运与判断力",
+  "mouthClarityInterpersonalAccuracy": "口部清晰度：人际与表达",
+  "improveAnalysisQualityAdvice": "光线充足、正脸、无遮挡会让分析更准确。",
+  "basicAnalysisDescription": "快速看看你今天的整体气场与运势走向。",
+  "defaultDailyFortune": "今日默认运势",
+  "dailyFortuneHeadline": "{vibe}今天是 {topKey} 运势最突出的日子。相反，{bottomKey} 方面似乎需要格外注意。",
+  "@dailyFortuneHeadline": {
     "placeholders": {
-      "month": { "type": "String" },
-      "day": { "type": "int" }
+      "vibe": {
+        "type": "String"
+      },
+      "topKey": {
+        "type": "String"
+      },
+      "bottomKey": {
+        "type": "String"
+      }
     }
   },
-  "fortuneNewYearButton": "查看 2026 年新年运势",
-  "loveFortune": "爱情运",
-  "wealthFortune": "财运",
-  "successFortune": "成功运",
-  "fortuneResultTitle": "这是您今天的运势结果。",
-  "fortuneResultTitleDate": "{year}年{month}月{day}日的运势",
-  "@fortuneResultTitleDate": {
+  "faceShapeVLine": "V 字脸",
+  "faceShapeSquare": "方形脸",
+  "faceShapeBalanced": "均衡型",
+  "faceShapeRound": "圆脸",
+  "faceShapeLong": "长脸",
+  "faceShapeOval": "椭圆脸",
+  "titleWealthOriented": "偏财运型",
+  "titleLoveStrong": "桃花旺盛型",
+  "titleCareerNotable": "事业运突出型",
+  "titleStableEnergy": "气场稳定型",
+  "faceAnalysisComplete": "面相分析完成！",
+  "chooseUnlockMethod": "想查看你脸上隐藏的运势\n请选择以下一种方式。",
+  "watchAdForFreeResult": "看广告免费解锁",
+  "useTwoCookies": "使用 2 个幸运饼干",
+  "checkResult": "查看结果",
+  "aiAnalyzingFace": "AI 正在分析你的面相...",
+  "faceRecognitionComplete": "识别完成",
+  "extractingFeatures": "正在提取特征...",
+  "matchingFortuneData": "正在匹配运势数据...",
+  "adLoadFailedFreeUnlock": "广告加载失败，这次直接为你免费解锁。",
+  "insufficientCookies": "幸运饼干不足",
+  "insufficientCookiesDesc": "你的幸运饼干不够。\n可以看广告免费查看！",
+  "usingTwoCookiesToast": "已使用 2 个幸运饼干解锁结果。",
+  "todaysFaceAnalysis": "今日面相分析",
+  "totalScoreWithPoints": "总分 {score} 分",
+  "@totalScoreWithPoints": {
     "placeholders": {
-      "year": { "type": "int" },
-      "month": { "type": "String" },
-      "day": { "type": "int" }
+      "score": {
+        "type": "int"
+      }
     }
   },
-  "startDayButton": "开始新的一天",
-  "fortuneDetailTitle": "详细解读",
-  "policy": "服务条款和隐私政策",
-  "support": "支持",
-  "defaultAlarmBehavior": "默认闹钟行为",
-  "defaultAlarmVolume": "默认闹钟音量",
-  "defaultAlarmVolumeDescription": "创建新闹钟时应用的默认音量。",
-  "gradualVolumeDescription": "设置闹钟声音逐渐增大。",
-  "defaultVibration": "默认振动",
-  "defaultVibrationDescription": "创建新闹钟时默认启用振动。",
-  "defaultInterval": "默认间隔",
-  "maxSnoozeCountLabel": "最大重复次数",
-  "minutes": "分",
-  "times": "次",
-  "cupsCount": "({current}杯/{goal}杯)",
-  "@cupsCount": {
+  "adLoadFailFreeAccess": "广告加载失败，这次直接为你免费解锁。",
+  "insufficientCookiesTitle": "幸运饼干不足",
+  "insufficientCookiesMessage": "你的幸运饼干不够。\n完成任务或看广告都能免费补充。",
+  "useCookiesSnackbar": "已使用 2 个幸运饼干解锁结果。",
+  "faceAnalysisComplete_v2": "面相分析完成！",
+  "chooseMethodToViewResult": "想查看你脸上隐藏的运势\n请选择以下一种方式。",
+  "watchAdForFree": "看广告免费查看",
+  "useTwoCookies_v2": "使用 2 个饼干",
+  "viewResult": "查看结果",
+  "aiAnalyzingFace_v2": "AI 正在分析你的面相...",
+  "faceRecognitionComplete_v2": "识别完成",
+  "extractingFeatures_v2": "正在提取特征...",
+  "matchingFortuneData_v2": "正在匹配数据...",
+  "wealthLuck": "财运",
+  "loveLuck": "感情运",
+  "careerLuck": "事业运",
+  "healthLuck": "健康运",
+  "tojeongMonthlyGood_0": "一位来自东方的贵人带来了好消息。你期待已久的计划终于要实现了。",
+  "tojeongMonthlyGood_1": "财富如泉水般涌流。随着一切进展顺利，烦恼也随之消散。",
+  "tojeongMonthlyGood_2": "努力开花结果，你将收到祝贺。预期会有晋升或重大的成果。",
+  "tojeongMonthlyGood_3": "黑夜过后，晨曦微露。苦难结束，幸福降临。",
+  "tojeongMonthlyGood_4": "意外的横财填满了你的口袋。小额投资将带来巨大利润。",
+  "tojeongMonthlyNeutral_0": "平和的日常生活仍在继续。这段时间没有特别的大事发生。",
+  "tojeongMonthlyNeutral_1": "知足常乐。享受这些小小的幸福吧。",
+  "tojeongMonthlyNeutral_2": "在忙碌的生活中休息一下。请特别注意健康管理。",
+  "tojeongMonthlyNeutral_3": "与其开始新事物，不如维持现状。",
+  "tojeongMonthlyNeutral_4": "沟通是关键。注意言辞，避免误解。",
+  "tojeongMonthlyCaution_0": "凡事都要谨慎。防患于未然总比事后后悔好。",
+  "tojeongMonthlyCaution_1": "关注健康，避免过度劳累。",
+  "tojeongMonthlyCaution_2": "远离流言蜚语，不要插手他人的私事。",
+  "tojeongMonthlyCaution_3": "过度的贪婪会带来麻烦。量力而行。",
+  "tojeongMonthlyCaution_4": "避免金钱交易，你可能会被信任的人所辜负。",
+  "tojeongMonthlySpecial_1_0": "新年气象清明，计划推进会很顺利。",
+  "tojeongMonthlySpecial_1_1": "年初会出现贵人。好好珍惜缘分与人脉。",
+  "tojeongMonthlySpecial_1_2": "新的开始带来意想不到的机会，保持开放心态。",
+  "tojeongMonthlySpecial_1_3": "专注与毅力会带来突破性的进展。",
+  "tojeongMonthlySpecial_1_4": "过往的经验与智慧，会指引你应对新的挑战。",
+  "tojeongMonthlySpecial_2_0": "时机未到，先蓄力等待机会。",
+  "tojeongMonthlySpecial_2_1": "旧问题可能再度出现，正面处理会更轻松。",
+  "tojeongMonthlySpecial_2_2": "本月以耐心为王，观察与学习会有收获。",
+  "tojeongMonthlySpecial_2_3": "避免仓促决定，更好的时机很快到来。",
+  "tojeongMonthlySpecial_2_4": "今天的小步前进，会成为未来的大收获。",
+  "tojeongMonthlySpecial_3_0": "万物复苏，别犹豫，勇敢迎接挑战。",
+  "tojeongMonthlySpecial_3_1": "新的缘分可能开始，积极心态会带来好结果。",
+  "tojeongMonthlySpecial_3_2": "意想不到的领域正在成长，顺势而为。",
+  "tojeongMonthlySpecial_3_3": "你的能量会感染他人，用善意与勇气带头。",
+  "tojeongMonthlySpecial_3_4": "创意灵感涌现，把想法大胆说出来。",
+  "tojeongMonthlySpecial_4_0": "财运随暖意上升，努力会转化为实际回报。",
+  "tojeongMonthlySpecial_4_1": "合约与考试运佳，细致复盘会更稳。",
+  "tojeongMonthlySpecial_4_2": "事业稳定向上，保持现在的节奏就很好。",
+  "tojeongMonthlySpecial_4_3": "现在做财务规划，今年后续会收获更大。",
+  "tojeongMonthlySpecial_4_4": "有望出现互利合作，携手更容易成功。",
+  "tojeongMonthlySpecial_5_0": "家中和气带来稳定与喜悦。",
+  "tojeongMonthlySpecial_5_1": "对他人的善意，会以祝福的形式回到你身边。",
+  "tojeongMonthlySpecial_5_2": "平静与安宁围绕你，珍惜这段舒适时光。",
+  "tojeongMonthlySpecial_5_3": "真诚沟通能加深家人之间的连结。",
+  "tojeongMonthlySpecial_5_4": "你的内在光芒很强，会自然地鼓舞周围的人。",
+  "tojeongMonthlySpecial_6_0": "努力被看见，有机会迎来晋升或被表彰。",
+  "tojeongMonthlySpecial_6_1": "行动力很强，适合考虑扩展或职业转向。",
+  "tojeongMonthlySpecial_6_2": "领导力被需要，带着自信做主导。",
+  "tojeongMonthlySpecial_6_3": "重要目标近在咫尺，盯紧终点就能拿下。",
+  "tojeongMonthlySpecial_6_4": "新的职业视野正在打开，勇敢去探索。",
+  "tojeongMonthlySpecial_7_0": "热情带来成绩，大胆行动更容易达成目标。",
+  "tojeongMonthlySpecial_7_1": "出行中易遇贵人，也可能发现新机会。",
+  "tojeongMonthlySpecial_7_2": "适合换个环境，新的风景会让心情焕然一新。",
+  "tojeongMonthlySpecial_7_3": "你的干劲会吸引好结果，把目标定大一点。",
+  "tojeongMonthlySpecial_7_4": "能量很足，持续向前推进就对了。",
+  "tojeongMonthlySpecial_8_0": "耐心会得到回报，运势会慢慢打开。",
+  "tojeongMonthlySpecial_8_1": "旧问题会出现解法，靠你的智慧就能化解。",
+  "tojeongMonthlySpecial_8_2": "稳住节奏、坚持到底，困难终会过去。",
+  "tojeongMonthlySpecial_8_3": "复盘能带来清晰感，找到真正适合自己的方向。",
+  "tojeongMonthlySpecial_8_4": "远方传来好消息，准备迎接喜悦。",
+  "tojeongMonthlySpecial_9_0": "像丰收季一样，财运与感情都更充盈。",
+  "tojeongMonthlySpecial_9_1": "辛苦会得到超出预期的回报。",
+  "tojeongMonthlySpecial_9_2": "懂得感恩会吸引更多丰盛，也别忘了分享喜悦。",
+  "tojeongMonthlySpecial_9_3": "情绪满足感很高，好好享受爱与被爱。",
+  "tojeongMonthlySpecial_9_4": "成果甜美可见，值得为自己庆祝。",
+  "tojeongMonthlySpecial_10_0": "名望上升，更容易被人记住与认可。",
+  "tojeongMonthlySpecial_10_1": "学业/思考运佳，适合专注学习与研究。",
+  "tojeongMonthlySpecial_10_2": "专业能力被看见，勇敢表达你的观点。",
+  "tojeongMonthlySpecial_10_3": "本月学业或事业上的成功概率很高。",
+  "tojeongMonthlySpecial_10_4": "影响力正在变强，把它用在更有意义的地方。",
+  "tojeongMonthlySpecial_11_0": "适合沉淀与思考，为未来做准备。",
+  "tojeongMonthlySpecial_11_1": "财务趋于稳定，但避免高风险投资。",
+  "tojeongMonthlySpecial_11_2": "通过安静与冥想更容易找到内心的平和。",
+  "tojeongMonthlySpecial_11_3": "现在的战略布局，会让明年走得更顺。",
+  "tojeongMonthlySpecial_11_4": "相信直觉，它会带你避开风险、走向更稳的选择。",
+  "tojeongMonthlySpecial_12_0": "年末有意外好运，值得期待好消息。",
+  "tojeongMonthlySpecial_12_1": "长期努力迎来收尾成果，漂亮地画上句号。",
+  "tojeongMonthlySpecial_12_2": "这一年以高光收场，为自己的旅程感到骄傲。",
+  "tojeongMonthlySpecial_12_3": "旧门关闭，新门打开，带着期待迎接未来。",
+  "tojeongMonthlySpecial_12_4": "分享温暖会带来回馈，把节日的喜悦传出去。",
+  "todaysFaceFortune": "今日面相运势",
+  "detailedAnalysis": "详细分析",
+  "eyeInsight": "👁️ 眼（洞察）",
+  "noseWealth": "👃 鼻（财运）",
+  "mouthLateLuck": "👄 口（晚运）",
+  "overallAnalysisTitle": "整体分析",
+  "shareResultTitle": "今日面相结果",
+  "shareResultDesc": "AI 面相分析结果。\n{title}",
+  "@shareResultDesc": {
     "placeholders": {
-      "current": { "type": "int" },
-      "goal": { "type": "int" }
+      "title": {
+        "type": "String"
+      }
     }
   },
-  "timesCountProgress": "({current}次/{goal}次)",
-  "@timesCountProgress": {
-    "placeholders": {
-      "current": { "type": "int" },
-      "goal": { "type": "int" }
-    }
-  },
-  "missionGym": "去健身房",
-  "missionWorkout": "家庭训练",
-  "missionDiary": "写日记",
-  "missionBedMaking": "整理床铺",
-  "missionStretching": "拉伸",
-  "missionReading": "阅读10分钟",
-  "missionPlanning": "制定今日计划",
-  "missionBreakfast": "吃早餐",
-  "missionMeditation": "冥想5分钟",
-  "missionLearnWords": "背5个单词",
-  "missionVentilation": "通风",
-  "missionCleaning": "打扫房间",
-  "missionGratitudeDiary": "感恩日记",
-  "faqQuestion1": "闹钟没有响。",
-  "faqAnswer1": "由于Android系统的电池优化功能，闹钟可能会延迟或被阻止。请在 设置 > 闹钟优化 菜单中将所有权限设置为'允许'。",
-  "faqQuestion2": "我想更改任务。",
-  "faqAnswer2": "点击闹钟列表中您想要编辑的闹钟，然后在任务选择菜单中将其更改为您想要的任务（数学、拍照、摇晃等）。",
-  "faqQuestion3": "如何设置深色模式？",
-  "faqAnswer3": "您可以通过 设置 > 常规 > 深色模式 开关更改屏幕主题。",
-  "faqQuestion4": "如何收集幸运饼干？",
-  "faqAnswer4": "每天早上关闭闹钟或完成任务时都可以获得幸运饼干。用收集的饼干查看您的每日运势！",
-  "faqQuestion5": "如果删除应用，我的数据会消失吗？",
-  "faqAnswer5": "是的，幸运闹钟将数据存储在设备内部，因此删除应用将删除您所有的闹钟设置和任务记录。请小心。",
-  "noticeLabel": "公告",
-  "notice1Title": "幸运闹钟正式上线",
-  "notice1Content": "您好。幸运闹钟已正式上线。\n\n每天早上用闹钟查看您的每日运势，开启快乐的一天！\n我们将继续提供更多样化的功能和改进的服务。\n\n谢谢。",
-  "notice2Title": "版本 1.0.0 更新新闻",
-  "notice2Content": "以下是版本 1.0.0 更新的内容。\n\n1. 营养品任务界面改进\n2. 精确闹钟的系统设置集成\n3. 深色模式支持\n4. 错误修复和稳定性改进\n\n立即体验最新版本！",
-  "notice3Title": "服务条款修订通知",
-  "notice3Content": "服务条款已修订。\n\n主要修订：\n- 加强隐私政策\n- 指定服务使用范围\n\n详情可在 设置 > 条款 页面查看。",
-  "supportContentTitle": "咨询内容",
-  "supportHint": "请输入内容。",
-  "supportRecipient": "收件人 (客户支持)",
-  "emailCopied": "电子邮件地址已复制。",
-  "copyTooltip": "复制",
-  "supportWorkingDays": "我们将尝试在工作日24小时内回复。",
-  "supportEmptyError": "请输入内容。",
-  "supportSubjectPrefix": "咨询标题",
-  "supportContentPrefix": "咨询内容",
-  "supportCopySuccessTitle": "咨询已复制",
-  "supportCopySuccessMessage": "咨询内容已复制到剪贴板。\n您想发送邮件给 {email} 吗？",
-  "@supportCopySuccessMessage": {
-    "placeholders": {
-      "email": { "type": "String" }
-    }
-  },
-  "copyEmailAction": "复制电子邮件地址",
-  "copyEmailSuccessMessage": "电子邮件地址已复制。请将其粘贴到您的邮件应用中。",
-  "supportSubmitButton": "复制咨询并发送",
-  "shakePhone": "请摇晃手机！",
-  "version": "版本 {version}",
-  "@version": {
-    "placeholders": {
-      "version": { "type": "String" }
-    }
-  },
-  "locationPermissionTitle": "允许位置权限",
-  "locationPermissionDesc": "显示天气信息所必需。",
-  "privacySettings": "隐私设置",
-  "shareResult": "分享结果",
+  "shareResultTotalScore": "总分",
+  "shareResultWealth": "财运",
+  "shareResultLove": "感情运",
+  "shareResultCareer": "事业运",
+  "shareResultHealth": "健康运",
+  "shareResultText": "分享结果",
   "wakeUpComplete": "起床成功！",
+  "collapseOptions": "收起选项",
+  "expandOptions": "更多选项",
+  "snoozeAlarm": "稍后再响",
+  "interval": "间隔",
+  "maxSnoozeCount": "最大贪睡次数",
+  "unlimited": "不限",
+  "permissionRequired": "需要权限",
+  "exactAlarmFailMessage": "闹钟注册失败：未开启“精确闹钟”权限。",
+  "batteryOptimFailMessage": "闹钟注册失败：未允许忽略电池优化。",
+  "overlayFailMessage": "闹钟注册失败：未开启“在其他应用上层显示”。",
+  "loadingDelay": "加载延迟",
+  "loading": "加载中...",
+  "previewFail": "预览失败",
+  "bgDefault": "默认背景",
+  "bgFortuneFriends": "福妮伙伴们",
+  "bgMongChuni": "梦春妮",
+  "bgPanChuni": "盼春妮",
+  "bgToChuni": "土春妮",
+  "bgHoChuni": "虎春妮",
+  "bgBear": "小熊",
+  "bgMoon": "月亮",
+  "bgSea": "海",
+  "bgBridge": "桥",
+  "bgRoad": "路",
+  "bgSky": "天空",
+  "bgMinimalGray": "极简灰",
+  "bgDarkMode": "暗色模式",
+  "bgSoftBlue": "柔和蓝",
+  "bgWarmBeige": "暖米色",
+  "dateFormatMdyE": "M月d日（E）",
+  "deleteAlarm": "删除闹钟",
+  "confirmDelete": "确认删除",
+  "yes": "是",
+  "no": "不",
+  "wealthLuckWithIcon": "💰 财运",
+  "loveLuckWithIcon": "❤️ 感情运",
+  "careerLuckWithIcon": "💼 事业运",
+  "healthLuckWithIcon": "💪 健康运",
+  "mouthFortune": "👄 口（晚运）",
+  "comprehensiveAnalysis": "综合分析",
+  "todaysFaceResult": "今日面相分析结果",
+  "faceAnalysisShareDesc": "AI 面相分析结果。\n{title}",
+  "@faceAnalysisShareDesc": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "shareResult": "分享结果",
   "faceVibeSmile0": "你灿烂的笑容为周围的人带来了正能量。",
   "faceVibeSmile1": "那灿烂的笑容显示出你今天充满了活力。",
   "faceVibeSmile2": "你温柔的神情带有一种迷人的魅力，能吸引贵人相助。",
@@ -555,12 +590,53 @@
   "mouthExpressionBlessing": "上扬的嘴角预示着积极的天性，能自然地吸引好运和他人的青睐。",
   "mouthExpressionReliable": "紧闭且坚定的双唇反映了可靠性，以及行动胜过空谈的偏好。",
   "mouthExpressionLucky": "灿烂开朗的笑容散发着正能量，为你的社交关系带来好运。",
+  "supplementAlarmTitle": "该吃营养补充剂了！ 💊",
+  "alarmVolume": "闹钟音量",
+  "alarmTimeList": "闹钟时间列表",
+  "noAlarmTimesAdded": "未添加闹钟时间",
+  "alarmTimeDeleted": "闹钟时间已删除",
+  "addAlarmTime": "添加闹钟时间",
+  "editAlarmTime": "编辑闹钟时间",
+  "defaultRingtone": "默认铃声",
+  "takeSupplementsNow": "请服用营养剂并记录！",
+  "nextTime": "下次再吃",
+  "take": "服用",
+  "notifications": "通知",
+  "notificationTime": "通知时间",
+  "start": "开始",
+  "end": "结束",
+  "notificationInterval": "通知间隔",
+  "waterDrankToday": "今天喝的水",
+  "goal": "目标",
+  "cup": "杯",
+  "waterIntakeRecord": "水分摄入记录",
+  "remainingAmount": "剩余量",
+  "ml": "毫升",
+  "minutesFormat": "{minutes} 分钟",
+  "drinkWater": "喝水",
+  "supplement": "营养剂",
+  "water": "水分",
+  "morning": "上午",
+  "afternoon": "下午",
+  "evening": "晚上",
+  "takeSupplement": "服用营养剂",
+  "goalAchievedTitle": "目标达成！",
+  "waterIntake": "水分摄入",
+  "remindTime": "提醒时间",
+  "alarmRingtone": "闹钟铃声",
+  "snoozeTime": "稍后提醒时间",
+  "snoozeDescription": "选择“下次再吃”时的默认时间",
+  "oneHour": "1 小时",
   "mouthExpressionOpen": "坦率的神情预示着诚实，但在敏感场合请注意言辞。",
-  "overallHeadlineSimple": "今天的重点是 {topKey}，需要注意的一点是 {bottomKey}。",
+  "overallHeadlineSimple": "今日重点是 {topKey}，需要留意的点是 {bottomKey}。",
   "@overallHeadlineSimple": {
     "placeholders": {
-      "topKey": { "type": "String" },
-      "bottomKey": { "type": "String" }
+      "topKey": {
+        "type": "String"
+      },
+      "bottomKey": {
+        "type": "String"
+      }
     }
   },
   "overallVibeWealthRich": "你的五官散发着财务活力，是抓住新机遇的绝佳日子。",
@@ -596,14 +672,6 @@
   "sajuFortune2024Gye": "💧 2024年 甲辰年 (木龙): '在变革中抓住机遇'\n\n2024年对你来说是‘伤官’和‘正官’能量进入的一年。就像甘霖滋润森林，使万物复苏。这将是你向世界发声、宣告你的存在并抓住新机遇的一年。\n\n💼 [事业与商务]\n表达能力提升，创意想法丰富。你将在营销、公关和艺术领域展现卓越才华。但由于可能对上司或组织规则产生抵触情绪，需要灵活应对的智慧。\n\n💰 [财运]\n金钱流向变得活跃的一年。通过发挥机智和敏捷增加收入的机会将会到来。但要小心因冲动消费或虚荣心导致开支变大。\n\n❤️ [爱情与关系]\n你将因过人的魅力和良好的谈吐而大受欢迎。在恋爱关系中，你通过坦诚的情感表达注入活力，但需要体谅，因为尖锐的话语有时可能会伤人。\n\n⚠️ [注意事项]\n预防泌尿系统疾病或血液循环问题。同时，避免在背后议论他人，始终保持谦虚的言行，因为你可能会成为谣言的对象。",
   "sajuFortune2025Gap": "🌿 2025年 乙巳年 (木蛇): '在新阶段与竞争中成长'\n\n2025年对你来说是‘劫财’和‘食神’能量进入的一年。就像森林中的大树与常春藤（乙木）和谐共处，共同成长。合作会产生协同效应，但同时也将是无法避免激烈竞争的一年。\n\n💼 [事业与商务]\n活动变得频繁，表现欲望增强。向世界广泛宣传你的想法和才华的机会将会到来。对于自由职业者、从事演艺事业或销售的人，预期的结果会很好。但与同事或竞争对手之间可能会产生微妙的冲突，需要化敌为友的智慧。\n\n💰 [财运]\n金钱流向活跃，但开支可能与收入一样多（劫财的影响）。由于与朋友/同事的聚会或投资建议，可能会产生支出，需要注意。从长远来看，投资于自我提升或扩大业务比存钱更有利。\n\n❤️ [爱情与关系]\n社交能力提高，你会结识许多新朋友。在聚会或团体活动中人气上升，是向异性展示魅力的好时机。但由于可能出现竞争对手，如果你有喜欢的人，最好积极表达自己。\n\n⚠️ [注意事项]\n过度的竞争心可能会导致麻烦。同时，受‘巳火’能量影响，变动运势增加，请注意交通安全和体力管理。",
   "sajuFortune2025Eul": "🌿 2025年 乙巳年 (木蛇): '展现自我色彩的华丽跃升'\n\n2025年对你来说是‘比肩’和‘伤官’能量进入的一年。就像田野里的花朵在温暖的阳光下盛开。这将是充满活力的一年，你将充分展示个性和才华，并获得公众关注。\n\n💼 [事业与商务]\n创造力和艺术感达到顶峰。你将在策划和展示想法的任务中表现出色。随着技能获得认可，独立或领导新项目的机会将会出现。但需要协调，因为试图走得太远可能会与现有规则产生冲突。\n\n💰 [财运]\n这是一个基于机智和技能创造收入的年份。你可能会通过副业或创作活动获得意外收入。但由于追求华丽的事物，维持体面的开支或娱乐支出可能会增加，所以不要失去理财意识。\n\n❤️ [爱情与关系]\n魅力四射，受到异性关注。在恋爱关系中，你们度过了愉快而活泼的时光，但有时可能会因自己的固执而发生争吵。如果是单身，你可以期待一场命中注定的相遇。\n\n⚠️ [注意事项]\n小心言多必失，因为今年很容易成为谣言的对象。同时，规律的睡眠和休息必不可少，因为你可能会消耗太多精力，容易感到疲倦。",
-  "sajuFortune2025Byeong": "🔥 2025年 乙巳年 (木蛇): '激情洋溢的成就与竞争'\n\n2025年对你来说是‘正印’和‘比肩’能量进入的一年。就像天空中的太阳遇到了地面的热气，燃烧得更加炽热。你将获得强大的支持力量，并在自信的基础上毫不犹豫地推向目标。\n\n💼 [事业与商务]\n在可靠的助手或导师的帮助下，你将实现巨大的成长。对于考取证书或学术成就非常有利。与同事的协作闪耀，你将通过发挥领导力带领团队走向成功。但要警惕过度的竞争心可能会损害人际关系。\n\n💰 [财运]\n这是一个在与周围人分享信息的同时增加财富的时期。预期会有通过共同投资或合作获得的收入。但重要的是要维护实际利益，因为你可能会因自尊心或在意他人的目光而过度消费。\n\n❤️ [爱情与关系]\n随着与人们的聚会增多，友谊会加深。在恋爱关系中，像朋友般的舒适感变得更强。但需要适当的平衡，因为优先考虑朋友可能会导致与伴侣产生冲突。\n\n⚠️ [注意事项]\n关注血压或心脏健康等血液循环系统。同时，始终保持内心的平静，因为火爆脾气导致的冲动情绪可能会毁掉事情。",
-  "sajuFortune2025Jeong": "🔥 2025年 乙巳年 (木蛇): '在变革中寻找稳定与机遇'\n\n2025年对你来说是‘偏印’和‘劫财’能量进入的一年。就像蜡烛在风中摇曳，但最终照亮了周围并展现出它的存在。可能会出现意想不到的变化，但这将是你明智地克服它们并将其转化为机遇的一年。\n\n💼 [事业与商务]\n原创性的想法和直觉闪耀。你将瞄准别人没想到的利基市场，或在专业领域取得深厚成果。但与同事的竞争变得激烈，可能会有人试图抢夺成果，因此请注意安全维护和关系管理。\n\n💰 [财运]\n财运可能会有波动的一年。需要保守的资产管理，因为可能会产生意外开支或在投资中受损。但利用自身专业技能获得的收入将稳定进入。最好避免金钱交易。\n\n❤️ [爱情与关系]\n随着想法增加，恋爱中可能会变得被动。在恋爱关系中，很容易因小事感到失望，所以信任对方并以开放的心态对待很重要。通过独处时间充实内心也是个好方法。\n\n⚠️ [注意事项]\n警惕压力导致的神经系统不适或失眠。通过冥想或轻微运动管理情绪很重要，努力保持积极的心态而非消极的想法。",
-  "sajuFortune2025Mu": "⛰️ 2025年 乙巳年 (木蛇): '明智地强化内在基础的成熟之年'\n\n2025年对你来说是‘正官’和‘偏印’能量进入的一年。就像温暖的热气渗透进一座大山之下，包容万物。这将是增加自身深度同时保持社会荣誉的充实一年。\n\n💼 [事业与商务]\n你将升至组织内的负责职位，或者晋升机会将会到来。如果你重视原则并诚实工作，你将获得巨大的认可。同时，你在获取专业知识或研究任务方面取得优异成果。但需要灵活思考，因为你可能会因陷入刻板印象而拒绝变化。\n\n💰 [财运]\n稳定的收入是有保障的。诚实地储蓄和管理资产是有利的。房地产或文书方面的运势很好，因此值得考虑长远投资。但要避免因受周围诱惑影响而进行无理投资。\n\n❤️ [爱情与关系]\n你端庄的言行赢得了人们的信任。在恋爱关系中，这是互相尊重并发展成严肃关系的好时机。如果考虑结婚，现在制定具体计划也很好。\n\n⚠️ [注意事项]\n关注消化系统或皮肤健康。同时，练习听取周围建议并快速做出决定，因为你可能会因思虑过多而面临决策困境。",
-  "sajuFortune2025Gi": "🌾 2025年 乙巳年 (木蛇): '以责任感达成目标'\n\n2025年对你来说是‘偏官’和‘正印’能量进入的一年。就像雨后的阳光照耀在广阔的土地上，使庄稼茁壮成长。可能会有艰辛的过程，但这将是最终获得荣誉并达成目标的丰收年。\n\n💼 [事业与商务]\n工作强度可能会增加，可能会被赋予艰巨的任务。然而，你将通过技能和耐心克服困难，证明你作为领导者的素质。你将在长辈的帮助或支持下度过危机，并因此体会到巨大的成就感。\n\n💰 [财运]\n需要注意开支管理的一年。可能会有很多钱流出，如意外的税收或公共事业费用。但由于持之以恒的努力有望获得奖金或红利，诚实是招财的关键。\n\n❤️ [爱情与关系]\n负责任的形象对异性很有吸引力。在恋爱关系中，通过倾听彼此的辛劳并互相安慰，纽带会加深。但即使时间很短，也需要努力频繁沟通，因为你可能会因忙碌的日常生活而忽略伴侣。\n\n⚠️ [注意事项]\n警惕过劳导致的免疫力下降。通过规律的饮食和运动管理体力，并用积极的想法缓解压力非常重要。",
-  "sajuFortune2025Gyeong": "⚔️ 2025年 乙巳年 (木蛇): '获得荣誉的同时兼顾实际利益'\n\n2025年对你来说是‘正财’和‘偏官’能量进入的一年。就像坚硬的岩石被火加热，重生成为珍贵的宝剑。你将为自己的努力获得明确的回报，并在社会上证明自己的价值。\n\n💼 [事业与商务]\n你凭借结果导向的思维和执行力取得巨大成果。尤其在金融、管理和技术领域的才华获得认可。解决难题并获得荣誉的运势强劲，但责任也在增长，你可能会感到压力。相信自己，大胆前进吧。\n\n💰 [财运]\n财运非常好。除了稳定的收入，你还可以通过投资或副业获得实际利润。你将准确掌握金钱流向，并高效管理资产。但请克制为了荣誉而大肆挥霍的行为。\n\n❤️ [爱情与关系]\n以真诚可靠的形象吸引异性。在恋爱关系中，你以负责任的态度给对方安全感。在人际关系中，你可能会给人一种略显严厉的印象，所以偶尔进行一些柔和幽默的谈话会很好。\n\n⚠️ [注意事项]\n关注骨骼或关节健康，以及呼吸系统疾病。同时，以‘这样就足够了’的心态安抚自己，因为你可能会因完美主义倾向而苛责自己。",
-  "sajuFortune2025Sin": "💎 2025年 乙巳年 (木蛇): '在变革中闪耀智慧的一年'\n\n2025年对你来说是‘偏财’和‘正官’能量进入的一年。就像一颗精致的珠宝在灿烂的灯光下展现价值。这将是社会地位提升并伴随意外横财的愉快一年。\n\n💼 [事业与商务]\n商业嗅觉提升，捕捉新机遇的能力卓越。这是一个大胆挑战会转化为巨额利润的时期。在组织内部，你凭借理性的判断赢得信任，并抓住晋升或调动的机会。但要注意不要因过于关注结果而忽视过程。\n\n💰 [财运]\n这是一个招财的年份。触碰大额财富的机会（如意外的投资回报或继承）会出现。但由于开支也可能变得奢华，维持计划性的消费习惯很重要。\n\n❤️ [爱情与关系]\n你以华丽动人的外表成为社交聚会的主角。恋爱运势非常强劲，你可能会收到许多人的追求。在恋爱关系中，你们度过了激情而愉快的时光。是发展成严肃交往的好年份。\n\n⚠️ [注意事项]\n关注肺部健康或皮肤病。同时，始终保持谦虚，不要忘记体谅他人的心，因为你可能会因过度自信而显得傲慢。",
-  "sajuFortune2025Im": "🌊 2025年 乙巳年 (木蛇): '发挥智慧产生结果'\n\n2025年对你来说是‘伤官’和‘偏财’能量进入的一年。就像大河蜿蜒滋润着广阔的田野。这将是发挥你的才华和口才，获得巨额财富并扩大活动范围的充满活力的一年。\n\n💼 [事业与商务]\n表达能力提升，在营销或公关领域取得优异成果。是商业化你的想法或开拓新市场的极佳时机。对从事创造性工作的人来说将是最好的一年。但重要的是保持礼貌，因为可能会与上司产生摩擦。\n\n💰 [财运]\n财运变动活跃。用自己的技能赚钱的运势强劲，滚动大笔金钱的机会将会到来。但对于投机性投资需谨慎，只有抱着赚多少给多少的心态，财运才能长久维持。\n\n❤️ [爱情与关系]\n凭借过人的幽默感和魅力，身边总是围满了人。这是你可以享受愉快约会、在异性中人气很高的一年。在恋爱关系中，你通过多样化的约会注入活力。但要小心，哪怕是一个轻微的词语也可能引起误解。\n\n⚠️ [注意事项]\n关注肾脏或泌尿系统健康。同时，注意适当的休息和营养，因为体力可能会因广泛的活动范围而透支。",
-  "sajuFortune2025Gye": "💧 2025年 乙巳年 (木蛇): '真诚产生稳定成果的一年'\n\n2025年对你来说是‘食神’和‘正财’能量进入的一年。就像清澈的细雨滋润大地，为丰收做准备。这将是温暖的一年，你的努力稳步积累，并转化为稳定的财富和幸福。\n\n💼 [事业与商务]\n真诚成为最强大的武器的一年。你通过履行职责产生稳定的成果，并赢得同事的信任。是增长专业知识的好时机，你会通过喜欢的工作感受到回报。你可以在稳定的环境中步步为营地成长。\n\n💰 [财运]\n经济上从容稳定的一年。产生稳定的收入，你会感受到勤俭节约增加资产的乐趣。衣食无忧，整体生活充满富足。储蓄比无理的投资更有利。\n\n❤️ [爱情与关系]\n你以温厚的神情给伴侣带来舒适感。这是你们在细致体谅彼此的同时，培育美丽爱情的一年。如果是单身，你很有可能遇到沟通顺畅、价值观相似的伴侣。\n\n⚠️ [注意事项]\n关注胃部健康或饮食管理。偶尔通过给予新刺激来寻找活力会很好，因为你可能会因安于现状而变得懒惰。",
   "sajuFortune2026Gap": "🌳 2026年 丙午年 (火马): '热情的火焰，活动的极大化'\n\n2026年对你来说是‘食神’和‘伤官’能量非常强劲的一年。就像木头遇到了熊熊烈火，这是一个你的才华和表达欲毫不犹豫地迸发出来的时期。即使你保持静止，你的存在感也会显现出来，你的活动范围将急剧扩大。\n\n💼 [事业与商务]\n这是开始新项目或创业的极佳时机。你的想法得以实现，你将充满激情地投入工作。你可以在表现自我的领域（如艺术、广播、销售和教育）取得巨大成果。但你需要谨慎并复核一切，因为如果你只顾向前冲，可能会犯错。\n\n💰 [财运]\n财运随着你的活跃而到来。来自商业或副业的收入可能会增加。但正如你赚得很多，也可能会有很多钱用于投资或消费。为未来投资是好的，但应防范冲动消费。\n\n❤️ [爱情与关系]\n以诚实和积极的态度吸引异性。恋爱运势升温，但过度的情感表达可能会给伴侣带来负担。这也是子孙运势非常强劲的一年。\n\n⚠️ [注意事项]\n这是一个能量消耗极大的年份。可能会出现‘倦怠’，因此体力管理至关重要。小心言多必失引发的谣言，尽量不要只坚持自己的主张。",
   "sajuFortune2026Eul": "🌸 2026年 丙午年 (火马): '华丽绽放，才华的全面盛开'\n\n2026年对你来说是‘伤官’能量沉重的一年。就像花朵在烈日下绽放，这是一个你的魅力和才华达到顶峰的时期。你将成为到处受到关注的主角，品尝到辉煌的成就。\n\n💼 [事业与商务]\n打破现有框架的非常规尝试会取得成功。你将在设计、时尚、美容和娱乐领域脱颖而出。你可能会在工作中收到晋升或挖角邀请，但要小心与上司的摩擦。你的能力在自由的环境中会翻倍。\n\n💰 [财运]\n创造财富的能力变得卓越。你的品牌价值提升，身价增加。然而，追求华丽可能会导致奢侈或浪费，所以你必须守好钱包。\n\n❤️ [爱情与关系]\n异性缘爆发。你将拥有一段辉煌而热烈的恋情，但它可能既短暂又强烈。已婚者可能在子女方面有很多操心的事情。\n\n⚠️ [注意事项]\n情绪波动可能会变得剧烈。如果你不能控制脾气，辛勤换来的成就可能会崩溃。要有守法意识，避免法律问题或谣言。",
   "sajuFortune2026Byeong": "☀️ 2026年 丙午年 (火马): '双日并出，激烈的竞争与跃升'\n\n2026年对你来说是‘比肩’和‘劫财’非常强劲的一年。就像天空中出现了两个太阳，这是一个自尊心和竞争心达到顶点的时期。自主性变强，你讨厌任何干涉，并以坚定的决心开辟自己的道路。\n\n💼 [事业与商务]\n这是在竞争场所获胜并取得成就的好运。你可以通过合伙或协作扩大规模，但可能会因利润分配问题产生冲突。对于自由职业者或专业人士来说，这是扬名立万的好机会。\n\n💰 [财运]\n钱进来了，但流出的漏洞也很大。可能会因为兄弟姐妹、朋友或同事而花钱。绝对禁止担保或借钱给他人。与其存钱，不如投资于荣誉或增长力量。\n\n❤️ [爱情与关系]\n你可能会遇到像朋友一样的爱人，或者从朋友发展为爱人。但如果你已有伴侣，请小心，因为可能会出现三角关系或竞争对手。\n\n⚠️ [注意事项]\n武断的行为可能会引起周围人的反感。‘谦逊’是最好的策略。关注心血管疾病或眼睛健康。",
@@ -614,393 +682,23 @@
   "sajuFortune2026Sin": "💎 2026年 丙午年 (火马): '闪耀的珠宝，荣誉的顶峰'\n\n2026年对你来说是‘正官’和‘偏官’的一年。就像在灯光下闪耀的珠宝，这是一个你的价值向世界揭示、荣誉提升的时期。你与正直、稳定的工作场所或组织有深厚的缘分。\n\n💼 [事业与商务]\n求职、晋升和调动运势非常好。你也可能因技能获得认可而收到挖角邀请。如果你遵守原则并正确处理工作，你将赢得所有人的尊重。\n\n💰 [财运]\n稳定的薪水或固定收入是有保障的。如果你保护荣誉而非追求财富，财富自然会随之而来。你可以从丈夫或工作中获益。\n\n❤️ [爱情与关系]\n这是女性最好的结婚和恋爱运势。你可以遇到一位正直且有能力的配偶。男性将喜得贵子，或因子女而有喜事。\n\n⚠️ [注意事项]\n过高的热度可能会熔化珠宝。过量的工作或压力可能会导致神经质。你可能会因强烈的原则导向倾向而显得死板，所以请小心。",
   "sajuFortune2026Im": "🌊 2026年 丙午年 (火马): '江面上的太阳，巨额财富的机会'\n\n2026年对你来说是‘偏财’和‘正财’非常活跃的一年。就像太阳照在湖面上，波光粼粼。财运爆发，这是一个你可能抓住人生逆转机会的时期。\n\n💼 [事业与商务]\n对企业主来说，这是一个格外好的年份。生意兴隆，活动舞台可能扩展到海外。上班族可以获得丰厚的奖金或红利。重视结果和实际利益的务实态度会招来成功。\n\n💰 [财运]\n这是你可以触碰大笔金钱的好运。投资回报、商业收入和意外横财随之而来。然而，如果你的理财能力较弱，可能会因钱失健，所以请在可控范围内追求财富。\n\n❤️ [爱情与关系]\n对于男性，异性缘如潮水般涌入。有吸引力的伴侣就在你身边。女性可能会在与婆婆的关系中表现突出，或遇到有能力的男性。\n\n⚠️ [注意事项]\n对财富和伴侣的执着可能会导致麻烦。盲目的贪婪可能会导致健康恶化（肾脏、膀胱、血压），所以请小心。理财要彻底，谨防诈骗。",
   "sajuFortune2026Gye": "🌧️ 2026年 丙午年 (火马): '伴随彩虹的收获季节'\n\n2026年对你来说是‘正财’和‘偏财’的一年。就像在伴有热气的暖日落下的春雨。你将为自己的努力获得诚实的回报，这是一个财务上非常繁荣且稳定的时期。\n\n💼 [事业与商务]\n如果你以真诚和细致去竞争，你一定会得到回报。你将在需要细致入微的领域（如金融、会计、银行和数据分析）展现才华。适合经营稳定的工作场所或扎实的生意。\n\n💰 [财运]\n勤奋存下的钱会变成一笔巨款。你可以通过储蓄、分期付款和安全投资增加资产。固定收入增加，生活变得从容。只需注意防范浪费。\n\n❤️ [爱情与关系]\n男性有很好的运气遇到贤妻良母型的配偶或结婚。女性将追求现实且稳定的恋爱。人际关系顺畅，你将赢得信誉。\n\n⚠️ [注意事项]\n过高的热度可能会蒸发雨水（癸水）。过度的活动或贪婪可能会耗尽体力，因此需要适当的休息。小心不要因纠结于眼前利益而错失大局。",
-  "compatibilitySummaryCheonganHap": "命中注定的灵魂伴侣",
-  "compatibilityDescCheonganHap": "你们的性格和价值观完美契合。你们是那种无需言语就能心领神会的灵魂伴侣。",
-  "compatibilitySummarySangsaeng": "相辅相成的伙伴关系",
-  "compatibilityDescSangsaeng": "一种积极的关系，你们会自然地支持彼此，并帮助对方成长。",
-  "compatibilitySummarySanggeuk": "需要动态平衡的关系",
-  "compatibilityDescSanggeuk": "虽然可能存在性格差异，但你们拥有独特的潜力，可以互补彼此的优缺点。",
-  "compatibilitySummaryDefaultInner": "天生的好朋友",
-  "compatibilityDescDefaultInner": "基于相似倾向和共同兴趣建立的关系，让你们在一起的时光轻松而舒适。",
-  "compatibilitySummarySameElement": "志同道合的相遇",
-  "compatibilityDescSameElement": "共有‘{element}’倾向意味着你们的价值观和行为方式非常同步。",
-  "@compatibilityDescSameElement": {
-    "placeholders": {
-      "element": { "type": "String" }
-    }
-  },
-  "compatibilitySummaryCompatibleElement": "和谐的平衡",
-  "compatibilityDescCompatibleElement": "一段美妙的关系，你们不同的魅力完美地融合在一起。",
-  "compatibilitySummaryIncompatibleElement": "迷人的差异",
-  "compatibilityDescIncompatibleElement": "你们不同的气质起初可能让你们感到陌生，但它们为共同成长和探索提供了无限可能。",
-  "tojeongMonthlyGood_0": "一位来自东方的贵人带来了好消息。你期待已久的计划终于要实现了。",
-  "tojeongMonthlyGood_1": "财富如泉水般涌流。随着一切进展顺利，烦恼也随之消散。",
-  "tojeongMonthlyGood_2": "努力开花结果，你将收到祝贺。预期会有晋升或重大的成果。",
-  "tojeongMonthlyGood_3": "黑夜过后，晨曦微露。苦难结束，幸福降临。",
-  "tojeongMonthlyGood_4": "意外的横财填满了你的口袋。小额投资将带来巨大利润。",
-  "tojeongMonthlyNeutral_0": "平和的日常生活仍在继续。这段时间没有特别的大事发生。",
-  "tojeongMonthlyNeutral_1": "知足常乐。享受这些小小的幸福吧。",
-  "tojeongMonthlyNeutral_2": "在忙碌的生活中休息一下。请特别注意健康管理。",
-  "tojeongMonthlyNeutral_3": "与其开始新事物，不如维持现状。",
-  "tojeongMonthlyNeutral_4": "沟通是关键。注意言辞，避免误解。",
-  "tojeongMonthlyCaution_0": "凡事都要谨慎。防患于未然总比事后后悔好。",
-  "tojeongMonthlyCaution_1": "关注健康，避免过度劳累。",
-  "tojeongMonthlyCaution_2": "远离流言蜚语，不要插手他人的私事。",
-  "tojeongMonthlyCaution_3": "过度的贪婪会带来麻烦。量力而行。",
-  "tojeongMonthlyCaution_4": "避免金钱交易，你可能会被信任的人所辜负。",
-  "tarotTheFool": "愚者",
-  "tarotTheFoolDesc": "代表新的开始、冒险和无限的可能性。",
-  "tarotTheMagician": "魔术师",
-  "tarotTheMagicianDesc": "象征创造力、自信和将想法转化为现实的能力。",
-  "tarotTheHighPriestess": "女祭司",
-  "tarotTheHighPriestessDesc": "代表直觉、内在智慧和未揭示的秘密。",
-  "tarotTheEmpress": "皇后",
-  "tarotTheEmpressDesc": "象征丰饶、母性和自然的美丽。",
-  "tarotTheEmperor": "皇帝",
-  "tarotTheEmperorDesc": "代表权威、稳定和强大的领导力。",
-  "tarotTheHierophant": "教皇",
-  "tarotTheHierophantDesc": "象征传统、教育和精神指导。",
-  "tarotTheLovers": "恋人",
-  "tarotTheLoversDesc": "代表爱情、和谐和重要的选择。",
-  "tarotTheChariot": "战车",
-  "tarotTheChariotDesc": "象征意志力、胜利和勇往直前的力量。",
-  "tarotStrength": "力量",
-  "tarotStrengthDesc": "代表内在的勇气、耐心和柔中带刚的力量。",
-  "tarotTheHermit": "隐士",
-  "tarotTheHermitDesc": "象征反思、寻求真理和内心的平静。",
-  "tarotWheelOfFortune": "命运之轮",
-  "tarotWheelOfFortuneDesc": "代表转折点、命运的改变和新的机遇。",
-  "tarotJustice": "正义",
-  "tarotJusticeDesc": "象征平衡、公平和诚实的决定。",
-  "tarotTheHangedMan": "倒吊人",
-  "tarotTheHangedManDesc": "代表新的视角、牺牲和等待的价值。",
-  "tarotDeath": "死亡",
-  "tarotDeathDesc": "象征结束、转变和新生的开始。",
-  "tarotTemperance": "节制",
-  "tarotTemperanceDesc": "代表节制、平衡和和谐的融合。",
-  "tarotTheDevil": "恶魔",
-  "tarotTheDevilDesc": "象征诱惑、束缚和需要克服的欲望。",
-  "tarotTheTower": "高塔",
-  "tarotTheTowerDesc": "代表突然的改变、崩溃和重建的契机。",
-  "tarotTheStar": "星星",
-  "tarotTheStarDesc": "象征希望、灵感和精神上的康复。",
-  "tarotTheMoon": "月亮",
-  "tarotTheMoonDesc": "代表不安、幻想和直觉的引导。",
-  "tarotTheSun": "太阳",
-  "tarotTheSunDesc": "象征成功、快乐和充满活力的能量。",
-  "tarotJudgement": "审判",
-  "tarotJudgementDesc": "代表觉醒、重生和重要的决定。",
-  "tarotTheWorld": "世界",
-  "tarotTheWorldDesc": "象征完成、完美和一段旅程的终点。",
-  "itsTimeToWakeUp": "该起床了！",
-  "loading": "加载中...",
-  "useTwoCookies_v2": "使用 2 个饼干",
-  "aiAnalyzingFace_v2": "AI 正在分析你的面相...",
-  "faceRecognitionComplete_v2": "识别完成",
-  "extractingFeatures_v2": "正在提取特征...",
-  "matchingFortuneData_v2": "正在匹配数据...",
-  "faceAnalysisComplete_v2": "面相分析完成！",
-  "tapTimes": "{count} 次点击",
-  "@tapTimes": {
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "snoozeMinutesUnlimited": "{minutes} 分钟（不限次数）",
-  "@snoozeMinutesUnlimited": {
-    "placeholders": {
-      "minutes": { "type": "int" }
-    }
-  },
-  "snoozeMinutesCount": "{minutes} 分钟（{current}/{total}）",
-  "@snoozeMinutesCount": {
-    "placeholders": {
-      "minutes": { "type": "int" },
-      "current": { "type": "int" },
-      "total": { "type": "int" }
-    }
-  },
-  "ringtone_fluttering_day": "心动的一天",
-  "ringtone_cozy_day": "温暖的一天",
-  "ringtone_sensible_day": "理性的一天",
-  "ringtone_play_with_me": "和我玩",
-  "ringtone_refreshing_day": "清爽的一天",
-  "ringtone_new_beginning": "新的开始",
-  "ringtone_self_love": "爱自己",
-  "cheonganGap": "甲",
-  "cheonganEul": "乙",
-  "cheonganByeong": "丙",
-  "cheonganJeong": "丁",
-  "cheonganMu": "戊",
-  "cheonganGi": "己",
-  "cheonganGyeong": "庚",
-  "cheonganSin": "辛",
-  "cheonganIm": "壬",
-  "cheonganGye": "癸",
-  "jijiJa": "子",
-  "jijiChuk": "丑",
-  "jijiIn": "寅",
-  "jijiMyo": "卯",
-  "jijiJin": "辰",
-  "jijiSa": "巳",
-  "jijiO": "午",
-  "jijiMi": "未",
-  "jijiSin": "申",
-  "jijiYu": "酉",
-  "jijiSul": "戌",
-  "jijiHae": "亥",
-  "jijiAnimalRat": "鼠",
-  "jijiAnimalOx": "牛",
-  "jijiAnimalTiger": "虎",
-  "jijiAnimalRabbit": "兔",
-  "jijiAnimalDragon": "龙",
-  "jijiAnimalSnake": "蛇",
-  "jijiAnimalHorse": "马",
-  "jijiAnimalSheep": "羊",
-  "jijiAnimalMonkey": "猴",
-  "jijiAnimalRooster": "鸡",
-  "jijiAnimalDog": "狗",
-  "jijiAnimalPig": "猪",
-  "assetDefaultBackground": "默认背景",
-  "assetFortuneyFriends": "福妮伙伴们",
-  "assetMongchuny": "梦春妮",
-  "assetPanchuny": "盼春妮",
-  "assetTochuny": "土春妮",
-  "assetHochuny": "虎春妮",
-  "assetBear": "小熊",
-  "assetMoon": "月亮",
-  "assetBridge": "桥",
-  "assetRoad": "路",
-  "assetSky": "天空",
-  "assetMinimalGray": "极简灰",
-  "assetDarkMode": "暗色模式",
-  "assetSoftBlue": "柔和蓝",
-  "assetWarmBeige": "暖米色",
-  "assetCat": "猫 {number}",
-  "@assetCat": {
-    "placeholders": {
-      "number": { "type": "int" }
-    }
-  },
-  "assetDog": "狗 {number}",
-  "@assetDog": {
-    "placeholders": {
-      "number": { "type": "int" }
-    }
-  },
-  "assetSea": "海 {number}",
-  "@assetSea": {
-    "placeholders": {
-      "number": { "type": "int" }
-    }
-  },
-  "categoryCharacter": "角色",
-  "categoryAnimal": "动物",
-  "categoryIllustration": "插画",
-  "categoryLandscape": "风景",
-  "categorySimple": "简约",
-  "alarmBackground": "闹钟背景",
-  "random": "随机",
-  "selectSolidColor": "选择纯色",
-  "deleteColor": "删除颜色",
-  "deleteColorConfirm": "确定要从列表中删除该颜色吗？",
-  "randomBackgroundDesc": "每次闹钟响起都会换一张新背景！",
-  "backgroundDeleted": "背景已删除。",
-  "pickFromDevice": "从设备选择",
-  "alarmSaveError": "闹钟保存失败，发生未知错误。",
-  "videoLoadFailed": "视频加载失败\n点击重试",
-  "dismissAlarm": "关闭闹钟",
-  "slideToDismiss": "滑动关闭",
-  "snoozeInfoUnlimited": "{minutes} 分钟 · 不限次数",
-  "@snoozeInfoUnlimited": {
-    "placeholders": {
-      "minutes": { "type": "int" }
-    }
-  },
-  "noActiveAlarms": "没有正在响的闹钟",
-  "wealth": "财运",
-  "love": "感情",
-  "career": "事业",
-  "health": "健康",
-  "faceAnalysisBasic": "基础面相分析",
-  "insufficientDataOverallImpression": "整体信息不足",
-  "noseStabilityWealthAccuracy": "鼻部稳定度：财运与判断力",
-  "mouthClarityInterpersonalAccuracy": "口部清晰度：人际与表达",
-  "improveAnalysisQualityAdvice": "光线充足、正脸、无遮挡会让分析更准确。",
-  "basicAnalysisDescription": "快速看看你今天的整体气场与运势走向。",
-  "defaultDailyFortune": "今日默认运势",
-  "dailyFortuneHeadline": "今日运势要点",
-  "faceShapeVLine": "V 字脸",
-  "faceShapeSquare": "方形脸",
-  "faceShapeBalanced": "均衡型",
-  "faceShapeRound": "圆脸",
-  "faceShapeLong": "长脸",
-  "faceShapeOval": "椭圆脸",
-  "titleWealthOriented": "偏财运型",
-  "titleLoveStrong": "桃花旺盛型",
-  "titleCareerNotable": "事业运突出型",
-  "titleStableEnergy": "气场稳定型",
-  "faceAnalysisComplete": "面相分析完成！",
-  "chooseUnlockMethod": "想查看你脸上隐藏的运势\n请选择以下一种方式。",
-  "watchAdForFreeResult": "看广告免费解锁",
-  "useTwoCookies": "使用 2 个幸运饼干",
-  "checkResult": "查看结果",
-  "aiAnalyzingFace": "AI 正在分析你的面相...",
-  "faceRecognitionComplete": "识别完成",
-  "extractingFeatures": "正在提取特征...",
-  "matchingFortuneData": "正在匹配运势数据...",
-  "adLoadFailedFreeUnlock": "广告加载失败，这次直接为你免费解锁。",
-  "insufficientCookies": "幸运饼干不足",
-  "insufficientCookiesDesc": "你的幸运饼干不够。\n可以看广告免费查看！",
-  "usingTwoCookiesToast": "已使用 2 个幸运饼干解锁结果。",
-  "todaysFaceAnalysis": "今日面相分析",
-  "totalScoreWithPoints": "总分 {score} 分",
-  "@totalScoreWithPoints": {
-    "placeholders": {
-      "score": { "type": "int" }
-    }
-  },
-  "adLoadFailFreeAccess": "广告加载失败，这次直接为你免费解锁。",
-  "insufficientCookiesTitle": "幸运饼干不足",
-  "insufficientCookiesMessage": "你的幸运饼干不够。\n完成任务或看广告都能免费补充。",
-  "useCookiesSnackbar": "已使用 2 个幸运饼干解锁结果。",
-  "chooseMethodToViewResult": "想查看你脸上隐藏的运势\n请选择以下一种方式。",
-  "watchAdForFree": "看广告免费查看",
-  "viewResult": "查看结果",
-  "wealthLuck": "财运",
-  "loveLuck": "感情运",
-  "careerLuck": "事业运",
-  "healthLuck": "健康运",
-  "tojeongMonthlySpecial_1_0": "新年气象清明，计划推进会很顺利。",
-  "tojeongMonthlySpecial_1_1": "年初会出现贵人。好好珍惜缘分与人脉。",
-  "tojeongMonthlySpecial_1_2": "新的开始带来意想不到的机会，保持开放心态。",
-  "tojeongMonthlySpecial_1_3": "专注与毅力会带来突破性的进展。",
-  "tojeongMonthlySpecial_1_4": "过往的经验与智慧，会指引你应对新的挑战。",
-  "tojeongMonthlySpecial_2_0": "时机未到，先蓄力等待机会。",
-  "tojeongMonthlySpecial_2_1": "旧问题可能再度出现，正面处理会更轻松。",
-  "tojeongMonthlySpecial_2_2": "本月以耐心为王，观察与学习会有收获。",
-  "tojeongMonthlySpecial_2_3": "避免仓促决定，更好的时机很快到来。",
-  "tojeongMonthlySpecial_2_4": "今天的小步前进，会成为未来的大收获。",
-  "tojeongMonthlySpecial_3_0": "万物复苏，别犹豫，勇敢迎接挑战。",
-  "tojeongMonthlySpecial_3_1": "新的缘分可能开始，积极心态会带来好结果。",
-  "tojeongMonthlySpecial_3_2": "意想不到的领域正在成长，顺势而为。",
-  "tojeongMonthlySpecial_3_3": "你的能量会感染他人，用善意与勇气带头。",
-  "tojeongMonthlySpecial_3_4": "创意灵感涌现，把想法大胆说出来。",
-  "tojeongMonthlySpecial_4_0": "财运随暖意上升，努力会转化为实际回报。",
-  "tojeongMonthlySpecial_4_1": "合约与考试运佳，细致复盘会更稳。",
-  "tojeongMonthlySpecial_4_2": "事业稳定向上，保持现在的节奏就很好。",
-  "tojeongMonthlySpecial_4_3": "现在做财务规划，今年后续会收获更大。",
-  "tojeongMonthlySpecial_4_4": "有望出现互利合作，携手更容易成功。",
-  "tojeongMonthlySpecial_5_0": "家中和气带来稳定与喜悦。",
-  "tojeongMonthlySpecial_5_1": "对他人的善意，会以祝福的形式回到你身边。",
-  "tojeongMonthlySpecial_5_2": "平静与安宁围绕你，珍惜这段舒适时光。",
-  "tojeongMonthlySpecial_5_3": "真诚沟通能加深家人之间的连结。",
-  "tojeongMonthlySpecial_5_4": "你的内在光芒很强，会自然地鼓舞周围的人。",
-  "tojeongMonthlySpecial_6_0": "努力被看见，有机会迎来晋升或被表彰。",
-  "tojeongMonthlySpecial_6_1": "行动力很强，适合考虑扩展或职业转向。",
-  "tojeongMonthlySpecial_6_2": "领导力被需要，带着自信做主导。",
-  "tojeongMonthlySpecial_6_3": "重要目标近在咫尺，盯紧终点就能拿下。",
-  "tojeongMonthlySpecial_6_4": "新的职业视野正在打开，勇敢去探索。",
-  "tojeongMonthlySpecial_7_0": "热情带来成绩，大胆行动更容易达成目标。",
-  "tojeongMonthlySpecial_7_1": "出行中易遇贵人，也可能发现新机会。",
-  "tojeongMonthlySpecial_7_2": "适合换个环境，新的风景会让心情焕然一新。",
-  "tojeongMonthlySpecial_7_3": "你的干劲会吸引好结果，把目标定大一点。",
-  "tojeongMonthlySpecial_7_4": "能量很足，持续向前推进就对了。",
-  "tojeongMonthlySpecial_8_0": "耐心会得到回报，运势会慢慢打开。",
-  "tojeongMonthlySpecial_8_1": "旧问题会出现解法，靠你的智慧就能化解。",
-  "tojeongMonthlySpecial_8_2": "稳住节奏、坚持到底，困难终会过去。",
-  "tojeongMonthlySpecial_8_3": "复盘能带来清晰感，找到真正适合自己的方向。",
-  "tojeongMonthlySpecial_8_4": "远方传来好消息，准备迎接喜悦。",
-  "tojeongMonthlySpecial_9_0": "像丰收季一样，财运与感情都更充盈。",
-  "tojeongMonthlySpecial_9_1": "辛苦会得到超出预期的回报。",
-  "tojeongMonthlySpecial_9_2": "懂得感恩会吸引更多丰盛，也别忘了分享喜悦。",
-  "tojeongMonthlySpecial_9_3": "情绪满足感很高，好好享受爱与被爱。",
-  "tojeongMonthlySpecial_9_4": "成果甜美可见，值得为自己庆祝。",
-  "tojeongMonthlySpecial_10_0": "名望上升，更容易被人记住与认可。",
-  "tojeongMonthlySpecial_10_1": "学业/思考运佳，适合专注学习与研究。",
-  "tojeongMonthlySpecial_10_2": "专业能力被看见，勇敢表达你的观点。",
-  "tojeongMonthlySpecial_10_3": "本月学业或事业上的成功概率很高。",
-  "tojeongMonthlySpecial_10_4": "影响力正在变强，把它用在更有意义的地方。",
-  "tojeongMonthlySpecial_11_0": "适合沉淀与思考，为未来做准备。",
-  "tojeongMonthlySpecial_11_1": "财务趋于稳定，但避免高风险投资。",
-  "tojeongMonthlySpecial_11_2": "通过安静与冥想更容易找到内心的平和。",
-  "tojeongMonthlySpecial_11_3": "现在的战略布局，会让明年走得更顺。",
-  "tojeongMonthlySpecial_11_4": "相信直觉，它会带你避开风险、走向更稳的选择。",
-  "tojeongMonthlySpecial_12_0": "年末有意外好运，值得期待好消息。",
-  "tojeongMonthlySpecial_12_1": "长期努力迎来收尾成果，漂亮地画上句号。",
-  "tojeongMonthlySpecial_12_2": "这一年以高光收场，为自己的旅程感到骄傲。",
-  "tojeongMonthlySpecial_12_3": "旧门关闭，新门打开，带着期待迎接未来。",
-  "tojeongMonthlySpecial_12_4": "分享温暖会带来回馈，把节日的喜悦传出去。",
-  "todaysFaceFortune": "今日面相运势",
-  "detailedAnalysis": "详细分析",
-  "eyeInsight": "👁️ 眼（洞察）",
-  "noseWealth": "👃 鼻（财运）",
-  "mouthLateLuck": "👄 口（晚运）",
-  "overallAnalysisTitle": "整体分析",
-  "shareResultTitle": "今日面相结果",
-  "shareResultDesc": "AI 面相分析结果。\n{title}",
-  "@shareResultDesc": {
-    "placeholders": {
-      "title": { "type": "String" }
-    }
-  },
-  "shareResultTotalScore": "总分",
-  "shareResultWealth": "财运",
-  "shareResultLove": "感情运",
-  "shareResultCareer": "事业运",
-  "shareResultHealth": "健康运",
-  "shareResultText": "分享结果",
-  "collapseOptions": "收起选项",
-  "expandOptions": "更多选项",
-  "snoozeAlarm": "稍后再响",
-  "maxSnoozeCount": "最大贪睡次数",
-  "unlimited": "不限",
-  "exactAlarmFailMessage": "闹钟注册失败：未开启“精确闹钟”权限。",
-  "batteryOptimFailMessage": "闹钟注册失败：未允许忽略电池优化。",
-  "overlayFailMessage": "闹钟注册失败：未开启“在其他应用上层显示”。",
-  "loadingDelay": "加载延迟",
-  "previewFail": "预览失败",
-  "bgDefault": "默认背景",
-  "bgFortuneFriends": "福妮伙伴们",
-  "bgMongChuni": "梦春妮",
-  "bgPanChuni": "盼春妮",
-  "bgToChuni": "土春妮",
-  "bgHoChuni": "虎春妮",
-  "bgBear": "小熊",
-  "bgMoon": "月亮",
-  "bgSea": "海",
-  "bgBridge": "桥",
-  "bgRoad": "路",
-  "bgSky": "天空",
-  "bgMinimalGray": "极简灰",
-  "bgDarkMode": "暗色模式",
-  "bgSoftBlue": "柔和蓝",
-  "bgWarmBeige": "暖米色",
-  "dateFormatMdyE": "M月d日（E）",
-  "deleteAlarm": "删除闹钟",
-  "confirmDelete": "确认删除",
-  "yes": "是",
-  "no": "否",
-  "wealthLuckWithIcon": "💰 财运",
-  "loveLuckWithIcon": "❤️ 感情运",
-  "careerLuckWithIcon": "💼 事业运",
-  "healthLuckWithIcon": "💪 健康运",
-  "mouthFortune": "👄 口（晚运）",
-  "comprehensiveAnalysis": "综合分析",
-  "todaysFaceResult": "今日面相分析结果",
-  "faceAnalysisShareDesc": "AI 面相分析结果。\n{title}",
-  "@faceAnalysisShareDesc": {
-    "placeholders": {
-      "title": { "type": "String" }
-    }
-  },
+  "sajuFortune2025Byeong": "🔥 2025年 乙巳年 (木蛇): '激情洋溢的成就与竞争'\n\n2025年对你来说是‘正印’和‘比肩’能量进入的一年。就像天空中的太阳遇到了地面的热气，燃烧得更加炽热。你将获得强大的支持力量，并在自信的基础上毫不犹豫地推向目标。\n\n💼 [事业与商务]\n在可靠的助手或导师的帮助下，你将实现巨大的成长。对于考取证书或学术成就非常有利。与同事的协作闪耀，你将通过发挥领导力带领团队走向成功。但要警惕过度的竞争心可能会损害人际关系。\n\n💰 [财运]\n这是一个在与周围人分享信息的同时增加财富的时期。预期会有通过共同投资或合作获得的收入。但重要的是要维护实际利益，因为你可能会因自尊心或在意他人的目光而过度消费。\n\n❤️ [爱情与关系]\n随着与人们的聚会增多，友谊会加深。在恋爱关系中，像朋友般的舒适感变得更强。但需要适当的平衡，因为优先考虑朋友可能会导致与伴侣产生冲突。\n\n⚠️ [注意事项]\n关注血压或心脏健康等血液循环系统。同时，始终保持内心的平静，因为火爆脾气导致的冲动情绪可能会毁掉事情。",
+  "sajuFortune2025Jeong": "🔥 2025年 乙巳年 (木蛇): '在变革中寻找稳定与机遇'\n\n2025年对你来说是‘偏印’和‘劫财’能量进入的一年。就像蜡烛在风中摇曳，但最终照亮了周围并展现出它的存在。可能会出现意想不到的变化，但这将是你明智地克服它们并将其转化为机遇的一年。\n\n💼 [事业与商务]\n原创性的想法和直觉闪耀。你将瞄准别人没想到的利基市场，或在专业领域取得深厚成果。但与同事的竞争变得激烈，可能会有人试图抢夺成果，因此请注意安全维护和关系管理。\n\n💰 [财运]\n财运可能会有波动的一年。需要保守的资产管理，因为可能会产生意外开支或在投资中受损。但利用自身专业技能获得的收入将稳定进入。最好避免金钱交易。\n\n❤️ [爱情与关系]\n随着想法增加，恋爱中可能会变得被动。在恋爱关系中，很容易因小事感到失望，所以信任对方并以开放的心态对待很重要。通过独处时间充实内心也是个好方法。\n\n⚠️ [注意事项]\n警惕压力导致的神经系统不适或失眠。通过冥想或轻微运动管理情绪很重要，努力保持积极的心态而非消极的想法。",
+  "sajuFortune2025Mu": "⛰️ 2025年 乙巳年 (木蛇): '明智地强化内在基础的成熟之年'\n\n2025年对你来说是‘正官’和‘偏印’能量进入的一年。就像温暖的热气渗透进一座大山之下，包容万物。这将是增加自身深度同时保持社会荣誉的充实一年。\n\n💼 [事业与商务]\n你将升至组织内的负责职位，或者晋升机会将会到来。如果你重视原则并诚实工作，你将获得巨大的认可。同时，你在获取专业知识或研究任务方面取得优异成果。但需要灵活思考，因为你可能会因陷入刻板印象而拒绝变化。\n\n💰 [财运]\n稳定的收入是有保障的。诚实地储蓄和管理资产是有利的。房地产或文书方面的运势很好，因此值得考虑长远投资。但要避免因受周围诱惑影响而进行无理投资。\n\n❤️ [爱情与关系]\n你端庄的言行赢得了人们的信任。在恋爱关系中，这是互相尊重并发展成严肃关系的好时机。如果考虑结婚，现在制定具体计划也很好。\n\n⚠️ [注意事项]\n关注消化系统或皮肤健康。同时，练习听取周围建议并快速做出决定，因为你可能会因思虑过多而面临决策困境。",
+  "sajuFortune2025Gi": "🌾 2025年 乙巳年 (木蛇): '以责任感达成目标'\n\n2025年对你来说是‘偏官’和‘正印’能量进入的一年。就像雨后的阳光照耀在广阔的土地上，使庄稼茁壮成长。可能会有艰辛的过程，但这将是最终获得荣誉并达成目标的丰收年。\n\n💼 [事业与商务]\n工作强度可能会增加，可能会被赋予艰巨的任务。然而，你将通过技能和耐心克服困难，证明你作为领导者的素质。你将在长辈的帮助或支持下度过危机，并因此体会到巨大的成就感。\n\n💰 [财运]\n需要注意开支管理的一年。可能会有很多钱流出，如意外的税收或公共事业费用。但由于持之以恒的努力有望获得奖金或红利，诚实是招财的关键。\n\n❤️ [爱情与关系]\n负责任的形象对异性很有吸引力。在恋爱关系中，通过倾听彼此的辛劳并互相安慰，纽带会加深。但即使时间很短，也需要努力频繁沟通，因为你可能会因忙碌的日常生活而忽略伴侣。\n\n⚠️ [注意事项]\n警惕过劳导致的免疫力下降。通过规律的饮食和运动管理体力，并用积极的想法缓解压力非常重要。",
+  "sajuFortune2025Gyeong": "⚔️ 2025年 乙巳年 (木蛇): '获得荣誉的同时兼顾实际利益'\n\n2025年对你来说是‘正财’和‘偏官’能量进入的一年。就像坚硬的岩石被火加热，重生成为珍贵的宝剑。你将为自己的努力获得明确的回报，并在社会上证明自己的价值。\n\n💼 [事业与商务]\n你凭借结果导向的思维和执行力取得巨大成果。尤其在金融、管理和技术领域的才华获得认可。解决难题并获得荣誉的运势强劲，但责任也在增长，你可能会感到压力。相信自己，大胆前进吧。\n\n💰 [财运]\n财运非常好。除了稳定的收入，你还可以通过投资或副业获得实际利润。你将准确掌握金钱流向，并高效管理资产。但请克制为了荣誉而大肆挥霍的行为。\n\n❤️ [爱情与关系]\n以真诚可靠的形象吸引异性。在恋爱关系中，你以负责任的态度给对方安全感。在人际关系中，你可能会给人一种略显严厉的印象，所以偶尔进行一些柔和幽默的谈话会很好。\n\n⚠️ [注意事项]\n关注骨骼或关节健康，以及呼吸系统疾病。同时，以‘这样就足够了’的心态安抚自己，因为你可能会因完美主义倾向而苛责自己。",
+  "sajuFortune2025Sin": "💎 2025年 乙巳年 (木蛇): '在变革中闪耀智慧的一年'\n\n2025年对你来说是‘偏财’和‘正官’能量进入的一年。就像一颗精致的珠宝在灿烂的灯光下展现价值。这将是社会地位提升并伴随意外横财的愉快一年。\n\n💼 [事业与商务]\n商业嗅觉提升，捕捉新机遇的能力卓越。这是一个大胆挑战会转化为巨额利润的时期。在组织内部，你凭借理性的判断赢得信任，并抓住晋升或调动的机会。但要注意不要因过于关注结果而忽视过程。\n\n💰 [财运]\n这是一个招财的年份。触碰大额财富的机会（如意外的投资回报或继承）会出现。但由于开支也可能变得奢华，维持计划性的消费习惯很重要。\n\n❤️ [爱情与关系]\n你以华丽动人的外表成为社交聚会的主角。恋爱运势非常强劲，你可能会收到许多人的追求。在恋爱关系中，你们度过了激情而愉快的时光。是发展成严肃交往的好年份。\n\n⚠️ [注意事项]\n关注肺部健康或皮肤病。同时，始终保持谦虚，不要忘记体谅他人的心，因为你可能会因过度自信而显得傲慢。",
+  "sajuFortune2025Im": "🌊 2025年 乙巳年 (木蛇): '发挥智慧产生结果'\n\n2025年对你来说是‘伤官’和‘偏财’能量进入的一年。就像大河蜿蜒滋润着广阔的田野。这将是发挥你的才华和口才，获得巨额财富并扩大活动范围的充满活力的一年。\n\n💼 [事业与商务]\n表达能力提升，在营销或公关领域取得优异成果。是商业化你的想法或开拓新市场的极佳时机。对从事创造性工作的人来说将是最好的一年。但重要的是保持礼貌，因为可能会与上司产生摩擦。\n\n💰 [财运]\n财运变动活跃。用自己的技能赚钱的运势强劲，滚动大笔金钱的机会将会到来。但对于投机性投资需谨慎，只有抱着赚多少给多少的心态，财运才能长久维持。\n\n❤️ [爱情与关系]\n凭借过人的幽默感和魅力，身边总是围满了人。这是你可以享受愉快约会、在异性中人气很高的一年。在恋爱关系中，你通过多样化的约会注入活力。但要小心，哪怕是一个轻微的词语也可能引起误解。\n\n⚠️ [注意事项]\n关注肾脏或泌尿系统健康。同时，注意适当的休息和营养，因为体力可能会因广泛的活动范围而透支。",
+  "sajuFortune2025Gye": "💧 2025年 乙巳年 (木蛇): '真诚产生稳定成果的一年'\n\n2025年对你来说是‘食神’和‘正财’能量进入的一年。就像清澈的细雨滋润大地，为丰收做准备。这将是温暖的一年，你的努力稳步积累，并转化为稳定的财富和幸福。\n\n💼 [事业与商务]\n真诚成为最强大的武器的一年。你通过履行职责产生稳定的成果，并赢得同事的信任。是增长专业知识的好时机，你会通过喜欢的工作感受到回报。你可以在稳定的环境中步步为营地成长。\n\n💰 [财运]\n经济上从容稳定的一年。产生稳定的收入，你会感受到勤俭节约增加资产的乐趣。衣食无忧，整体生活充满富足。储蓄比无理的投资更有利。\n\n❤️ [爱情与关系]\n你以温厚的神情给伴侣带来舒适感。这是你们在细致体谅彼此的同时，培育美丽爱情的一年。如果是单身，你很有可能遇到沟通顺畅、价值观相似的伴侣。\n\n⚠️ [注意事项]\n关注胃部健康或饮食管理。偶尔通过给予新刺激来寻找活力会很好，因为你可能会因安于现状而变得懒惰。",
   "preparationForTomorrow": "明日准备",
   "howToMeetMoreLuck": "如何遇见更多好运",
   "enterName": "请输入姓名",
   "fortuneDateConfirm": "要查看 {date} 的运势吗？",
   "@fortuneDateConfirm": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "colorPurple": "紫色",
@@ -1032,13 +730,72 @@
   "dirSouthEast": "东南",
   "dirNorthWest": "西北",
   "dirSouthWest": "西南",
+  "general": "常规",
+  "darkMode": "深色模式",
+  "darkModeDescription": "开启深色模式，享受更舒适的视觉体验。",
+  "alarmSettings": "闹钟设置",
+  "privacySettings": "隐私设置",
+  "information": "信息",
+  "notice": "公告",
+  "weatherConditionSunny": "晴",
   "weatherConditionPartlyCloudy": "多云间晴",
+  "weatherConditionCloudy": "多云",
+  "weatherConditionFoggy": "雾",
   "weatherConditionDrizzle": "毛毛雨",
+  "weatherConditionRainy": "雨",
   "weatherConditionFreezingRain": "冻雨",
+  "weatherConditionSnowy": "雪",
   "weatherConditionSnowGrains": "雪粒",
   "weatherConditionRainShowers": "阵雨",
   "weatherConditionSnowShowers": "阵雪",
+  "weatherConditionThunderstorm": "雷暴",
+  "airQualityGood": "优",
+  "airQualityNormal": "良",
+  "airQualityBad": "差",
+  "airQualityVeryBad": "很差",
+  "locationUnknown": "未知位置",
+  "locationError": "定位错误",
+  "faq": "常见问题",
+  "sendFeedback": "发送反馈",
+  "feedbackDescription": "如果您在使用幸运闹钟时遇到任何不便或有建议的功能，请随时告知我们。\n您的宝贵意见将帮助我们提供更好的服务。",
+  "reportCopyright": "报告版权侵权",
+  "copyrightDescription": "如果您认为幸运闹钟内的内容侵犯了版权，请通过电子邮件举报。\n核实后我们将立即采取行动。",
+  "termsOfService": "服务条款",
+  "privacyPolicy": "服务条款与隐私政策\n\n1. 总则\n\n第1条（目的）\n本条款旨在规定“幸运闹钟”（以下简称“本服务”）所提供服务的使用条件与流程，以及用户与开发者的权利、义务与责任等事项。\n\n第2条（隐私政策）\n\n1. 个人信息收集项目与方式\n本服务无需注册即可使用，不会在独立服务器上保存或收集用户的个人信息。\n但在使用过程中，以下信息可能会在设备上生成并本地保存：\n- 闹钟设置、任务完成记录、幸运饼干获取记录等\n\n2. 设备权限使用说明\n为提供服务，本服务仅在必要范围内使用以下权限：\n- 通知（必需）：用于闹钟运行及幸运饼干通知\n- 精确闹钟与电池优化排除（必需）：用于确保在省电模式下闹钟也能准时响铃\n- 在其他应用上层显示（必需）：用于在锁屏或使用其他应用时显示闹钟界面\n- 相机（可选）：仅用于“物体拍摄”任务；拍摄图片仅在设备上处理，不会上传至服务器\n\n3. 广告服务与数据处理\n为免费提供服务，本服务使用 Google AdMob 投放广告。\nGoogle 可能会为广告个性化设置收集广告标识符（ADID）等非个人身份信息。\n- Google 隐私政策：https://policies.google.com/privacy\n\n第3条（数据存储与删除）\n本服务为本地应用，数据存储在用户设备中。\n如删除应用，设备中保存的所有数据（闹钟、任务记录等）将立即删除且无法恢复。\n\n第4条（免责声明）\n1. 本服务提供的运势信息仅供娱乐参考，不保证其准确性或可靠性。\n2. 因设备设置变更（关闭通知、启用电池优化等）或系统错误导致闹钟未响，开发者不承担责任。\n\n第5条（联系方式）\n如有任何问题或意见，请通过以下邮箱联系我们：\n邮箱：seriessnap.co@gmail.com",
+  "alarmOptimization": "闹钟运行优化",
+  "allOptimizationsCompleted": "所有设置已优化。",
+  "optimizationNeeded": "为了确保闹钟准时响铃，需要进行必要设置。",
+  "optimizationDescription": "受系统设置影响，闹钟可能会延迟或无法响铃。请允许以下所有权限。",
+  "allowNotificationPermission": "允许通知",
+  "notificationPermissionDescription": "用于在闹钟响铃及运势更新时提醒您。",
+  "excludeBatteryOptimization": "电池优化排除",
+  "batteryOptimizationDescription": "防止系统为省电而延迟闹钟响铃。",
+  "allowExactAlarm": "允许精确闹钟",
+  "exactAlarmDescription": "确保闹钟在设定时间准时触发。",
+  "drawOverOtherApps": "在其他应用上层显示",
+  "overlayDescription": "即使在锁屏或使用其他应用时也能显示闹钟界面。",
+  "allSettingsCompleted": "所有设置已完成。",
   "allowAllItems": "请开启所有权限。",
+  "manualSettingsInfo": "您可以在系统设置菜单中随时管理这些权限。",
+  "takePhoto": "拍照",
+  "selectPhoto": "选择照片",
+  "selectAlarmBackground": "选择闹钟背景",
+  "defaultLabel": "默认",
+  "howToAdd": "如何添加",
+  "addAssetInstructions": "将图片放入 assets/images/ 文件夹并在 pubspec.yaml 中注册。",
+  "ringingNow": "闹钟响铃中",
+  "setTime": "设置时间",
+  "repeatDays": "重复日期",
+  "repeatDaily": "每天重复",
+  "snoozeSettings": "贪睡设置",
+  "wakeUpAlarm": "起床闹钟",
+  "daySun": "日",
+  "dayMon": "一",
+  "dayTue": "二",
+  "dayWed": "三",
+  "dayThu": "四",
+  "dayFri": "五",
+  "daySat": "六",
   "daySunFull": "星期日",
   "dayMonFull": "星期一",
   "dayTueFull": "星期二",
@@ -1046,10 +803,31 @@
   "dayThuFull": "星期四",
   "dayFriFull": "星期五",
   "daySatFull": "星期六",
+  "missionRewardEarned": "太棒了！您已完成今日的5个任务，获得1个幸运饼干！",
+  "missionRewardEarnedWithCount": "干得漂亮！您今天完成了{missions}个任务，获得{cookies}个幸运饼干！",
+  "@missionRewardEarnedWithCount": {
+    "placeholders": {
+      "missions": {
+        "type": "int"
+      },
+      "cookies": {
+        "type": "int"
+      }
+    }
+  },
+  "daysCount": "{count}天",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "user": "用户",
   "member": "会员",
   "manageSajuInfo": "管理四柱信息",
   "freeCharge": "免费补充",
-  "fortunePass": "Fortune Pass",
+  "fortunePass": "福气通行证",
   "unlimitedNotSubscribed": "未订阅（无法使用不限次数）",
   "unlimitedInUse": "不限次数使用中",
   "subscribe": "订阅",
@@ -1058,10 +836,13 @@
   "customerCenter": "客服中心",
   "noNewNotifications": "暂无新通知。",
   "noPurchaseHistory": "暂无购买记录。",
+  "none": "无",
   "deleteConfirmMessage": "要删除“{title}”吗？",
   "@deleteConfirmMessage": {
     "placeholders": {
-      "title": { "type": "String" }
+      "title": {
+        "type": "String"
+      }
     }
   },
   "delete": "删除",
@@ -1083,7 +864,9 @@
   "adjustThickness": "调整{label}粗细",
   "@adjustThickness": {
     "placeholders": {
-      "label": { "type": "String" }
+      "label": {
+        "type": "String"
+      }
     }
   },
   "sticker": "贴纸",
@@ -1121,6 +904,31 @@
   "content": "内容",
   "selectTime": "选择时间",
   "noTime": "不设置时间",
+  "minutesLater": "{minutes}分钟后",
+  "@minutesLater": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "countLabel": "次数",
+  "timesCount": "{count}次 (共{count}次)",
+  "@timesCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "wakeUpMission": "起床任务",
+  "alarmSound": "闹钟声音",
+  "gradualVolume": "音量渐强",
+  "vibration": "震动",
+  "alarmNameAndBackground": "闹钟名称和背景",
+  "customStyle": "自定义样式",
+  "alarmName": "闹钟名称",
+  "enterAlarmName": "请输入闹钟名称",
   "routineSummary": "日程概览",
   "alarmOn": "闹钟已开启",
   "alarmOff": "闹钟已关闭",
@@ -1130,16 +938,112 @@
   "manageItemDescription": "管理你的日程与备忘录条目。",
   "noTitle": "无标题",
   "selectTitleColor": "选择标题颜色",
+  "save": "保存",
+  "missionNone": "无任务",
+  "missionSnap": "物体拍摄",
+  "missionMath": "计算",
+  "missionFortune": "运势",
+  "missionShake": "摇晃",
+  "missionFortuneCatch": "运势捕捉",
+  "missionNoDescription": "无任务直接响铃。",
+  "missionCameraDescription": "按顺序拍摄指定物品以关闭闹钟。",
+  "missionMathDescription": "解决数学题以关闭闹钟。",
+  "missionFortuneDescription": "已选择运势任务。",
+  "missionShakeDescription": "摇晃手机以关闭闹钟。",
+  "missionFortuneCatchDescription": "抓住移动的 Fortuni！",
+  "missionWalk": "走路",
+  "missionWalkDescription": "走路即可关闭闹钟！",
+  "missionFaceDescription": "将脸保持在画面中5秒。",
+  "walkStepCount": "目标步数",
+  "walkSteps": "{count}步",
+  "@walkSteps": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "missionNumberOrder": "数字顺序",
+  "missionNumberOrderDescription": "按顺序点击1到9。",
+  "missionNumberOrderGuide": "下一个：{nextNumber}",
+  "@missionNumberOrderGuide": {
+    "placeholders": {
+      "nextNumber": {
+        "type": "int"
+      }
+    }
+  },
+  "missionHiddenButton": "位置记忆",
+  "missionHiddenButtonDescription": "按顺序记住亮起的方块，并在10秒内点击它们。",
+  "missionHiddenButtonDifficulty": "Δ{delta}",
+  "@missionHiddenButtonDifficulty": {
+    "placeholders": {
+      "delta": {
+        "type": "int"
+      }
+    }
+  },
+  "missionTapSprint": "连点冲刺",
+  "missionTapSprintDescriptionShort": "连点填满进度条。",
+  "missionTapSprintDescription": "点击{goalTaps}次以上填满进度条。",
+  "@missionTapSprintDescription": {
+    "placeholders": {
+      "goalTaps": {
+        "type": "int"
+      }
+    }
+  },
+  "missionTapSprintTapHere": "点击",
+  "missionTapSprintHint": "快速增长，停下会下降。",
+  "missionLeftRight": "左 / 右",
+  "missionLeftRightDescriptionShort": "按提示选择左或右。",
+  "missionLeftRightDescription": "连续答对{targetStreak}次。",
+  "@missionLeftRightDescription": {
+    "placeholders": {
+      "targetStreak": {
+        "type": "int"
+      }
+    }
+  },
+  "missionLeftRightPromptLeft": "点击左边",
+  "missionLeftRightPromptRight": "点击右边",
+  "left": "左",
+  "right": "右",
+  "missionHintInactivity": "停止2分钟会重置。",
+  "fortuneCatchScore": "得分：{score}",
+  "@fortuneCatchScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "fortuneCatchGoal": "目标：100",
+  "fortuneCatchGoalDetail": "（捕捉：{count}/{min}）",
+  "@fortuneCatchGoalDetail": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
+    }
+  },
   "fortuneCatchTime": "时间：{seconds}s",
   "@fortuneCatchTime": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "fortuneCatchBest": "最佳：{seconds}s",
   "@fortuneCatchBest": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "fortuneCatchAngryHint": "避开生气的福尼，避免扣分！",
@@ -1147,27 +1051,60 @@
   "fortuneCatchPointMinus": "扣除 {points} 分",
   "@fortuneCatchPointMinus": {
     "placeholders": {
-      "points": { "type": "int" }
+      "points": {
+        "type": "int"
+      }
     }
   },
   "fortuneCatchPointPlus": "+{points} 分",
   "@fortuneCatchPointPlus": {
     "placeholders": {
-      "points": { "type": "int" }
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "fortuneCatchCombo": "{combo} 连击！",
+  "@fortuneCatchCombo": {
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "difficulty": "难度",
+  "difficultyEasy": "简单",
+  "difficultyNormal": "普通",
+  "difficultyHard": "困难",
+  "problemCount": "题目数量",
+  "problemsCount": "{count}题",
+  "@problemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
     }
   },
   "missionAnalyzing": "任务 {index}/{total} 分析中…",
   "@missionAnalyzing": {
     "placeholders": {
-      "index": { "type": "int" },
-      "total": { "type": "int" }
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "missionPointObject": "任务 {index}/{total}：请对准提示中的物品。",
   "@missionPointObject": {
     "placeholders": {
-      "index": { "type": "int" },
-      "total": { "type": "int" }
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "missionPointSink": "请对准水槽。",
@@ -1183,11 +1120,22 @@
   "missionSuccessWithCount": "{completed}/{total} 成功！",
   "@missionSuccessWithCount": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "missionMatchSuccess": "{total}/{total} 成功！匹配完成！",
+  "@missionMatchSuccess": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "escape": "逃脱",
   "pointObjectClearly": "请清晰对准物体",
   "matchingSuccess": "匹配成功",
@@ -1196,7 +1144,9 @@
   "missionSnoozeMessage": "任务成功！不过将按设置在 {minutes} 分钟后再次响铃。",
   "@missionSnoozeMessage": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
   "showFace": "请露出脸",
@@ -1208,6 +1158,43 @@
   "wrongAnswerRetry": "不对哦，再试一次。",
   "correct": "正确！",
   "walkToDismiss": "请拿着手机走动",
+  "shakeCount": "摇动次数",
+  "shakeTimes": "{count}次",
+  "@shakeTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tapTimes": "{count} 次点击",
+  "@tapTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "missionNumber": "任务 {number}",
+  "@missionNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "soundBirds": "鸟鸣声",
+  "shakeCountLabel": "摇晃次数",
+  "missionIndex": "任务 {index}",
+  "@missionIndex": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "ringtoneSelect": "选择铃声",
+  "vibrationSelect": "选择震动模式",
   "selectMissionTitle": "选择闹钟任务",
   "ringtoneCategoryStandard": "标准",
   "ringtoneCategoryCalm": "舒缓",
@@ -1222,30 +1209,144 @@
   "deleteCount": "删除 {count}",
   "@deleteCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "deleteSelectedImagesConfirm": "确定要删除 {count} 张图片吗？\n此操作无法撤销。",
   "@deleteSelectedImagesConfirm": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
+  "classicAlarm": "经典闹钟",
+  "digitalAlarm": "数字闹钟",
+  "birdsSound": "鸟鸣声",
+  "wavesSound": "海浪声",
   "cuckooClock": "布谷钟",
   "calmAlarm": "舒缓闹钟",
   "doorKnock": "敲门声",
-  "earlySunrise": "清晨日出",
-  "goodMorningSound": "早安",
-  "inAHurry": "匆忙",
-  "lovingYou": "爱着你",
-  "sirenSound": "警报声",
-  "swingingSound": "摇摆",
+  "earlySunrise": "清晨日出 (Early Sunrise)",
+  "goodMorningSound": "早安 (Good Morning)",
+  "inAHurry": "匆忙 (In a Hurry)",
+  "lovingYou": "爱着你 (Loving You)",
+  "sirenSound": "警报声 (Siren)",
+  "swingingSound": "摇摆 (Swinging)",
   "telephoneBusy": "电话忙音",
+  "shortVibration": "短促重复",
+  "longVibration": "长震动重复",
+  "heartbeatVibration": "心跳震动",
+  "sosVibration": "SOS",
+  "quickVibration": "快速跳动",
+  "exactAlarmPermissionDesc": "为了在准确时间响铃，需要“日程与提醒”权限。",
+  "batteryOptimizationPermissionDesc": "为了确保闹钟准时，需要关闭电池优化。",
+  "overlayPermissionDesc": "为了在响铃时显示任务界面，需要“在其他应用上层显示”权限。",
+  "cameraMissionFirstImageError": "请至少设置第一张任务图片。",
   "retry": "重试",
+  "exactAlarmPermissionFail": "闹钟设置失败。需要开启准确闹钟权限。",
+  "batteryOptimizationPermissionFail": "闹钟设置失败。需要关闭电池优化。",
+  "overlayPermissionFail": "闹钟设置失败。需要开启“在其他应用上层显示”权限。",
+  "unknownAlarmError": "闹钟设置失败。发生未知错误。",
+  "resetTooltip": "重置",
+  "errorLoadingAlarm": "无法加载闹钟信息。",
+  "alarmNotFound": "未找到闹钟信息。",
+  "repeatAlarmCount": "重复闹钟 ({current}/{max})",
+  "@repeatAlarmCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "turnOffAlarm": "关闭闹钟",
+  "startMission": "开始任务",
+  "alarmSnooze": "闹钟延后",
+  "snoozeMinutesUnlimited": "{minutes} 分钟（不限次数）",
+  "@snoozeMinutesUnlimited": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "snoozeMinutesCount": "{minutes} 分钟（{current}/{total}）",
+  "@snoozeMinutesCount": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ringtone_fluttering_day": "心动的一天 (Fluttering Day)",
+  "ringtone_cozy_day": "温暖的一天 (Cozy Day)",
+  "ringtone_sensible_day": "理性的一天 (Sensible Day)",
+  "ringtone_play_with_me": "和我玩 (Play with Me)",
+  "ringtone_refreshing_day": "清爽的一天 (Refreshing Day)",
+  "ringtone_new_beginning": "新的开始 (New Beginning)",
+  "ringtone_self_love": "爱自己 (Self Love)",
+  "cherry_stained_finger": "樱桃渍手指 (Cherry Stained Finger)",
+  "dancing_in_the_stars": "星间舞动 (Dancing In The Stars)",
+  "nice_day": "美好的一天 (Nice Day)",
+  "fortuneTitle": "查看运势",
+  "fortuneMessage": "查看您的运势结果\n并获得隐藏的礼物！",
+  "fortuneAdButton": "观看广告并查看结果",
+  "fortuneLoadingMessage": "体验占卜师特别的塔罗牌解读。",
+  "fortuneAnalyzing": "正在分析您选择的塔罗牌... {progress}%",
+  "@fortuneAnalyzing": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      }
+    }
+  },
+  "fortuneSelectTitle": "思考今天的能量\n并选择3张牌。",
+  "fortuneSelectTitleDate": "思考 {month}月{day}日的能量\n并选择3张牌。",
+  "@fortuneSelectTitleDate": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "fortuneNewYearButton": "查看 2026 年新年运势",
+  "loveFortune": "爱情运",
+  "wealthFortune": "财运",
+  "successFortune": "成功运",
+  "fortuneResultTitle": "这是您今天的运势结果。",
+  "fortuneResultTitleDate": "{year}年{month}月{day}日的运势",
+  "@fortuneResultTitleDate": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      }
+    }
+  },
+  "startDayButton": "开始新的一天",
   "tarotName0": "愚者",
   "tarotName1": "魔术师",
   "tarotName2": "女祭司",
-  "tarotName3": "皇后",
+  "tarotName3": "女皇",
   "tarotName4": "皇帝",
   "tarotName5": "教皇",
   "tarotName6": "恋人",
@@ -1264,16 +1365,299 @@
   "tarotName19": "太阳",
   "tarotName20": "审判",
   "tarotName21": "世界",
-  "tarotKeywords1": "创造力、意志、能力、实现、灵活",
-  "tarotDescription1": "魔术师身披红袍，一手指天、一手指地，象征将灵感落地成现实。桌上摆着权杖、圣杯、宝剑与金币，意味着你早已具备达成目标所需的工具与能力。",
-  "tarotLoveMeaning1": "魅力值拉满的一天，更容易被人注意与喜欢。若有心动对象，真诚与机智会推动关系升温。",
-  "tarotLoveDetail1": "当你的自信与才华闪光时，机会也会跟着出现。喜欢的人就大胆靠近，轻松幽默的交流会让对方更愿意靠近你。单身者容易迎来邀约；有伴者适合主动规划约会或制造小惊喜，让感情更有温度。",
-  "tarotWealthMeaning1": "适合把想法变现的一天。将计划落地，会带来实际的收益回报。",
-  "tarotWealthDetail1": "知识、技能与创意都可能转化为金钱。除了固定收入，也可以尝试副业或自由接单。你在判断与规划上更容易命中重点，适合做预算、配置资金或梳理长期理财计划。",
-  "tarotSuccessMeaning1": "能力容易被看见与认可。想做的事，今天适合真正开始行动。",
-  "tarotSuccessDetail1": "你会更像舞台中央的主角：遇到问题也能用机智与沟通化解。无论是重要汇报、新项目还是考试准备，只要你愿意站出来，就更容易拿到好结果。相信自己，稳稳把事情做完。",
+  "tarotKeywords0": "新的开始, 冒险, 纯真, 自由, 鲁莽",
+  "tarotDesc0": "愚者身穿华丽的衣服，站在悬崖边缘，目光却望向远方，充满希望。一只小狗跟在他身后，仿佛在吠叫提醒。这象征着不考虑现实风险的纯粹热情和新旅程的开始。",
+  "tarotLoveMeaning0": "可能会有一段意想不到的新恋情，或者是一场一见钟情的命中注定的相遇。",
+  "tarotLoveDetail0": "这是一个你可以像孩子一样以纯真之心开始恋爱的时期。忘掉过去所有的伤痛或复杂的条件，忠于当下的感受。",
+  "tarotWealthMeaning0": "新的投资机会或商业项目可能会引起你的注意。这是一个在不被金钱束缚、快乐工作时会有收益的时期。",
+  "tarotWealthDetail0": "这是一个在财务上开启新机会的时期。如果你投资于别人没尝试过的新领域或创意项目，可能会获得意想不到的结果。",
+  "tarotSuccessMeaning0": "这是开始新项目或跳槽到完全不同领域的好时机。",
+  "tarotSuccessDetail0": "如果你有正在准备的事情，请大胆迈出第一步。这是离开熟悉环境、接受新挑战的最合适时机。",
+  "tarotKeywords1": "创造, 意志, 能力, 实现, 多才多艺",
+  "tarotDesc1": "魔术师身穿红袍，一手指天，一手拍地，将上天的力量带到人间。桌上有四种元素（权杖、圣杯、宝剑、钱币），意味着你已经拥有了实现目标的所有工具和能力。",
+  "tarotLoveMeaning1": "这是你的魅力达到顶峰、受到异性欢迎的时期。",
+  "tarotLoveDetail1": "这是利用你的魅力和才华俘获心仪对象之心的绝佳机会。如果你有喜欢的人，请不要犹豫，积极靠近。你的幽默感和机智的谈话会令对方感到愉快，你将能够主导这段关系的发展。请保持自信，大胆追求你的真爱。",
+  "tarotWealthMeaning1": "这是利用你的能力和技能创造收入的最佳时机。",
+  "tarotWealthDetail1": "这是一个你的知识、技能和想法变成金钱的时期。不要满足于只领工资，尝试通过副业或兼职创造额外收入。你的创意策划或销售能力将得到卓越发挥，有望获得超出预期的收益。",
+  "tarotSuccessMeaning1": "你的工作能力得到卓越发挥并获得周围人的认可。",
+  "tarotSuccessDetail1": "在职场或学业中，你可以充分发挥自己的能力并脱颖而出。无论遇到什么问题，你都能凭借自己的机智和才干将其解决，同事和上司都会认可你为“能者”。请相信自己，堂堂正正地展示你的实力。",
+  "tarotKeywords2": "直觉, 智慧, 神秘, 秘密, 柏拉图式",
+  "tarotDesc2": "坐在神秘面纱后的女祭司手中拿着智慧卷轴，在黑白柱子之间保持平衡，象征着深刻的洞察力。",
+  "tarotLoveMeaning2": "意味着精神交流很重要的柏拉图式爱情。",
+  "tarotLoveDetail2": "比起肉体魅力，你更倾向于被精神深度和能够交流的人吸引。你敏锐的直觉能让你洞察对方的心思，即使不言语也能相互理解。但过于谨慎的态度可能会导致误解，偶尔也请坦率地表达你的心意。",
+  "tarotWealthMeaning2": "现在是保护资产、观察局势的时候，而不是积极投资。",
+  "tarotWealthDetail2": "这是一个你应该冷静分析和研究市场局势，而不是追求眼前利益的时期。现在是播种和等待的阶段，不要因为暂时没有收益而感到焦虑。考虑房地产或股票等长期投资视角会更合适。",
+  "tarotSuccessMeaning2": "你可以在研究、专业领域取得好成绩。",
+  "tarotSuccessDetail2": "比起追求华丽的表面成就，你应该专注于充实内在和提高技能。在研究、策划、分析等需要深思熟虑的工作中，你能取得卓越成果。你睿智且谨慎的态度将在关键时刻成为解决问题的钥匙。",
+  "tarotKeywords3": "丰收, 母亲, 自然, 美丽, 成果",
+  "tarotDesc3": "皇后安详地坐在丰饶的大自然中，是物质和精神富足的象征。",
+  "tarotLoveMeaning3": "这是一个爱意满溢、关系进一步深化的时期。",
+  "tarotLoveDetail3": "你的女性化（或包容性）魅力达到极致，对异性非常有吸引力。恋爱中的人会因为给予对方温暖的关怀而获得巨大的爱，甚至可能谈及婚嫁。单身的人可以通过打扮或改变风格来显著提升恋爱运。",
+  "tarotWealthMeaning3": "这是一个物质上非常富足和稳定的时期。",
+  "tarotWealthDetail3": "财运正盛。付出会有回报，甚至超出预期，可以享受经济上的从容。你可能会在事业或投资中获得惊喜收益，或者收到意想不到的奖金或礼物。与周围人分享这份富足的能量，会带来更大的幸运。",
+  "tarotSuccessMeaning3": "进行中的项目进展顺利，会取得好成果。",
+  "tarotSuccessDetail3": "这是工作成果显现的时期。项目圆满完成，你可能获得奖金或晋升机会。特别是在需要审美或创造力的领域，你的才华将大放异彩。保持从容的心态并享受过程，反而会带来更好的结果。",
+  "tarotKeywords4": "权威, 结构, 稳定, 领导力, 责任感",
+  "tarotDesc4": "皇帝坐在坚硬的石座上，身穿盔甲，象征着坚定的支配力和秩序。",
+  "tarotLoveMeaning4": "意味着与可靠、有责任感的对象建立稳定的恋爱关系。",
+  "tarotLoveDetail4": "比起热烈的激情，基于信任和稳定的关系会持续下去。对方会给予你坚实的依靠和引导。不过请注意不要过度控制对方或过于固执。单身的人有机会遇到有能力且有社会地位的对象。",
+  "tarotWealthMeaning4": "通过系统的资产管理可以积累稳定的财富。",
+  "tarotWealthDetail4": "在理财方面，建立原则和计划非常重要。比起追求暴利的投机，投资于储蓄、房地产等安全可靠的资产来夯实基础会更好。你现实的判断力和执行力将极大地帮助你积累财富。",
+  "tarotSuccessMeaning4": "有晋升或担任领导职务的运气。",
+  "tarotSuccessDetail4": "你在组织中的地位变得稳固。你的领导力获得认可，可能晋升为团队负责人或经理，甚至被委以重要项目的总负责人。凭借理性和冷静的判断处理业务，你将赢得老板的信任。",
+  "tarotKeywords5": "传统, 教导, 信念, 建议, 调解",
+  "tarotDesc5": "教皇重视社会规范和传统，是凭借智慧建议引导人们的精神导师。",
+  "tarotLoveMeaning5": "基于信任和尊重的严肃且健康的交往将持续。",
+  "tarotLoveDetail5": "比起轻率的交往，你更倾向于以结婚为前提的严肃恋爱。在相亲或健康的聚会中你可能遇到良缘。如果恋人之间有矛盾，请向长辈或前辈寻求建议，他们的睿智会极大地帮助关系恢复。",
+  "tarotWealthMeaning5": "传统且安全的理财方式较好。",
+  "tarotWealthDetail5": "比起冒险的投资，应将稳定性放在首位。利用银行储蓄或保险等传统金融产品会更合适。寻求专家的咨询或保持诚实透明的资金交易是守护你信用和财产的途径。",
+  "tarotSuccessMeaning5": "契约、合作、协作关系将圆满达成。",
+  "tarotSuccessDetail5": "比起独自解决问题，寻求周围的帮助是明智的。向同事或上司等前辈寻求建议，往往能出乎意料地轻松找到解决方案。遵守公司规章制度是获得好评的捷径，也是签订重要合同的好运期。",
+  "tarotKeywords6": "爱情, 和谐, 选择, 结合, 伙伴关系",
+  "tarotDesc6": "在温暖的太阳下，亚当和夏娃正接受天使的祝福。这象征着灵魂的结合与重要的选择。",
+  "tarotLoveMeaning6": "这是爱情开花结果的最佳时期之一。",
+  "tarotLoveDetail6": "令人心跳加速的浪漫正等待着你。与好感对象迅速接近，感受深刻的共鸣。如果你打算表白，成功几率非常高。但请记住，比起被瞬间的诱惑冲昏头脑，选择真心所属的方向才是明智之举。",
+  "tarotWealthMeaning6": "比起独自一人，合作时财运会上升。",
+  "tarotWealthDetail6": "与志同道合的人一起共事会产生协同效应，增加经济利益。如果有合作建议，请积极考虑。这是一个通过与人沟通获得有益投资信息的时期。不过请注意调节娱乐支出，避免过度消费。",
+  "tarotSuccessMeaning6": "这是团队合作大放异彩的时期。",
+  "tarotSuccessDetail6": "与同事或合作伙伴默契十足，工作进行得非常愉快。比起独自工作，在团队项目中你能取得更好的成果，圆融的人际关系将成为成功的关键。如果你选择自己真心热爱的工作，将会获得无悔的结果。",
+  "tarotKeywords7": "胜利, 意志, 前进, 征服, 移动",
+  "tarotDesc7": "坐在战车上的年轻国王手持指挥棒，以坚定的意志向着目标冲锋，势不可挡。",
+  "tarotLoveMeaning7": "积极的爱情攻势会取得成功的时期。",
+  "tarotLoveDetail7": "是时候为了争取爱情而冲锋了。不要犹豫，坦率而堂堂正正地表达你的心意，即使有竞争者也能胜出。如果处于暧昧阶段，最好由你来主导并明确关系。充满活力的约会或共同旅行将加深你们的感情。",
+  "tarotWealthMeaning7": "为了达到目标收益，需要积极行动的时期。",
+  "tarotWealthDetail7": "为了实现财务目标，需要强大推进力的时期。不要犹豫，抓住机会果断决策。集中精力于短期见效的项目会更有利，这是一个多跑动就能多出业绩的运势。虽然可能会有与移动相关的支出，但这将是对新机会的投资。",
+  "tarotSuccessMeaning7": "在竞争中获胜并夺取目标的运气。",
+  "tarotSuccessDetail7": "预见将达成明确的目标，如晋升、合格、签约成功等。竞争越激烈，你的斗志就越旺盛，最终将夺得胜利。即使遇到障碍，你正面突破的身姿也会给周围留下深刻印象。在出差或移动较多的业务中，你将发挥卓越能力。",
+  "tarotKeywords8": "耐心, 勇气, 内在力量, 包容, 柔中带刚",
+  "tarotDesc8": "身穿白衣的女子正温柔地抚摸着狮子的嘴，这象征着通过精神力量和耐心而非武力来驯服猛兽。",
+  "tarotLoveMeaning8": "这是一个需要包容力去接受和理解对方本来面貌的时期。",
+  "tarotLoveDetail8": "现在的爱情需要耐心和智慧。以宽大的胸怀接纳对方的缺点或牢骚时，关系会得到发展。你需要以温柔的态度引导对方，这种柔中带刚的姿态至关重要。如果你能持之以恒地守护在旁，你的真心最终会叩开对方的心扉。",
+  "tarotWealthMeaning8": "持之以恒的储蓄和健康的消费习惯是积累财富的秘诀。",
+  "tarotWealthDetail8": "财运正缓慢上升。即使现在没有大笔资金进入，也不要失望，坚持管理资产，未来会积少成多。在投资方面，不要因为短期的波动而患得患失，保持定力会更有利。克制自己的冲动消费欲望是通往财富的捷径。",
+  "tarotSuccessMeaning8": "即使遇到困难的课题或挑剔的上司，也能智慧地应对。",
+  "tarotSuccessDetail8": "虽然可能承担艰巨的项目或挑剔的任务，但你有足够的底气去解决它。你外柔内刚，凭借内在强大的意志一个个克服难关。你冷静解决问题的样子将赢得周围人的深厚信任。",
+  "tarotKeywords9": "反省, 孤独, 探索, 智慧, 休息",
+  "tarotDesc9": "在黑暗的雪山上，一位老人手持灯火独自站立，倾听内在的声音并探求真理。",
+  "tarotLoveMeaning9": "这是一个需要独处时间或深度思考爱情的时期。",
+  "tarotLoveDetail9": "比起活跃的恋爱，现在更需要时间去反思自我。不要为了缓解孤独而随意约会，请深思自己真正想要的爱情是什么。即使有恋人，暂时保持距离、拥有各自的空间，反而有助于看清关系的本质。",
+  "tarotWealthMeaning9": "金钱活动可能会有些萎缩。",
+  "tarotWealthDetail9": "在财富方面应采取保守态度。现在是守护资金比增加资金更重要的时期，仔细检查当前资产并堵住资金漏洞至关重要。相比之下，将费用支出在学习技能或提升自我价值上，是未来获得更大收益的极佳投资。",
+  "tarotSuccessMeaning9": "在深入研究专业知识或技术的领域会取得成果。",
+  "tarotSuccessDetail9": "在研究、策划、开发等需要独自深入钻研的工作中能取得卓越成果。这是一个默默积累实力的时期，专注于业务本质而非职场人际关系会更有利。如果遇到无法解决的问题，请寻找经验丰富的导师寻求建议。",
+  "tarotKeywords10": "命运, 变化, 机会, 循环, 转折点",
+  "tarotDesc10": "巨大的命运之轮正在转动，宣告着不可避免的命运流向和新周期的开始。四角有象征四元素的天使正在看书，意味着智慧与规律。",
+  "tarotLoveMeaning10": "命运般的邂逅正等待着你。",
+  "tarotLoveDetail10": "像电影一样命运般的爱情会找上你。可能会发生偶然相遇、意外重逢等戏剧性事件，请保持心门敞开。单身的人可能遇到一见钟情的对象，恋爱中的人则会迎来关系更进一步的契机。请不要错过当前的大好趋势。",
+  "tarotWealthMeaning10": "财运流向正在变好。",
+  "tarotWealthDetail10": "幸运女神正在向你微笑。意想不到的金钱进入，或投资产生收益，财运呈上升曲线。资金周转变得顺畅，你需要果断抓住机会。不过运气总是循环往复的，在财源广进时也别忘了为未来储蓄的智慧，以便在周期变化时保持从容。",
+  "tarotSuccessMeaning10": "形势对你有利。",
+  "tarotSuccessDetail10": "这是将成为人生转折点的重要时期。停滞的事情变得顺畅，周围情况向有利于你的方向发展。晋升或跳槽等变化的机会将成为带你走向更高处的上升气流。顺势而为并勇敢抓住新机遇，会带来意想不到的好结果。",
+  "tarotKeywords11": "公正, 平衡, 责任, 真理, 因果报应",
+  "tarotDesc11": "身穿红衣的审判官右手持剑，左手持天平，进行客观且冷静的判断。这象征着对行为负责和维护正义。",
+  "tarotLoveMeaning11": "这是一段理性先于感情的关系。",
+  "tarotLoveDetail11": "现在是需要理性判断而非感情用事的时期。请反思你与对方的关系是否平衡，你是否付出了太多或者只是一味索取。如果你在考虑结婚，可能会仔细权衡对方的条件和背景。坦诚公正的对话将是改善关系的良药。",
+  "tarotWealthMeaning11": "在金钱交易或契约中需要仔细确认。",
+  "tarotWealthDetail11": "在金钱方面可能会发生需要分辨是非的事情。现在是清理债务、结算财务关系、理清财务状况的好时机。签订合同时请仔细检查是否有不利条款，比起走捷径，坚持诚实透明的原则会更好。",
+  "tarotSuccessMeaning11": "获得公正评价并得到正当报酬。",
+  "tarotSuccessDetail11": "你的工作成果将获得公正且客观的评价。如果你一直以来努力工作，晋升或奖金等相应的报酬将会到来。在法律或会计等需要精确性的领域，你将大展身手。决策时请排除感情干扰，彻底基于数据和事实进行判断。",
+  "tarotKeywords12": "牺牲, 耐心, 新视角, 停滞, 觉醒",
+  "tarotDesc12": "倒吊在树上的男人通过自愿的苦难，以全新的视角观察世界并获得觉醒。他脑后的光环意味着精神上的成长。",
+  "tarotLoveMeaning12": "关系可能停滞不前，或者单恋会持续较长时间。",
+  "tarotLoveDetail12": "你可能会因为恋爱进度缓慢而感到郁闷，但现在急于求成并不能解决问题。请暂时停下脚步，换个角度审视现状，反思自己是否在以自己的方式强求爱情。换位思考并给予对方体贴与耐心，最终将成为开启对方心扉的钥匙。",
+  "tarotWealthMeaning12": "资金流向可能受阻，或者需要承担一定的损失。",
+  "tarotWealthDetail12": "你可能会感到财务上的阻塞。投资的资金被套牢或预定的收入延迟，但越是挣扎可能越是混乱，现在最好放宽心态静观其变。利用这段时间检查自己的消费习惯，重新树立对金钱的价值观。",
+  "tarotSuccessMeaning12": "事情可能不会按计划进行，会出现延迟。",
+  "tarotSuccessDetail12": "项目中断或业务延迟可能会给你带来压力，但这并非失败，而是“暂停”的信号。不要强行推进，退后一步重新规划大局。打破固定观念时，你会产生别人想不到的奇思妙想，当前的试炼将带给你新的觉醒。",
+  "tarotKeywords13": "终结, 变化, 重生, 离别, 新开始",
+  "tarotDesc13": "象征着旧事物的完全终结以及由此产生的新开始，表现了痛苦但不可避免的变化过程。死神骑马而来，为新道路的开启而清扫旧物。",
+  "tarotLoveMeaning13": "意味着关系的终结或巨大的变化。",
+  "tarotLoveDetail13": "现在的关系可能已达极限。比起强求，更需要顺其自然放手的勇气。虽然离别是痛苦的，但在那尽头一定会有更好的新开始在等着你。请记住，只有完全摆脱过去的留恋或伤痛，才会有新的人进入你的生活空间。",
+  "tarotWealthMeaning13": "可能会出现金钱损失或投资失败等艰难处境。",
+  "tarotWealthDetail13": "预计财务上会有巨大变化。你信任的投资处可能出现损失，或者因预料之外的支出而陷入困境，但这是改变以往低效资产管理方式的信号。请以此为契机，清理债务并彻底切断不必要的支出，为建立更健康、更稳定的财务结构打下基础。",
+  "tarotSuccessMeaning13": "进行中的工作可能中断或失败。",
+  "tarotSuccessDetail13": "苦心经营的项目可能化为乌有，或在职场经历巨变。虽然眼下挫折感很大，但这是命运的启示，让你整理不适合自己的工作，寻找通往更大成功的道路。抛弃旧方式，以全新的心态开始，人生更精彩的下一章就会开启。",
+  "tarotKeywords14": "平衡, 节制, 和谐, 治愈, 中道",
+  "tarotDesc14": "一位天使在两个圣杯之间倒水，象征着现实与理想之间的完美平衡与和谐流动。",
+  "tarotLoveMeaning14": "这是两个不同的人相遇并达成和谐的过程。",
+  "tarotLoveDetail14": "比起热烈的激情，淡淡而持久的爱情更适合这个时期。承认并互补彼此的差异，建立深厚的纽带。即使有争吵，也请用冷静的对话来化解。你温和体贴的态度会让对方感到安心，从而建立起稳定的关系。",
+  "tarotWealthMeaning14": "平衡收支非常重要。",
+  "tarotWealthDetail14": "财运正处于稳定流向。与其追求横财，不如集中精力有效分配和管理现有资产，随着收入增加也要适度调节支出。投资方面建议进行风险管理的分散投资，持之以恒的管理最终会为你带来财富。",
+  "tarotSuccessMeaning14": "调解不同意见并引导和谐的能力非常突出。",
+  "tarotSuccessDetail14": "在团队项目中出色地担任调解人角色，解决冲突并提高工作效率。你灵活的思维和适应力将获得周围认可。这是一个在工作与休息间寻找平衡、预防职业倦怠的明智期。统揽全局并循序渐进地推进将带来最佳结果。",
+  "tarotKeywords15": "诱惑, 束缚, 执着, 物质主义, 成瘾",
+  "tarotDesc15": "象征着自我约束的欲望与执着，以及只要下定决心就能摆脱、却往往深陷其中的物质诱惑。",
+  "tarotLoveMeaning15": "意味着被强烈的肉体魅力吸引或产生执着的关系。",
+  "tarotLoveDetail15": "你可能会被异性的魅力强烈吸引，以至于难以做出理性判断。虽然一段火热的罗曼史可能开启，但也要注意不要陷入过度的执着与束缚中。请冷静反思自己的感情究竟是真爱还是单纯的占有欲，学会自我调节。",
+  "tarotWealthMeaning15": "物质欲望过重，可能进行过激投资或在享乐上花费巨资。",
+  "tarotWealthDetail15": "当前是金钱诱惑较多的时期。请警惕被花言巧语蒙蔽而进行高风险投资，或因冲动消费导致财产受损。不要沦为金钱的奴隶而辜负周围人的信任。比起盲目投资，现在更应守护现有资产，克制过度的物欲。",
+  "tarotSuccessMeaning15": "为了成功可能不择手段。",
+  "tarotSuccessDetail15": "对权力或名誉的渴望增强，可能会将周围同事视为单纯的竞争对手。注意不要为了成果而安排过载日程，甚至陷入损害健康的“工作狂”状态。请放下不劳而获的心态，诚实对待业务，努力从自我束缚中解脱出来。",
+  "tarotKeywords16": "崩溃, 冲击, 急剧变化, 解放, 真相大白",
+  "tarotDesc16": "落雷直击塔顶，塔身崩塌，人们纷纷坠落。这象征着因突如其来的外部力量导致的旧价值观的破除，以及与新真相的邂逅。",
+  "tarotLoveMeaning16": "关系可能面临巨大危机或突然分手。",
+  "tarotLoveDetail16": "恋爱战线上可能会发生晴天霹雳般的预料之外的事件。你可能会对信任的人感到失望，或者因无法承受的争吵导致关系彻底动摇，但请不要绝望。这是一个清理不健康关系或误会、面对真相的过程，废墟之上终将迎来建立更稳固爱情的机会。",
+  "tarotWealthMeaning16": "需要应对突然的金钱损失或灾难。",
+  "tarotWealthDetail16": "财务上非常不稳定的时期。你可能会听到令人震惊的消息，如资金意外流失或投资项目崩溃，因此必须将资产转移到安全的地方并做好防范。然而，这种崩溃也将成为纠正错误经济观念的契机，触底之后将有机会建立不再崩塌的坚实基础。",
+  "tarotSuccessMeaning16": "项目可能中断，或职场发生突然的人事变动等冲击性变化。",
+  "tarotSuccessDetail16": "你可能会感到苦心经营的高塔崩塌般的挫折感，但这并非因为你能力不足，而是因为不可避免的变化潮流。不要惊慌，冷静把握事态，抛弃旧系统并寻找新道路。如果能将当前的危机转化为机会进行重新整顿，你将能够向着更高处实现跨越。",
+  "tarotKeywords17": "希望, 灵感, 治愈, 乐观主义, 愿望实现",
+  "tarotDesc17": "在明亮的星光下，一位女子正在倒水。这象征着苦难之后到来的和平，以及对未来的希望与愿景。",
+  "tarotLoveMeaning17": "遇到接近理想型的人，或恋爱梦想成真的时期。",
+  "tarotLoveDetail17": "像照亮黑夜的星星一样，你的爱情也会迎来闪耀的希望。你可能会遇到梦寐以求的理想型，你纯粹的魅力将深深吸引异性。过去痛苦的记忆现在已得到治愈，你会产生能够再次梦想新爱情的光明能量。",
+  "tarotWealthMeaning17": "财运状况正逐渐好转。",
+  "tarotWealthDetail17": "财运开始向积极的方向流动。之前的经济困难正在缓解，你将看到一线曙光。通过创意想法可能会获得额外收入的机会。与其追求眼前的巨大利益，不如以长期眼光投资于未来价值高的地方，这种眼光将引导你走向财务稳定。",
+  "tarotSuccessMeaning17": "创造性灵感迸发，获得广泛展示才华的机会。",
+  "tarotSuccessDetail17": "你的创意将大放异彩并赢得周围赞赏。特别是在艺术感、公关或营销领域，你能脱颖而出。这是一个启动梦寐以求项目的绝佳时机。如果你能自信地表达自我，就有机会获得大众喜爱或赢得名誉，请务必抓住这个好运。",
+  "tarotKeywords18": "不安, 幻想, 暧昧, 直觉, 无意识",
+  "tarotDesc18": "月光之下不安与暧昧共存，象征着看不见的背后真相与无意识的世界。正如雾气弥漫的夜晚，方向感变得模糊。",
+  "tarotLoveMeaning18": "因无法了解对方心意而郁闷，容易产生误解和怀疑。",
+  "tarotLoveDetail18": "仿佛置身雾中，无法了解对方真心，这是一个不安的时期。细微的误解可能演变成巨大的怀疑，不安感甚至可能令你彻夜难眠，但与其急于求证，不如静观其变。比起在感情用事下执着于不确定的关系，理性思考并保持内心定力才是首要任务。",
+  "tarotWealthMeaning18": "投资前景不明朗，存在诈骗风险。",
+  "tarotWealthDetail18": "金钱方面的视野变得模糊，极易被看似不错的投资信息或甜言蜜语所迷惑。看不见的地方可能隐藏着陷阱，因此现在是需要极度谨慎、如履薄冰的时期。与其开启新计划，不如维持现状，彻底的现实验证过程是守护财产的唯一途径。",
+  "tarotSuccessMeaning18": "工作方向模糊，可能存在隐藏的敌人，是一个混乱的时期。",
+  "tarotSuccessDetail18": "你可能陷入看不见前方的渺茫处境，项目方向发生动摇，或者职场内的流言蜚语可能令你困扰，因此请务必注意言行。现在与其轻举妄动，不如等待形势明朗。不要盲目相信他人的话，默默守护自己的位置并做好心态管理会更好。",
+  "tarotKeywords19": "成功, 幸福, 活力, 积极, 祝福",
+  "tarotDesc19": "在灿烂的阳光下，小孩骑着白马挥舞旗帜，非常快乐。",
+  "tarotLoveMeaning19": "将拥有一段受人祝福的灿烂幸福的恋情。",
+  "tarotLoveDetail19": "完美而幸福的爱情与你同在。之前的误解或冲突消融，信任加深。",
+  "tarotWealthMeaning19": "财运处于巅峰状态。",
+  "tarotWealthDetail19": "守得云开见月明。财运非常强劲，做什么都能转化为收益。事业兴旺，投资大赚。",
+  "tarotSuccessMeaning19": "你的能力获得认可并受到关注。",
+  "tarotSuccessDetail19": "成功的号角响起。你一直以来的努力大放异彩，展现在世人面前。取得合格、晋升等成果。",
+  "tarotKeywords20": "复活, 报偿, 消息, 决断, 重逢",
+  "tarotDesc20": "当天使在空中吹响号角，棺木中的人们苏醒并欢呼。这象征着对过去努力的报偿，以及向新生命的觉醒。",
+  "tarotLoveMeaning20": "可能会收到前任的消息，或获得重逢的机会。",
+  "tarotLoveDetail20": "你苦苦等待的消息即将到来。如果你一直无法忘记前任或渴望重逢，实现的几率非常高；迟迟没有进展的暧昧关系也可能迎来确定关系的果实。你可能会与过去认识的人重新建立联系，请倾听内心的声音，做出无悔的决断。",
+  "tarotWealthMeaning20": "过去投资的地方可能产生收益，或者能收回借出的钱。",
+  "tarotWealthDetail20": "这是一个获得过去努力报偿的时期。被遗忘的股票可能上涨，或者收回原以为无法拿回的欠款，会有意想不到的横财运。你现在下的决定将极大地影响未来的财运，因此这是一个需要慎重且果断决策的时刻。",
+  "tarotSuccessMeaning20": "过去的努力获得认可，有望晋升或获得奖励。",
+  "tarotSuccessDetail20": "审判之日已到。你之前流下的汗水将获得公正的评价和报偿，晋升或合格等喜讯将如号角般响起。这是一个摆脱停滞状态、再次飞翔的机会，可能会有猎头邀请或跳槽机会，请不要畏惧变化，抓住机遇开启新篇章。",
+  "tarotKeywords21": "完成, 整合, 达成, 完美结局, 完美",
+  "tarotDesc21": "象征着在漫长的旅程之后完全达成目标、实现完美和谐的最高结局。四角的圣兽祝福着这个圆满的世界，同时也预示着新旅程的开始。",
+  "tarotLoveMeaning21": "意味着爱情的圆满。能与理想的对象结合，迎接最幸福的时刻。",
+  "tarotLoveDetail21": "这是为长期的恋爱画上句点、步入婚姻这一新世界的完美时机。你们将确认彼此是最佳伴侣，并在祝福中享受合二为一的幸福。如果是单身，你可能遇到符合所有理想条件的真命天子。这也是一段在海外旅行或异国环境中结缘的运势。",
+  "tarotWealthMeaning21": "达成目标金额，开始享受经济自由。",
+  "tarotWealthDetail21": "你达成了100%的财务目标，进入了享受经济自由的阶段。在美股或贸易等全球领域有望获得巨大收益，你的投资组合实现了完美和谐并带来稳定收益。现在请在享受富足的同时，向着更广阔的世界拓宽视野。",
+  "tarotSuccessMeaning21": "圆满完成项目，获得最高荣誉。",
+  "tarotSuccessDetail21": "这是你职业生涯登上顶峰的时期。你完美地完成了受命的项目并获得最高赞誉。你达成了所有预定目标，并准备向更广阔的世界迈进。由于你的活动舞台有望扩展到全球（如留学或海外就业），请以当前的成功为踏板，描绘更远大的梦想并实现飞跃。",
+  "supplementRecordPrompt": "请服用营养剂并记录！",
+  "snoozeQuestion": "什么时候再次提醒您？",
+  "hoursShort": "小时",
+  "minutesShort": "分",
+  "after": "后",
+  "snoozeMessage": "闹钟将在 {minutes} 分钟后再次响。",
+  "timesTaken": "已服用 {count} 次",
+  "dailyGoalTimes": "目标：每天 {goal} 次",
+  "didYouTakeSupplement": "您服用营养剂了吗？",
+  "viewMissionRecords": "查看任务记录",
+  "setTakingGoal": "设置摄入目标",
+  "times": "次",
+  "dailyTakingGoal": "每日摄入目标",
+  "howManyTimesADay": "您一天服用几次营养剂？",
+  "setGoalMl": "设置目标 (ml)",
+  "sleepAnalysis": "睡眠分析",
+  "todaysSleep": "今日睡眠",
+  "sleepDuration": "睡眠时长",
+  "wakeUpTime": "起床时间",
+  "weeklySleepPattern": "每周睡眠模式",
+  "sleepAdvice": "您保持着规律的睡眠习惯。比昨天早睡了30分钟！",
+  "stopwatch": "秒表",
+  "lap": "计圈",
+  "stop": "停止",
+  "lapLabel": "第 {index} 圈",
+  "monday": "周一",
+  "tuesday": "周二",
+  "wednesday": "周三",
+  "thursday": "周四",
+  "friday": "周五",
+  "saturday": "周六",
+  "sunday": "周日",
+  "policy": "服务条款和隐私政策",
+  "support": "支持",
+  "defaultAlarmBehavior": "默认闹钟行为",
+  "defaultAlarmVolume": "默认闹钟音量",
+  "defaultAlarmVolumeDescription": "创建新闹钟时应用的默认音量。",
+  "gradualVolumeDescription": "设置闹钟声音逐渐增大。",
+  "defaultVibration": "默认振动",
+  "defaultVibrationDescription": "创建新闹钟时默认启用振动。",
+  "defaultInterval": "默认间隔",
+  "maxSnoozeCountLabel": "最大重复次数",
+  "minutes": "分钟",
+  "cupsCount": "({current}杯/{goal}杯)",
+  "@cupsCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "timesCountProgress": "({current}次/{goal}次)",
+  "@timesCountProgress": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "missionGym": "去健身房",
+  "missionWorkout": "家庭训练",
+  "missionDiary": "写日记",
+  "missionBedMaking": "整理床铺",
+  "missionStretching": "拉伸",
+  "missionReading": "阅读10分钟",
+  "missionPlanning": "制定今日计划",
+  "missionBreakfast": "吃早餐",
+  "missionMeditation": "冥想5分钟",
+  "missionLearnWords": "背5个单词",
+  "missionVentilation": "通风",
+  "missionCleaning": "打扫房间",
+  "missionGratitudeDiary": "感恩日记",
+  "faqQuestion1": "闹钟没有响。",
+  "faqAnswer1": "由于Android系统的电池优化功能，闹钟可能会延迟或被阻止。请在 设置 > 闹钟优化 菜单中将所有权限设置为'允许'。",
+  "faqQuestion2": "我想更改任务。",
+  "faqAnswer2": "点击闹钟列表中您想要编辑的闹钟，然后在任务选择菜单中将其更改为您想要的任务（数学、拍照、摇晃等）。",
+  "faqQuestion3": "如何设置深色模式？",
+  "faqAnswer3": "您可以通过 设置 > 常规 > 深色模式 开关更改屏幕主题。",
+  "faqQuestion4": "如何收集幸运饼干？",
+  "faqAnswer4": "每天早上关闭闹钟或完成任务时都可以获得幸运饼干。用收集的饼干查看您的每日运势！",
+  "faqQuestion5": "如果删除应用，我的数据会消失吗？",
+  "faqAnswer5": "是的，幸运闹钟将数据存储在设备内部，因此删除应用将删除您所有的闹钟设置和任务记录。请小心。",
+  "noticeLabel": "公告",
+  "notice1Title": "幸运闹钟正式上线",
+  "notice1Content": "您好。幸运闹钟已正式上线。\n\n每天早上用闹钟查看您的每日运势，开启快乐的一天！\n我们将继续提供更多样化的功能和改进的服务。\n\n谢谢。",
+  "notice2Title": "版本 1.0.0 更新新闻",
+  "notice2Content": "以下是版本 1.0.0 更新的内容。\n\n1. 营养品任务界面改进\n2. 精确闹钟的系统设置集成\n3. 深色模式支持\n4. 错误修复和稳定性改进\n\n立即体验最新版本！",
+  "notice3Title": "服务条款修订通知",
+  "notice3Content": "服务条款已修订。\n\n主要修订：\n- 加强隐私政策\n- 指定服务使用范围\n\n详情可在 设置 > 条款 页面查看。",
+  "supportContentTitle": "咨询内容",
+  "supportHint": "请输入内容。",
+  "supportRecipient": "收件人 (客户支持)",
+  "emailCopied": "电子邮件地址已复制。",
+  "copyTooltip": "复制",
+  "supportWorkingDays": "我们将尝试在工作日24小时内回复。",
+  "supportEmptyError": "请输入内容。",
+  "supportSubjectPrefix": "咨询标题",
+  "supportContentPrefix": "咨询内容",
+  "supportCopySuccessTitle": "咨询已复制",
+  "supportCopySuccessMessage": "咨询内容已复制到剪贴板。\n您想发送邮件给 {email} 吗？",
+  "@supportCopySuccessMessage": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
   "selectionComplete": "选择完成",
   "selectVibration": "选择震动模式",
+  "cameraMissionSequentialImageError": "请按顺序设置任务图片。",
+  "copyEmailAction": "复制电子邮件地址",
   "addMissionTitle": "添加新任务",
   "recommendedMissionList": "推荐任务",
   "recommendedMissionDesc": "为健康一天准备的推荐任务。",
@@ -1289,12 +1673,34 @@
   "missionNameHint": "输入任务名称（例：去健身房）",
   "selectCategory": "选择分类",
   "getNotification": "接收通知",
-  "notificationTime": "通知时间",
   "missionCategoryHealth": "健康",
   "missionCategoryStudy": "学习",
   "missionCategoryRoutine": "日常",
   "missionCategoryHobby": "兴趣",
   "missionCategoryOther": "其他",
+  "copyEmailSuccessMessage": "电子邮件地址已复制。请将其粘贴到您的邮件应用中。",
+  "supportSubmitButton": "复制咨询并发送",
+  "shakePhone": "请摇晃手机！",
+  "version": "版本 {version}",
+  "@version": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "fortuneCheckButton": "查看运势",
+  "fortuneSelectCards": "选择3张牌",
+  "fortuneDragCards": "拖动并选择3张牌",
+  "fortuneDetailTitle": "详细解读",
+  "labelFineDust": "PM10",
+  "labelUltraFineDust": "PM2.5",
+  "weatherToday": "今日天气",
+  "weatherUpdateMessage": "正在更新当前位置的天气信息。",
+  "weatherDisclaimer": "观测数据可能因当地条件或信号接收情况而有所不同。",
+  "weatherSource": "气象数据来源：权威气象机构",
+  "locationPermissionTitle": "允许位置权限",
+  "locationPermissionDesc": "显示天气信息所必需。",
   "hourlyForecast": "逐小时预报",
   "weeklyForecast": "一周预报",
   "hourFormat": "{hour} 时",
@@ -1313,7 +1719,9 @@
   "earnCookies": "获得 {count} 个幸运饼干！ 🎉",
   "@earnCookies": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "freePassAfterTimeout": "广告超时，本次免费为你展示结果！ 🎉",
@@ -1324,7 +1732,9 @@
   "useCookiesButtonText": "使用 {count} 个幸运饼干",
   "@useCookiesButtonText": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "adFailFreePass": "广告失败，本次直接免费解锁。",
@@ -1340,6 +1750,13 @@
   "luckyNumberAnalysisStep6": "计算最优组合…",
   "luckyNumberAnalysisStep7": "分析完成，正在生成数字…",
   "luckyNumberAnalysisFinal": "正在处理最终数据…",
+  "luckyNumberAnalyzing": "能量分析中...",
+  "luckyNumberGeometric": "几何分析...",
+  "luckyNumberPatterns": "模式匹配...",
+  "luckyNumberEnergy": "能量协调中...",
+  "luckyNumberCompleted": "分析完成！",
+  "luckyNumberShare": "分享结果",
+  "luckyNumberRestart": "重试",
   "luckyNumberGenerating": "生成中…",
   "luckyNumberResultTitle": "你的幸运数字已出炉",
   "luckyNumberResultSubtitle": "把好运带走吧",
@@ -1349,7 +1766,9 @@
   "luckyNumberSetLabel": "第 {label} 组",
   "@luckyNumberSetLabel": {
     "placeholders": {
-      "label": { "type": "String" }
+      "label": {
+        "type": "String"
+      }
     }
   },
   "luckyNumberRegenerateButton": "重新生成",
@@ -1377,17 +1796,31 @@
   "fortunePassTimeSaleLabel": "{percent}% 限时特惠！",
   "@fortunePassTimeSaleLabel": {
     "placeholders": {
-      "percent": { "type": "int" }
+      "percent": {
+        "type": "int"
+      }
     }
   },
   "fortunePassOffLabel": "{percent}% OFF",
   "@fortunePassOffLabel": {
     "placeholders": {
-      "percent": { "type": "int" }
+      "percent": {
+        "type": "int"
+      }
     }
   },
   "fortunePassPerMonth": " /月",
-  "fortunePassTotalPrice": "总计",
+  "fortunePassTotalPrice": "总计 {price}{unit}",
+  "@fortunePassTotalPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
   "fortunePassUnitMonth": "月",
   "fortunePassUnit6Months": "6 个月",
   "fortunePassUnitYear": "年",
@@ -1397,7 +1830,14 @@
   "fortunePassStatusFree": "Free",
   "fortunePassStoreErrorTitle": "商店错误",
   "fortunePassStoreErrorContent": "暂时无法连接商店，请稍后重试。",
-  "fortunePassSubscribeSale": "订阅享优惠",
+  "fortunePassSubscribeSale": "订阅享 {percent}% 优惠",
+  "@fortunePassSubscribeSale": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
   "fortunePassSubscribeNow": "立即订阅",
   "fortunePassApplied": "已生效",
   "fortunePassApplyFailed": "应用失败",
@@ -1407,13 +1847,17 @@
   "fortunePassTimeSalePriceOriginal": "原价 {price}",
   "@fortunePassTimeSalePriceOriginal": {
     "placeholders": {
-      "price": { "type": "String" }
+      "price": {
+        "type": "String"
+      }
     }
   },
   "fortunePassTimeSalePriceDiscount": "特惠 {price}",
   "@fortunePassTimeSalePriceDiscount": {
     "placeholders": {
-      "price": { "type": "String" }
+      "price": {
+        "type": "String"
+      }
     }
   },
   "fortunePassTimeSaleBadge": "限时",
@@ -1426,15 +1870,21 @@
   "fortunePassCookieCount": "{count}",
   "@fortunePassCookieCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "fortunePassActive": "已激活",
   "fortunePassTotalFormat": "总计 ₩{price} / {unit}",
   "@fortunePassTotalFormat": {
     "placeholders": {
-      "price": { "type": "String" },
-      "unit": { "type": "String" }
+      "price": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
     }
   },
   "fortunePassPopularPlan": "热门套餐",
@@ -1484,30 +1934,93 @@
   "compatibilityDeleteTooltip": "删除",
   "compatibilityGenderMale": "男",
   "compatibilityGenderFemale": "女",
+  "compatibilityInputTitle": "输入合婚信息",
   "tojeongInputTitle": "土亭秘诀输入",
-  "tojeongCheckFortune": "查看土亭秘诀",
+  "tojeongCheckFortune": "查看 {year} 年土亭秘诀",
+  "@tojeongCheckFortune": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
   "tojeongInputGuide": "输入姓名与信息，生成当年运势。",
-  "tojeongViewResult": "查看结果",
+  "tojeongViewResult": "查看 {year} 年结果",
+  "@tojeongViewResult": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
   "tojeongCheckButton": "开始查看",
   "tojeongSaveAndCheck": "保存并查看",
   "tojeongYearSelect": "选择年份",
-  "tojeongResultTitle": "土亭秘诀结果",
-  "tojeongUserFortune": "你的运势",
-  "tojeongGua": "卦",
+  "tojeongResultTitle": "{year} 年土亭秘诀结果",
+  "@tojeongResultTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "tojeongUserFortune": "{name} 的 {year} 年运势",
+  "@tojeongUserFortune": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "tojeongGua": "卦 ({gua})",
+  "@tojeongGua": {
+    "placeholders": {
+      "gua": {
+        "type": "String"
+      }
+    }
+  },
   "tojeongTotalLuck": "总运",
   "tojeongProcess": "解析中",
   "tojeongResult": "结果",
   "tojeongMonthlyLuck": "月运",
   "tojeongShareResult": "分享结果",
-  "tojeongShareTitle": "土亭秘诀",
-  "tojeongShareDesc": "Fortune Alarm 生成的土亭秘诀结果。",
+  "tojeongShareTitle": "{year} 年土亭秘诀",
+  "tojeongShareDesc": "{name} 的土亭秘诀结果：\n\n{desc}",
+  "@tojeongShareDesc": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "desc": {
+        "type": "String"
+      }
+    }
+  },
   "tojeongShareTargetYear": "目标年份",
   "sajuDeleteTitle": "删除确认",
-  "sajuDeleteConfirm": "确定要删除这份资料吗？",
+  "sajuDeleteConfirm": "确定要删除 {name} 的资料吗？",
+  "@sajuDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "sajuProfileSelect": "选择资料",
   "add": "添加",
   "modify": "修改",
-  "fortuneUnderConstructionTitle": "功能准备中",
+  "fortuneUnderConstructionTitle": "{title} 功能正在准备中",
+  "@fortuneUnderConstructionTitle": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
   "fortuneUnderConstructionSubtitle": "我们正在打磨细节，敬请期待。",
   "goBack": "返回",
   "name": "姓名",
@@ -1516,30 +2029,76 @@
   "sajuBirthDateDisplay": "{year}.{month}.{day}",
   "@sajuBirthDateDisplay": {
     "placeholders": {
-      "year": { "type": "int" },
-      "month": { "type": "int" },
-      "day": { "type": "int" }
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
     }
   },
   "sajuSelectFortuneYear": "选择运势年份",
   "sajuYearDisplay": "{year} 年",
   "@sajuYearDisplay": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
   "sajuSelectProfile": "选择资料",
   "male": "男",
   "female": "女",
   "newYearFortuneInputTitle": "新年运势输入",
-  "newYearFortuneHeader": "新年运势",
+  "newYearFortuneHeader": "{year} 年新年运势",
+  "@newYearFortuneHeader": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
   "newYearFortuneSubHeader": "为你总结一整年的走向与重点",
-  "newYearFortuneViewButton": "查看新年运势",
+  "newYearFortuneViewButton": "查看 {year} 年运势",
+  "@newYearFortuneViewButton": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
   "newYearFortuneCheckButton": "开始查看",
   "newYearFortuneSaveAndCheckButton": "保存并查看",
-  "newYearFortuneResultTitle": "新年运势结果",
-  "newYearFortuneShareTitle": "分享新年运势",
-  "newYearFortuneShareDesc": "Fortune Alarm 生成的新年运势结果。",
+  "newYearFortuneResultTitle": "{year} 年新年运势结果",
+  "@newYearFortuneResultTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newYearFortuneShareTitle": "{year} 年新年运势",
+  "@newYearFortuneShareTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "newYearFortuneShareDesc": "{name} 的新年运势结果：\n\n{desc}",
+  "@newYearFortuneShareDesc": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "desc": {
+        "type": "String"
+      }
+    }
+  },
   "sajuChartTitle": "四柱盘",
   "sajuHour": "时",
   "sajuDay": "日",
@@ -1549,19 +2108,32 @@
   "dominantOhaeng": "你的主导五行：{name}（{symbol}）",
   "@dominantOhaeng": {
     "placeholders": {
-      "name": { "type": "String" },
-      "symbol": { "type": "String" }
+      "name": {
+        "type": "String"
+      },
+      "symbol": {
+        "type": "String"
+      }
     }
   },
   "ohaengDisclaimer": "＊五行解读仅供娱乐参考。",
-  "yearlyTotalLuck": "年度总运",
+  "yearlyTotalLuck": "{year} 年总运",
+  "@yearlyTotalLuck": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
   "fortuneDisclaimer": "＊运势内容仅供娱乐参考，不保证准确性。",
   "compatibilityResultTitle": "合盘结果",
   "compatibilityScore": "契合度",
   "compatibilityScoreDisplay": "{score}",
   "@compatibilityScoreDisplay": {
     "placeholders": {
-      "score": { "type": "int" }
+      "score": {
+        "type": "int"
+      }
     }
   },
   "compatibilityShareTitle": "我们的相性",
@@ -1641,24 +2213,36 @@
   "compatibilityDescSamhap": "{animal1} 与 {animal2} 属于天生互补，彼此能补短扬长，在一起更容易形成强大的协同。",
   "@compatibilityDescSamhap": {
     "placeholders": {
-      "animal1": { "type": "String" },
-      "animal2": { "type": "String" }
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
     }
   },
   "compatibilitySummaryYukhap": "非常合拍（六合）",
   "compatibilityDescYukhap": "{animal1} 与 {animal2} 彼此吸引力强，初见就容易产生连结与好感。",
   "@compatibilityDescYukhap": {
     "placeholders": {
-      "animal1": { "type": "String" },
-      "animal2": { "type": "String" }
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
     }
   },
   "compatibilitySummaryChung": "需要磨合（冲）",
   "compatibilityDescChung": "{animal1} 与 {animal2} 气质差异较大，容易起冲突。尊重差异、多体谅会更顺。",
   "@compatibilityDescChung": {
     "placeholders": {
-      "animal1": { "type": "String" },
-      "animal2": { "type": "String" }
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
     }
   },
   "compatibilitySummaryWonjin": "需要理解（怨嗔）",
@@ -1667,10 +2251,270 @@
   "compatibilityDescDefaultZodiac": "{animal1} 与 {animal2} 大体相处顺畅，没有明显的大冲突。",
   "@compatibilityDescDefaultZodiac": {
     "placeholders": {
-      "animal1": { "type": "String" },
-      "animal2": { "type": "String" }
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
     }
   },
+  "compatibilitySummaryCheonganHap": "命中注定的灵魂伴侣",
+  "compatibilityDescCheonganHap": "你们的性格和价值观完美契合。你们是那种无需言语就能心领神会的灵魂伴侣。",
+  "compatibilitySummarySangsaeng": "相辅相成的伙伴关系",
+  "compatibilityDescSangsaeng": "一种积极的关系，你们会自然地支持彼此，并帮助对方成长。",
+  "compatibilitySummarySanggeuk": "需要动态平衡的关系",
+  "compatibilityDescSanggeuk": "虽然可能存在性格差异，但你们拥有独特的潜力，可以互补彼此的优缺点。",
+  "compatibilitySummaryDefaultInner": "天生的好朋友",
+  "compatibilityDescDefaultInner": "基于相似倾向和共同兴趣建立的关系，让你们在一起的时光轻松而舒适。",
+  "compatibilitySummarySameElement": "志同道合的相遇",
+  "compatibilityDescSameElement": "共有‘{element}’倾向意味着你们的价值观和行为方式非常同步。",
+  "@compatibilityDescSameElement": {
+    "placeholders": {
+      "element": {
+        "type": "String"
+      }
+    }
+  },
+  "compatibilitySummaryCompatibleElement": "和谐的平衡",
+  "compatibilityDescCompatibleElement": "一段美妙的关系，你们不同的魅力完美地融合在一起。",
+  "compatibilitySummaryIncompatibleElement": "迷人的差异",
+  "compatibilityDescIncompatibleElement": "你们不同的气质起初可能让你们感到陌生，但它们为共同成长和探索提供了无限可能。",
   "compatibilitySummaryDefaultConstellation": "中等和谐",
-  "compatibilityDescDefaultConstellation": "从星座角度看，整体属于比较合拍的关系。"
+  "compatibilityDescDefaultConstellation": "从星座角度看，整 体属于比较合拍的关系。",
+  "routineMorningTitle": "清爽的早晨！ ☀️",
+  "routineMorningBody": "您忘记了今天计划的常规任务吗？",
+  "routineEveningTitle": "今天辛苦了！ ✨",
+  "routineEveningBody": "您完成今天的任务了吗？结束您的常规流程吧。",
+  "routineCheckTitle": "检查今天的任务！ 🚀",
+  "routineCheckBody": "遵守常规任务，度过愉快的一天。",
+  "supplementNotificationTitle": "营养剂提醒",
+  "waterNotificationTitle": "喝水提醒",
+  "routineNotificationTitle": "日常常规通知",
+  "todaysFortuneNotificationTitle": "今日运势",
+  "afternoonFortuneNotificationBody": "下午的运势如何？现在就去看看吧！",
+  "morningFortuneNotificationBody": "查看今日运势，开启元气满满的一天！",
+  "fortunePassExpiryTitle": "财富通行证今日到期",
+  "fortunePassExpiryBody": "您的财富通行证会员资格今日到期。请续费以继续享受优惠！",
+  "takeNow": "现在服用",
+  "later": "稍后",
+  "turnOffAlarmAction": "关闭闹钟",
+  "todaysFortuneNotification": "今日运势通知",
+  "enableNotification": "启用通知",
+  "fortuneNotificationDescription": "在指定时间通知您今日的运势。",
+  "morningNotificationTime": "上午通知时间",
+  "afternoonNotificationTime": "下午通知时间",
+  "morningFortuneTitle": "今日运势 (上午)",
+  "afternoonFortuneTitle": "今日运势 (下午)",
+  "type": "类型",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@categoryMissions": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "@hourFormat": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
+  "@tojeongShareTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "@tojeongCoreMessage": {
+    "placeholders": {
+      "sangsu": {
+        "type": "String"
+      },
+      "jungsu": {
+        "type": "String"
+      },
+      "hasu": {
+        "type": "String"
+      }
+    }
+  },
+  "@snoozeMessage": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@timesTaken": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dailyGoalTimes": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "@lapLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "supplementChannelDesc": "营养剂摄入通知频道。",
+  "waterChannelDesc": "饮水习惯通知频道。",
+  "waterSummaryTitle": "饮水通知",
+  "dailyRoutineChannelDesc": "每日任务和习惯养成通知频道。",
+  "dailyRoutineSummaryTitle": "每日例行通知",
+  "missionChannelName": "任务通知",
+  "missionChannelDesc": "一般任务执行通知频道。",
+  "fortuneChannelName": "运势通知",
+  "fortuneChannelDesc": "每日早晨运势检查通知频道。",
+  "subscriptionChannelName": "订阅通知",
+  "subscriptionChannelDesc": "Fortune Pass 到期及订阅相关通知频道。",
+  "alarmChannelName": "闹钟",
+  "alarmChannelDesc": "起床及任务执行闹钟频道。",
+  "shareViaKakao": "通过 KakaoTalk 分享",
+  "shareViaSNS": "通过其他 SNS 分享 (Instagram, Twitter 等)",
+  "checkDetailResult": "查看详细结果",
+  "viewMyFortuneResult": "查看我的运势结果",
+  "takeSupplementNow": "请服用营养剂！",
+  "takeNowQuestion": "您想现在服用吗？",
+  "eatNow": "现在服用",
+  "eatLater": "以后服用",
+  "snoozeMessageGeneric": "我将在 {minutes} 分钟后再次提醒您。",
+  "hours": "小时",
+  "@snoozeMessageGeneric": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "cheeringMessage4": "充满活力的早晨，快乐的开始！",
+  "cheeringMessage5": "愿您拥有微笑的一天。",
+  "cheeringMessage6": "今天也加油吧！",
+  "cheeringMessage7": "您今天会足够闪耀的。",
+  "cheeringMessage8": "感觉会有好事发生！",
+  "cheeringMessage9": "今天也辛苦了。充满活力的开始！",
+  "cheeringMessage10": "幸福总是在您身边。",
+  "cheeringMessage11": "正在为您今天的梦想加油。",
+  "cheeringMessage12": "清爽的早晨，愉快的一天！",
+  "cheeringMessage13": "在今天取得胜利吧！",
+  "cheeringMessage14": "您的存在本身就是珍贵的。",
+  "cheeringMessage15": "愿您度过充满愉快事物的一天。",
+  "cheeringMessage16": "愿您今天的一天闪闪发光！",
+  "cheeringMessage17": "您的微笑照亮了世界。",
+  "cheeringMessage18": "做您自己吧！",
+  "cheeringMessage19": "以心动的心情开始今天。",
+  "cheeringMessage20": "美好的一天正在等待着您。",
+  "cheeringMessage21": "用积极的力量度过今天！",
+  "cheeringMessage22": "正在为您前进的道路加油。",
+  "cheeringMessage23": "让今天成为您最好的一天！",
+  "cheeringMessage24": "愿好运伴随您！",
+  "cheeringMessage25": "今天也度过温暖的一天。",
+  "cheeringMessage26": "您能做到的！",
+  "cheeringMessage27": "带着感恩的心情开始今天。",
+  "cheeringMessage28": "您的价值是无限的。",
+  "cheeringMessage29": "愿您的一天笑容满面。",
+  "cheeringMessage30": "和好人一起度过愉快的时光！",
+  "cheeringMessage31": "今天离梦想又近了一步！",
+  "cheeringMessage32": "今天的您是最酷的。",
+  "cheeringMessage33": "奇迹般的一天将会到来。",
+  "cheeringMessage34": "今天请悠闲地享受您的一天。",
+  "cheeringMessage35": "您的努力不会背叛您。",
+  "cheeringMessage36": "今天也度过健康的一天。",
+  "cheeringMessage37": "您生来就是为了被爱！",
+  "cheeringMessage38": "今天也要勇敢！",
+  "cheeringMessage39": "光明的未来正在等待着您。",
+  "cheeringMessage40": "度过充满激情的一天！",
+  "cheeringMessage41": "愿您的内心平静。",
+  "cheeringMessage42": "今天寻找小小的幸福吧。",
+  "cheeringMessage43": "您已经做得很好了。",
+  "cheeringMessage44": "带着希望开始今天。",
+  "cheeringMessage45": "您的善良对他人的巨大力量。",
+  "cheeringMessage46": "今天也度过充实的一天。",
+  "cheeringMessage47": "您有改变世界的力量。",
+  "cheeringMessage48": "晴朗的一天！",
+  "cheeringMessage49": "尽情展现您的魅力吧。",
+  "cheeringMessage50": "让今天的一天充满幸福吧！",
+  "locationServiceDisabled": "位置服务已禁用。",
+  "locationPermissionDenied": "位置权限被拒绝。",
+  "locationPermissionPermanentlyDenied": "位置权限被永久拒绝。",
+  "deleteMissionTitle": "删除任务",
+  "deleteMissionConfirm": "您确定要删除这个任务吗？",
+  "yesDelete": "是的，删除",
+  "waterAlarmTitle": "该喝水了！ 💧",
+  "waterAlarmBody": "为了您的健康，来一杯凉水怎么样？",
+  "supplementAlarmBody": "别忘了吃今天的营养补充剂。",
+  "waterHabitChannelDesc": "喝水习惯的通知频道。",
+  "pleaseSolveMath": "请解决问题。",
+  "detectedLabel": "[检测到: {labels}]",
+  "defaultSleepDuration": "7小时30分",
+    "@detectedLabel": {
+    "placeholders": {
+      "labels": {
+        "type": "String"
+      }
+    }
+  },
+  "year2024Name": "甲辰年（青龙年）",
+  "year2025Name": "乙巳年（青蛇年）",
+  "year2026Name": "丙午年（红马年）",
+  "supportEmailSubject": "[{appTitle} 咨询] {title}",
+  "@supportEmailSubject": {
+    "placeholders": {
+      "appTitle": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "summary": "摘要",
+  "monthlySummary": "月度摘要",
+  "monthlySuccessRate": "{month}月 成功率: {percentage}% ({success}/{total})",
+  "noMonthlyRecord": "{month}月 无记录",
+  "missionRecord": "任务记录",
+  "supplementRecord": "补充剂记录",
+  "timeSaleCatchChance": "抓住 50% 的折扣机会！",
+  "@monthlySuccessRate": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "String"
+      },
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@noMonthlyRecord": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      }
+    }
+  }
 }

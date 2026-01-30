@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../../core/constants/mission_category.dart';
@@ -542,24 +543,49 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                         const Divider(height: 1, thickness: 0.5),
                         const SizedBox(height: 8),
                         InkWell(
-                          onTap: () async {
-                            final TimeOfDay? picked = await showTimePicker(
+                          onTap: () {
+                            showCupertinoModalPopup(
                               context: context,
-                              initialTime: _alarmTime,
-                              builder: (context, child) {
-                                return Theme(
-                                  data: isDark ? ThemeData.dark() : ThemeData.light().copyWith(
-                                    colorScheme: const ColorScheme.light(primary: Colors.blueAccent),
+                              builder: (context) => Container(
+                                height: 300,
+                                padding: const EdgeInsets.only(top: 6.0),
+                                color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                                child: SafeArea(
+                                  top: false,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          CupertinoButton(
+                                            child: Text(l10n.cancel),
+                                            onPressed: () => Navigator.pop(context),
+                                          ),
+                                          CupertinoButton(
+                                            child: Text(l10n.confirm),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: CupertinoDatePicker(
+                                          mode: CupertinoDatePickerMode.time,
+                                          initialDateTime: DateTime(2024, 1, 1, _alarmTime.hour, _alarmTime.minute),
+                                          use24hFormat: false,
+                                          onDateTimeChanged: (DateTime newDateTime) {
+                                            setState(() {
+                                              _alarmTime = TimeOfDay(hour: newDateTime.hour, minute: newDateTime.minute);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  child: child!,
-                                );
-                              },
+                                ),
+                              ),
                             );
-                            if (picked != null && picked != _alarmTime) {
-                              setState(() {
-                                _alarmTime = picked;
-                              });
-                            }
                           },
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8),

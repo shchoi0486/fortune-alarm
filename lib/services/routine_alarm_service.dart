@@ -2,6 +2,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 import 'notification_service.dart';
 
@@ -46,15 +47,18 @@ class RoutineAlarmService {
         allowWhileIdle: true,
       );
     } else if (Platform.isIOS) {
-      String title = '오늘의 미션을 확인해보세요! 🚀';
-      String body = '루틴 미션을 지키고 기분 좋은 하루를 만들어봐요.';
+      final locale = Locale(Platform.localeName.split('_')[0]);
+      final l10n = await AppLocalizations.delegate.load(locale);
+
+      String title = l10n.routineCheckTitle;
+      String body = l10n.routineCheckBody;
       
       if (id == _morningId) {
-        title = '상쾌한 아침입니다! ☀️';
-        body = '오늘 계획한 루틴 미션들을 잊지 않으셨나요?';
+        title = l10n.routineMorningTitle;
+        body = l10n.routineMorningBody;
       } else if (id == _eveningId) {
-        title = '오늘 하루도 수고 많으셨어요! ✨';
-        body = '오늘의 미션을 모두 수행하셨나요? 루틴을 마무리해보세요.';
+        title = l10n.routineEveningTitle;
+        body = l10n.routineEveningBody;
       }
 
       await NotificationService().scheduleAlarmNotification(
@@ -75,15 +79,18 @@ class RoutineAlarmService {
     final notificationService = NotificationService();
     await notificationService.init(null);
 
-    String title = '오늘의 미션을 확인해보세요! 🚀';
-    String body = '습관 루틴을 지키고 기분 좋은 하루를 만들어봐요.';
+    final locale = Locale(Platform.localeName.split('_')[0]);
+    final l10n = await AppLocalizations.delegate.load(locale);
+
+    String title = l10n.routineCheckTitle;
+    String body = l10n.routineCheckBody;
     
     if (id == _morningId) {
-      title = '상쾌한 아침입니다! ☀️';
-      body = '오늘 계획한 루틴 미션들을 잊지 않으셨나요?';
+      title = l10n.routineMorningTitle;
+      body = l10n.routineMorningBody;
     } else if (id == _eveningId) {
-      title = '오늘 하루도 수고 많으셨어요! ✨';
-      body = '오늘의 미션을 모두 수행하셨나요? 루틴을 마무리해보세요.';
+      title = l10n.routineEveningTitle;
+      body = l10n.routineEveningBody;
     }
 
     await notificationService.showRoutineNotification(

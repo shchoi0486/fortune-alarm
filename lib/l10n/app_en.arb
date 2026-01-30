@@ -7,6 +7,16 @@
   "missionWater": "Drink over 2L of Water",
   "fortuneCookie": "Fortune Cookie",
   "settings": "Settings",
+  "language": "Language",
+  "languageKorean": "Korean",
+  "languageEnglish": "English",
+  "languageJapanese": "Japanese",
+  "languageChinese": "Chinese",
+  "languageRussian": "Russian",
+  "languageHindi": "Hindi",
+  "languageSpanish": "Spanish",
+  "languageFrench": "French",
+  "languageGerman": "German",
   "alarm": "Alarm",
   "calendar": "Calendar",
   "mission": "Mission",
@@ -15,7 +25,16 @@
   "allMissionsCompleted": "You have completed all 5 missions for today.",
   "rewardReceived": "You received 1 Fortune Cookie as a reward! 🥠",
   "confirm": "Confirm",
-
+  "missionSuccess": "Mission Success!",
+  "cheeringMessage1": "Have a great day today!",
+  "cheeringMessage2": "I'm rooting for you today!",
+  "cheeringMessage3": "It's going to be a wonderful day.",
+  "todaysCheering": "Today's Message",
+  "notificationWakeUpBody": "Time to wake up!",
+  "notificationMissionBody": "Complete the mission and turn off the alarm!",
+  "notificationSafetyBody": "The alarm was forced to close! Please complete the mission.",
+  "notificationRingingBody": "The alarm is ringing!",
+  "snoozePrefix": "[Snooze]",
   "exactAlarmPermissionRequired": "The \"Exact Alarm\" permission is required to sound the alarm at the correct time.",
   "overlayPermissionRequired": "The \"Display over other apps\" permission is required for full-screen notifications.",
   "deleteAllAlarms": "Delete All Alarms",
@@ -24,32 +43,41 @@
   "hoursMinutesRemaining": "Ringing in {hours}h {minutes}m",
   "@hoursMinutesRemaining": {
     "placeholders": {
-      "hours": { "type": "int" },
-      "minutes": { "type": "int" }
+      "hours": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "String"
+      }
     }
   },
   "minutesRemaining": "Ringing in {minutes}m",
   "@minutesRemaining": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
   "am": "AM",
   "pm": "PM",
-
   "dailyFortuneCookieReward": "Daily Fortune Cookie Reward",
   "missionRewardInfo": "1 cookie for 5 successful missions, 2 for 10!",
   "dailyMission": "Daily Mission",
   "goalAchieved": "🎉 {completed}/5 Goal Achieved!",
   "@goalAchieved": {
     "placeholders": {
-      "completed": { "type": "int" }
+      "completed": {
+        "type": "int"
+      }
     }
   },
   "missionProgress": "{completed}/5 Achieved",
   "@missionProgress": {
     "placeholders": {
-      "completed": { "type": "int" }
+      "completed": {
+        "type": "int"
+      }
     }
   },
   "myMissionRecord": "My Mission Record",
@@ -64,11 +92,12 @@
   "addMission": "Add Mission",
   "completedMissions": "Completed Missions",
   "noCompletedMissionsHint": "No completed missions yet. Reach today's mission goal.",
-
   "greeting": "Hello, {userName}",
   "@greeting": {
     "placeholders": {
-      "userName": { "type": "String" }
+      "userName": {
+        "type": "String"
+      }
     }
   },
   "welcomeFortune": "Welcome to the mysterious world of fortune",
@@ -78,7 +107,7 @@
   "viewVariousFortunes": "View Various Fortunes",
   "todaysRecommendation": "Today's Recommendation",
   "checkTodaysFortune": "Check Today's Fortune",
-  "todaysAdvice": "Today's advice from the mysterious stars",
+  "todaysAdvice": "Today's Advice",
   "viewSpecificDateFortune": "View Fortune for Specific Date",
   "luckyNumberRecommendation": "Lucky Number Recommendation",
   "luckyNumber": "Lucky Number",
@@ -118,18 +147,18 @@
   "cheonganSin": "Sin",
   "cheonganIm": "Im",
   "cheonganGye": "Gye",
-  "jijiJa": "Ja",
-  "jijiChuk": "Chuk",
-  "jijiIn": "In",
-  "jijiMyo": "Myo",
-  "jijiJin": "Jin",
-  "jijiSa": "Sa",
-  "jijiO": "O",
-  "jijiMi": "Mi",
-  "jijiSin": "Sin",
-  "jijiYu": "Yu",
-  "jijiSul": "Sul",
-  "jijiHae": "Hae",
+  "jijiJa": "Rat",
+  "jijiChuk": "Ox",
+  "jijiIn": "Tiger",
+  "jijiMyo": "Rabbit",
+  "jijiJin": "Dragon",
+  "jijiSa": "Snake",
+  "jijiO": "Horse",
+  "jijiMi": "Goat",
+  "jijiSin": "Monkey",
+  "jijiYu": "Rooster",
+  "jijiSul": "Dog",
+  "jijiHae": "Pig",
   "jijiAnimalRat": "Rat",
   "jijiAnimalOx": "Ox",
   "jijiAnimalTiger": "Tiger",
@@ -157,22 +186,28 @@
   "assetDarkMode": "Dark Mode",
   "assetSoftBlue": "Soft Blue",
   "assetWarmBeige": "Warm Beige",
-  "assetCat": "Cat {index}",
+  "assetCat": "Cat {number}",
   "@assetCat": {
     "placeholders": {
-      "index": { "type": "int" }
+      "number": {
+        "type": "int"
+      }
     }
   },
-  "assetDog": "Dog {index}",
+  "assetDog": "Dog {number}",
   "@assetDog": {
     "placeholders": {
-      "index": { "type": "int" }
+      "number": {
+        "type": "int"
+      }
     }
   },
-  "assetSea": "Sea {index}",
+  "assetSea": "Sea {number}",
   "@assetSea": {
     "placeholders": {
-      "index": { "type": "int" }
+      "number": {
+        "type": "int"
+      }
     }
   },
   "categoryCharacter": "Character",
@@ -185,15 +220,17 @@
   "gallery": "Gallery",
   "selectSolidColor": "Select Solid Color",
   "deleteColor": "Delete Color",
-  "deleteColorConfirm": "Are you sure you want to delete this color?",
-  "randomBackgroundDesc": "A random background will be shown when the alarm rings.",
-  "backgroundDeleted": "Background deleted.",
+  "deleteColorConfirm": "Are you sure you want to delete this color from the list?",
+  "randomBackgroundDesc": "A new background every time the alarm rings!",
+  "backgroundDeleted": "Background image deleted.",
   "pickFromDevice": "Pick from device",
   "alarmSaveError": "Failed to save alarm. An unknown error occurred.",
-  "errorOccurred": "An error occurred: {error}",
+  "errorOccurred": "Error occurred: {error}",
   "@errorOccurred": {
     "placeholders": {
-      "error": { "type": "String" }
+      "error": {
+        "type": "String"
+      }
     }
   },
   "openSettings": "Open Settings",
@@ -201,17 +238,23 @@
   "itsTimeToWakeUp": "Time to wake up!",
   "dismissAlarm": "Stop Alarm",
   "slideToDismiss": "Swipe to turn off",
-  "snoozeInfo": "{minutes}m · {count}",
+  "snoozeInfo": "{minutes}m x {count}",
   "@snoozeInfo": {
     "placeholders": {
-      "minutes": { "type": "int" },
-      "count": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
     }
   },
   "snoozeInfoUnlimited": "{minutes}m · Unlimited",
   "@snoozeInfoUnlimited": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
   "noActiveAlarms": "No active alarms",
@@ -229,9 +272,15 @@
   "dailyFortuneHeadline": "{vibe}Today, your {topKey} luck is strongest, while your {bottomKey} luck requires extra care.",
   "@dailyFortuneHeadline": {
     "placeholders": {
-      "vibe": { "type": "String" },
-      "topKey": { "type": "String" },
-      "bottomKey": { "type": "String" }
+      "vibe": {
+        "type": "String"
+      },
+      "topKey": {
+        "type": "String"
+      },
+      "bottomKey": {
+        "type": "String"
+      }
     }
   },
   "faceShapeVLine": "V-line",
@@ -267,9 +316,8 @@
     }
   },
   "adLoadFailFreeAccess": "Ad failed to load. Results unlocked for free!",
-  "insufficientCookiesTitle": "Not Enough Cookies",
-  "insufficientCookiesMessage": "You don't have enough cookies.\nWatch an ad to check for free!",
-  "confirm": "Confirm",
+  "insufficientCookiesTitle": "Not Enough Fortune Cookies",
+  "insufficientCookiesMessage": "You don't have enough fortune cookies.\nYou can earn more by completing missions or watching ads.",
   "useCookiesSnackbar": "Using 2 Cookies to check results.",
   "faceAnalysisComplete_v2": "Face analysis is complete!",
   "chooseMethodToViewResult": "Choose a method below to check your hidden facial fortune.",
@@ -365,7 +413,6 @@
   "noseWealth": "👃 Nose (Wealth)",
   "mouthLateLuck": "👄 Mouth (Late Luck)",
   "overallAnalysisTitle": "Overall Analysis",
-  "todaysAdvice": "Today's Advice",
   "shareResultTitle": "Today's Face Result",
   "shareResultDesc": "AI face analysis result.\n{title}",
   "@shareResultDesc": {
@@ -388,14 +435,13 @@
   "interval": "Interval",
   "maxSnoozeCount": "Max Snooze Count",
   "unlimited": "Unlimited",
-  "random": "Random",
   "permissionRequired": "Permission Required",
   "exactAlarmFailMessage": "Failed to register alarm. Exact alarm permission is off and needs setting.",
   "batteryOptimFailMessage": "Failed to register alarm. Battery optimization exception permission is missing.",
   "overlayFailMessage": "Failed to register alarm. Display over other apps permission is missing.",
-  "loadingDelay": "Loading Delay",
+  "loadingDelay": "Loading delay",
   "loading": "Loading...",
-  "previewFail": "Preview Failed",
+  "previewFail": "Preview failed",
   "bgDefault": "Default Background",
   "bgFortuneFriends": "Fortune Friends",
   "bgMongChuni": "Mongchuni",
@@ -421,21 +467,18 @@
   "loveLuckWithIcon": "❤️ Love Luck",
   "careerLuckWithIcon": "💼 Career Luck",
   "healthLuckWithIcon": "💪 Health Luck",
-  "todaysFaceFortune": "Today's Face Fortune",
-  "detailedAnalysis": "Detailed Analysis",
-  "eyeInsight": "👁️ Eye (Insight)",
-  "noseWealth": "👃 Nose (Wealth)",
   "mouthFortune": "👄 Mouth (Maturity Luck)",
   "comprehensiveAnalysis": "Comprehensive Analysis",
   "todaysFaceResult": "Today's Face Analysis Result",
   "faceAnalysisShareDesc": "This is the AI face analysis result.\n{title}",
   "@faceAnalysisShareDesc": {
     "placeholders": {
-      "title": { "type": "String" }
+      "title": {
+        "type": "String"
+      }
     }
   },
   "shareResult": "Share Result",
-  "wakeUpComplete": "Wake up complete!",
   "faceVibeSmile0": "Your bright smile spreads positive energy to everyone around you. ",
   "faceVibeSmile1": "That radiant smile shows you're full of vibrant energy today. ",
   "faceVibeSmile2": "Your gentle expression has a charming quality that attracts supportive people. ",
@@ -547,12 +590,53 @@
   "mouthExpressionBlessing": "Your upturned corners suggest a positive nature that naturally attracts good fortune and favor from others.",
   "mouthExpressionReliable": "A firm, closed mouth reflects reliability and a preference for action over empty words.",
   "mouthExpressionLucky": "A bright, open smile radiates positive energy, bringing luck to your relationships.",
+  "supplementAlarmTitle": "Time to take your supplements! 💊",
+  "alarmVolume": "Alarm Volume",
+  "alarmTimeList": "Alarm Time List",
+  "noAlarmTimesAdded": "No alarm times added.",
+  "alarmTimeDeleted": "Alarm time deleted.",
+  "addAlarmTime": "Add Alarm Time",
+  "editAlarmTime": "Edit Alarm Time",
+  "defaultRingtone": "Default Ringtone",
+  "takeSupplementsNow": "Please take your supplements and record it!",
+  "nextTime": "Next Time",
+  "take": "Take",
+  "notifications": "Notifications",
+  "notificationTime": "Notification Time",
+  "start": "Start",
+  "end": "End",
+  "notificationInterval": "Notification Interval",
+  "waterDrankToday": "Water Drank Today",
+  "goal": "Goal",
+  "cup": "Cup",
+  "waterIntakeRecord": "Water Intake Record",
+  "remainingAmount": "Remaining",
+  "ml": "ml",
+  "minutesFormat": "{minutes}m",
+  "drinkWater": "Drink Water",
+  "supplement": "Supplement",
+  "water": "Water",
+  "morning": "Morning",
+  "afternoon": "Afternoon",
+  "evening": "Evening",
+  "takeSupplement": "Take Supplement",
+  "goalAchievedTitle": "Goal Achieved!",
+  "waterIntake": "Water Intake",
+  "remindTime": "Remind Time",
+  "alarmRingtone": "Alarm Ringtone",
+  "snoozeTime": "Snooze Time",
+  "snoozeDescription": "Default time when selecting 'Next Time'",
+  "oneHour": "1 Hour",
   "mouthExpressionOpen": "Your open expression suggests honesty, but be mindful of your words in sensitive situations.",
   "overallHeadlineSimple": "Today's focus is {topKey}, and the point to be careful of is {bottomKey}.",
   "@overallHeadlineSimple": {
     "placeholders": {
-      "topKey": { "type": "String" },
-      "bottomKey": { "type": "String" }
+      "topKey": {
+        "type": "String"
+      },
+      "bottomKey": {
+        "type": "String"
+      }
     }
   },
   "overallVibeWealthRich": "Your features radiate financial vitality, making this an excellent day to seize new opportunities.",
@@ -596,8 +680,8 @@
   "sajuFortune2026Gi": "🌾 2026 Byeong-oh Year Gi-Earth General Fortune: 'Solid Foundation and Definite Support'\n\n2026 is a year of 'Jeong-in' (Knowledge) and 'Pyeon-in' (Intuition) for you, a Gi-Earth. It is a situation where warm sunlight shines on the earth and ripens grains. It is a period of solidifying a stable foundation while receiving full support and love from superiors.\n\n💼 [Career & Business]\nYou will achieve the best results in everything related to study, such as promotion exams, certification exams, and degree attainment. At work, you will gain the trust of superiors and take on important positions. You will stand out in education, real estate, counseling, and welfare fields.\n\n💰 [Wealth]\nIt is a luck to hold documents. You may achieve the goal of owning a home or receive inheritance or gifts. Stable asset growth is possible, and it is a year where honor shines more than wealth.\n\n❤️ [Love & Relationships]\nIt is a year to be loved. You will receive dependable love from your lover or meet a partner with good conditions. Marriage luck also enters, and family life becomes harmonious.\n\n⚠️ [Precautions]\nIf you only try to receive, you may become lazy. A posture of sharing as much as you received is necessary. Discard dependency and grow self-reliance.",
   "sajuFortune2026Gyeong": "⚔️ 2026 Byeong-oh Year Gyeong-Metal General Fortune: 'Birth of a Masterpiece Beyond Ordeal'\n\n2026 is a year where 'Pyeon-gwan' (Pressure) and 'Jeong-gwan' (Authority) are very powerful for you, a Gyeong-Metal. It is a situation of melting raw ore in a furnace to make a masterpiece sword. There may be strong pressure and stress, but if you endure it, you will gain immense authority and honor.\n\n💼 [Career & Business]\nYou may take on positions with heavy responsibility or handle difficult projects. However, this is a process of testing you, and if successfully completed, your status rises instantly. It is an opportunity for promotion for those in public office, military, police, and legal fields.\n\n💰 [Wealth]\nIt is a luck of honor and titles rather than money. As status rises, wealth will naturally follow, but money going out for dignity maintenance or entertainment is also significant.\n\n❤️ [Love & Relationships]\nFor women, it is a luck where a charismatic and capable man appears. Men have strong children's luck. Relationships with work superiors or elders become important.\n\n⚠️ [Precautions]\nHealth management is the top priority. Be careful of diseases or accidents caused by overwork. Especially lungs and large intestines may weaken. Find ways to relieve stress.",
   "sajuFortune2026Sin": "💎 2026 Byeong-oh Year Sin-Metal General Fortune: 'Shining Jewel, Peak of Honor'\n\n2026 is a year of 'Jeong-gwan' (Authority) and 'Pyeon-gwan' (Pressure) for you, a Sin-Metal. Like a jewel shining under lights, it is a period where your value is revealed to the world and honor is elevated. You have deep connections with upright and stable workplaces or organizations.\n\n💼 [Career & Business]\nJob hunting, promotion, and transfer luck are very good. You may also receive scout offers by being recognized for your skills. If you follow principles and handle work correctly, you will receive respect from everyone.\n\n💰 [Wealth]\nStable salary or fixed income is guaranteed. If you protect honor rather than chasing wealth, wealth will naturally follow. You can benefit from your husband or workplace.\n\n❤️ [Love & Relationships]\nIt is the best marriage and dating luck for women. You can meet an upright and capable spouse. Men gain children or have joyful events due to children.\n\n⚠️ [Precautions]\nToo much heat can melt the jewel. Excessive work or stress may cause nervousness. You may appear inflexible due to strong principle-oriented tendencies, so be careful.",
-  "sajuFortune2026Im": "🌊 2026 Byeong-oh Year Im-Water General Fortune: 'Sun on the River, Opportunity for Great Fortune'\n\n2026 is a year where 'Pyeon-jae' (Large Wealth) and 'Jeong-jae' (Fixed Wealth) are very active for you, an Im-Water. It is a situation where the sun shines on the lake and the waves glow gold. Wealth luck explodes, and it is a time when you may seize an opportunity for a life reversal.\n\n💼 [Career & Business]\nIt is an exceptionally good year for business owners. Business flourishes and the stage of activity may expand overseas. Office workers can get handsome bonuses or incentives. A practical attitude that values results and practical interests calls for success.\n\n💰 [Wealth]\nIt is a luck where you can touch a lot of money. Investment returns, business income, and unexpected windfalls follow. However, if your power to handle wealth is weak, you may lose health because of money, so be greedy within manageable limits.\n\n❤️ [Love & Relationships]\nFor men, luck with women floods in like a tide. Attractive partners are all around you. Women may have highlighted relationships with mothers-in-law or meet capable men.\n\n⚠️ [Precautions]\nObsession with wealth and partners can lead to trouble. Unreasonable greed may lead to health deterioration (kidneys, bladder, blood pressure), so be careful. Be thorough with money management and watch out for scams.",
-  "sajuFortune2026Gye": "🌧️ 2026 Byeong-oh Year Gye-Water General Fortune: 'Harvest Season with Rainbow'\n\n2026 is a year of 'Jeong-jae' (Fixed Wealth) and 'Pyeon-jae' (Large Wealth) for you, a Gye-Water. It is like a spring rain falling on a warm day with heat haze. You will get honest rewards for your efforts, and it is a financially very prosperous and stable period.\n\n💼 [Career & Business]\nIf you compete with sincerity and meticulousness, you will surely be rewarded. You will show talent in fields that require meticulousness such as finance, accounting, banking, and data analysis. It is good for operating a stable workplace or a solid business.\n\n💰 [Wealth]\nMoney saved diligently returns as a large sum. You can increase assets through savings, installments, and safe investments. Fixed income increases and leisure in life arises. Just watch out for wastefulness.\n\n❤️ [Love & Relationships]\nMen have good luck to meet a spouse of a good-wife-and-wise-mother style or get married. Women will pursue realistic and stable romance. Interpersonal relationships are smooth and you gain credit.\n\n⚠️ [Precautions]\nToo much heat can evaporate the rain (Gye-Water). Excessive activity or greed may exhaust physical strength, so proper rest is needed. Be careful not to miss the big picture by being obsessed only with immediate interests.",
+  "sajuFortune2026Im": "🌊 2026 Byeongo Year Im-Water General Fortune: 'A Dynamic Year of Expanding Activity Range'\n\n2026 is a year where the energy of 'Pyeon-jae' and 'Jeong-jae' enters for you. It's like a huge sea circulating actively by receiving the sun's heat and moving towards the wide world. It will be a dynamic year where economic activities become vigorous and opportunities to touch large wealth come.\n\n💼 [Career & Business]\nBusiness acumen is maximized. A very good year to pioneer new markets or reap large profits from investments. Luck where activity range can expand beyond domestic to overseas. Bold decisions lead to great results, but detailed review is essential.\n\n💰 [Wealth]\nWealth luck reaches its peak. Unexpected windfalls or large-scale business profits are expected. If you ride the flow of money well, you can form large assets. However, management is important as money going out can be as large as money coming in.\n\n❤️ [Love & Relationships]\nSociability improves and many people of the opposite sex gather around with overflowing charm. A good time to enjoy active dating. In romantic relationships, you spend happy times enjoying fancy dates and trips. However, be careful as you may neglect partners due to a too busy schedule.\n\n⚠️ [Cautions]\nPay attention to kidney function or blood circulation. Also, wisdom to know how to be satisfied at an appropriate level is needed as excessive greed may lead to trouble.",
+  "sajuFortune2026Gye": "💧 2026 Byeongo Year Gye-Water General Fortune: 'Gaining Practical Interests while Strengthening Internal Foundations'\n\n2026 is a year where the energy of 'Jeong-jae' and 'Pyeon-jae' enters for you. It's like sunshine shining after sweet rain, making the land full of life and abundance. You will achieve economic stability based on stable income and find small happinesses.\n\n💼 [Career & Business]\nYou handle assigned tasks perfectly with sincerity and meticulousness. Display excellent ability in finance, accounting, or management tasks. Recognition and rewards follow when you do your best in assigned work rather than excessive greed. You can grow step by step while building skills in a stable environment.\n\n💰 [Wealth]\nWealth luck is very good. Steady and stable income occurs, and you enjoy the joy of increasing assets through financial technology or savings. Small but definite profits gather to give great reward. Frugal spending habits shine this year.\n\n❤️ [Love & Relationships]\nYou give deep trust to partners with kindhearted and meticulous consideration. You grow a small but warm love while sharing daily lives. Relationships are also smooth and peaceful. You will play the role of a trusted advisor to people around you.\n\n⚠️ [Cautions]\nPay attention to eye diseases or urological system health. Also, sometimes practice looking at the world with a wide perspective as you may miss the big flow by paying attention to too detailed things.",
   "sajuFortune2025Byeong": "🔥 2025 Year of the Wood Snake (Yang Fire): 'Passion and Achievement'\n\n2025 brings the energy of 'Academic Success' and 'Peers.' Like the sun meeting the warmth of the earth, this year you'll find strong support and the confidence to achieve your goals.\n\n💼 [Career & Business]\nSupport from mentors or reliable partners will help you reach new heights. This is a great year for academic pursuits or professional certifications. While collaboration will lead to success, be mindful that excessive competition doesn't strain your professional relationships.\n\n💰 [Wealth]\nSharing information with your network will lead to financial growth. Joint ventures or collaborative investments look promising. Avoid overspending for the sake of appearance or pride; focus on practical gains.\n\n❤️ [Love & Relationships]\nYour social circle will deepen, and you'll find comfort in friendships. In romantic relationships, a sense of familiarity and friendship will strengthen your bond. Balance your time between friends and your partner to maintain harmony.\n\n⚠️ [Cautions]\nPay attention to your heart and circulatory health. Stay calm and manage your emotions, as impulsive reactions could lead to unnecessary setbacks.",
   "sajuFortune2025Jeong": "🔥 2025 Year of the Wood Snake (Yin Fire): 'Opportunities in Times of Change'\n\n2025 brings the energy of 'Intuition' and 'Competitors.' Like a candle that continues to shine despite the wind, you will wisely overcome challenges and turn them into opportunities for success.\n\n💼 [Career & Business]\nYour original ideas and sharp intuition will shine. You'll find success in niche markets or specialized fields where others haven't looked. Be mindful of competition within your organization, and protect your ideas while maintaining good relationships.\n\n💰 [Wealth]\nExpect some fluctuations in your finances this year. A conservative approach to asset management is recommended, as unexpected expenses could arise. However, your professional skills will provide a stable source of income. Avoid risky financial transactions.\n\n❤️ [Love & Relationships]\nYou may find yourself being more reflective or passive in your romantic life. Trust is essential; try to approach your relationships with an open heart. Taking time for yourself will help you maintain your inner balance.\n\n⚠️ [Cautions]\nWatch out for stress-related fatigue or sleep issues. Practice mindfulness or light exercise to stay positive and clear-headed throughout the year.",
   "sajuFortune2025Mu": "⛰️ 2025 Year of the Wood Snake (Yang Earth): 'Wisdom and Maturity'\n\n2025 brings the energy of 'Honor' and 'Intuition.' Like a great mountain embracing the warmth of the earth, this will be a year for deepening your knowledge while maintaining your social standing.\n\n💼 [Career & Business]\nYou're likely to step into a role of responsibility or find opportunities for promotion. By valuing principles and working sincerely, you'll earn significant recognition. This is also an excellent year for research or specialized studies. Stay open to new ideas to avoid becoming stuck in old patterns.\n\n💰 [Wealth]\nA stable income is expected. Focus on saving and careful asset management. Luck is on your side regarding real estate or legal documents, making it a good time for long-term investments. Avoid being swayed by risky temptations.\n\n❤️ [Love & Relationships]\nYour dignified and reliable manner will earn you the trust of others. This is a perfect time for couples to build a deeper, more serious relationship. If you're considering marriage, this is a great year to make specific plans.\n\n⚠️ [Cautions]\nTake care of your digestive health and skin. Don't let overthinking lead to indecision; listen to trusted advice to help you move forward with confidence.",
@@ -606,15 +690,15 @@
   "sajuFortune2025Sin": "💎 2025 Year of the Wood Snake (Yin Metal): 'Wisdom and Success in Times of Change'\n\n2025 brings the energy of 'Windfalls' and 'Honor.' Like a fine jewel under a spotlight, your value will be recognized, and you'll experience both a rise in social status and unexpected financial gains.\n\n💼 [Career & Business]\nYour business acumen will be sharp, and you'll excel at capturing new opportunities. Bold challenges are likely to bring significant rewards. Within your organization, your rational judgment will earn you the trust of others and potentially a promotion.\n\n💰 [Wealth]\nFinancial luck is on your side this year. You may see unexpected gains from investments or family support. While wealth flows in, maintain a planned budget to avoid overspending on luxury items.\n\n❤️ [Love & Relationships]\nYou'll be the center of attention in social settings with your attractive presence. This is a very strong year for romance, with many people drawn to your charm. Couples can look forward to a passionate and meaningful year together.\n\n⚠️ [Cautions]\nPay attention to your respiratory and skin health. Maintain a humble attitude to ensure your confidence isn't mistaken for arrogance by those around you.",
   "sajuFortune2025Im": "🌊 2025 Year of the Wood Snake (Yang Water): 'Expanding Your Influence through Wisdom'\n\n2025 brings the energy of 'Expression' and 'Windfalls.' Like a winding river nurturing a field, this will be a dynamic year for expanding your activities and achieving significant financial success through your unique talents.\n\n💼 [Career & Business]\nYour communication skills will be highly effective, especially in marketing, PR, or creative fields. This is the perfect time to commercialize your ideas and explore new markets. Stay professional in your interactions with authority to ensure your ideas are well-received.\n\n💰 [Wealth]\nYour financial situation will be active and promising. You'll find opportunities to earn money through your specialized skills and capture large financial gains. Remember to share your success with others to maintain your positive financial flow.\n\n❤️ [Love & Relationships]\nYour humor and charm will make you very popular. You'll enjoy a vibrant social life with many interesting dates. In relationships, variety and creativity will keep things exciting. Be mindful that your words are understood as intended to avoid simple misunderstandings.\n\n⚠️ [Cautions]\nTake care of your kidney and urological health. Prioritize rest and proper nutrition to maintain your energy levels as you expand your range of activities.",
   "sajuFortune2025Gye": "💧 2025 Year of the Wood Snake (Yin Water): 'A Year of Stability and Reward'\n\n2025 brings the energy of 'Productivity' and 'Stable Wealth.' Like a gentle rain preparing the land for a rich harvest, your steady efforts will lead to lasting wealth and happiness.\n\n💼 [Career & Business]\nSincerity is your greatest strength this year. By fulfilling your responsibilities, you'll earn the deep trust of your colleagues. This is a great time to focus on your favorite projects and grow your expertise in a stable environment.\n\n💰 [Wealth]\nExpect a stable and comfortable financial year. You'll find satisfaction in steadily building your assets through careful planning. Abundance is the theme for your year; focus on safe investments and savings rather than taking risks.\n\n❤️ [Love & Relationships]\nYour warm-hearted and considerate nature will bring comfort to your partner. This is a year for nurturing your relationships with care and attention. Singles are likely to meet someone who shares their values and communicates well.\n\n⚠️ [Cautions]\nPay attention to your digestive health and maintain healthy eating habits. Find new ways to stay active and engaged to avoid becoming too comfortable or settled in your routine.",
-  "sajuFortune2026Im": "🌊 2026 Byeongo Year Im-Water General Fortune: 'A Dynamic Year of Expanding Activity Range'\n\n2026 is a year where the energy of 'Pyeon-jae' and 'Jeong-jae' enters for you. It's like a huge sea circulating actively by receiving the sun's heat and moving towards the wide world. It will be a dynamic year where economic activities become vigorous and opportunities to touch large wealth come.\n\n💼 [Career & Business]\nBusiness acumen is maximized. A very good year to pioneer new markets or reap large profits from investments. Luck where activity range can expand beyond domestic to overseas. Bold decisions lead to great results, but detailed review is essential.\n\n💰 [Wealth]\nWealth luck reaches its peak. Unexpected windfalls or large-scale business profits are expected. If you ride the flow of money well, you can form large assets. However, management is important as money going out can be as large as money coming in.\n\n❤️ [Love & Relationships]\nSociability improves and many people of the opposite sex gather around with overflowing charm. A good time to enjoy active dating. In romantic relationships, you spend happy times enjoying fancy dates and trips. However, be careful as you may neglect partners due to a too busy schedule.\n\n⚠️ [Cautions]\nPay attention to kidney function or blood circulation. Also, wisdom to know how to be satisfied at an appropriate level is needed as excessive greed may lead to trouble.",
-  "sajuFortune2026Gye": "💧 2026 Byeongo Year Gye-Water General Fortune: 'Gaining Practical Interests while Strengthening Internal Foundations'\n\n2026 is a year where the energy of 'Jeong-jae' and 'Pyeon-jae' enters for you. It's like sunshine shining after sweet rain, making the land full of life and abundance. You will achieve economic stability based on stable income and find small happinesses.\n\n💼 [Career & Business]\nYou handle assigned tasks perfectly with sincerity and meticulousness. Display excellent ability in finance, accounting, or management tasks. Recognition and rewards follow when you do your best in assigned work rather than excessive greed. You can grow step by step while building skills in a stable environment.\n\n💰 [Wealth]\nWealth luck is very good. Steady and stable income occurs, and you enjoy the joy of increasing assets through financial technology or savings. Small but definite profits gather to give great reward. Frugal spending habits shine this year.\n\n❤️ [Love & Relationships]\nYou give deep trust to partners with kindhearted and meticulous consideration. You grow a small but warm love while sharing daily lives. Relationships are also smooth and peaceful. You will play the role of a trusted advisor to people around you.\n\n⚠️ [Cautions]\nPay attention to eye diseases or urological system health. Also, sometimes practice looking at the world with a wide perspective as you may miss the big flow by paying attention to too detailed things.",
   "preparationForTomorrow": "Preparation for Tomorrow",
   "howToMeetMoreLuck": "How to meet more luck",
   "enterName": "Please enter your name",
-  "fortuneDateConfirm": "Would you like to see the fortune for {date}?",
+  "fortuneDateConfirm": "Would you like to check the fortune for {date}?",
   "@fortuneDateConfirm": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "colorPurple": "Purple",
@@ -653,7 +737,6 @@
   "privacySettings": "Privacy Settings",
   "information": "Information",
   "notice": "Notice",
-
   "weatherConditionSunny": "Sunny",
   "weatherConditionPartlyCloudy": "Partly Cloudy",
   "weatherConditionCloudy": "Cloudy",
@@ -694,20 +777,17 @@
   "allSettingsCompleted": "All settings updated.",
   "allowAllItems": "Please enable all permissions.",
   "manualSettingsInfo": "You can manage these settings anytime in your Android system menu.",
-
   "takePhoto": "Take Photo",
   "selectPhoto": "Select Photo",
   "selectAlarmBackground": "Alarm Background",
   "defaultLabel": "Default",
   "howToAdd": "How to Add",
   "addAssetInstructions": "Add images to the 'assets/images/' folder and update 'pubspec.yaml'.",
-  "gallery": "Gallery",
   "ringingNow": "Alarm Ringing",
   "setTime": "Set Time",
   "repeatDays": "Repeat Days",
   "repeatDaily": "Repeat Daily",
   "snoozeSettings": "Snooze Settings",
-  "interval": "Interval",
   "wakeUpAlarm": "Alarm Mission",
   "daySun": "S",
   "dayMon": "M",
@@ -727,14 +807,20 @@
   "missionRewardEarnedWithCount": "Well done! You've completed {missions} missions and earned {cookies} Fortune Cookie(s)!",
   "@missionRewardEarnedWithCount": {
     "placeholders": {
-      "missions": { "type": "int" },
-      "cookies": { "type": "int" }
+      "missions": {
+        "type": "int"
+      },
+      "cookies": {
+        "type": "int"
+      }
     }
   },
   "daysCount": "{count} days",
   "@daysCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "user": "User",
@@ -754,7 +840,9 @@
   "deleteConfirmMessage": "Do you want to delete \"{title}\"?",
   "@deleteConfirmMessage": {
     "placeholders": {
-      "title": { "type": "String" }
+      "title": {
+        "type": "String"
+      }
     }
   },
   "delete": "Delete",
@@ -776,7 +864,9 @@
   "adjustThickness": "Adjust {label} thickness",
   "@adjustThickness": {
     "placeholders": {
-      "label": { "type": "String" }
+      "label": {
+        "type": "String"
+      }
     }
   },
   "sticker": "Sticker",
@@ -791,11 +881,9 @@
   "routineMovie": "Movie",
   "routineMeeting": "Meeting",
   "howIsYourMoodToday": "How is your mood today?",
-  "setTime": "Set Time",
   "complete": "Complete",
   "amWithIcon": "☀️ AM",
   "pmWithIcon": "🌙 PM",
-  "permissionRequired": "Permission Required",
   "photoPermissionDescription": "To add photos, you must allow photo access in settings.",
   "goToSettings": "Go to Settings",
   "photoPermissionNeeded": "Photo access permission is required.",
@@ -819,14 +907,18 @@
   "minutesLater": "{minutes} min later",
   "@minutesLater": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
   "countLabel": "Count",
   "timesCount": "Total {count} times",
   "@timesCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "String"
+      }
     }
   },
   "wakeUpMission": "Wake-up Mission",
@@ -866,7 +958,9 @@
   "walkSteps": "{count} steps",
   "@walkSteps": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "missionNumberOrder": "Number Order",
@@ -874,7 +968,9 @@
   "missionNumberOrderGuide": "Next: {nextNumber}",
   "@missionNumberOrderGuide": {
     "placeholders": {
-      "nextNumber": { "type": "int" }
+      "nextNumber": {
+        "type": "int"
+      }
     }
   },
   "missionHiddenButton": "Memory Tiles",
@@ -882,7 +978,9 @@
   "missionHiddenButtonDifficulty": "Δ{delta}",
   "@missionHiddenButtonDifficulty": {
     "placeholders": {
-      "delta": { "type": "int" }
+      "delta": {
+        "type": "int"
+      }
     }
   },
   "missionTapSprint": "Rapid Tap",
@@ -890,7 +988,9 @@
   "missionTapSprintDescription": "Tap {goalTaps}+ times to fill the meter.",
   "@missionTapSprintDescription": {
     "placeholders": {
-      "goalTaps": { "type": "int" }
+      "goalTaps": {
+        "type": "int"
+      }
     }
   },
   "missionTapSprintTapHere": "Tap",
@@ -900,7 +1000,9 @@
   "missionLeftRightDescription": "Get {targetStreak} correct in a row.",
   "@missionLeftRightDescription": {
     "placeholders": {
-      "targetStreak": { "type": "int" }
+      "targetStreak": {
+        "type": "int"
+      }
     }
   },
   "missionLeftRightPromptLeft": "Tap LEFT",
@@ -911,27 +1013,37 @@
   "fortuneCatchScore": "Score: {score}",
   "@fortuneCatchScore": {
     "placeholders": {
-      "score": { "type": "int" }
+      "score": {
+        "type": "int"
+      }
     }
   },
   "fortuneCatchGoal": "Goal: 100",
   "fortuneCatchGoalDetail": "(Catches: {count}/{min})",
   "@fortuneCatchGoalDetail": {
     "placeholders": {
-      "count": { "type": "int" },
-      "min": { "type": "int" }
+      "count": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      }
     }
   },
   "fortuneCatchTime": "Time: {seconds}s",
   "@fortuneCatchTime": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "fortuneCatchBest": "Best: {seconds}s",
   "@fortuneCatchBest": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "fortuneCatchAngryHint": "Avoid the angry Fortuni to prevent penalties!",
@@ -939,19 +1051,25 @@
   "fortuneCatchPointMinus": "{points} points deducted",
   "@fortuneCatchPointMinus": {
     "placeholders": {
-      "points": { "type": "int" }
+      "points": {
+        "type": "int"
+      }
     }
   },
   "fortuneCatchPointPlus": "+{points} points",
   "@fortuneCatchPointPlus": {
     "placeholders": {
-      "points": { "type": "int" }
+      "points": {
+        "type": "int"
+      }
     }
   },
   "fortuneCatchCombo": "{combo} Combo!",
   "@fortuneCatchCombo": {
     "placeholders": {
-      "combo": { "type": "int" }
+      "combo": {
+        "type": "int"
+      }
     }
   },
   "difficulty": "Difficulty",
@@ -962,21 +1080,31 @@
   "problemsCount": "{count} Problems",
   "@problemsCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "missionAnalyzing": "Mission {index}/{total} Analyzing...",
   "@missionAnalyzing": {
     "placeholders": {
-      "index": { "type": "int" },
-      "total": { "type": "int" }
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "missionPointObject": "Mission {index}/{total}: Point at the object in the guide.",
   "@missionPointObject": {
     "placeholders": {
-      "index": { "type": "int" },
-      "total": { "type": "int" }
+      "index": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "missionPointSink": "Point at the sink.",
@@ -992,14 +1120,20 @@
   "missionSuccessWithCount": "{completed}/{total} Success!",
   "@missionSuccessWithCount": {
     "placeholders": {
-      "completed": { "type": "int" },
-      "total": { "type": "int" }
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "missionMatchSuccess": "{total}/{total} Success! Matching success!",
   "@missionMatchSuccess": {
     "placeholders": {
-      "total": { "type": "int" }
+      "total": {
+        "type": "int"
+      }
     }
   },
   "escape": "Escape",
@@ -1010,7 +1144,9 @@
   "missionSnoozeMessage": "Mission Success! But it will ring again in {minutes} minutes according to settings.",
   "@missionSnoozeMessage": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
   "showFace": "Please show your face",
@@ -1026,19 +1162,25 @@
   "shakeTimes": "{count} Shakes",
   "@shakeTimes": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "tapTimes": "{count} Taps",
   "@tapTimes": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "missionNumber": "Mission {number}",
   "@missionNumber": {
     "placeholders": {
-      "number": { "type": "int" }
+      "number": {
+        "type": "int"
+      }
     }
   },
   "soundBirds": "Bird Sounds",
@@ -1046,7 +1188,9 @@
   "missionIndex": "Mission {index}",
   "@missionIndex": {
     "placeholders": {
-      "index": { "type": "int" }
+      "index": {
+        "type": "int"
+      }
     }
   },
   "ringtoneSelect": "Select Ringtone",
@@ -1057,72 +1201,27 @@
   "ringtoneCategoryUpbeat": "Upbeat",
   "ringtoneCategoryLoud": "Loud",
   "noRingtones": "No ringtones found.",
-  "assetCat": "Cat {number}",
-  "@assetCat": {
-    "placeholders": {
-      "number": { "type": "int" }
-    }
-  },
-  "assetDog": "Dog {number}",
-  "@assetDog": {
-    "placeholders": {
-      "number": { "type": "int" }
-    }
-  },
-  "assetDefaultBackground": "Default Background",
-  "assetFortuneyFriends": "Fortuney Friends",
-  "assetMongchuny": "Mongchuny",
-  "assetPanchuny": "Panchuny",
-  "assetTochuny": "Tochuny",
-  "assetHochuny": "Hochuny",
-  "assetBear": "Bear",
-  "assetMoon": "Moon",
-  "assetSea": "Sea {number}",
-  "@assetSea": {
-    "placeholders": {
-      "number": { "type": "int" }
-    }
-  },
-  "assetBridge": "Bridge",
-  "assetRoad": "Road",
-  "assetSky": "Sky",
   "photoPermissionRequired": "Photo access permission is required.",
   "deleteImage": "Delete Image",
-  "delete": "Delete",
-  "edit": "Edit",
-  "backgroundDeleted": "Background image deleted.",
-  "deleteColor": "Delete Color",
-  "deleteColorConfirm": "Are you sure you want to delete this color from the list?",
   "longPressToDelete": "Long press to delete.",
-  "categoryCharacter": "Character",
-  "categoryAnimal": "Animal",
-  "categoryIllustration": "Illustration",
-  "categoryLandscape": "Landscape",
-  "categorySimple": "Simple",
-  "assetMinimalGray": "Minimal Gray",
-  "assetDarkMode": "Dark Mode",
-  "assetSoftBlue": "Soft Blue",
-  "assetWarmBeige": "Warm Beige",
-  "alarmBackground": "Alarm Background",
-  "random": "Random",
   "videoLoadFail": "Failed to load video\nTap to retry",
-  "previewFail": "Preview failed",
-  "loadingDelay": "Loading delay",
-  "gallery": "Gallery",
   "existingCapturedImages": "Existing Captured Images",
   "deleteCount": "Delete {count}",
   "@deleteCount": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "deleteSelectedImagesConfirm": "Are you sure you want to delete {count} images?\nThis action cannot be undone.",
   "@deleteSelectedImagesConfirm": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-  "defaultRingtone": "Default Ringtone",
   "classicAlarm": "Classic Alarm",
   "digitalAlarm": "Digital Alarm",
   "birdsSound": "Birds Chirping",
@@ -1142,18 +1241,10 @@
   "heartbeatVibration": "Heartbeat",
   "sosVibration": "SOS",
   "quickVibration": "Quick Beat",
-  "permissionRequired": "Permission Required",
   "exactAlarmPermissionDesc": "To ring the alarm at the exact time, \"Schedule & Reminders\" permission is required.",
   "batteryOptimizationPermissionDesc": "Battery optimization must be disabled for the alarm to ring on time.",
   "overlayPermissionDesc": "To display the mission screen when the alarm goes off, \"Display over other apps\" permission is required.",
   "cameraMissionFirstImageError": "Please set at least the first mission image.",
-  "errorOccurred": "Error occurred: {error}",
-  "@errorOccurred": {
-    "placeholders": {
-      "error": { "type": "String" }
-    }
-  },
-  "openSettings": "Open Settings",
   "retry": "Retry",
   "exactAlarmPermissionFail": "Failed to register alarm. Exact alarm permission is disabled and needs to be set.",
   "batteryOptimizationPermissionFail": "Failed to register alarm. Battery optimization exception permission is missing and needs to be set.",
@@ -1165,8 +1256,12 @@
   "repeatAlarmCount": "Snooze Alarm ({current}/{max})",
   "@repeatAlarmCount": {
     "placeholders": {
-      "current": { "type": "int" },
-      "max": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
     }
   },
   "turnOffAlarm": "Turn Off Alarm",
@@ -1175,15 +1270,23 @@
   "snoozeMinutesUnlimited": "{minutes}m (Unlimited)",
   "@snoozeMinutesUnlimited": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
   "snoozeMinutesCount": "{minutes}m ({current}/{total})",
   "@snoozeMinutesCount": {
     "placeholders": {
-      "minutes": { "type": "int" },
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      },
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "ringtone_fluttering_day": "Fluttering Day",
@@ -1193,6 +1296,9 @@
   "ringtone_refreshing_day": "Refreshing Day",
   "ringtone_new_beginning": "New Beginning",
   "ringtone_self_love": "Self Love",
+  "cherry_stained_finger": "Cherry Stained Finger",
+  "dancing_in_the_stars": "Dancing In The Stars",
+  "nice_day": "Nice Day",
   "fortuneTitle": "Check Fortune",
   "fortuneMessage": "Check your fortune results\nand get hidden gifts!",
   "fortuneAdButton": "Watch Ad and Check Results",
@@ -1200,15 +1306,21 @@
   "fortuneAnalyzing": "Analyzing your selected Tarot card... {progress}%",
   "@fortuneAnalyzing": {
     "placeholders": {
-      "progress": { "type": "int" }
+      "progress": {
+        "type": "int"
+      }
     }
   },
   "fortuneSelectTitle": "Think about today's energy\nand select 3 cards.",
-  "fortuneSelectTitleDate": "Think about the energy of {month, select, 1{January} 2{February} 3{March} 4{April} 5{May} 6{June} 7{July} 8{August} 9{September} 10{October} 11{November} 12{December} other{Month}} {day}\nand select 3 cards.",
+  "fortuneSelectTitleDate": "Think about the energy of {month}/{day}\nand select 3 cards.",
   "@fortuneSelectTitleDate": {
     "placeholders": {
-      "month": { "type": "String" },
-      "day": { "type": "int" }
+      "month": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      }
     }
   },
   "fortuneNewYearButton": "View 2026 New Year Fortune",
@@ -1216,12 +1328,18 @@
   "wealthFortune": "Wealth",
   "successFortune": "Success",
   "fortuneResultTitle": "Here is your fortune result for today.",
-  "fortuneResultTitleDate": "Fortune for {month, select, 1{January} 2{February} 3{March} 4{April} 5{May} 6{June} 7{July} 8{August} 9{September} 10{October} 11{November} 12{December} other{Month}} {day}, {year}",
+  "fortuneResultTitleDate": "Fortune for {month}/{day}, {year}",
   "@fortuneResultTitleDate": {
     "placeholders": {
-      "year": { "type": "int" },
-      "month": { "type": "String" },
-      "day": { "type": "int" }
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "String"
+      },
+      "day": {
+        "type": "int"
+      }
     }
   },
   "startDayButton": "Start Your Day",
@@ -1247,14 +1365,214 @@
   "tarotName19": "The Sun",
   "tarotName20": "Judgement",
   "tarotName21": "The World",
+  "tarotKeywords0": "New beginnings, adventure, innocence, freedom, recklessness",
+  "tarotDesc0": "The Fool stands precariously at the edge of a cliff in colorful clothes, but his gaze is fixed on the distance, full of hope.",
+  "tarotLoveMeaning0": "An unexpected new love may arrive, or a fateful encounter at first sight may occur.",
+  "tarotLoveDetail0": "It's a time when you can start love with a pure heart like a child. Forget all past wounds or complex conditions and be faithful to the emotions of this moment. You may encounter a new connection in an unexpected place or have a heart-fluttering experience of falling in love at first sight.",
+  "tarotWealthMeaning0": "New investments or business items may catch your eye. It's a time when profits follow when you work happily without being tied to money.",
+  "tarotWealthDetail0": "A time when new financial opportunities are opening up. You can achieve unexpected results by investing in creative items that others haven't tried or by challenging new fields. However, avoid reckless spending and let profits naturally follow the process of enjoying your work.",
+  "tarotSuccessMeaning0": "It's a good time to start a new project or change to a completely different field.",
+  "tarotSuccessDetail0": "The most suitable time to start a new project or change to a completely different field. Take a bold first step with excitement rather than fear of failure. Your pure passion will positively influence those around you and open new paths.",
   "tarotKeywords1": "Creation, Will, Ability, Realization, Versatility",
-  "tarotDescription1": "The magician is wearing a red robe, one hand pointing to the sky and the other to the ground, bringing heavenly power to the ground. There are four elements (staff, cup, sword, coin) on the table, which means you already have all the tools and abilities to achieve your goals.",
-  "tarotLoveMeaning1": "This is a time when your charm is at its peak and you are popular with others. If you're seeing someone or have a spark with someone, you can develop the relationship with your witty speech and lead.",
-  "tarotLoveDetail1": "It's a great opportunity to capture someone's heart as your charm and talent shine. If there's someone you like, don't hesitate to approach them actively. Your sense of humor and sensible conversation will delight the other person and allow you to lead the relationship proactively. If you're single, you may be approached by several people, and if you're in a relationship, the other person will be greatly moved if you lead the date plans or prepare an event. Win love with confidence.",
-  "tarotWealthMeaning1": "This is the right time to generate revenue using your abilities and skills. If you materialize the ideas in your head into reality, it will lead to financial results.",
-  "tarotWealthDetail1": "This is the time when your knowledge, skills, and ideas become money. Don't just settle for a salary; generate extra income through side jobs, two jobs, or freelance activities. Creative planning, sales ability, and speaking ability will be demonstrated excellently, resulting in higher-than-expected revenue. Since your judgment is likely to hit the mark in fund management, you will get good results if you proactively set up a financial plan and put it into practice.",
-  "tarotSuccessMeaning1": "Your work ability will be excellently demonstrated and recognized by those around you. If you have something planned, now is the time to put it into practice.",
-  "tarotSuccessDetail1": "You can stand out in your workplace or studies by making full use of your abilities. No matter what problem you face, you can solve it with your own wit and humor, and you will be recognized as a 'capable person' by your colleagues or superiors. If you take the lead in a new project or give an important presentation, you can finish it successfully. Just as opportunities come to those who are prepared, you are already fully prepared. Believe in yourself and show off your skills confidently like a protagonist on stage.",
+  "tarotDesc1": "The magician is wearing a red robe, one hand pointing to the sky and the other to the ground, bringing heavenly power to the ground.",
+  "tarotLoveMeaning1": "This is a time when your charm is at its peak and you become popular with the opposite sex.",
+  "tarotLoveDetail1": "This is a perfect opportunity for your charm and talent to shine and capture someone's heart. If there's someone you like, don't hesitate and approach them actively. Your sense of humor and witty conversation will delight them, allowing you to take the lead in the relationship. Win your love with confidence.",
+  "tarotWealthMeaning1": "It's the right time to generate revenue using your abilities and skills.",
+  "tarotWealthDetail1": "It's a time when your knowledge, skills, and ideas turn into money. Don't just settle for your salary; try creating additional income through side jobs or second careers. Your creative planning and sales abilities will be outstanding, leading to higher-than-expected profits.",
+  "tarotSuccessMeaning1": "Your work ability is excellently demonstrated and recognized by those around you.",
+  "tarotSuccessDetail1": "You can stand out in your workplace or studies by fully demonstrating your abilities. No matter what problem arises, you can solve it with your own wit and cleverness, being recognized as a 'talented person' by colleagues and superiors. Trust yourself and show your skills confidently.",
+  "tarotKeywords2": "Intuition, wisdom, mystery, secret, platonic",
+  "tarotDesc2": "The High Priestess sits behind a mysterious veil, holding a scroll of wisdom and balancing to symbolize deep insight.",
+  "tarotLoveMeaning2": "It means platonic love where spiritual communion is important.",
+  "tarotLoveDetail2": "You'll be attracted to someone with spiritual depth and good conversation rather than just physical charm. Your intuition for reading others' minds is developed, so you can understand each other's feelings without words. However, being too cautious can cause misunderstandings, so try expressing your feelings honestly sometimes.",
+  "tarotWealthMeaning2": "Now is the time to protect your assets and watch the situation rather than actively investing.",
+  "tarotWealthDetail2": "It's a time to analyze and study market conditions calmly rather than moving hastily for immediate profit. Since this is a time for sowing seeds and waiting, don't be impatient if you don't see immediate gains. It's better to consider investments from a long-term perspective like real estate or stocks.",
+  "tarotSuccessMeaning2": "You can achieve good results in fields such as studies, research, and professional jobs.",
+  "tarotSuccessDetail2": "Focus on strengthening your internal foundations and building skills rather than on flashy external results. You can achieve excellent outcomes in tasks requiring deep thinking like research, planning, or analysis. Your wise and cautious attitude will be the key to solving problems at decisive moments.",
+  "tarotKeywords3": "Abundance, motherhood, nature, beauty, fruit",
+  "tarotDesc3": "The Empress, sitting comfortably in abundant nature, is a symbol of material and spiritual abundance.",
+  "tarotLoveMeaning3": "It's a time when love overflows and the relationship becomes deeper.",
+  "tarotLoveDetail3": "It's a period when your inclusive charm is maximized, making you appear very attractive to others. If you're in a relationship, you'll receive great love for your warm and caring nature, and marriage talks may arise. If you're single, grooming your appearance or changing your style will greatly help improve your love luck.",
+  "tarotWealthMeaning3": "It's a very materially abundant and stable time.",
+  "tarotWealthDetail3": "Your financial luck is blooming. Rewards follow as much as your effort, or even more, allowing you to enjoy economic leisure. You may achieve higher-than-expected profits in business or investments, or receive unexpected bonuses or gifts. Sharing this abundant energy with those around you will bring even greater fortune.",
+  "tarotSuccessMeaning3": "Projects in progress grow smoothly and produce good results.",
+  "tarotSuccessDetail3": "It's a time when the results of work appear visibly. Projects will finish successfully, leading to performance bonuses or promotion opportunities. Your talent will especially shine in fields requiring aesthetic sense or creativity. Working while enjoying the process will bring even better results.",
+  "tarotKeywords4": "Authority, structure, stability, leadership, responsibility",
+  "tarotDesc4": "The Emperor, sitting on a hard stone throne in armor, symbolizes firm dominance and order.",
+  "tarotLoveMeaning4": "It means a stable relationship with a reliable and responsible partner.",
+  "tarotLoveDetail4": "A relationship based on trust and stability continues rather than burning passion. Your partner will reliably protect and lead you. However, be careful not to be too controlling or stubborn. If you're single, you'll have opportunities to meet someone with ability and social status.",
+  "tarotWealthMeaning4": "You can accumulate financial stability with systematic asset management.",
+  "tarotWealthDetail4": "Setting principles and plans is important in financial management. Rather than speculation aiming for a windfall, it's better to build a foundation by investing in safe and certain assets like savings or real estate. Your realistic judgment and drive will be a great help in accumulating wealth.",
+  "tarotSuccessMeaning4": "You are in a favorable position to be promoted at work or rise to a leadership role.",
+  "tarotSuccessDetail4": "It's a time when your position within the organization becomes solid. You may be promoted to team leader or manager in recognition of your leadership, and you may be put in charge of important projects. You'll gain the trust of your superiors by handling tasks with rational and cool judgment without being swayed by emotions.",
+  "tarotKeywords5": "Tradition, teaching, belief, advice, mediation",
+  "tarotDesc5": "The Hierophant is a spiritual teacher who values social norms and traditions and leads people with wise advice.",
+  "tarotLoveMeaning5": "Serious and healthy meetings continue based on trust and respect.",
+  "tarotLoveDetail5": "You'll want a serious relationship with marriage in mind rather than a casual encounter. You can meet a good connection in blind dates, arranged meetings, or healthy gatherings. If there's a conflict between partners, try seeking advice from elders or seniors around you. Their wise advice will be a great help in restoring the relationship.",
+  "tarotWealthMeaning5": "Traditional and safe methods of financial technology are good.",
+  "tarotWealthDetail5": "Stability should be the top priority rather than adventurous investment. It's good to use traditional financial products like bank savings or insurance. Seeking professional consulting or maintaining honest and transparent financial transactions is the way to protect your credit and assets.",
+  "tarotSuccessMeaning5": "Contracts, alliances, and cooperative relationships will be signed smoothly.",
+  "tarotSuccessDetail5": "It's wise to receive help from those around you rather than trying to solve the problem alone. You can find solutions surprisingly easily if you seek advice from superiors like bosses or mentors. Following company rules and procedures is the shortcut to getting good evaluations, and it's also a good time to sign important contracts.",
+  "tarotKeywords6": "Love, harmony, choice, union, partnership",
+  "tarotDesc6": "Adam and Eve stand receiving a blessing from an angel under a warm sun.",
+  "tarotLoveMeaning6": "This is one of the best times for love to bloom.",
+  "tarotLoveDetail6": "A heart-fluttering romance awaits you. You'll rapidly get closer to someone you're attracted to, and you can feel a telepathic connection just by making eye contact. If you're preparing to confess, the success rate is very high, so take courage. However, you need the wisdom to choose where your heart truly belongs rather than being swept away by momentary temptation.",
+  "tarotWealthMeaning6": "Your financial fortunes increase when you're together rather than alone.",
+  "tarotWealthDetail6": "Promoting work with someone you get along with will create synergy and increase financial benefits. If you receive a partnership proposal, review it positively. It's a time when you can get useful investment information through communication with people around you. However, spending for pleasure may become excessive, so proper adjustment is necessary.",
+  "tarotSuccessMeaning6": "This is a time when teamwork shines.",
+  "tarotSuccessDetail6": "You'll work joyfully with colleagues or business partners who fit you perfectly. You can achieve better results in team projects than in solo tasks, and smooth interpersonal relationships will be the key to success. If you choose work that you truly love and enjoy, you'll get results you won't regret.",
+  "tarotKeywords7": "Victory, will, forward, conquest, movement",
+  "tarotDesc7": "A young king in a chariot rushes forward toward his goal with strong will and wins a victory.",
+  "tarotLoveMeaning7": "It's a time when active romantic pursuits succeed.",
+  "tarotLoveDetail7": "It's time to rush to win love. Don't hesitate and express your heart honestly and proudly; you can win even if there are competitors. If you're in a 'some' stage, it's good to define the relationship clearly and lead. Dynamic dates or traveling together will deepen your affection.",
+  "tarotWealthMeaning7": "It's time to move aggressively to achieve the target profit.",
+  "tarotWealthDetail7": "Strong drive is needed to achieve financial goals. Don't hesitate and make bold decisions when the opportunity arises; this drive will bring you profit. It's advantageous to focus on projects that yield results in the short term, and your performance will increase as much as you work hard. Movement-related expenses may occur, but they will be investments for new opportunities.",
+  "tarotSuccessMeaning7": "You are likely to win the competition and achieve your goals.",
+  "tarotSuccessDetail7": "Clear goal achievement such as promotion, passing, or contract signing is predicted. The more intense the competition, the more your fighting spirit will burn, eventually leading to victory. Your image of breaking through obstacles directly will leave a deep impression on those around you, and you'll demonstrate excellent abilities in tasks with frequent business trips or movement.",
+  "tarotKeywords8": "Patience, courage, inner strength, embrace, gentle but firm",
+  "tarotDesc8": "A woman in white gently handles a lion's mouth, symbolizing spiritual strength and patience over physical power.",
+  "tarotLoveMeaning8": "It's a time when you need the tolerance to accept and understand the other person as they are.",
+  "tarotLoveDetail8": "Current love requires patience and wisdom. The relationship can develop to the next level when you accept and embrace the other person's shortcomings or complaints with a broad heart. A 'gentle but firm' attitude leading the other person with a soft touch is needed, and if you stay by their side patiently, your sincerity will eventually open their heart.",
+  "tarotWealthMeaning8": "Steady savings and healthy consumption habits are the secrets to collecting wealth.",
+  "tarotWealthDetail8": "Your financial fortune is gradually rising. Don't be disappointed even if big money doesn't come in immediately; manage your assets faithfully, and it will return as a large sum later. In investing, it's advantageous to hold on firmly rather than being swayed by short-term fluctuations. Managing your impulsive desire to consume is the shortcut to becoming rich.",
+  "tarotSuccessMeaning8": "Even if you encounter a difficult task or a picky boss, you can deal with it wisely.",
+  "tarotSuccessDetail8": "You may be assigned a hard project or a picky task, but you have enough potential to solve it. Though you appear soft on the outside, you stand out by overcoming obstacles one by one with strong inner will. Your calm problem-solving ability will lead people around you to send deep trust your way.",
+  "tarotKeywords9": "Reflection, solitude, exploration, wisdom, rest",
+  "tarotDesc9": "An old man with a lamp on a dark snowy mountain listens to his inner voice and explores the truth.",
+  "tarotLoveMeaning9": "It's a time when you need time for yourself or think deeply about love.",
+  "tarotLoveDetail9": "Now is a time when you need time to look back on yourself rather than active dating. Instead of meeting just anyone to soothe loneliness, think deeply about what kind of love you truly want. Even if you have a partner, taking some distance and having your own time can actually help you realize the essence of the relationship.",
+  "tarotWealthMeaning9": "Financial activities may be somewhat contracted.",
+  "tarotWealthDetail9": "You should take a conservative attitude toward wealth. Rather than making new investments or starting businesses, it's important to check your current assets thoroughly and stop money from leaking. Instead, spending on study or skill acquisition to increase your value is a great investment that will lead to larger profits later.",
+  "tarotSuccessMeaning9": "You achieve results in fields that deeply research professional knowledge or skills.",
+  "tarotSuccessDetail9": "You can achieve excellent results in tasks that require deep focus alone, such as research, planning, or development. It's a period of silently building skills even if not recognized by others, and it's advantageous to focus on the essence of the work rather than workplace relationships. If there's an unsolved problem, find an experienced mentor for advice.",
+  "tarotKeywords10": "Destiny, change, opportunity, cycle, turning point",
+  "tarotDesc10": "A huge wheel of fortune turns, signaling the inevitable flow of destiny and the start of a new cycle.",
+  "tarotLoveMeaning10": "A fateful encounter awaits you.",
+  "tarotLoveDetail10": "A fated love like a movie is coming your way. Dramatic events such as meeting someone in an unexpected place or a surprise reunion may occur, so keep your heart open. Singles might meet someone they fall for at first sight, while couples will find their relationship advancing to the next level. Don't miss this good flow.",
+  "tarotWealthMeaning10": "The flow of financial luck is improving.",
+  "tarotWealthDetail10": "The goddess of luck is smiling upon you. Your financial fortune is on an upward curve, with unexpected income or investment returns. As money circulation becomes smooth, you need the boldness to seize the opportunity when it comes. However, since luck cycles, don't forget the wisdom to save for the future when things are going well.",
+  "tarotSuccessMeaning10": "The situation is turning in your favor.",
+  "tarotSuccessDetail10": "A turning point has arrived where blocked matters start to flow smoothly. The tide is turning in your favor, so don't hesitate to seize new opportunities. Opportunities for change like promotion or career moves will be an upward current taking you to a higher place. Going with the flow will bring great results.",
+  "tarotKeywords11": "Fairness, balance, responsibility, truth, cause and effect",
+  "tarotDesc11": "A judge in a red robe holds a sword in his right hand and a scale in his left.",
+  "tarotLoveMeaning11": "It's a relationship where reason precedes emotion.",
+  "tarotLoveDetail11": "Now is a time for rational judgment rather than being swayed by emotions. Look back to see if your relationship is balanced, and if you're sacrificing too much or only receiving. If you're thinking about marriage, you might meticulously weigh your partner's conditions or background; honest and fair conversation will be the solution for relationship improvement.",
+  "tarotWealthMeaning11": "Careful checking is needed in financial transactions or contracts.",
+  "tarotWealthDetail11": "A situation may arise where you need to clarify right from wrong in financial matters. It's a good time to cleanly settle financial relationships, such as receiving borrowed money or repaying debts. When signing contracts, check carefully for any toxic clauses and handle everything according to principles rather than relying on luck or expedients.",
+  "tarotSuccessMeaning11": "You receive a fair evaluation and legitimate compensation.",
+  "tarotSuccessDetail11": "You will receive a fair and objective evaluation of your work performance. If you've worked hard, legitimate rewards like promotions or bonuses will follow, and you can demonstrate your abilities in fields requiring accuracy like law or accounting. When making decisions, exclude emotions and judge based strictly on data and facts.",
+  "tarotKeywords12": "Sacrifice, patience, new perspective, stagnation, enlightenment",
+  "tarotDesc12": "A man hanging upside down from a tree looks at the world from a new perspective through voluntary hardship and gains enlightenment.",
+  "tarotLoveMeaning12": "The relationship may stagnate or unrequited feelings may last for a long time.",
+  "tarotLoveDetail12": "You may feel frustrated because the progress of love is stalled, but rushing won't solve anything now. Stop for a moment and look at the current situation from a different perspective, reflecting on whether you've been forcing love only in your own way. The patience to think and care from the other person's position will eventually be the key to opening their heart.",
+  "tarotWealthMeaning12": "Fund flow may be tied up or you may have to bear losses.",
+  "tarotWealthDetail12": "You may feel completely blocked financially. Invested money may be tied up or expected income may be delayed, but the more you struggle, the more tangled it might get. It's better to empty your mind and observe for now. Use this period to check your consumption habits and re-establish your values regarding money.",
+  "tarotSuccessMeaning12": "Work may not proceed as planned and may be delayed.",
+  "tarotSuccessDetail12": "Projects might be suspended or work delayed, causing stress, but this is a temporary stop signal rather than a failure. Don't try to force progress; instead, step back and redraw the overall picture. Brilliant ideas can emerge when you break fixed ideas, and current trials will give you new enlightenment.",
+  "tarotKeywords13": "Ending, change, rebirth, separation, new beginning",
+  "tarotDesc13": "It symbolizes the complete termination of the old and a new beginning resulting from it, representing a painful but inevitable process of change.",
+  "tarotLoveMeaning13": "It means the end of a relationship or a big change.",
+  "tarotLoveDetail13": "The current relationship may have reached its limit. You need the courage to let it flow naturally rather than trying to hold on; separation is painful, but a better new beginning always waits at the end. Remember that a place for a new person is created only when you completely escape from past lingering feelings or wounds.",
+  "tarotWealthMeaning13": "Difficult situations such as financial losses or investment failures may come.",
+  "tarotWealthDetail13": "A big change is expected financially. You might experience losses in trusted investments or face difficulties with unexpected expenses, but this is a signal to change inefficient asset management methods. Organize your debts and completely cut off unnecessary spending to use this as a stepping stone for a healthier financial structure.",
+  "tarotSuccessMeaning13": "Work in progress may be interrupted or failed.",
+  "tarotSuccessDetail13": "A project you worked hard on might fall through, or you could experience major changes at work. While the sense of frustration will be great for now, this is a revelation of destiny to organize work that doesn't fit you and find a new path for greater success. If you discard old ways and start with a completely new mindset, a more wonderful next chapter will open.",
+  "tarotKeywords14": "Balance, temperance, harmony, healing, moderation",
+  "tarotDesc14": "Water is transferred between two cups, symbolizing perfect balance between reality and ideals and a harmonious flow.",
+  "tarotLoveMeaning14": "It's a process of two different people meeting and achieving harmony.",
+  "tarotLoveDetail14": "A subtle and lasting love suits this period better than burning passion. You'll build deep bonds by acknowledging and complementing each other's differences, and if there are conflicts, you need the wisdom to solve them through calm conversation. Your gentle and caring attitude will put your partner's mind at ease and create a stable relationship.",
+  "tarotWealthMeaning14": "It's important to balance income and spending.",
+  "tarotWealthDetail14": "Your financial stability follows a stable flow. Focus on efficiently allocating and managing current assets rather than aiming for a windfall, and a habit of appropriately adjusting spending as income increases is needed. If you invest, it's good to diversify for risk management, and steady management will eventually bring wealth.",
+  "tarotSuccessMeaning14": "The ability to coordinate different opinions and lead harmony stands out.",
+  "tarotSuccessDetail14": "You'll excellently perform as a mediator in team projects, resolving conflicts and increasing work efficiency. Your flexible thinking and adaptability will be recognized, and the wisdom to prevent burnout by balancing work and rest will stand out. Proceeding step-by-step while observing the overall flow leads to the best results.",
+  "tarotKeywords15": "Temptation, bondage, obsession, materialism, addiction",
+  "tarotDesc15": "It symbolizes desires and obsessions that bind oneself, and material temptations that one could escape if they chose, but fails to do so.",
+  "tarotLoveMeaning15": "It means a relationship attracted to or obsessed with intense physical charm.",
+  "tarotLoveDetail15": "It's a time when it's hard to make rational judgments because you're strongly fascinated by someone's charm. A hot romance that might keep you awake at night could start, but on the other hand, you need caution as you might suffer from excessive obsession and restraint. Coolly reflect on whether your feelings are true love or just simple desire or possessiveness.",
+  "tarotWealthMeaning15": "Material greed becomes excessive, so you may invest excessively.",
+  "tarotWealthDetail15": "A time with many financial temptations. There's a risk of putting money into dangerous places deceived by sweet words, or squandering assets through impulsive luxury purchases. Be wary of becoming a slave to money and losing trust, and focus on protecting what you have rather than new investments.",
+  "tarotSuccessMeaning15": "You may try to use any means for success.",
+  "tarotSuccessDetail15": "Greed for power or honor increases. There is a concern about falling into work addiction, such as setting unreasonable schedules for performance or neglecting health. You need an attitude of working honestly by returning to your original intentions rather than trying to gain without legitimate effort.",
+  "tarotKeywords16": "Collapse, shock, sudden change, liberation, revelation of truth",
+  "tarotDesc16": "Lightning strikes the tower, collapsing it and people are falling.",
+  "tarotLoveMeaning16": "A big crisis or a sudden breakup may come to the relationship.",
+  "tarotLoveDetail16": "An unexpected event like a bolt from the blue can occur on the love front. You might be disappointed in someone you trusted or face a conflict that shakes the relationship to its roots, but don't despair. This is a process of breaking unhealthy relationships or misunderstandings to face the truth, and an opportunity to build a firmer love will eventually come.",
+  "tarotWealthMeaning16": "You should prepare for sudden financial losses or disasters.",
+  "tarotWealthDetail16": "It's a very unstable time financially. You may hear shocking news such as big money leaving or an investment collapsing, so move your assets to a safe place and prepare. However, this collapse will be an opportunity to correct wrong economic concepts, and after hitting rock bottom, a chance to build a solid foundation will come.",
+  "tarotSuccessMeaning16": "Projects may be interrupted or shocking changes at work may occur.",
+  "tarotSuccessDetail16": "You may feel frustration as if the tower you've worked hard to build is collapsing, but this is due to an inevitable flow of change rather than a lack of ability. Don't panic; grasp the situation coolly, discard old systems, and seek new paths. If you take this crisis as an opportunity to reorganize, you can leap to a much higher place.",
+  "tarotKeywords17": "Hope, inspiration, healing, optimism, wish fulfillment",
+  "tarotDesc17": "A woman is pouring water with two jars while keeping one foot on the ground, symbolizing peace after hardship and hope for the future.",
+  "tarotLoveMeaning17": "It's a time when you meet someone close to your ideal type or your dream about love comes true.",
+  "tarotLoveDetail17": "Like a star brightening the dark night, sparkling hope comes to your love life as well. You may meet your ideal type or make a beautiful promise for the future with your lover, and it's a time when your pure charm strongly appeals. Past painful memories will now be healed, and bright energy to dream of new love will arise.",
+  "tarotWealthMeaning17": "The financial situation gradually improves.",
+  "tarotWealthDetail17": "Your financial outlook starts to flow in a positive direction. Previous economic difficulties are resolved and a ray of light is seen, and an opportunity to increase side income through creative ideas may arise. Rather than immediate big gains, an eye for investing in places with high future value from a long-term perspective will lead you to financial stability.",
+  "tarotSuccessMeaning17": "Creative inspiration springs up and you get an opportunity to spread your talent widely.",
+  "tarotSuccessDetail17": "Your ideas shine and receive praise from those around you. You can stand out in marketing, PR, or artistic fields, and it's a very good time to start a project you've always dreamed of. If you express yourself confidently, luck is in for you to gain popularity or honor, so seize the opportunity.",
+  "tarotKeywords18": "Anxiety, illusion, ambiguity, intuition, unconscious",
+  "tarotDesc18": "At night when the moon is up, a dog and a wolf howl and a crayfish crawls out of the water, symbolizing unseen truths and the subconscious.",
+  "tarotLoveMeaning18": "It's frustrating because you don't know the other person's heart, and suspicion are easy to sprout.",
+  "tarotLoveDetail18": "It's a time when you're anxious because you don't know the other person's inner thoughts, as if in a fog. Trivial misunderstandings can grow into suspicion and cause sleepless nights, so it's better to watch the situation calmly rather than hastily interrogating. Instead of clinging to uncertain relationships swept by emotions, prioritize finding your center through rational thinking.",
+  "tarotWealthMeaning18": "Investment prospects are opaque and there is a risk of fraud.",
+  "tarotWealthDetail18": "Your vision is blurred in terms of finance, so there is a high risk of being deceived by plausible investment information or sweet words. Since traps are hidden in unseen places, it's a time to be extremely careful, as if tapping a stone bridge before crossing. Rather than starting new things, protecting your assets through thorough realistic verification is the way.",
+  "tarotSuccessMeaning18": "It's a confusing time because the direction of work may be ambiguous.",
+  "tarotSuccessDetail18": "You may find yourself in a hopeless situation where you can't see ahead, and you should be careful with your words and actions as project direction may be shaken or you may be caught in workplace rumors. It's wise to wait until the situation becomes clear rather than moving hastily, and it's good to guard your position silently and focus on mental management.",
+  "tarotKeywords19": "Success, Happiness, Vitality, Positivity, Blessing",
+  "tarotDesc19": "Under the bright sun, a child is joyfully riding a white horse and waving a flag.",
+  "tarotLoveMeaning19": "You will have a bright and happy relationship that is blessed.",
+  "tarotLoveDetail19": "A perfectly happy and blessed love is with you. Past misunderstandings and conflicts will melt away, deepening your trust. It's the best time for singles to meet someone with bright energy, and you can expect joyous news like marriage or expansion. It's a wonderful fortune to enjoy love purely and passionately like a child.",
+  "tarotWealthMeaning19": "Your financial fortune is at its best.",
+  "tarotWealthDetail19": "Bright days have arrived for your finances. Your money luck is extremely strong, with everything you do turning into profit. Business will flourish, investments look promising, and sharing this positive energy will bring even greater abundance. You can expect good news that asset values like real estate or stocks will rise significantly.",
+  "tarotSuccessMeaning19": "Your abilities will be recognized and you will receive the spotlight.",
+  "tarotSuccessDetail19": "The fanfare of success is sounding. Your long-term efforts will finally shine and be recognized by the world. You'll achieve visible results like passing exams or getting promoted, and your confident attitude will establish you as a natural leader. Now is the stage where you are the protagonist, so display your skills to the fullest and win success.",
+  "tarotKeywords20": "Resurrection, reward, news, decision, reunion",
+  "tarotDesc20": "When an angel blows a trumpet in the sky, people in coffins wake up and cheer, symbolizing rewards for the past and rebirth to a new stage.",
+  "tarotLoveMeaning20": "You may receive contact from an ex-lover or have an opportunity to reunite.",
+  "tarotLoveDetail20": "Waiting news arrives. If you've been waiting for contact from an ex-lover you couldn't forget or wishing for a reunion, it's very likely to come true, and stagnant 'some' relationships will bear fruit by clearly developing into lovers. A new connection with someone you knew in the past might also occur, so listen to your heart and make a decision without regret.",
+  "tarotWealthMeaning20": "You may get profits from previous investments, or get back money you lent.",
+  "tarotWealthDetail20": "It's a time to receive rewards for past efforts. There's an unexpected windfall, such as forgotten stocks rising or receiving back money you didn't expect to get, and an opportunity to succeed by retrying ideas that failed before. Since the decision you make now will greatly influence your future wealth, careful yet bold determination is needed.",
+  "tarotSuccessMeaning20": "Your efforts will be recognized and you will be promoted or rewarded.",
+  "tarotSuccessDetail20": "Judgment day has come. A fair evaluation and rewards for the sweat you've shed will be given, and happy news like promotion or passing will spread like a trumpet sound. A scout offer or career move opportunity to escape from a stagnant situation and fly again might come, so don't fear change and start a new chapter.",
+  "tarotKeywords21": "Completion, integration, achievement, happy ending, perfection",
+  "tarotDesc21": "A woman is dancing inside a laurel wreath, and the four elements are in their completed forms, symbolizing the best happy ending.",
+  "tarotLoveMeaning21": "You will bear the fruit of love and enter marriage, or form an ideal family.",
+  "tarotLoveDetail21": "It's a perfect time to put a period to a long relationship and move toward a new world called marriage. You'll enjoy the happiness of becoming one under blessings after confirming you are each other's best halves, and if you're single, you can meet a fateful partner who meets your ideal type. It's also a fortune where connections are made during overseas travel or in exotic environments.",
+  "tarotWealthMeaning21": "You will achieve the target amount and enjoy economic freedom.",
+  "tarotWealthDetail21": "You achieve the feat of 100% achieving your financial goals and have reached a stage where you can enjoy economic freedom. You can make big profits in global fields like overseas stocks or trade, and your investment portfolio will achieve perfect harmony to bring stable wealth. Now, enjoy the abundance and widen your perspective toward a broader world.",
+  "tarotSuccessMeaning21": "You will successfully complete the project and gain the highest honor.",
+  "tarotSuccessDetail21": "It's the time to hit the peak of your career. You will receive the highest praise by perfectly succeeding in the project you're in charge of, and you'll prepare to move toward a bigger world after achieving everything you aimed for. As it's a fortune where your activity stage can expand globally through studying abroad or overseas employment, use current success as a stepping stone to leap toward a grander dream.",
+  "supplementRecordPrompt": "Please take your supplements and record it!",
+  "snoozeQuestion": "When should I remind you again?",
+  "hoursShort": "h",
+  "minutesShort": "m",
+  "after": "after",
+  "snoozeMessage": "Alarm will ring again in {minutes} minutes.",
+  "timesTaken": "{count} times taken",
+  "dailyGoalTimes": "Goal: {goal} times a day",
+  "didYouTakeSupplement": "Did you take your supplements?",
+  "viewMissionRecords": "View Mission Records",
+  "setTakingGoal": "Set Intake Goal",
+  "times": "times",
+  "dailyTakingGoal": "Daily Intake Goal",
+  "howManyTimesADay": "How many times a day do you take supplements?",
+  "setGoalMl": "Set Goal (ml)",
+  "sleepAnalysis": "Sleep Analysis",
+  "todaysSleep": "Today's Sleep",
+  "sleepDuration": "Sleep Duration",
+  "wakeUpTime": "Wake Up Time",
+  "weeklySleepPattern": "Weekly Sleep Pattern",
+  "sleepAdvice": "You are maintaining a regular sleep habit. You went to bed 30 minutes earlier than yesterday!",
+  "stopwatch": "Stopwatch",
+  "lap": "Lap",
+  "stop": "Stop",
+  "lapLabel": "Lap {index}",
+  "monday": "Mon",
+  "tuesday": "Tue",
+  "wednesday": "Wed",
+  "thursday": "Thu",
+  "friday": "Fri",
+  "saturday": "Sat",
+  "sunday": "Sun",
   "policy": "Terms and Privacy Policy",
   "support": "Support",
   "defaultAlarmBehavior": "Default Alarm Behavior",
@@ -1266,19 +1584,26 @@
   "defaultInterval": "Default Interval",
   "maxSnoozeCountLabel": "Max Snooze Count",
   "minutes": "min",
-  "times": "times",
   "cupsCount": "({current}/{goal} cups)",
   "@cupsCount": {
     "placeholders": {
-      "current": { "type": "int" },
-      "goal": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
     }
   },
   "timesCountProgress": "({current}/{goal} times)",
   "@timesCountProgress": {
     "placeholders": {
-      "current": { "type": "int" },
-      "goal": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
     }
   },
   "missionGym": "Go to Gym",
@@ -1324,26 +1649,16 @@
   "supportCopySuccessMessage": "Inquiry content has been copied to clipboard.\\nWould you like to send an email to {email}?",
   "@supportCopySuccessMessage": {
     "placeholders": {
-      "email": { "type": "String" }
+      "email": {
+        "type": "String"
+      }
     }
   },
-  "selectSolidColor": "Select Solid Color",
-  "randomBackgroundDesc": "A new background every time the alarm rings!",
   "selectionComplete": "Selection Complete",
   "selectVibration": "Select Vibration Pattern",
-  "cancel": "Cancel",
-  "heartbeatVibration": "Heartbeat",
-  "sosVibration": "SOS",
-  "quickVibration": "Quick Beat",
-  "permissionRequired": "Permission Required",
-  "exactAlarmPermissionDesc": "To ring the alarm at the exact time, \"Schedule & Reminders\" permission is required.",
-  "batteryOptimizationPermissionDesc": "Battery optimization must be disabled for the alarm to ring on time.",
-  "overlayPermissionDesc": "To display the mission screen when the alarm goes off, \"Display over other apps\" permission is required.",
-  "cameraMissionFirstImageError": "Please set at least the first mission image.",
   "cameraMissionSequentialImageError": "Please set mission images in order.",
   "copyEmailAction": "Copy Email Address",
   "addMissionTitle": "Add New Mission",
-  "complete": "Complete",
   "recommendedMissionList": "Recommended Missions",
   "recommendedMissionDesc": "Recommended missions for a healthy day.",
   "all": "All",
@@ -1358,7 +1673,6 @@
   "missionNameHint": "Enter mission name (e.g. Go to gym)",
   "selectCategory": "Select Category",
   "getNotification": "Get Notification",
-  "notificationTime": "Notification Time",
   "missionCategoryHealth": "Health",
   "missionCategoryStudy": "Study",
   "missionCategoryRoutine": "Routine",
@@ -1370,7 +1684,9 @@
   "version": "Version {version}",
   "@version": {
     "placeholders": {
-      "version": { "type": "String" }
+      "version": {
+        "type": "String"
+      }
     }
   },
   "fortuneCheckButton": "Check Fortune",
@@ -1397,13 +1713,15 @@
   "exitApp": "Exit",
   "shareResultDescription": "This is your fortune result analyzed by Fortune Alarm.",
   "shareResultButton": "Share Result",
-  "unknownTime": "Time Unknown",
+  "unknownTime": "Unknown Time",
   "adLoadError": "Could not load the ad. Please try again in a moment.",
   "adShowError": "Could not display the ad. Please try again in a moment.",
   "earnCookies": "You've earned {count} fortune cookies! 🎉",
   "@earnCookies": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "freePassAfterTimeout": "Showing results for free without an ad! 🎉",
@@ -1411,12 +1729,12 @@
   "fortuneAccessTitle": "Check Fortune",
   "fortuneAccessSubtitle": "Check your fortune results\nand get hidden gifts!",
   "watchAdButtonText": "Watch Ad for Free Results",
-  "insufficientCookiesTitle": "Not Enough Fortune Cookies",
-  "insufficientCookiesMessage": "You don't have enough fortune cookies.\nYou can earn more by completing missions or watching ads.",
   "useCookiesButtonText": "Use {count} Fortune Cookies",
   "@useCookiesButtonText": {
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
   "adFailFreePass": "Could not load the ad, so we'll let you through for free this time.",
@@ -1432,6 +1750,13 @@
   "luckyNumberAnalysisStep6": "Calculating optimal combinations...",
   "luckyNumberAnalysisStep7": "Analysis complete! Generating numbers...",
   "luckyNumberAnalysisFinal": "Processing final data...",
+  "luckyNumberAnalyzing": "Analyzing energy...",
+  "luckyNumberGeometric": "Geometric analysis...",
+  "luckyNumberPatterns": "Pattern matching...",
+  "luckyNumberEnergy": "Energy harmonization...",
+  "luckyNumberCompleted": "Analysis completed!",
+  "luckyNumberShare": "Share Results",
+  "luckyNumberRestart": "Try Again",
   "luckyNumberGenerating": "Generating lucky numbers...",
   "luckyNumberResultTitle": "Lucky number generation complete",
   "luckyNumberResultSubtitle": "6 numbers + bonus number",
@@ -1471,24 +1796,32 @@
   "fortunePassTimeSaleLabel": "{percent}% Time Sale!",
   "@fortunePassTimeSaleLabel": {
     "placeholders": {
-      "percent": { "type": "int" }
+      "percent": {
+        "type": "int"
+      }
     }
   },
   "fortunePassOffLabel": "{percent}% OFF",
   "@fortunePassOffLabel": {
     "placeholders": {
-      "percent": { "type": "int" }
+      "percent": {
+        "type": "int"
+      }
     }
   },
   "fortunePassPerMonth": " /mo",
   "fortunePassTotalPrice": "Total {price} / {unit}",
   "@fortunePassTotalPrice": {
     "placeholders": {
-      "price": { "type": "String" },
-      "unit": { "type": "String" }
+      "price": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
+      }
     }
   },
-  "fortunePassUnitMonth": "Monthly",
+  "fortunePassUnitMonth": "Month",
   "fortunePassUnit6Months": "6 Months",
   "fortunePassUnitYear": "Year",
   "fortunePassMyCookies": "My Fortune Cookies",
@@ -1500,7 +1833,9 @@
   "fortunePassSubscribeSale": "Subscribe with {percent}% OFF",
   "@fortunePassSubscribeSale": {
     "placeholders": {
-      "percent": { "type": "int" }
+      "percent": {
+        "type": "int"
+      }
     }
   },
   "fortunePassSubscribeNow": "Subscribe Now",
@@ -1541,9 +1876,6 @@
     }
   },
   "fortunePassActive": "Pass Active",
-  "fortunePassUnitMonth": "Month",
-  "fortunePassUnit6Months": "6 Months",
-  "fortunePassUnitYear": "Year",
   "fortunePassTotalFormat": "Total ₩{price} / {unit}",
   "@fortunePassTotalFormat": {
     "placeholders": {
@@ -1562,17 +1894,9 @@
   "fortunePassSubscriptionSuccess": "Fortune Pass subscription has been applied.",
   "fortunePassCannotSubscribeTitle": "Cannot Subscribe",
   "fortunePassCannotSubscribeMessage": "Unable to retrieve product information from the store at this time.\n\n[Check List]\n1. Google Play / App Store login status\n2. Internet connection\n3. Test device registration status",
-   "fortuneDateConfirm": "Would you like to check the fortune for {date}?",
-   "@fortuneDateConfirm": {
-     "placeholders": {
-       "date": {
-         "type": "String"
-       }
-     }
-   },
-   "year": "Year",
-  "month": "Month",
-  "day": "Day",
+  "year": "Y",
+  "month": "M",
+  "day": "D",
   "sajuProfileTitle": "Edit Main Four Pillars of Destiny Profile",
   "sajuNameLabel": "Name",
   "sajuNameHint": "Please enter your name",
@@ -1610,18 +1934,23 @@
   "compatibilityDeleteTooltip": "Delete",
   "compatibilityGenderMale": "Male",
   "compatibilityGenderFemale": "Female",
+  "compatibilityInputTitle": "Compatibility Information Input",
   "tojeongInputTitle": "Tojeong Yearly Oracle Information Input",
   "tojeongCheckFortune": "Check your {year}\nTojeong Yearly Oracle",
   "@tojeongCheckFortune": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
   "tojeongInputGuide": "Please enter your birth date and time\nfor an accurate analysis.",
   "tojeongViewResult": "View {year} Tojeong Yearly Oracle",
   "@tojeongViewResult": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
   "tojeongCheckButton": "Check Tojeong Yearly Oracle",
@@ -1630,20 +1959,28 @@
   "tojeongResultTitle": "{year} Tojeong Yearly Oracle",
   "@tojeongResultTitle": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
   "tojeongUserFortune": "{name}'s {year} Fortune",
   "@tojeongUserFortune": {
     "placeholders": {
-      "name": { "type": "String" },
-      "year": { "type": "int" }
+      "name": {
+        "type": "String"
+      },
+      "year": {
+        "type": "int"
+      }
     }
   },
   "tojeongGua": "Gua: {gua}",
   "@tojeongGua": {
     "placeholders": {
-      "gua": { "type": "String" }
+      "gua": {
+        "type": "String"
+      }
     }
   },
   "tojeongTotalLuck": "Total Luck",
@@ -1655,8 +1992,12 @@
   "tojeongShareDesc": "{name}'s Tojeong Yearly Oracle overall review.\n\n{desc}...",
   "@tojeongShareDesc": {
     "placeholders": {
-      "name": { "type": "String" },
-      "desc": { "type": "String" }
+      "name": {
+        "type": "String"
+      },
+      "desc": {
+        "type": "String"
+      }
     }
   },
   "tojeongShareTargetYear": "Target Year",
@@ -1664,7 +2005,9 @@
   "sajuDeleteConfirm": "Are you sure you want to delete {name}'s info?",
   "@sajuDeleteConfirm": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
   "sajuProfileSelect": "Select Four Pillars of Destiny Info",
@@ -1673,7 +2016,9 @@
   "fortuneUnderConstructionTitle": "{title}\nService is under preparation.",
   "@fortuneUnderConstructionTitle": {
     "placeholders": {
-      "title": { "type": "String" }
+      "title": {
+        "type": "String"
+      }
     }
   },
   "fortuneUnderConstructionSubtitle": "We are working hard to provide you with\nmore accurate and useful fortune information!",
@@ -1684,36 +2029,45 @@
   "sajuBirthDateDisplay": "{year}.{month}.{day}",
   "@sajuBirthDateDisplay": {
     "placeholders": {
-      "year": { "type": "int" },
-      "month": { "type": "int" },
-      "day": { "type": "int" }
+      "year": {
+        "type": "int"
+      },
+      "month": {
+        "type": "int"
+      },
+      "day": {
+        "type": "int"
+      }
     }
   },
   "sajuSelectFortuneYear": "Select Fortune Year",
   "sajuYearDisplay": "{year}",
   "@sajuYearDisplay": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
-  "sajuSelectBirthTime": "Select Birth Time",
   "sajuSelectProfile": "Select Profile",
-  "add": "Add",
   "male": "Male",
   "female": "Female",
-  "unknownTime": "Unknown Time",
   "newYearFortuneInputTitle": "New Year Fortune Info",
   "newYearFortuneHeader": "How will your {year}\nfortune be?",
   "@newYearFortuneHeader": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
   "newYearFortuneSubHeader": "Please enter your birth date and time\nfor accurate Four Pillars of Destiny analysis.",
   "newYearFortuneViewButton": "View {year} Fortune",
   "@newYearFortuneViewButton": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
   "newYearFortuneCheckButton": "Check Fortune",
@@ -1721,20 +2075,28 @@
   "newYearFortuneResultTitle": "My {year} New Year Fortune",
   "@newYearFortuneResultTitle": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
   "newYearFortuneShareTitle": "My {year} New Year Fortune Result",
   "@newYearFortuneShareTitle": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
   "newYearFortuneShareDesc": "New Year fortune for {name}.\n\n{desc}...",
   "@newYearFortuneShareDesc": {
     "placeholders": {
-      "name": { "type": "String" },
-      "desc": { "type": "String" }
+      "name": {
+        "type": "String"
+      },
+      "desc": {
+        "type": "String"
+      }
     }
   },
   "sajuChartTitle": "Four Pillars of Destiny Chart",
@@ -1746,15 +2108,21 @@
   "dominantOhaeng": "Your Dominant Element: {name}({symbol})",
   "@dominantOhaeng": {
     "placeholders": {
-      "name": { "type": "String" },
-      "symbol": { "type": "String" }
+      "name": {
+        "type": "String"
+      },
+      "symbol": {
+        "type": "String"
+      }
     }
   },
   "ohaengDisclaimer": "※ Five Elements (Wood, Fire, Earth, Metal, Water) are the basic energies of Four Pillars of Destiny. While balance is ideal, you can understand your tendencies through these elements.",
   "yearlyTotalLuck": "{year} Total Luck",
   "@yearlyTotalLuck": {
     "placeholders": {
-      "year": { "type": "int" }
+      "year": {
+        "type": "int"
+      }
     }
   },
   "fortuneDisclaimer": "This fortune is for entertainment purposes. Your life depends on your own will.",
@@ -1763,7 +2131,9 @@
   "compatibilityScoreDisplay": "{score}",
   "@compatibilityScoreDisplay": {
     "placeholders": {
-      "score": { "type": "int" }
+      "score": {
+        "type": "int"
+      }
     }
   },
   "compatibilityShareTitle": "Our Compatibility",
@@ -1813,9 +2183,6 @@
   "tojeongGeneralLoveGood": "Love luck rises, so singles may meet a good partner and couples' love will deepen. Laughter and harmony will fill the home. It's a good time for marriage talks.",
   "tojeongGeneralLoveBad": "Arguments may arise due to trivial misunderstandings. Understanding and consideration for each other's positions are needed. Try to resolve problems through rational dialogue rather than emotional responses.",
   "optional": "Optional",
-  "year": "Y",
-  "month": "M",
-  "day": "D",
   "sajuSolarHint": "Tojeong Yearly Oracle is most accurate when analyzed based on the lunar birthday.",
   "yourFortune": "Your Fortune",
   "guaUpper": "Upper",
@@ -1823,23 +2190,6 @@
   "guaLower": "Lower",
   "guaCode": "Gua Code",
   "viewAgain": "Check Again",
-  "jijiJa": "Rat",
-  "jijiChuk": "Ox",
-  "jijiIn": "Tiger",
-  "jijiMyo": "Rabbit",
-  "jijiJin": "Dragon",
-  "jijiSa": "Snake",
-  "jijiO": "Horse",
-  "jijiMi": "Goat",
-  "jijiSin": "Monkey",
-  "jijiYu": "Rooster",
-  "jijiSul": "Dog",
-  "jijiHae": "Pig",
-  "ohaengWood": "Wood",
-  "ohaengFire": "Fire",
-  "ohaengEarth": "Earth",
-  "ohaengMetal": "Metal",
-  "ohaengWater": "Water",
   "zodiacAries": "Aries",
   "zodiacTaurus": "Taurus",
   "zodiacGemini": "Gemini",
@@ -1863,24 +2213,36 @@
   "compatibilityDescSamhap": "The {animal1} and {animal2} are a perfect match, complementing each other's weaknesses. This relationship creates great synergy when together.",
   "@compatibilityDescSamhap": {
     "placeholders": {
-      "animal1": { "type": "String" },
-      "animal2": { "type": "String" }
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
     }
   },
   "compatibilitySummaryYukhap": "Great Zodiac Match (Yukhap)",
   "compatibilityDescYukhap": "The {animal1} and {animal2} have a strong mutual attraction. It's easy to feel a connection from the very beginning.",
   "@compatibilityDescYukhap": {
     "placeholders": {
-      "animal1": { "type": "String" },
-      "animal2": { "type": "String" }
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
     }
   },
   "compatibilitySummaryChung": "Relationship Requiring Effort (Chung)",
   "compatibilityDescChung": "The {animal1} and {animal2} have different temperaments and may clash. Respecting each other's differences and showing consideration is necessary.",
   "@compatibilityDescChung": {
     "placeholders": {
-      "animal1": { "type": "String" },
-      "animal2": { "type": "String" }
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
     }
   },
   "compatibilitySummaryWonjin": "Relationship Requiring Understanding (Wonjin)",
@@ -1889,8 +2251,12 @@
   "compatibilityDescDefaultZodiac": "The {animal1} and {animal2} have a smooth relationship without major conflicts.",
   "@compatibilityDescDefaultZodiac": {
     "placeholders": {
-      "animal1": { "type": "String" },
-      "animal2": { "type": "String" }
+      "animal1": {
+        "type": "String"
+      },
+      "animal2": {
+        "type": "String"
+      }
     }
   },
   "compatibilitySummaryCheonganHap": "Destined Soulmates",
@@ -1905,7 +2271,9 @@
   "compatibilityDescSameElement": "Sharing the '{element}' tendency means your values and ways of acting are very much in sync.",
   "@compatibilityDescSameElement": {
     "placeholders": {
-      "element": { "type": "String" }
+      "element": {
+        "type": "String"
+      }
     }
   },
   "compatibilitySummaryCompatibleElement": "Harmonious Balance",
@@ -1913,5 +2281,240 @@
   "compatibilitySummaryIncompatibleElement": "Fascinating Differences",
   "compatibilityDescIncompatibleElement": "Your different temperaments may feel unfamiliar at first, but they offer endless opportunities for growth and discovery together.",
   "compatibilitySummaryDefaultConstellation": "Average Harmony",
-  "compatibilityDescDefaultConstellation": "A relationship that matches reasonably well based on zodiac signs."
+  "compatibilityDescDefaultConstellation": "A relationship that matches reasonably well based on zodiac signs.",
+  "routineMorningTitle": "Fresh Morning! ☀️",
+  "routineMorningBody": "Did you forget your routine missions?",
+  "routineEveningTitle": "Good job today! ✨",
+  "routineEveningBody": "Did you complete all your missions? Finish your routine.",
+  "routineCheckTitle": "Check today's missions! 🚀",
+  "routineCheckBody": "Follow your routine and have a great day.",
+  "supplementNotificationTitle": "Supplement Reminder",
+  "waterNotificationTitle": "Water Reminder",
+  "routineNotificationTitle": "Daily Routine Reminder",
+  "todaysFortuneNotificationTitle": "Today's Fortune",
+  "afternoonFortuneNotificationBody": "How about your afternoon fortune? Check it now!",
+  "morningFortuneNotificationBody": "Check your fortune and start your day with energy!",
+  "fortunePassExpiryTitle": "Fortune Pass Expiring Today",
+  "fortunePassExpiryBody": "Your membership expires today. Renew to keep enjoying benefits!",
+  "takeNow": "Take Now",
+  "later": "Later",
+  "turnOffAlarmAction": "Turn Off Alarm",
+  "todaysFortuneNotification": "Today's Fortune Notification",
+  "enableNotification": "Enable Notification",
+  "fortuneNotificationDescription": "Get your daily fortune at the scheduled time.",
+  "morningNotificationTime": "Morning Notification Time",
+  "afternoonNotificationTime": "Afternoon Notification Time",
+  "morningFortuneTitle": "Today's Fortune (Morning)",
+  "afternoonFortuneTitle": "Today's Fortune (Afternoon)",
+  "type": "Type",
+  "@minutesFormat": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@categoryMissions": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "@hourFormat": {
+    "placeholders": {
+      "hour": {
+        "type": "String"
+      }
+    }
+  },
+  "@tojeongShareTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "@tojeongCoreMessage": {
+    "placeholders": {
+      "sangsu": {
+        "type": "String"
+      },
+      "jungsu": {
+        "type": "String"
+      },
+      "hasu": {
+        "type": "String"
+      }
+    }
+  },
+  "@snoozeMessage": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@timesTaken": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dailyGoalTimes": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "@lapLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "supplementChannelDesc": "Channel for supplement intake notifications.",
+  "waterChannelDesc": "Channel for water drinking habit notifications.",
+  "waterSummaryTitle": "Water Drinking Notification",
+  "dailyRoutineChannelDesc": "Channel for daily mission and habit building notifications.",
+  "dailyRoutineSummaryTitle": "Daily Routine Notification",
+  "missionChannelName": "Mission Notification",
+  "missionChannelDesc": "Channel for general mission performance notifications.",
+  "fortuneChannelName": "Fortune Notification",
+  "fortuneChannelDesc": "Channel for daily fortune check notifications.",
+  "subscriptionChannelName": "Subscription Notification",
+  "subscriptionChannelDesc": "Channel for Fortune Pass expiration and subscription notifications.",
+  "alarmChannelName": "Alarm",
+  "alarmChannelDesc": "Channel for wake-up and mission performance alarms.",
+  "shareViaKakao": "Share via KakaoTalk",
+  "shareViaSNS": "Share via other SNS (Instagram, Twitter, etc.)",
+  "checkDetailResult": "Check Detailed Result",
+  "viewMyFortuneResult": "View My Fortune Result",
+  "takeSupplementNow": "Please take your supplements!",
+  "takeNowQuestion": "Would you like to take it now?",
+  "eatNow": "Eat now",
+  "eatLater": "Eat later",
+  "snoozeMessageGeneric": "I will remind you again in {minutes} minutes.",
+  "hours": "hours",
+  "@snoozeMessageGeneric": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "cheeringMessage4": "Vibrant morning, happy start!",
+  "cheeringMessage5": "Have a smiling day.",
+  "cheeringMessage6": "Cheer up today!",
+  "cheeringMessage7": "You will shine enough today.",
+  "cheeringMessage8": "I have a feeling something good will happen!",
+  "cheeringMessage9": "Great job today. A vigorous start!",
+  "cheeringMessage10": "Happiness is always by your side.",
+  "cheeringMessage11": "I'm rooting for your dreams today.",
+  "cheeringMessage12": "Refreshing morning, pleasant day!",
+  "cheeringMessage13": "Be victorious today!",
+  "cheeringMessage14": "You are precious just by being you.",
+  "cheeringMessage15": "Have a day full of pleasant things.",
+  "cheeringMessage16": "I hope your day sparkles today!",
+  "cheeringMessage17": "Your smile brightens the world.",
+  "cheeringMessage18": "Be yourself today!",
+  "cheeringMessage19": "Start today with a fluttering heart.",
+  "cheeringMessage20": "A wonderful day awaits you.",
+  "cheeringMessage21": "With the power of positivity today!",
+  "cheeringMessage22": "I'm rooting for your path.",
+  "cheeringMessage23": "Make today your best!",
+  "cheeringMessage24": "May luck be with you!",
+  "cheeringMessage25": "Have a warm day today.",
+  "cheeringMessage26": "You can do it!",
+  "cheeringMessage27": "Start today with gratitude.",
+  "cheeringMessage28": "Your value is infinite.",
+  "cheeringMessage29": "May your day bloom with smiles.",
+  "cheeringMessage30": "Have a good time with good people!",
+  "cheeringMessage31": "One step closer to your dreams today!",
+  "cheeringMessage32": "You are the coolest person today.",
+  "cheeringMessage33": "A miraculous day will come.",
+  "cheeringMessage34": "Enjoy your day at leisure today.",
+  "cheeringMessage35": "Your efforts will not betray you.",
+  "cheeringMessage36": "Have a healthy day today.",
+  "cheeringMessage37": "You were born to be loved!",
+  "cheeringMessage38": "Be courageous today!",
+  "cheeringMessage39": "A bright future awaits you.",
+  "cheeringMessage40": "Have a day full of passion!",
+  "cheeringMessage41": "I hope your mind is at peace.",
+  "cheeringMessage42": "Find small happiness today.",
+  "cheeringMessage43": "You're already doing well enough.",
+  "cheeringMessage44": "Start today hopefully.",
+  "cheeringMessage45": "Your kindness is a great strength to someone.",
+  "cheeringMessage46": "Have a productive day today.",
+  "cheeringMessage47": "You have the power to change the world.",
+  "cheeringMessage48": "Clear day today!",
+  "cheeringMessage49": "Exude your charm to your heart's content.",
+  "cheeringMessage50": "Fill your day with happiness today!",
+  "locationServiceDisabled": "Location services are disabled.",
+  "locationPermissionDenied": "Location permission denied.",
+  "locationPermissionPermanentlyDenied": "Location permission permanently denied.",
+  "deleteMissionTitle": "Delete Mission",
+  "deleteMissionConfirm": "Are you sure you want to delete this mission?",
+  "yesDelete": "Yes, delete it",
+  "waterAlarmTitle": "Time to drink water! 💧",
+  "waterAlarmBody": "How about a glass of cool water for your health?",
+  "supplementAlarmBody": "Don't forget to take your supplements for today.",
+  "waterHabitChannelDesc": "Notification channel for water drinking habit.",
+  "pleaseSolveMath": "Please solve the problem.",
+  "detectedLabel": "[Detected: {labels}]",
+  "defaultSleepDuration": "7h 30m",
+    "@detectedLabel": {
+    "placeholders": {
+      "labels": {
+        "type": "String"
+      }
+    }
+  },
+  "year2024Name": "Gap-Chin Year (Year of the Blue Dragon)",
+  "year2025Name": "Eul-Sa Year (Year of the Blue Snake)",
+  "year2026Name": "Byeong-O Year (Year of the Red Horse)",
+  "supportEmailSubject": "[{appTitle} Inquiry] {title}",
+  "@supportEmailSubject": {
+    "placeholders": {
+      "appTitle": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "summary": "Summary",
+  "monthlySummary": "Monthly Summary",
+  "monthlySuccessRate": "{month} Monthly Success Rate: {percentage}% ({success}/{total})",
+  "noMonthlyRecord": "No records for {month}",
+  "missionRecord": "Mission Record",
+  "supplementRecord": "Supplement Record",
+  "timeSaleCatchChance": "Grab the 50% discount chance!",
+  "@monthlySuccessRate": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "String"
+      },
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@noMonthlyRecord": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      }
+    }
+  }
 }

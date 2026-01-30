@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
-import '../../core/constants/cheering_messages.dart';
 import '../../main.dart';
 import '../../providers/mission_provider.dart';
 
@@ -14,6 +13,8 @@ class MissionSuccessScreen extends ConsumerStatefulWidget {
 }
 
 class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
+  String? _randomMessage;
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +26,17 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String message = cheeringMessages[Random().nextInt(cheeringMessages.length)];
+    final l10n = AppLocalizations.of(context)!;
+    
+    // 메시지가 아직 선택되지 않았다면 랜덤하게 선택
+    if (_randomMessage == null) {
+      final messages = [
+        l10n.cheeringMessage1,
+        l10n.cheeringMessage2,
+        l10n.cheeringMessage3,
+      ];
+      _randomMessage = messages[Random().nextInt(messages.length)];
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -38,9 +49,9 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
               children: [
                 const Icon(Icons.check_circle, size: 80, color: Colors.green),
                 const SizedBox(height: 24),
-                const Text(
-                  "오늘의 응원",
-                  style: TextStyle(
+                Text(
+                  l10n.todaysCheering,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.blueAccent,
@@ -62,7 +73,7 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
                     ],
                   ),
                   child: Text(
-                    message,
+                    _randomMessage!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 22,

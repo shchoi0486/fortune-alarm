@@ -154,6 +154,66 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @languageKorean.
+  ///
+  /// In en, this message translates to:
+  /// **'Korean'**
+  String get languageKorean;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageJapanese.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese'**
+  String get languageJapanese;
+
+  /// No description provided for @languageChinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese'**
+  String get languageChinese;
+
+  /// No description provided for @languageRussian.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian'**
+  String get languageRussian;
+
+  /// No description provided for @languageHindi.
+  ///
+  /// In en, this message translates to:
+  /// **'Hindi'**
+  String get languageHindi;
+
+  /// No description provided for @languageSpanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get languageSpanish;
+
+  /// No description provided for @languageFrench.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get languageFrench;
+
+  /// No description provided for @languageGerman.
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get languageGerman;
+
   /// No description provided for @alarm.
   ///
   /// In en, this message translates to:
@@ -202,6 +262,66 @@ abstract class AppLocalizations {
   /// **'Confirm'**
   String get confirm;
 
+  /// No description provided for @missionSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission Success!'**
+  String get missionSuccess;
+
+  /// No description provided for @cheeringMessage1.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a great day today!'**
+  String get cheeringMessage1;
+
+  /// No description provided for @cheeringMessage2.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m rooting for you today!'**
+  String get cheeringMessage2;
+
+  /// No description provided for @cheeringMessage3.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s going to be a wonderful day.'**
+  String get cheeringMessage3;
+
+  /// No description provided for @todaysCheering.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Message'**
+  String get todaysCheering;
+
+  /// No description provided for @notificationWakeUpBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to wake up!'**
+  String get notificationWakeUpBody;
+
+  /// No description provided for @notificationMissionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the mission and turn off the alarm!'**
+  String get notificationMissionBody;
+
+  /// No description provided for @notificationSafetyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The alarm was forced to close! Please complete the mission.'**
+  String get notificationSafetyBody;
+
+  /// No description provided for @notificationRingingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The alarm is ringing!'**
+  String get notificationRingingBody;
+
+  /// No description provided for @snoozePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'[Snooze]'**
+  String get snoozePrefix;
+
   /// No description provided for @exactAlarmPermissionRequired.
   ///
   /// In en, this message translates to:
@@ -236,13 +356,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Ringing in {hours}h {minutes}m'**
-  String hoursMinutesRemaining(int hours, int minutes);
+  String hoursMinutesRemaining(String hours, String minutes);
 
   /// No description provided for @minutesRemaining.
   ///
   /// In en, this message translates to:
   /// **'Ringing in {minutes}m'**
-  String minutesRemaining(int minutes);
+  String minutesRemaining(String minutes);
 
   /// No description provided for @am.
   ///
@@ -1027,14 +1147,14 @@ abstract class AppLocalizations {
   /// No description provided for @snoozeInfo.
   ///
   /// In en, this message translates to:
-  /// **'{minutes}m · {count}'**
-  String snoozeInfo(int minutes, int count);
+  /// **'{minutes}m x {count}'**
+  String snoozeInfo(String minutes, String count);
 
   /// No description provided for @snoozeInfoUnlimited.
   ///
   /// In en, this message translates to:
   /// **'{minutes}m · Unlimited'**
-  String snoozeInfoUnlimited(int minutes);
+  String snoozeInfoUnlimited(String minutes);
 
   /// No description provided for @noActiveAlarms.
   ///
@@ -2830,6 +2950,228 @@ abstract class AppLocalizations {
   /// **'A bright, open smile radiates positive energy, bringing luck to your relationships.'**
   String get mouthExpressionLucky;
 
+  /// No description provided for @supplementAlarmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to take your supplements! 💊'**
+  String get supplementAlarmTitle;
+
+  /// No description provided for @alarmVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm Volume'**
+  String get alarmVolume;
+
+  /// No description provided for @alarmTimeList.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm Time List'**
+  String get alarmTimeList;
+
+  /// No description provided for @noAlarmTimesAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'No alarm times added.'**
+  String get noAlarmTimesAdded;
+
+  /// No description provided for @alarmTimeDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm time deleted.'**
+  String get alarmTimeDeleted;
+
+  /// No description provided for @addAlarmTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Alarm Time'**
+  String get addAlarmTime;
+
+  /// No description provided for @editAlarmTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Alarm Time'**
+  String get editAlarmTime;
+
+  /// No description provided for @defaultRingtone.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Ringtone'**
+  String get defaultRingtone;
+
+  /// No description provided for @takeSupplementsNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Please take your supplements and record it!'**
+  String get takeSupplementsNow;
+
+  /// No description provided for @nextTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Next Time'**
+  String get nextTime;
+
+  /// No description provided for @take.
+  ///
+  /// In en, this message translates to:
+  /// **'Take'**
+  String get take;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @notificationTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Time'**
+  String get notificationTime;
+
+  /// No description provided for @start.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get start;
+
+  /// No description provided for @end.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get end;
+
+  /// No description provided for @notificationInterval.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Interval'**
+  String get notificationInterval;
+
+  /// No description provided for @waterDrankToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Drank Today'**
+  String get waterDrankToday;
+
+  /// No description provided for @goal.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal'**
+  String get goal;
+
+  /// No description provided for @cup.
+  ///
+  /// In en, this message translates to:
+  /// **'Cup'**
+  String get cup;
+
+  /// No description provided for @waterIntakeRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Intake Record'**
+  String get waterIntakeRecord;
+
+  /// No description provided for @remainingAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get remainingAmount;
+
+  /// No description provided for @ml.
+  ///
+  /// In en, this message translates to:
+  /// **'ml'**
+  String get ml;
+
+  /// No description provided for @minutesFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes}m'**
+  String minutesFormat(String minutes);
+
+  /// No description provided for @drinkWater.
+  ///
+  /// In en, this message translates to:
+  /// **'Drink Water'**
+  String get drinkWater;
+
+  /// No description provided for @supplement.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplement'**
+  String get supplement;
+
+  /// No description provided for @water.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get water;
+
+  /// No description provided for @morning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get morning;
+
+  /// No description provided for @afternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get afternoon;
+
+  /// No description provided for @evening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get evening;
+
+  /// No description provided for @takeSupplement.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Supplement'**
+  String get takeSupplement;
+
+  /// No description provided for @goalAchievedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal Achieved!'**
+  String get goalAchievedTitle;
+
+  /// No description provided for @waterIntake.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Intake'**
+  String get waterIntake;
+
+  /// No description provided for @remindTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind Time'**
+  String get remindTime;
+
+  /// No description provided for @alarmRingtone.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm Ringtone'**
+  String get alarmRingtone;
+
+  /// No description provided for @snoozeTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Snooze Time'**
+  String get snoozeTime;
+
+  /// No description provided for @snoozeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Default time when selecting \'Next Time\''**
+  String get snoozeDescription;
+
+  /// No description provided for @oneHour.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Hour'**
+  String get oneHour;
+
   /// No description provided for @mouthExpressionOpen.
   ///
   /// In en, this message translates to:
@@ -4208,7 +4550,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{minutes} min later'**
-  String minutesLater(int minutes);
+  String minutesLater(String minutes);
 
   /// No description provided for @countLabel.
   ///
@@ -4220,7 +4562,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Total {count} times'**
-  String timesCount(int count);
+  String timesCount(String count);
 
   /// No description provided for @wakeUpMission.
   ///
@@ -4760,7 +5102,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Mission Success! But it will ring again in {minutes} minutes according to settings.'**
-  String missionSnoozeMessage(int minutes);
+  String missionSnoozeMessage(String minutes);
 
   /// No description provided for @showFace.
   ///
@@ -4947,12 +5289,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete {count} images?\nThis action cannot be undone.'**
   String deleteSelectedImagesConfirm(int count);
-
-  /// No description provided for @defaultRingtone.
-  ///
-  /// In en, this message translates to:
-  /// **'Default Ringtone'**
-  String get defaultRingtone;
 
   /// No description provided for @classicAlarm.
   ///
@@ -5168,13 +5504,13 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{minutes}m (Unlimited)'**
-  String snoozeMinutesUnlimited(int minutes);
+  String snoozeMinutesUnlimited(String minutes);
 
   /// No description provided for @snoozeMinutesCount.
   ///
   /// In en, this message translates to:
   /// **'{minutes}m ({current}/{total})'**
-  String snoozeMinutesCount(int minutes, int current, int total);
+  String snoozeMinutesCount(String minutes, int current, int total);
 
   /// No description provided for @ringtone_fluttering_day.
   ///
@@ -5218,6 +5554,24 @@ abstract class AppLocalizations {
   /// **'Self Love'**
   String get ringtone_self_love;
 
+  /// No description provided for @cherry_stained_finger.
+  ///
+  /// In en, this message translates to:
+  /// **'Cherry Stained Finger'**
+  String get cherry_stained_finger;
+
+  /// No description provided for @dancing_in_the_stars.
+  ///
+  /// In en, this message translates to:
+  /// **'Dancing In The Stars'**
+  String get dancing_in_the_stars;
+
+  /// No description provided for @nice_day.
+  ///
+  /// In en, this message translates to:
+  /// **'Nice Day'**
+  String get nice_day;
+
   /// No description provided for @fortuneTitle.
   ///
   /// In en, this message translates to:
@@ -5257,7 +5611,7 @@ abstract class AppLocalizations {
   /// No description provided for @fortuneSelectTitleDate.
   ///
   /// In en, this message translates to:
-  /// **'Think about the energy of {month, select, 1{January} 2{February} 3{March} 4{April} 5{May} 6{June} 7{July} 8{August} 9{September} 10{October} 11{November} 12{December} other{Month}} {day}\nand select 3 cards.'**
+  /// **'Think about the energy of {month}/{day}\nand select 3 cards.'**
   String fortuneSelectTitleDate(String month, int day);
 
   /// No description provided for @fortuneNewYearButton.
@@ -5293,7 +5647,7 @@ abstract class AppLocalizations {
   /// No description provided for @fortuneResultTitleDate.
   ///
   /// In en, this message translates to:
-  /// **'Fortune for {month, select, 1{January} 2{February} 3{March} 4{April} 5{May} 6{June} 7{July} 8{August} 9{September} 10{October} 11{November} 12{December} other{Month}} {day}, {year}'**
+  /// **'Fortune for {month}/{day}, {year}'**
   String fortuneResultTitleDate(int year, String month, int day);
 
   /// No description provided for @startDayButton.
@@ -5434,53 +5788,1253 @@ abstract class AppLocalizations {
   /// **'The World'**
   String get tarotName21;
 
+  /// No description provided for @tarotKeywords0.
+  ///
+  /// In en, this message translates to:
+  /// **'New beginnings, adventure, innocence, freedom, recklessness'**
+  String get tarotKeywords0;
+
+  /// No description provided for @tarotDesc0.
+  ///
+  /// In en, this message translates to:
+  /// **'The Fool stands precariously at the edge of a cliff in colorful clothes, but his gaze is fixed on the distance, full of hope.'**
+  String get tarotDesc0;
+
+  /// No description provided for @tarotLoveMeaning0.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected new love may arrive, or a fateful encounter at first sight may occur.'**
+  String get tarotLoveMeaning0;
+
+  /// No description provided for @tarotLoveDetail0.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when you can start love with a pure heart like a child. Forget all past wounds or complex conditions and be faithful to the emotions of this moment. You may encounter a new connection in an unexpected place or have a heart-fluttering experience of falling in love at first sight.'**
+  String get tarotLoveDetail0;
+
+  /// No description provided for @tarotWealthMeaning0.
+  ///
+  /// In en, this message translates to:
+  /// **'New investments or business items may catch your eye. It\'s a time when profits follow when you work happily without being tied to money.'**
+  String get tarotWealthMeaning0;
+
+  /// No description provided for @tarotWealthDetail0.
+  ///
+  /// In en, this message translates to:
+  /// **'A time when new financial opportunities are opening up. You can achieve unexpected results by investing in creative items that others haven\'t tried or by challenging new fields. However, avoid reckless spending and let profits naturally follow the process of enjoying your work.'**
+  String get tarotWealthDetail0;
+
+  /// No description provided for @tarotSuccessMeaning0.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a good time to start a new project or change to a completely different field.'**
+  String get tarotSuccessMeaning0;
+
+  /// No description provided for @tarotSuccessDetail0.
+  ///
+  /// In en, this message translates to:
+  /// **'The most suitable time to start a new project or change to a completely different field. Take a bold first step with excitement rather than fear of failure. Your pure passion will positively influence those around you and open new paths.'**
+  String get tarotSuccessDetail0;
+
   /// No description provided for @tarotKeywords1.
   ///
   /// In en, this message translates to:
   /// **'Creation, Will, Ability, Realization, Versatility'**
   String get tarotKeywords1;
 
-  /// No description provided for @tarotDescription1.
+  /// No description provided for @tarotDesc1.
   ///
   /// In en, this message translates to:
-  /// **'The magician is wearing a red robe, one hand pointing to the sky and the other to the ground, bringing heavenly power to the ground. There are four elements (staff, cup, sword, coin) on the table, which means you already have all the tools and abilities to achieve your goals.'**
-  String get tarotDescription1;
+  /// **'The magician is wearing a red robe, one hand pointing to the sky and the other to the ground, bringing heavenly power to the ground.'**
+  String get tarotDesc1;
 
   /// No description provided for @tarotLoveMeaning1.
   ///
   /// In en, this message translates to:
-  /// **'This is a time when your charm is at its peak and you are popular with others. If you\'re seeing someone or have a spark with someone, you can develop the relationship with your witty speech and lead.'**
+  /// **'This is a time when your charm is at its peak and you become popular with the opposite sex.'**
   String get tarotLoveMeaning1;
 
   /// No description provided for @tarotLoveDetail1.
   ///
   /// In en, this message translates to:
-  /// **'It\'s a great opportunity to capture someone\'s heart as your charm and talent shine. If there\'s someone you like, don\'t hesitate to approach them actively. Your sense of humor and sensible conversation will delight the other person and allow you to lead the relationship proactively. If you\'re single, you may be approached by several people, and if you\'re in a relationship, the other person will be greatly moved if you lead the date plans or prepare an event. Win love with confidence.'**
+  /// **'This is a perfect opportunity for your charm and talent to shine and capture someone\'s heart. If there\'s someone you like, don\'t hesitate and approach them actively. Your sense of humor and witty conversation will delight them, allowing you to take the lead in the relationship. Win your love with confidence.'**
   String get tarotLoveDetail1;
 
   /// No description provided for @tarotWealthMeaning1.
   ///
   /// In en, this message translates to:
-  /// **'This is the right time to generate revenue using your abilities and skills. If you materialize the ideas in your head into reality, it will lead to financial results.'**
+  /// **'It\'s the right time to generate revenue using your abilities and skills.'**
   String get tarotWealthMeaning1;
 
   /// No description provided for @tarotWealthDetail1.
   ///
   /// In en, this message translates to:
-  /// **'This is the time when your knowledge, skills, and ideas become money. Don\'t just settle for a salary; generate extra income through side jobs, two jobs, or freelance activities. Creative planning, sales ability, and speaking ability will be demonstrated excellently, resulting in higher-than-expected revenue. Since your judgment is likely to hit the mark in fund management, you will get good results if you proactively set up a financial plan and put it into practice.'**
+  /// **'It\'s a time when your knowledge, skills, and ideas turn into money. Don\'t just settle for your salary; try creating additional income through side jobs or second careers. Your creative planning and sales abilities will be outstanding, leading to higher-than-expected profits.'**
   String get tarotWealthDetail1;
 
   /// No description provided for @tarotSuccessMeaning1.
   ///
   /// In en, this message translates to:
-  /// **'Your work ability will be excellently demonstrated and recognized by those around you. If you have something planned, now is the time to put it into practice.'**
+  /// **'Your work ability is excellently demonstrated and recognized by those around you.'**
   String get tarotSuccessMeaning1;
 
   /// No description provided for @tarotSuccessDetail1.
   ///
   /// In en, this message translates to:
-  /// **'You can stand out in your workplace or studies by making full use of your abilities. No matter what problem you face, you can solve it with your own wit and humor, and you will be recognized as a \'capable person\' by your colleagues or superiors. If you take the lead in a new project or give an important presentation, you can finish it successfully. Just as opportunities come to those who are prepared, you are already fully prepared. Believe in yourself and show off your skills confidently like a protagonist on stage.'**
+  /// **'You can stand out in your workplace or studies by fully demonstrating your abilities. No matter what problem arises, you can solve it with your own wit and cleverness, being recognized as a \'talented person\' by colleagues and superiors. Trust yourself and show your skills confidently.'**
   String get tarotSuccessDetail1;
+
+  /// No description provided for @tarotKeywords2.
+  ///
+  /// In en, this message translates to:
+  /// **'Intuition, wisdom, mystery, secret, platonic'**
+  String get tarotKeywords2;
+
+  /// No description provided for @tarotDesc2.
+  ///
+  /// In en, this message translates to:
+  /// **'The High Priestess sits behind a mysterious veil, holding a scroll of wisdom and balancing to symbolize deep insight.'**
+  String get tarotDesc2;
+
+  /// No description provided for @tarotLoveMeaning2.
+  ///
+  /// In en, this message translates to:
+  /// **'It means platonic love where spiritual communion is important.'**
+  String get tarotLoveMeaning2;
+
+  /// No description provided for @tarotLoveDetail2.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll be attracted to someone with spiritual depth and good conversation rather than just physical charm. Your intuition for reading others\' minds is developed, so you can understand each other\'s feelings without words. However, being too cautious can cause misunderstandings, so try expressing your feelings honestly sometimes.'**
+  String get tarotLoveDetail2;
+
+  /// No description provided for @tarotWealthMeaning2.
+  ///
+  /// In en, this message translates to:
+  /// **'Now is the time to protect your assets and watch the situation rather than actively investing.'**
+  String get tarotWealthMeaning2;
+
+  /// No description provided for @tarotWealthDetail2.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time to analyze and study market conditions calmly rather than moving hastily for immediate profit. Since this is a time for sowing seeds and waiting, don\'t be impatient if you don\'t see immediate gains. It\'s better to consider investments from a long-term perspective like real estate or stocks.'**
+  String get tarotWealthDetail2;
+
+  /// No description provided for @tarotSuccessMeaning2.
+  ///
+  /// In en, this message translates to:
+  /// **'You can achieve good results in fields such as studies, research, and professional jobs.'**
+  String get tarotSuccessMeaning2;
+
+  /// No description provided for @tarotSuccessDetail2.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on strengthening your internal foundations and building skills rather than on flashy external results. You can achieve excellent outcomes in tasks requiring deep thinking like research, planning, or analysis. Your wise and cautious attitude will be the key to solving problems at decisive moments.'**
+  String get tarotSuccessDetail2;
+
+  /// No description provided for @tarotKeywords3.
+  ///
+  /// In en, this message translates to:
+  /// **'Abundance, motherhood, nature, beauty, fruit'**
+  String get tarotKeywords3;
+
+  /// No description provided for @tarotDesc3.
+  ///
+  /// In en, this message translates to:
+  /// **'The Empress, sitting comfortably in abundant nature, is a symbol of material and spiritual abundance.'**
+  String get tarotDesc3;
+
+  /// No description provided for @tarotLoveMeaning3.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when love overflows and the relationship becomes deeper.'**
+  String get tarotLoveMeaning3;
+
+  /// No description provided for @tarotLoveDetail3.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a period when your inclusive charm is maximized, making you appear very attractive to others. If you\'re in a relationship, you\'ll receive great love for your warm and caring nature, and marriage talks may arise. If you\'re single, grooming your appearance or changing your style will greatly help improve your love luck.'**
+  String get tarotLoveDetail3;
+
+  /// No description provided for @tarotWealthMeaning3.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a very materially abundant and stable time.'**
+  String get tarotWealthMeaning3;
+
+  /// No description provided for @tarotWealthDetail3.
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial luck is blooming. Rewards follow as much as your effort, or even more, allowing you to enjoy economic leisure. You may achieve higher-than-expected profits in business or investments, or receive unexpected bonuses or gifts. Sharing this abundant energy with those around you will bring even greater fortune.'**
+  String get tarotWealthDetail3;
+
+  /// No description provided for @tarotSuccessMeaning3.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects in progress grow smoothly and produce good results.'**
+  String get tarotSuccessMeaning3;
+
+  /// No description provided for @tarotSuccessDetail3.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when the results of work appear visibly. Projects will finish successfully, leading to performance bonuses or promotion opportunities. Your talent will especially shine in fields requiring aesthetic sense or creativity. Working while enjoying the process will bring even better results.'**
+  String get tarotSuccessDetail3;
+
+  /// No description provided for @tarotKeywords4.
+  ///
+  /// In en, this message translates to:
+  /// **'Authority, structure, stability, leadership, responsibility'**
+  String get tarotKeywords4;
+
+  /// No description provided for @tarotDesc4.
+  ///
+  /// In en, this message translates to:
+  /// **'The Emperor, sitting on a hard stone throne in armor, symbolizes firm dominance and order.'**
+  String get tarotDesc4;
+
+  /// No description provided for @tarotLoveMeaning4.
+  ///
+  /// In en, this message translates to:
+  /// **'It means a stable relationship with a reliable and responsible partner.'**
+  String get tarotLoveMeaning4;
+
+  /// No description provided for @tarotLoveDetail4.
+  ///
+  /// In en, this message translates to:
+  /// **'A relationship based on trust and stability continues rather than burning passion. Your partner will reliably protect and lead you. However, be careful not to be too controlling or stubborn. If you\'re single, you\'ll have opportunities to meet someone with ability and social status.'**
+  String get tarotLoveDetail4;
+
+  /// No description provided for @tarotWealthMeaning4.
+  ///
+  /// In en, this message translates to:
+  /// **'You can accumulate financial stability with systematic asset management.'**
+  String get tarotWealthMeaning4;
+
+  /// No description provided for @tarotWealthDetail4.
+  ///
+  /// In en, this message translates to:
+  /// **'Setting principles and plans is important in financial management. Rather than speculation aiming for a windfall, it\'s better to build a foundation by investing in safe and certain assets like savings or real estate. Your realistic judgment and drive will be a great help in accumulating wealth.'**
+  String get tarotWealthDetail4;
+
+  /// No description provided for @tarotSuccessMeaning4.
+  ///
+  /// In en, this message translates to:
+  /// **'You are in a favorable position to be promoted at work or rise to a leadership role.'**
+  String get tarotSuccessMeaning4;
+
+  /// No description provided for @tarotSuccessDetail4.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when your position within the organization becomes solid. You may be promoted to team leader or manager in recognition of your leadership, and you may be put in charge of important projects. You\'ll gain the trust of your superiors by handling tasks with rational and cool judgment without being swayed by emotions.'**
+  String get tarotSuccessDetail4;
+
+  /// No description provided for @tarotKeywords5.
+  ///
+  /// In en, this message translates to:
+  /// **'Tradition, teaching, belief, advice, mediation'**
+  String get tarotKeywords5;
+
+  /// No description provided for @tarotDesc5.
+  ///
+  /// In en, this message translates to:
+  /// **'The Hierophant is a spiritual teacher who values social norms and traditions and leads people with wise advice.'**
+  String get tarotDesc5;
+
+  /// No description provided for @tarotLoveMeaning5.
+  ///
+  /// In en, this message translates to:
+  /// **'Serious and healthy meetings continue based on trust and respect.'**
+  String get tarotLoveMeaning5;
+
+  /// No description provided for @tarotLoveDetail5.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll want a serious relationship with marriage in mind rather than a casual encounter. You can meet a good connection in blind dates, arranged meetings, or healthy gatherings. If there\'s a conflict between partners, try seeking advice from elders or seniors around you. Their wise advice will be a great help in restoring the relationship.'**
+  String get tarotLoveDetail5;
+
+  /// No description provided for @tarotWealthMeaning5.
+  ///
+  /// In en, this message translates to:
+  /// **'Traditional and safe methods of financial technology are good.'**
+  String get tarotWealthMeaning5;
+
+  /// No description provided for @tarotWealthDetail5.
+  ///
+  /// In en, this message translates to:
+  /// **'Stability should be the top priority rather than adventurous investment. It\'s good to use traditional financial products like bank savings or insurance. Seeking professional consulting or maintaining honest and transparent financial transactions is the way to protect your credit and assets.'**
+  String get tarotWealthDetail5;
+
+  /// No description provided for @tarotSuccessMeaning5.
+  ///
+  /// In en, this message translates to:
+  /// **'Contracts, alliances, and cooperative relationships will be signed smoothly.'**
+  String get tarotSuccessMeaning5;
+
+  /// No description provided for @tarotSuccessDetail5.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s wise to receive help from those around you rather than trying to solve the problem alone. You can find solutions surprisingly easily if you seek advice from superiors like bosses or mentors. Following company rules and procedures is the shortcut to getting good evaluations, and it\'s also a good time to sign important contracts.'**
+  String get tarotSuccessDetail5;
+
+  /// No description provided for @tarotKeywords6.
+  ///
+  /// In en, this message translates to:
+  /// **'Love, harmony, choice, union, partnership'**
+  String get tarotKeywords6;
+
+  /// No description provided for @tarotDesc6.
+  ///
+  /// In en, this message translates to:
+  /// **'Adam and Eve stand receiving a blessing from an angel under a warm sun.'**
+  String get tarotDesc6;
+
+  /// No description provided for @tarotLoveMeaning6.
+  ///
+  /// In en, this message translates to:
+  /// **'This is one of the best times for love to bloom.'**
+  String get tarotLoveMeaning6;
+
+  /// No description provided for @tarotLoveDetail6.
+  ///
+  /// In en, this message translates to:
+  /// **'A heart-fluttering romance awaits you. You\'ll rapidly get closer to someone you\'re attracted to, and you can feel a telepathic connection just by making eye contact. If you\'re preparing to confess, the success rate is very high, so take courage. However, you need the wisdom to choose where your heart truly belongs rather than being swept away by momentary temptation.'**
+  String get tarotLoveDetail6;
+
+  /// No description provided for @tarotWealthMeaning6.
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial fortunes increase when you\'re together rather than alone.'**
+  String get tarotWealthMeaning6;
+
+  /// No description provided for @tarotWealthDetail6.
+  ///
+  /// In en, this message translates to:
+  /// **'Promoting work with someone you get along with will create synergy and increase financial benefits. If you receive a partnership proposal, review it positively. It\'s a time when you can get useful investment information through communication with people around you. However, spending for pleasure may become excessive, so proper adjustment is necessary.'**
+  String get tarotWealthDetail6;
+
+  /// No description provided for @tarotSuccessMeaning6.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a time when teamwork shines.'**
+  String get tarotSuccessMeaning6;
+
+  /// No description provided for @tarotSuccessDetail6.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll work joyfully with colleagues or business partners who fit you perfectly. You can achieve better results in team projects than in solo tasks, and smooth interpersonal relationships will be the key to success. If you choose work that you truly love and enjoy, you\'ll get results you won\'t regret.'**
+  String get tarotSuccessDetail6;
+
+  /// No description provided for @tarotKeywords7.
+  ///
+  /// In en, this message translates to:
+  /// **'Victory, will, forward, conquest, movement'**
+  String get tarotKeywords7;
+
+  /// No description provided for @tarotDesc7.
+  ///
+  /// In en, this message translates to:
+  /// **'A young king in a chariot rushes forward toward his goal with strong will and wins a victory.'**
+  String get tarotDesc7;
+
+  /// No description provided for @tarotLoveMeaning7.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when active romantic pursuits succeed.'**
+  String get tarotLoveMeaning7;
+
+  /// No description provided for @tarotLoveDetail7.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s time to rush to win love. Don\'t hesitate and express your heart honestly and proudly; you can win even if there are competitors. If you\'re in a \'some\' stage, it\'s good to define the relationship clearly and lead. Dynamic dates or traveling together will deepen your affection.'**
+  String get tarotLoveDetail7;
+
+  /// No description provided for @tarotWealthMeaning7.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s time to move aggressively to achieve the target profit.'**
+  String get tarotWealthMeaning7;
+
+  /// No description provided for @tarotWealthDetail7.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong drive is needed to achieve financial goals. Don\'t hesitate and make bold decisions when the opportunity arises; this drive will bring you profit. It\'s advantageous to focus on projects that yield results in the short term, and your performance will increase as much as you work hard. Movement-related expenses may occur, but they will be investments for new opportunities.'**
+  String get tarotWealthDetail7;
+
+  /// No description provided for @tarotSuccessMeaning7.
+  ///
+  /// In en, this message translates to:
+  /// **'You are likely to win the competition and achieve your goals.'**
+  String get tarotSuccessMeaning7;
+
+  /// No description provided for @tarotSuccessDetail7.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear goal achievement such as promotion, passing, or contract signing is predicted. The more intense the competition, the more your fighting spirit will burn, eventually leading to victory. Your image of breaking through obstacles directly will leave a deep impression on those around you, and you\'ll demonstrate excellent abilities in tasks with frequent business trips or movement.'**
+  String get tarotSuccessDetail7;
+
+  /// No description provided for @tarotKeywords8.
+  ///
+  /// In en, this message translates to:
+  /// **'Patience, courage, inner strength, embrace, gentle but firm'**
+  String get tarotKeywords8;
+
+  /// No description provided for @tarotDesc8.
+  ///
+  /// In en, this message translates to:
+  /// **'A woman in white gently handles a lion\'s mouth, symbolizing spiritual strength and patience over physical power.'**
+  String get tarotDesc8;
+
+  /// No description provided for @tarotLoveMeaning8.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when you need the tolerance to accept and understand the other person as they are.'**
+  String get tarotLoveMeaning8;
+
+  /// No description provided for @tarotLoveDetail8.
+  ///
+  /// In en, this message translates to:
+  /// **'Current love requires patience and wisdom. The relationship can develop to the next level when you accept and embrace the other person\'s shortcomings or complaints with a broad heart. A \'gentle but firm\' attitude leading the other person with a soft touch is needed, and if you stay by their side patiently, your sincerity will eventually open their heart.'**
+  String get tarotLoveDetail8;
+
+  /// No description provided for @tarotWealthMeaning8.
+  ///
+  /// In en, this message translates to:
+  /// **'Steady savings and healthy consumption habits are the secrets to collecting wealth.'**
+  String get tarotWealthMeaning8;
+
+  /// No description provided for @tarotWealthDetail8.
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial fortune is gradually rising. Don\'t be disappointed even if big money doesn\'t come in immediately; manage your assets faithfully, and it will return as a large sum later. In investing, it\'s advantageous to hold on firmly rather than being swayed by short-term fluctuations. Managing your impulsive desire to consume is the shortcut to becoming rich.'**
+  String get tarotWealthDetail8;
+
+  /// No description provided for @tarotSuccessMeaning8.
+  ///
+  /// In en, this message translates to:
+  /// **'Even if you encounter a difficult task or a picky boss, you can deal with it wisely.'**
+  String get tarotSuccessMeaning8;
+
+  /// No description provided for @tarotSuccessDetail8.
+  ///
+  /// In en, this message translates to:
+  /// **'You may be assigned a hard project or a picky task, but you have enough potential to solve it. Though you appear soft on the outside, you stand out by overcoming obstacles one by one with strong inner will. Your calm problem-solving ability will lead people around you to send deep trust your way.'**
+  String get tarotSuccessDetail8;
+
+  /// No description provided for @tarotKeywords9.
+  ///
+  /// In en, this message translates to:
+  /// **'Reflection, solitude, exploration, wisdom, rest'**
+  String get tarotKeywords9;
+
+  /// No description provided for @tarotDesc9.
+  ///
+  /// In en, this message translates to:
+  /// **'An old man with a lamp on a dark snowy mountain listens to his inner voice and explores the truth.'**
+  String get tarotDesc9;
+
+  /// No description provided for @tarotLoveMeaning9.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when you need time for yourself or think deeply about love.'**
+  String get tarotLoveMeaning9;
+
+  /// No description provided for @tarotLoveDetail9.
+  ///
+  /// In en, this message translates to:
+  /// **'Now is a time when you need time to look back on yourself rather than active dating. Instead of meeting just anyone to soothe loneliness, think deeply about what kind of love you truly want. Even if you have a partner, taking some distance and having your own time can actually help you realize the essence of the relationship.'**
+  String get tarotLoveDetail9;
+
+  /// No description provided for @tarotWealthMeaning9.
+  ///
+  /// In en, this message translates to:
+  /// **'Financial activities may be somewhat contracted.'**
+  String get tarotWealthMeaning9;
+
+  /// No description provided for @tarotWealthDetail9.
+  ///
+  /// In en, this message translates to:
+  /// **'You should take a conservative attitude toward wealth. Rather than making new investments or starting businesses, it\'s important to check your current assets thoroughly and stop money from leaking. Instead, spending on study or skill acquisition to increase your value is a great investment that will lead to larger profits later.'**
+  String get tarotWealthDetail9;
+
+  /// No description provided for @tarotSuccessMeaning9.
+  ///
+  /// In en, this message translates to:
+  /// **'You achieve results in fields that deeply research professional knowledge or skills.'**
+  String get tarotSuccessMeaning9;
+
+  /// No description provided for @tarotSuccessDetail9.
+  ///
+  /// In en, this message translates to:
+  /// **'You can achieve excellent results in tasks that require deep focus alone, such as research, planning, or development. It\'s a period of silently building skills even if not recognized by others, and it\'s advantageous to focus on the essence of the work rather than workplace relationships. If there\'s an unsolved problem, find an experienced mentor for advice.'**
+  String get tarotSuccessDetail9;
+
+  /// No description provided for @tarotKeywords10.
+  ///
+  /// In en, this message translates to:
+  /// **'Destiny, change, opportunity, cycle, turning point'**
+  String get tarotKeywords10;
+
+  /// No description provided for @tarotDesc10.
+  ///
+  /// In en, this message translates to:
+  /// **'A huge wheel of fortune turns, signaling the inevitable flow of destiny and the start of a new cycle.'**
+  String get tarotDesc10;
+
+  /// No description provided for @tarotLoveMeaning10.
+  ///
+  /// In en, this message translates to:
+  /// **'A fateful encounter awaits you.'**
+  String get tarotLoveMeaning10;
+
+  /// No description provided for @tarotLoveDetail10.
+  ///
+  /// In en, this message translates to:
+  /// **'A fated love like a movie is coming your way. Dramatic events such as meeting someone in an unexpected place or a surprise reunion may occur, so keep your heart open. Singles might meet someone they fall for at first sight, while couples will find their relationship advancing to the next level. Don\'t miss this good flow.'**
+  String get tarotLoveDetail10;
+
+  /// No description provided for @tarotWealthMeaning10.
+  ///
+  /// In en, this message translates to:
+  /// **'The flow of financial luck is improving.'**
+  String get tarotWealthMeaning10;
+
+  /// No description provided for @tarotWealthDetail10.
+  ///
+  /// In en, this message translates to:
+  /// **'The goddess of luck is smiling upon you. Your financial fortune is on an upward curve, with unexpected income or investment returns. As money circulation becomes smooth, you need the boldness to seize the opportunity when it comes. However, since luck cycles, don\'t forget the wisdom to save for the future when things are going well.'**
+  String get tarotWealthDetail10;
+
+  /// No description provided for @tarotSuccessMeaning10.
+  ///
+  /// In en, this message translates to:
+  /// **'The situation is turning in your favor.'**
+  String get tarotSuccessMeaning10;
+
+  /// No description provided for @tarotSuccessDetail10.
+  ///
+  /// In en, this message translates to:
+  /// **'A turning point has arrived where blocked matters start to flow smoothly. The tide is turning in your favor, so don\'t hesitate to seize new opportunities. Opportunities for change like promotion or career moves will be an upward current taking you to a higher place. Going with the flow will bring great results.'**
+  String get tarotSuccessDetail10;
+
+  /// No description provided for @tarotKeywords11.
+  ///
+  /// In en, this message translates to:
+  /// **'Fairness, balance, responsibility, truth, cause and effect'**
+  String get tarotKeywords11;
+
+  /// No description provided for @tarotDesc11.
+  ///
+  /// In en, this message translates to:
+  /// **'A judge in a red robe holds a sword in his right hand and a scale in his left.'**
+  String get tarotDesc11;
+
+  /// No description provided for @tarotLoveMeaning11.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a relationship where reason precedes emotion.'**
+  String get tarotLoveMeaning11;
+
+  /// No description provided for @tarotLoveDetail11.
+  ///
+  /// In en, this message translates to:
+  /// **'Now is a time for rational judgment rather than being swayed by emotions. Look back to see if your relationship is balanced, and if you\'re sacrificing too much or only receiving. If you\'re thinking about marriage, you might meticulously weigh your partner\'s conditions or background; honest and fair conversation will be the solution for relationship improvement.'**
+  String get tarotLoveDetail11;
+
+  /// No description provided for @tarotWealthMeaning11.
+  ///
+  /// In en, this message translates to:
+  /// **'Careful checking is needed in financial transactions or contracts.'**
+  String get tarotWealthMeaning11;
+
+  /// No description provided for @tarotWealthDetail11.
+  ///
+  /// In en, this message translates to:
+  /// **'A situation may arise where you need to clarify right from wrong in financial matters. It\'s a good time to cleanly settle financial relationships, such as receiving borrowed money or repaying debts. When signing contracts, check carefully for any toxic clauses and handle everything according to principles rather than relying on luck or expedients.'**
+  String get tarotWealthDetail11;
+
+  /// No description provided for @tarotSuccessMeaning11.
+  ///
+  /// In en, this message translates to:
+  /// **'You receive a fair evaluation and legitimate compensation.'**
+  String get tarotSuccessMeaning11;
+
+  /// No description provided for @tarotSuccessDetail11.
+  ///
+  /// In en, this message translates to:
+  /// **'You will receive a fair and objective evaluation of your work performance. If you\'ve worked hard, legitimate rewards like promotions or bonuses will follow, and you can demonstrate your abilities in fields requiring accuracy like law or accounting. When making decisions, exclude emotions and judge based strictly on data and facts.'**
+  String get tarotSuccessDetail11;
+
+  /// No description provided for @tarotKeywords12.
+  ///
+  /// In en, this message translates to:
+  /// **'Sacrifice, patience, new perspective, stagnation, enlightenment'**
+  String get tarotKeywords12;
+
+  /// No description provided for @tarotDesc12.
+  ///
+  /// In en, this message translates to:
+  /// **'A man hanging upside down from a tree looks at the world from a new perspective through voluntary hardship and gains enlightenment.'**
+  String get tarotDesc12;
+
+  /// No description provided for @tarotLoveMeaning12.
+  ///
+  /// In en, this message translates to:
+  /// **'The relationship may stagnate or unrequited feelings may last for a long time.'**
+  String get tarotLoveMeaning12;
+
+  /// No description provided for @tarotLoveDetail12.
+  ///
+  /// In en, this message translates to:
+  /// **'You may feel frustrated because the progress of love is stalled, but rushing won\'t solve anything now. Stop for a moment and look at the current situation from a different perspective, reflecting on whether you\'ve been forcing love only in your own way. The patience to think and care from the other person\'s position will eventually be the key to opening their heart.'**
+  String get tarotLoveDetail12;
+
+  /// No description provided for @tarotWealthMeaning12.
+  ///
+  /// In en, this message translates to:
+  /// **'Fund flow may be tied up or you may have to bear losses.'**
+  String get tarotWealthMeaning12;
+
+  /// No description provided for @tarotWealthDetail12.
+  ///
+  /// In en, this message translates to:
+  /// **'You may feel completely blocked financially. Invested money may be tied up or expected income may be delayed, but the more you struggle, the more tangled it might get. It\'s better to empty your mind and observe for now. Use this period to check your consumption habits and re-establish your values regarding money.'**
+  String get tarotWealthDetail12;
+
+  /// No description provided for @tarotSuccessMeaning12.
+  ///
+  /// In en, this message translates to:
+  /// **'Work may not proceed as planned and may be delayed.'**
+  String get tarotSuccessMeaning12;
+
+  /// No description provided for @tarotSuccessDetail12.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects might be suspended or work delayed, causing stress, but this is a temporary stop signal rather than a failure. Don\'t try to force progress; instead, step back and redraw the overall picture. Brilliant ideas can emerge when you break fixed ideas, and current trials will give you new enlightenment.'**
+  String get tarotSuccessDetail12;
+
+  /// No description provided for @tarotKeywords13.
+  ///
+  /// In en, this message translates to:
+  /// **'Ending, change, rebirth, separation, new beginning'**
+  String get tarotKeywords13;
+
+  /// No description provided for @tarotDesc13.
+  ///
+  /// In en, this message translates to:
+  /// **'It symbolizes the complete termination of the old and a new beginning resulting from it, representing a painful but inevitable process of change.'**
+  String get tarotDesc13;
+
+  /// No description provided for @tarotLoveMeaning13.
+  ///
+  /// In en, this message translates to:
+  /// **'It means the end of a relationship or a big change.'**
+  String get tarotLoveMeaning13;
+
+  /// No description provided for @tarotLoveDetail13.
+  ///
+  /// In en, this message translates to:
+  /// **'The current relationship may have reached its limit. You need the courage to let it flow naturally rather than trying to hold on; separation is painful, but a better new beginning always waits at the end. Remember that a place for a new person is created only when you completely escape from past lingering feelings or wounds.'**
+  String get tarotLoveDetail13;
+
+  /// No description provided for @tarotWealthMeaning13.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficult situations such as financial losses or investment failures may come.'**
+  String get tarotWealthMeaning13;
+
+  /// No description provided for @tarotWealthDetail13.
+  ///
+  /// In en, this message translates to:
+  /// **'A big change is expected financially. You might experience losses in trusted investments or face difficulties with unexpected expenses, but this is a signal to change inefficient asset management methods. Organize your debts and completely cut off unnecessary spending to use this as a stepping stone for a healthier financial structure.'**
+  String get tarotWealthDetail13;
+
+  /// No description provided for @tarotSuccessMeaning13.
+  ///
+  /// In en, this message translates to:
+  /// **'Work in progress may be interrupted or failed.'**
+  String get tarotSuccessMeaning13;
+
+  /// No description provided for @tarotSuccessDetail13.
+  ///
+  /// In en, this message translates to:
+  /// **'A project you worked hard on might fall through, or you could experience major changes at work. While the sense of frustration will be great for now, this is a revelation of destiny to organize work that doesn\'t fit you and find a new path for greater success. If you discard old ways and start with a completely new mindset, a more wonderful next chapter will open.'**
+  String get tarotSuccessDetail13;
+
+  /// No description provided for @tarotKeywords14.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance, temperance, harmony, healing, moderation'**
+  String get tarotKeywords14;
+
+  /// No description provided for @tarotDesc14.
+  ///
+  /// In en, this message translates to:
+  /// **'Water is transferred between two cups, symbolizing perfect balance between reality and ideals and a harmonious flow.'**
+  String get tarotDesc14;
+
+  /// No description provided for @tarotLoveMeaning14.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a process of two different people meeting and achieving harmony.'**
+  String get tarotLoveMeaning14;
+
+  /// No description provided for @tarotLoveDetail14.
+  ///
+  /// In en, this message translates to:
+  /// **'A subtle and lasting love suits this period better than burning passion. You\'ll build deep bonds by acknowledging and complementing each other\'s differences, and if there are conflicts, you need the wisdom to solve them through calm conversation. Your gentle and caring attitude will put your partner\'s mind at ease and create a stable relationship.'**
+  String get tarotLoveDetail14;
+
+  /// No description provided for @tarotWealthMeaning14.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s important to balance income and spending.'**
+  String get tarotWealthMeaning14;
+
+  /// No description provided for @tarotWealthDetail14.
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial stability follows a stable flow. Focus on efficiently allocating and managing current assets rather than aiming for a windfall, and a habit of appropriately adjusting spending as income increases is needed. If you invest, it\'s good to diversify for risk management, and steady management will eventually bring wealth.'**
+  String get tarotWealthDetail14;
+
+  /// No description provided for @tarotSuccessMeaning14.
+  ///
+  /// In en, this message translates to:
+  /// **'The ability to coordinate different opinions and lead harmony stands out.'**
+  String get tarotSuccessMeaning14;
+
+  /// No description provided for @tarotSuccessDetail14.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll excellently perform as a mediator in team projects, resolving conflicts and increasing work efficiency. Your flexible thinking and adaptability will be recognized, and the wisdom to prevent burnout by balancing work and rest will stand out. Proceeding step-by-step while observing the overall flow leads to the best results.'**
+  String get tarotSuccessDetail14;
+
+  /// No description provided for @tarotKeywords15.
+  ///
+  /// In en, this message translates to:
+  /// **'Temptation, bondage, obsession, materialism, addiction'**
+  String get tarotKeywords15;
+
+  /// No description provided for @tarotDesc15.
+  ///
+  /// In en, this message translates to:
+  /// **'It symbolizes desires and obsessions that bind oneself, and material temptations that one could escape if they chose, but fails to do so.'**
+  String get tarotDesc15;
+
+  /// No description provided for @tarotLoveMeaning15.
+  ///
+  /// In en, this message translates to:
+  /// **'It means a relationship attracted to or obsessed with intense physical charm.'**
+  String get tarotLoveMeaning15;
+
+  /// No description provided for @tarotLoveDetail15.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when it\'s hard to make rational judgments because you\'re strongly fascinated by someone\'s charm. A hot romance that might keep you awake at night could start, but on the other hand, you need caution as you might suffer from excessive obsession and restraint. Coolly reflect on whether your feelings are true love or just simple desire or possessiveness.'**
+  String get tarotLoveDetail15;
+
+  /// No description provided for @tarotWealthMeaning15.
+  ///
+  /// In en, this message translates to:
+  /// **'Material greed becomes excessive, so you may invest excessively.'**
+  String get tarotWealthMeaning15;
+
+  /// No description provided for @tarotWealthDetail15.
+  ///
+  /// In en, this message translates to:
+  /// **'A time with many financial temptations. There\'s a risk of putting money into dangerous places deceived by sweet words, or squandering assets through impulsive luxury purchases. Be wary of becoming a slave to money and losing trust, and focus on protecting what you have rather than new investments.'**
+  String get tarotWealthDetail15;
+
+  /// No description provided for @tarotSuccessMeaning15.
+  ///
+  /// In en, this message translates to:
+  /// **'You may try to use any means for success.'**
+  String get tarotSuccessMeaning15;
+
+  /// No description provided for @tarotSuccessDetail15.
+  ///
+  /// In en, this message translates to:
+  /// **'Greed for power or honor increases. There is a concern about falling into work addiction, such as setting unreasonable schedules for performance or neglecting health. You need an attitude of working honestly by returning to your original intentions rather than trying to gain without legitimate effort.'**
+  String get tarotSuccessDetail15;
+
+  /// No description provided for @tarotKeywords16.
+  ///
+  /// In en, this message translates to:
+  /// **'Collapse, shock, sudden change, liberation, revelation of truth'**
+  String get tarotKeywords16;
+
+  /// No description provided for @tarotDesc16.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightning strikes the tower, collapsing it and people are falling.'**
+  String get tarotDesc16;
+
+  /// No description provided for @tarotLoveMeaning16.
+  ///
+  /// In en, this message translates to:
+  /// **'A big crisis or a sudden breakup may come to the relationship.'**
+  String get tarotLoveMeaning16;
+
+  /// No description provided for @tarotLoveDetail16.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected event like a bolt from the blue can occur on the love front. You might be disappointed in someone you trusted or face a conflict that shakes the relationship to its roots, but don\'t despair. This is a process of breaking unhealthy relationships or misunderstandings to face the truth, and an opportunity to build a firmer love will eventually come.'**
+  String get tarotLoveDetail16;
+
+  /// No description provided for @tarotWealthMeaning16.
+  ///
+  /// In en, this message translates to:
+  /// **'You should prepare for sudden financial losses or disasters.'**
+  String get tarotWealthMeaning16;
+
+  /// No description provided for @tarotWealthDetail16.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a very unstable time financially. You may hear shocking news such as big money leaving or an investment collapsing, so move your assets to a safe place and prepare. However, this collapse will be an opportunity to correct wrong economic concepts, and after hitting rock bottom, a chance to build a solid foundation will come.'**
+  String get tarotWealthDetail16;
+
+  /// No description provided for @tarotSuccessMeaning16.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects may be interrupted or shocking changes at work may occur.'**
+  String get tarotSuccessMeaning16;
+
+  /// No description provided for @tarotSuccessDetail16.
+  ///
+  /// In en, this message translates to:
+  /// **'You may feel frustration as if the tower you\'ve worked hard to build is collapsing, but this is due to an inevitable flow of change rather than a lack of ability. Don\'t panic; grasp the situation coolly, discard old systems, and seek new paths. If you take this crisis as an opportunity to reorganize, you can leap to a much higher place.'**
+  String get tarotSuccessDetail16;
+
+  /// No description provided for @tarotKeywords17.
+  ///
+  /// In en, this message translates to:
+  /// **'Hope, inspiration, healing, optimism, wish fulfillment'**
+  String get tarotKeywords17;
+
+  /// No description provided for @tarotDesc17.
+  ///
+  /// In en, this message translates to:
+  /// **'A woman is pouring water with two jars while keeping one foot on the ground, symbolizing peace after hardship and hope for the future.'**
+  String get tarotDesc17;
+
+  /// No description provided for @tarotLoveMeaning17.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when you meet someone close to your ideal type or your dream about love comes true.'**
+  String get tarotLoveMeaning17;
+
+  /// No description provided for @tarotLoveDetail17.
+  ///
+  /// In en, this message translates to:
+  /// **'Like a star brightening the dark night, sparkling hope comes to your love life as well. You may meet your ideal type or make a beautiful promise for the future with your lover, and it\'s a time when your pure charm strongly appeals. Past painful memories will now be healed, and bright energy to dream of new love will arise.'**
+  String get tarotLoveDetail17;
+
+  /// No description provided for @tarotWealthMeaning17.
+  ///
+  /// In en, this message translates to:
+  /// **'The financial situation gradually improves.'**
+  String get tarotWealthMeaning17;
+
+  /// No description provided for @tarotWealthDetail17.
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial outlook starts to flow in a positive direction. Previous economic difficulties are resolved and a ray of light is seen, and an opportunity to increase side income through creative ideas may arise. Rather than immediate big gains, an eye for investing in places with high future value from a long-term perspective will lead you to financial stability.'**
+  String get tarotWealthDetail17;
+
+  /// No description provided for @tarotSuccessMeaning17.
+  ///
+  /// In en, this message translates to:
+  /// **'Creative inspiration springs up and you get an opportunity to spread your talent widely.'**
+  String get tarotSuccessMeaning17;
+
+  /// No description provided for @tarotSuccessDetail17.
+  ///
+  /// In en, this message translates to:
+  /// **'Your ideas shine and receive praise from those around you. You can stand out in marketing, PR, or artistic fields, and it\'s a very good time to start a project you\'ve always dreamed of. If you express yourself confidently, luck is in for you to gain popularity or honor, so seize the opportunity.'**
+  String get tarotSuccessDetail17;
+
+  /// No description provided for @tarotKeywords18.
+  ///
+  /// In en, this message translates to:
+  /// **'Anxiety, illusion, ambiguity, intuition, unconscious'**
+  String get tarotKeywords18;
+
+  /// No description provided for @tarotDesc18.
+  ///
+  /// In en, this message translates to:
+  /// **'At night when the moon is up, a dog and a wolf howl and a crayfish crawls out of the water, symbolizing unseen truths and the subconscious.'**
+  String get tarotDesc18;
+
+  /// No description provided for @tarotLoveMeaning18.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s frustrating because you don\'t know the other person\'s heart, and suspicion are easy to sprout.'**
+  String get tarotLoveMeaning18;
+
+  /// No description provided for @tarotLoveDetail18.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when you\'re anxious because you don\'t know the other person\'s inner thoughts, as if in a fog. Trivial misunderstandings can grow into suspicion and cause sleepless nights, so it\'s better to watch the situation calmly rather than hastily interrogating. Instead of clinging to uncertain relationships swept by emotions, prioritize finding your center through rational thinking.'**
+  String get tarotLoveDetail18;
+
+  /// No description provided for @tarotWealthMeaning18.
+  ///
+  /// In en, this message translates to:
+  /// **'Investment prospects are opaque and there is a risk of fraud.'**
+  String get tarotWealthMeaning18;
+
+  /// No description provided for @tarotWealthDetail18.
+  ///
+  /// In en, this message translates to:
+  /// **'Your vision is blurred in terms of finance, so there is a high risk of being deceived by plausible investment information or sweet words. Since traps are hidden in unseen places, it\'s a time to be extremely careful, as if tapping a stone bridge before crossing. Rather than starting new things, protecting your assets through thorough realistic verification is the way.'**
+  String get tarotWealthDetail18;
+
+  /// No description provided for @tarotSuccessMeaning18.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a confusing time because the direction of work may be ambiguous.'**
+  String get tarotSuccessMeaning18;
+
+  /// No description provided for @tarotSuccessDetail18.
+  ///
+  /// In en, this message translates to:
+  /// **'You may find yourself in a hopeless situation where you can\'t see ahead, and you should be careful with your words and actions as project direction may be shaken or you may be caught in workplace rumors. It\'s wise to wait until the situation becomes clear rather than moving hastily, and it\'s good to guard your position silently and focus on mental management.'**
+  String get tarotSuccessDetail18;
+
+  /// No description provided for @tarotKeywords19.
+  ///
+  /// In en, this message translates to:
+  /// **'Success, Happiness, Vitality, Positivity, Blessing'**
+  String get tarotKeywords19;
+
+  /// No description provided for @tarotDesc19.
+  ///
+  /// In en, this message translates to:
+  /// **'Under the bright sun, a child is joyfully riding a white horse and waving a flag.'**
+  String get tarotDesc19;
+
+  /// No description provided for @tarotLoveMeaning19.
+  ///
+  /// In en, this message translates to:
+  /// **'You will have a bright and happy relationship that is blessed.'**
+  String get tarotLoveMeaning19;
+
+  /// No description provided for @tarotLoveDetail19.
+  ///
+  /// In en, this message translates to:
+  /// **'A perfectly happy and blessed love is with you. Past misunderstandings and conflicts will melt away, deepening your trust. It\'s the best time for singles to meet someone with bright energy, and you can expect joyous news like marriage or expansion. It\'s a wonderful fortune to enjoy love purely and passionately like a child.'**
+  String get tarotLoveDetail19;
+
+  /// No description provided for @tarotWealthMeaning19.
+  ///
+  /// In en, this message translates to:
+  /// **'Your financial fortune is at its best.'**
+  String get tarotWealthMeaning19;
+
+  /// No description provided for @tarotWealthDetail19.
+  ///
+  /// In en, this message translates to:
+  /// **'Bright days have arrived for your finances. Your money luck is extremely strong, with everything you do turning into profit. Business will flourish, investments look promising, and sharing this positive energy will bring even greater abundance. You can expect good news that asset values like real estate or stocks will rise significantly.'**
+  String get tarotWealthDetail19;
+
+  /// No description provided for @tarotSuccessMeaning19.
+  ///
+  /// In en, this message translates to:
+  /// **'Your abilities will be recognized and you will receive the spotlight.'**
+  String get tarotSuccessMeaning19;
+
+  /// No description provided for @tarotSuccessDetail19.
+  ///
+  /// In en, this message translates to:
+  /// **'The fanfare of success is sounding. Your long-term efforts will finally shine and be recognized by the world. You\'ll achieve visible results like passing exams or getting promoted, and your confident attitude will establish you as a natural leader. Now is the stage where you are the protagonist, so display your skills to the fullest and win success.'**
+  String get tarotSuccessDetail19;
+
+  /// No description provided for @tarotKeywords20.
+  ///
+  /// In en, this message translates to:
+  /// **'Resurrection, reward, news, decision, reunion'**
+  String get tarotKeywords20;
+
+  /// No description provided for @tarotDesc20.
+  ///
+  /// In en, this message translates to:
+  /// **'When an angel blows a trumpet in the sky, people in coffins wake up and cheer, symbolizing rewards for the past and rebirth to a new stage.'**
+  String get tarotDesc20;
+
+  /// No description provided for @tarotLoveMeaning20.
+  ///
+  /// In en, this message translates to:
+  /// **'You may receive contact from an ex-lover or have an opportunity to reunite.'**
+  String get tarotLoveMeaning20;
+
+  /// No description provided for @tarotLoveDetail20.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting news arrives. If you\'ve been waiting for contact from an ex-lover you couldn\'t forget or wishing for a reunion, it\'s very likely to come true, and stagnant \'some\' relationships will bear fruit by clearly developing into lovers. A new connection with someone you knew in the past might also occur, so listen to your heart and make a decision without regret.'**
+  String get tarotLoveDetail20;
+
+  /// No description provided for @tarotWealthMeaning20.
+  ///
+  /// In en, this message translates to:
+  /// **'You may get profits from previous investments, or get back money you lent.'**
+  String get tarotWealthMeaning20;
+
+  /// No description provided for @tarotWealthDetail20.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time to receive rewards for past efforts. There\'s an unexpected windfall, such as forgotten stocks rising or receiving back money you didn\'t expect to get, and an opportunity to succeed by retrying ideas that failed before. Since the decision you make now will greatly influence your future wealth, careful yet bold determination is needed.'**
+  String get tarotWealthDetail20;
+
+  /// No description provided for @tarotSuccessMeaning20.
+  ///
+  /// In en, this message translates to:
+  /// **'Your efforts will be recognized and you will be promoted or rewarded.'**
+  String get tarotSuccessMeaning20;
+
+  /// No description provided for @tarotSuccessDetail20.
+  ///
+  /// In en, this message translates to:
+  /// **'Judgment day has come. A fair evaluation and rewards for the sweat you\'ve shed will be given, and happy news like promotion or passing will spread like a trumpet sound. A scout offer or career move opportunity to escape from a stagnant situation and fly again might come, so don\'t fear change and start a new chapter.'**
+  String get tarotSuccessDetail20;
+
+  /// No description provided for @tarotKeywords21.
+  ///
+  /// In en, this message translates to:
+  /// **'Completion, integration, achievement, happy ending, perfection'**
+  String get tarotKeywords21;
+
+  /// No description provided for @tarotDesc21.
+  ///
+  /// In en, this message translates to:
+  /// **'A woman is dancing inside a laurel wreath, and the four elements are in their completed forms, symbolizing the best happy ending.'**
+  String get tarotDesc21;
+
+  /// No description provided for @tarotLoveMeaning21.
+  ///
+  /// In en, this message translates to:
+  /// **'You will bear the fruit of love and enter marriage, or form an ideal family.'**
+  String get tarotLoveMeaning21;
+
+  /// No description provided for @tarotLoveDetail21.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a perfect time to put a period to a long relationship and move toward a new world called marriage. You\'ll enjoy the happiness of becoming one under blessings after confirming you are each other\'s best halves, and if you\'re single, you can meet a fateful partner who meets your ideal type. It\'s also a fortune where connections are made during overseas travel or in exotic environments.'**
+  String get tarotLoveDetail21;
+
+  /// No description provided for @tarotWealthMeaning21.
+  ///
+  /// In en, this message translates to:
+  /// **'You will achieve the target amount and enjoy economic freedom.'**
+  String get tarotWealthMeaning21;
+
+  /// No description provided for @tarotWealthDetail21.
+  ///
+  /// In en, this message translates to:
+  /// **'You achieve the feat of 100% achieving your financial goals and have reached a stage where you can enjoy economic freedom. You can make big profits in global fields like overseas stocks or trade, and your investment portfolio will achieve perfect harmony to bring stable wealth. Now, enjoy the abundance and widen your perspective toward a broader world.'**
+  String get tarotWealthDetail21;
+
+  /// No description provided for @tarotSuccessMeaning21.
+  ///
+  /// In en, this message translates to:
+  /// **'You will successfully complete the project and gain the highest honor.'**
+  String get tarotSuccessMeaning21;
+
+  /// No description provided for @tarotSuccessDetail21.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s the time to hit the peak of your career. You will receive the highest praise by perfectly succeeding in the project you\'re in charge of, and you\'ll prepare to move toward a bigger world after achieving everything you aimed for. As it\'s a fortune where your activity stage can expand globally through studying abroad or overseas employment, use current success as a stepping stone to leap toward a grander dream.'**
+  String get tarotSuccessDetail21;
+
+  /// No description provided for @supplementRecordPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Please take your supplements and record it!'**
+  String get supplementRecordPrompt;
+
+  /// No description provided for @snoozeQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'When should I remind you again?'**
+  String get snoozeQuestion;
+
+  /// No description provided for @hoursShort.
+  ///
+  /// In en, this message translates to:
+  /// **'h'**
+  String get hoursShort;
+
+  /// No description provided for @minutesShort.
+  ///
+  /// In en, this message translates to:
+  /// **'m'**
+  String get minutesShort;
+
+  /// No description provided for @after.
+  ///
+  /// In en, this message translates to:
+  /// **'after'**
+  String get after;
+
+  /// No description provided for @snoozeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm will ring again in {minutes} minutes.'**
+  String snoozeMessage(int minutes);
+
+  /// No description provided for @timesTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} times taken'**
+  String timesTaken(int count);
+
+  /// No description provided for @dailyGoalTimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal: {goal} times a day'**
+  String dailyGoalTimes(int goal);
+
+  /// No description provided for @didYouTakeSupplement.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you take your supplements?'**
+  String get didYouTakeSupplement;
+
+  /// No description provided for @viewMissionRecords.
+  ///
+  /// In en, this message translates to:
+  /// **'View Mission Records'**
+  String get viewMissionRecords;
+
+  /// No description provided for @setTakingGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Intake Goal'**
+  String get setTakingGoal;
+
+  /// No description provided for @times.
+  ///
+  /// In en, this message translates to:
+  /// **'times'**
+  String get times;
+
+  /// No description provided for @dailyTakingGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Intake Goal'**
+  String get dailyTakingGoal;
+
+  /// No description provided for @howManyTimesADay.
+  ///
+  /// In en, this message translates to:
+  /// **'How many times a day do you take supplements?'**
+  String get howManyTimesADay;
+
+  /// No description provided for @setGoalMl.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Goal (ml)'**
+  String get setGoalMl;
+
+  /// No description provided for @sleepAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep Analysis'**
+  String get sleepAnalysis;
+
+  /// No description provided for @todaysSleep.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Sleep'**
+  String get todaysSleep;
+
+  /// No description provided for @sleepDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Sleep Duration'**
+  String get sleepDuration;
+
+  /// No description provided for @wakeUpTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Wake Up Time'**
+  String get wakeUpTime;
+
+  /// No description provided for @weeklySleepPattern.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly Sleep Pattern'**
+  String get weeklySleepPattern;
+
+  /// No description provided for @sleepAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'You are maintaining a regular sleep habit. You went to bed 30 minutes earlier than yesterday!'**
+  String get sleepAdvice;
+
+  /// No description provided for @stopwatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopwatch'**
+  String get stopwatch;
+
+  /// No description provided for @lap.
+  ///
+  /// In en, this message translates to:
+  /// **'Lap'**
+  String get lap;
+
+  /// No description provided for @stop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stop;
+
+  /// No description provided for @lapLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Lap {index}'**
+  String lapLabel(int index);
+
+  /// No description provided for @monday.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get monday;
+
+  /// No description provided for @tuesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get tuesday;
+
+  /// No description provided for @wednesday.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get wednesday;
+
+  /// No description provided for @thursday.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get thursday;
+
+  /// No description provided for @friday.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get friday;
+
+  /// No description provided for @saturday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get saturday;
+
+  /// No description provided for @sunday.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get sunday;
 
   /// No description provided for @policy.
   ///
@@ -5547,12 +7101,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'min'**
   String get minutes;
-
-  /// No description provided for @times.
-  ///
-  /// In en, this message translates to:
-  /// **'times'**
-  String get times;
 
   /// No description provided for @cupsCount.
   ///
@@ -5870,7 +7418,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{category} Missions'**
-  String categoryMissions(Object category);
+  String categoryMissions(String category);
 
   /// No description provided for @deselectAll.
   ///
@@ -5925,12 +7473,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get Notification'**
   String get getNotification;
-
-  /// No description provided for @notificationTime.
-  ///
-  /// In en, this message translates to:
-  /// **'Notification Time'**
-  String get notificationTime;
 
   /// No description provided for @missionCategoryHealth.
   ///
@@ -6074,7 +7616,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{hour}h'**
-  String hourFormat(Object hour);
+  String hourFormat(String hour);
 
   /// No description provided for @noNotifications.
   ///
@@ -6267,6 +7809,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Processing final data...'**
   String get luckyNumberAnalysisFinal;
+
+  /// No description provided for @luckyNumberAnalyzing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing energy...'**
+  String get luckyNumberAnalyzing;
+
+  /// No description provided for @luckyNumberGeometric.
+  ///
+  /// In en, this message translates to:
+  /// **'Geometric analysis...'**
+  String get luckyNumberGeometric;
+
+  /// No description provided for @luckyNumberPatterns.
+  ///
+  /// In en, this message translates to:
+  /// **'Pattern matching...'**
+  String get luckyNumberPatterns;
+
+  /// No description provided for @luckyNumberEnergy.
+  ///
+  /// In en, this message translates to:
+  /// **'Energy harmonization...'**
+  String get luckyNumberEnergy;
+
+  /// No description provided for @luckyNumberCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Analysis completed!'**
+  String get luckyNumberCompleted;
+
+  /// No description provided for @luckyNumberShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Results'**
+  String get luckyNumberShare;
+
+  /// No description provided for @luckyNumberRestart.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get luckyNumberRestart;
 
   /// No description provided for @luckyNumberGenerating.
   ///
@@ -6916,6 +8500,12 @@ abstract class AppLocalizations {
   /// **'Female'**
   String get compatibilityGenderFemale;
 
+  /// No description provided for @compatibilityInputTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Compatibility Information Input'**
+  String get compatibilityInputTitle;
+
   /// No description provided for @tojeongInputTitle.
   ///
   /// In en, this message translates to:
@@ -7010,7 +8600,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'{year} Tojeong Yearly Oracle Results'**
-  String tojeongShareTitle(Object year);
+  String tojeongShareTitle(int year);
 
   /// No description provided for @tojeongShareDesc.
   ///
@@ -7394,7 +8984,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'This year\'s journey: {sangsu}, followed by {jungsu}, leading to {hasu}.'**
-  String tojeongCoreMessage(Object hasu, Object jungsu, Object sangsu);
+  String tojeongCoreMessage(String sangsu, String jungsu, String hasu);
 
   /// No description provided for @tojeongSangsuDetail1.
   ///
@@ -7851,6 +9441,721 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A relationship that matches reasonably well based on zodiac signs.'**
   String get compatibilityDescDefaultConstellation;
+
+  /// No description provided for @routineMorningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fresh Morning! ☀️'**
+  String get routineMorningTitle;
+
+  /// No description provided for @routineMorningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you forget your routine missions?'**
+  String get routineMorningBody;
+
+  /// No description provided for @routineEveningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Good job today! ✨'**
+  String get routineEveningTitle;
+
+  /// No description provided for @routineEveningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you complete all your missions? Finish your routine.'**
+  String get routineEveningBody;
+
+  /// No description provided for @routineCheckTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check today\'s missions! 🚀'**
+  String get routineCheckTitle;
+
+  /// No description provided for @routineCheckBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Follow your routine and have a great day.'**
+  String get routineCheckBody;
+
+  /// No description provided for @supplementNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplement Reminder'**
+  String get supplementNotificationTitle;
+
+  /// No description provided for @waterNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Reminder'**
+  String get waterNotificationTitle;
+
+  /// No description provided for @routineNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Routine Reminder'**
+  String get routineNotificationTitle;
+
+  /// No description provided for @todaysFortuneNotificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Fortune'**
+  String get todaysFortuneNotificationTitle;
+
+  /// No description provided for @afternoonFortuneNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'How about your afternoon fortune? Check it now!'**
+  String get afternoonFortuneNotificationBody;
+
+  /// No description provided for @morningFortuneNotificationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your fortune and start your day with energy!'**
+  String get morningFortuneNotificationBody;
+
+  /// No description provided for @fortunePassExpiryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune Pass Expiring Today'**
+  String get fortunePassExpiryTitle;
+
+  /// No description provided for @fortunePassExpiryBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your membership expires today. Renew to keep enjoying benefits!'**
+  String get fortunePassExpiryBody;
+
+  /// No description provided for @takeNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Now'**
+  String get takeNow;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @turnOffAlarmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn Off Alarm'**
+  String get turnOffAlarmAction;
+
+  /// No description provided for @todaysFortuneNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Fortune Notification'**
+  String get todaysFortuneNotification;
+
+  /// No description provided for @enableNotification.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Notification'**
+  String get enableNotification;
+
+  /// No description provided for @fortuneNotificationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Get your daily fortune at the scheduled time.'**
+  String get fortuneNotificationDescription;
+
+  /// No description provided for @morningNotificationTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning Notification Time'**
+  String get morningNotificationTime;
+
+  /// No description provided for @afternoonNotificationTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon Notification Time'**
+  String get afternoonNotificationTime;
+
+  /// No description provided for @morningFortuneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Fortune (Morning)'**
+  String get morningFortuneTitle;
+
+  /// No description provided for @afternoonFortuneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Fortune (Afternoon)'**
+  String get afternoonFortuneTitle;
+
+  /// No description provided for @type.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get type;
+
+  /// No description provided for @supplementChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel for supplement intake notifications.'**
+  String get supplementChannelDesc;
+
+  /// No description provided for @waterChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel for water drinking habit notifications.'**
+  String get waterChannelDesc;
+
+  /// No description provided for @waterSummaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Drinking Notification'**
+  String get waterSummaryTitle;
+
+  /// No description provided for @dailyRoutineChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel for daily mission and habit building notifications.'**
+  String get dailyRoutineChannelDesc;
+
+  /// No description provided for @dailyRoutineSummaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Routine Notification'**
+  String get dailyRoutineSummaryTitle;
+
+  /// No description provided for @missionChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission Notification'**
+  String get missionChannelName;
+
+  /// No description provided for @missionChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel for general mission performance notifications.'**
+  String get missionChannelDesc;
+
+  /// No description provided for @fortuneChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Fortune Notification'**
+  String get fortuneChannelName;
+
+  /// No description provided for @fortuneChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel for daily fortune check notifications.'**
+  String get fortuneChannelDesc;
+
+  /// No description provided for @subscriptionChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription Notification'**
+  String get subscriptionChannelName;
+
+  /// No description provided for @subscriptionChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel for Fortune Pass expiration and subscription notifications.'**
+  String get subscriptionChannelDesc;
+
+  /// No description provided for @alarmChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm'**
+  String get alarmChannelName;
+
+  /// No description provided for @alarmChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Channel for wake-up and mission performance alarms.'**
+  String get alarmChannelDesc;
+
+  /// No description provided for @shareViaKakao.
+  ///
+  /// In en, this message translates to:
+  /// **'Share via KakaoTalk'**
+  String get shareViaKakao;
+
+  /// No description provided for @shareViaSNS.
+  ///
+  /// In en, this message translates to:
+  /// **'Share via other SNS (Instagram, Twitter, etc.)'**
+  String get shareViaSNS;
+
+  /// No description provided for @checkDetailResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Check Detailed Result'**
+  String get checkDetailResult;
+
+  /// No description provided for @viewMyFortuneResult.
+  ///
+  /// In en, this message translates to:
+  /// **'View My Fortune Result'**
+  String get viewMyFortuneResult;
+
+  /// No description provided for @takeSupplementNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Please take your supplements!'**
+  String get takeSupplementNow;
+
+  /// No description provided for @takeNowQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Would you like to take it now?'**
+  String get takeNowQuestion;
+
+  /// No description provided for @eatNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Eat now'**
+  String get eatNow;
+
+  /// No description provided for @eatLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Eat later'**
+  String get eatLater;
+
+  /// No description provided for @snoozeMessageGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'I will remind you again in {minutes} minutes.'**
+  String snoozeMessageGeneric(int minutes);
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get hours;
+
+  /// No description provided for @cheeringMessage4.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrant morning, happy start!'**
+  String get cheeringMessage4;
+
+  /// No description provided for @cheeringMessage5.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a smiling day.'**
+  String get cheeringMessage5;
+
+  /// No description provided for @cheeringMessage6.
+  ///
+  /// In en, this message translates to:
+  /// **'Cheer up today!'**
+  String get cheeringMessage6;
+
+  /// No description provided for @cheeringMessage7.
+  ///
+  /// In en, this message translates to:
+  /// **'You will shine enough today.'**
+  String get cheeringMessage7;
+
+  /// No description provided for @cheeringMessage8.
+  ///
+  /// In en, this message translates to:
+  /// **'I have a feeling something good will happen!'**
+  String get cheeringMessage8;
+
+  /// No description provided for @cheeringMessage9.
+  ///
+  /// In en, this message translates to:
+  /// **'Great job today. A vigorous start!'**
+  String get cheeringMessage9;
+
+  /// No description provided for @cheeringMessage10.
+  ///
+  /// In en, this message translates to:
+  /// **'Happiness is always by your side.'**
+  String get cheeringMessage10;
+
+  /// No description provided for @cheeringMessage11.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m rooting for your dreams today.'**
+  String get cheeringMessage11;
+
+  /// No description provided for @cheeringMessage12.
+  ///
+  /// In en, this message translates to:
+  /// **'Refreshing morning, pleasant day!'**
+  String get cheeringMessage12;
+
+  /// No description provided for @cheeringMessage13.
+  ///
+  /// In en, this message translates to:
+  /// **'Be victorious today!'**
+  String get cheeringMessage13;
+
+  /// No description provided for @cheeringMessage14.
+  ///
+  /// In en, this message translates to:
+  /// **'You are precious just by being you.'**
+  String get cheeringMessage14;
+
+  /// No description provided for @cheeringMessage15.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a day full of pleasant things.'**
+  String get cheeringMessage15;
+
+  /// No description provided for @cheeringMessage16.
+  ///
+  /// In en, this message translates to:
+  /// **'I hope your day sparkles today!'**
+  String get cheeringMessage16;
+
+  /// No description provided for @cheeringMessage17.
+  ///
+  /// In en, this message translates to:
+  /// **'Your smile brightens the world.'**
+  String get cheeringMessage17;
+
+  /// No description provided for @cheeringMessage18.
+  ///
+  /// In en, this message translates to:
+  /// **'Be yourself today!'**
+  String get cheeringMessage18;
+
+  /// No description provided for @cheeringMessage19.
+  ///
+  /// In en, this message translates to:
+  /// **'Start today with a fluttering heart.'**
+  String get cheeringMessage19;
+
+  /// No description provided for @cheeringMessage20.
+  ///
+  /// In en, this message translates to:
+  /// **'A wonderful day awaits you.'**
+  String get cheeringMessage20;
+
+  /// No description provided for @cheeringMessage21.
+  ///
+  /// In en, this message translates to:
+  /// **'With the power of positivity today!'**
+  String get cheeringMessage21;
+
+  /// No description provided for @cheeringMessage22.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m rooting for your path.'**
+  String get cheeringMessage22;
+
+  /// No description provided for @cheeringMessage23.
+  ///
+  /// In en, this message translates to:
+  /// **'Make today your best!'**
+  String get cheeringMessage23;
+
+  /// No description provided for @cheeringMessage24.
+  ///
+  /// In en, this message translates to:
+  /// **'May luck be with you!'**
+  String get cheeringMessage24;
+
+  /// No description provided for @cheeringMessage25.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a warm day today.'**
+  String get cheeringMessage25;
+
+  /// No description provided for @cheeringMessage26.
+  ///
+  /// In en, this message translates to:
+  /// **'You can do it!'**
+  String get cheeringMessage26;
+
+  /// No description provided for @cheeringMessage27.
+  ///
+  /// In en, this message translates to:
+  /// **'Start today with gratitude.'**
+  String get cheeringMessage27;
+
+  /// No description provided for @cheeringMessage28.
+  ///
+  /// In en, this message translates to:
+  /// **'Your value is infinite.'**
+  String get cheeringMessage28;
+
+  /// No description provided for @cheeringMessage29.
+  ///
+  /// In en, this message translates to:
+  /// **'May your day bloom with smiles.'**
+  String get cheeringMessage29;
+
+  /// No description provided for @cheeringMessage30.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a good time with good people!'**
+  String get cheeringMessage30;
+
+  /// No description provided for @cheeringMessage31.
+  ///
+  /// In en, this message translates to:
+  /// **'One step closer to your dreams today!'**
+  String get cheeringMessage31;
+
+  /// No description provided for @cheeringMessage32.
+  ///
+  /// In en, this message translates to:
+  /// **'You are the coolest person today.'**
+  String get cheeringMessage32;
+
+  /// No description provided for @cheeringMessage33.
+  ///
+  /// In en, this message translates to:
+  /// **'A miraculous day will come.'**
+  String get cheeringMessage33;
+
+  /// No description provided for @cheeringMessage34.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy your day at leisure today.'**
+  String get cheeringMessage34;
+
+  /// No description provided for @cheeringMessage35.
+  ///
+  /// In en, this message translates to:
+  /// **'Your efforts will not betray you.'**
+  String get cheeringMessage35;
+
+  /// No description provided for @cheeringMessage36.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a healthy day today.'**
+  String get cheeringMessage36;
+
+  /// No description provided for @cheeringMessage37.
+  ///
+  /// In en, this message translates to:
+  /// **'You were born to be loved!'**
+  String get cheeringMessage37;
+
+  /// No description provided for @cheeringMessage38.
+  ///
+  /// In en, this message translates to:
+  /// **'Be courageous today!'**
+  String get cheeringMessage38;
+
+  /// No description provided for @cheeringMessage39.
+  ///
+  /// In en, this message translates to:
+  /// **'A bright future awaits you.'**
+  String get cheeringMessage39;
+
+  /// No description provided for @cheeringMessage40.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a day full of passion!'**
+  String get cheeringMessage40;
+
+  /// No description provided for @cheeringMessage41.
+  ///
+  /// In en, this message translates to:
+  /// **'I hope your mind is at peace.'**
+  String get cheeringMessage41;
+
+  /// No description provided for @cheeringMessage42.
+  ///
+  /// In en, this message translates to:
+  /// **'Find small happiness today.'**
+  String get cheeringMessage42;
+
+  /// No description provided for @cheeringMessage43.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re already doing well enough.'**
+  String get cheeringMessage43;
+
+  /// No description provided for @cheeringMessage44.
+  ///
+  /// In en, this message translates to:
+  /// **'Start today hopefully.'**
+  String get cheeringMessage44;
+
+  /// No description provided for @cheeringMessage45.
+  ///
+  /// In en, this message translates to:
+  /// **'Your kindness is a great strength to someone.'**
+  String get cheeringMessage45;
+
+  /// No description provided for @cheeringMessage46.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a productive day today.'**
+  String get cheeringMessage46;
+
+  /// No description provided for @cheeringMessage47.
+  ///
+  /// In en, this message translates to:
+  /// **'You have the power to change the world.'**
+  String get cheeringMessage47;
+
+  /// No description provided for @cheeringMessage48.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear day today!'**
+  String get cheeringMessage48;
+
+  /// No description provided for @cheeringMessage49.
+  ///
+  /// In en, this message translates to:
+  /// **'Exude your charm to your heart\'s content.'**
+  String get cheeringMessage49;
+
+  /// No description provided for @cheeringMessage50.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill your day with happiness today!'**
+  String get cheeringMessage50;
+
+  /// No description provided for @locationServiceDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Location services are disabled.'**
+  String get locationServiceDisabled;
+
+  /// No description provided for @locationPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission denied.'**
+  String get locationPermissionDenied;
+
+  /// No description provided for @locationPermissionPermanentlyDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission permanently denied.'**
+  String get locationPermissionPermanentlyDenied;
+
+  /// No description provided for @deleteMissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Mission'**
+  String get deleteMissionTitle;
+
+  /// No description provided for @deleteMissionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this mission?'**
+  String get deleteMissionConfirm;
+
+  /// No description provided for @yesDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, delete it'**
+  String get yesDelete;
+
+  /// No description provided for @waterAlarmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to drink water! 💧'**
+  String get waterAlarmTitle;
+
+  /// No description provided for @waterAlarmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'How about a glass of cool water for your health?'**
+  String get waterAlarmBody;
+
+  /// No description provided for @supplementAlarmBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t forget to take your supplements for today.'**
+  String get supplementAlarmBody;
+
+  /// No description provided for @waterHabitChannelDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification channel for water drinking habit.'**
+  String get waterHabitChannelDesc;
+
+  /// No description provided for @pleaseSolveMath.
+  ///
+  /// In en, this message translates to:
+  /// **'Please solve the problem.'**
+  String get pleaseSolveMath;
+
+  /// No description provided for @detectedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'[Detected: {labels}]'**
+  String detectedLabel(String labels);
+
+  /// No description provided for @defaultSleepDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'7h 30m'**
+  String get defaultSleepDuration;
+
+  /// No description provided for @year2024Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Gap-Chin Year (Year of the Blue Dragon)'**
+  String get year2024Name;
+
+  /// No description provided for @year2025Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Eul-Sa Year (Year of the Blue Snake)'**
+  String get year2025Name;
+
+  /// No description provided for @year2026Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Byeong-O Year (Year of the Red Horse)'**
+  String get year2026Name;
+
+  /// No description provided for @supportEmailSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'[{appTitle} Inquiry] {title}'**
+  String supportEmailSubject(String appTitle, String title);
+
+  /// No description provided for @summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get summary;
+
+  /// No description provided for @monthlySummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Summary'**
+  String get monthlySummary;
+
+  /// No description provided for @monthlySuccessRate.
+  ///
+  /// In en, this message translates to:
+  /// **'{month} Monthly Success Rate: {percentage}% ({success}/{total})'**
+  String monthlySuccessRate(
+      int month, String percentage, int success, int total);
+
+  /// No description provided for @noMonthlyRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'No records for {month}'**
+  String noMonthlyRecord(int month);
+
+  /// No description provided for @missionRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Mission Record'**
+  String get missionRecord;
+
+  /// No description provided for @supplementRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplement Record'**
+  String get supplementRecord;
+
+  /// No description provided for @timeSaleCatchChance.
+  ///
+  /// In en, this message translates to:
+  /// **'Grab the 50% discount chance!'**
+  String get timeSaleCatchChance;
 }
 
 class _AppLocalizationsDelegate

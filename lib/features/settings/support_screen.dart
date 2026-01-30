@@ -82,7 +82,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         scheme: 'mailto',
                         path: widget.email,
                         queryParameters: {
-                          'subject': '[포춘알람 문의] ${widget.title}',
+                          'subject': l10n.supportEmailSubject(l10n.appTitle, widget.title),
                         },
                       );
                       try {

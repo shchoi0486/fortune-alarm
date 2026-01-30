@@ -39,12 +39,14 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   String? _expression; // (12+3) x 5 형태의 복합 수식을 저장하기 위한 변수
   String _input = '';
   String _feedback = '';
+
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_feedback.isEmpty) {
-      _feedback = AppLocalizations.of(context)!.solveProblem;
+    if (_feedback.isEmpty || _feedback == l10n.pleaseSolveMath) {
+      _feedback = l10n.solveProblem;
     }
   }
   
@@ -373,7 +375,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
         _isLastProblem = isLast;
         if (isLast) {
           final random = Random();
-          _lastMessage = PositiveMessages.messages[random.nextInt(PositiveMessages.messages.length)];
+          _lastMessage = PositiveMessages.getMessage(context);
           _feedback = l10n.missionComplete;
         } else {
           _feedback = l10n.correctAnswer;
@@ -396,7 +398,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
           _generateProblem();
           setState(() {
             _input = '';
-            _feedback = '문제를 풀어주세요.';
+            _feedback = l10n.solveProblem;
           });
         }
       });
@@ -748,11 +750,13 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                                       key: ValueKey(_feedback),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontSize: 18, // 15 -> 18로 키움
-                                        color: _feedback.startsWith('정답') 
+                                        fontSize: 18,
+                                        color: _feedback == l10n.correct || _feedback == l10n.correctAnswer
                                             ? Colors.green[700] 
-                                            : (_feedback == '문제를 풀어주세요.' ? (isLightBg ? Colors.black : Colors.white) : Colors.redAccent),
-                                        fontWeight: FontWeight.w800, // 더 두껍게
+                                            : (_feedback == l10n.solveProblem 
+                                                ? (isLightBg ? Colors.black : Colors.white) 
+                                                : Colors.redAccent),
+                                        fontWeight: FontWeight.w800,
                                       ),
                                     ),
                                   ),
@@ -869,7 +873,7 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
-                                '정답!',
+                                l10n.correct,
                                 style: const TextStyle(
                                   fontSize: 40,
                                   fontWeight: FontWeight.bold,

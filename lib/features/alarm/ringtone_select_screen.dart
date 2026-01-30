@@ -166,7 +166,7 @@ class _RingtoneSelectScreenState extends State<RingtoneSelectScreen> with Single
     final filename = path.split('/').last;
     final l10n = AppLocalizations.of(context)!;
 
-    // 한국어 파일명 번역 처리
+    // 한국어 및 특정 키 번역 처리
     switch (filename) {
       case '설레는 하루': return l10n.ringtone_fluttering_day;
       case '포근한 하루': return l10n.ringtone_cozy_day;
@@ -175,6 +175,23 @@ class _RingtoneSelectScreenState extends State<RingtoneSelectScreen> with Single
       case '산뜻한 하루': return l10n.ringtone_refreshing_day;
       case '새로운 시작': return l10n.ringtone_new_beginning;
       case '자아도취': return l10n.ringtone_self_love;
+      case 'alarm_sound': return l10n.classicAlarm;
+      case 'morning': return l10n.digitalAlarm;
+      case 'birds': return l10n.birdsSound;
+      case 'waves': return l10n.wavesSound;
+      case 'cuckoo_cuckoo_clock': return l10n.cuckooClock;
+      case 'discreet': return l10n.calmAlarm;
+      case 'door_knock': return l10n.doorKnock;
+      case 'early_sunrise': return l10n.earlySunrise;
+      case 'good_morning': return l10n.goodMorningSound;
+      case 'in_a_hurry': return l10n.inAHurry;
+      case 'loving_you': return l10n.lovingYou;
+      case 'siren_air_raid': return l10n.sirenSound;
+      case 'swinging': return l10n.swingingSound;
+      case 'telephone_busy_signal': return l10n.telephoneBusy;
+      case 'cherry_stained_finger': return l10n.cherry_stained_finger;
+      case 'dancing_in_the_stars': return l10n.dancing_in_the_stars;
+      case 'nice_day': return l10n.nice_day;
     }
     
     // 영문 파일명 포맷팅 (언더바 제거 및 단어별 첫 글자 대문자화)

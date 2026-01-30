@@ -2162,17 +2162,50 @@ class _AddEventSheetState extends State<AddEventSheet> {
                   children: [
                     Expanded(
                       child: InkWell(
-                        onTap: () async {
-                          final time = await showTimePicker(
+                        onTap: () {
+                          showCupertinoModalPopup(
                             context: context,
-                            initialTime: _selectedTime,
+                            builder: (context) => Container(
+                              height: 300,
+                              padding: const EdgeInsets.only(top: 6.0),
+                              color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+                              child: SafeArea(
+                                top: false,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        CupertinoButton(
+                                          child: Text(AppLocalizations.of(context)!.cancel),
+                                          onPressed: () => Navigator.pop(context),
+                                        ),
+                                        CupertinoButton(
+                                          child: Text(AppLocalizations.of(context)!.confirm),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: CupertinoDatePicker(
+                                        mode: CupertinoDatePickerMode.time,
+                                        initialDateTime: DateTime(2024, 1, 1, _selectedTime.hour, _selectedTime.minute),
+                                        use24hFormat: false,
+                                        onDateTimeChanged: (DateTime newDateTime) {
+                                          setState(() {
+                                            _selectedTime = TimeOfDay(hour: newDateTime.hour, minute: newDateTime.minute);
+                                            _isTimeManuallySet = true;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           );
-                          if (time != null) {
-                            setState(() {
-                              _selectedTime = time;
-                              _isTimeManuallySet = true;
-                            });
-                          }
                         },
                         child: Row(
                           children: [

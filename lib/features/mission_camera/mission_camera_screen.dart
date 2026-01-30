@@ -394,7 +394,9 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                  
                  // 인식된 라벨이 있으면 추가 표시
                  if (result.detectedLabels.isNotEmpty) {
-                   _debugLabelText += "\n[인식됨: ${result.detectedLabels.take(3).join(", ")}]";
+                   final l10n = AppLocalizations.of(context)!;
+                   final labels = result.detectedLabels.take(3).join(", ");
+                   _debugLabelText += "\n${l10n.detectedLabel(labels)}";
                  }
                });
              }
@@ -420,7 +422,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
 
     // 성공 애니메이션 설정
     final random = math.Random();
-    _lastMessage = PositiveMessages.messages[random.nextInt(PositiveMessages.messages.length)];
+    _lastMessage = PositiveMessages.getMessage(context);
 
     setState(() {
       _showCorrectAnimation = true;
@@ -670,7 +672,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          DateFormat('M월 d일 EEEE', 'ko_KR').format(DateTime.now()),
+                          DateFormat.yMMMMEEEEd(AppLocalizations.of(context)?.localeName ?? 'ko_KR').format(DateTime.now()),
                           style: const TextStyle(
                             fontSize: 20,
                             color: Colors.white,

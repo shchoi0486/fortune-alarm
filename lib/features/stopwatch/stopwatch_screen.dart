@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class StopwatchScreen extends StatefulWidget {
   const StopwatchScreen({super.key});
@@ -71,8 +73,9 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('스톱워치')),
+      appBar: AppBar(title: Text(l10n.stopwatch)),
       body: Column(
         children: [
           // 시간 표시 영역
@@ -106,7 +109,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                     backgroundColor: Colors.grey[300],
                   ),
                   child: Text(
-                    _stopwatch.isRunning ? '랩' : '초기화',
+                    _stopwatch.isRunning ? l10n.lap : l10n.reset,
                     style: const TextStyle(color: Colors.black, fontSize: 16),
                   ),
                 ),
@@ -120,7 +123,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                     backgroundColor: _stopwatch.isRunning ? Colors.redAccent : Colors.greenAccent,
                   ),
                   child: Text(
-                    _stopwatch.isRunning ? '중지' : '시작',
+                    _stopwatch.isRunning ? l10n.stop : l10n.start,
                     style: TextStyle(
                       color: _stopwatch.isRunning ? Colors.white : Colors.black,
                       fontSize: 18,
@@ -141,7 +144,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                 // 랩 번호는 역순으로 계산
                 final lapIndex = _laps.length - index;
                 return ListTile(
-                  leading: Text('랩 $lapIndex', style: const TextStyle(fontSize: 16)),
+                  leading: Text(l10n.lapLabel(lapIndex), style: const TextStyle(fontSize: 16)),
                   trailing: Text(
                     _laps[index],
                     style: const TextStyle(fontSize: 18, fontFamily: 'monospace'),

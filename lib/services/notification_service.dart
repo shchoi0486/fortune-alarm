@@ -1,10 +1,12 @@
 import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -17,6 +19,24 @@ class NotificationService {
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  Future<AppLocalizations> getL10n() async {
+    return await _getL10n();
+  }
+
+  Future<AppLocalizations> _getL10n() async {
+    String languageCode = 'ko';
+    try {
+      // settings 박스에서 언어 설정을 가져옴 (alarm_settings_screen.dart와 동일한 로직)
+      final settingsBox = await Hive.openBox('settings');
+      languageCode = settingsBox.get('language', defaultValue: Platform.localeName.split('_')[0]);
+    } catch (_) {
+      // 에러 발생 시 시스템 로케일 사용
+      languageCode = Platform.localeName.split('_')[0];
+    }
+    
+    return await AppLocalizations.delegate.load(Locale(languageCode));
+  }
 
   // 알림 그룹화를 위한 키
   static const String _groupKey = 'com.snapalarm.NOTIFICATION_GROUP';
@@ -75,19 +95,20 @@ class NotificationService {
     String? soundName,
     bool isVibrationEnabled = true,
   }) async {
+    final l10n = await _getL10n();
     const String channelId = 'supplement_channel_v1';
 
     // 액션 버튼 정의
     final List<AndroidNotificationAction> actions = [
-      const AndroidNotificationAction(
+      AndroidNotificationAction(
         'TAKE_NOW',
-        '지금 먹기',
+        l10n.takeNow,
         showsUserInterface: true,
         cancelNotification: true,
       ),
-      const AndroidNotificationAction(
+      AndroidNotificationAction(
         'SNOOZE',
-        '나중에',
+        l10n.later,
         showsUserInterface: true,
         cancelNotification: true,
       ),
@@ -96,8 +117,8 @@ class NotificationService {
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '영양제 알림',
-      channelDescription: '영양제 섭취 알림 채널입니다.',
+      l10n.supplementNotificationTitle,
+      channelDescription: l10n.supplementChannelDesc,
       importance: Importance.max,
       priority: Priority.max,
       category: AndroidNotificationCategory.reminder,
@@ -108,7 +129,7 @@ class NotificationService {
       enableVibration: isVibrationEnabled,
       autoCancel: true,
       ongoing: false,
-      ticker: '영양제 알림',
+      ticker: l10n.supplementNotificationTitle,
       actions: actions,
       groupKey: _groupKey, // 그룹화 키 추가
     );
@@ -132,7 +153,7 @@ class NotificationService {
     );
 
     // Android 그룹 요약 알림 발송
-    await _showAndroidSummary(channelId, '영양제 알림');
+    await _showAndroidSummary(channelId, l10n.supplementNotificationTitle);
   }
 
   // Android 그룹 요약 알림 발송용 프라이빗 메서드
@@ -167,13 +188,14 @@ class NotificationService {
     String? payload,
     bool isVibrationEnabled = true,
   }) async {
+    final l10n = await _getL10n();
     const String channelId = 'water_channel_v1';
 
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '물 마시기 알림',
-      channelDescription: '물 마시기 습관을 위한 알림 채널입니다.',
+      l10n.waterNotificationTitle,
+      channelDescription: l10n.waterHabitChannelDesc,
       importance: Importance.max,
       priority: Priority.max,
       category: AndroidNotificationCategory.reminder,
@@ -184,7 +206,7 @@ class NotificationService {
       enableVibration: isVibrationEnabled,
       autoCancel: true,
       ongoing: false,
-      ticker: '물 마시기 알림',
+      ticker: l10n.waterNotificationTitle,
       groupKey: _groupKey,
     );
 
@@ -204,7 +226,7 @@ class NotificationService {
       payload: payload,
     );
 
-    await _showAndroidSummary(channelId, '물 마시기 알림');
+    await _showAndroidSummary(channelId, l10n.waterSummaryTitle);
   }
 
   // 데일리 루틴 알림 전용
@@ -214,13 +236,14 @@ class NotificationService {
     required String body,
     String? payload,
   }) async {
+    final l10n = await _getL10n();
     const String channelId = 'routine_channel_v1';
 
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '데일리 루틴 알림',
-      channelDescription: '오늘의 미션을 확인하고 습관을 만드는 알림 채널입니다.',
+      l10n.routineNotificationTitle,
+      channelDescription: l10n.dailyRoutineChannelDesc,
       importance: Importance.max,
       priority: Priority.max,
       category: AndroidNotificationCategory.reminder,
@@ -229,7 +252,7 @@ class NotificationService {
       playSound: true,
       autoCancel: true,
       ongoing: false,
-      ticker: '데일리 루틴 알림',
+      ticker: l10n.routineNotificationTitle,
       groupKey: _groupKey,
     );
 
@@ -249,7 +272,7 @@ class NotificationService {
       payload: payload,
     );
 
-    await _showAndroidSummary(channelId, '데일리 루틴 알림');
+    await _showAndroidSummary(channelId, l10n.dailyRoutineSummaryTitle);
   }
 
   // 일반/커스텀 미션 알림 스케줄링
@@ -260,13 +283,14 @@ class NotificationService {
     required TimeOfDay time,
   }) async {
     final int id = _getStableId(missionId);
+    final l10n = await _getL10n();
     
     const String channelId = 'mission_channel_v1';
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '미션 알림',
-      channelDescription: '일반 미션 수행을 위한 알림 채널입니다.',
+      l10n.missionChannelName,
+      channelDescription: l10n.missionChannelDesc,
       importance: Importance.max,
       priority: Priority.max,
       category: AndroidNotificationCategory.reminder,
@@ -312,12 +336,13 @@ class NotificationService {
     required String title,
     required String body,
   }) async {
+    final l10n = await _getL10n();
     const String channelId = 'fortune_channel_v1';
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '운세 알림',
-      channelDescription: '매일 아침 운세 확인을 위한 알림 채널입니다.',
+      l10n.fortuneChannelName,
+      channelDescription: l10n.fortuneChannelDesc,
       importance: Importance.max,
       priority: Priority.max,
       category: AndroidNotificationCategory.reminder,
@@ -385,18 +410,20 @@ class NotificationService {
       final parts2 = time2Str.split(':');
       final time2 = TimeOfDay(hour: int.parse(parts2[0]), minute: int.parse(parts2[1]));
 
+      final l10n = await _getL10n();
+
       await scheduleDailyFortuneNotification(
         id: 40001,
         time: time1,
-        title: "오늘의 운세",
-        body: "오늘의 운세를 확인하고 활기차게 시작해 보세요!",
+        title: l10n.morningFortuneTitle,
+        body: l10n.morningFortuneNotificationBody,
       );
       
       await scheduleDailyFortuneNotification(
         id: 40002,
         time: time2,
-        title: "오늘의 운세",
-        body: "오후의 운세는 어떨까요? 지금 바로 확인해 보세요!",
+        title: l10n.afternoonFortuneTitle,
+        body: l10n.afternoonFortuneNotificationBody,
       );
     }
   }
@@ -420,12 +447,14 @@ class NotificationService {
       return;
     }
 
+    final l10n = await _getL10n();
+
     const String channelId = 'subscription_channel_v1';
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '구독 알림',
-      channelDescription: '포춘 패스 만료 및 구독 관련 알림 채널입니다.',
+      l10n.subscriptionChannelName,
+      channelDescription: l10n.subscriptionChannelDesc,
       importance: Importance.high,
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
@@ -444,8 +473,8 @@ class NotificationService {
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
-      '포춘 패스 오늘 만료',
-      '오늘 포춘 패스 멤버십이 만료됩니다. 혜택을 계속 누리시려면 갱신해 보세요!',
+      l10n.fortunePassExpiryTitle,
+      l10n.fortunePassExpiryBody,
       tz.TZDateTime.from(reminderTime, tz.local),
       platformChannelSpecifics,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -486,10 +515,12 @@ class NotificationService {
     final String channelId =
         'alarm_channel_${normalizedSoundName ?? 'default'}_v1';
 
+    final l10n = await _getL10n();
+
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '알람',
+      l10n.alarmChannelName,
       importance: Importance.max,
       priority: Priority.max,
       fullScreenIntent: true,
@@ -570,11 +601,13 @@ class NotificationService {
     final String channelId =
         'alarm_channel_${normalizedSoundName ?? 'default'}_v1';
 
+    final l10n = await _getL10n();
+
     final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
       channelId,
-      '알람',
-      channelDescription: '기상 및 미션 수행을 위한 알람 채널입니다.',
+      l10n.alarm,
+      channelDescription: l10n.alarmChannelDesc,
       importance: Importance.max,
       priority: Priority.max,
       category: AndroidNotificationCategory.alarm,
@@ -591,11 +624,11 @@ class NotificationService {
       vibrationPattern: isVibrationEnabled ? vibration : null,
       autoCancel: false, // 알람은 사용자가 끌 때까지 유지
       ongoing: true,
-      ticker: '알람이 울립니다!',
+      ticker: l10n.itsTimeToWakeUp,
       actions: [
-         const AndroidNotificationAction(
+         AndroidNotificationAction(
           'DISMISS',
-          '알람 끄기',
+          l10n.turnOffAlarmAction,
           showsUserInterface: true,
           cancelNotification: true,
         ),

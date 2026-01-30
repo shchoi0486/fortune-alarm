@@ -238,7 +238,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
 
     // 흔들기 미션은 단일 성공이므로 바로 성공 애니메이션
     final random = Random();
-    _lastMessage = PositiveMessages.messages[random.nextInt(PositiveMessages.messages.length)];
+    _lastMessage = PositiveMessages.getMessage(context);
     
     try {
       HapticFeedback.heavyImpact();

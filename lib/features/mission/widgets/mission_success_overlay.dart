@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../../core/constants/cheering_messages.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class MissionSuccessOverlay extends StatefulWidget {
   final VoidCallback onFinish;
@@ -22,12 +22,11 @@ class _MissionSuccessOverlayState extends State<MissionSuccessOverlay> with Sing
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
-  late String _message;
+  String? _randomMessage;
 
   @override
   void initState() {
     super.initState();
-    _message = cheeringMessages[Random().nextInt(cheeringMessages.length)];
     
     _controller = AnimationController(
       vsync: this,
@@ -60,6 +59,18 @@ class _MissionSuccessOverlayState extends State<MissionSuccessOverlay> with Sing
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
+    // 메시지가 아직 선택되지 않았다면 랜덤하게 선택
+    if (_randomMessage == null) {
+      final messages = [
+        l10n.cheeringMessage1,
+        l10n.cheeringMessage2,
+        l10n.cheeringMessage3,
+      ];
+      _randomMessage = messages[Random().nextInt(messages.length)];
+    }
+
     return Container(
       color: Colors.black.withOpacity(0.7),
       width: double.infinity,
@@ -100,7 +111,7 @@ class _MissionSuccessOverlayState extends State<MissionSuccessOverlay> with Sing
               ),
               const SizedBox(height: 32),
               Text(
-                widget.title ?? '미션 성공!',
+                widget.title ?? l10n.missionSuccess,
                 style: const TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.bold,
@@ -140,7 +151,7 @@ class _MissionSuccessOverlayState extends State<MissionSuccessOverlay> with Sing
                   ],
                 ),
                 child: Text(
-                  _message,
+                  _randomMessage!,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 18,

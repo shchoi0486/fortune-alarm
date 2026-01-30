@@ -1,9 +1,12 @@
 import 'dart:math';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class TarotCard {
   final int id;
-  final String name;
   final String imagePath;
+  
+  // Default values (fallback)
+  final String name;
   final String keywords;
   final String description;
   final String loveMeaning;
@@ -12,15 +15,6 @@ class TarotCard {
   final String wealthDetail;
   final String successMeaning;
   final String successDetail;
-
-  final String? enKeywords;
-  final String? enDescription;
-  final String? enLoveMeaning;
-  final String? enLoveDetail;
-  final String? enWealthMeaning;
-  final String? enWealthDetail;
-  final String? enSuccessMeaning;
-  final String? enSuccessDetail;
 
   const TarotCard({
     required this.id,
@@ -34,15 +28,259 @@ class TarotCard {
     required this.wealthDetail,
     required this.successMeaning,
     required this.successDetail,
-    this.enKeywords,
-    this.enDescription,
-    this.enLoveMeaning,
-    this.enLoveDetail,
-    this.enWealthMeaning,
-    this.enWealthDetail,
-    this.enSuccessMeaning,
-    this.enSuccessDetail,
   });
+
+  String getLocalizedName(AppLocalizations l10n) {
+    switch (id) {
+      case 0: return l10n.tarotName0;
+      case 1: return l10n.tarotName1;
+      case 2: return l10n.tarotName2;
+      case 3: return l10n.tarotName3;
+      case 4: return l10n.tarotName4;
+      case 5: return l10n.tarotName5;
+      case 6: return l10n.tarotName6;
+      case 7: return l10n.tarotName7;
+      case 8: return l10n.tarotName8;
+      case 9: return l10n.tarotName9;
+      case 10: return l10n.tarotName10;
+      case 11: return l10n.tarotName11;
+      case 12: return l10n.tarotName12;
+      case 13: return l10n.tarotName13;
+      case 14: return l10n.tarotName14;
+      case 15: return l10n.tarotName15;
+      case 16: return l10n.tarotName16;
+      case 17: return l10n.tarotName17;
+      case 18: return l10n.tarotName18;
+      case 19: return l10n.tarotName19;
+      case 20: return l10n.tarotName20;
+      case 21: return l10n.tarotName21;
+      default: return name;
+    }
+  }
+
+  String getLocalizedKeywords(AppLocalizations l10n) {
+    switch (id) {
+      case 0: return l10n.tarotKeywords0;
+      case 1: return l10n.tarotKeywords1;
+      case 2: return l10n.tarotKeywords2;
+      case 3: return l10n.tarotKeywords3;
+      case 4: return l10n.tarotKeywords4;
+      case 5: return l10n.tarotKeywords5;
+      case 6: return l10n.tarotKeywords6;
+      case 7: return l10n.tarotKeywords7;
+      case 8: return l10n.tarotKeywords8;
+      case 9: return l10n.tarotKeywords9;
+      case 10: return l10n.tarotKeywords10;
+      case 11: return l10n.tarotKeywords11;
+      case 12: return l10n.tarotKeywords12;
+      case 13: return l10n.tarotKeywords13;
+      case 14: return l10n.tarotKeywords14;
+      case 15: return l10n.tarotKeywords15;
+      case 16: return l10n.tarotKeywords16;
+      case 17: return l10n.tarotKeywords17;
+      case 18: return l10n.tarotKeywords18;
+      case 19: return l10n.tarotKeywords19;
+      case 20: return l10n.tarotKeywords20;
+      case 21: return l10n.tarotKeywords21;
+      default: return keywords;
+    }
+  }
+
+  String getLocalizedDesc(AppLocalizations l10n) {
+    switch (id) {
+      case 0: return l10n.tarotDesc0;
+      case 1: return l10n.tarotDesc1;
+      case 2: return l10n.tarotDesc2;
+      case 3: return l10n.tarotDesc3;
+      case 4: return l10n.tarotDesc4;
+      case 5: return l10n.tarotDesc5;
+      case 6: return l10n.tarotDesc6;
+      case 7: return l10n.tarotDesc7;
+      case 8: return l10n.tarotDesc8;
+      case 9: return l10n.tarotDesc9;
+      case 10: return l10n.tarotDesc10;
+      case 11: return l10n.tarotDesc11;
+      case 12: return l10n.tarotDesc12;
+      case 13: return l10n.tarotDesc13;
+      case 14: return l10n.tarotDesc14;
+      case 15: return l10n.tarotDesc15;
+      case 16: return l10n.tarotDesc16;
+      case 17: return l10n.tarotDesc17;
+      case 18: return l10n.tarotDesc18;
+      case 19: return l10n.tarotDesc19;
+      case 20: return l10n.tarotDesc20;
+      case 21: return l10n.tarotDesc21;
+      default: return description;
+    }
+  }
+
+  String getLocalizedLoveMeaning(AppLocalizations l10n) {
+    switch (id) {
+      case 0: return l10n.tarotLoveMeaning0;
+      case 1: return l10n.tarotLoveMeaning1;
+      case 2: return l10n.tarotLoveMeaning2;
+      case 3: return l10n.tarotLoveMeaning3;
+      case 4: return l10n.tarotLoveMeaning4;
+      case 5: return l10n.tarotLoveMeaning5;
+      case 6: return l10n.tarotLoveMeaning6;
+      case 7: return l10n.tarotLoveMeaning7;
+      case 8: return l10n.tarotLoveMeaning8;
+      case 9: return l10n.tarotLoveMeaning9;
+      case 10: return l10n.tarotLoveMeaning10;
+      case 11: return l10n.tarotLoveMeaning11;
+      case 12: return l10n.tarotLoveMeaning12;
+      case 13: return l10n.tarotLoveMeaning13;
+      case 14: return l10n.tarotLoveMeaning14;
+      case 15: return l10n.tarotLoveMeaning15;
+      case 16: return l10n.tarotLoveMeaning16;
+      case 17: return l10n.tarotLoveMeaning17;
+      case 18: return l10n.tarotLoveMeaning18;
+      case 19: return l10n.tarotLoveMeaning19;
+      case 20: return l10n.tarotLoveMeaning20;
+      case 21: return l10n.tarotLoveMeaning21;
+      default: return loveMeaning;
+    }
+  }
+
+  String getLocalizedLoveDetail(AppLocalizations l10n) {
+    switch (id) {
+      case 0: return l10n.tarotLoveDetail0;
+      case 1: return l10n.tarotLoveDetail1;
+      case 2: return l10n.tarotLoveDetail2;
+      case 3: return l10n.tarotLoveDetail3;
+      case 4: return l10n.tarotLoveDetail4;
+      case 5: return l10n.tarotLoveDetail5;
+      case 6: return l10n.tarotLoveDetail6;
+      case 7: return l10n.tarotLoveDetail7;
+      case 8: return l10n.tarotLoveDetail8;
+      case 9: return l10n.tarotLoveDetail9;
+      case 10: return l10n.tarotLoveDetail10;
+      case 11: return l10n.tarotLoveDetail11;
+      case 12: return l10n.tarotLoveDetail12;
+      case 13: return l10n.tarotLoveDetail13;
+      case 14: return l10n.tarotLoveDetail14;
+      case 15: return l10n.tarotLoveDetail15;
+      case 16: return l10n.tarotLoveDetail16;
+      case 17: return l10n.tarotLoveDetail17;
+      case 18: return l10n.tarotLoveDetail18;
+      case 19: return l10n.tarotLoveDetail19;
+      case 20: return l10n.tarotLoveDetail20;
+      case 21: return l10n.tarotLoveDetail21;
+      default: return loveDetail;
+    }
+  }
+
+  String getLocalizedWealthMeaning(AppLocalizations l10n) {
+    switch (id) {
+      case 0: return l10n.tarotWealthMeaning0;
+      case 1: return l10n.tarotWealthMeaning1;
+      case 2: return l10n.tarotWealthMeaning2;
+      case 3: return l10n.tarotWealthMeaning3;
+      case 4: return l10n.tarotWealthMeaning4;
+      case 5: return l10n.tarotWealthMeaning5;
+      case 6: return l10n.tarotWealthMeaning6;
+      case 7: return l10n.tarotWealthMeaning7;
+      case 8: return l10n.tarotWealthMeaning8;
+      case 9: return l10n.tarotWealthMeaning9;
+      case 10: return l10n.tarotWealthMeaning10;
+      case 11: return l10n.tarotWealthMeaning11;
+      case 12: return l10n.tarotWealthMeaning12;
+      case 13: return l10n.tarotWealthMeaning13;
+      case 14: return l10n.tarotWealthMeaning14;
+      case 15: return l10n.tarotWealthMeaning15;
+      case 16: return l10n.tarotWealthMeaning16;
+      case 17: return l10n.tarotWealthMeaning17;
+      case 18: return l10n.tarotWealthMeaning18;
+      case 19: return l10n.tarotWealthMeaning19;
+      case 20: return l10n.tarotWealthMeaning20;
+      case 21: return l10n.tarotWealthMeaning21;
+      default: return wealthMeaning;
+    }
+  }
+
+  String getLocalizedWealthDetail(AppLocalizations l10n) {
+    switch (id) {
+      case 0: return l10n.tarotWealthDetail0;
+      case 1: return l10n.tarotWealthDetail1;
+      case 2: return l10n.tarotWealthDetail2;
+      case 3: return l10n.tarotWealthDetail3;
+      case 4: return l10n.tarotWealthDetail4;
+      case 5: return l10n.tarotWealthDetail5;
+      case 6: return l10n.tarotWealthDetail6;
+      case 7: return l10n.tarotWealthDetail7;
+      case 8: return l10n.tarotWealthDetail8;
+      case 9: return l10n.tarotWealthDetail9;
+      case 10: return l10n.tarotWealthDetail10;
+      case 11: return l10n.tarotWealthDetail11;
+      case 12: return l10n.tarotWealthDetail12;
+      case 13: return l10n.tarotWealthDetail13;
+      case 14: return l10n.tarotWealthDetail14;
+      case 15: return l10n.tarotWealthDetail15;
+      case 16: return l10n.tarotWealthDetail16;
+      case 17: return l10n.tarotWealthDetail17;
+      case 18: return l10n.tarotWealthDetail18;
+      case 19: return l10n.tarotWealthDetail19;
+      case 20: return l10n.tarotWealthDetail20;
+      case 21: return l10n.tarotWealthDetail21;
+      default: return wealthDetail;
+    }
+  }
+
+  String getLocalizedSuccessMeaning(AppLocalizations l10n) {
+    switch (id) {
+      case 0: return l10n.tarotSuccessMeaning0;
+      case 1: return l10n.tarotSuccessMeaning1;
+      case 2: return l10n.tarotSuccessMeaning2;
+      case 3: return l10n.tarotSuccessMeaning3;
+      case 4: return l10n.tarotSuccessMeaning4;
+      case 5: return l10n.tarotSuccessMeaning5;
+      case 6: return l10n.tarotSuccessMeaning6;
+      case 7: return l10n.tarotSuccessMeaning7;
+      case 8: return l10n.tarotSuccessMeaning8;
+      case 9: return l10n.tarotSuccessMeaning9;
+      case 10: return l10n.tarotSuccessMeaning10;
+      case 11: return l10n.tarotSuccessMeaning11;
+      case 12: return l10n.tarotSuccessMeaning12;
+      case 13: return l10n.tarotSuccessMeaning13;
+      case 14: return l10n.tarotSuccessMeaning14;
+      case 15: return l10n.tarotSuccessMeaning15;
+      case 16: return l10n.tarotSuccessMeaning16;
+      case 17: return l10n.tarotSuccessMeaning17;
+      case 18: return l10n.tarotSuccessMeaning18;
+      case 19: return l10n.tarotSuccessMeaning19;
+      case 20: return l10n.tarotSuccessMeaning20;
+      case 21: return l10n.tarotSuccessMeaning21;
+      default: return successMeaning;
+    }
+  }
+
+  String getLocalizedSuccessDetail(AppLocalizations l10n) {
+    switch (id) {
+      case 0: return l10n.tarotSuccessDetail0;
+      case 1: return l10n.tarotSuccessDetail1;
+      case 2: return l10n.tarotSuccessDetail2;
+      case 3: return l10n.tarotSuccessDetail3;
+      case 4: return l10n.tarotSuccessDetail4;
+      case 5: return l10n.tarotSuccessDetail5;
+      case 6: return l10n.tarotSuccessDetail6;
+      case 7: return l10n.tarotSuccessDetail7;
+      case 8: return l10n.tarotSuccessDetail8;
+      case 9: return l10n.tarotSuccessDetail9;
+      case 10: return l10n.tarotSuccessDetail10;
+      case 11: return l10n.tarotSuccessDetail11;
+      case 12: return l10n.tarotSuccessDetail12;
+      case 13: return l10n.tarotSuccessDetail13;
+      case 14: return l10n.tarotSuccessDetail14;
+      case 15: return l10n.tarotSuccessDetail15;
+      case 16: return l10n.tarotSuccessDetail16;
+      case 17: return l10n.tarotSuccessDetail17;
+      case 18: return l10n.tarotSuccessDetail18;
+      case 19: return l10n.tarotSuccessDetail19;
+      case 20: return l10n.tarotSuccessDetail20;
+      case 21: return l10n.tarotSuccessDetail21;
+      default: return successDetail;
+    }
+  }
 }
 
 const List<TarotCard> majorArcana = [
@@ -58,14 +296,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "금전적으로 새로운 기회가 열리는 시기입니다. 남들이 시도하지 않은 새로운 분야나 창의적인 아이템에 투자한다면 의외의 성과를 거둘 수 있습니다. 당장의 수익보다는 미래의 가능성을 보고 과감하게 도전하는 것이 좋습니다. 하지만 '어떻게든 되겠지'라는 막연한 낙관주의는 위험할 수 있습니다. 충동적인 지출이나 무계획적인 투자는 피하고, 전문가의 조언을 참고하거나 최소한의 안전 장치는 마련해두는 것이 좋습니다. 즐겁게 돈을 버는 것이 최고의 재테크가 될 것입니다.",
     successMeaning: "새로운 프로젝트를 시작하거나 전혀 다른 분야로 이직하기 좋은 시기입니다. 획기적이고 창의적인 아이디어가 성공의 열쇠가 될 것입니다.",
     successDetail: "현재 준비하고 있는 일이 있다면 과감하게 첫발을 내딛으세요. 익숙한 환경을 떠나 새로운 도전을 하기에 가장 적합한 때입니다. 당신의 톡톡 튀는 아이디어와 자유로운 사고방식이 직장이나 프로젝트에서 큰 빛을 발하게 됩니다. 실패를 두려워하지 않는 도전 정신이 주변 사람들에게 영감을 주고, 리더십을 발휘할 기회를 가져다줄 것입니다. 다만, 계획성이 부족해 보일 수 있으니 꼼꼼한 마무리와 책임감 있는 태도를 보여준다면 금상첨화입니다.",
-    enKeywords: "New beginnings, adventure, innocence, freedom, recklessness",
-    enDescription: "The Fool stands precariously at the edge of a cliff in colorful clothes, but his gaze is fixed on the distance, full of hope. A small dog follows him, barking as if to warn him. This symbolizes pure passion and the beginning of a new journey without considering realistic risks.",
-    enLoveMeaning: "An unexpected new love may arrive, or a fateful encounter at first sight may occur. Approaching with a pure heart without calculation can lead to a rapid progression in the relationship.",
-    enLoveDetail: "It's a time when you can start love with a pure heart like a child. Forget all past wounds or complicated conditions and stay true to your feelings at this moment. There's a high probability of meeting your fateful partner at an unexpected place or a travel destination you happened to visit. If you're a couple, it's good to give a fresh stimulus to the relationship, such as starting a new hobby together or suddenly going on a trip. However, if you only prioritize emotions while ignoring reality too much, situations you can't take responsibility for may arise, so maintaining a minimum sense of reality is the secret to a long-lasting relationship.",
-    enWealthMeaning: "A new investment or business item may catch your eye. It's a time when profits follow when you work happily without being tied to money.",
-    enWealthDetail: "It's a time when new opportunities open up financially. You can achieve unexpected results if you invest in a new field or creative item that others haven't tried. It's better to boldly challenge while looking at future possibilities rather than immediate profits. However, vague optimism like 'it'll work out somehow' can be dangerous. Avoid impulsive spending or unplanned investments, and it's good to consult an expert or have at least a minimum safety device. Earning money happily will be the best financial management.",
-    enSuccessMeaning: "It's a good time to start a new project or change jobs to a completely different field. Innovative and creative ideas will be the key to success.",
-    enSuccessDetail: "If there's something you're preparing for, take the first step boldly. It's the most suitable time to leave a familiar environment and take on a new challenge. Your popping ideas and free way of thinking will shine brightly in your workplace or project. A challenging spirit that isn't afraid of failure will inspire people around you and bring opportunities to exercise leadership. However, you may seem lacking in planning, so showing a meticulous finish and responsible attitude will be the icing on the cake.",
   ),
   TarotCard(
     id: 1,
@@ -79,14 +309,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "당신이 가진 지식, 기술, 아이디어가 곧 돈이 되는 시기입니다. 단순히 월급을 받는 것에 만족하지 말고, 부업이나 투잡, 프리랜서 활동 등을 통해 추가 수익을 창출해보세요. 창의적인 기획이나 영업 능력, 말하기 능력 등이 탁월하게 발휘되어 기대 이상의 수익을 올릴 수 있습니다. 자금 운용에 있어서도 당신의 판단이 적중할 가능성이 높으니, 주도적으로 재테크 계획을 세우고 실행에 옮기면 좋은 결과를 얻을 것입니다.",
     successMeaning: "업무 능력이 탁월하게 발휘되어 주변의 인정을 받습니다. 계획한 일이 있다면 지금이 바로 실행에 옮길 타이밍입니다.",
     successDetail: "직장이나 학업에서 당신의 능력을 십분 발휘하여 두각을 나타낼 수 있습니다. 어떤 문제가 닥쳐도 당신만의 기지와 재치로 해결해낼 수 있으며, 주변 동료들이나 상사에게 '능력자'로 인정받게 됩니다. 새로운 프로젝트의 리더를 맡거나 중요한 발표를 하게 된다면 성공적으로 마칠 수 있습니다. 준비된 자에게 기회가 온다는 말처럼, 당신은 이미 모든 준비가 되어 있습니다. 자신을 믿고 무대 위 주인공처럼 당당하게 실력을 보여주세요.",
-    enKeywords: "Creation, Will, Ability, Realization, Versatility",
-    enDescription: "The magician is wearing a red robe, one hand pointing to the sky and the other to the ground, bringing heavenly power to the ground. There are four elements (staff, cup, sword, coin) on the table, which means you already have all the tools and abilities to achieve your goals.",
-    enLoveMeaning: "This is a time when your charm is at its peak and you are popular with others. If you're seeing someone or have a spark with someone, you can develop the relationship with your witty speech and lead.",
-    enLoveDetail: "This is a golden opportunity to capture the heart of the person you like with your charm and talent. Don't hesitate to approach them actively if you have someone you like. Your sense of humor and sensible conversation will delight the other person, and you can lead the relationship proactively. If you're single, you may receive advances from several people, and if you're a couple, the other person will be greatly moved if you lead the date course or prepare an event. Win love with confidence.",
-    enWealthMeaning: "It's the right time to generate revenue using your abilities and skills. If you materialize the ideas in your head, it will lead to financial results.",
-    enWealthDetail: "It's a time when your knowledge, skills, and ideas become money. Don't just be satisfied with receiving a salary, but try to create additional income through side jobs, two jobs, or freelance activities. Creative planning, sales ability, and speaking skills will be excellently demonstrated, leading to more revenue than expected. Your judgment is likely to be correct in fund management as well, so if you proactively set a financial plan and put it into action, you will get good results.",
-    enSuccessMeaning: "Your work ability is excellently demonstrated and recognized by those around you. If there's something you planned, now is the time to put it into action.",
-    enSuccessDetail: "You can stand out in your workplace or studies by fully demonstrating your abilities. You can solve any problem that comes your way with your own wit and cleverness, and you will be recognized as a 'capable person' by your colleagues or superiors. If you take the lead in a new project or give an important presentation, you can complete it successfully. As the saying goes that opportunity comes to those who are prepared, you are already fully prepared. Believe in yourself and show your skills confidently like a protagonist on stage.",
   ),
   TarotCard(
     id: 2,
@@ -100,14 +322,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "눈앞의 이익을 쫓아 섣불리 움직이기보다는 냉철하게 시장 상황을 분석하고 공부해야 할 시기입니다. 겉으로 보이는 정보보다는 그 이면에 숨겨진 흐름을 읽어내는 통찰력이 중요합니다. 지금은 씨앗을 뿌리고 기다리는 시기이므로, 당장의 수익이 나지 않는다고 조급해하지 마세요. 부동산이나 주식 등 장기적인 관점에서의 투자를 고려하거나, 금융 관련 지식을 쌓는 데 시간을 투자하는 것이 훗날 큰 자산이 될 것입니다.",
     successMeaning: "학업, 연구, 전문직 분야에서 좋은 성과를 낼 수 있습니다. 조용히 내실을 다지며 지식을 쌓는 것이 유리합니다.",
     successDetail: "겉으로 화려하게 드러나는 성과보다는 내실을 다지고 실력을 키우는 데 집중해야 합니다. 연구, 기획, 분석 등 깊이 있는 사고가 필요한 업무에서 탁월한 성과를 낼 수 있습니다. 직장 내에서는 나서기보다는 조용히 자신의 자리를 지키며 상황을 관망하는 것이 유리합니다. 당신의 지혜롭고 신중한 태도는 결정적인 순간에 빛을 발하여 문제 해결의 열쇠가 될 것입니다. 자격증 취득이나 학위 논문 등 전문성을 높이는 활동에 매진하면 좋은 결과가 있습니다.",
-    enKeywords: "Intuition, wisdom, mystery, secret, platonic",
-    enDescription: "The High Priestess, sitting behind a mysterious veil, holds the scroll of wisdom (TORA) in her hand. Sitting between black and white pillars to maintain balance, she symbolizes the unrevealed world of the unconscious and deep insight. It suggests that the inner voice is more important than what is visible on the outside.",
-    enLoveMeaning: "It means platonic love where spiritual communion is important. Deep understanding and trust for the other person are built, but emotions are not expressed well on the outside, so it may remain as unrequited feelings or the relationship progress may be slow.",
-    enLoveDetail: "You will be attracted to someone with spiritual depth and conversation rather than physical charm. Your intuition to see through the other person's heart is developed, so you can understand each other's feelings without speaking. However, too cautious and secretive attitude may give the other person a misunderstanding of 'Are you not interested in me?'. If you have unrequited feelings, it's better to be a little brave and express your heart rather than suffering alone. If you're already a lover, build a spiritual bond by reading together or having a deep conversation in a quiet place.",
-    enWealthMeaning: "Now is the time to protect your assets and watch the situation rather than actively investing. Since your intuition is getting better, believe in your instinctive feeling before deciding to invest.",
-    enWealthDetail: "It's a time when you should calmly analyze and study the market situation rather than chasing immediate profits. Insight to read the flow hidden behind it is more important than information visible on the outside. Since now is the time to sow seeds and wait, don't be impatient even if there's no immediate profit. Considering investments from a long-term perspective such as real estate or stocks, or investing time in building finance-related knowledge, will become a great asset in the future.",
-    enSuccessMeaning: "You can achieve good results in fields such as studies, research, and professional jobs. It's advantageous to quietly build inner strength and knowledge.",
-    enSuccessDetail: "You should focus on building inner strength and skills rather than flashy achievements. You can achieve excellent results in tasks that require deep thinking such as research, planning, and analysis. In the workplace, it's advantageous to watch the situation while quietly keeping your place rather than stepping forward. Your wise and cautious attitude will shine at the decisive moment and become the key to problem-solving. There are good results if you immerse yourself in activities to increase professionalism such as acquiring certifications or academic theses.",
   ),
   TarotCard(
     id: 3,
@@ -121,14 +335,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "재물운이 활짝 피어나는 시기입니다. 노력한 만큼, 아니 그 이상의 보상이 따르며 경제적으로 여유를 만끽할 수 있습니다. 사업이나 투자에서 기대 이상의 수익을 거두거나, 뜻밖의 보너스나 선물을 받을 수도 있습니다. 자신을 위해 명품을 사거나 맛있는 음식을 먹는 등 '소확행'을 즐겨도 좋습니다. 다만, 기분에 취해 과소비를 할 수 있으니 계획적인 지출이 필요합니다. 풍요로운 에너지를 주변 사람들과 나누면 더 큰 행운이 찾아올 것입니다.",
     successMeaning: "진행 중인 프로젝트가 순조롭게 성장하여 좋은 성과를 냅니다. 특히 예술, 디자인, 패션 등 창의적인 분야에서 두각을 나타낼 수 있습니다.",
     successDetail: "일의 결과가 눈에 보이게 나타나는 시기입니다. 프로젝트가 성공적으로 마무리되어 성과급을 받거나 승진의 기회를 잡을 수 있습니다. 특히 미적 감각이나 창의력이 필요한 분야에서 당신의 재능이 빛을 발합니다. 팀 내 분위기를 부드럽고 화기애애하게 만드는 리더십을 발휘하여 동료들의 신망을 얻게 됩니다. 지금은 너무 빡빡하게 일하기보다는 여유를 가지고 과정을 즐기면서 일하는 것이 오히려 더 좋은 결과를 가져다줄 것입니다.",
-    enKeywords: "Abundance, motherhood, nature, beauty, fruit",
-    enDescription: "The Empress, sitting comfortably in abundant nature, is a symbol of material and spiritual abundance. Her colorful clothes and crown represent her authority and charm, and the flowing river and ripe grain mean the fruits of effort and vitality.",
-    enLoveMeaning: "It's a time when love overflows and the relationship becomes deeper. If you show comfort and consideration like maternal love to the other person, the relationship becomes more solid. There may be happy news such as promising marriage or pregnancy.",
-    enLoveDetail: "It's a time when your inclusive charm is maximized and you look very attractive to others. If you're dating, you will receive great love from being warm and caring, and there may be talk of marriage. If you're single, grooming your appearance or changing your style will be a great help in increasing your romantic prospects. You will receive attention at gatherings or introductions, and you are highly likely to meet a capable and affectionate partner who will treat you like royalty.",
-    enWealthMeaning: "It's a very materially abundant and stable time. Previous investments bear fruit and return as revenue. Spending on beautiful items or self-care may increase.",
-    enWealthDetail: "It's a time when your financial prospects are in full bloom. Compensation follows your effort—often even exceeding it—and you can enjoy economic leisure. You may achieve more revenue than expected in business or investment, or you may receive unexpected bonuses or gifts. It's okay to enjoy 'small but certain happiness' such as treating yourself to something nice. However, you may overspend by getting carried away, so planned spending is needed. If you share this abundant energy with those around you, even greater prosperity will come.",
-    enSuccessMeaning: "Projects in progress grow smoothly and produce good results. Especially, you can stand out in creative fields such as art, design, and fashion.",
-    enSuccessDetail: "It's a time when the results of work appear visibly. The project is successfully completed, and you can receive a performance bonus or grab an opportunity for promotion. Especially, your talent shines in fields that require aesthetic sense or creativity. You will gain the trust of your colleagues by exercising leadership that makes the atmosphere in the team soft and harmonious. Now, rather than working too tightly, enjoying the process with leisure will actually bring better results.",
   ),
   TarotCard(
     id: 4,
@@ -142,14 +348,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "금전 관리에 있어서 원칙과 계획을 세우는 것이 중요합니다. 일확천금을 노리는 투기보다는 적금, 부동산 등 안전하고 확실한 자산에 투자하여 기반을 다지는 것이 좋습니다. 당신의 현실적인 판단력과 추진력이 부를 축적하는 데 큰 도움이 됩니다. 사업을 한다면 체계를 잡고 조직을 정비하여 수익 구조를 안정화시킬 수 있는 적기입니다. 낭비를 줄이고 철저하게 계산된 지출을 통해 재정적인 안정을 이룰 수 있습니다.",
     successMeaning: "직장에서 승진하거나 리더의 자리에 오를 수 있는 운입니다. 추진력과 결단력을 발휘하여 팀을 이끌고 목표를 달성하게 됩니다.",
     successDetail: "조직 내에서 당신의 입지가 단단해지는 시기입니다. 리더십을 인정받아 팀장이나 관리자로 승진할 수 있으며, 중요한 프로젝트의 총괄 책임을 맡게 될 수도 있습니다. 감정에 휘둘리지 않고 이성적이고 냉철한 판단으로 업무를 처리하여 상사의 신임을 얻습니다. 목표를 달성하기 위해 강한 추진력으로 밀어붙이는 것이 필요하며, 규정과 원칙을 준수하는 모범적인 태도가 성공의 지름길입니다. 자신의 야망을 숨기지 말고 당당하게 드러내세요.",
-    enKeywords: "Authority, structure, stability, leadership, responsibility",
-    enDescription: "The Emperor, sitting on a hard stone throne, wears armor and holds an Ankh cross and an orb. This symbolizes secular power and firm dominance. He values order and discipline, and protects and rules his territory with strong willpower.",
-    enLoveMeaning: "It means a stable relationship with a reliable and responsible partner. You may have a bond with an older person or a person with leadership. However, if you are too authoritative or stubborn, a conflict may arise.",
-    enLoveDetail: "A relationship based on trust and stability continues rather than burning passion. Your partner will firmly protect and lead you. However, they may be somewhat blunt or assertive, so understanding is needed. If you are leading, be careful not to try to control too much or be stubborn. If you're single, you have a chance to meet someone with ability and social status; meeting through a formal introduction or mutual acquaintances has a higher success rate than a casual setup.",
-    enWealthMeaning: "You can accumulate financial stability with systematic asset management. Conservative and long-term investments are advantageous, and it's good to invest in real estate or assets with a solid foundation.",
-    enWealthDetail: "It's important to set principles and plans in financial management. Rather than speculation aiming for a windfall, it's good to build a foundation by investing in safe and certain assets such as savings and real estate. Your realistic judgment and drive are a great help in accumulating wealth. If you're in business, now is the right time to establish a system and reorganize to stabilize the revenue structure. You can achieve financial stability through reducing waste and thoroughly calculated spending.",
-    enSuccessMeaning: "You are in a favorable position to be promoted at work or rise to a leadership role. You will lead the team and achieve the goal by demonstrating drive and decisiveness.",
-    enSuccessDetail: "This is a time when your position within the organization becomes solid. You can be recognized for your leadership and promoted to a team leader or manager, and you may be in charge of an important project. You gain the trust of your boss by handling work with rational and cold judgment without being swayed by emotions. It's necessary to push with strong drive to achieve the goal, and an exemplary attitude of complying with regulations and principles is the shortcut to success. Don't hide your ambition and show it proudly.",
   ),
   TarotCard(
     id: 5,
@@ -163,14 +361,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "모험적인 투자보다는 안정성을 최우선으로 해야 합니다. 은행 예적금이나 연금, 보험 등 전통적인 금융 상품을 활용하는 것이 좋습니다. 주식이나 부동산에 투자하더라도 우량주나 대장주 위주로 접근하세요. 재무 설계사나 은행원 등 전문가의 컨설팅을 받아보는 것도 좋은 방법입니다. 또한, 계약이나 서류 작성 시 꼼꼼하게 검토하고 법적인 문제가 없는지 확인해야 합니다. 정직하고 투명한 금전 거래가 당신의 신용을 높여줄 것입니다.",
     successMeaning: "계약, 제휴, 협력 관계가 원만하게 체결될 운입니다. 멘토나 상사에게 조언을 구하면 문제 해결의 실마리를 찾을 수 있습니다.",
     successDetail: "혼자서 문제를 해결하려 하기보다는 주변의 도움을 받는 것이 현명합니다. 직장 상사나 멘토, 교수님 등 윗사람에게 조언을 구하면 의외로 쉽게 해결책을 찾을 수 있습니다. 또한, 회사 내의 규칙과 절차를 잘 따르는 것이 좋은 평가를 받는 길입니다. 교육, 상담, 컨설팅 관련 업무에서 두각을 나타낼 수 있으며, 중요한 계약이나 협약을 체결하기에 좋은 운이 들어와 있습니다. 원칙을 지키는 당신의 태도가 신뢰를 줍니다.",
-    enKeywords: "Tradition, teaching, belief, advice, mediation",
-    enDescription: "The Hierophant, wearing religious clothing, is blessing two priests. He is a mediator who delivers the will of God and a spiritual teacher. He values social norms, traditions, and moral values, and leads people with wise advice.",
-    enLoveMeaning: "Serious and healthy meetings continue based on trust and respect. It is highly likely to be a bond meeting through an introduction by the family or an association on the premise of marriage. It is important to share each other's values and build a spiritual bond.",
-    enLoveDetail: "You will want a serious relationship on the premise of marriage rather than a light meeting. You can meet a good bond at healthy gatherings such as blind dates, matchmaking, or religious activities or clubs. The other person may be polite and conservative, and the key to maintaining the relationship is that each other's values and conversation go well. If there is a conflict between lovers, seek advice from elders or seniors around you. Their wise advice will be a great help in restoring the relationship between the two.",
-    enWealthMeaning: "Traditional and safe methods of financial technology are good. Take an interest in long-term and stable products such as savings or insurance. Listening to expert advice or following proven investment methods is a way to reduce risk.",
-    enWealthDetail: "Stability should be the top priority rather than adventurous investment. It's good to use traditional financial products such as bank savings, pensions, and insurance. Even if you invest in stocks or real estate, approach them with blue-chip stocks or leading stocks. Getting a consultation from an expert such as a financial planner or banker is also a good way. Also, when writing a contract or document, you should review it carefully and check if there are any legal problems. Honest and transparent financial transactions will increase your credit.",
-    enSuccessMeaning: "Contracts, alliances, and cooperative relationships will be signed smoothly. Seeking advice from a mentor or boss can find a clue to problem-solving.",
-    enSuccessDetail: "It's wiser to get help from those around you rather than trying to solve the problem alone. If you seek advice from elders such as your boss, mentor, or professor, you can find a solution surprisingly easily. Also, following the rules and procedures within the company well is the way to get a good evaluation. You can stand out in education, counseling, and consulting-related work, and it is a favorable time to sign an important contract or agreement. Your attitude of keeping the principles gives trust.",
   ),
   TarotCard(
     id: 6,
@@ -183,13 +373,6 @@ const List<TarotCard> majorArcana = [
     wealthMeaning: "혼자보다는 함께할 때 금전운이 상승합니다. 파트너십이나 동업을 통해 수익을 창출할 수 있습니다. 지출에 있어서는 감정적인 소비나 데이트 비용이 늘어날 수 있으니 조절이 필요합니다.",
     wealthDetail: "마음이 맞는 사람과 함께 일을 도모하면 시너지 효과가 나서 금전적 이익이 커집니다. 동업 제안이 들어온다면 긍정적으로 검토해보세요. 또한, 인간관계를 통한 정보가 돈이 될 수 있으니 주변 사람들과의 소통을 활발히 하는 것이 좋습니다. 다만, 유흥비나 쇼핑, 데이트 비용 등 즐거움을 위한 지출이 과다해질 수 있습니다. 기분을 내는 것도 좋지만, 카드 명세서를 보고 후회하지 않도록 지출 한도를 정해놓는 지혜가 필요합니다.",
     successMeaning: "팀워크가 빛을 발하는 시기입니다. 마음이 맞는 동료나 파트너를 만나 일이 즐겁게 진행됩니다. 중요한 선택의 순간이 올 수 있는데, 자신의 직관과 마음이 끌리는 쪽을 선택하세요.",
-    enKeywords: "Love, harmony, choice, union, partnership",
-    enDescription: "Adam and Eve stand receiving a blessing from an angel under a warm sun. This symbolizes pure love and harmonious union. It also suggests that they are standing at a crossroads of temptation and choice with the snake and apple tree in the background.",
-    enLoveMeaning: "It is one of the best times for love to bloom. You fall deeply into each other, and a budding connection develops into a committed relationship. You can meet a soulmate with whom you share a deep, wordless understanding.",
-    enLoveDetail: "A heart-fluttering romance awaits you. You'll find yourself rapidly getting closer to an attractive person, feeling a deep connection even without words. If you're planning to confess your feelings, you have a very high chance of success, so be brave. However, 'The Lovers' card also signifies a choice. You might find yourself torn between two attractive people, or choosing between love and career. Follow your heart rather than temporary emotions. With so much charm and many options, you'll have a pleasant dilemma to solve.",
-    enWealthMeaning: "Your financial outlook improves when collaborating with others. You can generate revenue through partnerships or joint ventures. Regarding spending, social expenses or date costs may increase, so mindful budgeting is needed.",
-    enWealthDetail: "If you promote work with someone who fits your heart, a synergy effect occurs and financial profit increases. If a joint business proposal comes in, review it positively. Also, information through human relationships can become money, so it's good to communicate actively with people around you. However, spending for pleasure such as entertainment, shopping, and date costs may become excessive. It's good to feel good, but you need the wisdom to set a spending limit so that you don't regret it after seeing the credit card statement.",
-    enSuccessMeaning: "This is a time when teamwork shines. You meet a colleague or partner who fits your heart and the work proceeds joyfully. An important moment of choice may come, so choose the side that your intuition and heart are drawn to.",
     successDetail: "직장 동료나 비즈니스 파트너와의 호흡이 척척 맞아 일하는 것이 즐겁습니다. 혼자 하는 업무보다는 팀 프로젝트에서 더 좋은 성과를 낼 수 있으며, 원만한 대인관계가 성공의 핵심 열쇠가 됩니다. 취업이나 이직을 준비 중이라면 자신이 진정으로 좋아하고 즐길 수 있는 일을 선택하는 것이 좋습니다. 여러 가지 제안을 놓고 고민하게 될 수 있는데, 조건도 중요하지만 '내 마음이 설레는가?'를 기준으로 삼는다면 후회 없는 선택이 될 것입니다.",
   ),
   TarotCard(
@@ -204,14 +387,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "금전적인 목표를 달성하기 위해 강력한 추진력이 필요한 시기입니다. 망설이지 말고 기회가 왔을 때 과감하게 베팅하는 결단력이 수익을 가져다줍니다. 단타 매매나 빠르게 성과가 나는 프로젝트에 집중하는 것이 유리합니다. 영업직이라면 발로 뛰는 만큼 실적이 올라갈 것입니다. 자동차를 구매하거나 여행을 가는 등 이동과 관련된 큰 지출이 생길 수 있지만, 이는 당신의 활동 반경을 넓히고 새로운 기회를 가져다주는 투자가 될 것입니다.",
     successMeaning: "경쟁에서 승리하고 목표를 쟁취하는 운입니다. 장애물이 있어도 강한 정신력으로 돌파해 나갈 수 있습니다. 승진이나 합격 등 가시적인 성과가 따르며, 출장이나 이동이 많은 업무에서 능력을 발휘하게 됩니다.",
     successDetail: "승진, 합격, 계약 성사 등 뚜렷한 목표 달성이 예견됩니다. 경쟁이 치열할수록 당신의 투지가 불타올라 결국 승리를 거머쥐게 됩니다. 장애물이나 어려움이 닥쳐도 결코 포기하지 않고 정면 돌파하는 당신의 모습이 주변에 깊은 인상을 남깁니다. 해외 출장이나 지방 근무 등 이동수가 들어올 수 있는데, 이를 기회로 삼아 더 넓은 세상에서 능력을 펼쳐보세요. 지금은 뒤를 돌아보지 말고 앞만 보고 달려가야 할 때입니다.",
-    enKeywords: "Victory, will, forward, conquest, movement",
-    enDescription: "A young king in a chariot stands proudly with a scepter. The black and white sphinxes try to go in different directions, but the king controls them with strong will and moves forward. It symbolizes a relentless dash toward the goal and victory.",
-    enLoveMeaning: "It's a time when active romantic pursuits succeed. You can win even if there are competitors, and you gain the drive to develop a casual spark into a committed relationship. There are also romantic opportunities related to travel or relocation, such as long-distance relationships or meeting someone while traveling.",
-    enLoveDetail: "It's time to rush to win love. Don't hesitate and express your heart honestly and proudly. If there are competitors, you can win the other person's heart with a more burning competitive spirit. If there's a spark between you, it's good to define the relationship clearly and lead. Also, love deepens when you go on dynamic dates, drives, or trips together. However, if you try to drag it only at your own pace, the other person may get tired, so speed control is essential.",
-    enWealthMeaning: "It's time to move aggressively to achieve the target profit. You can see profits in short-term investments or businesses with high turnover. Expenses or gains related to cars or means of transportation may occur.",
-    enWealthDetail: "It's a time when strong drive is needed to achieve financial goals. Don't hesitate and the decisiveness to bet boldly when an opportunity comes brings profit. It's advantageous to focus on short-term trading or projects with fast results. If you're in sales, your performance will go up as much as you run on your feet. Large expenditures related to movement, such as buying a car or going on a trip, may occur, but this will be an investment that broadens your activity range and brings new opportunities.",
-    enSuccessMeaning: "You are likely to win the competition and achieve your goals. Even if there are obstacles, you can break through with strong mental power. Tangible results such as promotion or passing follow, and you will demonstrate your ability in tasks with many business trips or movements.",
-    enSuccessDetail: "Clear goal achievement such as promotion, passing, or contract signing is predicted. The more intense the competition, the more your fighting spirit burns, eventually seizing victory. Even if obstacles or difficulties arise, your appearance of breaking through head-on without giving up leaves a deep impression on those around you. Movement such as overseas business trips or regional work may come in, so use this as an opportunity to unfold your abilities in a wider world. Now is the time to look ahead and run without looking back.",
   ),
   TarotCard(
     id: 8,
@@ -225,14 +400,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "재물운이 서서히 상승하는 흐름입니다. 당장 큰돈이 들어오지 않더라도 실망하지 말고 꾸준히 자산을 관리하세요. 티끌 모아 태산이라는 말처럼, 성실하게 모은 돈이 나중에 큰 목돈이 되어 돌아옵니다. 투자에 있어서는 단기적인 등락에 일희일비하지 말고 뚝심 있게 버티는 자가 승리합니다. 자신의 충동적인 소비 욕구를(내면의 사자) 잘 다스리고 통제하는 것이 부자가 되는 지름길입니다. 당신의 끈기가 빛을 발할 것입니다.",
     successMeaning: "어려운 과제나 까다로운 상사를 만나더라도 지혜롭게 대처할 수 있습니다. 당신의 성실함과 끈기가 결국 빛을 발하여 주변의 신뢰를 얻습니다. 위기 상황에서도 침착함을 잃지 않고 문제를 해결하는 능력이 돋보입니다.",
     successDetail: "힘든 프로젝트나 까다로운 업무를 맡게 될 수 있지만, 당신에게는 이를 해결할 충분한 저력이 있습니다. 겉으로는 부드러워 보이지만 내면의 강한 의지로 난관을 하나씩 극복해 나갑니다. 감정적으로 대응하기보다는 이성적이고 차분하게 상대를 설득하는 능력이 돋보입니다. 끈기 있게 노력하는 당신의 모습에 주변 동료들과 상사들이 깊은 신뢰를 보내게 됩니다. 지금의 고난은 당신을 더 강하게 만드는 훈련 과정이니 포기하지 마세요.",
-    enKeywords: "Patience, courage, inner strength, embrace, gentle but firm",
-    enDescription: "A woman in white is gently handling a lion's mouth. She subdues the beast with spiritual power and patience, not physical force. The Mobius strip above her head symbolizes infinite potential and wisdom.",
-    enLoveMeaning: "It's a time when you need the tolerance to accept and understand the other person as they are. Even if there is a quarrel, if you deal with it gently, the relationship becomes more solid. If you have unrequited feelings, don't hurry and appeal your charm subtly while waiting patiently.",
-    enLoveDetail: "Current love requires patience and wisdom. The relationship develops when you accept and embrace the other person's shortcomings or grumbling with a wide heart. As the saying goes, 'patience is a virtue,' you need a gentle but firm attitude to lead the other person with a gentle manner. If you silently stay by the side of your crush until they open their heart, your sincerity will eventually get through. If you are a lover, the effort to acknowledge and adjust to each other's differences deepens the trust between the two.",
-    enWealthMeaning: "Steady savings and healthy consumption habits are the secrets to collecting wealth. Money earned by working diligently rather than a windfall makes you rich. If you invest, the power to endure with a long-term perspective will bring profit.",
-    enWealthDetail: "Your financial prospects are gradually improving. Even if big money doesn't come in right away, don't be disappointed and manage your assets steadily. As the saying goes, 'many a mickle makes a muckle,' money collected diligently will return as a large sum of money later. In investment, the one who endures with grit wins without being swayed by short-term fluctuations. Controlling your impulsive consumption desire (the lion inside) is the shortcut to becoming rich. Your persistence will shine.",
-    enSuccessMeaning: "Even if you encounter a difficult task or a picky boss, you can deal with it wisely. Your diligence and persistence eventually shine and earn the trust of those around you. The ability to solve problems without losing composure even in crisis situations stands out.",
-    enSuccessDetail: "You may be assigned a hard project or a picky task, but you have enough potential to solve it. Although you look soft on the outside, you overcome obstacles one by one with strong inner will. The ability to persuade the other person rationally and calmly rather than responding emotionally stands out. Your colleagues and superiors will have deep trust in you for your persistent efforts. Don't give up as current hardship is a training process that makes you stronger.",
   ),
   TarotCard(
     id: 9,
@@ -246,14 +413,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "재물에 관해서는 보수적인 태도를 취해야 합니다. 새로운 투자를 하거나 사업을 벌이기에는 시기가 좋지 않습니다. 현재 가지고 있는 자산을 꼼꼼히 점검하고 새어나가는 돈은 없는지 확인하세요. 지금은 돈을 불리기보다는 지키는 것이 중요한 시기입니다. 대신, 자신의 가치를 높이기 위한 공부나 연구, 자격증 취득 등에 비용을 지출하는 것은 훌륭한 투자입니다. 훗날 전문가로서 더 큰 수익을 올릴 수 있는 밑거름이 될 것입니다.",
     successMeaning: "전문적인 지식이나 기술을 깊이 있게 연구하는 분야에서 성과를 냅니다. 혼자서 집중해서 하는 업무가 잘 맞으며, 멘토를 만나거나 스스로가 누군가의 멘토가 되어 조언을 줄 수 있습니다.",
     successDetail: "연구직, 교수, 작가, 프로그래머 등 혼자서 깊이 있게 파고드는 업무에서 탁월한 성과를 낼 수 있습니다. 남들에게 드러나지는 않지만 묵묵히 실력을 쌓아가는 시기입니다. 직장 내 인간관계나 정치 싸움에는 관심을 끄고 오로지 업무의 본질에만 집중하세요. 해결되지 않는 문제가 있다면 경험이 풍부한 멘토를 찾아가 조언을 구해보세요. 그들의 지혜가 어둠 속의 등불처럼 길을 비춰줄 것입니다. 지금 쌓은 내공이 나중에 큰 빛을 발할 것입니다.",
-    enKeywords: "Reflection, solitude, exploration, wisdom, rest",
-    enDescription: "An old man stands alone with a lamp on a dark snowy mountain. He escapes from secular desires and explores the truth by listening to his inner voice. The lamp is the light of wisdom, illuminating the path for himself and others.",
-    enLoveMeaning: "It's a time when you need time for yourself or think deeply about love. You may keep a crush in your heart for a long time or miss an ex-lover. Before trying to make a relationship forcibly, look into your heart first.",
-    enLoveDetail: "Now is the time when you need time to look back on yourself rather than active dating. Rather than meeting anyone to soothe loneliness, think deeply about what kind of love you truly want. Even if you have a lover, taking time apart for a while can actually help the relationship. It may be a process of healing lingering feelings for an ex-lover or past wounds. Don't try to go out forcibly, prioritize finding peace of mind by listening to your inner voice.",
-    enWealthMeaning: "Financial activities may be somewhat contracted. Now is the time to build inner strength and check the fund flow rather than expanding investment. It's good to reduce unnecessary spending and spend money on learning professional knowledge or skills for the future.",
-    enWealthDetail: "You should take a conservative attitude toward wealth. It's not a good time to make new investments or start a business. Carefully check the assets you currently have and see if there is any leaking money. Now is a time when protecting money is more important than increasing it. Instead, spending on studying, research, or acquiring certifications to increase your value is an excellent investment. It will be the foundation for raising greater revenue as an expert in the future.",
-    enSuccessMeaning: "You achieve results in fields that deeply research professional knowledge or skills. Concentrated work alone fits well, and you can meet a mentor or become a mentor to someone yourself and give advice.",
-    enSuccessDetail: "You can achieve excellent results in tasks that dig deep alone, such as research positions, professors, writers, and programmers. Although it's not revealed to others, it's a time to build skills silently. Turn off your interest in human relationships or political fights in the workplace and focus only on the essence of the work. If there's a problem that can't be solved, find an experienced mentor and seek advice. Their wisdom will light the way like a lamp in the dark. The inner strength you build now will shine brightly later.",
   ),
   TarotCard(
     id: 10,
@@ -267,14 +426,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "행운의 여신이 당신에게 미소 짓고 있습니다. 생각지도 못한 돈이 들어오거나, 투자 수익이 나는 등 금전운이 상승 곡선을 그립니다. 복권을 사보거나 경품 이벤트에 응모해보는 것도 좋습니다. 주식이나 부동산 시장의 흐름이 당신에게 유리하게 작용할 수 있습니다. 하지만 운은 돌고 도는 법이니, 잘 벌릴 때일수록 자만하지 말고 미래를 대비해 저축하는 지혜도 필요합니다. 돈의 흐름이 원활하니 기분 좋게 쓰고 기분 좋게 버는 시기입니다.",
     successMeaning: "상황이 당신에게 유리하게 돌아갑니다. 막혔던 일이 풀리고 새로운 기회가 찾아옵니다. 승진, 합격, 해외 진출 등 변화의 시기에 적극적으로 움직이면 좋은 결과를 얻을 수 있습니다.",
     successDetail: "인생의 터닝포인트가 될 중요한 시기입니다. 막혀있던 일들이 술술 풀리고, 주변 상황이 당신을 돕는 방향으로 흘러갑니다. 승진, 이직, 부서 이동 등 변화의 기회가 온다면 두려워 말고 받아들이세요. 그 변화는 당신을 더 높은 곳으로 데려다줄 '상승하는 수레바퀴'입니다. 해외와 관련된 일이나 유학 등 활동 무대가 넓어질 수도 있습니다. 운이 따르는 시기이니 평소보다 조금 더 과감한 목표를 세우고 도전해봐도 좋습니다.",
-    enKeywords: "Destiny, change, opportunity, cycle, turning point",
-    enDescription: "There is a huge wheel of fortune on the clouds, and angels symbolizing the four elements are reading books at the four corners. The wheel doesn't stop and repeats rising and falling. This means an unavoidable flow of destiny and the beginning of a new cycle.",
-    enLoveMeaning: "A fateful encounter awaits you. You may fall in love with someone by chance, or have a strong chance of reuniting with an ex-lover. Couples who have been in a rut will experience a positive shift and see their relationship improve.",
-    enLoveDetail: "A fateful love like a movie is coming your way. Dramatic events, such as meeting in an unexpected place or a surprise reunion, may occur. The current of fortune is in your favor, so go with the flow. If you're single, you might meet your soulmate at first sight; if you're in a relationship, this is an opportunity to take things to the next level. However, because fate is always moving, it's important to seize the moment. If you hesitate, the wheel may turn again.",
-    enWealthMeaning: "Your financial fortunes are improving. You may see unexpected profits or gains from previous investments. As cash flow becomes smoother, be ready to grab opportunities as they arise.",
-    enWealthDetail: "The goddess of fortune is smiling on you. Unexpected money may come your way, or your financial prospects will trend upward with investment gains. It's a good time to try your hand at a lottery or a giveaway. Market trends may work in your favor. But remember that fortune is cyclical; the more you earn, the more you should save for the future. Since money is flowing smoothly, it's a time to both enjoy your earnings and earn with joy.",
-    enSuccessMeaning: "The situation is turning in your favor. Things that were blocked are unblocked and new opportunities come. If you move actively during the time of change such as promotion, passing, or overseas expansion, you can get good results.",
-    enSuccessDetail: "It's an important time that will be a turning point in your life. Things that were blocked are solved smoothly, and surrounding situations flow in a direction that helps you. If an opportunity for change such as promotion, job change, or department move comes, don't be afraid and accept it. That change is an 'ascending wheel' that will take you to a higher place. The stage of activity may broaden, such as work related to overseas or studying abroad. Since fortune is on your side, it's good to set a slightly more bold goal than usual and challenge it.",
   ),
   TarotCard(
     id: 11,
@@ -288,14 +439,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "금전적인 부분에서 시시비비를 가려야 할 일이 생길 수 있습니다. 빌려준 돈을 받거나, 반대로 갚아야 할 돈을 정산하는 등 재무 관계를 깨끗이 정리하기 좋은 때입니다. 계약서를 쓸 때는 독소 조항이 없는지 꼼꼼하게 살펴보고, 법적인 조언을 구하는 것도 좋습니다. 요행이나 편법을 쓰려다가는 오히려 큰 코 다칠 수 있으니, 정직하고 투명하게 원칙대로 처리하세요. 뿌린 대로 거둔다는 말처럼, 정당하게 노력한 만큼의 수익은 확실하게 보장됩니다.",
     successMeaning: "공정한 평가를 받고 정당한 보상을 받게 됩니다. 계약 체결, 협상, 소송 등에서 유리한 판결이나 결과를 얻을 수 있습니다. 두 가지 선택지 사이에서 갈등할 수 있으니 객관적인 팩트에 근거하여 결정하세요.",
     successDetail: "당신의 업무 성과에 대해 공정하고 객관적인 평가를 받게 됩니다. 그동안 열심히 일했다면 승진이나 보너스 등 합당한 보상이 따를 것이고, 요령을 피웠다면 그에 상응하는 책임을 지게 될 것입니다. 법조계, 세무, 회계 등 정확성이 요구되는 분야에서 능력을 발휘할 수 있습니다. 중요한 의사결정을 내려야 할 때는 감정을 배제하고 철저히 데이터와 팩트에 기반하여 판단하세요. 어느 한쪽으로 치우치지 않는 균형 감각이 당신을 성공으로 이끌 것입니다.",
-    enKeywords: "Fairness, balance, responsibility, truth, cause and effect",
-    enDescription: "A judge in a red robe holds a sword in his right hand and a scale in his left. He judges fairly according to facts and principles without being swayed by emotions. It symbolizes the law of cause and effect that you reap what you sow.",
-    enLoveMeaning: "It's a relationship where reason precedes emotion. You may weigh whether the give-and-take is fair, or consider practical factors in a partner. If you have a crush, you will demand a clear signal from them.",
-    enLoveDetail: "Now is the time for rational judgment rather than being swayed by emotions. Consider whether your relationship is balanced, and whether you are sacrificing too much or just receiving. If you're thinking about marriage, you may carefully weigh your partner's circumstances or background. While this might seem calculated, it is a necessary process for a healthy and equal relationship. If you're in an ambiguous relationship, it's time to draw a line and clarify where you stand. Honest and fair conversation is the solution.",
-    enWealthMeaning: "Careful checking is needed in financial transactions or contracts. You'll receive fair compensation for your hard work, but don't expect a windfall. Legal or tax-related issues may arise, so it's best to handle everything transparently.",
-    enWealthDetail: "You may need to resolve a financial dispute or clarify right from wrong. It's a good time to settle financial relationships, such as collecting debt or paying what you owe. When signing a contract, look carefully for any unfavorable clauses and consider seeking legal advice. If you try to rely on shortcuts or mere luck, you may face serious consequences, so act with honesty and integrity. As you reap what you sow, you are guaranteed to profit in proportion to your legitimate efforts.",
-    enSuccessMeaning: "You receive a fair evaluation and legitimate compensation. You can get favorable rulings or results in contract signing, negotiation, and litigation. You may be in conflict between two choices, so decide based on objective facts.",
-    enSuccessDetail: "You receive a fair and objective evaluation of your work performance. If you worked hard so far, legitimate compensation such as promotion or bonus will follow, and if you were cutting corners, you will take corresponding responsibility. You can demonstrate your ability in fields where accuracy is required, such as legal, tax, and accounting. When you have to make an important decision, exclude emotions and judge based thoroughly on data and facts. A sense of balance that is not biased to either side will lead you to success.",
   ),
   TarotCard(
     id: 12,
@@ -309,14 +452,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "금전적으로 꽉 막힌 듯한 느낌을 받을 수 있습니다. 투자한 돈이 묶이거나 예정된 수입이 지연될 수 있습니다. 하지만 발버둥 칠수록 더 꼬일 수 있으니, 지금은 차라리 마음을 비우고 관망하는 것이 상책입니다. 손해를 보더라도 감수해야 할 타이밍일 수도 있습니다. 이 시기를 통해 자신의 소비 습관을 점검하고, 돈에 대한 가치관을 새롭게 정립해보세요. 위기를 기회로 바꾸는 역발상이 떠오를지도 모릅니다. 지금의 인내가 훗날의 큰 이익을 위한 밑거름이 될 것입니다.",
     successMeaning: "일이 계획대로 진행되지 않고 지연될 수 있습니다. 답답하더라도 때를 기다리며 내공을 쌓아야 합니다. 기존의 방식이 통하지 않는다면, 발상의 전환을 통해 독창적인 아이디어를 내보세요.",
     successDetail: "프로젝트가 중단되거나 업무가 지연되어 스트레스를 받을 수 있습니다. 하지만 이는 실패가 아니라 잠시 멈춤 신호입니다. 억지로 진행하려 하지 말고, 한 발 물러서서 전체적인 그림을 다시 그려보세요. 남들이 생각하지 못하는 기발하고 독창적인 아이디어는 고정관념을 깼을 때 나옵니다. 지금의 시련은 당신에게 새로운 깨달음을 주기 위한 과정입니다. 희생을 감수하고 궂은일을 도맡아 하다 보면, 언젠가 당신의 진가를 알아주는 날이 반드시 옵니다.",
-    enKeywords: "Sacrifice, patience, new perspective, stagnation, enlightenment",
-    enDescription: "A man is hanging upside down from a tree, but a halo shines behind his head and his expression is peaceful. He voluntarily chose hardship, and through this, he is gaining a new enlightenment that others do not see by looking at the world upside down.",
-    enLoveMeaning: "The relationship may stagnate or unrequited feelings may last for a long time. Now, rather than trying to change the situation forcibly, you should wait with patience. The heart of sacrificing and caring for the other person can eventually move the other's heart.",
-    enLoveDetail: "You may feel frustrated because the progress of love is not being made. But now is not the time to solve it by rushing. Stop for a moment and look at the current situation from a different perspective. You need to reflect on whether you've been forcing love only in your own way. You need the wisdom of being 'hung upside down' to think and care for the partner's position. Devoted and sacrificial love is sometimes the key to opening the partner's heart. Current stagnation is a growing pain to go to a deeper love.",
-    enWealthMeaning: "Fund flow may be tied up or you may have to bear losses. Now it's wise to stop investing and watch the situation. You need time to let go of obsession with money and seek asset management methods from another perspective.",
-    enWealthDetail: "You may feel like you're completely blocked financially. Invested money may be tied up or expected income may be delayed. But the more you struggle, the more it can get tangled, so now it's best to rather empty your mind and watch. It may be the timing to bear losses. Through this period, check your consumption habits and re-establish your values about money. A reverse thinking that turns a crisis into an opportunity may come up. Current patience will be the foundation for future big profits.",
-    enSuccessMeaning: "Work may not proceed as planned and may be delayed. Even if it's frustrating, you should wait for the time and build your inner strength. If the existing method doesn't work, try coming up with original ideas through a shift in thinking.",
-    enSuccessDetail: "You may be stressed by the project being stopped or work being delayed. But this is not a failure, it's a temporary stop signal. Don't try to proceed forcibly, take a step back and redraw the overall picture. Novel and original ideas that others can't think of come when you break stereotypes. Current trials are a process to give you new enlightenment. If you bear the sacrifice and take charge of hard work, a day will surely come when your true value is recognized.",
   ),
   TarotCard(
     id: 13,
@@ -330,14 +465,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "재정적으로 큰 변화가 예상됩니다. 믿었던 투자처에서 손실이 나거나 예기치 못한 지출로 어려움을 겪을 수 있습니다. 하지만 이는 그동안의 비효율적인 자산 관리 방식을 바꾸라는 신호입니다. 부채를 정리하고 불필요한 지출을 완전히 차단하세요. 바닥을 쳐야 다시 올라올 수 있는 법입니다. 지금의 고통스러운 정리가 끝난 후에는 더 건강하고 안정적인 재무 구조를 갖게 될 것입니다.",
     successMeaning: "진행하던 일이 중단되거나 실패할 수 있습니다. 하지만 이는 당신에게 맞지 않는 일을 정리하고 새로운 길을 찾으라는 운명의 계시입니다. 과감하게 포기하고 새로운 분야에 도전하세요.",
     successDetail: "공들였던 프로젝트가 무산되거나 직장에서 큰 변화(퇴사, 부서 해체 등)를 겪을 수 있습니다. 당장은 좌절감이 크겠지만, 이는 더 큰 성공을 위한 '환골탈태'의 과정입니다. 낡은 방식과 고정관념을 버리고 완전히 새로운 마음가짐으로 시작해야 합니다. 당신의 인생에서 한 챕터가 끝나고 더 멋진 다음 챕터가 시작되려 하고 있습니다. 끝은 곧 시작임을 명심하세요.",
-    enKeywords: "Ending, change, rebirth, separation, new beginning",
-    enDescription: "The knight of death in black armor passes on a white horse, and the king and child also fall. This means the complete end of the old and the resulting new beginning, not physical death. It is a painful but inevitable process of change.",
-    enLoveMeaning: "It means the end of a relationship or a big change. You may experience a breakup, but this may be an inevitable process to meet a better bond. You must let go of past regrets for a new love to start.",
-    enLoveDetail: "The current relationship may have reached its limit. You need the courage to let it flow naturally rather than trying to hold on to it forcibly. Breakups are painful, but a new beginning always waits at the end. If you're single, you must completely escape from the memories or wounds of your past lover for a place for a new person to enter. Now is the time to prepare for a new love through 'emptying'. Don't be afraid of change.",
-    enWealthMeaning: "Difficult situations such as financial losses or investment failures may come. However, this is also an opportunity to discard wrong investment habits and start anew. Bold restructuring and organization are needed.",
-    enWealthDetail: "A big change is expected financially. You may suffer from losses at a trusted investment site or unexpected spending. However, this is a signal to change the inefficient asset management method you've had so far. Clean up debts and completely block unnecessary spending. You can only come back up after hitting rock bottom. After this painful organization is over, you will have a healthier and more stable financial structure.",
-    enSuccessMeaning: "Work in progress may be interrupted or failed. However, this is a revelation of fate to organize work that doesn't fit you and find a new path. Give up boldly and challenge a new field.",
-    enSuccessDetail: "A project you worked hard on may be canceled or you may experience a big change at work (resignation, department dissolution, etc.). The frustration will be great for now, but this is a process of 'metamorphosis' for greater success. You must discard old methods and stereotypes and start with a completely new mindset. One chapter in your life is ending and a more wonderful next chapter is about to begin. Keep in mind that the end is the beginning.",
   ),
   TarotCard(
     id: 14,
@@ -351,14 +478,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "재물운이 안정적인 흐름을 탑니다. 일확천금을 노리기보다는 현재의 자산을 효율적으로 배분하고 관리하는 데 집중하세요. 수입이 늘어난 만큼 지출도 적절히 조절하여 저축하는 습관이 필요합니다. 투자를 한다면 한 곳에 몰빵하기보다는 주식, 채권, 예금 등으로 나누어 리스크를 관리하는 것이 좋습니다. 지금은 과하지도 부족하지도 않은 '중용'의 덕을 발휘할 때입니다. 꾸준함이 결국 부를 가져다줄 것입니다.",
     successMeaning: "서로 다른 의견을 조율하고 화합을 이끌어내는 능력이 돋보입니다. 업무 진행이 순조로우며, 여러 가지 일을 동시에 처리하면서도 균형을 잃지 않습니다.",
     successDetail: "팀 프로젝트에서 중재자 역할을 훌륭히 수행하여 갈등을 해결하고 업무 효율을 높입니다. 당신의 유연한 사고와 적응력이 주변의 인정을 받게 됩니다. 바쁜 와중에도 일과 휴식의 균형을 잘 맞추어 번아웃을 예방하는 지혜가 필요합니다. 지금은 무리하게 성과를 내려고 독달하기보다는, 전체적인 흐름을 살피며 차근차근 진행하는 것이 오히려 더 좋은 결과로 이어집니다. 당신의 평온한 에너지가 주변 동료들에게도 긍정적인 영향을 줍니다.",
-    enKeywords: "Balance, temperance, harmony, healing, moderation",
-    enDescription: "An angel is transferring water between two cups. One foot on the ground and the other in the water symbolizes perfect balance between consciousness and unconsciousness, reality and ideal. It means a harmonious and smooth flow.",
-    enLoveMeaning: "It's a process of two different people meeting and achieving harmony. If you manage emotional ups and downs well and adjust through conversation, you can continue a peaceful and stable love.",
-    enLoveDetail: "It's a time when subtle and continuous love is more suitable than burning passion. You build a deep bond by acknowledging and complementing each other's differences. Even if there's a conflict, try to solve it calmly through conversation rather than responding emotionally. Your gentle and considerate attitude makes the other person feel comfortable. If you're single, don't rush too much and enjoy the process of getting to know each other slowly. Leisure rather than impatience brings a bond.",
-    enWealthMeaning: "It's important to balance income and spending. If you discard excessive greed and operate funds at an appropriate level, your assets will increase stably. Diversified investment is advantageous.",
-    enWealthDetail: "Your financial stability follows a stable flow. Rather than aiming for a windfall, focus on efficiently allocating and managing current assets. As income increases, you need a habit of saving by appropriately adjusting spending. When investing, it's good to manage risks by dividing into stocks, bonds, and savings rather than putting everything in one place. Now is the time to exercise the virtue of 'moderation' that is neither excessive nor lacking. Steadiness will eventually bring wealth.",
-    enSuccessMeaning: "The ability to coordinate different opinions and lead harmony stands out. Work progress is smooth, and you handle several tasks simultaneously without losing balance.",
-    enSuccessDetail: "You perform the role of a mediator excellently in team projects to solve conflicts and increase work efficiency. Your flexible thinking and adaptability will be recognized by those around you. Even in the midst of busyness, you need the wisdom to prevent burnout by balancing work and rest well. Now, rather than rushing to achieve results excessively, looking at the overall flow and proceeding step by step actually leads to better results. Your peaceful energy has a positive influence on your colleagues as well.",
   ),
   TarotCard(
     id: 15,
@@ -372,14 +491,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "금전적인 유혹이 많은 시기입니다. '고수익 보장'이라는 달콤한 말에 속아 위험한 곳에 돈을 넣거나, 충동적인 명품 구매나 도박 등으로 재산을 탕진할 위험이 있습니다. 돈의 노예가 되어 주변 사람들과의 신뢰를 저버리지 않도록 경계해야 합니다. 지금은 새로운 투자를 하기보다는 현재 가지고 있는 것을 지키고, 자신의 과도한 물욕을 다스려야 할 때입니다. 겉으로 화려해 보이는 제안일수록 그 이면을 철저히 확인하세요.",
     successMeaning: "성공을 위해 수단과 방법을 가리지 않으려 할 수 있습니다. 부정한 유혹이나 편법의 유혹이 올 수 있는데, 당장은 이익처럼 보여도 결국 발목을 잡게 됩니다. 과도한 업무 집착으로 건강을 해칠 수 있습니다.",
     successDetail: "권력이나 명예에 대한 욕심이 커져 주변 동료들을 경쟁 상대로만 보게 될 수 있습니다. 성과를 위해 무리한 일정을 잡거나 건강을 돌보지 않는 등 일 중독에 빠질 우려가 있습니다. 또한, 달콤한 이권 개입이나 부정한 청탁의 유혹이 올 수 있는데, 이에 응한다면 훗날 돌이킬 수 없는 결과가 따를 것입니다. 정당한 노력 없이 얻으려는 마음을 버리고, 초심으로 돌아가 정직하게 업무에 임하는 자세가 필요합니다. 스스로 만든 감옥에서 벗어나야 더 큰 성장이 가능합니다.",
-    enKeywords: "Temptation, bondage, obsession, materialism, addiction",
-    enDescription: "A man and a woman are tied with chains under a horned devil. However, the chains are loose, so they can escape whenever they want. This warns of desires, obsessions that bind oneself, and falling into material temptations.",
-    enLoveMeaning: "It means a relationship attracted to or obsessed with intense physical charm. It can be an addictive love that is hard to break even if you want to. Jealousy or possessiveness can become strong, so be careful.",
-    enLoveDetail: "It's a time when it's hard to make rational judgments because you're strongly fascinated by someone's charm. A heated romance that makes you lose sleep may start, but on the other hand, it can become difficult due to excessive obsession or the partner's controlling behavior. It can be a relationship you can't escape even though you know it's unhealthy. You should coolly look back on whether your emotions are true love or simple desire or possessiveness. Don't forget that you can unlock the chains whenever you want.",
-    enWealthMeaning: "Material greed becomes excessive, so you may invest excessively or spend big money on entertainment. You should be careful of gambling investments aiming for a windfall or fraud, and be careful not to take on debt.",
-    enWealthDetail: "It's a time with many financial temptations. There is a risk of losing property by being deceived by sweet words like 'guaranteed high profit' and putting money in a dangerous place, or impulsive luxury purchases or gambling. You should be wary of becoming a slave to money and betraying the trust of people around you. Now, rather than making new investments, it's a time to protect what you have and manage your excessive greed for material things. Check the background of proposals that look flashy on the outside thoroughly.",
-    enSuccessMeaning: "You may try to use any means for success. Temptations of corrupt or expedient ways may come, which may look like profit for now but will eventually catch your foot. Excessive obsession with work can harm your health.",
-    enSuccessDetail: "Greed for power or honor increases, so you may see your colleagues only as competitors. There is a concern about falling into work addiction such as setting unreasonable schedules for performance or not taking care of health. Also, temptations for sweet interests or corrupt requests may come, and if you respond, irreversible results will follow. You need an attitude of discarding the mind to get without legitimate effort and working honestly by returning to your original intention. You can achieve greater growth only by escaping from the prison you made yourself.",
   ),
   TarotCard(
     id: 16,
@@ -393,14 +504,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "재정적으로 매우 불안정한 시기입니다. 예상치 못한 곳에서 큰돈이 빠져나가거나, 투자했던 곳이 무너지는 등 충격적인 소식을 접할 수 있습니다. 지금은 어떤 감언이설에도 흔들리지 말고 자산을 가장 안전한 곳으로 옮겨야 합니다. 무리하게 빚을 내어 투자했다면 큰 위기가 올 수 있으니 미리 대비하세요. 하지만 이 붕괴는 당신의 잘못된 경제 관념을 바로잡고 다시 시작하게 만드는 계기가 될 것입니다. 바닥까지 무너지고 나면, 다시는 무너지지 않을 튼튼한 기반을 쌓을 기회가 옵니다.",
     successMeaning: "프로젝트가 중단되거나 직장에서 갑작스러운 인사 이동, 구조조정 등 충격적인 변화가 생길 수 있습니다. 기존의 방식이 완전히 무너지고 새로운 판이 짜여지는 시기입니다.",
     successDetail: "그동안 공들여 쌓아온 탑이 무너지는 듯한 좌절감을 느낄 수 있습니다. 회사의 경영 위기나 예상치 못한 외부 변수로 인해 하던 일이 중단될 수도 있습니다. 하지만 이는 당신의 능력이 부족해서가 아니라, 시대의 흐름이나 피할 수 없는 변화 때문입니다. 당황하지 말고 사태를 냉정하게 파악하세요. 낡은 시스템이 무너진 자리에는 반드시 더 효율적이고 새로운 시스템이 들어서게 됩니다. 지금의 위기를 기회로 삼아 자신의 전문성을 재정비하고 새로운 길을 모색한다면, 훨씬 더 높은 곳으로 도약할 수 있습니다.",
-    enKeywords: "Collapse, shock, sudden change, liberation, revelation of truth",
-    enDescription: "Lightning strikes the tower, collapsing it and people are falling. This symbolizes unexpected sudden shock and change. However, this is a process where a fake foundation built poorly collapses, and becomes an opportunity to face the true truth.",
-    enLoveMeaning: "A big crisis or a sudden breakup may come to the relationship. Hidden secrets may be revealed or a big conflict may arise, but this is actually an opportunity to organize unhealthy relationships and face the truth.",
-    enLoveDetail: "An unexpected event like a bolt from the blue can occur on the love front. You may be disappointed in a trusted partner, or the relationship may be shaken to its roots by an unbearable conflict. But don't despair too much. 'The Tower' card means that what should collapse collapses. Once the false peace or misunderstanding that has been forcibly maintained so far is broken, you may actually feel relieved. It will be painful, but the current rupture is an inevitable process that guides you to a more solid and mature love.",
-    enWealthMeaning: "You should prepare for sudden financial losses or disasters. Situations that are hard to control such as stock price crashes or unexpected accident spending may come. Assets built with greed can be dangerous.",
-    enWealthDetail: "It's a very unstable time financially. You may hear shocking news such as big money leaving from an unexpected place or an investment site collapsing. Now, you should not be swayed by any sweet talk and move your assets to the safest place. If you invested with unreasonable debt, a big crisis may come, so prepare in advance. However, this collapse will be an opportunity to correct your wrong economic concepts and start anew. After collapsing to the bottom, an opportunity to build a solid foundation that will never collapse again comes.",
-    enSuccessMeaning: "Projects may be interrupted or shocking changes such as sudden personnel changes or restructuring at work may occur. It's a time when old methods completely collapse and a new plate is set.",
-    enSuccessDetail: "You may feel frustration as if the tower you've worked hard to build is collapsing. Work in progress may be interrupted due to the company's management crisis or unexpected external variables. However, this is not because your ability is lacking, but because of the flow of the times or unavoidable changes. Don't panic and grasp the situation coolly. A more efficient and new system will surely be installed in the place where the old system collapsed. If you use the current crisis as an opportunity to reorganize your expertise and seek a new path, you can leap to a much higher place.",
   ),
   TarotCard(
     id: 17,
@@ -414,14 +517,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "재물운이 긍정적인 방향으로 흘러가기 시작합니다. 그동안의 경제적 어려움이 해소되고 한 줄기 빛이 보이는 시기입니다. 창의적인 예술 활동이나 아이디어 기획 등을 통해 부가 수익을 올릴 기회가 생길 수 있습니다. 지금 당장의 큰 이득보다는 장기적인 관점에서 미래 가치가 높은 곳에 투자하는 안목이 필요합니다. 당신의 긍정적인 마인드가 좋은 기회와 사람들을 끌어당겨 재정적인 안정으로 인도할 것입니다.",
     successMeaning: "창의적인 영감이 샘솟고 자신의 재능을 널리 알릴 기회를 얻습니다. 많은 사람에게 희망을 주는 역할을 하거나 예술, 디자인, 홍보 분야에서 큰 성과를 거둘 수 있습니다.",
     successDetail: "당신의 아이디어가 빛을 발하여 주변의 찬사를 받게 됩니다. 특히 예술적인 감각이나 대중의 마음을 읽는 능력이 탁월해져 홍보, 마케팅, 디자인 분야에서 두각을 나타낼 수 있습니다. 평소 꿈꿔왔던 프로젝트를 시작하기에 아주 좋은 타이밍이며, 당신의 진심이 담긴 업무 태도가 주변 사람들에게 영감을 줍니다. 유명세를 타거나 대중의 인기를 얻을 수 있는 운도 있으니 자신 있게 자신을 표현하세요. 밝은 미래가 당신을 기다리고 있습니다.",
-    enKeywords: "Hope, inspiration, healing, optimism, wish fulfillment",
-    enDescription: "A woman is pouring water with two jars while keeping one foot on the ground and the other in the water. Large and small stars shine brightly in the night sky. This symbolizes peace coming after hardships and bright hope for the future.",
-    enLoveMeaning: "It's a time when you meet someone close to your ideal type or your dream about love comes true. You can start a pure and beautiful love that inspires each other. If you have unrequited feelings for someone, hopeful news may be heard.",
-    enLoveDetail: "Like a star brightening the dark night, sparkling hope comes to your love life as well. You may meet your ideal type you've been dreaming of, or make a beautiful promise about the future with your partner. It's a time when your clear and pure charm appeals greatly to others. If you've experienced a painful breakup in the past, true healing now occurs and energy to dream of a new love arises. Cultivate a beautiful love that supports each other's dreams while sharing spiritual communion with your partner.",
-    enWealthMeaning: "The financial situation gradually improves. Even if big money doesn't come in immediately, signals of finding an investment site with a bright future or smooth fund flow are visible. Creative ideas bring money.",
-    enWealthDetail: "Your financial outlook starts to flow in a positive direction. It's a time when previous economic difficulties are resolved and a ray of light is seen. Opportunities to raise additional revenue through creative artistic activities or idea planning may arise. You need an eye to invest in a place with high future value from a long-term perspective rather than immediate big profits. Your positive mindset will attract good opportunities and people, leading to financial stability.",
-    enSuccessMeaning: "Creative inspiration springs up and you get an opportunity to spread your talent widely. You can play a role in giving hope to many people or achieve great results in the fields of art, design, and public relations.",
-    enSuccessDetail: "Your ideas shine and receive praise from those around you. Especially, your artistic sense or ability to read the public's mind becomes excellent, so you can stand out in the fields of public relations, marketing, and design. It's a very good timing to start a project you've usually dreamed of, and your work attitude with sincerity inspires people around you. There is also a chance to gain public popularity or even fame, so express yourself with confidence. A bright future awaits you.",
   ),
   TarotCard(
     id: 18,
@@ -435,14 +530,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "금전적인 면에서 시야가 흐려져 있습니다. 그럴싸해 보이는 투자 정보나 사기꾼의 감언이설에 속아 넘어갈 위험이 매우 높습니다. 보이지 않는 곳에 함정이 숨어 있으니, 돌다리도 두들겨 보고 건너는 심정으로 조심해야 합니다. 지금은 새로운 일을 벌이거나 투자를 결정하기에 최악의 시기입니다. 불안한 마음에 무리수를 두지 말고, 차라리 아무것도 하지 않고 현상 유지를 하는 것이 돈을 버는 길입니다. 직감을 믿되, 현실적인 검증 과정을 반드시 거치세요.",
     successMeaning: "업무의 방향이 모호하거나 숨겨진 적이 있을 수 있어 혼란스러운 시기입니다. 직장 내 유언비어나 구설수에 휘말리지 않도록 언행을 조심하세요. 지금은 섣불리 움직이기보다는 상황이 명확해질 때까지 기다리는 것이 좋습니다.",
     successDetail: "앞이 보이지 않는 막막한 상황에 처할 수 있습니다. 프로젝트의 방향성이 흔들리거나, 내부에 첩자나 방해꾼이 있을 수 있습니다. 직장 내 헛소문이나 모함에 휘말려 곤란을 겪을 수도 있으니, 남의 말을 함부로 믿거나 옮기지 마세요. 지금은 적과 아군이 구별되지 않는 혼란기입니다. 섣불리 행동했다가는 늪에 빠질 수 있으니, 상황이 명확해질 때까지 납작 엎드려 있는 것이 상책입니다. 이 또한 지나가리라는 믿음을 가지고 멘탈 관리에 힘쓰세요.",
-    enKeywords: "Anxiety, illusion, ambiguity, intuition, unconscious",
-    enDescription: "At night when the moon is up, a dog and a wolf howl and a crayfish crawls out of the water. Moonlight shows things in a distorted way, creating anxiety and fear, but at the same time leading to the world of unconsciousness and intuition. You should be careful of the truth behind what is invisible.",
-    enLoveMeaning: "It's frustrating because you don't know the other person's heart, and misunderstanding and suspicion are easy to sprout. There is also a risk of being involved in secret relationships such as love triangles or affairs. Don't be swept away by emotions, and calmly grasp the truth behind the appearance.",
-    enLoveDetail: "It's a time when you're anxious because you don't know the other person's inner thoughts, as if you're in a fog. Minor misunderstandings grow into suspicion, and you may lose sleep because of anxiety. You may feel like the other person is hiding something, but it's better to watch until clear evidence comes out rather than pursuing them hastily. Or you yourself may be wandering around swept away by confusing emotions. Talk during the rational day rather than the emotional night. Don't cling too much to uncertain relationships and hold the center of your heart.",
-    enWealthMeaning: "Investment prospects are opaque and there is a risk of fraud. Don't decide to invest being deceived by sweet words. There may be errors in documents or hidden traps, so it's best to watch without spending money on things that are not certain.",
-    enWealthDetail: "Your vision is blurred in terms of finance. There is a very high risk of being deceived by plausible investment information or the sweet talk of swindlers. Since there are traps hidden in invisible places, you should be careful with the feeling of tapping even a stone bridge before crossing. Now is the worst time to start a new job or decide on an investment. Don't make an unreasonable move with an anxious heart, rather, maintaining the status quo without doing anything is the way to make money. Trust your intuition, but go through a realistic verification process.",
-    enSuccessMeaning: "It's a confusing time because the direction of work may be ambiguous or there may be hidden enemies. Be careful with your words and actions so as not to get caught up in rumors or gossip in the workplace. It's better to wait until the situation becomes clear rather than moving hastily now.",
-    enSuccessDetail: "You may find yourself in a hopeless situation where you can't see ahead. The direction of the project may be shaken, or there may be spies or saboteurs inside. You may suffer from false rumors or slander in the workplace, so don't blindly believe or relay other people's words. Now is a confusing period where enemies and allies are not distinguished. If you act hastily, you may fall into a swamp, so it's best to stay low until the situation becomes clear. Have faith that this too shall pass and work on managing your mental state.",
   ),
   TarotCard(
     id: 19,
@@ -456,14 +543,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "쨍하고 해 뜰 날이 찾아왔습니다. 금전운이 매우 강력하여 무엇을 하든 수익으로 연결됩니다. 사업은 번창하고 투자는 대박이 날 조짐입니다. 승진이나 성과급 등으로 주머니가 두둑해지니 마음에도 여유가 넘칩니다. 이 좋은 기운을 혼자만 누리지 말고 주변 사람들에게 베풀면 더 큰 복으로 돌아올 것입니다. 부동산이나 주식 등 자산 가치가 상승할 운도 있습니다. 자신감을 가지고 적극적으로 경제 활동을 한다면 부의 추월차선에 올라탈 수 있습니다.",
     successMeaning: "당신의 능력을 인정받고 스포트라이트를 받게 됩니다. 승진, 합격, 프로젝트 성공 등 가시적인 성과가 뚜렷하게 나타납니다. 자신감 넘치는 태도로 일을 추진하면 주변의 도움까지 더해져 탄탄대로를 걷게 될 것입니다.",
     successDetail: "성공의 팡파르가 울려 퍼집니다. 당신이 그동안 노력해 온 일들이 빛을 발하여 세상에 드러나게 됩니다. 합격, 승진, 수상 등 누구나 부러워할 만한 성과를 거두게 됩니다. 당신의 자신감 넘치고 활기찬 태도가 주변 사람들에게 긍정적인 영향을 미쳐 리더로서의 자질도 인정받습니다. 어떤 어려움도 태양 같은 열정으로 녹여버릴 수 있습니다. 지금은 당신이 주인공이니, 무대 중앙에서 마음껏 기량을 펼쳐보세요. 성공은 이미 당신의 것입니다.",
-    enKeywords: "Success, happiness, vitality, positivity, blessing",
-    enDescription: "Under the bright sun, a child is riding a white horse, waving a flag and enjoying himself. Sunflowers are blooming over the wall. The darkness is lifted and everything is revealed clearly, it's the best card full of positive energy and pure joy.",
-    enLoveMeaning: "You will have a bright and happy relationship. You are honest and open to each other, and laughter doesn't stop when you are together. Your prospects for marriage are very good, and there may be happy news such as pregnancy or childbirth.",
-    enLoveDetail: "A perfectly happy love is with you. Misunderstandings or conflicts of the past disappear like snow melting, and trust and love for each other deepen further. If you're single, you'll start a pleasant relationship by meeting someone with bright and positive energy. Your bright smile is your best weapon to capture someone's heart. It's the best time to prepare for marriage, and if you have plans for the future, you can look forward to happy news. Love purely and passionately like a child.",
-    enWealthMeaning: "Your financial prospects are at their peak. Everything you do goes well, profits increase, and you enjoy abundance. Business flourishes or you receive bonuses, becoming economically affluent. Bright and positive energy attracts more wealth.",
-    enWealthDetail: "A sunny day has come. Your financial prospects are very strong, so whatever you do leads to profit. Business is flourishing and investments are showing signs of a big hit. Your pockets are thick with promotions or performance bonuses, so your heart is also overflowing with leisure. Don't enjoy this good energy alone; if you share it with those around you, it will return as a greater blessing. There is also potential for asset values such as real estate or stocks to rise. If you actively engage in economic activities with confidence, you can get on the fast track to wealth.",
-    enSuccessMeaning: "Your abilities will be recognized and you will receive the spotlight. Visible results such as promotion, passing, and project success appear clearly. If you push ahead with a confident attitude, the help of those around you will be added and you will walk on a solid road.",
-    enSuccessDetail: "A fanfare of success rings out. The things you've worked hard on will shine and be revealed to the world. You will achieve results that everyone will envy, such as passing, promotion, and awards. Your confident and energetic attitude has a positive influence on people around you, and your qualities as a leader are also recognized. Any difficulty can be melted away with sun-like passion. Now you are the protagonist, so show your skills to your heart's content in the center of the stage. Success is already yours.",
   ),
   TarotCard(
     id: 20,
@@ -477,14 +556,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "과거의 노력에 대한 보상을 받는 시기입니다. 잊고 있었던 주식이 오르거나, 못 받을 줄 알았던 돈을 돌려받는 등 뜻밖의 횡재수가 있습니다. 또는 예전에 실패했던 사업 아이템을 다시 시도하여 성공할 수도 있습니다. 지금 내리는 결정이 앞으로의 재물운을 크게 좌우하게 되니 신중하면서도 과감한 결단이 필요합니다. 재무 구조를 개편하거나 리모델링하기에도 좋은 때입니다. 낡은 껍질을 벗고 부자로 다시 태어날 준비를 하세요.",
     successMeaning: "그동안의 노력을 인정받아 승진하거나 포상을 받게 됩니다. 기다리던 합격 소식이나 프로젝트의 좋은 결과를 듣게 됩니다. 지금의 위치에서 한 단계 더 도약할 수 있는 중요한 기회가 오니 놓치지 말고 잡으세요.",
     successDetail: "심판의 날이 왔습니다. 그동안 흘린 땀방울에 대한 정당한 평가와 보상이 주어집니다. 승진, 합격, 당선 등 기쁜 소식이 나팔 소리처럼 울려 퍼질 것입니다. 침체되어 있던 상황에서 벗어나 다시 한번 비상할 수 있는 기회가 찾아옵니다. 스카우트 제의를 받거나 더 좋은 조건으로 이직할 수도 있습니다. 변화를 두려워하지 말고 기회를 꽉 잡으세요. 당신의 잠재력이 깨어나고 인생의 새로운 챕터가 시작되는 순간입니다.",
-    enKeywords: "Resurrection, reward, news, decision, reunion",
-    enDescription: "When an angel blows a trumpet in the sky, people in coffins wake up and cheer. This symbolizes the last judgment, meaning receiving fair evaluation and reward for past actions and resurrecting to a new stage. It calls for a decision at an important crossroads.",
-    enLoveMeaning: "You may receive contact from an ex-lover or have an opportunity to reunite. Or a relationship that was only in the budding stage will reach a clear conclusion. Since it's a time to receive rewards for your feelings, there are good results if you have courage and decide.",
-    enLoveDetail: "Waiting news arrives. Contact from an ex-lover you couldn't forget, or if you wanted a reunion, it's likely to come true. Or a stagnant budding relationship is resolved and develops into a committed one, tying the knot clearly. If you're single, you might coincidentally meet someone you knew in the past and fall in love again. It's like heaven giving you another chance. But whether it's a reunion or a new start, your decision is the most important. Listen to the voice of your heart and make a choice without regrets.",
-    enWealthMeaning: "You may get profits from previous investments, or get back money you lent. An opportunity returns from a job you gave up on, and you gain financially. It's time to make an important decision, and that decision will change your financial prospects.",
-    enWealthDetail: "It's a time to receive rewards for past efforts. There's an unexpected windfall, such as forgotten stocks rising or recovering money you thought was lost. Or you can succeed by revisiting a business idea that failed in the past. Since the decision you make now will greatly influence your future financial outlook, a cautious but bold decision is needed. It's also a good time to reorganize or remodel your financial structure. Shed your old shell and get ready to be reborn as a rich person.",
-    enSuccessMeaning: "Your efforts will be recognized and you will be promoted or rewarded. You will hear good news about passing or the results of a project you've been waiting for. An important opportunity to jump to a higher level from your current position is coming, so don't miss it and grab it.",
-    enSuccessDetail: "Judgment day has come. Fair evaluation and rewards for the sweat you've shed will be given. Happy news such as promotion, passing, and election will ring out like a trumpet sound. An opportunity to escape from a stagnant situation and soar once again arrives. You may receive a scout offer or move to a job with better conditions. Don't be afraid of change and grab the opportunity tight. It's the moment when your potential wakes up and a new chapter of your life begins.",
   ),
   TarotCard(
     id: 21,
@@ -498,14 +569,6 @@ const List<TarotCard> majorArcana = [
     wealthDetail: "금전적인 목표를 100% 달성하는 쾌거를 이룹니다. 경제적 자유를 얻어 여유로운 삶을 즐길 수 있는 단계에 도달했습니다. 해외 주식이나 부동산 투자, 무역업 등 글로벌한 분야에서 큰 수익을 낼 수 있습니다. 당신의 투자 포트폴리오가 완벽한 조화를 이루어 안정적인 수익을 가져다줍니다. 이제는 돈을 버는 것보다 어떻게 의미 있게 쓸 것인가를 고민해야 할 때입니다. 풍요로움 속에 안주하지 말고, 더 넓은 세상을 향해 시야를 넓혀보세요.",
     successMeaning: "프로젝트를 성공적으로 완수하고 최고의 명예를 얻습니다. 하나의 큰 주기가 끝나고 성공적인 마침표를 찍는 시기입니다. 유학을 가거나 해외 지사로 발령받는 등 활동 무대가 넓어질 수 있으며, 완벽한 커리어를 쌓게 됩니다.",
     successDetail: "당신의 커리어에 정점을 찍는 시기입니다. 맡은 프로젝트를 완벽하게 성공시켜 최고의 찬사를 받게 됩니다. 목표했던 바를 모두 이루었으니, 이제는 더 큰 세상으로 나아갈 준비를 해야 합니다. 유학, 해외 취업, 주재원 발령 등 활동 무대가 세계로 넓어질 수 있습니다. 끝은 곧 새로운 시작입니다. 현재의 성공에 만족하여 안주하기보다는, 이 성취감을 발판 삼아 더 원대한 꿈을 꾸세요. 당신의 세상은 이제 한계가 없습니다.",
-    enKeywords: "Completion, integration, achievement, happy ending, perfection",
-    enDescription: "A woman is dancing inside a laurel wreath, and the four elements are in their completed forms at the four corners. It symbolizes reaching the end of a long journey, completely achieving the goal, and being in a state of perfect harmony. It's the best happy ending.",
-    enLoveMeaning: "You will bear the fruit of love and enter marriage, or form an ideal family. You are a perfect match for each other, and a happy relationship with nothing more to wish for continues. There may be a connection related to overseas, or you can confirm your love by going on a trip together.",
-    enLoveDetail: "It's a time to put a period to a long relationship and move toward a new world called marriage. You confirm that you are each other's perfect other half and become one in blessing. If you're single, you can meet your fateful partner who perfectly fits your ideal type. Especially, a connection may be made in exotic environments such as during an overseas trip or a foreign company. It's the peak of happiness with nothing more to wish for. To maintain this perfect harmony, don't forget to be thankful and cherish each other.",
-    enWealthMeaning: "You will achieve the target amount and enjoy economic freedom. You can generate revenue on a wide stage such as overseas investment or trade. You are in a state of no lack financially, and you are fully entitled to enjoy abundance after all your hard work is over.",
-    enWealthDetail: "You achieve the feat of 100% achieving your financial goals. You've reached a stage where you can enjoy a leisurely life by gaining economic freedom. You can make big profits in global fields such as overseas stocks, real estate investment, and trade. Your investment portfolio achieves perfect harmony, bringing stable returns. Now is the time to worry about how to use money meaningfully rather than earning it. Don't settle in abundance, but broaden your horizons toward a wider world.",
-    enSuccessMeaning: "You will successfully complete the project and gain the highest honor. It's a time when one big cycle ends and a successful period is put. Your activity stage may broaden, such as going to study abroad or being assigned to an overseas branch, and you will build a perfect career.",
-    enSuccessDetail: "It's the time to hit the peak of your career. You will successfully complete the project you were in charge of and receive the highest praise. Since you've achieved all your goals, you should now prepare to move to a larger world. Your activity stage can broaden to the world, such as studying abroad, getting a job overseas, or being assigned as an expatriate. The end is a new beginning. Rather than settling down satisfied with your current success, use this sense of achievement as a stepping stone to dream bigger. Your world now has no limits.",
   ),
 ];
 

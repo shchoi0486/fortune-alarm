@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
@@ -32,6 +33,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
     final enabled = _settingsBox.get('daily_fortune_enabled', defaultValue: true);
     
     if (enabled) {
+      final l10n = await _getL10n();
       final time1Str = _settingsBox.get('daily_fortune_time1', defaultValue: '08:00');
       final time2Str = _settingsBox.get('daily_fortune_time2', defaultValue: '13:00');
       
@@ -44,19 +46,33 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
       await NotificationService().scheduleDailyFortuneNotification(
         id: 40001,
         time: time1,
-        title: "오늘의 운세 (오전)",
-        body: "오늘의 운세를 확인하고 활기차게 시작해 보세요!",
+        title: l10n.morningFortuneTitle,
+        body: l10n.morningFortuneNotificationBody,
       );
       
       await NotificationService().scheduleDailyFortuneNotification(
         id: 40002,
         time: time2,
-        title: "오늘의 운세 (오후)",
-        body: "오후의 운세는 어떨까요? 지금 바로 확인해 보세요!",
+        title: l10n.afternoonFortuneTitle,
+        body: l10n.afternoonFortuneNotificationBody,
       );
     } else {
       await NotificationService().cancelAllFortuneNotifications();
     }
+  }
+
+  Future<AppLocalizations> _getL10n() async {
+    if (mounted) {
+      return AppLocalizations.of(context)!;
+    }
+    // Fallback for background or when not mounted
+    String languageCode = 'ko';
+    try {
+      final settingsBox = await Hive.openBox('settings');
+      languageCode = settingsBox.get('language', defaultValue: 'ko');
+    } catch (_) {}
+    
+    return await AppLocalizations.delegate.load(Locale(languageCode));
   }
 
   @override
@@ -80,9 +96,10 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
           _buildSection(
             AppLocalizations.of(context)!.defaultAlarmBehavior,
             [
@@ -135,11 +152,11 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
           ),
           const SizedBox(height: 24),
           _buildSection(
-            "오늘의 운세 알림",
+            AppLocalizations.of(context)!.todaysFortuneNotification,
             [
               _buildSwitchTile(
-                "알림 활성화",
-                "지정한 시간에 오늘의 운세를 알려드립니다.",
+                AppLocalizations.of(context)!.enableNotification,
+                AppLocalizations.of(context)!.fortuneNotificationDescription,
                 'daily_fortune_enabled',
                 true,
                 isDark,
@@ -147,13 +164,13 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
               ),
               if (_settingsBox.get('daily_fortune_enabled', defaultValue: true)) ...[
                 _buildTimeTile(
-                  "오전 알림 시간",
+                  AppLocalizations.of(context)!.morningNotificationTime,
                   'daily_fortune_time1',
                   '08:00',
                   isDark,
                 ),
                 _buildTimeTile(
-                  "오후 알림 시간",
+                  AppLocalizations.of(context)!.afternoonNotificationTime,
                   'daily_fortune_time2',
                   '13:00',
                   isDark,
@@ -162,10 +179,12 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
             ],
             isDark,
           ),
+          const SizedBox(height: 80), // Increased bottom padding to avoid navigation bar
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTimeTile(String title, String key, String defaultValue, bool isDark) {
     final timeStr = _settingsBox.get(key, defaultValue: defaultValue);
@@ -189,17 +208,53 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
           ),
         ),
       ),
-      onTap: () async {
-        final TimeOfDay? picked = await showTimePicker(
+      onTap: () {
+        showCupertinoModalPopup(
           context: context,
-          initialTime: time,
+          builder: (context) => Container(
+            height: 300,
+            padding: const EdgeInsets.only(top: 6.0),
+            margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            color: isDark ? const Color(0xFF1C1C1E) : CupertinoColors.systemBackground.resolveFrom(context),
+            child: SafeArea(
+              top: false,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CupertinoButton(
+                        child: Text(AppLocalizations.of(context)!.cancel),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      CupertinoButton(
+                        child: Text(AppLocalizations.of(context)!.confirm),
+                        onPressed: () {
+                          _saveFortuneSettings();
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.time,
+                      initialDateTime: DateTime(2024, 1, 1, time.hour, time.minute),
+                      use24hFormat: false,
+                      onDateTimeChanged: (DateTime newDateTime) {
+                        setState(() {
+                          _settingsBox.put(key, "${newDateTime.hour}:${newDateTime.minute}");
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
-        if (picked != null) {
-          setState(() {
-            _settingsBox.put(key, "${picked.hour}:${picked.minute}");
-          });
-          _saveFortuneSettings();
-        }
       },
     );
   }

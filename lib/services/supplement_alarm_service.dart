@@ -87,10 +87,12 @@ class SupplementAlarmService {
       );
     } else if (Platform.isIOS) {
       try {
-        await NotificationService().scheduleAlarmNotification(
+        final notificationService = NotificationService();
+        final l10n = await notificationService.getL10n();
+        await notificationService.scheduleAlarmNotification(
           id: id,
-          title: '영양제 챙겨드실 시간이에요! 💊',
-          body: '건강을 위해 잊지 말고 지금 영양제를 드세요.',
+          title: l10n.supplementAlarmTitle,
+          body: l10n.supplementAlarmBody,
           scheduledDate: time,
           payload: 'supplement_$id',
         );
@@ -172,6 +174,7 @@ class SupplementAlarmService {
         debugPrint('[SupplementAlarm] Notification init error: $e');
     }
 
+    final l10n = await notificationService.getL10n();
     final String payload = 'supplement_$id';
 
     /* [사용자 요청] 앱이 켜져 있을 때 즉시 화면 전환되는 기능을 제거하여 덜 방해되도록 수정
@@ -185,8 +188,8 @@ class SupplementAlarmService {
     debugPrint('[SupplementAlarm] Calling showSupplementNotification. Payload: $payload');
     await notificationService.showSupplementNotification(
       id: id,
-      title: '영양제 챙겨 드세요!',
-      body: '지금 드시겠습니까?',
+      title: l10n.supplementAlarmTitle,
+      body: l10n.takeNowQuestion,
       payload: payload,
       soundName: ringtone,
       isVibrationEnabled: vibration,

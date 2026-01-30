@@ -237,7 +237,7 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     _volumeTimer?.cancel();
     
     final random = Random();
-    _lastMessage = PositiveMessages.messages[random.nextInt(PositiveMessages.messages.length)];
+    _lastMessage = PositiveMessages.getMessage(context);
     
     if (mounted) {
       setState(() {

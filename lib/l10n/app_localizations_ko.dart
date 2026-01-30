@@ -30,6 +30,36 @@ class AppLocalizationsKo extends AppLocalizations {
   String get settings => '설정';
 
   @override
+  String get language => '언어';
+
+  @override
+  String get languageKorean => '한국어';
+
+  @override
+  String get languageEnglish => '영어';
+
+  @override
+  String get languageJapanese => '일본어';
+
+  @override
+  String get languageChinese => '중국어';
+
+  @override
+  String get languageRussian => '러시아어';
+
+  @override
+  String get languageHindi => '힌디어';
+
+  @override
+  String get languageSpanish => '스페인어';
+
+  @override
+  String get languageFrench => '프랑스어';
+
+  @override
+  String get languageGerman => '독일어';
+
+  @override
   String get alarm => '알람';
 
   @override
@@ -54,6 +84,36 @@ class AppLocalizationsKo extends AppLocalizations {
   String get confirm => '확인';
 
   @override
+  String get missionSuccess => '미션 성공!';
+
+  @override
+  String get cheeringMessage1 => '오늘 하루도 즐겁게 보내세요!';
+
+  @override
+  String get cheeringMessage2 => '당신의 오늘을 응원합니다!';
+
+  @override
+  String get cheeringMessage3 => '오늘도 멋진 하루가 될 거예요.';
+
+  @override
+  String get todaysCheering => '오늘의 응원';
+
+  @override
+  String get notificationWakeUpBody => '일어날 시간입니다!';
+
+  @override
+  String get notificationMissionBody => '미션을 수행하고 알람을 끄세요!';
+
+  @override
+  String get notificationSafetyBody => '알람이 강제로 종료되었습니다! 미션을 완료해주세요.';
+
+  @override
+  String get notificationRingingBody => '알람이 울리고 있습니다!';
+
+  @override
+  String get snoozePrefix => '[미루기]';
+
+  @override
   String get exactAlarmPermissionRequired =>
       '정확한 시간에 알람을 울리려면 \"정확한 알람\" 권한이 필요합니다.';
 
@@ -71,12 +131,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get lessThanAMinuteRemaining => '1분 미만 후에 울려요';
 
   @override
-  String hoursMinutesRemaining(int hours, int minutes) {
+  String hoursMinutesRemaining(String hours, String minutes) {
     return '$hours시간 $minutes분 후에 울려요';
   }
 
   @override
-  String minutesRemaining(int minutes) {
+  String minutesRemaining(String minutes) {
     return '$minutes분 후에 울려요';
   }
 
@@ -490,12 +550,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get slideToDismiss => '밀어서 끄기';
 
   @override
-  String snoozeInfo(int minutes, int count) {
-    return '$minutes분 · $count회';
+  String snoozeInfo(String minutes, String count) {
+    return '$minutes분 x $count회';
   }
 
   @override
-  String snoozeInfoUnlimited(int minutes) {
+  String snoozeInfoUnlimited(String minutes) {
     return '$minutes분 · 무제한';
   }
 
@@ -677,63 +737,53 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get tojeongMonthlyGood_0 =>
-      'A noble person from the east brings good news. Long-awaited plans will come to fruition.';
+      '동쪽에서 귀인이 나타나 기쁜 소식을 전합니다. 오랫동안 기다려온 계획이 결실을 맺을 것입니다.';
 
   @override
   String get tojeongMonthlyGood_1 =>
-      'Wealth flows in like a spring. Worries disappear as everything goes smoothly.';
+      '재물이 샘물처럼 흘러들어옵니다. 모든 일이 순조롭게 풀리니 걱정이 사라집니다.';
 
   @override
   String get tojeongMonthlyGood_2 =>
-      'Efforts bear fruit and you receive congratulations. Promotion or great results are expected.';
+      '노력이 결실을 맺어 축하받을 일이 생깁니다. 승진이나 큰 성과가 기대됩니다.';
 
   @override
-  String get tojeongMonthlyGood_3 =>
-      'Morning sun rises after a dark night. Hardship ends and happiness arrives.';
+  String get tojeongMonthlyGood_3 => '어두운 밤이 지나고 아침 해가 뜹니다. 고생 끝에 행복이 찾아옵니다.';
 
   @override
   String get tojeongMonthlyGood_4 =>
-      'Unexpected windfall fills your pocket. Small investments lead to big profits.';
+      '뜻밖의 횡재수가 있어 주머니가 두둑해집니다. 작은 투자로 큰 이익을 봅니다.';
 
   @override
-  String get tojeongMonthlyNeutral_0 =>
-      'A peaceful daily life continues. It passes without special events.';
+  String get tojeongMonthlyNeutral_0 => '평온한 일상이 지속됩니다. 특별한 사건 없이 무난하게 지나갑니다.';
 
   @override
-  String get tojeongMonthlyNeutral_1 =>
-      'Contentment brings peace of mind. Enjoy small happiness.';
+  String get tojeongMonthlyNeutral_1 => '자족하는 마음이 평안을 가져옵니다. 소소한 행복을 즐겨보세요.';
 
   @override
   String get tojeongMonthlyNeutral_2 =>
-      'Take a rest in your busy life. Pay attention to health management.';
+      '바쁜 일상 속에서 잠시 휴식을 취하세요. 건강 관리에 유의해야 합니다.';
 
   @override
-  String get tojeongMonthlyNeutral_3 =>
-      'Maintain your current work rather than starting something new.';
+  String get tojeongMonthlyNeutral_3 => '새로운 일을 벌이기보다는 현재의 자리를 지키는 것이 좋습니다.';
 
   @override
-  String get tojeongMonthlyNeutral_4 =>
-      'Communication is key. Be careful with words to avoid misunderstandings.';
+  String get tojeongMonthlyNeutral_4 => '소통이 중요합니다. 오해를 사지 않도록 언행에 주의하세요.';
 
   @override
-  String get tojeongMonthlyCaution_0 =>
-      'Be cautious in everything. Better safe than sorry.';
+  String get tojeongMonthlyCaution_0 => '매사에 신중함이 필요합니다. 돌다리도 두들겨 보고 건너세요.';
 
   @override
-  String get tojeongMonthlyCaution_1 =>
-      'Pay attention to health and avoid overexertion.';
+  String get tojeongMonthlyCaution_1 => '건강에 유의하고 무리한 활동은 피하는 것이 좋습니다.';
 
   @override
-  String get tojeongMonthlyCaution_2 =>
-      'Avoid gossip and stay out of others\' business.';
+  String get tojeongMonthlyCaution_2 => '구설수를 조심하고 타인의 일에 깊이 관여하지 마세요.';
 
   @override
-  String get tojeongMonthlyCaution_3 =>
-      'Excessive greed brings trouble. Live within your means.';
+  String get tojeongMonthlyCaution_3 => '과도한 욕심은 화를 부릅니다. 분수에 맞는 생활이 필요합니다.';
 
   @override
-  String get tojeongMonthlyCaution_4 =>
-      'Avoid money transactions as you might be disappointed in people you trust.';
+  String get tojeongMonthlyCaution_4 => '금전 거래를 피하세요. 믿었던 사람에게 실망할 수 있습니다.';
 
   @override
   String get tojeongMonthlySpecial_1_0 =>
@@ -1534,6 +1584,119 @@ class AppLocalizationsKo extends AppLocalizations {
       '활짝 웃는 입매가 시원하여, 긍정적인 에너지를 발산하고 대인관계에서 행운을 불러옵니다.';
 
   @override
+  String get supplementAlarmTitle => '영양제 챙겨드실 시간이에요! 💊';
+
+  @override
+  String get alarmVolume => '알람 볼륨';
+
+  @override
+  String get alarmTimeList => '알림 시간 목록';
+
+  @override
+  String get noAlarmTimesAdded => '추가된 알림 시간이 없습니다';
+
+  @override
+  String get alarmTimeDeleted => '알림 시간이 삭제되었습니다';
+
+  @override
+  String get addAlarmTime => '알림 시간 추가';
+
+  @override
+  String get editAlarmTime => '알림 시간 수정';
+
+  @override
+  String get defaultRingtone => '기본 벨소리';
+
+  @override
+  String get takeSupplementsNow => '영양제를 드시고 기록해주세요!';
+
+  @override
+  String get nextTime => '다음에 먹기';
+
+  @override
+  String get take => '먹기';
+
+  @override
+  String get notifications => '알림';
+
+  @override
+  String get notificationTime => '알림 시간';
+
+  @override
+  String get start => '시작';
+
+  @override
+  String get end => '종료';
+
+  @override
+  String get notificationInterval => '알림 간격';
+
+  @override
+  String get waterDrankToday => '오늘 마신 물';
+
+  @override
+  String get goal => '목표';
+
+  @override
+  String get cup => '컵';
+
+  @override
+  String get waterIntakeRecord => '물 섭취 기록';
+
+  @override
+  String get remainingAmount => '남은 양';
+
+  @override
+  String get ml => 'ml';
+
+  @override
+  String minutesFormat(String minutes) {
+    return '$minutes분';
+  }
+
+  @override
+  String get drinkWater => '물 마시기';
+
+  @override
+  String get supplement => '영양제';
+
+  @override
+  String get water => '수분';
+
+  @override
+  String get morning => '오전';
+
+  @override
+  String get afternoon => '오후';
+
+  @override
+  String get evening => '저녁';
+
+  @override
+  String get takeSupplement => '영양제 먹기';
+
+  @override
+  String get goalAchievedTitle => '목표 달성!';
+
+  @override
+  String get waterIntake => '수분 섭취';
+
+  @override
+  String get remindTime => '알림 시간';
+
+  @override
+  String get alarmRingtone => '알람 벨소리';
+
+  @override
+  String get snoozeTime => '알림 미루기 시간';
+
+  @override
+  String get snoozeDescription => '나중에 먹기 선택 시 기본 시간입니다';
+
+  @override
+  String get oneHour => '1시간';
+
+  @override
   String get mouthExpressionOpen =>
       '입이 살짝 벌어져 있어 개방적이고 솔직한 성격이 보이지만, 때로는 말실수를 조심해야 합니다.';
 
@@ -1616,7 +1779,7 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get sajuFortune2024Gap =>
-      '🌿 2024년 갑진년 갑목(甲木) 총운: \'새로운 시작과 도약의 해\'\n\n2024년은 갑목인 당신에게 \'비견(比肩)\'과 \'편재(偏財)\'의 기운이 들어오는 해입니다. 마치 울창한 숲속에 새로운 나무가 심어지고 넓은 땅이 펼쳐지는 형국입니다. 자신의 주관이 뚜렷해지고 새로운 일을 도모하기에 매우 좋은 한 해가 될 것입니다.\n\n💼 [직장 및 사업운]\n자신감이 넘치고 추진력이 강해지는 시기입니다. 동료나 파트너와 협력하여 큰 프로젝트를 성공시킬 기회가 찾아옵니다. 창업이나 이직을 고민했다면 올해가 적기일 수 있습니다. 다만, 고집이 세질 수 있으니 주변의 의견을 경청하는 자세가 필요합니다.\n\n💰 [재물운]\n큰 재물을 만질 수 있는 기회가 찾아옵니다. 예상치 못한 횡재수나 투자 수익이 기대되는 해입니다. 하지만 나가는 돈도 많을 수 있으니 철저한 자산 관리가 필요합니다. 장기적인 안목으로 투자하는 것이 유리합니다.\n\n❤️ [연애 및 대인관계]\n대인관계가 넓어지고 새로운 인연을 맺기 좋은 시기입니다. 싱글이라면 매력적인 상대를 만날 가능성이 높고, 커플이라면 서로의 관계가 더욱 돈독해질 것입니다. 다만, 경쟁자가 나타날 수 있으니 주의가 필요합니다.\n\n⚠️ [주의사항]\n건강 면에서는 간이나 담 기능에 유의해야 하며, 스트레스 관리에 신경 써야 합니다. 또한, 지나친 자신감으로 인한 독단적인 결정은 피하는 것이 좋습니다.';
+      '🌿 2024년 갑진년 갑목(甲木) 총운: \'새로운 시작과 도약의 해\'\n\n2024년은 갑목인 당신에게 \'비견(비견)\'과 \'편재(편재)\'의 기운이 들어오는 해입니다. 마치 울창한 숲속에 새로운 나무가 심어지고 넓은 땅이 펼쳐지는 형국입니다. 자신의 주관이 뚜렷해지고 새로운 일을 도모하기에 매우 좋은 한 해가 될 것입니다.\n\n💼 [직장 및 사업운]\n자신감이 넘치고 추진력이 강해지는 시기입니다. 동료나 파트너와 협력하여 큰 프로젝트를 성공시킬 기회가 찾아옵니다. 창업이나 이직을 고민했다면 올해가 적기일 수 있습니다. 다만, 고집이 세질 수 있으니 주변의 의견을 경청하는 자세가 필요합니다.\n\n💰 [재물운]\n큰 재물을 만질 수 있는 기회가 찾아옵니다. 예상치 못한 횡재수나 투자 수익이 기대되는 해입니다. 하지만 나가는 돈도 많을 수 있으니 철저한 자산 관리가 필요합니다. 장기적인 안목으로 투자하는 것이 유리합니다.\n\n❤️ [연애 및 대인관계]\n대인관계가 넓어지고 새로운 인연을 맺기 좋은 시기입니다. 싱글이라면 매력적인 상대를 만날 가능성이 높고, 커플이라면 서로의 관계가 더욱 돈독해질 것입니다. 다만, 경쟁자가 나타날 수 있으니 주의가 필요합니다.\n\n⚠️ [주의사항]\n건강 면에서는 간이나 담 기능에 유의해야 하며, 스트레스 관리에 신경 써야 합니다. 또한, 지나친 자신감으로 인한 독단적인 결정은 피하는 것이 좋습니다.';
 
   @override
   String get sajuFortune2024Eul =>
@@ -2278,7 +2441,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get noTime => '시간 없음';
 
   @override
-  String minutesLater(int minutes) {
+  String minutesLater(String minutes) {
     return '$minutes분 후';
   }
 
@@ -2286,7 +2449,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get countLabel => '횟수';
 
   @override
-  String timesCount(int count) {
+  String timesCount(String count) {
     return '총 $count회';
   }
 
@@ -2592,7 +2755,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get allMissionsComplete => '모든 미션 완료!';
 
   @override
-  String missionSnoozeMessage(int minutes) {
+  String missionSnoozeMessage(String minutes) {
     return '미션 성공! 하지만 설정에 따라 $minutes분 뒤 다시 울립니다.';
   }
 
@@ -2700,9 +2863,6 @@ class AppLocalizationsKo extends AppLocalizations {
   String deleteSelectedImagesConfirm(int count) {
     return '$count개의 이미지를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.';
   }
-
-  @override
-  String get defaultRingtone => '기본 벨소리';
 
   @override
   String get classicAlarm => '클래식 알람';
@@ -2818,12 +2978,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get alarmSnooze => '알람 미루기';
 
   @override
-  String snoozeMinutesUnlimited(int minutes) {
+  String snoozeMinutesUnlimited(String minutes) {
     return '$minutes분 (무제한)';
   }
 
   @override
-  String snoozeMinutesCount(int minutes, int current, int total) {
+  String snoozeMinutesCount(String minutes, int current, int total) {
     return '$minutes분 ($current/$total)';
   }
 
@@ -2847,6 +3007,15 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get ringtone_self_love => '자아도취';
+
+  @override
+  String get cherry_stained_finger => 'Cherry Stained Finger';
+
+  @override
+  String get dancing_in_the_stars => 'Dancing In The Stars';
+
+  @override
+  String get nice_day => 'Nice Day';
 
   @override
   String get fortuneTitle => '운세 확인하기';
@@ -2963,35 +3132,724 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tarotName21 => '세계';
 
   @override
+  String get tarotKeywords0 => '새로운 시작, 모험, 순수, 자유, 무모함';
+
+  @override
+  String get tarotDesc0 =>
+      '광대는 화려한 옷을 입고 절벽 끝에 위태롭게 서 있지만, 시선은 먼 곳을 향해 희망에 차 있습니다. 작은 강아지가 그를 따르며 경고하듯 짖고 있습니다. 이는 현실적인 위험을 고려하지 않는 순수한 열정과 새로운 여정의 시작을 상징합니다.';
+
+  @override
+  String get tarotLoveMeaning0 =>
+      '예기치 못한 새로운 사랑이 찾아오거나 첫눈에 반하는 운명적인 만남이 있을 수 있습니다.';
+
+  @override
+  String get tarotLoveDetail0 =>
+      '마치 어린아이와 같은 순수한 마음으로 사랑을 시작할 수 있는 시기입니다. 과거의 상처나 복잡한 조건들은 모두 잊고, 지금 이 순간의 감정에 충실해보세요. 예기치 못한 곳에서 새로운 인연이 나타나거나 첫눈에 반하는 설레는 경험을 하게 될 수 있습니다.';
+
+  @override
+  String get tarotWealthMeaning0 =>
+      '새로운 투자처나 사업 아이템이 눈에 들어올 수 있습니다. 돈에 얽매이지 않고 즐겁게 일할 때 수익이 따라오는 시기입니다.';
+
+  @override
+  String get tarotWealthDetail0 =>
+      '금전적으로 새로운 기회가 열리는 시기입니다. 남들이 시도하지 않은 창의적인 아이템에 투자하거나 새로운 분야에 도전한다면 의외의 성과를 거둘 수 있습니다. 다만 무모한 지출은 피하고, 즐겁게 일하는 과정에서 자연스럽게 수익이 따라오도록 유도하세요.';
+
+  @override
+  String get tarotSuccessMeaning0 => '새로운 프로젝트를 시작하거나 전혀 다른 분야로 이직하기 좋은 시기입니다.';
+
+  @override
+  String get tarotSuccessDetail0 =>
+      '새로운 프로젝트를 시작하거나 전혀 다른 분야로 이직하기에 가장 적합한 때입니다. 실패에 대한 두려움보다는 설렘을 가지고 과감하게 첫발을 내딛으세요. 당신의 순수한 열정이 주변에 긍정적인 영향을 주어 새로운 길을 열어줄 것입니다.';
+
+  @override
   String get tarotKeywords1 => '창조, 의지, 능력, 실현, 다재다능';
 
   @override
-  String get tarotDescription1 =>
-      '마법사는 붉은 로브를 입고 한 손은 하늘을, 다른 한 손은 땅을 가리키며 천상의 힘을 지상으로 가져오고 있습니다. 테이블 위에는 4원소(지팡이, 컵, 검, 동전)가 모두 갖춰져 있어, 당신이 이미 목표를 이룰 모든 도구와 능력을 가지고 있음을 의미합니다.';
+  String get tarotDesc1 =>
+      '마법사는 붉은 로브를 입고 한 손은 하늘을, 다른 한 손은 땅을 가리키며 천상의 힘을 지상으로 가져오고 있습니다.';
 
   @override
-  String get tarotLoveMeaning1 =>
-      '당신의 매력이 최고조에 달해 이성에게 인기가 많아지는 시기입니다. 썸을 타고 있다면 재치 있는 말솜씨와 리드로 관계를 발전시킬 수 있습니다.';
+  String get tarotLoveMeaning1 => '당신의 매력이 최고조에 달해 이성에게 인기가 많아지는 시기입니다.';
 
   @override
   String get tarotLoveDetail1 =>
-      '당신이 가진 매력과 재능이 빛을 발하여 이성의 마음을 사로잡을 수 있는 절호의 기회입니다. 마음에 드는 상대가 있다면 망설이지 말고 적극적으로 다가가세요. 당신의 유머 감각과 센스 있는 대화가 상대방을 즐겁게 하고, 관계를 주도적으로 이끌어갈 수 있습니다. 솔로라면 여러 이성에게 대시를 받을 수 있으며, 커플이라면 당신의 주도로 데이트 코스를 짜거나 이벤트를 준비하면 상대방이 크게 감동할 것입니다. 자신감을 가지고 사랑을 쟁취하세요.';
+      '당신이 가진 매력과 재능이 빛을 발하여 이성의 마음을 사로잡을 수 있는 절호의 기회입니다. 마음에 드는 상대가 있다면 망설이지 말고 적극적으로 다가가세요. 당신의 유머 감각과 센스 있는 대화가 상대방을 즐겁게 하고, 관계를 주도적으로 이끌어갈 수 있습니다. 자신감을 가지고 사랑을 쟁취하세요.';
 
   @override
-  String get tarotWealthMeaning1 =>
-      '당신의 능력과 기술을 활용하여 수익을 창출할 수 있는 적기입니다. 머릿속에 있는 아이디어를 현실로 구체화하면 금전적인 성과로 이어질 것입니다.';
+  String get tarotWealthMeaning1 => '당신의 능력과 기술을 활용하여 수익을 창출할 수 있는 적기입니다.';
 
   @override
   String get tarotWealthDetail1 =>
-      '당신이 가진 지식, 기술, 아이디어가 곧 돈이 되는 시기입니다. 단순히 월급을 받는 것에 만족하지 말고, 부업이나 투잡, 프리랜서 활동 등을 통해 추가 수익을 창출해보세요. 창의적인 기획이나 영업 능력, 말하기 능력 등이 탁월하게 발휘되어 기대 이상의 수익을 올릴 수 있습니다. 자금 운용에 있어서도 당신의 판단이 적중할 가능성이 높으니, 주도적으로 재테크 계획을 세우고 실행에 옮기면 좋은 결과를 얻을 것입니다.';
+      '당신이 가진 지식, 기술, 아이디어가 곧 돈이 되는 시기입니다. 단순히 월급을 받는 것에 만족하지 말고, 부업이나 투잡 등을 통해 추가 수익을 창출해보세요. 창의적인 기획이나 영업 능력이 탁월하게 발휘되어 기대 이상의 수익을 올릴 수 있습니다.';
 
   @override
-  String get tarotSuccessMeaning1 =>
-      '업무 능력이 탁월하게 발휘되어 주변의 인정을 받습니다. 계획한 일이 있다면 지금이 바로 실행에 옮길 타이밍입니다.';
+  String get tarotSuccessMeaning1 => '업무 능력이 탁월하게 발휘되어 주변의 인정을 받습니다.';
 
   @override
   String get tarotSuccessDetail1 =>
-      '직장이나 학업에서 당신의 능력을 십분 발휘하여 두각을 나타낼 수 있습니다. 어떤 문제가 닥쳐도 당신만의 기지와 재치로 해결해낼 수 있으며, 주변 동료들이나 상사에게 \'능력자\'로 인정받게 됩니다. 새로운 프로젝트의 리더를 맡거나 중요한 발표를 하게 된다면 성공적으로 마칠 수 있습니다. 준비된 자에게 기회가 온다는 말처럼, 당신은 이미 모든 준비가 되어 있습니다. 자신을 믿고 무대 위 주인공처럼 당당하게 실력을 보여주세요.';
+      '직장이나 학업에서 당신의 능력을 십분 발휘하여 두각을 나타낼 수 있습니다. 어떤 문제가 닥쳐도 당신만의 기지와 재치로 해결해낼 수 있으며, 주변 동료들이나 상사에게 \'능력자\'로 인정받게 됩니다. 자신을 믿고 당당하게 실력을 보여주세요.';
+
+  @override
+  String get tarotKeywords2 => '직관, 지혜, 신비, 비밀, 플라토닉';
+
+  @override
+  String get tarotDesc2 =>
+      '신비로운 베일 뒤에 앉아 있는 여사제는 손에 지혜의 두루마리를 들고 균형을 잡으며 깊은 통찰력을 상징합니다.';
+
+  @override
+  String get tarotLoveMeaning2 => '정신적인 교감이 중요한 플라토닉한 사랑을 의미합니다.';
+
+  @override
+  String get tarotLoveDetail2 =>
+      '육체적인 매력보다는 정신적인 깊이와 대화가 통하는 사람에게 끌리게 됩니다. 상대방의 마음을 꿰뚫어 보는 직관력이 발달하여 말하지 않아도 서로의 감정을 이해할 수 있습니다. 하지만 너무 신중한 태도는 오해를 줄 수 있으니 가끔은 솔직하게 마음을 표현해보세요.';
+
+  @override
+  String get tarotWealthMeaning2 =>
+      '지금은 적극적으로 투자하기보다는 자산을 지키고 상황을 관망해야 할 때입니다.';
+
+  @override
+  String get tarotWealthDetail2 =>
+      '눈앞의 이익을 쫓아 섣불리 움직이기보다는 냉철하게 시장 상황을 분석하고 공부해야 할 시기입니다. 지금은 씨앗을 뿌리고 기다리는 시기이므로, 당장의 수익이 나지 않는다고 조급해하지 마세요. 부동산이나 주식 등 장기적인 관점에서의 투자를 고려하는 것이 좋습니다.';
+
+  @override
+  String get tarotSuccessMeaning2 => '학업, 연구, 전문직 분야에서 좋은 성과를 낼 수 있습니다.';
+
+  @override
+  String get tarotSuccessDetail2 =>
+      '겉으로 화려하게 드러나는 성과보다는 내실을 다지고 실력을 키우는 데 집중해야 합니다. 연구, 기획, 분석 등 깊이 있는 사고가 필요한 업무에서 탁월한 성과를 낼 수 있습니다. 당신의 지혜롭고 신중한 태도는 결정적인 순간에 문제 해결의 열쇠가 될 것입니다.';
+
+  @override
+  String get tarotKeywords3 => '풍요, 모성, 자연, 아름다움, 결실';
+
+  @override
+  String get tarotDesc3 => '풍요로운 자연 속에서 편안하게 앉아 있는 여황제는 물질적, 정신적 풍요의 상징입니다.';
+
+  @override
+  String get tarotLoveMeaning3 => '사랑이 넘치고 관계가 더욱 깊어지는 시기입니다.';
+
+  @override
+  String get tarotLoveDetail3 =>
+      '당신의 여성스러운(또는 포용적인) 매력이 극대화되어 이성에게 매우 매력적으로 비치는 시기입니다. 연애 중이라면 상대방을 따뜻하게 감싸주고 챙겨주는 모습에서 큰 사랑을 받게 되며, 결혼 얘기가 오갈 수 있습니다. 솔로라면 외모를 가꾸거나 스타일을 변화시켜보는 것이 연애운을 높이는 데 큰 도움이 됩니다.';
+
+  @override
+  String get tarotWealthMeaning3 => '물질적으로 매우 풍요롭고 안정적인 시기입니다.';
+
+  @override
+  String get tarotWealthDetail3 =>
+      '재물운이 활짝 피어나는 시기입니다. 노력한 만큼, 아니 그 이상의 보상이 따르며 경제적으로 여유를 만끽할 수 있습니다. 사업이나 투자에서 기대 이상의 수익을 거두거나, 뜻밖의 보너스나 선물을 받을 수도 있습니다. 풍요로운 에너지를 주변 사람들과 나누면 더 큰 행운이 찾아올 것입니다.';
+
+  @override
+  String get tarotSuccessMeaning3 => '진행 중인 프로젝트가 순조롭게 성장하여 좋은 성과를 냅니다.';
+
+  @override
+  String get tarotSuccessDetail3 =>
+      '일의 결과가 눈에 보이게 나타나는 시기입니다. 프로젝트가 성공적으로 마무리되어 성과급을 받거나 승진의 기회를 잡을 수 있습니다. 특히 미적 감각이나 창의력이 필요한 분야에서 당신의 재능이 빛을 발합니다. 여유를 가지고 과정을 즐기면서 일하는 것이 오히려 더 좋은 결과를 가져다줄 것입니다.';
+
+  @override
+  String get tarotKeywords4 => '권위, 구조, 안정, 리더십, 책임감';
+
+  @override
+  String get tarotDesc4 => '딱딱한 돌좌에 앉은 황제는 갑옷을 입고 확고한 지배력과 질서를 상징합니다.';
+
+  @override
+  String get tarotLoveMeaning4 => '신뢰할 수 있고 책임감 있는 상대와의 안정적인 연애를 의미합니다.';
+
+  @override
+  String get tarotLoveDetail4 =>
+      '불타오르는 열정보다는 신뢰와 안정을 바탕으로 한 관계가 지속됩니다. 상대방이 당신을 든든하게 지켜주고 이끌어줄 것입니다. 다만, 너무 통제하려 들거나 고집을 피우지 않도록 주의하세요. 솔로라면 능력 있고 사회적 지위가 있는 사람을 만날 기회가 생길 것입니다.';
+
+  @override
+  String get tarotWealthMeaning4 => '체계적인 자산 관리로 안정적인 부를 축적할 수 있습니다.';
+
+  @override
+  String get tarotWealthDetail4 =>
+      '금전 관리에 있어서 원칙과 계획을 세우는 것이 중요합니다. 일확천금을 노리는 투기보다는 적금, 부동산 등 안전하고 확실한 자산에 투자하여 기반을 다지는 것이 좋습니다. 당신의 현실적인 판단력과 추진력이 부를 축적하는 데 큰 도움이 될 것입니다.';
+
+  @override
+  String get tarotSuccessMeaning4 => '직장에서 승진하거나 리더의 자리에 오를 수 있는 운입니다.';
+
+  @override
+  String get tarotSuccessDetail4 =>
+      '조직 내에서 당신의 입지가 단단해지는 시기입니다. 리더십을 인정받아 팀장이나 관리자로 승진할 수 있으며, 중요한 프로젝트의 총괄 책임을 맡게 될 수도 있습니다. 감정에 휘둘리지 않고 이성적이고 냉철한 판단으로 업무를 처리하여 상사의 신임을 얻을 것입니다.';
+
+  @override
+  String get tarotKeywords5 => '전통, 가르침, 신념, 조언, 중재';
+
+  @override
+  String get tarotDesc5 =>
+      '교황은 사회적 규범과 전통을 중시하며, 지혜로운 조언으로 사람들을 이끄는 정신적인 스승입니다.';
+
+  @override
+  String get tarotLoveMeaning5 => '신뢰와 존중을 바탕으로 한 진지하고 건전한 만남이 이어집니다.';
+
+  @override
+  String get tarotLoveDetail5 =>
+      '가벼운 만남보다는 결혼을 전제로 한 진지한 교제를 원하게 됩니다. 소개팅이나 맞선, 또는 건전한 모임에서 좋은 인연을 만날 수 있습니다. 연인 간에 갈등이 있다면 주변 어른이나 선배에게 조언을 구해보세요. 그들의 지혜로운 조언이 관계 회복에 큰 도움이 될 것입니다.';
+
+  @override
+  String get tarotWealthMeaning5 => '전통적이고 안전한 방식의 재테크가 좋습니다.';
+
+  @override
+  String get tarotWealthDetail5 =>
+      '모험적인 투자보다는 안정성을 최우선으로 해야 합니다. 은행 예적금이나 보험 등 전통적인 금융 상품을 활용하는 것이 좋습니다. 전문가의 컨설팅을 받아보거나 정직하고 투명한 금전 거래를 유지하는 것이 당신의 신용과 재산을 지키는 길입니다.';
+
+  @override
+  String get tarotSuccessMeaning5 => '계약, 제휴, 협력 관계가 원만하게 체결될 운입니다.';
+
+  @override
+  String get tarotSuccessDetail5 =>
+      '혼자서 문제를 해결하려 하기보다는 주변의 도움을 받는 것이 현명합니다. 직장 상사나 멘토 등 윗사람에게 조언을 구하면 의외로 쉽게 해결책을 찾을 수 있습니다. 회사 내의 규칙과 절차를 잘 따르는 것이 좋은 평가를 받는 지름길이며, 중요한 계약을 체결하기에도 좋은 운입니다.';
+
+  @override
+  String get tarotKeywords6 => '사랑, 조화, 선택, 결합, 파트너십';
+
+  @override
+  String get tarotDesc6 => '따스한 태양 아래 천사의 축복을 받는 아담과 이브가 서 있습니다.';
+
+  @override
+  String get tarotLoveMeaning6 => '사랑이 꽃피는 가장 좋은 시기 중 하나입니다.';
+
+  @override
+  String get tarotLoveDetail6 =>
+      '가슴 설레는 로맨스가 기다리고 있습니다. 호감 있는 상대와 급속도로 가까워지며, 눈만 마주쳐도 통하는 텔레파시 같은 교감을 느낄 수 있습니다. 고백을 준비 중이라면 성공 확률이 매우 높으니 용기를 내세요. 다만 순간의 유혹에 휩쓸리기보다는 진심이 향하는 곳을 선택하는 지혜가 필요합니다.';
+
+  @override
+  String get tarotWealthMeaning6 => '혼자보다는 함께할 때 금전운이 상승합니다.';
+
+  @override
+  String get tarotWealthDetail6 =>
+      '마음이 맞는 사람과 함께 일을 도모하면 시너지 효과가 나서 금전적 이익이 커집니다. 동업 제안이 들어온다면 긍정적으로 검토해보세요. 주변 사람들과의 소통을 통해 유익한 투자 정보를 얻을 수 있는 시기입니다. 다만 즐거움을 위한 지출이 과다해질 수 있으니 적절한 조절이 필요합니다.';
+
+  @override
+  String get tarotSuccessMeaning6 => '팀워크가 빛을 발하는 시기입니다.';
+
+  @override
+  String get tarotSuccessDetail6 =>
+      '직장 동료나 비즈니스 파트너와의 호흡이 척척 맞아 일하는 것이 즐겁습니다. 혼자 하는 업무보다는 팀 프로젝트에서 더 좋은 성과를 낼 수 있으며, 원만한 대인관계가 성공의 핵심 열쇠가 됩니다. 당신이 진정으로 좋아하고 즐길 수 있는 일을 선택한다면 후회 없는 결과를 얻을 것입니다.';
+
+  @override
+  String get tarotKeywords7 => '승리, 의지, 전진, 정복, 이동';
+
+  @override
+  String get tarotDesc7 =>
+      '전차를 탄 젊은 왕이 강한 의지로 목표를 향해 거침없이 돌진하며 승리를 쟁취하는 모습입니다.';
+
+  @override
+  String get tarotLoveMeaning7 => '적극적인 애정 공세가 성공하는 시기입니다.';
+
+  @override
+  String get tarotLoveDetail7 =>
+      '사랑을 쟁취하기 위해 돌진해야 할 때입니다. 머뭇거리지 말고 자신의 마음을 솔직하고 당당하게 표현하면 경쟁자가 있더라도 승리할 수 있습니다. 썸을 타고 있다면 관계를 확실히 정의 내리고 리드하는 것이 좋습니다. 역동적인 데이트나 함께 여행을 떠나는 것이 애정을 깊게 만들어줄 것입니다.';
+
+  @override
+  String get tarotWealthMeaning7 => '목표한 수익을 달성하기 위해 공격적으로 움직여야 할 때입니다.';
+
+  @override
+  String get tarotWealthDetail7 =>
+      '금전적인 목표를 달성하기 위해 강력한 추진력이 필요한 시기입니다. 망설이지 말고 기회가 왔을 때 과감하게 결정하는 추진력이 수익을 가져다줍니다. 단기적으로 성과가 나는 프로젝트에 집중하는 것이 유리하며, 발로 뛰는 만큼 실적이 올라가는 운세입니다. 이동과 관련된 지출이 생길 수 있으나 이는 새로운 기회를 위한 투자가 될 것입니다.';
+
+  @override
+  String get tarotSuccessMeaning7 => '경쟁에서 승리하고 목표를 쟁취하는 운입니다.';
+
+  @override
+  String get tarotSuccessDetail7 =>
+      '승진, 합격, 계약 성사 등 뚜렷한 목표 달성이 예견됩니다. 경쟁이 치열할수록 당신의 투지가 불타올라 결국 승리를 거머쥐게 될 것입니다. 장애물이 닥쳐도 정면 돌파하는 당신의 모습이 주변에 깊은 인상을 남기며, 출장이나 이동이 많은 업무에서 탁월한 능력을 발휘하게 됩니다.';
+
+  @override
+  String get tarotKeywords8 => '인내, 용기, 내면의 힘, 포용, 외유내강';
+
+  @override
+  String get tarotDesc8 =>
+      '흰 옷을 입은 여인이 물리적인 힘이 아닌 정신적인 힘과 인내심으로 맹수를 부드럽게 길들이는 모습입니다.';
+
+  @override
+  String get tarotLoveMeaning8 => '상대방을 있는 그대로 받아들이고 이해하는 포용력이 필요한 시기입니다.';
+
+  @override
+  String get tarotLoveDetail8 =>
+      '지금의 사랑은 인내심과 지혜를 요구합니다. 상대방의 단점이나 투정을 넓은 마음으로 받아주고 보듬어줄 때 관계가 한 단계 더 발전할 수 있습니다. 부드러운 태도로 상대를 리드하는 외유내강의 자세가 필요하며, 끈기 있게 곁을 지켜준다면 결국 당신의 진심이 상대의 마음을 열게 할 것입니다.';
+
+  @override
+  String get tarotWealthMeaning8 => '꾸준한 저축과 건전한 소비 습관이 재물을 모으는 비결입니다.';
+
+  @override
+  String get tarotWealthDetail8 =>
+      '재물운이 서서히 상승하는 흐름입니다. 당장 큰돈이 들어오지 않더라도 실망하지 말고 성실하게 자산을 관리하면 나중에 큰 목돈이 되어 돌아올 것입니다. 투자에 있어서는 단기적인 등락에 일희일비하지 말고 뚝심 있게 버티는 것이 유리합니다. 자신의 충동적인 소비 욕구를 잘 다스리는 것이 부자가 되는 지름길입니다.';
+
+  @override
+  String get tarotSuccessMeaning8 => '어려운 과제나 까다로운 상사를 만나더라도 지혜롭게 대처할 수 있습니다.';
+
+  @override
+  String get tarotSuccessDetail8 =>
+      '힘든 프로젝트나 까다로운 업무를 맡게 될 수 있지만, 당신에게는 이를 해결할 충분한 저력이 있습니다. 겉으로는 부드러워 보이지만 내면의 강한 의지로 난관을 하나씩 극복해 나가는 모습이 돋보입니다. 침착함을 잃지 않고 문제를 해결하는 당신의 모습에 주변에서 깊은 신뢰를 보내게 될 것입니다.';
+
+  @override
+  String get tarotKeywords9 => '성찰, 고독, 탐구, 지혜, 휴식';
+
+  @override
+  String get tarotDesc9 =>
+      '어두운 설산 위에서 등불을 든 노인이 내면의 목소리에 귀 기울이며 진리를 탐구하는 모습입니다.';
+
+  @override
+  String get tarotLoveMeaning9 => '혼자만의 시간이 필요하거나 연애에 대해 깊이 고민하는 시기입니다.';
+
+  @override
+  String get tarotLoveDetail9 =>
+      '지금은 활발한 연애보다는 자신을 돌아보는 시간이 필요한 때입니다. 외로움을 달래기 위해 아무나 만나기보다는, 내가 진정으로 원하는 사랑이 무엇인지 깊이 고민해보세요. 연인이 있더라도 잠시 거리를 두고 각자의 시간을 갖는 것이 오히려 관계의 본질을 깨닫는 데 도움이 될 수 있습니다.';
+
+  @override
+  String get tarotWealthMeaning9 => '금전적인 활동이 다소 위축될 수 있습니다.';
+
+  @override
+  String get tarotWealthDetail9 =>
+      '재물에 관해서는 보수적인 태도를 취해야 합니다. 새로운 투자를 하거나 사업을 벌이기보다는 현재의 자산을 꼼꼼히 점검하고 새어나가는 돈을 막는 것이 중요합니다. 대신 자신의 가치를 높이기 위한 공부나 기술 습득에 비용을 지출하는 것은 훗날 더 큰 수익을 올릴 수 있는 훌륭한 투자입니다.';
+
+  @override
+  String get tarotSuccessMeaning9 => '전문적인 지식이나 기술을 깊이 있게 연구하는 분야에서 성과를 냅니다.';
+
+  @override
+  String get tarotSuccessDetail9 =>
+      '연구, 기획, 개발 등 혼자서 깊이 있게 파고드는 업무에서 탁월한 성과를 낼 수 있습니다. 남들에게 드러나지는 않지만 묵묵히 실력을 쌓아가는 시기이며, 직장 내 인간관계보다는 업무의 본질에 집중하는 것이 유리합니다. 해결되지 않는 문제가 있다면 경험이 풍부한 멘토를 찾아 조언을 구해보세요.';
+
+  @override
+  String get tarotKeywords10 => '운명, 변화, 기회, 순환, 터닝포인트';
+
+  @override
+  String get tarotDesc10 =>
+      '거대한 수레바퀴가 돌며 피할 수 없는 운명의 흐름과 새로운 주기의 시작을 알리는 모습입니다.';
+
+  @override
+  String get tarotLoveMeaning10 => '운명적인 만남이 기다리고 있습니다.';
+
+  @override
+  String get tarotLoveDetail10 =>
+      '영화처럼 운명적인 사랑이 당신을 찾아옵니다. 우연한 장소에서의 만남이나 뜻밖의 재회 등 드라마틱한 사건이 일어날 수 있으니 마음을 열어두세요. 솔로라면 첫눈에 반하는 상대를 만날 수 있고, 커플이라면 관계가 한 단계 발전하는 계기가 생길 것입니다. 지금의 좋은 흐름을 놓치지 마세요.';
+
+  @override
+  String get tarotWealthMeaning10 => '금전운의 흐름이 좋아지고 있습니다.';
+
+  @override
+  String get tarotWealthDetail10 =>
+      '행운의 여신이 당신에게 미소 짓고 있습니다. 생각지도 못한 수입이 생기거나 투자 수익이 나는 등 금전운이 상승 곡선을 그리는 시기입니다. 자금 회전이 원활해지니 기회가 왔을 때 잡는 과감함이 필요합니다. 다만 운은 돌고 도는 법이니 잘 벌릴 때일수록 미래를 위해 저축하는 지혜도 잊지 마세요.';
+
+  @override
+  String get tarotSuccessMeaning10 => '상황이 당신에게 유리하게 돌아갑니다.';
+
+  @override
+  String get tarotSuccessDetail10 =>
+      '막혀있던 일들이 술술 풀리는 인생의 터닝포인트가 찾아왔습니다. 주변 상황이 당신에게 유리하게 흘러가고 있으니, 새로운 기회가 왔을 때 망설이지 말고 잡으세요. 승진이나 이직 등 변화의 기회는 당신을 더 높은 곳으로 데려다줄 상승 기류가 될 것입니다. 흐름에 몸을 맡기면 좋은 결과가 따를 것입니다.';
+
+  @override
+  String get tarotKeywords11 => '공정, 균형, 책임, 진실, 인과응보';
+
+  @override
+  String get tarotDesc11 => '붉은 옷을 입은 재판관이 오른손엔 검, 왼손엔 저울을 들고 있습니다.';
+
+  @override
+  String get tarotLoveMeaning11 => '감정보다는 이성이 앞서는 관계입니다.';
+
+  @override
+  String get tarotLoveDetail11 =>
+      '지금은 감정에 치우치기보다는 이성적인 판단이 필요한 시기입니다. 상대방과 나의 관계가 균형 잡혀 있는지, 내가 너무 희생하거나 반대로 받기만 하는 건 아닌지 돌아보세요. 결혼을 생각 중이라면 상대방의 조건이나 배경을 꼼꼼히 따져보게 될 수 있으며, 솔직하고 공정한 대화가 관계 개선의 해결책이 될 것입니다.';
+
+  @override
+  String get tarotWealthMeaning11 => '금전 거래나 계약에서 꼼꼼한 확인이 필요합니다.';
+
+  @override
+  String get tarotWealthDetail11 =>
+      '금전적인 부분에서 시시비비를 가려야 할 일이 생길 수 있습니다. 빌려준 돈을 받거나, 반대로 갚아야 할 돈을 정산하는 등 재무 관계를 깨끗이 정리하기 좋은 때입니다. 계약서를 쓸 때는 독소 조항이 없는지 꼼꼼하게 살펴보고, 요행이나 편법보다는 정직하고 투명하게 원칙대로 처리하는 것이 좋습니다.';
+
+  @override
+  String get tarotSuccessMeaning11 => '공정한 평가를 받고 정당한 보상을 받게 됩니다.';
+
+  @override
+  String get tarotSuccessDetail11 =>
+      '당신의 업무 성과에 대해 공정하고 객관적인 평가를 받게 됩니다. 그동안 열심히 일했다면 승진이나 보너스 등 합당한 보상이 따를 것이고, 법조계나 회계 등 정확성이 요구되는 분야에서 능력을 발휘할 수 있습니다. 의사결정을 내릴 때는 감정을 배제하고 철저히 데이터와 팩트에 기반하여 판단하세요.';
+
+  @override
+  String get tarotKeywords12 => '희생, 인내, 새로운 시각, 정체, 깨달음';
+
+  @override
+  String get tarotDesc12 =>
+      '나무에 거꾸로 매달린 남자가 자발적인 고난을 통해 세상을 새로운 시각으로 바라보며 깨달음을 얻는 모습입니다.';
+
+  @override
+  String get tarotLoveMeaning12 => '관계가 정체되거나 짝사랑이 길어질 수 있습니다.';
+
+  @override
+  String get tarotLoveDetail12 =>
+      '연애 진도가 나가지 않아 답답함을 느낄 수 있지만, 지금은 서두른다고 해결될 일이 아닙니다. 잠시 멈춰 서서 현재의 상황을 다른 관점에서 바라보며 내가 너무 내 방식대로만 사랑을 강요한 건 아닌지 반성해볼 필요가 있습니다. 상대방의 입장이 되어 생각하고 배려하는 인내가 결국 상대의 마음을 여는 열쇠가 될 것입니다.';
+
+  @override
+  String get tarotWealthMeaning12 => '자금 흐름이 묶이거나 손실을 감수해야 할 수도 있습니다.';
+
+  @override
+  String get tarotWealthDetail12 =>
+      '금전적으로 꽉 막힌 듯한 느낌을 받을 수 있습니다. 투자한 돈이 묶이거나 예정된 수입이 지연될 수 있지만, 발버둥 칠수록 더 꼬일 수 있으니 지금은 차라리 마음을 비우고 관망하는 것이 상책입니다. 이 시기를 통해 자신의 소비 습관을 점검하고 돈에 대한 가치관을 새롭게 정립해보는 시간으로 삼으세요.';
+
+  @override
+  String get tarotSuccessMeaning12 => '일이 계획대로 진행되지 않고 지연될 수 있습니다.';
+
+  @override
+  String get tarotSuccessDetail12 =>
+      '프로젝트가 중단되거나 업무가 지연되어 스트레스를 받을 수 있지만, 이는 실패가 아니라 잠시 멈춤 신호입니다. 억지로 진행하려 하지 말고 한 발 물러서서 전체적인 그림을 다시 그려보세요. 고정관념을 깼을 때 남들이 생각하지 못하는 기발한 아이디어가 나올 수 있으며, 지금의 시련은 당신에게 새로운 깨달음을 줄 것입니다.';
+
+  @override
+  String get tarotKeywords13 => '종결, 변화, 재탄생, 이별, 새로운 시작';
+
+  @override
+  String get tarotDesc13 =>
+      '낡은 것의 완전한 종결과 그로 인한 새로운 시작을 상징하며, 고통스럽지만 피할 수 없는 변화의 과정을 나타냅니다.';
+
+  @override
+  String get tarotLoveMeaning13 => '관계의 종결이나 큰 변화를 의미합니다.';
+
+  @override
+  String get tarotLoveDetail13 =>
+      '지금의 관계가 한계를 맞이했을 수 있습니다. 억지로 붙잡으려 하기보다는 자연스럽게 흘려보내는 용기가 필요하며, 이별은 아프지만 그 끝에는 반드시 더 나은 새로운 시작이 기다리고 있습니다. 과거의 미련이나 상처에서 완전히 벗어나야만 새로운 사람이 들어올 자리가 생긴다는 점을 명심하세요.';
+
+  @override
+  String get tarotWealthMeaning13 => '금전적인 손실이나 투자 실패 등 힘든 상황이 올 수 있습니다.';
+
+  @override
+  String get tarotWealthDetail13 =>
+      '재정적으로 큰 변화가 예상됩니다. 믿었던 투자처에서 손실이 나거나 예기치 못한 지출로 어려움을 겪을 수 있지만, 이는 그동안의 비효율적인 자산 관리 방식을 바꾸라는 신호입니다. 부채를 정리하고 불필요한 지출을 완전히 차단하여 더 건강하고 안정적인 재무 구조를 갖추기 위한 발판으로 삼으세요.';
+
+  @override
+  String get tarotSuccessMeaning13 => '진행하던 일이 중단되거나 실패할 수 있습니다.';
+
+  @override
+  String get tarotSuccessDetail13 =>
+      '공들였던 프로젝트가 무산되거나 직장에서 큰 변화를 겪을 수 있습니다. 당장은 좌절감이 크겠지만 이는 당신에게 맞지 않는 일을 정리하고 더 큰 성공을 위해 새로운 길을 찾으라는 운명의 계시입니다. 낡은 방식을 버리고 완전히 새로운 마음가짐으로 시작하면 인생의 더 멋진 다음 챕터가 열릴 것입니다.';
+
+  @override
+  String get tarotKeywords14 => '균형, 절제, 화합, 치유, 중용';
+
+  @override
+  String get tarotDesc14 =>
+      '두 개의 컵 사이로 물을 옮겨 담으며 현실과 이상 사이의 완벽한 균형과 조화로운 흐름을 상징합니다.';
+
+  @override
+  String get tarotLoveMeaning14 => '서로 다른 두 사람이 만나 조화를 이루어가는 과정입니다.';
+
+  @override
+  String get tarotLoveDetail14 =>
+      '불타오르는 열정보다는 은은하고 지속적인 사랑이 어울리는 시기입니다. 서로의 차이점을 인정하고 보완해주며 깊은 유대감을 쌓아가게 되며, 다툼이 있더라도 차분하게 대화로 풀어가는 지혜가 필요합니다. 당신의 온화하고 배려심 깊은 태도가 상대방의 마음을 편안하게 하여 안정적인 관계를 만들어줄 것입니다.';
+
+  @override
+  String get tarotWealthMeaning14 => '수입과 지출의 균형을 맞추는 것이 중요합니다.';
+
+  @override
+  String get tarotWealthDetail14 =>
+      '재물운이 안정적인 흐름을 탑니다. 일확천금을 노리기보다는 현재의 자산을 효율적으로 배분하고 관리하는 데 집중하며, 수입이 늘어난 만큼 지출도 적절히 조절하는 습관이 필요합니다. 투자를 한다면 리스크 관리를 위해 분산 투자를 하는 것이 좋으며, 꾸준한 관리가 결국 부를 가져다줄 것입니다.';
+
+  @override
+  String get tarotSuccessMeaning14 => '서로 다른 의견을 조율하고 화합을 이끌어내는 능력이 돋보입니다.';
+
+  @override
+  String get tarotSuccessDetail14 =>
+      '팀 프로젝트에서 중재자 역할을 훌륭히 수행하여 갈등을 해결하고 업무 효율을 높입니다. 당신의 유연한 사고와 적응력이 주변의 인정을 받게 되며, 일과 휴식의 균형을 잘 맞춰 번아웃을 예방하는 지혜가 돋보이는 시기입니다. 전체적인 흐름을 살피며 차근차근 진행하는 것이 가장 좋은 결과로 이어집니다.';
+
+  @override
+  String get tarotKeywords15 => '유혹, 속박, 집착, 물질주의, 중독';
+
+  @override
+  String get tarotDesc15 =>
+      '스스로를 구속하는 욕망과 집착, 그리고 마음만 먹으면 벗어날 수 있지만 그러지 못하는 물질적인 유혹을 상징합니다.';
+
+  @override
+  String get tarotLoveMeaning15 => '강렬한 육체적 매력에 끌리거나 집착하는 관계를 의미합니다.';
+
+  @override
+  String get tarotLoveDetail15 =>
+      '이성의 매력에 강력하게 매료되어 이성적인 판단을 내리기 힘든 시기입니다. 뜨거운 로맨스가 시작될 수도 있지만, 한편으로는 상대에 대한 과도한 집착과 구속으로 힘들어질 수 있으니 주의가 필요합니다. 자신의 감정이 진정한 사랑인지 아니면 단순한 소유욕인지 냉정하게 돌아보고 스스로를 다스려야 합니다.';
+
+  @override
+  String get tarotWealthMeaning15 =>
+      '물질적인 욕심이 과해져 무리한 투자를 하거나 유흥에 큰돈을 쓸 수 있습니다.';
+
+  @override
+  String get tarotWealthDetail15 =>
+      '금전적인 유혹이 많은 시기입니다. 달콤한 말에 속아 위험한 곳에 투자하거나 충동적인 소비로 재산을 탕진할 위험이 있으니 경계해야 합니다. 돈의 노예가 되어 주변의 신뢰를 저버리지 않도록 주의하고, 새로운 투자를 하기보다는 현재 가지고 있는 것을 지키며 자신의 과도한 물욕을 다스려야 할 때입니다.';
+
+  @override
+  String get tarotSuccessMeaning15 => '성공을 위해 수단과 방법을 가리지 않으려 할 수 있습니다.';
+
+  @override
+  String get tarotSuccessDetail15 =>
+      '권력이나 명예에 대한 욕심이 커져 주변 동료들을 경쟁 상대로만 보게 될 수 있습니다. 성과를 위해 무리한 일정을 잡거나 건강을 돌보지 않는 일 중독에 빠질 우려가 있으니 주의하세요. 정당한 노력 없이 얻으려는 마음을 버리고 정직하게 업무에 임하는 자세가 필요하며, 스스로 만든 구속에서 벗어나야 합니다.';
+
+  @override
+  String get tarotKeywords16 => '붕괴, 충격, 급격한 변화, 해방, 진실의 폭로';
+
+  @override
+  String get tarotDesc16 => '번개가 탑을 내리쳐 탑이 무너지고 사람들이 떨어지고 있습니다.';
+
+  @override
+  String get tarotLoveMeaning16 => '관계에 큰 위기나 갑작스러운 이별이 닥칠 수 있습니다.';
+
+  @override
+  String get tarotLoveDetail16 =>
+      '마치 마른하늘에 날벼락처럼 예기치 못한 사건이 연애 전선에 발생할 수 있습니다. 믿었던 상대에게 실망하거나 감당하기 힘든 다툼으로 관계가 뿌리째 흔들릴 수 있지만, 너무 절망하지 마세요. 이는 건강하지 못한 관계나 오해가 깨지고 진실을 마주하게 되는 과정이며, 무너진 자리에는 결국 더 단단한 사랑을 쌓을 기회가 올 것입니다.';
+
+  @override
+  String get tarotWealthMeaning16 => '갑작스러운 금전적 손실이나 재난에 대비해야 합니다.';
+
+  @override
+  String get tarotWealthDetail16 =>
+      '재정적으로 매우 불안정한 시기입니다. 예상치 못한 곳에서 큰돈이 빠져나가거나 투자했던 곳이 무너지는 등 충격적인 소식을 접할 수 있으니 자산을 안전한 곳으로 옮기고 대비해야 합니다. 하지만 이 붕괴는 잘못된 경제 관념을 바로잡는 계기가 될 것이며, 바닥을 치고 나면 다시는 무너지지 않을 튼튼한 기반을 쌓을 기회가 옵니다.';
+
+  @override
+  String get tarotSuccessMeaning16 =>
+      '프로젝트가 중단되거나 직장에서 갑작스러운 인사 이동 등 충격적인 변화가 생길 수 있습니다.';
+
+  @override
+  String get tarotSuccessDetail16 =>
+      '그동안 공들여 쌓아온 탑이 무너지는 듯한 좌절감을 느낄 수 있지만, 이는 당신의 능력이 부족해서가 아니라 피할 수 없는 변화의 흐름 때문입니다. 당황하지 말고 사태를 냉정하게 파악하여 낡은 시스템을 버리고 새로운 길을 모색하세요. 지금의 위기를 기회로 삼아 재정비한다면 훨씬 더 높은 곳으로 도약할 수 있을 것입니다.';
+
+  @override
+  String get tarotKeywords17 => '희망, 영감, 치유, 낙관주의, 소망 성취';
+
+  @override
+  String get tarotDesc17 =>
+      '밤하늘의 밝은 별빛 아래에서 여인이 물을 부으며 고난 뒤에 찾아오는 평화와 미래에 대한 희망을 상징합니다.';
+
+  @override
+  String get tarotLoveMeaning17 => '이상형에 가까운 사람을 만나거나 연애에 대한 꿈이 이루어지는 시기입니다.';
+
+  @override
+  String get tarotLoveDetail17 =>
+      '어두운 밤을 밝히는 별처럼 당신의 연애에도 반짝이는 희망이 찾아옵니다. 마음에 그리던 이상형을 만나게 될 수 있으며, 당신의 순수한 매력이 이성에게 크게 어필하는 시기입니다. 과거의 아픈 기억은 이제 치유되고 새로운 사랑을 꿈꿀 수 있는 밝은 에너지가 생길 것입니다.';
+
+  @override
+  String get tarotWealthMeaning17 => '금전적으로 서서히 상황이 좋아집니다.';
+
+  @override
+  String get tarotWealthDetail17 =>
+      '재물운이 긍정적인 방향으로 흘러가기 시작합니다. 그동안의 경제적 어려움이 해소되고 한 줄기 빛이 보이는 시기이며, 창의적인 아이디어를 통해 부가 수익을 올릴 기회가 생길 수 있습니다. 당장의 큰 이득보다는 장기적인 관점에서 미래 가치가 높은 곳에 투자하는 안목이 당신을 재정적 안정으로 인도할 것입니다.';
+
+  @override
+  String get tarotSuccessMeaning17 => '창의적인 영감이 샘솟고 자신의 재능을 널리 알릴 기회를 얻습니다.';
+
+  @override
+  String get tarotSuccessDetail17 =>
+      '당신의 아이디어가 빛을 발하여 주변의 찬사를 받게 됩니다. 특히 예술적인 감각이나 홍보, 마케팅 분야에서 두각을 나타낼 수 있으며, 평소 꿈꿔왔던 프로젝트를 시작하기에 아주 좋은 타이밍입니다. 자신 있게 자신을 표현하면 대중의 인기를 얻거나 명예를 얻을 수 있는 운이 들어와 있으니 기회를 잡으세요.';
+
+  @override
+  String get tarotKeywords18 => '불안, 환상, 모호함, 직감, 무의식';
+
+  @override
+  String get tarotDesc18 =>
+      '달빛 아래 불안과 모호함이 공존하며, 보이지 않는 이면의 진실과 무의식의 세계를 상징합니다.';
+
+  @override
+  String get tarotLoveMeaning18 => '상대방의 마음을 알 수 없어 답답하거나, 오해와 의심이 싹트기 쉽습니다.';
+
+  @override
+  String get tarotLoveDetail18 =>
+      '안개 속에 있는 듯 상대방의 속마음을 알 수 없어 불안한 시기입니다. 사소한 오해가 커져 의심이 되고 불안감 때문에 밤잠을 설칠 수도 있으니, 섣불리 추궁하기보다는 상황을 차분히 지켜보는 것이 좋습니다. 감정에 휩쓸려 불확실한 관계에 너무 매달리기보다는 이성적으로 생각하여 마음의 중심을 잡는 것이 우선입니다.';
+
+  @override
+  String get tarotWealthMeaning18 => '투자 전망이 불투명하고 사기의 위험이 도사리고 있습니다.';
+
+  @override
+  String get tarotWealthDetail18 =>
+      '금전적인 면에서 시야가 흐려져 있어 그럴싸해 보이는 투자 정보나 감언이설에 속아 넘어갈 위험이 높습니다. 보이지 않는 곳에 함정이 숨어 있으니 돌다리도 두들겨 보고 건너는 심정으로 극도로 조심해야 할 시기입니다. 새로운 일을 벌이기보다는 현상 유지를 하며 현실적인 검증 과정을 철저히 거치는 것이 재산을 지키는 길입니다.';
+
+  @override
+  String get tarotSuccessMeaning18 =>
+      '업무의 방향이 모호하거나 숨겨진 적이 있을 수 있어 혼란스러운 시기입니다.';
+
+  @override
+  String get tarotSuccessDetail18 =>
+      '앞이 보이지 않는 막막한 상황에 처할 수 있으며, 프로젝트의 방향성이 흔들리거나 직장 내 유언비어에 휘말릴 수 있으니 언행을 조심해야 합니다. 지금은 섣불리 움직이기보다는 상황이 명확해질 때까지 기다리는 것이 현명하며, 남의 말을 함부로 믿지 말고 묵묵히 자신의 자리를 지키며 멘탈 관리에 힘쓰는 것이 좋습니다.';
+
+  @override
+  String get tarotKeywords19 => '성공, 행복, 활력, 긍정, 축복';
+
+  @override
+  String get tarotDesc19 => '밝은 태양 아래 어린아이가 백마를 타고 깃발을 흔들며 즐거워합니다.';
+
+  @override
+  String get tarotLoveMeaning19 => '축복받는 밝고 행복한 연애를 하게 됩니다.';
+
+  @override
+  String get tarotLoveDetail19 =>
+      '더할 나위 없이 완벽하고 행복한 사랑이 당신과 함께합니다. 그동안의 오해나 갈등이 눈 녹듯이 사라지고 신뢰가 깊어지며, 솔로라면 밝은 에너지를 가진 인연을 만날 수 있는 최고의 시기입니다. 결혼이나 임신 등 경사스러운 소식을 기대해봐도 좋으며, 아이처럼 순수하고 열정적으로 사랑을 즐기기에 더없이 좋은 운세입니다.';
+
+  @override
+  String get tarotWealthMeaning19 => '금전운이 최상입니다.';
+
+  @override
+  String get tarotWealthDetail19 =>
+      '쨍하고 해 뜰 날이 찾아왔습니다. 금전운이 매우 강력하여 무엇을 하든 수익으로 연결되며, 사업은 번창하고 투자는 대박이 날 조짐입니다. 주머니가 두둑해지는 시기이니 이 좋은 기운을 주변과 나누면 더 큰 복으로 돌아올 것이며, 부동산이나 주식 등 자산 가치가 크게 상승할 기분 좋은 소식을 기대해도 좋습니다.';
+
+  @override
+  String get tarotSuccessMeaning19 => '당신의 능력을 인정받고 스포트라이트를 받게 됩니다.';
+
+  @override
+  String get tarotSuccessDetail19 =>
+      '성공의 팡파르가 울려 퍼집니다. 당신이 그동안 노력해 온 일들이 빛을 발하여 세상에 드러나게 되며, 합격이나 승진 등 가시적인 성과를 거두게 됩니다. 자신감 넘치는 태도가 주변을 매료시켜 리더로서의 자질도 인정받을 것이며, 지금은 당신이 주인공인 무대이니 마음껏 기량을 펼쳐 성공을 쟁취하세요.';
+
+  @override
+  String get tarotKeywords20 => '부활, 보상, 소식, 결단, 재회';
+
+  @override
+  String get tarotDesc20 => '하늘에서 천사가 나팔을 불자, 관 속에 있던 사람들이 깨어나 환호합니다.';
+
+  @override
+  String get tarotLoveMeaning20 => '헤어진 연인에게서 연락이 오거나 재회할 기회가 생깁니다.';
+
+  @override
+  String get tarotLoveDetail20 =>
+      '기다리던 소식이 들려옵니다. 잊지 못했던 옛 연인에게서 연락이 오거나 재회를 바랐다면 이루어질 가능성이 매우 높으며, 지지부진했던 썸 관계가 확실하게 연인으로 발전하는 결실을 보게 될 것입니다. 과거에 알던 사람과 새로운 인연이 닿을 수도 있으니, 마음의 소리에 귀 기울이고 후회 없는 결단을 내리세요.';
+
+  @override
+  String get tarotWealthMeaning20 =>
+      '과거에 투자했던 곳에서 수익이 나거나 빌려줬던 돈을 돌려받을 수 있습니다.';
+
+  @override
+  String get tarotWealthDetail20 =>
+      '과거의 노력에 대한 보상을 받는 시기입니다. 잊고 있었던 주식이 오르거나 못 받을 줄 알았던 돈을 돌려받는 등 뜻밖의 횡재수가 있으며, 예전에 실패했던 아이디어를 다시 시도하여 성공할 기회가 찾아옵니다. 지금 내리는 결정이 앞으로의 재물운을 크게 좌우하게 되니 신중하면서도 과감한 결단이 필요한 때입니다.';
+
+  @override
+  String get tarotSuccessMeaning20 => '그동안의 노력을 인정받아 승진하거나 포상을 받게 됩니다.';
+
+  @override
+  String get tarotSuccessDetail20 =>
+      '심판의 날이 왔습니다. 그동안 흘린 땀방울에 대한 정당한 평가와 보상이 주어져 승진이나 합격 등 기쁜 소식이 나팔 소리처럼 울려 퍼질 것입니다. 침체되어 있던 상황에서 벗어나 다시 한번 비상할 수 있는 스카우트 제의나 이직 기회가 올 수 있으니, 변화를 두려워하지 말고 기회를 잡아 새로운 챕터를 시작하세요.';
+
+  @override
+  String get tarotKeywords21 => '완성, 통합, 달성, 해피엔딩, 완벽함';
+
+  @override
+  String get tarotDesc21 =>
+      '긴 여정 끝에 목표를 완전히 달성하고 완벽한 조화를 이룬 상태를 나타내는 최고의 해피엔딩을 상징합니다.';
+
+  @override
+  String get tarotLoveMeaning21 => '사랑의 결실을 맺어 결혼에 골인하거나, 이상적인 가정을 꾸리게 됩니다.';
+
+  @override
+  String get tarotLoveDetail21 =>
+      '긴 연애의 마침표를 찍고 결혼이라는 새로운 세상으로 나아가는 완벽한 시기입니다. 서로가 서로에게 최고의 반쪽임을 확인하고 축복 속에 하나가 되는 행복을 누리게 될 것이며, 솔로라면 당신의 이상형에 부합하는 운명의 상대를 만날 수 있습니다. 해외여행이나 이국적인 환경에서 인연이 닿을 운세이기도 합니다.';
+
+  @override
+  String get tarotWealthMeaning21 => '목표했던 금액을 달성하고 경제적 자유를 누리게 됩니다.';
+
+  @override
+  String get tarotWealthDetail21 =>
+      '금전적인 목표를 100% 달성하는 쾌거를 이루어 경제적 자유를 누릴 수 있는 단계에 도달했습니다. 해외 주식이나 무역 등 글로벌한 분야에서 큰 수익을 낼 수 있으며, 당신의 투자 포트폴리오가 완벽한 조화를 이루어 안정적인 수익을 가져다줄 것입니다. 이제는 풍요로움을 만끽하며 더 넓은 세상을 향해 시야를 넓혀보세요.';
+
+  @override
+  String get tarotSuccessMeaning21 => '프로젝트를 성공적으로 완수하고 최고의 명예를 얻습니다.';
+
+  @override
+  String get tarotSuccessDetail21 =>
+      '당신의 커리어에 정점을 찍는 시기입니다. 맡은 프로젝트를 완벽하게 성공시켜 최고의 찬사를 받게 되며, 목표했던 바를 모두 이루어 더 큰 세상으로 나아갈 준비를 하게 될 것입니다. 유학이나 해외 취업 등 활동 무대가 세계로 넓어질 수 있는 운세이니, 현재의 성공을 발판 삼아 더 원대한 꿈을 꾸며 도약하세요.';
+
+  @override
+  String get supplementRecordPrompt => '영양제를 드시고 기록해주세요!';
+
+  @override
+  String get snoozeQuestion => '언제 다시 알려드릴까요?';
+
+  @override
+  String get hoursShort => '시간';
+
+  @override
+  String get minutesShort => '분';
+
+  @override
+  String get after => '후에';
+
+  @override
+  String snoozeMessage(int minutes) {
+    return '$minutes분 후에 알람이 다시 울립니다.';
+  }
+
+  @override
+  String timesTaken(int count) {
+    return '$count회 섭취';
+  }
+
+  @override
+  String dailyGoalTimes(int goal) {
+    return '목표: 하루 $goal회';
+  }
+
+  @override
+  String get didYouTakeSupplement => '영양제를 챙겨 드셨나요?';
+
+  @override
+  String get viewMissionRecords => '미션 기록 보기';
+
+  @override
+  String get setTakingGoal => '섭취 목표 설정';
+
+  @override
+  String get times => '회';
+
+  @override
+  String get dailyTakingGoal => '일일 섭취 목표';
+
+  @override
+  String get howManyTimesADay => '하루에 몇 번 영양제를 드시나요?';
+
+  @override
+  String get setGoalMl => '목표 설정 (ml)';
+
+  @override
+  String get sleepAnalysis => '수면 분석';
+
+  @override
+  String get todaysSleep => '오늘의 수면';
+
+  @override
+  String get sleepDuration => '수면 시간';
+
+  @override
+  String get wakeUpTime => '기상 시간';
+
+  @override
+  String get weeklySleepPattern => '주간 수면 패턴';
+
+  @override
+  String get sleepAdvice => '규칙적인 수면 습관을 유지하고 있습니다. 어제보다 30분 더 일찍 잠자리에 들었어요!';
+
+  @override
+  String get stopwatch => '스톱워치';
+
+  @override
+  String get lap => '랩';
+
+  @override
+  String get stop => '중지';
+
+  @override
+  String lapLabel(int index) {
+    return '랩 $index';
+  }
+
+  @override
+  String get monday => '월';
+
+  @override
+  String get tuesday => '화';
+
+  @override
+  String get wednesday => '수';
+
+  @override
+  String get thursday => '목';
+
+  @override
+  String get friday => '금';
+
+  @override
+  String get saturday => '토';
+
+  @override
+  String get sunday => '일';
 
   @override
   String get policy => '이용약관 및 개인정보 처리방침';
@@ -3025,9 +3883,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get minutes => '분';
-
-  @override
-  String get times => '회';
 
   @override
   String cupsCount(int current, int goal) {
@@ -3199,7 +4054,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get allMissions => '전체 미션';
 
   @override
-  String categoryMissions(Object category) {
+  String categoryMissions(String category) {
     return '$category 미션';
   }
 
@@ -3229,9 +4084,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get getNotification => '알림 받기';
-
-  @override
-  String get notificationTime => '알림 시간';
 
   @override
   String get missionCategoryHealth => '건강';
@@ -3305,7 +4157,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get weeklyForecast => '주간 예보';
 
   @override
-  String hourFormat(Object hour) {
+  String hourFormat(String hour) {
     return '$hour시';
   }
 
@@ -3409,6 +4261,27 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get luckyNumberAnalysisFinal => '데이터 최종 처리 중...';
+
+  @override
+  String get luckyNumberAnalyzing => '에너지 분석 중...';
+
+  @override
+  String get luckyNumberGeometric => '기하학적 분석...';
+
+  @override
+  String get luckyNumberPatterns => '패턴 매칭...';
+
+  @override
+  String get luckyNumberEnergy => '에너지 조화 작업...';
+
+  @override
+  String get luckyNumberCompleted => '분석 완료!';
+
+  @override
+  String get luckyNumberShare => '결과 공유';
+
+  @override
+  String get luckyNumberRestart => '다시 시도';
 
   @override
   String get luckyNumberGenerating => '행운 번호 생성 중...';
@@ -3758,6 +4631,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get compatibilityGenderFemale => '여성';
 
   @override
+  String get compatibilityInputTitle => '궁합 정보 입력';
+
+  @override
   String get tojeongInputTitle => '토정비결 정보 입력';
 
   @override
@@ -3813,7 +4689,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tojeongShareResult => '결과 공유하기';
 
   @override
-  String tojeongShareTitle(Object year) {
+  String tojeongShareTitle(int year) {
     return '$year년 토정비결 결과';
   }
 
@@ -4035,7 +4911,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get tojeongHasuKeyword3 => '인내 끝에 위기를 기회로 만들게 됩니다.';
 
   @override
-  String tojeongCoreMessage(Object hasu, Object jungsu, Object sangsu) {
+  String tojeongCoreMessage(String sangsu, String jungsu, String hasu) {
     return '올해는 $sangsu 속에서 $jungsu, 결국 $hasu';
   }
 
@@ -4307,4 +5183,373 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get compatibilityDescDefaultConstellation =>
       '별자리로 보았을 때 무난하게 어울리는 관계입니다.';
+
+  @override
+  String get routineMorningTitle => '상쾌한 아침입니다! ☀️';
+
+  @override
+  String get routineMorningBody => '오늘 계획한 루틴 미션들을 잊지 않으셨나요?';
+
+  @override
+  String get routineEveningTitle => '오늘 하루도 수고 많으셨어요! ✨';
+
+  @override
+  String get routineEveningBody => '오늘의 미션을 모두 수행하셨나요? 루틴을 마무리해보세요.';
+
+  @override
+  String get routineCheckTitle => '오늘의 미션을 확인해보세요! 🚀';
+
+  @override
+  String get routineCheckBody => '루틴 미션을 지키고 기분 좋은 하루를 만들어봐요.';
+
+  @override
+  String get supplementNotificationTitle => '영양제 알림';
+
+  @override
+  String get waterNotificationTitle => '물 마시기 알림';
+
+  @override
+  String get routineNotificationTitle => '데일리 루틴 알림';
+
+  @override
+  String get todaysFortuneNotificationTitle => '오늘의 운세';
+
+  @override
+  String get afternoonFortuneNotificationBody => '오후의 운세는 어떨까요? 지금 바로 확인해 보세요!';
+
+  @override
+  String get morningFortuneNotificationBody => '오늘의 운세를 확인하고 활기차게 시작해 보세요!';
+
+  @override
+  String get fortunePassExpiryTitle => '포춘 패스 오늘 만료';
+
+  @override
+  String get fortunePassExpiryBody =>
+      '오늘 포춘 패스 멤버십이 만료됩니다. 혜택을 계속 누리시려면 갱신해 보세요!';
+
+  @override
+  String get takeNow => '지금 먹기';
+
+  @override
+  String get later => '나중에';
+
+  @override
+  String get turnOffAlarmAction => '알람 끄기';
+
+  @override
+  String get todaysFortuneNotification => '오늘의 운세 알림';
+
+  @override
+  String get enableNotification => '알림 활성화';
+
+  @override
+  String get fortuneNotificationDescription => '지정한 시간에 오늘의 운세를 알려드립니다.';
+
+  @override
+  String get morningNotificationTime => '오전 알림 시간';
+
+  @override
+  String get afternoonNotificationTime => '오후 알림 시간';
+
+  @override
+  String get morningFortuneTitle => '오늘의 운세 (오전)';
+
+  @override
+  String get afternoonFortuneTitle => '오늘의 운세 (오후)';
+
+  @override
+  String get type => '유형';
+
+  @override
+  String get supplementChannelDesc => '영양제 섭취 알림 채널입니다.';
+
+  @override
+  String get waterChannelDesc => '물 마시기 습관을 위한 알림 채널입니다.';
+
+  @override
+  String get waterSummaryTitle => '물 마시기 알림';
+
+  @override
+  String get dailyRoutineChannelDesc => '오늘의 미션을 확인하고 습관을 만드는 알림 채널입니다.';
+
+  @override
+  String get dailyRoutineSummaryTitle => '데일리 루틴 알림';
+
+  @override
+  String get missionChannelName => '미션 알림';
+
+  @override
+  String get missionChannelDesc => '일반 미션 수행을 위한 알림 채널입니다.';
+
+  @override
+  String get fortuneChannelName => '운세 알림';
+
+  @override
+  String get fortuneChannelDesc => '매일 아침 운세 확인을 위한 알림 채널입니다.';
+
+  @override
+  String get subscriptionChannelName => '구독 알림';
+
+  @override
+  String get subscriptionChannelDesc => '포춘 패스 만료 및 구독 관련 알림 채널입니다.';
+
+  @override
+  String get alarmChannelName => '알람';
+
+  @override
+  String get alarmChannelDesc => '기상 및 미션 수행을 위한 알람 채널입니다.';
+
+  @override
+  String get shareViaKakao => '카카오톡으로 공유';
+
+  @override
+  String get shareViaSNS => '기타 SNS 공유 (Instagram, Twitter 등)';
+
+  @override
+  String get checkDetailResult => '자세한 결과 확인하기';
+
+  @override
+  String get viewMyFortuneResult => '나의 운세 결과 확인하기';
+
+  @override
+  String get takeSupplementNow => '영양제 챙겨 드세요!';
+
+  @override
+  String get takeNowQuestion => '지금 드시겠습니까?';
+
+  @override
+  String get eatNow => '지금 먹을게요';
+
+  @override
+  String get eatLater => '나중에 먹을게요';
+
+  @override
+  String snoozeMessageGeneric(int minutes) {
+    return '$minutes분 후에 다시 알려드릴게요.';
+  }
+
+  @override
+  String get hours => '시간';
+
+  @override
+  String get cheeringMessage4 => '활기찬 아침, 행복한 시작!';
+
+  @override
+  String get cheeringMessage5 => '미소 짓는 하루 되세요.';
+
+  @override
+  String get cheeringMessage6 => '오늘 하루도 힘내세요!';
+
+  @override
+  String get cheeringMessage7 => '당신은 오늘 충분히 빛날 거예요.';
+
+  @override
+  String get cheeringMessage8 => '좋은 일이 생길 것 같은 예감!';
+
+  @override
+  String get cheeringMessage9 => '오늘도 수고 많으셨습니다. 힘찬 시작!';
+
+  @override
+  String get cheeringMessage10 => '행복은 늘 당신 곁에 있어요.';
+
+  @override
+  String get cheeringMessage11 => '오늘도 당신의 꿈을 응원합니다.';
+
+  @override
+  String get cheeringMessage12 => '상쾌한 아침, 기분 좋은 하루!';
+
+  @override
+  String get cheeringMessage13 => '오늘 하루도 승리하세요!';
+
+  @override
+  String get cheeringMessage14 => '당신은 존재만으로도 소중합니다.';
+
+  @override
+  String get cheeringMessage15 => '기분 좋은 일이 가득한 하루 되세요.';
+
+  @override
+  String get cheeringMessage16 => '오늘 하루도 반짝반짝 빛나길!';
+
+  @override
+  String get cheeringMessage17 => '당신의 미소가 세상을 밝힙니다.';
+
+  @override
+  String get cheeringMessage18 => '오늘 하루도 당신답게!';
+
+  @override
+  String get cheeringMessage19 => '설레는 마음으로 오늘을 시작해요.';
+
+  @override
+  String get cheeringMessage20 => '당신을 위한 멋진 하루가 기다려요.';
+
+  @override
+  String get cheeringMessage21 => '오늘 하루도 긍정의 힘으로!';
+
+  @override
+  String get cheeringMessage22 => '당신이 가는 길을 응원합니다.';
+
+  @override
+  String get cheeringMessage23 => '오늘 하루도 최고로 만드세요!';
+
+  @override
+  String get cheeringMessage24 => '행운이 당신과 함께하길!';
+
+  @override
+  String get cheeringMessage25 => '오늘 하루도 따뜻하게 보내세요.';
+
+  @override
+  String get cheeringMessage26 => '당신은 할 수 있어요!';
+
+  @override
+  String get cheeringMessage27 => '오늘 하루도 감사하며 시작해요.';
+
+  @override
+  String get cheeringMessage28 => '당신의 가치는 무한합니다.';
+
+  @override
+  String get cheeringMessage29 => '오늘 하루도 웃음꽃 피우세요.';
+
+  @override
+  String get cheeringMessage30 => '좋은 사람들과 좋은 시간 보내길!';
+
+  @override
+  String get cheeringMessage31 => '오늘 하루도 꿈을 향해 한 걸음!';
+
+  @override
+  String get cheeringMessage32 => '당신은 오늘 가장 멋진 사람입니다.';
+
+  @override
+  String get cheeringMessage33 => '기적 같은 하루가 찾아올 거예요.';
+
+  @override
+  String get cheeringMessage34 => '오늘 하루도 여유롭게 즐기세요.';
+
+  @override
+  String get cheeringMessage35 => '당신의 노력은 배신하지 않아요.';
+
+  @override
+  String get cheeringMessage36 => '오늘 하루도 건강하게 보내세요.';
+
+  @override
+  String get cheeringMessage37 => '당신은 사랑받기 위해 태어난 사람!';
+
+  @override
+  String get cheeringMessage38 => '오늘 하루도 용기 있게!';
+
+  @override
+  String get cheeringMessage39 => '밝은 미래가 당신을 기다립니다.';
+
+  @override
+  String get cheeringMessage40 => '오늘 하루도 열정 가득하게!';
+
+  @override
+  String get cheeringMessage41 => '당신의 마음이 평안하길 바랍니다.';
+
+  @override
+  String get cheeringMessage42 => '오늘 하루도 소소한 행복을 찾으세요.';
+
+  @override
+  String get cheeringMessage43 => '당신은 이미 충분히 잘하고 있어요.';
+
+  @override
+  String get cheeringMessage44 => '오늘 하루도 희망차게 시작해요.';
+
+  @override
+  String get cheeringMessage45 => '당신의 친절이 누군가에게 큰 힘이 됩니다.';
+
+  @override
+  String get cheeringMessage46 => '오늘 하루도 보람차게 보내세요.';
+
+  @override
+  String get cheeringMessage47 => '당신은 세상을 바꾸는 힘이 있습니다.';
+
+  @override
+  String get cheeringMessage48 => '오늘 하루도 맑음!';
+
+  @override
+  String get cheeringMessage49 => '당신의 매력을 마음껏 발산하세요.';
+
+  @override
+  String get cheeringMessage50 => '오늘 하루도 행복으로 꽉 채우세요!';
+
+  @override
+  String get locationServiceDisabled => '위치 서비스가 꺼져 있습니다.';
+
+  @override
+  String get locationPermissionDenied => '위치 권한이 거부되었습니다.';
+
+  @override
+  String get locationPermissionPermanentlyDenied => '위치 권한이 영구적으로 거부되었습니다.';
+
+  @override
+  String get deleteMissionTitle => '미션 삭제';
+
+  @override
+  String get deleteMissionConfirm => '미션을 삭제하시겠습니까?';
+
+  @override
+  String get yesDelete => '네, 삭제할게요';
+
+  @override
+  String get waterAlarmTitle => '물 마실 시간이에요! 💧';
+
+  @override
+  String get waterAlarmBody => '건강을 위해 시원한 물 한 잔 어떠세요?';
+
+  @override
+  String get supplementAlarmBody => '오늘의 영양제, 잊지 말고 지금 챙겨 드세요.';
+
+  @override
+  String get waterHabitChannelDesc => '물 마시기 습관을 위한 알림 채널입니다.';
+
+  @override
+  String get pleaseSolveMath => '문제를 풀어주세요.';
+
+  @override
+  String detectedLabel(String labels) {
+    return '[인식됨: $labels]';
+  }
+
+  @override
+  String get defaultSleepDuration => '7시간 30분';
+
+  @override
+  String get year2024Name => '갑진년(푸른 용의 해)';
+
+  @override
+  String get year2025Name => '을사년(푸른 뱀의 해)';
+
+  @override
+  String get year2026Name => '병오년(붉은 말의 해)';
+
+  @override
+  String supportEmailSubject(String appTitle, String title) {
+    return '[$appTitle 문의] $title';
+  }
+
+  @override
+  String get summary => '요약';
+
+  @override
+  String get monthlySummary => '월간 요약';
+
+  @override
+  String monthlySuccessRate(
+      int month, String percentage, int success, int total) {
+    return '$month월 성공률: $percentage% ($success/$total)';
+  }
+
+  @override
+  String noMonthlyRecord(int month) {
+    return '$month월 기록 없음';
+  }
+
+  @override
+  String get missionRecord => '미션 기록';
+
+  @override
+  String get supplementRecord => '섭취 기록';
+
+  @override
+  String get timeSaleCatchChance => '50% 할인 기회를 꼭 잡으세요!';
 }

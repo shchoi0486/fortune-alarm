@@ -1,4 +1,129 @@
+import 'package:fortune_alarm/l10n/app_localizations.dart';
+
 class TojeongMonthlyData {
+  static String getMonthlySpecial(AppLocalizations l10n, int month, int index) {
+    switch (month) {
+      case 1:
+        if (index == 0) return l10n.tojeongMonthlySpecial_1_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_1_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_1_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_1_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_1_4;
+        break;
+      case 2:
+        if (index == 0) return l10n.tojeongMonthlySpecial_2_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_2_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_2_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_2_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_2_4;
+        break;
+      case 3:
+        if (index == 0) return l10n.tojeongMonthlySpecial_3_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_3_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_3_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_3_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_3_4;
+        break;
+      case 4:
+        if (index == 0) return l10n.tojeongMonthlySpecial_4_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_4_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_4_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_4_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_4_4;
+        break;
+      case 5:
+        if (index == 0) return l10n.tojeongMonthlySpecial_5_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_5_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_5_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_5_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_5_4;
+        break;
+      case 6:
+        if (index == 0) return l10n.tojeongMonthlySpecial_6_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_6_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_6_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_6_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_6_4;
+        break;
+      case 7:
+        if (index == 0) return l10n.tojeongMonthlySpecial_7_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_7_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_7_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_7_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_7_4;
+        break;
+      case 8:
+        if (index == 0) return l10n.tojeongMonthlySpecial_8_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_8_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_8_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_8_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_8_4;
+        break;
+      case 9:
+        if (index == 0) return l10n.tojeongMonthlySpecial_9_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_9_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_9_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_9_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_9_4;
+        break;
+      case 10:
+        if (index == 0) return l10n.tojeongMonthlySpecial_10_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_10_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_10_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_10_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_10_4;
+        break;
+      case 11:
+        if (index == 0) return l10n.tojeongMonthlySpecial_11_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_11_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_11_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_11_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_11_4;
+        break;
+      case 12:
+        if (index == 0) return l10n.tojeongMonthlySpecial_12_0;
+        if (index == 1) return l10n.tojeongMonthlySpecial_12_1;
+        if (index == 2) return l10n.tojeongMonthlySpecial_12_2;
+        if (index == 3) return l10n.tojeongMonthlySpecial_12_3;
+        if (index == 4) return l10n.tojeongMonthlySpecial_12_4;
+        break;
+    }
+    return "";
+  }
+
+  static String getGoodSentence(AppLocalizations l10n, int index) {
+    switch (index % 5) {
+      case 0: return l10n.tojeongMonthlyGood_0;
+      case 1: return l10n.tojeongMonthlyGood_1;
+      case 2: return l10n.tojeongMonthlyGood_2;
+      case 3: return l10n.tojeongMonthlyGood_3;
+      case 4: return l10n.tojeongMonthlyGood_4;
+      default: return l10n.tojeongMonthlyGood_0;
+    }
+  }
+
+  static String getNeutralSentence(AppLocalizations l10n, int index) {
+    switch (index % 5) {
+      case 0: return l10n.tojeongMonthlyNeutral_0;
+      case 1: return l10n.tojeongMonthlyNeutral_1;
+      case 2: return l10n.tojeongMonthlyNeutral_2;
+      case 3: return l10n.tojeongMonthlyNeutral_3;
+      case 4: return l10n.tojeongMonthlyNeutral_4;
+      default: return l10n.tojeongMonthlyNeutral_0;
+    }
+  }
+
+  static String getCautionSentence(AppLocalizations l10n, int index) {
+    switch (index % 5) {
+      case 0: return l10n.tojeongMonthlyCaution_0;
+      case 1: return l10n.tojeongMonthlyCaution_1;
+      case 2: return l10n.tojeongMonthlyCaution_2;
+      case 3: return l10n.tojeongMonthlyCaution_3;
+      case 4: return l10n.tojeongMonthlyCaution_4;
+      default: return l10n.tojeongMonthlyCaution_0;
+    }
+  }
+
   // 월별 특화 문장
   static const Map<int, List<String>> monthlySentences = {
     1: [

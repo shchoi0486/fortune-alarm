@@ -7,6 +7,16 @@
   "missionWater": "水2L以上飲む",
   "fortuneCookie": "幸運クッキー",
   "settings": "設定",
+  "language": "言語",
+  "languageKorean": "韓国語",
+  "languageEnglish": "英語",
+  "languageJapanese": "日本語",
+  "languageChinese": "中国語",
+  "languageRussian": "ロシア語",
+  "languageHindi": "ヒンディー語",
+  "languageSpanish": "スペイン語",
+  "languageFrench": "フランス語",
+  "languageGerman": "ドイツ語",
   "alarm": "アラーム",
   "calendar": "カレンダー",
   "mission": "ミッション",
@@ -15,6 +25,16 @@
   "allMissionsCompleted": "今日のミッション5つをすべて達成しました。",
   "rewardReceived": "報酬としてフォーチュンクッキー1個を支給します！ 🥠",
   "confirm": "確認",
+  "missionSuccess": "ミッション成功！",
+  "cheeringMessage1": "今日も一日楽しく過ごしましょう！",
+  "cheeringMessage2": "今日のあなたを応援しています！",
+  "cheeringMessage3": "今日も素敵な一日になるでしょう。",
+  "todaysCheering": "今日のメッセージ",
+  "notificationWakeUpBody": "起きる時間です！",
+  "notificationMissionBody": "ミッションを遂行してアラームを止めてください！",
+  "notificationSafetyBody": "アラームが強制終了されました！ミッションを完了してください。",
+  "notificationRingingBody": "アラームが鳴っています！",
+  "snoozePrefix": "[スヌーズ]",
   "exactAlarmPermissionRequired": "正確な時間にアラームを鳴らすには、「正確なアラーム」権限が必要です。",
   "overlayPermissionRequired": "全画面通知のために、「他のアプリの上に表示」権限が必要です。",
   "deleteAllAlarms": "すべてのアラームを削除",
@@ -24,10 +44,10 @@
   "@hoursMinutesRemaining": {
     "placeholders": {
       "hours": {
-        "type": "int"
+        "type": "String"
       },
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -35,7 +55,7 @@
   "@minutesRemaining": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -218,14 +238,14 @@
   "itsTimeToWakeUp": "起きる時間です！",
   "dismissAlarm": "アラームを解除",
   "slideToDismiss": "スライドして解除",
-  "snoozeInfo": "{minutes}分, {count}回",
+  "snoozeInfo": "{minutes}分 x {count}回",
   "@snoozeInfo": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       },
       "count": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -233,7 +253,7 @@
   "@snoozeInfoUnlimited": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -299,9 +319,15 @@
   "insufficientCookiesTitle": "フォーチュンクッキーが不足しています",
   "insufficientCookiesMessage": "フォーチュンクッキーが足りません。\nミッションをクリアするか、広告を見て獲得できます。",
   "useCookiesSnackbar": "フォーチュンクッキーを2個使用して結果を確認します。",
+  "faceAnalysisComplete_v2": "顔分析が完了しました！",
   "chooseMethodToViewResult": "あなたの顔に隠された運勢を確認するには、\n以下の方法のいずれかを選択してください。",
   "watchAdForFree": "広告を見て無料で結果を確認",
+  "useTwoCookies_v2": "クッキーを2枚使う",
   "viewResult": "結果を見る",
+  "aiAnalyzingFace_v2": "AIが顔を解析しています...",
+  "faceRecognitionComplete_v2": "認識が完了しました",
+  "extractingFeatures_v2": "特徴を抽出しています...",
+  "matchingFortuneData_v2": "データを照合しています...",
   "wealthLuck": "💰 財運",
   "loveLuck": "❤️ 恋愛運",
   "careerLuck": "💼 仕事運",
@@ -414,6 +440,7 @@
   "batteryOptimFailMessage": "アラームの登録に失敗しました。バッテリー最適化の例外権限がありません。",
   "overlayFailMessage": "アラームの登録に失敗しました。他のアプリの上に表示する権限がありません。",
   "loadingDelay": "読み込みの遅延",
+  "loading": "読み込み中...",
   "previewFail": "プレビューに失敗しました",
   "bgDefault": "デフォルト背景",
   "bgFortuneFriends": "フォーチュニーフレンズ",
@@ -563,6 +590,43 @@
   "mouthExpressionBlessing": "口は閉じられていますが口角が上がっているため、言葉の端々に福が宿り、周囲から好感を得る顔立ちです。",
   "mouthExpressionReliable": "固く結ばれた口元は信頼と責任感を示しており、軽い言葉よりも行動で示すタイプです。",
   "mouthExpressionLucky": "大きく開いた笑顔が爽やかで、ポジティブなエネルギーを放ち、対人関係に幸運を呼び込みます。",
+  "supplementAlarmTitle": "サプリメントを飲む時間です！ ��",
+  "alarmVolume": "アラーム音量",
+  "alarmTimeList": "アラーム時刻リスト",
+  "noAlarmTimesAdded": "追加されたアラーム時刻はありません",
+  "alarmTimeDeleted": "アラーム時刻が削除されました",
+  "addAlarmTime": "アラーム時刻の追加",
+  "editAlarmTime": "アラーム時刻の編集",
+  "defaultRingtone": "デフォルトの着信音",
+  "takeSupplementsNow": "サプリメントを飲んで記録してください！",
+  "nextTime": "後で飲む",
+  "take": "飲む",
+  "notifications": "通知",
+  "notificationTime": "通知時間",
+  "start": "開始",
+  "end": "終了",
+  "notificationInterval": "通知間隔",
+  "waterDrankToday": "今日飲んだ水",
+  "goal": "目標",
+  "cup": "コップ",
+  "waterIntakeRecord": "水分摂取の記録",
+  "remainingAmount": "残り",
+  "ml": "ml",
+  "minutesFormat": "{minutes}分",
+  "drinkWater": "水を飲む",
+  "supplement": "サプリメント",
+  "water": "水分",
+  "morning": "午前",
+  "afternoon": "午後",
+  "evening": "夜",
+  "takeSupplement": "サプリメントを飲む",
+  "goalAchievedTitle": "目標達成！",
+  "waterIntake": "水分摂取",
+  "remindTime": "通知時間",
+  "alarmRingtone": "アラームの着信音",
+  "snoozeTime": "スヌーズ時間",
+  "snoozeDescription": "「後で飲む」を選択した際のデフォルト時間です",
+  "oneHour": "1時間",
   "mouthExpressionOpen": "口が少し開いており、開放的で正直な性格を示していますが、時には失言に注意する必要があります。",
   "overallHeadlineSimple": "今日のポイントは{topKey}、注意すべき点は{bottomKey}です。",
   "@overallHeadlineSimple": {
@@ -844,7 +908,7 @@
   "@minutesLater": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -853,7 +917,7 @@
   "@timesCount": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -876,7 +940,7 @@
   "selectTitleColor": "タイトルの色を選択",
   "save": "保存",
   "missionNone": "ミッションなし",
-  "missionSnap": "スナップ",
+  "missionSnap": "物体撮影",
   "missionMath": "計算",
   "missionFortune": "運勢",
   "missionShake": "振る",
@@ -1081,7 +1145,7 @@
   "@missionSnoozeMessage": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -1097,6 +1161,14 @@
   "shakeCount": "振った回数",
   "shakeTimes": "{count}回",
   "@shakeTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tapTimes": "タップ {count}回",
+  "@tapTimes": {
     "placeholders": {
       "count": {
         "type": "int"
@@ -1150,7 +1222,6 @@
       }
     }
   },
-  "defaultRingtone": "デフォルトの着信音",
   "classicAlarm": "クラシックアラーム",
   "digitalAlarm": "デジタルアラーム",
   "birdsSound": "鳥のさえずり",
@@ -1174,7 +1245,6 @@
   "batteryOptimizationPermissionDesc": "アラームを時間通りに鳴らすには、バッテリーの最適化を無効にする必要があります。",
   "overlayPermissionDesc": "アラーム作動時にミッション画面を表示するには、「他のアプリの上に表示」権限が必要です。",
   "cameraMissionFirstImageError": "少なくとも最初のミッション画像を設定してください。",
-  "cameraMissionSequentialImageError": "ミッション画像を順番に設定してください。",
   "retry": "再試行",
   "exactAlarmPermissionFail": "アラームの登録に失敗しました。正確なアラーム権限が無効になっているため、設定が必要です。",
   "batteryOptimizationPermissionFail": "アラームの登録に失敗しました。バッテリーの最適化例外権限がないため、設定が必要です。",
@@ -1197,6 +1267,35 @@
   "turnOffAlarm": "アラームを止める",
   "startMission": "ミッション開始",
   "alarmSnooze": "アラームをスヌーズ",
+  "snoozeMinutesUnlimited": "{minutes}分（無制限）",
+  "@snoozeMinutesUnlimited": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "snoozeMinutesCount": "{minutes}分（{current}/{total}）",
+  "@snoozeMinutesCount": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ringtone_fluttering_day": "ときめく一日",
+  "ringtone_cozy_day": "ほっとする一日",
+  "ringtone_sensible_day": "落ち着いた一日",
+  "ringtone_play_with_me": "一緒に遊ぼう",
+  "ringtone_refreshing_day": "さわやかな一日",
+  "ringtone_new_beginning": "新しい始まり",
+  "ringtone_self_love": "セルフラブ",
   "fortuneTitle": "運勢を確認する",
   "fortuneMessage": "運勢の結果を確認して、\n隠されたプレゼントも手に入れましょう！",
   "fortuneAdButton": "広告を見て結果を確認",
@@ -1263,25 +1362,225 @@
   "tarotName19": "太陽",
   "tarotName20": "審判",
   "tarotName21": "世界",
-  "tarotKeywords1": "創造, 意志, 能力, 実現, 多才さ",
-  "tarotDescription1": "魔術師は赤いローブをまとい、片手を天に、もう片手を地に指して、天の力を地にもたらしています。テーブルの上には4つのエレメント（ワンド、カップ、ソード、ペンタクル）があり、これはあなたが目標を達成するためのすべての道具と能力をすでに持っていることを意味します。",
-  "tarotLoveMeaning1": "あなたの魅力が最高潮に達し、異性から人気を集める時期です。気になる人がいるなら、機転の利いた会話で関係を発展させ、リードすることができます。",
-  "tarotLoveDetail1": "あなたの魅力と才能が輝き、異性の心を掴む絶好のチャンスです。好きな人がいるなら、ためらわずに積極的にアプローチしてみてください。あなたのユーモアとセンスのある会話は相手を喜ばせ、主体的に関係をリードできるでしょう。フリーの方は複数の異性からアプローチを受ける可能性があり、カップルの方はデートコースをリードしたりイベントを準備したりすると、相手は非常に感動するでしょう。自信を持って愛を勝ち取ってください。",
-  "tarotWealthMeaning1": "あなたの能力と技術を活かして収益を生み出すのに適した時期です。頭の中にあるアイデアを形にすれば、経済的な成果につながります。",
-  "tarotWealthDetail1": "あなたの知識、技術、アイデアがお金になる時期です。給料だけに満足せず、副業やフリーランス活動を通じて追加収入を創出してみてください。独創的な企画、営業力、話術が遺憾なく発揮され、期待以上の収益が得られるでしょう。資金運用においてもあなたの判断が的中しやすいので、主体的に財務計画を立てて実行に移せば良い結果が得られます。",
-  "tarotSuccessMeaning1": "あなたの仕事能力が遺憾なく発揮され、周囲に認められるでしょう。計画していることがあれば、今が実行に移す時です。",
-  "tarotSuccessDetail1": "自分の能力を最大限に活かして、職場や学業で頭角を現すことができます。どんな問題に直面しても、あなた自身の機転とユーモアで解決でき、同僚や上司から「有能な人」として認められるでしょう。新しいプロジェクトを主導したり、重要なプレゼンテーションを行ったりすれば、成功裏に終えることができます。準備ができている者にチャンスが訪れるように、あなたはすでに十分な準備ができています。自分を信じて、ステージ上の主人公のように堂々と実力を発揮してください。",
+  "tarotKeywords0": "新たな始まり, 冒険, 純粋, 自由, 軽率",
+  "tarotDesc0": "愚者は華やかな服をまとい、崖の縁に危うく立っていますが、視線は遠くを向いて希望に満ちています。",
+  "tarotLoveMeaning0": "予期せぬ新しい愛が訪れたり、一目惚れするような運命的な出会いがあるかもしれません。",
+  "tarotLoveDetail0": "子供のような純粋な心で愛を始めることができる時期です。過去の傷や複雑な条件はすべて忘れ、今この瞬間の感情に忠実になってみてください。",
+  "tarotWealthMeaning0": "新しい投資先やビジネスアイテムが目に入るかもしれません。お金に縛られず、楽しく働くことで収익がついてくる時期です。",
+  "tarotWealthDetail0": "金銭的に新しい機会が開かれる時期です。他人が試したことのない新しい分野や独創的なアイテムに投資すれば、意外な成果を収めることができます。",
+  "tarotSuccessMeaning0": "新しいプロジェクトを始めたり、全く別の分野へ転職するのに良い時期です。",
+  "tarotSuccessDetail0": "現在準備していることがあるなら、果敢に第一歩を踏み出してください。慣れ親しんだ環境を離れ、新しい挑戦をするのに最も適した時期です。",
+  "tarotKeywords1": "創造性, 自信, 器用さ, 意志力, 潜在能力",
+  "tarotDesc1": "魔術師は片手を天に、もう片手を地に向け、無限の可能性を象徴しています。テーブルの上には4つの元素（ワンド、カップ、ソード、ペンタクル）が置かれており、すべてを現実に変える力を持っていることを示しています。",
+  "tarotLoveMeaning1": "自分の魅力を存分に発揮できる時期です。自信を持ってアプローチすれば、望む愛を手に入れることができるでしょう。",
+  "tarotLoveDetail1": "あなたの魅力と才能が光を放ち、異性の心をつかむ絶好の機会です。気になる相手がいるなら、迷わず積極的にアプローチしてください。あなたのユーモアとセンスのある会話が相手を楽しま、関係を主導的に導くことができるでしょう。自分を信じて、堂々と愛を勝ち取ってください。",
+  "tarotWealthMeaning1": "あなたの能力と技術を活用して収益を創出できる適期です。",
+  "tarotWealthDetail1": "あなたが持っている知識、技術、アイデアがすぐにお金になる時期です。単に給料を受け取ることに満足せず、副業や複業などを通じて追加収益を創出してみてください。独創的な企画や営業能力が卓越に発揮され、期待以上の収益を上げることができるでしょう。",
+  "tarotSuccessMeaning1": "業務能力が卓越に発揮され、周囲の認めを受けます。",
+  "tarotSuccessDetail1": "職場や学業において、あなたの能力を十分に発揮して頭角を現すことができます。どんな問題が起きても、あなたならではの機転と知恵で解決でき、周囲の同僚や上司から「実力者」として認められるようになります。自信を持って、堂々と実力を見せてください。",
+  "tarotKeywords2": "直感, 知恵, 神秘, 秘密, プラトニック",
+  "tarotDesc2": "神秘的なベールの後ろに座っている女教皇は、手に知恵の巻物を持ち、バランスを保ちながら深い洞察力を象徴しています。",
+  "tarotLoveMeaning2": "精神的な交感が重要なプラトニックな愛を意味します。",
+  "tarotLoveDetail2": "肉体的な魅力よりも、精神的な深さと会話が通じる人に惹かれるようになります。相手の心を見抜く直感力が発達し、言葉にしなくてもお互いの感情を理解できるでしょう。しかし、あまりにも慎重な態度は誤解を招くことがあるので、たまには素直に心を表現してみてください。",
+  "tarotWealthMeaning2": "今は積極的に投資するよりも、資産を守り状況を静観すべき時です。",
+  "tarotWealthDetail2": "目の前の利益を追ってむやみに動くよりも、冷徹に市場状況を分析し勉強すべき時期です。今は種をまいて待つ時期なので、当面の収益が出ないからといって焦らないでください。不動産や株式など、長期的な観点からの投資を考慮するのが良いでしょう。",
+  "tarotSuccessMeaning2": "学業、研究、専門職分野で良い成果を出すことができます。",
+  "tarotSuccessDetail2": "表向きに華やかに現れる成果よりも、内実を固めて実力を育てることに集中すべきです。研究、企画、分析など深い思考が必要な業務で卓越した成果を出すことができます。あなたの賢明で慎重な態度は、決定的な瞬間に問題解決の鍵となるでしょう。",
+  "tarotKeywords3": "豊穣, 母性, 自然, 美しさ, 結実",
+  "tarotDesc3": "豊かな自然の中でリラックスして座っている女帝は、物質的、精神的な豊かさの象徴です。",
+  "tarotLoveMeaning3": "愛が溢れ、関係がさらに深まる時期です。",
+  "tarotLoveDetail3": "あなたの女性らしい（または包容力のある）魅力が最大化され、異性に非常に魅力的に映る時期です。恋愛中なら、相手を温かく包み込み、気遣う姿で大きな愛を受けることになり、結婚の話が出るかもしれません。ソロなら、外見を整えたりスタイルを変化させてみることが恋愛運を高めるのに大きな助けになります。",
+  "tarotWealthMeaning3": "物質的に非常に豊かで安定した時期です。",
+  "tarotWealthDetail3": "財物運が大きく花開く時期です。努力した分、いやそれ以上の報酬が伴い、経済的に余裕を満喫することができます。事業や投資で期待以上の収益を収めたり、思いがけないボーナスやプレゼントを受け取ることもあります。豊かなエネルギーを周囲の人々と分か치合えば、さらに大きな幸運が訪れるでしょう。",
+  "tarotSuccessMeaning3": "進行中のプロジェクトが順調に成長し、良い成果を出します。",
+  "tarotSuccessDetail3": "仕事の結果が目に見えて現れる時期です。プロジェクトが成功裏に終わり、成果給を受け取ったり昇進の機会を掴むことができます。特に美的感覚や創造力が必要な分野で、あなたの才能が光を放ちます。余裕を持って過程を楽しみながら働くことが、むしろより良い結果をもたらすでしょう。",
+  "tarotKeywords4": "権威, 構造, 安定, リーダーシップ, 責任感",
+  "tarotDesc4": "硬い石の玉座に座った皇帝は、鎧を身にまとい、確固たる支配力と秩序を象徴しています。",
+  "tarotLoveMeaning4": "信頼でき、責任感のある相手との安定した恋愛を意味します。",
+  "tarotLoveDetail4": "燃え上がるような情熱よりも、信頼と安定をベースにした関係が持続します。相手があなたを心強く守り、リードしてくれるでしょう。ただし、あまりにもコントロールしようとしたり、意地を張ったりしないように注意してください。ソロなら、能力があり社会的地位がある人に出会う機会が生まれるでしょう。",
+  "tarotWealthMeaning4": "体系的な資産管理で安定した富を蓄積できます。",
+  "tarotWealthDetail4": "金銭管理において原則と計画を立てることが重要です。一攫千金を狙う投機よりも、定期預金、不動産など安全で確実な資産に投資して基盤を固めるのが良いでしょう。あなたの現実的な判断力と推進力が、富を蓄積するのに大きな助けになるでしょう。",
+  "tarotSuccessMeaning4": "職場で昇進したり、リーダーの座に就くことができる運気です。",
+  "tarotSuccessDetail4": "組織内でのあなたの立場が固まる時期です。リーダーシップを認められ、チームリーダーや管理職に昇進することができ、重要なプロジェクトの総括責任を任されることもあるでしょう。感情に振り回されず、理性的で冷徹な判断で業務を処理し、上司の信頼を得るでしょう。",
+  "tarotKeywords5": "伝統, 教え, 信念, 助言, 仲裁",
+  "tarotDesc5": "法王は社会的規範と伝統を重視し、賢明な助言で人々を導く精神的な師です。",
+  "tarotLoveMeaning5": "信頼と尊重をベースにした真剣で健全な出会いが続きます。",
+  "tarotLoveDetail5": "軽い出会いよりも、結婚を前提とした真剣な交際を望むようになります。紹介や合コン、あるいは健全な集まりで良い縁に出会うことができます。恋人との間に葛藤があるなら、周囲の大人や先輩に助言を求めてみてください。彼らの賢明な助言が関係回復に大きな助けになるでしょう。",
+  "tarotWealthMeaning5": "伝統적で安全な方式の財テクが良いでしょう。",
+  "tarotWealthDetail5": "冒険的な投資よりも安定性を最優先にすべきです。銀行の預貯金や保険など伝統的な金融商品を活用するのが良いでしょう。専門家のコンサルティングを受けてみたり、正直で透明な金銭取引を維持することが、あなたの信用と財産を守る道です。",
+  "tarotSuccessMeaning5": "契約、提携、協力関係が円満に締結される運気です。",
+  "tarotSuccessDetail5": "一人で問題を解決しようとするよりも、周囲の助けを借りるのが賢明です。職場の同僚や上司、メンターなど目上の人に助言を求めれば、意外と簡単に解決策を見つけることができます。社内の規則と手順をよく守ることが良い評価を受ける近道であり、重要な契約を締結するのにも良い運気です。",
+  "tarotKeywords6": "愛, 調和, 選択, 結合, パートナーシップ",
+  "tarotDesc6": "温かい太陽の下、天使の祝福を受けるアダムとイブが立っています。",
+  "tarotLoveMeaning6": "愛が花開く最高の時期の一つです。",
+  "tarotLoveDetail6": "胸が高鳴るロマンスが待っています。好意を持っている相手と急速に親しくなり、目を見るだけで通じ合うテレパシーのような交感を感じることができるでしょう。告白を準備中なら成功確率が非常に高いので、勇気を出してください。ただし、一時の誘惑に流されるよりは、真心が向かう先を選択する知恵が必要です。",
+  "tarotWealthMeaning6": "一人よりも一緒の時、金運が上昇します。",
+  "tarotWealthDetail6": "心の合う人と一緒に仕事を企てれば、相乗効果が出て金銭的利益が大きくなります。共同事業の提案があるなら前向きに検討してみてください。周囲の人々とのコミュニケーションを通じて有益な投資情報を得られる時期です。ただし、楽しむための支出が過多になる可能性があるので、適切な調節が必要です。",
+  "tarotSuccessMeaning6": "チームワークが光を放つ時期です。",
+  "tarotSuccessDetail6": "職場の同僚やビジネスパートナーとの呼吸がぴったり合い、働くことが楽しいです。一人でする業務よりはチームプロジェクトでより良い成果を出すことができ、円満な対人関係が成功の鍵となります。あなたが本当に好きで楽しめる仕事を選択するなら、後悔のない結果を得るでしょう。",
+  "tarotKeywords7": "勝利, 意志, 前進, 征服, 移動",
+  "tarotDesc7": "戦車に乗った若い王が強い意志で目標に向かって迷わず突き進み、勝利を勝ち取る姿です。",
+  "tarotLoveMeaning7": "積極的な愛情攻勢が成功する時期です。",
+  "tarotLoveDetail7": "愛を勝ち取るために突き進むべき時です。ためらわずに自分の心を素直に堂々と表現すれば、ライバルがいても勝利することができます。サム（友達以上恋人未満）の状態なら、関係をはっきりと定義してリードするのが良いでしょう。ダイナミックなデートや一緒に旅行に出かけることが、愛情を深めてくれるでしょう。",
+  "tarotWealthMeaning7": "目標とした収益を達成するために攻撃的に動くべき時です。",
+  "tarotWealthDetail7": "金銭的な目標を達成するために強力な推進力が必要な時期です。ためらわずにチャンスが来た時に果敢に決定する推進力が収益をもたらします。短期的に成果が出るプロジェクトに集中するのが有利であり、足で稼ぐ分だけ実績が上がる運勢です。移動に関連する支出が生じる可能性がありますが、これは新しい機会のための投資となるでしょう。",
+  "tarotSuccessMeaning7": "競争で勝利し、目標を勝ち取る運気です。",
+  "tarotSuccessDetail7": "昇進、合格、契約成立など、明確な目標達成が予見されます。競争が激しいほどあなたの闘志が燃え上がり、結局勝利を手にすることになるでしょう。障害が立ちはだかっても正面突破するあなたの姿が周囲に深い印象を残し、出張や移動が多い業務で卓越した能力を発揮することになります。",
+  "tarotKeywords8": "忍耐, 勇気, 内面の力, 包容, 外柔内剛",
+  "tarotDesc8": "白い服を着た女性が、物理的な力ではなく精神的な力と忍耐強さで猛獣を優しく手なずける姿です。",
+  "tarotLoveMeaning8": "相手をありのままに受け入れ、理解する包容力が必要な時期です。",
+  "tarotLoveDetail8": "今の愛は忍耐強さと知恵を要求します。相手の短所やわがままを広い心で受け入れ、包み込んであげる時、関係が一段階さらに発展することができます。柔らかい態度で相手をリードする外柔内剛の姿勢が必要であり、根気強く傍を守ってあげれば、結局あなたの真心が相手の心を開かせるでしょう。",
+  "tarotWealthMeaning8": "たゆまぬ貯蓄と健全な消費習慣が財産を集める秘訣です。",
+  "tarotWealthDetail8": "財物運が徐々に上昇する流れです。すぐに大金が入ってこなくても失望せず、誠実に資産を管理すれば、後で大きなまとまったお金になって戻ってくるでしょう。投資においては短期的な騰落に一喜一憂せず、粘り強く耐えるのが有利です。自分の衝動的な消費欲をうまくコントロールすることが金持ちになる近道です。",
+  "tarotSuccessMeaning8": "難しい課題や気難しい上司に出会っても、賢明に対処できます。",
+  "tarotSuccessDetail8": "大変なプロジェクトや気難しい業務を任されるかもしれませんが、あなたにはこれを解決する十分な底力があります。外見は柔らかそうに見えますが、内面の強い意志で難関を一つずつ克服していく姿が際立ちます。冷静さを失わずに問題を解決するあなたの姿に、周囲から深い信頼が寄せられるようになるでしょう。",
+  "tarotKeywords9": "内省, 孤独, 探求, 知恵, 休息",
+  "tarotDesc9": "暗い雪山の上で灯火を持った老人が、内面の声に耳を傾けながら真理を探求する姿です。",
+  "tarotLoveMeaning9": "一人だけの時間が必要だったり、恋愛について深く悩む時期です。",
+  "tarotLoveDetail9": "今は活発な恋愛よりは自分を見つめ直す時間が必要な時です。寂しさを紛らわすために誰でも会うよりは、自分が本当に望む愛が何なのか深く悩んでみてください。恋人がいても、しばらく距離を置いて各自の時間を持つことが、むしろ関係の本質を悟るのに役立つことがあります。",
+  "tarotWealthMeaning9": "金銭的な活動が多少萎縮することがあります。",
+  "tarotWealthDetail9": "財物に関しては保守的な態度を取るべきです。新しい投資をしたり事業を広げるよりは、現在の資産を几帳面に点検し、漏れていくお金を防ぐことが重要です。代わりに自分の価値を高めるための勉強や技術習得に費用を支出することは、後でより大きな収益を上げることができる素晴らしい投資です。",
+  "tarotSuccessMeaning9": "専門的な知識や技術を深く研究する分野で成果を出します。",
+  "tarotSuccessDetail9": "研究、企画、開発など、一人で深く掘り下げる業務で卓越した成果を出すことができます。他人に目立つことはありませんが、黙々と実力を積み重ねていく時期であり、職場内の人間関係よりは業務の本質に集中するのが有利です。解決されない問題があるなら、経験豊富なメンターを訪ねて助言を求めてみてください。",
+  "tarotKeywords10": "運命, 転換点, 幸運, サイクル, 変化",
+  "tarotDesc10": "雲の上に巨大な運命の輪があり、四元素を象徴する天使たちが本を読んでいます。",
+  "tarotLoveMeaning10": "運命的な出会いや、関係の劇的な変化が訪れる予感です。流れに身を任せてみてください。",
+  "tarotLoveDetail10": "映画のような運命的な愛があなたを訪れます。思いがけない場所での出会いや、意外な再会など、ドラマチックな出来事が起こる可能性があるので、心を開いておきましょう。フリーの方は一目惚れする相手に出회えるかもしれませんし、カップルの方は関係が一歩前進するきっかけが訪れるでしょう。",
+  "tarotWealthMeaning10": "金運の流れが良くなっています。",
+  "tarotWealthDetail10": "幸運の女神があなたに微笑んでいます。思いがけない収入や投資の利益など、金運が上昇カーブを描く時期です。ただし、運は巡るものです。良い時期こそ自惚れず、将来のために貯蓄する知恵も必要です。",
+  "tarotSuccessMeaning10": "チャンスが到来しています。タイミングを逃さず、波に乗ることが成功への近道です。",
+  "tarotSuccessDetail10": "滞っていた物事がスムーズに動き出す、人生のターニングポイントが訪れました。周囲の状況があなたに有利に働いているので、新しいチャンスが来た時は迷わず掴んでください。変化を恐れずに流れに身を任せれば、良い結果がついてくるでしょう。",
+  "tarotKeywords11": "公正, 均衡, 責任, 真実, 因果応報",
+  "tarotDesc11": "赤い服を着た裁判官が、右手に剣、左手に天秤を持っています。これは客観的な判断と、自分の行動に対する責任を象徴しています。",
+  "tarotLoveMeaning11": "感情よりも理性が優先される関係です。",
+  "tarotLoveDetail11": "今は感情に流されるよりは、理性的な判断が必要な時期です。相手と自分の関係が均衡を保っているか、自分が犠牲になりすぎていないか、あるいは逆に受け取ってばかりいないか振り返ってみてください。結婚を考えているなら、相手の条件や背景を几帳面に問い詰めることになる可能性があり、率直で公正な対話が関係改善の解決策になるでしょう。",
+  "tarotWealthMeaning11": "金銭取引や契約において几帳面な確認が必要です。",
+  "tarotWealthDetail11": "金銭的な部分で是非を正さなければならないことが生じる可能性があります。貸したお金を返してもらったり、逆に返すべきお金を精算するなど、財務関係をきれいに整理するのに良い時です。契約書を書く時は毒素条項がないか几帳面に調べ、僥倖や便法よりは正直で透明に原則通りに処理するのが良いでしょう。",
+  "tarotSuccessMeaning11": "公正な評価を受け、正当な報酬を受け取ることになります。",
+  "tarotSuccessDetail11": "あなたの業務成果に対して、公正で客観的な評価を受けることになります。これまで一生懸命働いたなら、昇進やボーナスなど妥当な報酬が伴うでしょうし、法曹界や会計など正確性が要求される分野で能力を発揮できます。意思決定を下す時は感情を排除し、徹底的にデータと事実に基盤して判断してください。",
+  "tarotKeywords12": "犠牲, 忍耐, 新しい視点, 停滞, 悟り",
+  "tarotDesc12": "木に逆さまに吊るされた男が、自発的な苦難を通じて世界を新しい視点で見つめ、悟りを得る姿です。彼の頭の後ろにある後光は、精神的な成長を意味します。",
+  "tarotLoveMeaning12": "関係が停滞したり、片思いが長引く可能性があります。",
+  "tarotLoveDetail12": "恋愛が進展せずもどかしさを感じることがありますが、今は急いでも解決されることではありません。しばらく立ち止まって、現在の状況を別の観点から眺め、自分が自分のやり方だけで愛を強要していないか反省してみる必要があります。相手の立場になって考え、配慮する忍耐が、結局相手の心を開く鍵となるでしょう。",
+  "tarotWealthMeaning12": "資金の流れが滞ったり、損失を甘受しなければならないこともあります。",
+  "tarotWealthDetail12": "金銭的に行き詰まったような感じを受けることがあります。投資したお金が凍結されたり、予定されていた収入が遅延することがありますが、あがくほどさらにもつれる可能性があるので、今はむしろ心を空にして静観するのが上策です。この時期を通じて自分の消費習慣を点検し、お金に対する価値観を新しく定立してみる時間にしてください。",
+  "tarotSuccessMeaning12": "物事が計画通りに進まず遅延することがあります。",
+  "tarotSuccessDetail12": "プロジェクトが中断されたり業務が遅延してストレスを受けることがありますが、これは失敗ではなく「一時停止」の信号です。無理に進めようとせず、一歩下がって全体的な絵を書き直してみてください。固定観念を壊した時、他人が考えられない奇抜なアイデアが出ることがあり、今の試練はあなたに新しい悟りを与えるでしょう。",
+  "tarotKeywords13": "終結, 変化, 再生, 別れ, 新しい始まり",
+  "tarotDesc13": "古いものの完全な終結と、それによる新しい始まりを象徴し、苦痛ですが避けられない変化の過程を表しています。",
+  "tarotLoveMeaning13": "関係の終結や大きな変化を意味します。",
+  "tarotLoveDetail13": "今の関係が限界を迎えている可能性があります。無理に引き留めようとするよりは、自然に流す勇気が必要であり、別れは痛いですが、その終わりには必ずより良い新しい始まりが待っています。過去の未練や傷から完全に脱してこそ、新しい人が入る場所ができるという点を肝に銘じてください。",
+  "tarotWealthMeaning13": "金銭的な損失や投資失敗など大変な状況が来ることがあります。",
+  "tarotWealthDetail13": "財政的に大きな変化が予想されます。信じていた投資先で損失が出たり、予期せぬ支出で困難を経験することがありますが、これはこれまでの非効率的な資産管理方式を変えなさいという信号です。負債を整理し不必要な支出を完全に遮断して、より健康的で安定した財務構造を備えるための足がかりにしてください。",
+  "tarotSuccessMeaning13": "進行していたことが中断されたり失敗することがあります。",
+  "tarotSuccessDetail13": "精魂込めたプロジェクトが霧散したり職場で大きな変化を経験することがあります。当面は挫折感が大きいでしょうが、これはあなたに合わない仕事を整理し、より大きな成功のために新しい道を探しなさいという運命の啓示です。古い方式を捨てて完全に新しい心構えで始めれば、人生のより素敵な次のチャプターが開かれるでしょう。",
+  "tarotKeywords14": "均衡, 節制, 和合, 治癒, 中庸",
+  "tarotDesc14": "二つのカップの間で水を移し替えながら、現実と理想の間の完璧な均衡と調和のとれた流れを象徴しています。",
+  "tarotLoveMeaning14": "異なる二人が出会い、調和を成していく過程です。",
+  "tarotLoveDetail14": "燃え上がるような情熱よりも、ほのかで持続的な愛が似合う時期です。お互いの相違点を認め、補完し合いながら深い絆を築いていくことになり、争いがあっても冷静に対話で解いていく知恵が必要です。あなたの穏やかで配慮深い態度が相手の心をリラックスさせ、安定した関係を作ってくれるでしょう。",
+  "tarotWealthMeaning14": "収入と支出の均衡を合わせることが重要です。",
+  "tarotWealthDetail14": "財物運が安定した流れに乗ります。一攫千金を狙うよりは現在の資産を効率的に配分し管理することに集中し、収入が増えた分、支出も適切に調節する習慣が必要です。投資をするならリスク管理のために分散投資をするのが良く、地道な管理が結局富をもたらすでしょう。",
+  "tarotSuccessMeaning14": "異なる意見を調整し和合を導き出す能力が際立ちます。",
+  "tarotSuccessDetail14": "チームプロジェクトで仲裁者の役割を立派に遂行し、葛藤を解決して業務効率を高めます。あなたの柔軟な思考と適応力が周囲に認められるようになり、仕事と休息のバランスをうまく合わせてバーンアウトを予防する知恵が際立つ時期です。全体的な流れを見守りながら着実に進めるのが最も良い結果につながります。",
+  "tarotKeywords15": "誘惑, 束縛, 執着, 物質主義, 中毒",
+  "tarotDesc15": "自分を拘束する欲望と執着、そしてその気になれば脱出できるけれどそうしない物質的な誘惑を象徴しています。",
+  "tarotLoveMeaning15": "強烈な肉体的魅力に惹かれたり執着する関係を意味します。",
+  "tarotLoveDetail15": "異性の魅力に強力に魅了され、理性的な判断を下しにくい時期です。熱いロマンスが始まることもありますが、一方で相手に対する過度な執着と拘束で大変になる可能性があるので注意が必要です。自分の感情が真実の愛なのか、それとも単純な所有欲なのか冷静に振り返り、自分をコントロールしなければなりません。",
+  "tarotWealthMeaning15": "物質的な欲が強くなり無謀な投資をしたり、遊興に大金を使う可能性があります。",
+  "tarotWealthDetail15": "金銭的な誘惑が多い時期です。甘い言葉に騙されて危険な場所に投資したり、衝動的な消費で財産を使い果たす危険があるので警戒しなければなりません。お金の奴隷になって周囲の信頼を裏切らないように注意し、新しい投資をするよりは現在持っているものを守り、自分の過度な物欲をコントロールすべき時です。",
+  "tarotSuccessMeaning15": "成功のために手段と方法を選ばないようにすることがあります。",
+  "tarotSuccessDetail15": "権力や名誉に対する欲が大きくなり、周囲の同僚を競争相手としてのみ見るようになることがあります。成果のために無理な日程を組んだり、健康を顧みない仕事中毒に陥る恐れがあるので注意してください。正当な努力なしに得ようとする心を捨てて、正直に業務に臨む姿勢が必要であり、自分で作った拘束から脱しなければなりません。",
+  "tarotKeywords16": "崩壊, 衝撃, 急激な変化, 解放, 真実の暴露",
+  "tarotDesc16": "落雷が塔を直撃し、塔が崩れ落ち、人々が落下しています。これは予期せぬ外部の力による古い価値観の破壊と、それによる新しい真実との遭遇を象徴しています。",
+  "tarotLoveMeaning16": "関係に大きな危機や突然の別れが訪れる可能性があります。",
+  "tarotLoveDetail16": "まるで青天の霹靂のように予期せぬ事件が恋愛戦線に発生することがあります。信じていた相手に失望したり、手に負えない争いで関係が根こそぎ揺らぐことがありますが、絶望しないでください。これは不健康な関係や誤解が解け、真実に向き合う過程であり、崩れた場所には結局より強固な愛を築く機会が来るでしょう。",
+  "tarotWealthMeaning16": "突然の金銭的損失や災難に備えなければなりません。",
+  "tarotWealthDetail16": "財政的に非常に不安定な時期です。予想外の場所から大金が出ていったり、投資していた場所が崩壊するなど衝撃的な知らせに接することがあるので、資産を安全な場所に移して備えなければなりません。しかし、この崩壊は間違った経済観念を正す契機となるでしょうし、底を打てば二度と崩れない丈夫な基盤を築く機会が来ます。",
+  "tarotSuccessMeaning16": "プロジェクトが中断されたり職場で突然の人事異動など衝撃的な変化が生じることがあります。",
+  "tarotSuccessDetail16": "これまで精魂込めて築いてきた塔が崩れるような挫折感を感じることがありますが、これはあなたの能力が不足しているからではなく、避けられない変化の流れのためです。慌てずに事態を冷静に把握して古いシステムを捨て、新しい道を模索してください。今の危機をチャンスに変えて再整備すれば、はるかに高い場所へと跳躍できるでしょう。",
+  "tarotKeywords17": "希望, 霊感, 治癒, 楽観主義, 所望成就",
+  "tarotDesc17": "夜空の明るい星の光の下で女性が水を注ぎ、苦難の後に訪れる平和と未来への希望を象徴しています。",
+  "tarotLoveMeaning17": "理想に近い人に出会ったり、恋愛に対する夢が叶う時期です。",
+  "tarotLoveDetail17": "暗い夜を照らす星のように、あなたの恋愛にも輝く希望が訪れます。心に描いていた理想の人に出会うことができ、あなたの純粋な魅力が異性に大きくアピールする時期です。過去の痛い記憶は今や癒やされ、新しい愛を夢見ることができる明るいエネルギーが生まれるでしょう。",
+  "tarotWealthMeaning17": "金銭的に徐々に状況が良くなります。",
+  "tarotWealthDetail17": "財物運が肯定的な方向に流れ始めます。これまでの経済的な困難が解消され、一筋の光が見える時期であり、創造的なアイデアを通じて副収入を上げる機会が生じることがあります。当面の大きな利得よりは、長期的な観点で将来価値の高い場所に投資する眼識が、あなたを財政的安定へと導くでしょう。",
+  "tarotSuccessMeaning17": "創造的な霊感が湧き上がり、自分の才能を広く知らせる機会を得ます。",
+  "tarotSuccessDetail17": "あなたのアイデアが光を放ち、周囲の称賛を受けることになります。特に芸術的な感覚や広報、マーケティング分野で頭角を現すことができ、普段夢見ていたプロジェクトを始めるのに非常に良いタイミングです。自信を持って自分を表現すれば、大衆の人気を得たり名誉を得ることができる運気が入っているので、チャンスを掴んでください。",
+  "tarotKeywords18": "不安, 幻想, 曖昧さ, 直感, 無意識",
+  "tarotDesc18": "月明かりの下、不安と曖昧さが共存しており、見えない裏側の真実と無意識の世界を象徴しています。",
+  "tarotLoveMeaning18": "相手の気持ちが分からずもどかしかったり、誤解や疑念が芽生えやすいです。",
+  "tarotLoveDetail18": "霧の中にいるように相手の本心が分からず不安な時期です。些細な誤解が大きくなって疑いになり、不安感のせいで夜も眠れないかもしれませんが、性急に問い詰めるよりは状況を落ち着いて見守るのが良いでしょう。感情に流されて不確実な関係にあまり執着するよりは、理性的に考えて心の中心を保つことが優先です。",
+  "tarotWealthMeaning18": "投資の見通しが不透明で、詐欺の危険が潜んでいます。",
+  "tarotWealthDetail18": "金銭的な面で視野が曇っており、それらしく見える投資情報や甘言に騙される危険が高いです。見えない場所に罠が隠されているので、石橋を叩いて渡る心情で極度に注意すべき時期です。新しいことを企てるよりは現状を維持し、現実的な検証過程を徹底的に経ることが財産を守る道です。",
+  "tarotSuccessMeaning18": "業務の方向が曖昧だったり、隠れた敵がいる可能性があり、混乱する時期です。",
+  "tarotSuccessDetail18": "先が見えない漠然とした状況に置かれることがあり、プロジェクトの方向性が揺らいだり、職場内の流言飛語に巻き込まれる可能性があるので言動に注意してください。今は性急に動くよりは状況が明確になるまで待つのが賢明であり、他人の話をむやみに信じず、黙々と自分の場所を守りながらメンタル管理に努めるのが良いでしょう。",
+  "tarotKeywords19": "喜び, 成功, 活力, 純粋, 祝福",
+  "tarotDesc19": "太陽が輝き、子供が馬に乗って無邪気に笑っています。最高の幸運を象徴します。",
+  "tarotLoveMeaning19": "最高に明るく幸せな愛。周囲からも祝福される喜びの時です。",
+  "tarotLoveDetail19": "この上なく完璧で幸せな愛があなたと共にあります。これまでの誤解や葛효が雪のように消え去り、信頼가深まるでしょう。フリーの方は明るいエネルギーを持つ人に出会える絶好の機会です。結婚や妊娠など、おめでたいニュースも期待できます。",
+  "tarotWealthMeaning19": "金運が最高潮に達しています。",
+  "tarotWealthDetail19": "ついに日の目を見る時が来ました。金運が非常に強力で、何をやっても収益につながる時期です。事業は繁栄し、投資も大きな利益を生む兆しがあります。この良い運気を周囲と分か치合うことで、さらに大きな幸運が返ってくるでしょう。",
+  "tarotSuccessMeaning19": "あなたの能力が認められ、スポットライトを浴びる時です。",
+  "tarotSuccessDetail19": "成功のファンファーレが鳴り響いています。これまで努力してきたことが実を結び、世間に認められる時です。合格や昇進など、目に見える成果を手にすることができるでしょう。自信に満ちた態度が周囲を魅了し、リーダーとしての素質も高く評価されます。",
+  "tarotKeywords20": "復活, 報酬, 知らせ, 決断, 再会",
+  "tarotDesc20": "空で天使がラッパを吹くと、棺の中にいた人々が目覚めて歓喜します。これは過去の努力に対する報いと、新しい生への目覚めを象徴しています。",
+  "tarotLoveMeaning20": "別れた恋人から連絡が来たり、再会する機会が生じます。",
+  "tarotLoveDetail20": "待ちわびていた知らせが届きます。忘れられなかった昔の恋人から連絡が来たり、再会を望んでいたなら叶う可能性が非常に高く、遅々として進まなかったサムの関係が確実に恋人に発展する結実を見ることになるでしょう。昔知っていた人と新しい縁がつながることもあるので、心の声に耳を傾け、後悔のない決断を下してください。",
+  "tarotWealthMeaning20": "過去に投資した場所から収益が出たり、貸したお金を返してもらえるかもしれません。",
+  "tarotWealthDetail20": "過去の努力に対する報酬を受ける時期です。忘れていた株が上がったり、もらえないと思っていたお金を返してもらうなど、思いがけない横財数があり、以前に失敗したアイデアを再試行して成功するチャンスが訪れます。今下す決定がこれからの財物運を大きく左右することになるので、慎重かつ果敢な決断が必要な時です。",
+  "tarotSuccessMeaning20": "これまでの努力が認められ昇進したり、褒賞を受けたりします。",
+  "tarotSuccessDetail20": "審判の日が来ました。これまで流した汗に対する正당な評価と報酬が与えられ、昇進や合格など嬉しい知らせがラッパの音のように鳴り響くでしょう。停滞していた状況から脱してもう一度飛翔できるスカウトの提案や転職の機会が来る可能性があるので、変化を恐れずにチャンスを掴んで新しいチャプターを始めてください。",
+  "tarotKeywords21": "完成, 統合, 達成, ハッピーエンド, 完璧",
+  "tarotDesc21": "長い旅の末に目標を完全に達成し、完璧な調和を成した状態を表す最高のハッピーエンドを象徴しています。四隅の聖獣は完成された世界を祝福し、新しい旅の始まりをも予感させます。",
+  "tarotLoveMeaning21": "愛の結実を意味します。理想の相手と結ばれたり、最高に幸せな瞬間を迎えられます。",
+  "tarotLoveDetail21": "長い恋愛の終止符を打ち、結婚という新しい世界へと進む完璧な時期です。お互いがお互いにとって最高のパートナーであることを確認し、祝福の中で一つになる幸せを享受することになるでしょう。ソロなら、あなたの理想に合致する運命の相手に出会うことができます。海外旅行や異国的な環境で縁がつながる運勢でもあります。",
+  "tarotWealthMeaning21": "目標としていた金額を達成し、経済的自由を享受することになります。",
+  "tarotWealthDetail21": "金銭的な目標を100%達成する快挙を成し遂げ、経済的自由を享受できる段階に到達しました。海外株式や貿易などグローバルな分野で大きな収益を上げることができ、あなたの投資ポートフォリオが完璧な調和を成して安定した収益をもたらしてくれるでしょう。これからは豊かさを満喫しながら、より広い世界に向かって視野を広げてみてください。",
+  "tarotSuccessMeaning21": "プロジェクトを成功裏に完遂し、最高の誉れを得ます。",
+  "tarotSuccessDetail21": "あなたのキャリアに頂点を極める時期です。任されたプロジェクトを完璧に成功させ、最高の賛辞を受けることになり、目標としていたことをすべて成し遂げて、より大きな世界へと進む準備をすることになるでしょう。留学や海外就職など活動の舞台が世界に広がる運勢なので、現在の成功を足がかりに、より遠大な夢を描いて飛躍してください。",
+  "supplementRecordPrompt": "サプリメントを飲んで記録しましょう！",
+  "snoozeQuestion": "いつまたお知らせしましょうか？",
+  "hoursShort": "時間",
+  "minutesShort": "分",
+  "after": "後",
+  "snoozeMessage": "アラームは {minutes} 分後に再び鳴ります。",
+  "timesTaken": "{count} 回服用",
+  "dailyGoalTimes": "目標：1日 {goal} 回",
+  "didYouTakeSupplement": "サプリメントは飲みましたか？",
+  "viewMissionRecords": "ミッション記録を見る",
+  "setTakingGoal": "摂取目標を設定",
+  "times": "回",
+  "dailyTakingGoal": "1日の摂取目標",
+  "howManyTimesADay": "サプリメントは1日に何回飲みますか？",
+  "setGoalMl": "目標設定 (ml)",
+  "sleepAnalysis": "睡眠分析",
+  "todaysSleep": "今日の睡眠",
+  "sleepDuration": "睡眠時間",
+  "wakeUpTime": "起床時間",
+  "weeklySleepPattern": "週間睡眠パターン",
+  "sleepAdvice": "規則正しい睡眠習慣を維持しています。昨日より30分早く就寝しました！",
+  "stopwatch": "ストップウォッチ",
+  "lap": "ラップ",
+  "stop": "停止",
+  "lapLabel": "ラップ {index}",
+  "monday": "月",
+  "tuesday": "火",
+  "wednesday": "水",
+  "thursday": "木",
+  "friday": "金",
+  "saturday": "土",
+  "sunday": "日",
   "policy": "利用規約とプライバシーポリシー",
   "support": "サポート",
   "defaultAlarmBehavior": "デフォルトのアラーム動作",
   "defaultAlarmVolume": "デフォルトのアラーム音量",
   "defaultAlarmVolumeDescription": "新しいアラーム作成時に適用されるデフォルトの音量です。",
   "gradualVolumeDescription": "アラーム音が徐々に大きくなるように設定します。",
+  "defaultVibration": "デフォルトのバイブレーション",
   "defaultVibrationDescription": "新しいアラーム作成時にデフォルトで振動をオンにします。",
   "defaultInterval": "デフォルトの間隔",
   "maxSnoozeCountLabel": "最大回数",
   "minutes": "分",
-  "times": "回",
   "cupsCount": "({current}杯/{goal}杯)",
   "@cupsCount": {
     "placeholders": {
@@ -1354,6 +1653,7 @@
   },
   "selectionComplete": "選択完了",
   "selectVibration": "バイブレーションパターンの選択",
+  "cameraMissionSequentialImageError": "ミッション画像を順番に設定してください。",
   "copyEmailAction": "メールアドレスをコピー",
   "addMissionTitle": "新しいミッションを追加",
   "recommendedMissionList": "おすすめミッション",
@@ -1370,7 +1670,6 @@
   "missionNameHint": "ミッション名を入力（例：ジムに行く）",
   "selectCategory": "カテゴリーを選択",
   "getNotification": "通知を受け取る",
-  "notificationTime": "通知時間",
   "missionCategoryHealth": "健康",
   "missionCategoryStudy": "勉強",
   "missionCategoryRoutine": "ルーチン",
@@ -1448,6 +1747,13 @@
   "luckyNumberAnalysisStep6": "最適な幸運の組み合わせを算出中...",
   "luckyNumberAnalysisStep7": "分析完了！ラッキーナンバーを生成",
   "luckyNumberAnalysisFinal": "データの最終処理中...",
+  "luckyNumberAnalyzing": "エネルギー分析中...",
+  "luckyNumberGeometric": "幾何学的分析...",
+  "luckyNumberPatterns": "パターンマッチング...",
+  "luckyNumberEnergy": "エネルギー調和中...",
+  "luckyNumberCompleted": "分析完了！",
+  "luckyNumberShare": "結果を共有",
+  "luckyNumberRestart": "もう一度試す",
   "luckyNumberGenerating": "ラッキーナンバーを生成中...",
   "luckyNumberResultTitle": "ラッキーナンバーの生成完了",
   "luckyNumberResultSubtitle": "6つの番号 + ボーナス番号",
@@ -1588,14 +1894,6 @@
   "year": "年",
   "month": "月",
   "day": "日",
-  "dreamTitle": "夢占い",
-  "dreamAnalyzing": "夢を分析中です...",
-  "dreamHeaderTitle": "昨夜はどんな夢を\n見ましたか？",
-  "dreamHeaderSubtitle": "夢の内容を自由に記入してください。\nキーワードを分析します。",
-  "dreamInputHint": "例）道で光り輝く金の指輪を拾った。",
-  "dreamAnalyzeButton": "無料で夢を分析する",
-  "dreamAdviceLabel": "アドバイス",
-  "dreamDisclaimer": "この結果は娯楽用であり、実際の意味を保証するものではありません。",
   "sajuProfileTitle": "メイン四柱推命プロフィールの編集",
   "sajuNameLabel": "名前",
   "sajuNameHint": "名前を入力してください",
@@ -1633,6 +1931,7 @@
   "compatibilityDeleteTooltip": "削除",
   "compatibilityGenderMale": "男性",
   "compatibilityGenderFemale": "女性",
+  "compatibilityInputTitle": "相性情報入力",
   "tojeongInputTitle": "土亭秘訣 情報入力",
   "tojeongCheckFortune": "{year}年の\n土亭秘訣（トジョンビギョル）を確認しましょう",
   "@tojeongCheckFortune": {
@@ -1980,39 +2279,239 @@
   "compatibilityDescIncompatibleElement": "気質が異なるため、最初は戸惑うこともあるかもしれませんが、知れば知るほど新しい発見がある関係です。",
   "compatibilitySummaryDefaultConstellation": "平均的な調和",
   "compatibilityDescDefaultConstellation": "星座の観点から見て、まずまずの相性です。",
-  "loading": "読み込み中...",
-  "defaultVibration": "デフォルトのバイブレーション",
-  "useTwoCookies_v2": "クッキーを2枚使う",
-  "aiAnalyzingFace_v2": "AIが顔を解析しています...",
-  "faceRecognitionComplete_v2": "認識が完了しました",
-  "extractingFeatures_v2": "特徴を抽出しています...",
-  "matchingFortuneData_v2": "データを照合しています...",
-  "faceAnalysisComplete_v2": "顔分析が完了しました！",
-  "tapTimes": "タップ {count}回",
-  "@tapTimes": {
+  "routineMorningTitle": "爽やかな朝です！ ☀️",
+  "routineMorningBody": "今日計画したルーチンミッションを忘れていませんか？",
+  "routineEveningTitle": "今日もお疲れ様でした！ ✨",
+  "routineEveningBody": "今日のミッションはすべて完了しましたか？ルーチンを締めくくりましょう。",
+  "routineCheckTitle": "今日のミッションを確認しましょう！ 🚀",
+  "routineCheckBody": "ルーチンミッションを守って、気持ちの良い一日を過ごしましょう。",
+  "supplementNotificationTitle": "サプリメント通知",
+  "waterNotificationTitle": "水分補給通知",
+  "routineNotificationTitle": "デイルーチン通知",
+  "todaysFortuneNotificationTitle": "今日の運勢",
+  "afternoonFortuneNotificationBody": "午後の運勢はどうでしょうか？今すぐ確認してみてください！",
+  "morningFortuneNotificationBody": "今日の運勢を確認して、元気に一日を始めましょう！",
+  "fortunePassExpiryTitle": "フォーチュンパス本日期限切れ",
+  "fortunePassExpiryBody": "本日、フォーチュンパスのメンバーシップが期限切れになります。特典を継続するには更新してください！",
+  "takeNow": "今飲む",
+  "later": "後で",
+  "turnOffAlarmAction": "アラームを止める",
+  "todaysFortuneNotification": "今日の運勢通知",
+  "enableNotification": "通知を有効にする",
+  "fortuneNotificationDescription": "指定した時間に今日の運勢をお知らせします。",
+  "morningNotificationTime": "午前の通知時間",
+  "afternoonNotificationTime": "午後の通知時間",
+  "morningFortuneTitle": "今日の運勢 (午前)",
+  "afternoonFortuneTitle": "今日の運勢 (午後)",
+  "type": "タイプ",
+  "@minutesFormat": {
     "placeholders": {
-      "count": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
-  "snoozeMinutesUnlimited": "{minutes}分（無制限）",
-  "@snoozeMinutesUnlimited": {
+  "@categoryMissions": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "category": {
+        "type": "String"
+      }
     }
   },
-  "snoozeMinutesCount": "{minutes}分（{current}/{total}）",
-  "@snoozeMinutesCount": {
+  "@hourFormat": {
     "placeholders": {
-      "minutes": { "type": "int" },
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "hour": {
+        "type": "String"
+      }
     }
   },
-  "ringtone_fluttering_day": "ときめく一日",
-  "ringtone_cozy_day": "ほっとする一日",
-  "ringtone_sensible_day": "落ち着いた一日",
-  "ringtone_play_with_me": "一緒に遊ぼう",
-  "ringtone_refreshing_day": "さわやかな一日",
-  "ringtone_new_beginning": "新しい始まり",
-  "ringtone_self_love": "セルフラブ"
+  "@tojeongShareTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "@tojeongCoreMessage": {
+    "placeholders": {
+      "sangsu": {
+        "type": "String"
+      },
+      "jungsu": {
+        "type": "String"
+      },
+      "hasu": {
+        "type": "String"
+      }
+    }
+  },
+  "@snoozeMessage": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@timesTaken": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dailyGoalTimes": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "@lapLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "supplementChannelDesc": "サプリメント摂取通知チャンネル。",
+  "waterChannelDesc": "水分補給習慣のための通知チャンネル。",
+  "waterSummaryTitle": "水分補給通知",
+  "dailyRoutineChannelDesc": "今日のミッション確認と習慣作りのための通知チャンネル。",
+  "dailyRoutineSummaryTitle": "デイリールーチン通知",
+  "missionChannelName": "ミッション通知",
+  "missionChannelDesc": "一般ミッション遂行のための通知チャンネル。",
+  "fortuneChannelName": "運勢通知",
+  "fortuneChannelDesc": "毎朝の運勢確認のための通知チャンネル。",
+  "subscriptionChannelName": "購読通知",
+  "subscriptionChannelDesc": "フォーチュンパスの期限切れおよび購読関連の通知チャンネル。",
+  "alarmChannelName": "アラーム",
+  "alarmChannelDesc": "起床およびミッション遂행のためのアラームチャンネル。",
+  "shareViaKakao": "KakaoTalkで共有",
+  "shareViaSNS": "他のSNSで共有 (Instagram, Twitterなど)",
+  "checkDetailResult": "詳細な結果を確認",
+  "viewMyFortuneResult": "自分の運勢結果を見る",
+  "takeSupplementNow": "サプリメントを飲んでください！",
+  "takeNowQuestion": "今飲みますか？",
+  "eatNow": "今飲む",
+  "eatLater": "後で飲む",
+  "snoozeMessageGeneric": "{minutes}分後に再度お知らせします。",
+  "hours": "時間",
+  "@snoozeMessageGeneric": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "cheeringMessage4": "活気ある朝、幸せなスタート！",
+  "cheeringMessage5": "笑顔あふれる一日を。",
+  "cheeringMessage6": "今日も一日頑張りましょう！",
+  "cheeringMessage7": "あなたは今日、十分に輝くでしょう。",
+  "cheeringMessage8": "何かいいことが起こりそうな予感！",
+  "cheeringMessage9": "今日もお疲れ様です。元気なスタートを！",
+  "cheeringMessage10": "幸せはいつもあなたのそばにあります。",
+  "cheeringMessage11": "今日のあなたの夢を応援しています。",
+  "cheeringMessage12": "爽やかな朝、心地よい一日！",
+  "cheeringMessage13": "今日という日に勝利しましょう！",
+  "cheeringMessage14": "あなたはありのままの姿で尊い存在です。",
+  "cheeringMessage15": "楽しいこといっぱの一日になりますように。",
+  "cheeringMessage16": "今日一日がキラキラ輝きますように！",
+  "cheeringMessage17": "あなたの笑顔が世界を明るくします。",
+  "cheeringMessage18": "あなたらしく過ごせる一日を！",
+  "cheeringMessage19": "今日をときめく心で始めましょう。",
+  "cheeringMessage20": "素晴らしい一日가あなたを待っています。",
+  "cheeringMessage21": "ポジティブなパワーで今日を！",
+  "cheeringMessage22": "あなたの歩む道を応援しています。",
+  "cheeringMessage23": "今日を最高の日にしましょう！",
+  "cheeringMessage24": "幸運があなたと共にありますように！",
+  "cheeringMessage25": "今日も温かい一日をお過ごしください。",
+  "cheeringMessage26": "あなたならできます！",
+  "cheeringMessage27": "今日を感謝の気持ちで始めましょう。",
+  "cheeringMessage28": "あなたの価値は無限大です。",
+  "cheeringMessage29": "あなたの一日が笑顔で満開になりますように。",
+  "cheeringMessage30": "良い人たちと楽しい時間を！",
+  "cheeringMessage31": "今日、夢に一歩近づけますように！",
+  "cheeringMessage32": "今日のあなたが一番素敵です。",
+  "cheeringMessage33": "奇跡のような一日が訪れるでしょう。",
+  "cheeringMessage34": "今日はゆったりと一日を楽しんでください。",
+  "cheeringMessage35": "あなたの努力は裏切りません。",
+  "cheeringMessage36": "今日も健康な一日を。",
+  "cheeringMessage37": "あなたは愛されるために生まれてきました！",
+  "cheeringMessage38": "今日一日、勇気を持って！",
+  "cheeringMessage39": "明るい未来があなたを待っています。",
+  "cheeringMessage40": "情熱あふれる一日を！",
+  "cheeringMessage41": "あなたの心が安らかでありますように。",
+  "cheeringMessage42": "今日、小さな幸せを見つけてください。",
+  "cheeringMessage43": "あなたはもう十分に頑張っています。",
+  "cheeringMessage44": "今日を希望を持って始めましょう。",
+  "cheeringMessage45": "あなたの親切は誰かの大きな力になります。",
+  "cheeringMessage46": "今日も実りある一日を。",
+  "cheeringMessage47": "あなたには世界を変える力があります。",
+  "cheeringMessage48": "晴れやかな一日を！",
+  "cheeringMessage49": "あなたの魅력을存分に発揮してください。",
+  "cheeringMessage50": "今日一日を幸せでいっぱいにしましょう！",
+  "locationServiceDisabled": "位置情報サービスが無効になっています。",
+  "locationPermissionDenied": "位置情報の権限が拒否されました。",
+  "locationPermissionPermanentlyDenied": "位置情報の権限が永久に拒부されました。",
+  "deleteMissionTitle": "ミッションを削除",
+  "deleteMissionConfirm": "このミッションを削除してもよろしいですか？",
+  "yesDelete": "はい、削除します",
+  "waterAlarmTitle": "水を飲む時間です！ 💧",
+  "waterAlarmBody": "健康のために冷たい水を一杯いかがですか？",
+  "supplementAlarmBody": "今日のサプリメントを忘れずに服用してください。",
+  "waterHabitChannelDesc": "水飲み習慣のための通知チャンネル。",
+  "pleaseSolveMath": "問題を解いてください。",
+  "detectedLabel": "[認識済み: {labels}]",
+  "defaultSleepDuration": "7時間30分",
+    "@detectedLabel": {
+    "placeholders": {
+      "labels": {
+        "type": "String"
+      }
+    }
+  },
+  "year2024Name": "甲辰年（青い龍の年）",
+  "year2025Name": "乙巳年（青い蛇の年）",
+  "year2026Name": "丙午年（赤い馬の年）",
+  "supportEmailSubject": "[{appTitle} お問い合わせ] {title}",
+  "@supportEmailSubject": {
+    "placeholders": {
+      "appTitle": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "summary": "要約",
+  "monthlySummary": "月間要약",
+  "monthlySuccessRate": "{month}月 成功率: {percentage}% ({success}/{total})",
+  "noMonthlyRecord": "{month}月の記録なし",
+  "missionRecord": "ミッション記録",
+  "supplementRecord": "摂取記録",
+  "timeSaleCatchChance": "50%割引のチャンスをつかもう！",
+  "@monthlySuccessRate": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "String"
+      },
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@noMonthlyRecord": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      }
+    }
+  }
 }

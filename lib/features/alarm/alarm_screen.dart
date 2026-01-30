@@ -468,8 +468,8 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   Widget _buildSnoozeInfo(AlarmModel alarm, Color secondaryTextColor, Color disabledTextColor) {
     final l10n = AppLocalizations.of(context)!;
     final snoozeText = alarm.maxSnoozeCount == 999 
-        ? l10n.snoozeInfoUnlimited(alarm.snoozeInterval)
-        : l10n.snoozeInfo(alarm.snoozeInterval, alarm.maxSnoozeCount);
+        ? l10n.snoozeInfoUnlimited(alarm.snoozeInterval.toString())
+        : l10n.snoozeInfo(alarm.snoozeInterval.toString(), alarm.maxSnoozeCount.toString());
 
     return Flexible(
       child: Text(
@@ -589,7 +589,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
           final hours = difference.inHours;
           final minutes = difference.inMinutes % 60;
 
-          if (hours > 0) return AppLocalizations.of(context)!.hoursMinutesRemaining(hours, minutes);
-          return AppLocalizations.of(context)!.minutesRemaining(minutes);
+          if (hours > 0) return AppLocalizations.of(context)!.hoursMinutesRemaining(hours.toString(), minutes.toString());
+          return AppLocalizations.of(context)!.minutesRemaining(minutes.toString());
   }
 }

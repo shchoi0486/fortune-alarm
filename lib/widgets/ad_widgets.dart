@@ -471,6 +471,7 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
     // 1. 광고 로드 완료 및 표시 시점 도달 시 광고 표시 (전체 영역)
     if (_showAd && _isAdLoaded && _nativeAd != null) {
       return Container(
+        height: 200, // 고정 높이 부여
         margin: widget.margin ?? EdgeInsets.zero,
         decoration: BoxDecoration(
           color: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
@@ -496,6 +497,7 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
 
     // 2. 로딩 중이거나 에러 발생 시 빈 공간 대신 귀여운 이미지 표시
     return Container(
+      height: 200, // 고정 높이 부여
       margin: widget.margin ?? EdgeInsets.zero,
       child: _buildCuteImage(isLoading: _showAd && !_isAdLoaded && _adLoadError == null),
     );
@@ -504,7 +506,11 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
   Widget _buildCuteImage({bool isLoading = false}) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: isDarkMode ? const Color(0xFF2C2C2E) : const Color(0xFFFFF8E1), // 연한 노란색 배경 -> 다크모드 대응
+      height: 200, // 고정 높이 보장
+      decoration: BoxDecoration(
+        color: isDarkMode ? const Color(0xFF2C2C2E) : const Color(0xFFFFF8E1),
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Stack(
         alignment: Alignment.center,
         children: [

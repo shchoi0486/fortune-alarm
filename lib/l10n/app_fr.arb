@@ -7,6 +7,16 @@
   "missionWater": "Boire plus de 2L d'eau",
   "fortuneCookie": "Biscuit de Fortune",
   "settings": "Paramètres",
+  "language": "Langue",
+  "languageKorean": "Coréen",
+  "languageEnglish": "Anglais",
+  "languageJapanese": "Japonais",
+  "languageChinese": "Chinois",
+  "languageRussian": "Russe",
+  "languageHindi": "Hindi",
+  "languageSpanish": "Espagnol",
+  "languageFrench": "Français",
+  "languageGerman": "Allemand",
   "alarm": "Alarme",
   "calendar": "Calendrier",
   "mission": "Mission",
@@ -15,6 +25,16 @@
   "allMissionsCompleted": "Vous avez terminé les 5 missions d'aujourd'hui.",
   "rewardReceived": "Vous avez reçu 1 Fortune Cookie en récompense ! 🥠",
   "confirm": "Confirmer",
+  "missionSuccess": "Mission réussie !",
+  "cheeringMessage1": "Passez une excellente journée aujourd'hui !",
+  "cheeringMessage2": "Je vous soutiens aujourd'hui !",
+  "cheeringMessage3": "Ce sera une journée merveilleuse.",
+  "todaysCheering": "Message du jour",
+  "notificationWakeUpBody": "C'est l'heure de se réveiller !",
+  "notificationMissionBody": "Remplissez la mission et éteignez l'alarme !",
+  "notificationSafetyBody": "L'alarme a été fermée de force ! Veuillez terminer la mission.",
+  "notificationRingingBody": "L'alarme sonne !",
+  "snoozePrefix": "[Rappel]",
   "exactAlarmPermissionRequired": "La permission \"Alarme exacte\" est requise pour sonner à l'heure correcte.",
   "overlayPermissionRequired": "La permission \"Afficher sur d'autres applis\" est requise pour les notifications plein écran.",
   "deleteAllAlarms": "Supprimer toutes les alarmes",
@@ -24,10 +44,10 @@
   "@hoursMinutesRemaining": {
     "placeholders": {
       "hours": {
-        "type": "int"
+        "type": "String"
       },
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -35,7 +55,7 @@
   "@minutesRemaining": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -98,25 +118,6 @@
   "traditionalFortune": "Fortune Traditionnelle (Tojeong)",
   "traditionalSaju": "Analyse Saju Traditionnelle",
   "faceReading": "Lecture du Visage AI",
-  "missionFaceReading": "Mission Lecture du Visage",
-  "faceFate": "Visage et Destin",
-  "compatibility": "Analyse de Compatibilité",
-  "relationshipHarmony": "Harmonie Relationnelle",
-  "ohaengWood": "Bois",
-  "ohaengFire": "Feu",
-  "ohaengEarth": "Terre",
-  "ohaengMetal": "Métal",
-  "ohaengWater": "Eau",
-  "ohaengWoodSymbol": "Bois",
-  "ohaengFireSymbol": "Feu",
-  "ohaengEarthSymbol": "Terre",
-  "ohaengMetalSymbol": "Métal",
-  "ohaengWaterSymbol": "Eau",
-  "ohaengWoodExplanation": "Avec une forte énergie de Bois, vous débordez de croissance et de motivation, possédant une nature compatissante et entreprenante.",
-  "ohaengFireExplanation": "Avec une forte énergie de Feu, vous êtes passionné et poli, avec une tendance à être actif et amateur de belles choses.",
-  "ohaengEarthExplanation": "Avec une forte énergie de Terre, vous avez confiance et tolérance, possédant une nature grave et immuable.",
-  "ohaengMetalExplanation": "Avec une forte énergie de Métal, vous avez de la décision et de la loyauté, possédant une nature posée qui valorise les principes.",
-  "ohaengWaterExplanation": "Avec une forte énergie de Eau, vous avez de la sagesse et de la flexibilité, possédant une nature intelligente et hautement adaptable.",
   "missionFaceReading": "Mission Lecture Visage",
   "faceFate": "Destin du Visage",
   "compatibility": "Compatibilité",
@@ -176,15 +177,15 @@
   "assetPanchuny": "Panchuny",
   "assetTochuny": "Tochuny",
   "assetHochuny": "Hochuny",
-  "assetBear": "Bear",
-  "assetMoon": "Moon",
-  "assetBridge": "Bridge",
-  "assetRoad": "Road",
-  "assetSky": "Sky",
-  "assetMinimalGray": "Minimal Gray",
-  "assetDarkMode": "Dark Mode",
-  "assetSoftBlue": "Soft Blue",
-  "assetWarmBeige": "Warm Beige",
+  "assetBear": "Ours",
+  "assetMoon": "Lune",
+  "assetBridge": "Pont",
+  "assetRoad": "Route",
+  "assetSky": "Ciel",
+  "assetMinimalGray": "Gris minimal",
+  "assetDarkMode": "Mode sombre",
+  "assetSoftBlue": "Bleu doux",
+  "assetWarmBeige": "Beige chaud",
   "assetCat": "Chat {number}",
   "@assetCat": {
     "placeholders": {
@@ -237,14 +238,14 @@
   "itsTimeToWakeUp": "Il est temps de se lever !",
   "dismissAlarm": "Arrêter l'alarme",
   "slideToDismiss": "Faire glisser pour arrêter",
-  "snoozeInfo": "{minutes} min, {count} fois",
+  "snoozeInfo": "{minutes} min x {count} fois",
   "@snoozeInfo": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       },
       "count": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -252,7 +253,7 @@
   "@snoozeInfoUnlimited": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -318,9 +319,15 @@
   "insufficientCookiesTitle": "Pas assez de Fortune Cookies",
   "insufficientCookiesMessage": "Gagnez-en via les missions ou regardez une pub.",
   "useCookiesSnackbar": "2 Fortune Cookies ont été utilisés.",
+  "faceAnalysisComplete_v2": "Analyse du visage terminée !",
   "chooseMethodToViewResult": "Choisissez une méthode pour voir votre fortune cachée.",
   "watchAdForFree": "Regarder une pub (Gratuit)",
+  "useTwoCookies_v2": "Utiliser 2 cookies",
   "viewResult": "Voir le résultat",
+  "aiAnalyzingFace_v2": "L’IA analyse votre visage...",
+  "faceRecognitionComplete_v2": "Reconnaissance terminée",
+  "extractingFeatures_v2": "Extraction des caractéristiques...",
+  "matchingFortuneData_v2": "Correspondance des données...",
   "wealthLuck": "💰 Richesse",
   "loveLuck": "❤️ Amour",
   "careerLuck": "💼 Carrière",
@@ -400,14 +407,14 @@
   "tojeongMonthlySpecial_12_2": "Des rassemblements fréquents peuvent nuire à votre santé ou entraîner des dépenses inutiles, la modération est donc nécessaire.",
   "tojeongMonthlySpecial_12_3": "La fin est un nouveau départ. Terminez l’année en planifiant un avenir plein d’espoir plutôt que de regrets.",
   "tojeongMonthlySpecial_12_4": "Si vous pratiquez le partage chaleureux, cette chaleur vous reviendra sous forme de chance.",
-  "todaysFaceFortune": "Today's Face Fortune",
-  "detailedAnalysis": "Detailed Analysis",
-  "eyeInsight": "👁️ Eye (Insight)",
-  "noseWealth": "👃 Nose (Wealth)",
-  "mouthLateLuck": "👄 Mouth (Late Luck)",
-  "overallAnalysisTitle": "Overall Analysis",
-  "shareResultTitle": "Today's Face Result",
-  "shareResultDesc": "AI face analysis result.\n{title}",
+  "todaysFaceFortune": "Physionomie du jour",
+  "detailedAnalysis": "Analyse détaillée",
+  "eyeInsight": "👁️ Œil (Perspicacité)",
+  "noseWealth": "👃 Nez (Richesse)",
+  "mouthLateLuck": "👄 Bouche (Chance tardive)",
+  "overallAnalysisTitle": "Analyse globale",
+  "shareResultTitle": "Résultat de la physionomie d'aujourd'hui",
+  "shareResultDesc": "Résultat de l'analyse du visage par l'IA.\n{title}",
   "@shareResultDesc": {
     "placeholders": {
       "title": {
@@ -415,54 +422,55 @@
       }
     }
   },
-  "shareResultTotalScore": "Total Score",
-  "shareResultWealth": "Wealth Luck",
-  "shareResultLove": "Love Luck",
-  "shareResultCareer": "Career Luck",
-  "shareResultHealth": "Health Luck",
-  "shareResultText": "Share Result",
-  "wakeUpComplete": "Wake up complete!",
-  "collapseOptions": "Collapse Options",
-  "expandOptions": "More Options",
-  "snoozeAlarm": "Snooze Alarm",
+  "shareResultTotalScore": "Score total",
+  "shareResultWealth": "Chance de richesse",
+  "shareResultLove": "Chance d'amour",
+  "shareResultCareer": "Chance de carrière",
+  "shareResultHealth": "Chance de santé",
+  "shareResultText": "Partager le résultat",
+  "wakeUpComplete": "Réveil terminé !",
+  "collapseOptions": "Réduire les options",
+  "expandOptions": "Plus d'options",
+  "snoozeAlarm": "Répéter l'alarme",
   "interval": "Intervalle",
-  "maxSnoozeCount": "Max Snooze Count",
-  "unlimited": "Unlimited",
-  "permissionRequired": "Permission Requise",
-  "exactAlarmFailMessage": "Failed to register alarm. Exact alarm permission is off and needs setting.",
-  "batteryOptimFailMessage": "Failed to register alarm. Battery optimization exception permission is missing.",
-  "overlayFailMessage": "Failed to register alarm. Display over other apps permission is missing.",
-  "loadingDelay": "Loading delay",
-  "previewFail": "Preview failed",
-  "bgDefault": "Default Background",
-  "bgFortuneFriends": "Fortune Friends",
+  "maxSnoozeCount": "Nombre max de répétitions",
+  "unlimited": "Illimité",
+  "permissionRequired": "Autorisation requise",
+  "exactAlarmFailMessage": "Échec de l'enregistrement de l'alarme. L'autorisation d'alarme exacte est désactivée et doit être configurée.",
+  "batteryOptimFailMessage": "Échec de l'enregistrement de l'alarme. L'autorisation d'exception d'optimisation de la batterie est manquante.",
+  "overlayFailMessage": "Échec de l'enregistrement de l'alarme. L'autorisation d'affichage sur d'autres applications est manquante.",
+  "loadingDelay": "Délai de chargement",
+  "loading": "Chargement...",
+  "previewFail": "Échec de l'aperçu",
+  "bgDefault": "Arrière-plan par défaut",
+  "bgFortuneFriends": "Amis de la Fortune",
   "bgMongChuni": "Mongchuni",
   "bgPanChuni": "Panchuni",
   "bgToChuni": "Tochuni",
   "bgHoChuni": "Hochuni",
-  "bgBear": "Bear",
-  "bgMoon": "Moon",
-  "bgSea": "Sea",
-  "bgBridge": "Bridge",
-  "bgRoad": "Road",
-  "bgSky": "Sky",
-  "bgMinimalGray": "Minimal Gray",
-  "bgDarkMode": "Dark Mode",
-  "bgSoftBlue": "Soft Blue",
-  "bgWarmBeige": "Warm Beige",
-  "dateFormatMdyE": "MMM d (E)",
-  "deleteAlarm": "Delete Alarm",
-  "confirmDelete": "Are you sure you want to delete?",
-  "yes": "Yes",
-  "no": "No",
-  "wealthLuckWithIcon": "💰 Wealth Luck",
-  "loveLuckWithIcon": "❤️ Love Luck",
-  "careerLuckWithIcon": "💼 Career Luck",
-  "healthLuckWithIcon": "💪 Health Luck",
-  "mouthFortune": "👄 Mouth (Maturity Luck)",
-  "comprehensiveAnalysis": "Comprehensive Analysis",
-  "todaysFaceResult": "Today's Face Analysis Result",
-  "faceAnalysisShareDesc": "This is the AI face analysis result.\n{title}",
+  "bgBear": "Ours",
+  "bgMoon": "Lune",
+  "bgSea": "Mer",
+  "bgBridge": "Pont",
+  "bgRoad": "Route",
+  "bgSky": "Ciel",
+  "bgMinimalGray": "Gris minimal",
+  "bgDarkMode": "Mode sombre",
+  "bgSoftBlue": "Bleu doux",
+  "bgWarmBeige": "Beige chaud",
+  "dateFormatMdyE": "d MMM (E)",
+  "deleteAlarm": "Supprimer l'alarme",
+  "confirmDelete": "Êtes-vous sûr de vouloir supprimer ?",
+  "yes": "Oui",
+  "no": "Non",
+  "wealthLuckWithIcon": "💰 Chance de richesse",
+  "loveLuckWithIcon": "❤️ Chance d'amour",
+  "careerLuckWithIcon": "💼 Chance de carrière",
+  "healthLuckWithIcon": "💪 Chance de santé",
+  "mouthFortune": "👄 Bouche (Chance de maturité)",
+  "comprehensiveAnalysis": "Analyse complète",
+  "todaysFaceResult": "Résultat de l'analyse du visage d'aujourd'hui",
+  "faceAnalysisShareDesc": "Ceci est le résultat de l'analyse du visage par l'IA.\n{title}",
   "@faceAnalysisShareDesc": {
     "placeholders": {
       "title": {
@@ -470,7 +478,7 @@
       }
     }
   },
-  "shareResult": "Share Result",
+  "shareResult": "Partager le résultat",
   "faceVibeSmile0": "Votre sourire radieux propage une énergie positive autour de vous. ",
   "faceVibeSmile1": "Votre sourire reflète l'énergie brillante de cette nouvelle journée. ",
   "faceVibeSmile2": "Vos traits doux émanent une énergie attractive qui attirera de l'aide aujourd'hui. ",
@@ -582,6 +590,43 @@
   "mouthExpressionBlessing": "La bouche est fermée mais les coins sont relevés ; la chance réside dans chacune de vos paroles et votre visage attire la bienveillance.",
   "mouthExpressionReliable": "Une bouche fermement close montre la fiabilité et la responsabilité, un type qui agit plus qu'il ne parle.",
   "mouthExpressionLucky": "Une bouche largement souriante est rafraîchissante, émettant une énergie positive et attirant la chance dans les relations.",
+  "supplementAlarmTitle": "C'est l'heure de prendre vos compléments ! 💊",
+  "alarmVolume": "Volume de l'alarme",
+  "alarmTimeList": "Liste des heures d'alarme",
+  "noAlarmTimesAdded": "Aucune heure d'alarme ajoutée",
+  "alarmTimeDeleted": "Heure de l'alarme supprimée",
+  "addAlarmTime": "Ajouter l'heure de l'alarme",
+  "editAlarmTime": "Modifier l'heure de l'alarme",
+  "defaultRingtone": "Sonnerie par défaut",
+  "takeSupplementsNow": "Veuillez prendre vos suppléments et les enregistrer !",
+  "nextTime": "Prendre plus tard",
+  "take": "Prendre",
+  "notifications": "Notifications",
+  "notificationTime": "Heure de notification",
+  "start": "Start",
+  "end": "Fin",
+  "notificationInterval": "Intervalle de notification",
+  "waterDrankToday": "Eau bue aujourd'hui",
+  "goal": "Objectif",
+  "cup": "Tasse",
+  "waterIntakeRecord": "Enregistrement de l'apport en eau",
+  "remainingAmount": "Montant restant",
+  "ml": "ml",
+  "minutesFormat": "{minutes} min",
+  "drinkWater": "Boire de l'eau",
+  "supplement": "Supplément",
+  "water": "Eau",
+  "morning": "Matin",
+  "afternoon": "Après-midi",
+  "evening": "Soir",
+  "takeSupplement": "Prendre le supplément",
+  "goalAchievedTitle": "Objectif atteint !",
+  "waterIntake": "Apport en eau",
+  "remindTime": "Heure de rappel",
+  "alarmRingtone": "Sonnerie d'alarme",
+  "snoozeTime": "Temps de rappel",
+  "snoozeDescription": "Temps par défaut lors de la sélection de 'Prendre plus tard'",
+  "oneHour": "1 heure",
   "mouthExpressionOpen": "La bouche est légèrement ouverte, montrant une personnalité franche, mais attention parfois aux paroles imprudentes.",
   "overallHeadlineSimple": "Aujourd'hui, l'accent est mis sur {topKey}, et le point de vigilance est {bottomKey}.",
   "@overallHeadlineSimple": {
@@ -645,10 +690,10 @@
   "sajuFortune2025Sin": "💎 Fortune générale de l'année Eulsa 2025 (Métal-Sin) : 'Une année où la sagesse brille au milieu du changement'\n\n2025 est une année où l'énergie de 'Pyeon-jae' et 'Jeong-gwan' entre en jeu pour vous. C'est comme un bijou sophistiqué révélant sa valeur sous un éclairage brillant. Ce sera une année plaisante où le statut social s'élève en même temps que des gains inattendus.\n\n💼 [Carrière et Affaires]\nLe sens des affaires s'améliore et la capacité à saisir de nouvelles opportunités est excellente. Une période où les défis audacieux rapportent de grands profits. Au sein de l'organisation, vous gagnez la confiance grâce à un jugement rationnel et saisissez des opportunités de promotion ou de transfert. Cependant, veillez à ne pas négliger le processus en vous concentrant trop sur les résultats.\n\n💰 [Richesse]\nUne année où la chance financière entre en jeu. Des opportunités de toucher une grande richesse comme des retours sur investissement inattendus ou un héritage se présentent. Cependant, comme les dépenses pourraient aussi devenir luxueuses, il est important de maintenir des habitudes de dépenses planifiées.\n\n❤️ [Amour et Relations]\nVous devenez le protagoniste des rassemblements sociaux avec une apparence soignée et attrayante. La chance de rencontre est très forte, vous pourriez recevoir des avances de nombreuses personnes. Dans les relations amoureuses, vous passez des moments passionnés et agréables. Une bonne année pour développer une relation sérieuse.\n\n⚠️ [Précautions]\nFaites attention à la santé des poumons ou aux maladies de peau. Maintenez toujours l'humilité et n'oubliez pas de considérer les autres car vous pourriez paraître arrogant à cause d'un excès de confiance.",
   "sajuFortune2025Im": "🌊 Fortune générale de l'année Eulsa 2025 (Eau-Im) : 'Obtenir des résultats en exerçant sa sagesse'\n\n2025 est une année où l'énergie de 'Sang-gwan' et 'Pyeon-jae' entre en jeu pour vous. C'est comme une grande rivière serpentant et humidifiant un large champ. Ce sera une année dynamique où vous gagnerez une grande richesse et étendrez votre champ d'activité en exerçant vos talents et votre éloquence.\n\n💼 [Carrière et Affaires]\nL'éloquence s'améliore et vous obtenez d'excellents résultats dans les domaines du marketing ou des relations publiques. Un très bon moment pour commercialiser vos idées ou défricher de nouveaux marchés. Ce sera la meilleure année pour ceux qui font un travail créatif. Cependant, il est important d'être poli car il pourrait y avoir des frictions avec les chefs.\n\n💰 [Richesse]\nLa chance de richesse bouge activement. La chance de gagner de l'argent avec vos propres compétences est forte, et les opportunités de brasser beaucoup d'argent arrivent. Cependant, la prudence est de mise pour les investissements spéculatifs, et la chance de richesse ne se maintiendra longtemps que si vous avez l'esprit de donner autant que vous avez gagné.\n\n❤️ [Amour et Relations]\nGrâce à votre humour et votre charme débordants, les gens ne cessent d'être autour de vous. Une année où vous pouvez profiter de rencontres agréables avec une grande popularité auprès du sexe opposé. Dans les relations amoureuses, vous insufflez de la vie par divers rendez-vous. Cependant, attention car une seule parole légère pourrait causer un malentendu.\n\n⚠️ [Précautions]\nFaites attention à la santé du système rénal ou urologique. Portez également attention à un repos et une nutrition appropriés car votre force physique pourrait s'épuiser à cause d'un large champ d'activité.",
   "sajuFortune2025Gye": "💧 Fortune générale de l'année Eulsa 2025 (Eau-Gye) : 'Une année de sincérité produisant des fruits stables'\n\n2025 est une année où l'énergie de 'Sik-sin' et 'Jeong-jae' entre en jeu pour vous. C'est comme une petite bruine claire humidifiant la terre pour préparer une riche récolte. Ce sera une année chaleureuse où vos efforts s'accumulent régulièrement et reviennent sous la forme d'une richesse et d'un bonheur stables.\n\n💼 [Carrière et Affaires]\nUne année où la sincérité devient votre meilleure arme. Vous produisez des résultats constants en assumant vos responsabilités et gagnez la confiance de vos collègues. Un bon moment pour accroître votre expertise, et vous vous sentirez récompensé par un travail que vous aimez. Vous pouvez grandir pas à pas dans un environnement stable.\n\n💰 [Richesse]\nUne année économiquement détendue et stable. Un revenu régulier apparaît, et vous ressentirez le plaisir d'augmenter vos actifs de manière frugale. Il y a de la chance en matière de nourriture et de vêtements, l'abondance est donc présente dans l'ensemble de la vie. L'épargne est plus avantageuse que les investissements déraisonnables.\n\n❤️ [Amour et Relations]\nVous apportez du réconfort à votre partenaire par une apparence chaleureuse. Une année où vous cultivez un bel amour tout en vous considérant méticuleusement. Si vous êtes célibataire, vous êtes très susceptible de rencontrer un partenaire qui communique bien et partage des valeurs similaires.\n\n⚠️ [Précautions]\nFaites attention à la santé de l'estomac ou à la gestion des habitudes alimentaires. Il est bon de trouver de la vitalité en apportant de nouveaux stimuli occasionnellement car vous pourriez devenir paresseux en vous installant dans le confort.",
-  "preparationForTomorrow": "Preparation for Tomorrow",
-  "howToMeetMoreLuck": "How to meet more luck",
-  "enterName": "Please enter your name",
-  "fortuneDateConfirm": "Would you like to check the fortune for {date}?",
+  "preparationForTomorrow": "Préparation pour demain",
+  "howToMeetMoreLuck": "Comment attirer plus de chance",
+  "enterName": "Entrez votre nom",
+  "fortuneDateConfirm": "Souhaitez-vous vérifier la fortune pour {date} ?",
   "@fortuneDateConfirm": {
     "placeholders": {
       "date": {
@@ -656,60 +701,60 @@
       }
     }
   },
-  "colorPurple": "Purple",
-  "colorBlue": "Blue",
-  "colorYellow": "Yellow",
-  "colorRed": "Red",
-  "colorGreen": "Green",
-  "colorPink": "Pink",
+  "colorPurple": "Violet",
+  "colorBlue": "Bleu",
+  "colorYellow": "Jaune",
+  "colorRed": "Rouge",
+  "colorGreen": "Vert",
+  "colorPink": "Rose",
   "colorOrange": "Orange",
-  "colorWhite": "White",
-  "colorBlack": "Black",
-  "itemPerfume": "Perfume",
-  "itemHandkerchief": "Handkerchief",
-  "itemRing": "Ring",
-  "itemWatch": "Watch",
-  "itemGlasses": "Glasses",
-  "itemHat": "Hat",
-  "itemBook": "Book",
-  "itemEarphones": "Earphones",
-  "itemMirror": "Mirror",
-  "itemPen": "Pen",
-  "itemCoin": "Coin",
-  "itemKey": "Key",
-  "dirEast": "East",
-  "dirWest": "West",
-  "dirSouth": "South",
-  "dirNorth": "North",
-  "dirNorthEast": "North-East",
-  "dirSouthEast": "South-East",
-  "dirNorthWest": "North-West",
-  "dirSouthWest": "South-West",
+  "colorWhite": "Blanc",
+  "colorBlack": "Noir",
+  "itemPerfume": "Parfum",
+  "itemHandkerchief": "Mouchoir",
+  "itemRing": "Bague",
+  "itemWatch": "Montre",
+  "itemGlasses": "Lunettes",
+  "itemHat": "Chapeau",
+  "itemBook": "Livre",
+  "itemEarphones": "Écouteurs",
+  "itemMirror": "Miroir",
+  "itemPen": "Stylo",
+  "itemCoin": "Pièce",
+  "itemKey": "Clé",
+  "dirEast": "Est",
+  "dirWest": "Ouest",
+  "dirSouth": "Sud",
+  "dirNorth": "Nord",
+  "dirNorthEast": "Nord-Est",
+  "dirSouthEast": "Sud-Est",
+  "dirNorthWest": "Nord-Ouest",
+  "dirSouthWest": "Sud-Ouest",
   "general": "Général",
-  "darkMode": "Mode Sombre",
+  "darkMode": "Mode sombre",
   "darkModeDescription": "Régler l'écran en mode sombre.",
   "alarmSettings": "Paramètres d'alarme",
   "privacySettings": "Paramètres de confidentialité",
   "information": "Information",
   "notice": "Avis",
   "weatherConditionSunny": "Ensoleillé",
-  "weatherConditionPartlyCloudy": "Partly Cloudy",
+  "weatherConditionPartlyCloudy": "Partiellement nuageux",
   "weatherConditionCloudy": "Nuageux",
   "weatherConditionFoggy": "Brumeux",
-  "weatherConditionDrizzle": "Drizzle",
+  "weatherConditionDrizzle": "Bruine",
   "weatherConditionRainy": "Pluvieux",
-  "weatherConditionFreezingRain": "Freezing Rain",
+  "weatherConditionFreezingRain": "Pluie verglaçante",
   "weatherConditionSnowy": "Neigeux",
-  "weatherConditionSnowGrains": "Snow Grains",
-  "weatherConditionRainShowers": "Rain Showers",
-  "weatherConditionSnowShowers": "Snow Showers",
+  "weatherConditionSnowGrains": "Neige en grains",
+  "weatherConditionRainShowers": "Averses de pluie",
+  "weatherConditionSnowShowers": "Averses de neige",
   "weatherConditionThunderstorm": "Orage",
   "airQualityGood": "Bon",
   "airQualityNormal": "Normal",
   "airQualityBad": "Mauvais",
-  "airQualityVeryBad": "Très Mauvais",
-  "locationUnknown": "Lieu Inconnu",
-  "locationError": "Erreur de Localisation",
+  "airQualityVeryBad": "Très mauvais",
+  "locationUnknown": "Lieu inconnu",
+  "locationError": "Erreur de localisation",
   "faq": "FAQ",
   "sendFeedback": "Envoyer des commentaires",
   "feedbackDescription": "Veuillez partager vos commentaires ou suggestions concernant Fortune Alarm.\nVotre avis nous aide à nous améliorer.",
@@ -730,7 +775,7 @@
   "drawOverOtherApps": "Afficher sur d'autres applis",
   "overlayDescription": "Affiche l'écran d'alarme même sur l'écran de verrouillage ou lors de l'utilisation d'autres applications.",
   "allSettingsCompleted": "Tous les paramètres sont terminés.",
-  "allowAllItems": "Please allow all items",
+  "allowAllItems": "Veuillez autoriser tous les éléments",
   "manualSettingsInfo": "Vous pouvez désactiver les paramètres directement dans les paramètres système Android.",
   "takePhoto": "Prendre une photo",
   "selectPhoto": "Sélectionner une photo",
@@ -782,7 +827,7 @@
   "member": "Membre",
   "manageSajuInfo": "Gérer les infos Saju",
   "freeCharge": "Recharge Gratuite",
-  "fortunePass": "Fortune Pass",
+  "fortunePass": "Pass Fortune",
   "unlimitedNotSubscribed": "Illimité non souscrit",
   "unlimitedInUse": "Illimité en cours d'utilisation",
   "subscribe": "S'abonner",
@@ -863,7 +908,7 @@
   "@minutesLater": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -872,7 +917,7 @@
   "@timesCount": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -884,18 +929,18 @@
   "customStyle": "Style personnalisé",
   "alarmName": "Nom de l'alarme",
   "enterAlarmName": "Veuillez entrer le nom de l'alarme",
-  "routineSummary": "Routine Summary",
-  "alarmOn": "Alarm ON",
-  "alarmOff": "Alarm OFF",
-  "contentHint": "Add content",
-  "addEvent": "Add Event",
-  "manageItem": "Manage Item",
-  "manageItemDescription": "What would you like to do with this item?",
-  "noTitle": "No Title",
-  "selectTitleColor": "Select Title Color",
+  "routineSummary": "Résumé de la routine",
+  "alarmOn": "Alarme ACTIVÉE",
+  "alarmOff": "Alarme DÉSACTIVÉE",
+  "contentHint": "Ajouter du contenu",
+  "addEvent": "Ajouter un événement",
+  "manageItem": "Gérer l'élément",
+  "manageItemDescription": "Que souhaitez-vous faire de cet élément ?",
+  "noTitle": "Sans titre",
+  "selectTitleColor": "Sélectionner la couleur du titre",
   "save": "Enregistrer",
   "missionNone": "Aucune Mission",
-  "missionSnap": "Object Snap",
+  "missionSnap": "Capture d'objet",
   "missionMath": "Problème Math",
   "missionFortune": "Fortune",
   "missionShake": "Secouer",
@@ -985,7 +1030,7 @@
       }
     }
   },
-  "fortuneCatchTime": "Time: {seconds}s",
+  "fortuneCatchTime": "Temps : {seconds}s",
   "@fortuneCatchTime": {
     "placeholders": {
       "seconds": {
@@ -993,7 +1038,7 @@
       }
     }
   },
-  "fortuneCatchBest": "Best: {seconds}s",
+  "fortuneCatchBest": "Meilleur : {seconds}s",
   "@fortuneCatchBest": {
     "placeholders": {
       "seconds": {
@@ -1001,9 +1046,9 @@
       }
     }
   },
-  "fortuneCatchAngryHint": "Angry Fortuny is a penalty!",
-  "fortuneCatchInstruction": "Avoid angry Fortuni and catch them!",
-  "fortuneCatchPointMinus": "{points} points deducted",
+  "fortuneCatchAngryHint": "Fortuny en colère est une pénalité !",
+  "fortuneCatchInstruction": "Évitez les Fortuni en colère et attrapez-les !",
+  "fortuneCatchPointMinus": "{points} points déduits",
   "@fortuneCatchPointMinus": {
     "placeholders": {
       "points": {
@@ -1100,7 +1145,7 @@
   "@missionSnoozeMessage": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -1116,6 +1161,14 @@
   "shakeCount": "Nombre de secousses",
   "shakeTimes": "{count} fois",
   "@shakeTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tapTimes": "{count} appuis",
+  "@tapTimes": {
     "placeholders": {
       "count": {
         "type": "int"
@@ -1169,7 +1222,6 @@
       }
     }
   },
-  "defaultRingtone": "Sonnerie par défaut",
   "classicAlarm": "Alarme Classique",
   "digitalAlarm": "Alarme Digitale",
   "birdsSound": "Oiseaux qui chantent",
@@ -1184,7 +1236,6 @@
   "sirenSound": "Sirène",
   "swingingSound": "Balançant",
   "telephoneBusy": "Téléphone occupé",
-  "defaultVibration": "Vibration par défaut",
   "shortVibration": "Répétition courte",
   "longVibration": "Répétition longue",
   "heartbeatVibration": "Battement de cœur",
@@ -1194,7 +1245,6 @@
   "batteryOptimizationPermissionDesc": "L'optimisation de la batterie doit être désactivée pour que l'alarme sonne à l'heure.",
   "overlayPermissionDesc": "Pour afficher l'écran de mission lorsque l'alarme se déclenche, la permission \"Afficher sur d'autres applis\" est requise.",
   "cameraMissionFirstImageError": "Veuillez définir au moins la première image de mission.",
-  "cameraMissionSequentialImageError": "Veuillez définir les images de mission dans l'ordre.",
   "retry": "Réessayer",
   "exactAlarmPermissionFail": "Échec de l'enregistrement de l'alarme. La permission d'alarme exacte est désactivée et doit être définie.",
   "batteryOptimizationPermissionFail": "Échec de l'enregistrement de l'alarme. La permission d'exception d'optimisation de la batterie est manquante et doit être définie.",
@@ -1217,6 +1267,35 @@
   "turnOffAlarm": "Éteindre l'alarme",
   "startMission": "Commencer la mission",
   "alarmSnooze": "Répéter",
+  "snoozeMinutesUnlimited": "{minutes} min (illimité)",
+  "@snoozeMinutesUnlimited": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "snoozeMinutesCount": "{minutes} min ({current}/{total})",
+  "@snoozeMinutesCount": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ringtone_fluttering_day": "Journée pétillante",
+  "ringtone_cozy_day": "Journée cocooning",
+  "ringtone_sensible_day": "Journée posée",
+  "ringtone_play_with_me": "Joue avec moi",
+  "ringtone_refreshing_day": "Journée rafraîchissante",
+  "ringtone_new_beginning": "Nouveau départ",
+  "ringtone_self_love": "Amour de soi",
   "fortuneTitle": "Vérifier la fortune",
   "fortuneMessage": "Vérifiez vos résultats de fortune\net obtenez des cadeaux cachés !",
   "fortuneAdButton": "Regarder la pub et voir les résultats",
@@ -1262,16 +1341,16 @@
   },
   "startDayButton": "Commencez votre journée",
   "tarotName0": "Le Fou",
-  "tarotName1": "Le Magicien",
-  "tarotName2": "La Grande Prêtresse",
+  "tarotName1": "Le Bateleur",
+  "tarotName2": "La Papesse",
   "tarotName3": "L'Impératrice",
   "tarotName4": "L'Empereur",
-  "tarotName5": "Le Hiérophante",
-  "tarotName6": "Les Amoureux",
+  "tarotName5": "Le Pape",
+  "tarotName6": "L'Amoureux",
   "tarotName7": "Le Chariot",
   "tarotName8": "La Force",
   "tarotName9": "L'Ermite",
-  "tarotName10": "La Roue de la Fortune",
+  "tarotName10": "La Roue de Fortune",
   "tarotName11": "La Justice",
   "tarotName12": "Le Pendu",
   "tarotName13": "La Mort",
@@ -1283,25 +1362,225 @@
   "tarotName19": "Le Soleil",
   "tarotName20": "Le Jugement",
   "tarotName21": "Le Monde",
-  "tarotKeywords1": "Création, Volonté, Capacité, Réalisation, Polyvalence",
-  "tarotDescription1": "Le magicien porte une robe rouge, une main pointée vers le ciel et l'autre vers le sol, apportant le pouvoir céleste sur terre. Il y a quatre éléments (bâton, coupe, épée, denier) sur la table, ce qui signifie que vous avez déjà tous les outils et capacités pour atteindre vos objectifs.",
-  "tarotLoveMeaning1": "C'est une période où votre charme est à son apogée et où vous êtes populaire auprès du sexe opposé. Si vous êtes dans une relation naissante, vous pouvez développer la relation avec votre discours spirituel et prendre les devants.",
-  "tarotLoveDetail1": "C'est une excellente occasion de capturer le cœur du sexe opposé alors que votre charme et votre talent brillent. S'il y a quelqu'un qui vous plaît, n'hésitez pas à l'approcher activement. Votre sens de l'humour et votre conversation sensée raviront l'autre personne et vous permettront de mener la relation de manière proactive. Si vous êtes célibataire, vous pouvez être approché par plusieurs personnes, et si vous êtes en couple, l'autre personne sera grandement émue si vous menez la sortie ou préparez un événement. Gagnez l'amour avec confiance.",
-  "tarotWealthMeaning1": "C'est le bon moment pour générer des revenus en utilisant vos capacités et vos compétences. Si vous concrétisez les idées que vous avez en tête, cela mènera à des résultats financiers.",
-  "tarotWealthDetail1": "C'est le moment où vos connaissances, vos compétences et vos idées deviennent de l'argent. Ne vous contentez pas d'un salaire ; générez des revenus supplémentaires via des activités secondaires ou en freelance. Votre planification créative, votre capacité de vente et votre aisance à l'oral seront d'excellents atouts, entraînant des revenus plus élevés que prévu. Comme votre jugement est susceptible de viser juste dans la gestion des fonds, vous obtiendrez de bons résultats si vous établissez de manière proactive un plan financier et le mettez en pratique.",
-  "tarotSuccessMeaning1": "Votre capacité de travail sera excellemment démontrée et reconnue par votre entourage. Si vous avez quelque chose de prévu, c'est le moment de le mettre en pratique.",
-  "tarotSuccessDetail1": "Vous pouvez vous démarquer sur votre lieu de travail ou dans vos études en utilisant pleinement vos capacités. Quel que soit le problème auquel vous faites face, vous pouvez le résoudre avec votre propre esprit et votre humour, et vous serez reconnu comme une 'personne capable' par vos collègues ou supérieurs. Si vous prenez la tête d'un nouveau projet ou faites une présentation importante, vous pouvez la terminer avec succès. Tout comme les opportunités viennent à ceux qui sont préparés, vous l'êtes déjà pleinement. Croyez en vous et montrez vos compétences avec confiance comme un protagoniste sur scène.",
+  "tarotKeywords0": "Nouveaux départs, aventure, innocence, liberté, imprudence",
+  "tarotDesc0": "Le Fou se tient précairement au bord d'une falaise dans des vêtements colorés, mais son regard est fixé au loin, plein d'espoir.",
+  "tarotLoveMeaning0": "Un nouvel amour inattendu peut arriver, ou une rencontre fatidique au premier regard.",
+  "tarotLoveDetail0": "C'est un moment où vous pouvez commencer l'amour avec un cœur pur comme un enfant. Oubliez toutes les blessures passées.",
+  "tarotWealthMeaning0": "Un nouvel investissement ou un nouvel élément commercial peut attirer votre attention.",
+  "tarotWealthDetail0": "C'est un moment où de nouvelles opportunités s'ouvrent financièrement. Vous pouvez obtenir des résultats inattendus.",
+  "tarotSuccessMeaning0": "C'est le bon moment pour commencer un nouveau projet ou changer d'emploi pour un domaine complètement différent.",
+  "tarotSuccessDetail0": "S'il y a quelque chose que vous préparez, faites le premier pas avec audace.",
+  "tarotKeywords1": "Créativité, maîtrise, expression de soi, ingéniosité, volonté",
+  "tarotDesc1": "Le Bateleur se tient devant une table portant les symboles des quatre éléments. Une main vers le ciel et l'autre vers la terre, il symbolise la capacité à manifester les idées dans la réalité.",
+  "tarotLoveMeaning1": "C'est une excellente occasion de montrer votre charme et de conquérir le cœur de quelqu'un.",
+  "tarotLoveDetail1": "Votre charisme et vos talents sont à leur apogée, vous rendant extrêmement attirant pour le sexe opposé. Si vous avez quelqu'un en vue, n'hésitez pas à prendre l'initiative. Votre sens de l'humour et votre conversation pleine d'esprit captiveront votre partenaire, vous permettant de guider la relation.",
+  "tarotWealthMeaning1": "Le moment idéal pour créer de nouvelles sources de revenus grâce à vos compétences.",
+  "tarotWealthDetail1": "Vos connaissances, vos compétences et vos idées peuvent se transformer en gains financiers réels dès maintenant. Ne vous limitez pas à votre salaire de base ; essayez de monétiser vos loisirs ou de vous lancer en freelance. Votre capacité de planification créative vous aidera à atteindre des revenus dépassant vos attentes.",
+  "tarotSuccessMeaning1": "Vos capacités professionnelles seront à l'honneur et recevront la reconnaissance de votre entourage.",
+  "tarotSuccessDetail1": "Au travail ou dans vos études, vous pourrez démontrer tout votre potentiel et vous démarquer. Quels que soient les défis, vous les résoudrez grâce à votre ingéniosité et votre esprit vif. Vos collègues et supérieurs vous reconnaîtront comme un véritable expert, alors agissez avec assurance.",
+  "tarotKeywords2": "Intuition, mystère, subconscient, sagesse intérieure, passivité",
+  "tarotDesc2": "La Papesse est assise entre une colonne blanche et une colonne noire, gardant le parchemin de la sagesse. Elle symbolise l'intuition profonde et l'équilibre entre le conscient et l'inconscient.",
+  "tarotLoveMeaning2": "Une période où la connexion spirituelle est plus importante que l'attraction physique.",
+  "tarotLoveDetail2": "Vous serez plus attiré par des personnes ayant un monde intérieur riche avec qui vous pouvez avoir des conversations profondes. Votre intuition est aiguisée, vous permettant de comprendre votre partenaire sans paroles. Cependant, un excès de réserve pourrait causer des malentendus, alors essayez d'exprimer vos sentiments sincèrement de temps en temps.",
+  "tarotWealthMeaning2": "Il est temps de protéger vos actifs et d'observer la situation plutôt que de prendre des risques.",
+  "tarotWealthDetail2": "Ce n'est pas le meilleur moment pour poursuivre des gains rapides sans réfléchir. Au lieu d'agir impulsivement, consacrez du temps à l'analyse du marché et à l'étude des outils financiers. C'est une étape de « semailles », alors ne vous angoissez pas si les fruits ne viennent pas immédiatement.",
+  "tarotSuccessMeaning2": "Le succès vous attend dans les activités académiques, la recherche et les professions intellectuelles.",
+  "tarotSuccessDetail2": "Concentrez-vous sur le renforcement de votre potentiel interne et l'amélioration de vos compétences plutôt que sur l'éclat extérieur. Vous obtiendrez des résultats exceptionnels dans les tâches nécessitant une analyse approfondie. Votre sagesse et votre prudence seront la clé du succès lors des moments décisifs.",
+  "tarotKeywords3": "Féminité, beauté, nature, abondance, fertilité",
+  "tarotDesc3": "L'Impératrice repose dans un jardin florissant, représentant la prospérité matérielle et la générosité émotionnelle.",
+  "tarotLoveMeaning3": "Temps de floraison émotionnelle et de renforcement des liens affectifs.",
+  "tarotLoveDetail3": "Votre charme et votre énergie féminine (ou réceptive) sont au maximum, vous rendant incroyablement attirante. Dans vos relations, il y aura de l'harmonie et du soin mutuel, ce qui en fait un bon moment pour parler de mariage ou de projets familiaux. Si vous êtes célibataire, un changement de style vous aidera à attirer l'attention.",
+  "tarotWealthMeaning3": "Période de prospérité matérielle et de stabilité financière.",
+  "tarotWealthDetail3": "La chance financière est de votre côté. Vos efforts passés porteront leurs fruits et vous pourrez profiter d'un plus grand confort. Vous pourriez recevoir des bonus inattendus, des cadeaux ou des bénéfices d'investissements réussis. Partagez votre énergie positive avec les autres, cela attirera encore plus de fortune.",
+  "tarotSuccessMeaning3": "Les projets actuels progressent avec succès et apportent d'excellents résultats.",
+  "tarotSuccessDetail3": "Il est temps de voir les fruits réels de votre travail. Les projets se concluront avec succès, ce qui pourrait se traduire par une promotion ou une prime. Votre vision créative et votre sens esthétique seront très appréciés. Profitez du processus de travail ; cela vous aidera à atteindre des objectifs encore plus élevés.",
+  "tarotKeywords4": "Autorité, structure, contrôle, leadership, logique",
+  "tarotDesc4": "L'Empereur est assis sur un trône de pierre en armure, symbolisant la fermeté, l'ordre et la détermination dans le commandement.",
+  "tarotLoveMeaning4": "Relation stable avec un partenaire fiable et responsable.",
+  "tarotLoveDetail4": "Au lieu de passions éphémères, la confiance et la sécurité en l'avenir prennent le devant de la scène. Votre partenaire sera un soutien solide et protecteur pour vous. Essayez d'éviter le contrôle excessif et l'entêtement dans la communication. Pour les célibataires, une rencontre avec une personne influente se dessine.",
+  "tarotWealthMeaning4": "La gestion systématique des actifs aidera à construire un capital stable.",
+  "tarotWealthDetail4": "En matière financière, il est crucial de s'en tenir à un plan et à vos principes. Au lieu de spéculations risquées, choisissez des instruments sûrs comme les dépôts ou l'immobilier. Votre pragmatisme et votre détermination vous aideront à jeter les bases d'une richesse durable.",
+  "tarotSuccessMeaning4": "De bonnes opportunités de promotion ou d'obtenir un poste de leadership.",
+  "tarotSuccessDetail4": "Votre position dans l'équipe se renforce. Les dirigeants apprécieront vos qualités de meneur et pourraient vous confier la gestion d'un projet ou d'un département important. Utilisez la logique et le calcul froid pour résoudre les tâches professionnelles et vous gagnerez la confiance totale de vos supérieurs.",
+  "tarotKeywords5": "Tradition, enseignement, croyances, conseil, médiation",
+  "tarotDesc5": "Le Pape symbolise les normes sociales et le guide spirituel, menant à travers des conseils sages et des valeurs traditionnelles.",
+  "tarotLoveMeaning5": "Relations sérieuses et saines basées sur le respect mutuel.",
+  "tarotLoveDetail5": "Vous ne chercherez pas d'aventures passagères, mais une relation profonde en vue de fonder une famille. Rencontrer quelqu'un par des amis communs ou lors d'événements formels pourrait être le début de quelque chose d'important. Si des disputes surviennent, demandez conseil à vos aînés ; leur sagesse vous aidera.",
+  "tarotWealthMeaning5": "Il est préférable de suivre des méthodes d'épargne traditionnelles et éprouvées.",
+  "tarotWealthDetail5": "Privilégiez la sécurité plutôt que les investissements risqués. Les dépôts bancaires ou les assurances seront les options les plus appropriées. La consultation d'un expert financier ou le maintien de l'honnêteté dans vos transactions vous aidera à conserver et à accroître votre patrimoine.",
+  "tarotSuccessMeaning5": "Moment favorable pour signer des contrats et des accords de partenariat.",
+  "tarotSuccessDetail5": "Au lieu de résoudre les problèmes seul, demandez le soutien de collègues ou de mentors. Respecter les règles et procédures de l'entreprise est le chemin le plus court vers la reconnaissance. C'est aussi une période propice pour signer des documents importants et établir des réseaux de contact professionnels.",
+  "tarotKeywords6": "Amour, harmonie, choix, union, partenariat",
+  "tarotDesc6": "Sous les rayons d'un soleil chaud, Adam et Ève reçoivent la bénédiction d'un ange. C'est le symbole de l'union des âmes et d'un choix de vie important.",
+  "tarotLoveMeaning6": "L'une des meilleures périodes pour l'épanouissement de l'amour.",
+  "tarotLoveDetail6": "Un roman passionnant vous attend. Vous vous rapprocherez rapidement d'une personne qui vous attire et ressentirez une profonde connexion spirituelle. Si vous prévoyez de déclarer vos sentiments, les chances de succès sont très élevées. Mais rappelez-vous : il vaut mieux choisir avec le cœur que de céder à une tentation momentanée.",
+  "tarotWealthMeaning6": "Votre situation financière s'améliorera en collaborant avec d'autres.",
+  "tarotWealthDetail6": "Travailler en équipe avec quelqu'un qui pense comme vous apportera un effet de synergie et augmentera vos bénéfices. Si l'on vous propose un partenariat, considérez-le sérieusement. La communication avec les autres vous aidera à obtenir des informations précieuses pour vos investissements. Cependant, surveillez vos dépenses de loisirs pour ne pas dépasser votre budget.",
+  "tarotSuccessMeaning6": "C'est le moment où le travail d'équipe apporte des résultats brillants.",
+  "tarotSuccessDetail6": "Vous vous entendez à merveille avec vos collègues et partenaires, et le travail vous est agréable. Dans des projets de groupe, vous accomplirez plus qu'en solo, et la capacité à nouer des relations sera la clé du succès. En choisissant une tâche qui vous plaît vraiment, vous obtiendrez des résultats que vous ne regretterez pas.",
+  "tarotKeywords7": "Victoire, volonté, avance, conquête, triomphe",
+  "tarotDesc7": "Le jeune roi sur son char avance avec détermination vers son objectif, tenant le sceptre du pouvoir. Sa volonté est inébranlable et le triomphe est proche.",
+  "tarotLoveMeaning7": "Période où les actions décidées en amour apporteront le succès.",
+  "tarotLoveDetail7": "Il est temps de lutter résolument pour votre amour. N'hésitez pas et déclarez vos sentiments ouvertement ; même s'il y a des concurrents, vous sortirez victorieux. Si vous êtes dans une phase d'incertitude, prenez l'initiative et définissez la relation. Les voyages ensemble ou les loisirs actifs renforceront votre lien.",
+  "tarotWealthMeaning7": "Vous devez agir avec audace pour atteindre les objectifs financiers fixés.",
+  "tarotWealthDetail7": "Vous avez maintenant besoin d'une force motrice puissante pour réaliser vos plans. N'hésitez pas à prendre des décisions importantes lorsque l'occasion se présente. Concentrez-vous sur des projets à court terme ; maintenant, vos revenus dépendent directement de votre activité. Des dépenses liées aux voyages peuvent survenir, mais ce sera un investissement dans de nouvelles opportunités.",
+  "tarotSuccessMeaning7": "Succès dans la compétition et atteinte des objectifs.",
+  "tarotSuccessDetail7": "Le succès vous attend dans l'atteinte de buts concrets : promotions, réussite aux examens ou conclusion d'accords bénéfiques. Plus la compétition sera forte, plus votre esprit combatif sera élevé et, au final, la victoire sera vôtre. Votre détermination fera une grande impression sur vos collègues.",
+  "tarotKeywords8": "Force, courage, patience, influence douce, maîtrise de soi",
+  "tarotDesc8": "Une femme aux vêtements blancs ferme doucement la gueule d'un lion, symbolisant la victoire de l'esprit sur la force brute et la maîtrise de soi.",
+  "tarotLoveMeaning8": "Période où vous devez faire preuve de patience et accepter votre partenaire tel qu'il est.",
+  "tarotLoveDetail8": "Vos relations exigent maintenant de la sagesse et de l'endurance. En acceptant les défauts de votre partenaire avec un cœur ouvert, vous élevez le lien à un nouveau niveau. Il est important de guider en douceur, en faisant preuve de force intérieure. Si vous soutenez patiemment votre être cher, votre sincérité finira par faire fondre toute glace.",
+  "tarotWealthMeaning8": "L'épargne constante et les habitudes de dépenses raisonnables sont la clé de la richesse.",
+  "tarotWealthDetail8": "Votre situation financière croît lentement mais sûrement. Ne vous découragez pas s'il n'y a pas de revenus énormes en ce moment ; continuez à gérer vos actifs régulièrement. Dans les investissements, ne vous laissez pas emporter par la panique face aux fluctuations temporaires. La capacité à contrôler vos désirs impulsifs est le chemin le plus court vers la prospérité.",
+  "tarotSuccessMeaning8": "Vous pourrez gérer même les tâches les plus difficiles ou une direction exigeante.",
+  "tarotSuccessDetail8": "Il est possible qu'on vous confie un projet difficile, mais vous avez suffisamment de ressources internes pour le gérer. Votre douceur extérieure cache une volonté d'acier qui vous aidera à surmonter tous les obstacles. Votre calme lors de la résolution de problèmes suscitera un profond respect et une confiance chez les autres.",
+  "tarotKeywords9": "Introspection, solitude, recherche de la vérité, sagesse, repos",
+  "tarotDesc9": "Un vieil homme avec une lanterne à la main est au sommet d'une montagne enneigée, écoutant sa voix intérieure en quête de vérité.",
+  "tarotLoveMeaning9": "Temps pour la solitude ou des réflexions profondes sur les relations.",
+  "tarotLoveDetail9": "Maintenant, il est plus important de vous comprendre vous-même que de mener une vie sociale active. Ne cherchez pas de rencontres juste pour fuir la solitude ; réfléchissez au type d'amour dont vous avez réellement besoin. Même si vous avez un partenaire, une petite distance vous aidera tous deux à mieux valoriser votre relation.",
+  "tarotWealthMeaning9": "L'activité financière peut diminuer temporairement.",
+  "tarotWealthDetail9": "En matière d'argent, il convient d'adopter une attitude conservatrice maintenant. Il est plus important de conserver ce que vous avez que d'essayer d'augmenter le capital par des méthodes risquées. Investir dans votre propre éducation ou formation sera le meilleur investissement, qui portera ses fruits à l'avenir.",
+  "tarotSuccessMeaning9": "Succès dans les affaires nécessitant des connaissances approfondies, de la recherche ou de la maîtrise.",
+  "tarotSuccessDetail9": "Vous obtiendrez d'excellents résultats dans les travaux scientifiques, la planification ou le développement, où une immersion profonde dans le processus est requise. C'est maintenant le moment d'accumuler des forces, pas de les exhiber. Si vous êtes confronté à une tâche insoluble, demandez conseil à un mentor expérimenté.",
+  "tarotKeywords10": "Chance, changements, destin, cycles, tournant",
+  "tarotDesc10": "La grande roue de la fortune tourne, annonçant des changements inévitables et le début d'un nouveau cycle de vie.",
+  "tarotLoveMeaning10": "Une rencontre fatidique vous attend.",
+  "tarotLoveDetail10": "L'amour peut arriver soudainement, comme au cinéma. Des rencontres fortuites ou des retrouvailles inattendues avec d'anciens amours sont possibles. Les célibataires peuvent tomber amoureux au premier regard, et ceux qui sont en couple sentiront la relation passer à un niveau supérieur.",
+  "tarotWealthMeaning10": "La situation financière commence à s'améliorer.",
+  "tarotWealthDetail10": "La déesse Fortune vous sourit. Des rentrées d'argent inattendues ou des bénéfices d'investissements sont possibles. Le flux d'argent devient plus stable et vous devez saisir les opportunités à temps. Cependant, rappelez-vous que la chance est cyclique ; montrez de la sagesse et épargnez une partie pour l'avenir.",
+  "tarotSuccessMeaning10": "Les circonstances penchent en votre faveur.",
+  "tarotSuccessDetail10": "Une période importante arrive qui peut être un tournant dans votre carrière. Les dossiers qui étaient en pause commenceront à bouger. Les chances d'une promotion ou d'une offre d'emploi avantageuse seront ce « vent favorable » qui vous emmènera vers de nouveaux sommets.",
+  "tarotKeywords11": "Justice, équilibre, responsabilité, vérité, cause et effet",
+  "tarotDesc11": "Un juge vêtu de rouge tient une épée dans la main droite et une balance dans la gauche. C'est le symbole du jugement objectif et de la responsabilité de ses propres actes.",
+  "tarotLoveMeaning11": "Une relation où la raison l'emporte sur les sentiments.",
+  "tarotLoveDetail11": "C'est maintenant un moment où le jugement rationnel est plus nécessaire que de se laisser emporter par les émotions. Réfléchissez pour savoir si votre relation maintient l'équilibre : si vous vous sacrifiez trop ou, au contraire, si vous ne faites que recevoir sans rien donner en retour. Si vous envisagez de vous marier, vous évaluerez méticuleusement les conditions et le passé de votre partenaire.",
+  "tarotWealthMeaning11": "Une vérification méticuleuse est requise dans les transactions financières et les contrats.",
+  "tarotWealthDetail11": "Des situations peuvent survenir où il est nécessaire de distinguer le vrai du faux sur le plan monétaire. C'est un bon moment pour vous faire rembourser de l'argent prêté ou pour liquider des comptes en suspens. Lors de la signature de contrats, examinez attentivement les clauses et agissez avec honnêteté et transparence en suivant les principes.",
+  "tarotSuccessMeaning11": "Vous recevrez une évaluation juste de votre travail et une récompense appropriée.",
+  "tarotSuccessDetail11": "Vos réalisations professionnelles recevront une évaluation juste et objective. Si vous avez travaillé dur, attendez-vous à une promotion ou à une prime. Vos capacités analytiques et votre précision seront très appréciées dans les domaines nécessitant de l'exactitude. Lors de la prise de décisions, laissez de côté les émotions et basez-vous strictement sur les données et les faits.",
+  "tarotKeywords12": "Sacrifice, patience, nouvelle perspective, stagnation, éveil",
+  "tarotDesc12": "Un homme pendu à un arbre par un pied, à travers une souffrance volontaire, observe le monde sous un angle totalement nouveau et atteint l'illumination. Le halo autour de sa tête signifie une croissance spirituelle.",
+  "tarotLoveMeaning12": "La relation peut stagner ou les sentiments non partagés peuvent durer longtemps.",
+  "tarotLoveDetail12": "Vous pouvez ressentir de la frustration face au manque de progrès en amour, mais maintenant la précipitation n'aidera pas. Faites une pause, regardez la situation de l'autre côté et réfléchissez si vous imposez vos sentiments à votre manière. Savoir se mettre à la place de l'autre et faire preuve de patience finira par être la clé du cœur de votre partenaire.",
+  "tarotWealthMeaning12": "Les flux d'argent peuvent s'arrêter temporairement, des pertes forcées sont possibles.",
+  "tarotWealthDetail12": "Vous pouvez ressentir une stagnation de vos finances. Les investissements peuvent être « gelés » et les revenus attendus retardés. Plus vous vous agiterez, plus la situation sera complexe, il est donc préférable de rester calme. Utilisez ce temps pour revoir vos habitudes de dépenses et développer une nouvelle attitude envers l'argent.",
+  "tarotSuccessMeaning12": "Les choses peuvent ne pas se passer selon le plan, des retards sont possibles.",
+  "tarotSuccessDetail12": "La suspension d'un projet ou le retard dans les affaires peuvent causer du stress, mais ce n'est pas un échec, c'est un signal de « redémarrage ». N'essayez pas de forcer les événements ; faites un pas en arrière et reconsidérez la stratégie globale. Rompre avec les vieux schémas vous aidera à trouver une solution géniale.",
+  "tarotKeywords13": "Achèvement, changement, transformation, séparation, nouveau départ",
+  "tarotDesc13": "Symbolise la fin complète de l'ancien et la naissance du nouveau. Représente un processus de transformation douloureux mais inévitable, où la mort de l'ancien dégage le chemin pour l'avenir.",
+  "tarotLoveMeaning13": "Signifie la fin d'une relation ou un changement radical en elle.",
+  "tarotLoveDetail13": "Il est possible que votre relation actuelle ait atteint sa limite. Au lieu d'essayer de retenir ce qui s'en va, montrez du courage et laissez faire la situation. La séparation est douloureuse, mais au bout de ce chemin vous attend sans doute un meilleur départ. Rappelez-vous : ce n'est qu'en vous libérant complètement des attachements et des blessures du passé que vous laisserez de la place pour qu'une nouvelle personne entre dans votre vie.",
+  "tarotWealthMeaning13": "Des pertes financières ou des échecs d'investissement peuvent survenir.",
+  "tarotWealthDetail13": "Des changements importants dans vos finances sont attendus. Vous pouvez faire face à des pertes là où vous ne les attendiez pas ou à des dépenses imprévues. C'est un signal que les anciennes méthodes de gestion de capital ne fonctionnent plus. Utilisez ce moment pour solder vos dettes, couper les dépenses inutiles et commencer à construire une structure financière plus saine et plus stable.",
+  "tarotSuccessMeaning13": "Le travail actuel peut être interrompu ou se terminer par un échec.",
+  "tarotSuccessDetail13": "Un projet dans lequel vous avez mis beaucoup d'efforts pourrait s'arrêter, ou vous pourriez connaître des changements brusques dans votre carrière. Maintenant, vous pouvez ressentir l'amertume de l'échec, mais c'est un signe du destin : il est temps de quitter ce qui ne vous convient pas et de chercher le chemin du véritable succès. Partez de zéro et un nouveau chapitre plus passionnant de votre vie s'ouvrira.",
+  "tarotKeywords14": "Équilibre, tempérance, harmonie, guérison, compromis",
+  "tarotDesc14": "Un ange verse de l'eau d'une coupe à l'autre, symbolisant l'équilibre parfait entre la réalité et l'idéal, ainsi que le flux harmonieux de la vie.",
+  "tarotLoveMeaning14": "Processus dans lequel deux personnes différentes trouvent un langage commun et l'harmonie.",
+  "tarotLoveDetail14": "Pour cette période, un amour calme et profond est plus approprié que les passions turbulentes. En reconnaissant les différences de l'autre et en les complétant, vous construisez un lien solide. Même si des disputes surviennent, la sagesse vous aidera à les résoudre par un dialogue serein. Votre attitude douce et attentionnée calmera votre partenaire et créera une atmosphère stable.",
+  "tarotWealthMeaning14": "Il est important de maintenir l'équilibre entre les revenus et les dépenses.",
+  "tarotWealthDetail14": "La situation financière se stabilise. Au lieu de poursuivre des gains faciles, concentrez-vous sur la distribution efficace de vos actifs actuels. Avec la croissance des revenus, il est important de garder l'habitude de contrôler les dépenses. Dans les investissements, il est préférable de suivre une stratégie de diversification ; la constance vous mènera finalement à la richesse.",
+  "tarotSuccessMeaning14": "Votre capacité à arrondir les angles et à mener l'équipe à l'accord sera à son apogée.",
+  "tarotSuccessDetail14": "Vous excellerez en tant que médiateur dans des projets d'équipe, résolvant les conflits et augmentant l'efficacité globale. Votre flexibilité et votre capacité d'adaptation seront appréciées par vos collègues. Maintenant, il est important de maintenir l'équilibre entre le travail et le repos pour éviter l'épuisement professionnel. Une vision globale de la situation vous aidera à obtenir les meilleurs résultats.",
+  "tarotKeywords15": "Tentation, dépendance, attachement, matérialisme, obsession",
+  "tarotDesc15": "Symbole des désirs et des attachements qui nous enchaînent. Ce sont les tentations matérielles dont nous pouvons nous libérer si nous montrons de la volonté, mais dans lesquelles nous nous plongeons souvent tête baissée.",
+  "tarotLoveMeaning15": "Signifie une relation attirée ou obsédée par un charme physique intense.",
+  "tarotLoveDetail15": "Vous pourriez être irrésistiblement attiré par quelqu'un, ce qui rend difficile la prise de décisions sensées. Une romance passionnée peut commencer, mais faites attention à ne pas tomber dans le piège de la jalousie et du contrôle excessifs. Réfléchissez si votre sentiment est un amour véritable ou simplement un désir de posséder l'autre.",
+  "tarotWealthMeaning15": "L'avidité excessive peut mener à des investissements risqués ou à de grandes dépenses de loisirs.",
+  "tarotWealthDetail15": "C'est une période de nombreuses tentations financières. Méfiez-vous des offres douteuses d'« argent facile » et des achats impulsifs qui peuvent vider votre portefeuille. Ne devenez pas l'esclave de l'argent et ne minez pas la confiance de votre entourage. Au lieu de nouveaux investissements, il est maintenant préférable de se concentrer sur la conservation de ce que vous avez.",
+  "tarotSuccessMeaning15": "Pour le succès, vous pourriez être prêt à n'importe quelle mesure.",
+  "tarotSuccessDetail15": "La soif de pouvoir ou de reconnaissance peut vous faire voir vos collègues comme de simples concurrents. Faites attention à ne pas devenir un bourreau de travail, en oubliant la santé et le repos. Renoncez à l'idée d'obtenir tout tout de suite sans l'effort adéquat. Une attitude honnête envers le travail vous aidera à vous libérer des chaînes internes.",
+  "tarotKeywords16": "Effondrement, impact, changement brusque, libération, révélation",
+  "tarotDesc16": "Un éclair frappe directement la tour, la faisant s'écrouler et provoquant la chute des gens. Symbolise la rupture soudaine des vieilles valeurs par des forces extérieures et la rencontre avec la crue vérité.",
+  "tarotLoveMeaning16": "Dans les relations, une crise grave ou une rupture soudaine est possible.",
+  "tarotLoveDetail16": "Comme un éclair dans un ciel dégagé, un événement inattendu peut survenir dans votre vie personnelle. Vous pourriez être déçu par votre partenaire ou faire face à un conflit qui ébranle les fondations de votre relation. Mais ne désespérez pas : c'est un processus de nettoyage des illusions. Sur les ruines de l'ancien, quelque chose de plus fort et de plus authentique grandira avec le temps.",
+  "tarotWealthMeaning16": "Vous devez vous préparer à des pertes financières soudaines ou à des chocs.",
+  "tarotWealthDetail16": "Une période d'extrême instabilité financière commence. Des pertes brusques ou l'effondrement de projets d'investissement sont possibles. Il est maintenant crucial de déplacer vos actifs dans un endroit sûr et d'être vigilant. Rappelez-vous que cet effondrement vous aidera à revoir vos points de vue sur l'argent, et qu'après la chute vient toujours une période de reconstruction.",
+  "tarotSuccessMeaning16": "Les projets peuvent être interrompus, des changements brusques de carrière ou des réajustements de personnel sont possibles.",
+  "tarotSuccessDetail16": "Vous pouvez ressentir de l'amertume parce que le projet que vous avez construit étape par étape s'effondre. Mais cela n'arrive pas à cause de votre faiblesse, mais à cause de changements inévitables. Gardez votre calme, évaluez la situation et commencez à chercher de nouvelles voies. Si vous pouvez transformer cette crise en opportunité, vous atteindrez des sommets encore plus élevés.",
+  "tarotKeywords17": "Espoir, inspiration, guérison, optimisme, réalisation des désirs",
+  "tarotDesc17": "Sous la lumière d'une étoile brillante, une femme verse de l'eau, symbolisant la paix après les épreuves et l'espoir en un avenir radieux.",
+  "tarotLoveMeaning17": "Période de rencontre avec l'idéal ou réalisation du rêve d'amour.",
+  "tarotLoveDetail17": "Comme une étoile dans la nuit, un espoir radieux arrive dans votre vie. Vous pourriez rencontrer la personne de vos rêves, et votre charisme sincère sera extrêmement attirant pour les autres. Les blessures du passé se referment, laissant place à une énergie lumineuse qui vous permettra de croire à nouveau en l'amour.",
+  "tarotWealthMeaning17": "La situation financière commence à s'améliorer progressivement.",
+  "tarotWealthDetail17": "La chance avec l'argent commence à tourner en votre faveur. Les difficultés économiques sont derrière vous et vous commencez à voir la lumière au bout du tunnel. Des idées créatives peuvent apporter des sources de revenus supplémentaires. Maintenant, il est important de penser à long terme : les investissements dans l'avenir seront la clé.",
+  "tarotSuccessMeaning17": "Une vague d'inspiration vous attend et l'occasion de faire connaître vos talents.",
+  "tarotSuccessDetail17": "Vos idées recevront la reconnaissance et les éloges de vos collègues. Vous vous distinguerez particulièrement dans les domaines créatifs, le marketing ou la publicité ; c'est maintenant le moment idéal pour lancer le projet dont vous avez toujours rêvé. Agissez avec confiance : vous avez toutes les chances de gagner en popularité et de renforcer votre autorité.",
+  "tarotKeywords18": "Anxiété, illusion, incertitude, intuition, subconscient",
+  "tarotDesc18": "Sous la lumière de la lune coexistent l'anxiété et une incertitude brumeuse, symbolisant la vérité cachée et le monde du subconscient.",
+  "tarotLoveMeaning18": "Incompréhension des sentiments du partenaire, offenses et soupçons possibles.",
+  "tarotLoveDetail18": "Vous êtes comme dans un brouillard : les sentiments de votre partenaire ne sont pas clairs, ce qui génère de l'anxiété. De petits malentendus peuvent se transformer en soupçons sérieux, vous volant votre tranquillité. Mais ne vous précipitez pas pour tirer des conclusions ; maintenant, il est préférable d'adopter une posture d'attente. Essayez de garder votre équilibre interne et de penser rationnellement.",
+  "tarotWealthMeaning18": "Les perspectives financières sont brumeuses, risque élevé de tromperie ou de fraude.",
+  "tarotWealthDetail18": "Votre vision de la situation est déformée maintenant. Vous pourriez facilement tomber dans les pièges d'escrocs ou dans des promesses tentantes mais vides. Méfiez-vous des pièges cachés et faites preuve d'une extrême prudence dans les affaires. Maintenant n'est pas le moment pour de nouveaux projets ; il vaut mieux se concentrer sur la protection de ce que vous avez déjà.",
+  "tarotSuccessMeaning18": "Période de confusion : les objectifs sont vagues, intrigues possibles dans l'équipe.",
+  "tarotSuccessDetail18": "Vous pouvez vous trouver dans une situation d'incertitude, où la direction du développement du projet est floue et où les collègues murmurent dans votre dos. Faites attention à vos paroles et à vos actions. Maintenant, il sera plus sage d'attendre que la situation s'éclaircisse. Ne croyez pas aux rumeurs aveuglément, gardez votre calme et occupez-vous de vos affaires.",
+  "tarotKeywords19": "Succès, bonheur, vitalité, positivisme, bénédiction",
+  "tarotDesc19": "Sous un soleil radieux, un enfant sur un cheval blanc agite un drapeau, profitant de la vie. C'est le symbole de la clarté totale, du succès et du bonheur.",
+  "tarotLoveMeaning19": "Des relations bénies, brillantes et heureuses vous attendent.",
+  "tarotLoveDetail19": "Un amour parfaitement heureux et béni est maintenant avec vous. Les malentendus et les conflits du passé disparaîtront et la confiance sera renforcée. Les célibataires rencontreront quelqu'un qui dégage une énergie lumineuse. Des nouvelles joyeuses sont possibles, comme un mariage ou l'agrandissement de la famille. C'est un moment merveilleux pour profiter de l'amour de manière pure et passionnée.",
+  "tarotWealthMeaning19": "Votre situation financière est à son apogée.",
+  "tarotWealthDetail19": "Votre « moment de gloire » est arrivé. Vos perspectives financières sont très solides, ce qui mène à une croissance des bénéfices. Tous vos efforts passés sont enfin récompensés. C'est un bon moment pour des achats importants ou des investissements dans ce qui vous apporte de la joie. Profitez de votre succès et partagez-le avec les autres.",
+  "tarotSuccessMeaning19": "Vos talents seront reconnus et vous serez au centre de l'attention.",
+  "tarotSuccessDetail19": "Les fanfares du succès retentissent. Tous vos travaux passés sont enfin valorisés positivement et présentés au monde. Le succès dans les affaires, une promotion ou la réussite brillante des examens vous attend. Votre confiance en vous et votre attitude positive vous aideront à atteindre n'importe quel sommet. C'est le moment de votre triomphe.",
+  "tarotKeywords20": "Renaissance, récompense, nouvelle, décision, retrouvailles",
+  "tarotDesc20": "Un ange sonne de la trompette dans le ciel et les gens dans les cercueils s'éveillent, profitant de la vie. C'est le symbole de la récompense pour les travaux passés et de l'éveil à une nouvelle vie.",
+  "tarotLoveMeaning20": "Une nouvelle d'un ancien partenaire ou une opportunité de retrouvailles est possible.",
+  "tarotLoveDetail20": "La nouvelle que vous attendiez tant arrivera. Si vous ne pouviez pas oublier un ancien amour ou espériez une rencontre, les chances de succès sont maintenant extrêmement élevées. Les relations incertaines peuvent enfin devenir sérieuses. Il est possible de reprendre contact avec une ancienne connaissance ; écoutez votre cœur et prenez une décision.",
+  "tarotWealthMeaning20": "Les investissements passés peuvent apporter des bénéfices, le remboursement d'anciennes dettes est possible.",
+  "tarotWealthDetail20": "Le moment est venu de récolter les fruits des efforts passés. Des actions oubliées peuvent augmenter de prix, ou l'on vous remboursera une dette sur laquelle vous ne comptiez plus. Une chance inattendue ou une opportunité de relancer avec succès une ancienne idée est possible. La décision que vous prendrez maintenant aura un grand impact.",
+  "tarotSuccessMeaning20": "Vos travaux passés seront reconnus, des promotions ou des récompenses sont possibles.",
+  "tarotSuccessDetail20": "Le jour du jugement est arrivé. Vos efforts passés ont enfin reçu une évaluation digne et une récompense, et les bonnes nouvelles, comme le son de la trompette, ne se feront pas attendre. Des offres d'emploi avantageuses ou l'opportunie de sortir de la stagnation sont possibles. Ne craignez pas les changements : saisissez l'opportunité.",
+  "tarotKeywords21": "Achèvement, intégration, accomplissement, fin heureuse, perfection",
+  "tarotDesc21": "Symbole de l'accomplissement total du but et de l'harmonie idéale après un long voyage. Les quatre bêtes sacrées aux coins bénissent le monde parfait et présagent le début d'un nouveau cycle.",
+  "tarotLoveMeaning21": "Signifie la floraison et la plénitude de l'amour. Une union avec le partenaire idéal et des moments de vrai bonheur vous attendent.",
+  "tarotLoveDetail21": "Le moment est idéal pour mettre un point final à une longue relation et passer à un nouveau niveau, par exemple se marier. Vous vous assurerez que vous êtes les meilleurs partenaires l'un pour l'autre. Si vous êtes célibataire, vous rencontrerez une personne qui correspond totalement à vos idéaux. Il est possible de rencontrer quelqu'un lors d'un voyage.",
+  "tarotWealthMeaning21": "Vous atteindrez l'objectif financier fixé et obtiendrez la liberté économique.",
+  "tarotWealthDetail21": "Vous avez atteint à 100 % vos objectifs d'argent et êtes arrivé au niveau de liberté financière. De grands bénéfices de la coopération internationale ou des investissements sur les marchés mondiaux sont possibles. Votre portefeuille est équilibré. Profitez de l'abondance et commencez à élargir vos horizons.",
+  "tarotSuccessMeaning21": "Le projet sera achevé avec succès et vous recevrez la reconnaissance maximale.",
+  "tarotSuccessDetail21": "Vous avez atteint le sommet de votre carrière. Le projet assigné se terminera par un succès brillant et vous recevrez les éloges mérités. Tous les objectifs fixés ont été atteints et il est temps de se préparer à sortir sur la scène mondiale. Des opportunités pour étudier ou travailler à l'étranger s'ouvrent.",
+  "supplementRecordPrompt": "Veuillez prendre vos compléments et les enregistrer !",
+  "snoozeQuestion": "Quand dois-je vous le rappeler à nouveau ?",
+  "hoursShort": "h",
+  "minutesShort": "m",
+  "after": "après",
+  "snoozeMessage": "L'alarme sonnera de nouveau dans {minutes} minutes.",
+  "timesTaken": "{count} fois pris",
+  "dailyGoalTimes": "Objectif : {goal} fois par jour",
+  "didYouTakeSupplement": "Avez-vous pris vos compléments ?",
+  "viewMissionRecords": "Voir les enregistrements de mission",
+  "setTakingGoal": "Définir l'objectif de prise",
+  "times": "fois",
+  "dailyTakingGoal": "Objectif de prise quotidien",
+  "howManyTimesADay": "Combien de fois par jour prenez-vous des compléments ?",
+  "setGoalMl": "Définir l'objectif (ml)",
+  "sleepAnalysis": "Analyse du sommeil",
+  "todaysSleep": "Sommeil d'aujourd'hui",
+  "sleepDuration": "Durée du sommeil",
+  "wakeUpTime": "Heure de réveil",
+  "weeklySleepPattern": "Modèle de sommeil hebdomadaire",
+  "sleepAdvice": "Vous maintenez une habitude de sommeil régulière. Vous vous êtes couché 30 minutes plus tôt qu'hier !",
+  "stopwatch": "Chronomètre",
+  "lap": "Tour",
+  "stop": "Arrêt",
+  "lapLabel": "Tour {index}",
+  "monday": "Lun",
+  "tuesday": "Mar",
+  "wednesday": "Mer",
+  "thursday": "Jeu",
+  "friday": "Ven",
+  "saturday": "Sam",
+  "sunday": "Dim",
   "policy": "Conditions et Confidentialité",
   "support": "Support",
   "defaultAlarmBehavior": "Comportement d'alarme par défaut",
   "defaultAlarmVolume": "Volume d'alarme par défaut",
   "defaultAlarmVolumeDescription": "Le volume par défaut appliqué lors de la création d'une nouvelle alarme.",
   "gradualVolumeDescription": "Règle le son de l'alarme pour qu'il augmente progressivement.",
+  "defaultVibration": "Vibration par défaut",
   "defaultVibrationDescription": "Active la vibration par défaut lors de la création d'une nouvelle alarme.",
   "defaultInterval": "Intervalle par défaut",
   "maxSnoozeCountLabel": "Nombre max de répétitions",
   "minutes": "min",
-  "times": "fois",
   "cupsCount": "({current}/{goal} tasses)",
   "@cupsCount": {
     "placeholders": {
@@ -1374,6 +1653,7 @@
   },
   "selectionComplete": "Sélection terminée",
   "selectVibration": "Sélectionner le modèle de vibration",
+  "cameraMissionSequentialImageError": "Veuillez définir les images de mission dans l'ordre.",
   "copyEmailAction": "Copier l'adresse e-mail",
   "addMissionTitle": "Ajouter une nouvelle mission",
   "recommendedMissionList": "Missions recommandées",
@@ -1390,7 +1670,6 @@
   "missionNameHint": "Entrez le nom de la mission (ex: Aller à la salle)",
   "selectCategory": "Sélectionner une catégorie",
   "getNotification": "Recevoir une notification",
-  "notificationTime": "Heure de notification",
   "missionCategoryHealth": "Santé",
   "missionCategoryStudy": "Études",
   "missionCategoryRoutine": "Routine",
@@ -1468,7 +1747,14 @@
   "luckyNumberAnalysisStep6": "Calcul de la combinaison chance optimale...",
   "luckyNumberAnalysisStep7": "Analyse terminée ! Génération des numéros chance",
   "luckyNumberAnalysisFinal": "Traitement des données finales...",
-  "luckyNumberGenerating": "Génération des numéros chance...",
+  "luckyNumberAnalyzing": "Analyse de l'énergie...",
+  "luckyNumberGeometric": "Analyse géométrique...",
+  "luckyNumberPatterns": "Correspondance des motifs...",
+  "luckyNumberEnergy": "Harmonisation de l'énergie...",
+  "luckyNumberCompleted": "Analyse terminée !",
+  "luckyNumberShare": "Partager les résultats",
+  "luckyNumberRestart": "Réessayer",
+  "luckyNumberGenerating": "Génération des numéros de la chance...",
   "luckyNumberResultTitle": "Génération des numéros chance terminée",
   "luckyNumberResultSubtitle": "6 numéros + numéro bonus",
   "luckyNumberDisclaimer": "* Ce service est à des fins de divertissement. Les numéros fournis sont à titre de référence générés par des algorithmes d'IA et ne garantissent pas un gain.",
@@ -1645,6 +1931,7 @@
   "compatibilityDeleteTooltip": "Supprimer",
   "compatibilityGenderMale": "Homme",
   "compatibilityGenderFemale": "Femme",
+  "compatibilityInputTitle": "Saisie des informations de compatibilité",
   "tojeongInputTitle": "Saisie des informations de l'Oracle Annuel de Tojeong",
   "tojeongCheckFortune": "Consultez votre {year}\nOracle Annuel de Tojeong",
   "@tojeongCheckFortune": {
@@ -1992,38 +2279,239 @@
   "compatibilityDescIncompatibleElement": "Vos tempéraments différents peuvent sembler inhabituels au début, mais ils offrent d'infinies opportunités de croissance et de découverte ensemble.",
   "compatibilitySummaryDefaultConstellation": "Harmonie Moyenne",
   "compatibilityDescDefaultConstellation": "Une relation qui s'accorde raisonnablement bien sur la base des signes du zodiaque.",
-  "loading": "Chargement...",
-  "useTwoCookies_v2": "Utiliser 2 cookies",
-  "aiAnalyzingFace_v2": "L’IA analyse votre visage...",
-  "faceRecognitionComplete_v2": "Reconnaissance terminée",
-  "extractingFeatures_v2": "Extraction des caractéristiques...",
-  "matchingFortuneData_v2": "Correspondance des données...",
-  "faceAnalysisComplete_v2": "Analyse du visage terminée !",
-  "tapTimes": "{count} appuis",
-  "@tapTimes": {
+  "routineMorningTitle": "Un matin rafraîchissant ! ☀️",
+  "routineMorningBody": "Avez-vous oublié les missions de routine prévues pour aujourd'hui ?",
+  "routineEveningTitle": "Bon travail aujourd'hui ! ✨",
+  "routineEveningBody": "Avez-vous terminé toutes les missions d'aujourd'hui ? Terminez votre routine.",
+  "routineCheckTitle": "Consultez vos missions d'aujourd'hui ! 🚀",
+  "routineCheckBody": "Suivez les missions de routine et rendez votre journée agréable.",
+  "supplementNotificationTitle": "Rappel de suppléments",
+  "waterNotificationTitle": "Rappel de boire de l'eau",
+  "routineNotificationTitle": "Notification de routine quotidienne",
+  "todaysFortuneNotificationTitle": "Votre fortune d'aujourd'hui",
+  "afternoonFortuneNotificationBody": "Et votre fortune de l'après-midi ? Vérifiez-la maintenant !",
+  "morningFortuneNotificationBody": "Consultez votre fortune et commencez la journée avec énergie !",
+  "fortunePassExpiryTitle": "Fortune Pass expire aujourd'hui",
+  "fortunePassExpiryBody": "Votre abonnement Fortune Pass expire aujourd'hui. Renouvelez-le pour continuer à profiter des avantages !",
+  "takeNow": "Prendre maintenant",
+  "later": "Plus tard",
+  "turnOffAlarmAction": "Arrêter l'alarme",
+  "todaysFortuneNotification": "Notification de l'horoscope du jour",
+  "enableNotification": "Activer la notification",
+  "fortuneNotificationDescription": "Vous informe de votre horoscope du jour à l'heure spécifiée.",
+  "morningNotificationTime": "Heure de notification le matin",
+  "afternoonNotificationTime": "Heure de notification l'après-midi",
+  "morningFortuneTitle": "Fortune du matin",
+  "afternoonFortuneTitle": "Fortune de l'après-midi",
+  "type": "Type",
+  "@minutesFormat": {
     "placeholders": {
-      "count": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
-  "snoozeMinutesUnlimited": "{minutes} min (illimité)",
-  "@snoozeMinutesUnlimited": {
+  "@categoryMissions": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "category": {
+        "type": "String"
+      }
     }
   },
-  "snoozeMinutesCount": "{minutes} min ({current}/{total})",
-  "@snoozeMinutesCount": {
+  "@hourFormat": {
     "placeholders": {
-      "minutes": { "type": "int" },
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "hour": {
+        "type": "String"
+      }
     }
   },
-  "ringtone_fluttering_day": "Journée pétillante",
-  "ringtone_cozy_day": "Journée cocooning",
-  "ringtone_sensible_day": "Journée posée",
-  "ringtone_play_with_me": "Joue avec moi",
-  "ringtone_refreshing_day": "Journée rafraîchissante",
-  "ringtone_new_beginning": "Nouveau départ",
-  "ringtone_self_love": "Amour de soi"
+  "@tojeongShareTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "@tojeongCoreMessage": {
+    "placeholders": {
+      "sangsu": {
+        "type": "String"
+      },
+      "jungsu": {
+        "type": "String"
+      },
+      "hasu": {
+        "type": "String"
+      }
+    }
+  },
+  "@snoozeMessage": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@timesTaken": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dailyGoalTimes": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "@lapLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "supplementChannelDesc": "Canal pour les notifications de prise de compléments.",
+  "waterChannelDesc": "Canal pour les notifications de l'habitude de boire de l'eau.",
+  "waterSummaryTitle": "Notification de consommation d'eau",
+  "dailyRoutineChannelDesc": "Canal pour les notifications de missions quotidiennes et de création d'habitudes.",
+  "dailyRoutineSummaryTitle": "Notification de routine quotidienne",
+  "missionChannelName": "Notification de mission",
+  "missionChannelDesc": "Canal pour les notifications générales d'exécution de mission.",
+  "fortuneChannelName": "Notification de fortune",
+  "fortuneChannelDesc": "Canal pour les notifications quotidiennes de consultation de fortune.",
+  "subscriptionChannelName": "Notification d'abonnement",
+  "subscriptionChannelDesc": "Canal pour les notifications d'expiration du Fortune Pass et d'abonnement.",
+  "alarmChannelName": "Alarme",
+  "alarmChannelDesc": "Canal pour les alarmes de réveil et d'exécution de mission.",
+  "shareViaKakao": "Partager via KakaoTalk",
+  "shareViaSNS": "Partager via d'autres réseaux sociaux (Instagram, Twitter, etc.)",
+  "checkDetailResult": "Vérifier le résultat détaillé",
+  "viewMyFortuneResult": "Voir mon résultat de fortune",
+  "takeSupplementNow": "Veuillez prendre vos compléments !",
+  "takeNowQuestion": "Souhaitez-vous le prendre maintenant ?",
+  "eatNow": "Prendre maintenant",
+  "eatLater": "Prendre plus tard",
+  "snoozeMessageGeneric": "Je vous le rappellerai dans {minutes} minutes.",
+  "hours": "heures",
+  "@snoozeMessageGeneric": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "cheeringMessage4": "Matinée vibrante, début heureux !",
+  "cheeringMessage5": "Passez une journée souriante.",
+  "cheeringMessage6": "Courage aujourd'hui !",
+  "cheeringMessage7": "Vous brillerez assez aujourd'hui.",
+  "cheeringMessage8": "J'ai le pressentiment que quelque chose de bien va arriver !",
+  "cheeringMessage9": "Beau travail aujourd'hui. Un départ vigoureux !",
+  "cheeringMessage10": "Le bonheur est toujours à vos côtés.",
+  "cheeringMessage11": "Je soutiens vos rêves aujourd'hui.",
+  "cheeringMessage12": "Matinée rafraîchissante, journée agréable !",
+  "cheeringMessage13": "Soyez victorieux aujourd'hui !",
+  "cheeringMessage14": "Vous êtes précieux juste en étant vous-même.",
+  "cheeringMessage15": "Passez une journée pleine de choses agréables.",
+  "cheeringMessage16": "J'espère que votre journée sera étincelante aujourd'hui !",
+  "cheeringMessage17": "Votre sourire illumine le monde.",
+  "cheeringMessage18": "Soyez vous-même aujourd'hui !",
+  "cheeringMessage19": "Commencez aujourd'hui avec un cœur battant.",
+  "cheeringMessage20": "Une journée merveilleuse vous attend.",
+  "cheeringMessage21": "Avec le pouvoir de la positivité aujourd'hui !",
+  "cheeringMessage22": "Je soutiens votre chemin.",
+  "cheeringMessage23": "Faites d'aujourd'hui votre meilleur jour !",
+  "cheeringMessage24": "Que la chance soit avec vous !",
+  "cheeringMessage25": "Passez une journée chaleureuse aujourd'hui.",
+  "cheeringMessage26": "Vous pouvez le faire !",
+  "cheeringMessage27": "Commencez aujourd'hui avec gratitude.",
+  "cheeringMessage28": "Votre valeur est infinie.",
+  "cheeringMessage29": "Que votre journée fleurisse de sourires.",
+  "cheeringMessage30": "Passez un bon moment avec des gens bien !",
+  "cheeringMessage31": "Un pas de plus vers vos rêves aujourd'hui !",
+  "cheeringMessage32": "Vous êtes la personne la plus cool aujourd'hui.",
+  "cheeringMessage33": "Une journée miraculeuse viendra.",
+  "cheeringMessage34": "Profitez de votre journée à loisir aujourd'hui.",
+  "cheeringMessage35": "Vos efforts ne vous trahiront pas.",
+  "cheeringMessage36": "Passez une journée saine aujourd'hui.",
+  "cheeringMessage37": "Vous êtes né pour être aimé !",
+  "cheeringMessage38": "Soyez courageux aujourd'hui !",
+  "cheeringMessage39": "Un avenir brillant vous attend.",
+  "cheeringMessage40": "Passez une journée pleine de passion !",
+  "cheeringMessage41": "J'espère que votre esprit est en paix.",
+  "cheeringMessage42": "Trouvez un petit bonheur aujourd'hui.",
+  "cheeringMessage43": "Vous vous en sortez déjà assez bien.",
+  "cheeringMessage44": "Commencez aujourd'hui avec espoir.",
+  "cheeringMessage45": "Votre gentillesse est une grande force pour quelqu'un.",
+  "cheeringMessage46": "Passez une journée productive aujourd'hui.",
+  "cheeringMessage47": "Vous avez le pouvoir de changer le monde.",
+  "cheeringMessage48": "Journée claire aujourd'hui !",
+  "cheeringMessage49": "Exprimez votre charme à votre guise.",
+  "cheeringMessage50": "Remplissez votre journée de bonheur aujourd'hui !",
+  "locationServiceDisabled": "Les services de localisation sont désactivés.",
+  "locationPermissionDenied": "Permission de localisation refusée.",
+  "locationPermissionPermanentlyDenied": "Permission de localisation refusée de manière permanente.",
+  "deleteMissionTitle": "Supprimer la mission",
+  "deleteMissionConfirm": "Êtes-vous sûr de vouloir supprimer cette mission ?",
+  "yesDelete": "Oui, supprimer",
+  "waterAlarmTitle": "C'est l'heure de boire de l'eau ! 💧",
+  "waterAlarmBody": "Que diriez-vous d'un verre d'eau fraîche pour votre santé ?",
+  "supplementAlarmBody": "N'oubliez pas de prendre vos compléments aujourd'hui.",
+  "waterHabitChannelDesc": "Canal de notification pour l'habitude de boire de l'eau.",
+  "pleaseSolveMath": "Veuillez résoudre le problème.",
+  "detectedLabel": "[Détecté : {labels}]",
+  "defaultSleepDuration": "7h 30m",
+    "@detectedLabel": {
+    "placeholders": {
+      "labels": {
+        "type": "String"
+      }
+    }
+  },
+  "year2024Name": "Année Gap-Chin (Année du Dragon Bleu)",
+  "year2025Name": "Année Eul-Sa (Année du Serpent Bleu)",
+  "year2026Name": "Année Byeong-O (Année du Cheval Rouge)",
+  "supportEmailSubject": "[{appTitle} Demande] {title}",
+  "@supportEmailSubject": {
+    "placeholders": {
+      "appTitle": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "summary": "Résumé",
+  "monthlySummary": "Résumé mensuel",
+  "monthlySuccessRate": "{month} Taux de réussite mensuel : {percentage}% ({success}/{total})",
+  "noMonthlyRecord": "Aucun enregistrement pour {month}",
+  "missionRecord": "Record de mission",
+  "supplementRecord": "Enregistrement des suppléments",
+  "timeSaleCatchChance": "Saisissez la chance de 50 % de réduction !",
+  "@monthlySuccessRate": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "String"
+      },
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@noMonthlyRecord": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      }
+    }
+  }
 }

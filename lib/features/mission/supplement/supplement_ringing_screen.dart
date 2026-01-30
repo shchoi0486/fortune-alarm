@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'providers/supplement_provider.dart';
 import '../../../services/supplement_alarm_service.dart';
 import '../../../services/notification_service.dart';
@@ -139,6 +140,7 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
   }
 
   void _showSnoozeOptions() {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -151,9 +153,9 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              '언제 다시 알려드릴까요?',
-              style: TextStyle(
+            Text(
+              l10n.snoozeQuestion,
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E293B),
@@ -179,7 +181,8 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
   }
 
   Widget _snoozeButton(int minutes) {
-    final label = minutes >= 60 ? '${minutes ~/ 60}시간' : '$minutes분';
+    final l10n = AppLocalizations.of(context)!;
+    final label = minutes >= 60 ? '${minutes ~/ 60}${l10n.hoursShort}' : '$minutes${l10n.minutesShort}';
     return InkWell(
       onTap: () async {
         await _stopAlarm();
@@ -207,9 +210,9 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
                 color: Color(0xFF334155),
               ),
             ),
-            const Text(
-              '후에',
-              style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+            Text(
+              l10n.after,
+              style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
             ),
           ],
         ),
@@ -218,6 +221,7 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
   }
 
   void _snooze(int minutes) {
+    final l10n = AppLocalizations.of(ref.context)!;
     final time = DateTime.now().add(Duration(minutes: minutes));
     // 스누즈용 ID 생성 (기존 ID + 50000)
     final snoozeId = widget.alarmId + 50000;
@@ -225,7 +229,7 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
     
     ScaffoldMessenger.of(ref.context).showSnackBar(
       SnackBar(
-        content: Text('$minutes분 후에 다시 알려드릴게요.'),
+        content: Text(l10n.snoozeMessageGeneric(minutes)),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -234,10 +238,11 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final timeStr = DateFormat('hh:mm').format(now);
     final amPmStr = DateFormat('a').format(now);
-    final dateStr = DateFormat('M월 d일 EEEE', 'ko_KR').format(now);
+    final dateStr = DateFormat.yMMMMEEEEd(l10n.localeName).format(now);
 
     return Scaffold(
       body: Container(
@@ -314,18 +319,18 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
                 ),
               ),
               const SizedBox(height: 40),
-              const Text(
-                '영양제 챙겨 드세요!',
-                style: TextStyle(
+              Text(
+                l10n.takeSupplementNow,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 12),
-              const Text(
-                '지금 드시겠습니까?',
-                style: TextStyle(
+              Text(
+                l10n.takeNowQuestion,
+                style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 18,
                 ),
@@ -346,9 +351,9 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
                         ),
                         elevation: 0,
                       ),
-                      child: const Text(
-                        '지금 먹을게요',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      child: Text(
+                        l10n.eatNow,
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -358,9 +363,9 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
                         foregroundColor: Colors.white70,
                         minimumSize: const Size(double.infinity, 56),
                       ),
-                      child: const Text(
-                        '나중에 먹을게요',
-                        style: TextStyle(fontSize: 18),
+                      child: Text(
+                        l10n.eatLater,
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ),
                   ],

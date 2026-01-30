@@ -33,6 +33,7 @@ import 'services/routine_alarm_service.dart';
 
 import 'features/alarm/alarm_ringing_screen.dart';
 import 'providers/theme_provider.dart';
+import 'providers/locale_provider.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -579,12 +580,14 @@ class FortuneAlarmApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
+    final locale = ref.watch(localeProvider);
     
     return MaterialApp(
       navigatorKey: navigatorKey, // Navigator Key 등록
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       title: 'Fortune Alarm', // 기본 타이틀 (로컬라이제이션 로딩 전)
       themeMode: themeMode,
+      locale: locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -1369,57 +1372,63 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
           builder: (dialogContext) => AlertDialog(
             backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
             surfaceTintColor: Colors.transparent,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: Text(
               AppLocalizations.of(context)?.exitQuestion ?? 'Do you want to exit?',
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 10),
-                Row(
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(false),
-                        style: TextButton.styleFrom(
-                          foregroundColor: isDark ? Colors.grey : Colors.black54,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[300]!),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () => Navigator.of(dialogContext).pop(false),
+                            style: TextButton.styleFrom(
+                              foregroundColor: isDark ? Colors.grey : Colors.black54,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[300]!),
+                              ),
+                            ),
+                            child: Text(AppLocalizations.of(context)?.cancel ?? 'Cancel'),
                           ),
                         ),
-                        child: Text(AppLocalizations.of(context)?.cancel ?? 'Cancel'),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(true),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.redAccent,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: TextButton(
+                            onPressed: () => Navigator.of(dialogContext).pop(true),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.redAccent,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              AppLocalizations.of(context)?.exitApp ?? 'Exit',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
-                        child: Text(
-                          AppLocalizations.of(context)?.exitApp ?? 'Exit',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                      ],
                     ),
+                    if (!AdService.isSubscriber) ...[
+                      const SizedBox(height: 20),
+                      const ExitDialogAdWidget(),
+                    ],
                   ],
                 ),
-                if (!AdService.isSubscriber) ...[
-                  const SizedBox(height: 20),
-                  const ExitDialogAdWidget(),
-                ],
-              ],
+              ),
             ),
           ),
         );
@@ -1500,10 +1509,10 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Expanded(
+                        Expanded(
                           child: Text(
-                            "50% 할인 기회를 꼭 잡으세요!",
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.timeSaleCatchChance,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 15,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart' hide Link;
 import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart' as kakao;
 import 'package:share_plus/share_plus.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 class SharingService {
   // 카카오 개발자 콘솔에서 발급받은 네이티브 앱 키
@@ -19,6 +20,7 @@ class SharingService {
     String? imageUrl,
     Map<String, String>? results,
   }) async {
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -28,11 +30,11 @@ class SharingService {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
-                '결과 공유하기',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                l10n.shareResult,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             ListTile(
@@ -44,10 +46,10 @@ class SharingService {
                 ),
                 child: const Icon(Icons.chat_bubble, color: Colors.black, size: 20),
               ),
-              title: const Text('카카오톡으로 공유'),
+              title: Text(l10n.shareViaKakao),
               onTap: () {
                 Navigator.pop(context);
-                shareFortune(title: title, description: description, imageUrl: imageUrl, results: results);
+                shareFortune(title: title, description: description, imageUrl: imageUrl, results: results, l10n: l10n);
               },
             ),
             ListTile(
@@ -59,10 +61,10 @@ class SharingService {
                 ),
                 child: const Icon(Icons.share, color: Colors.black, size: 20),
               ),
-              title: const Text('기타 SNS 공유 (Instagram, Twitter 등)'),
+              title: Text(l10n.shareViaSNS),
               onTap: () {
                 Navigator.pop(context);
-                shareGeneral(title: title, description: description, results: results);
+                shareGeneral(title: title, description: description, results: results, l10n: l10n);
               },
             ),
             const SizedBox(height: 16),
@@ -76,6 +78,7 @@ class SharingService {
     required String title,
     required String description,
     Map<String, String>? results,
+    AppLocalizations? l10n,
   }) async {
     try {
       StringBuffer sb = StringBuffer();
@@ -88,7 +91,7 @@ class SharingService {
         sb.writeln('━━━━━━━━━━━━━━━━━━━━');
       }
       sb.writeln(description);
-      sb.writeln('\n👇 자세한 결과 확인하기');
+      sb.writeln('\n👇 ${l10n?.checkDetailResult ?? "Check detailed result"}');
       sb.writeln(playStoreUrl);
 
       await Share.share(
@@ -105,6 +108,7 @@ class SharingService {
     required String description,
     String? imageUrl,
     Map<String, String>? results,
+    AppLocalizations? l10n,
   }) async {
     try {
       // 우선적으로 카카오톡 공유 시도
@@ -133,7 +137,7 @@ class SharingService {
           ) : null,
           buttons: [
             kakao.Button(
-              title: '나의 운세 결과 확인하기',
+              title: l10n?.viewMyFortuneResult ?? 'View my fortune result',
               link: kakao.Link(
                 mobileWebUrl: Uri.parse(playStoreUrl),
                 webUrl: Uri.parse(playStoreUrl),
@@ -145,12 +149,12 @@ class SharingService {
         await ShareClient.instance.shareDefault(template: template);
       } else {
         // 카카오톡이 없으면 일반 공유
-        await shareGeneral(title: title, description: description, results: results);
+        await shareGeneral(title: title, description: description, results: results, l10n: l10n);
       }
     } catch (e) {
       debugPrint('Error sharing: $e');
       // 에러 발생 시 일반 공유 시도
-      await shareGeneral(title: title, description: description, results: results);
+      await shareGeneral(title: title, description: description, results: results, l10n: l10n);
     }
   }
 }

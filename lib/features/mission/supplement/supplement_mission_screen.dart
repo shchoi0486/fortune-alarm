@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'providers/supplement_provider.dart';
 import '../widgets/mission_success_overlay.dart';
 import 'widgets/pill_box_widget.dart';
@@ -57,6 +58,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
   void _checkArguments() {
     if (_argumentsProcessed) return;
     
+    final l10n = AppLocalizations.of(context)!;
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is Map<String, dynamic>) {
       _argumentsProcessed = true;
@@ -64,7 +66,9 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
       final payload = args['payload'];
       
       if (action == 'take_now') {
-         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('영양제를 드시고 기록해주세요!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.supplementRecordPrompt)),
+        );
       } else if (action == 'snooze') {
          _showSnoozeDialog(payload?.toString());
       } else if (action == 'show_ringing') {
@@ -95,6 +99,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
   }
 
   void _showSnoozeDialog(String? payload) {
+    final l10n = AppLocalizations.of(context)!;
     int? alarmId;
     if (payload != null && payload.startsWith('supplement_')) {
        alarmId = int.tryParse(payload.split('_').last);
@@ -115,9 +120,9 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                '언제 다시 알려드릴까요?',
-                style: TextStyle(
+              Text(
+                l10n.snoozeQuestion,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1E293B),
@@ -145,7 +150,8 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
   }
 
   Widget _snoozeOptionButton(BuildContext context, int minutes, int alarmId) {
-    final label = minutes >= 60 ? '${minutes ~/ 60}시간' : '$minutes분';
+    final l10n = AppLocalizations.of(context)!;
+    final label = minutes >= 60 ? '${minutes ~/ 60}${l10n.hoursShort}' : '$minutes${l10n.minutesShort}';
     return InkWell(
       onTap: () {
         _snooze(minutes, alarmId);
@@ -169,9 +175,9 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                 color: Color(0xFF334155),
               ),
             ),
-            const Text(
-              '후에',
-              style: TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+            Text(
+              l10n.after,
+              style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
             ),
           ],
         ),
@@ -180,14 +186,16 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
   }
 
   void _snooze(int minutes, int id) {
+     final l10n = AppLocalizations.of(context)!;
      final time = DateTime.now().add(Duration(minutes: minutes));
      final snoozeId = id + 50000;
      SupplementAlarmService.scheduleOneTime(time, snoozeId);
-     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$minutes분 후에 알람이 다시 울립니다.')));
+     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.snoozeMessage(minutes))));
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final state = ref.watch(supplementProvider);
     final notifier = ref.read(supplementProvider.notifier);
 
@@ -246,9 +254,9 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                             ),
                           ),
                         ),
-                        const Text(
-                          '영양제',
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+                        Text(
+                          l10n.missionSupplement,
+                          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ],
                     ),
@@ -264,12 +272,12 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                 children: [
                                   const SizedBox(height: 10),
                                   Text(
-                                    '$currentCount회 섭취',
+                                    l10n.timesTaken(currentCount),
                                     style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    '목표: 하루 $dailyGoal회',
+                                    l10n.dailyGoalTimes(dailyGoal),
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.orange[700],
@@ -333,9 +341,9 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  const Text(
-                                    '영양제를 챙겨 드셨나요?',
-                                    style: TextStyle(color: Colors.grey, fontSize: 13),
+                                  Text(
+                                    l10n.didYouTakeSupplement,
+                                    style: const TextStyle(color: Colors.grey, fontSize: 13),
                                   ),
                                   const SizedBox(height: 12),
                                   const Spacer(),
@@ -344,7 +352,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                     child: Column(
                                       children: [
                                         _MenuItem(
-                                          title: '미션 기록 보기',
+                                          title: l10n.viewMissionRecords,
                                           icon: Icons.bar_chart_rounded,
                                           onTap: () {
                                             Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplementRecordScreen()));
@@ -352,14 +360,14 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                         ),
                                         const SizedBox(height: 8),
                                         _MenuItem(
-                                          title: '섭취 목표 설정',
-                                          value: '$dailyGoal회',
+                                          title: l10n.setTakingGoal,
+                                          value: '$dailyGoal${l10n.times}',
                                           icon: Icons.edit_note,
                                           onTap: () => _showGoalDialog(dailyGoal),
                                         ),
                                         const SizedBox(height: 8),
                                         _MenuItem(
-                                          title: '알림',
+                                          title: l10n.notifications,
                                           icon: Icons.notifications_none_rounded,
                                           trailing: Switch(
                                             value: state.settings.isAlarmEnabled,
@@ -406,17 +414,18 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
   }
 
   void _showGoalDialog(int currentGoal) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (context) {
         int tempGoal = currentGoal;
         return StatefulBuilder(
           builder: (context, setState) => AlertDialog(
-            title: const Text('일일 섭취 목표'),
+            title: Text(l10n.dailyTakingGoal),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('하루에 몇 번 영양제를 드시나요?'),
+                Text(l10n.howManyTimesADay),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -425,7 +434,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                       onPressed: () => setState(() => tempGoal = (tempGoal - 1).clamp(1, 10)),
                       icon: const Icon(Icons.remove_circle_outline),
                     ),
-                    Text('$tempGoal회', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                    Text('$tempGoal${l10n.times}', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                     IconButton(
                       onPressed: () => setState(() => tempGoal = (tempGoal + 1).clamp(1, 10)),
                       icon: const Icon(Icons.add_circle_outline),
@@ -435,13 +444,13 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
               ],
             ),
             actions: [
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('취소')),
+              TextButton(onPressed: () => Navigator.pop(context), child: Text(l10n.cancel)),
               TextButton(
                 onPressed: () {
                   ref.read(supplementProvider.notifier).updateSettings(dailyGoal: tempGoal);
                   Navigator.pop(context);
                 },
-                child: const Text('저장'),
+                child: Text(l10n.save),
               ),
             ],
           ),

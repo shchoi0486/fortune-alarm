@@ -7,6 +7,16 @@
   "missionWater": "Mindestens 2 Liter Wasser trinken",
   "fortuneCookie": "Glückskeks",
   "settings": "Einstellungen",
+  "language": "Sprache",
+  "languageKorean": "Koreanisch",
+  "languageEnglish": "Englisch",
+  "languageJapanese": "Japanisch",
+  "languageChinese": "Chinesisch",
+  "languageRussian": "Russisch",
+  "languageHindi": "Hindi",
+  "languageSpanish": "Spanisch",
+  "languageFrench": "Französisch",
+  "languageGerman": "Deutsch",
   "alarm": "Wecker",
   "calendar": "Kalender",
   "mission": "Mission",
@@ -15,6 +25,16 @@
   "allMissionsCompleted": "Du hast alle 5 Missionen für heute abgeschlossen.",
   "rewardReceived": "Du hast 1 Glückskeks als Belohnung erhalten! 🥠",
   "confirm": "Bestätigen",
+  "missionSuccess": "Mission erfolgreich!",
+  "cheeringMessage1": "Einen schönen Tag noch!",
+  "cheeringMessage2": "Ich drücke dir heute die Daumen!",
+  "cheeringMessage3": "Es wird ein wunderbarer Tag.",
+  "todaysCheering": "Botschaft des Tages",
+  "notificationWakeUpBody": "Zeit zum Aufstehen!",
+  "notificationMissionBody": "Erfülle die Mission und schalte den Wecker aus!",
+  "notificationSafetyBody": "Der Wecker wurde zwangsweise geschlossen! Bitte beende die Mission.",
+  "notificationRingingBody": "Der Wecker klingelt!",
+  "snoozePrefix": "[Schlummern]",
   "exactAlarmPermissionRequired": "Die Berechtigung \"Exakter Wecker\" ist erforderlich, damit der Wecker zur richtigen Zeit klingelt.",
   "overlayPermissionRequired": "Die Berechtigung \"Über anderen Apps anzeigen\" ist für Vollbild-Benachrichtigungen erforderlich.",
   "deleteAllAlarms": "Alle Wecker löschen",
@@ -24,10 +44,10 @@
   "@hoursMinutesRemaining": {
     "placeholders": {
       "hours": {
-        "type": "int"
+        "type": "String"
       },
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -35,7 +55,7 @@
   "@minutesRemaining": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -98,25 +118,6 @@
   "traditionalFortune": "Traditionelle Deutung (Tojeong)",
   "traditionalSaju": "Traditionelle Saju-Analyse",
   "faceReading": "KI-Gesichtsdeutung",
-  "missionFaceReading": "Mission Gesichtsdeutung",
-  "faceFate": "Gesicht und Schicksal",
-  "compatibility": "Kompatibilitätsanalyse",
-  "relationshipHarmony": "Harmonie in der Beziehung",
-  "ohaengWood": "Holz",
-  "ohaengFire": "Feuer",
-  "ohaengEarth": "Erde",
-  "ohaengMetal": "Metall",
-  "ohaengWater": "Wasser",
-  "ohaengWoodSymbol": "Holz",
-  "ohaengFireSymbol": "Feuer",
-  "ohaengEarthSymbol": "Erde",
-  "ohaengMetalSymbol": "Metall",
-  "ohaengWaterSymbol": "Wasser",
-  "ohaengWoodExplanation": "Mit einer starken Energie von Holz sind Sie voller Wachstum und Motivation und besitzen eine mitfühlende und unternehmungslustige Natur.",
-  "ohaengFireExplanation": "Mit einer starken Energie von Feuer sind Sie leidenschaftlich und höflich, neigen dazu, aktiv zu sein und mögen glamouröse Dinge.",
-  "ohaengEarthExplanation": "Mit einer starken Energie von Erde haben Sie Vertrauen und Toleranz und besitzen eine ernsthafte und beständige Natur.",
-  "ohaengMetalExplanation": "Mit einer starken Energie von Metall verfügen Sie über Entschlossenheit und Loyalität und besitzen eine kühle Natur, die Prinzipien schätzt.",
-  "ohaengWaterExplanation": "Mit einer starken Energie von Wasser verfügen Sie über Weisheit und Flexibilität und besitzen eine kluge und sehr anpassungsfähige Natur.",
   "missionFaceReading": "Gesichtsanalyse-Mission",
   "faceFate": "Gesichtsausdruck",
   "compatibility": "Kompatibilität",
@@ -237,14 +238,14 @@
   "itsTimeToWakeUp": "Zeit aufzustehen!",
   "dismissAlarm": "Wecker ausschalten",
   "slideToDismiss": "Zum Ausschalten schieben",
-  "snoozeInfo": "{minutes} Min, {count} Mal",
+  "snoozeInfo": "{minutes} Min x {count} Mal",
   "@snoozeInfo": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       },
       "count": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -252,7 +253,7 @@
   "@snoozeInfoUnlimited": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -318,9 +319,15 @@
   "insufficientCookiesTitle": "Zu wenig Glückskekse",
   "insufficientCookiesMessage": "Du hast nicht genug Glückskekse.\nVerdiene mehr durch Missionen oder sieh dir eine Anzeige an.",
   "useCookiesSnackbar": "2 Glückskekse wurden verwendet.",
+  "faceAnalysisComplete_v2": "Gesichtsanalyse abgeschlossen!",
   "chooseMethodToViewResult": "Wähle eine Methode, um dein Ergebnis freizuschalten.",
   "watchAdForFree": "Anzeige ansehen (kostenlos)",
+  "useTwoCookies_v2": "2 Kekse verwenden",
   "viewResult": "Ergebnis anzeigen",
+  "aiAnalyzingFace_v2": "KI analysiert dein Gesicht...",
+  "faceRecognitionComplete_v2": "Erkennung abgeschlossen",
+  "extractingFeatures_v2": "Merkmale werden extrahiert...",
+  "matchingFortuneData_v2": "Daten werden abgeglichen...",
   "wealthLuck": "💰 Finanzen",
   "loveLuck": "❤️ Liebe",
   "careerLuck": "💼 Karriere",
@@ -433,6 +440,7 @@
   "batteryOptimFailMessage": "Wecker konnte nicht registriert werden. Die Berechtigung zur Ausnahme von der Batterieoptimierung fehlt.",
   "overlayFailMessage": "Wecker konnte nicht registriert werden. Die Berechtigung zum Anzeigen über anderen Apps fehlt.",
   "loadingDelay": "Ladeverzögerung",
+  "loading": "Wird geladen...",
   "previewFail": "Vorschau fehlgeschlagen",
   "bgDefault": "Standardhintergrund",
   "bgFortuneFriends": "Glücksfreunde",
@@ -454,7 +462,7 @@
   "deleteAlarm": "Wecker löschen",
   "confirmDelete": "Möchten Sie wirklich löschen?",
   "yes": "Ja",
-  "no": "Nein",
+  "no": "No",
   "wealthLuckWithIcon": "💰 Wohlstandsglück",
   "loveLuckWithIcon": "❤️ Liebesglück",
   "careerLuckWithIcon": "💼 Karriereglück",
@@ -566,7 +574,7 @@
   "dailyFortuneTipHealth7": "Vermeiden Sie heute anregende Lebensmittel für die Darmgesundheit und die Haut.",
   "dailyFortuneTipHealth8": "Ausreichend Schlaf ist die beste Medizin. Gehen Sie heute früher als gewöhnlich ins Bett.",
   "dailyFortuneTipHealth9": "Wechseln Sie Ihre Stimmung mit Ihrer Lieblingsmusik oder Ihrem Lieblingsduft, damit sich kein Stress ansammelt.",
-  "eyeAnalysisTypeSharp": "Your eyes are intense and clear, showing momentary judgment and drive that stand out very much.",
+  "eyeAnalysisTypeSharp": "Ihre scharfen, klaren Augen spiegeln schnelles Urteilsvermögen und starke Entschlossenheit wider.",
   "eyeAnalysisTypeDeep": "Ihre Augen sind ruhig und tiefgründig, ein weises Gesicht, das sorgfältig beobachtet und nachdenkt, bevor es handelt.",
   "eyeAnalysisTypeBalanced": "Die Energie der Augen ist ausgeglichen und stimmt Emotionen und Vernunft angemessen aufeinander ab, um ein Gefühl der Stabilität zu vermitteln.",
   "eyeExpressionBright": "Besonders die strahlenden Augen und ein Lächeln harmonieren miteinander und bringen die Energie von 'Dohwa' stark zum Ausdruck, die Menschen anzieht.",
@@ -582,6 +590,43 @@
   "mouthExpressionBlessing": "Der Mund ist geschlossen, aber die Mundwinkel sind nach oben gezogen, sodass in jedem Wort Segen wohnt und Sie ein Gesicht sind, das Gunst von der Umgebung gewinnt.",
   "mouthExpressionReliable": "Das Aussehen des fest geschlossenen Mundes zeigt Vertrauen und Verantwortung, ein Typ, der eher durch Taten als durch leichte Worte überzeugt.",
   "mouthExpressionLucky": "Ein weit geöffneter, lächelnder Mund ist erfrischend, strahlt positive Energie aus und ruft nach Glück in zwischenmenschlichen Beziehungen.",
+  "supplementAlarmTitle": "Zeit, deine Nahrungsergänzungsmittel einzunehmen! 💊",
+  "alarmVolume": "Alarmlautstärke",
+  "alarmTimeList": "Alarmzeitliste",
+  "noAlarmTimesAdded": "Keine Alarmzeiten hinzugefügt",
+  "alarmTimeDeleted": "Alarmzeit wurde gelöscht",
+  "addAlarmTime": "Alarmzeit hinzufügen",
+  "editAlarmTime": "Alarmzeit bearbeiten",
+  "defaultRingtone": "Standardklingelton",
+  "takeSupplementsNow": "Bitte nehmen Sie Ihre Nahrungsergänzungsmittel ein und zeichnen Sie sie auf!",
+  "nextTime": "Nächstes Mal einnehmen",
+  "take": "Einnehmen",
+  "notifications": "Benachrichtigungen",
+  "notificationTime": "Benachrichtigungszeit",
+  "start": "Start",
+  "end": "Ende",
+  "notificationInterval": "Benachrichtigungsintervall",
+  "waterDrankToday": "Heute getrunkenes Wasser",
+  "goal": "Ziel",
+  "cup": "Tasse",
+  "waterIntakeRecord": "Wasseraufnahme-Aufzeichnung",
+  "remainingAmount": "Restbetrag",
+  "ml": "ml",
+  "minutesFormat": "{minutes} Min.",
+  "drinkWater": "Wasser trinken",
+  "supplement": "Nahrungsergänzungsmittel",
+  "water": "Wasser",
+  "morning": "Vormittag",
+  "afternoon": "Nachmittag",
+  "evening": "Abend",
+  "takeSupplement": "Nahrungsergänzungsmittel einnehmen",
+  "goalAchievedTitle": "Ziel erreicht!",
+  "waterIntake": "Wasseraufnahme",
+  "remindTime": "Erinnerungszeit",
+  "alarmRingtone": "Alarm-Klingelton",
+  "snoozeTime": "Snooze-Zeit",
+  "snoozeDescription": "Standardzeit bei Auswahl von 'Später einnehmen'",
+  "oneHour": "1 Stunde",
   "mouthExpressionOpen": "Der Mund ist leicht geöffnet, was eine offene und ehrliche Persönlichkeit zeigt, aber manchmal müssen Sie vorsichtig mit Versprechern sein.",
   "overallHeadlineSimple": "Der heutige Fokus liegt auf {topKey}, und der Punkt, auf den Sie achten sollten, ist {bottomKey}.",
   "@overallHeadlineSimple": {
@@ -625,35 +670,26 @@
   "sajuFortune2024Sin": "💎 2024 Gapjin Jahr Sin-Metall Allgemeines Glück: 'Ein Jahr der glänzenden Juwelen und der Ehre'\n\n2024 ist ein year, in dem die Energie von 'Jeong-jae' und 'Jeong-in' für Sie eintritt. Es ist wie ein Juwel, das in einem Wald glänzt und für seinen Wert anerkannt wird. Es wird ein Jahr sein, in dem Sie gerechte Belohnungen für Ihre Bemühungen erhalten und Ihre Ehre steigern.\n\n💼 [Karriere & Business]\nAufrichtigkeit und Gewissenhaftigkeit strahlen aus und gewinnen das Vertrauen aller um Sie herum. Sie könnten für Ihr Fachwissen anerkannt werden und die verantwortliche Person für ein wichtiges Projekt werden oder die Freude über eine Beförderung genießen. Eine stabile Zeit, in der die Dinge wie geplant reibungslos verlaufen.\n\n💰 [Reichtum]\nDas Reichtumsglück ist sehr stabil und gut. Ein stetiges Einkommen ist garantiert, und Sie werden gute Ergebnisse bei Ersparnissen oder Finanztechnologien erzielen. Sie könnten auch von Eltern oder Vorgesetzten erben oder wirtschaftliche Hilfe erhalten.\n\n❤️ [Liebe & Beziehungen]\nSie werden mit einem würdevollen und höflichen Auftreten großen Charme auf das andere Geschlecht ausüben. In romantischen Beziehungen vertieft sich das Vertrauen ineinander, was es zu einem guten Jahr macht, um sich die Ehe zu versprechen. Die Beziehungen sind ebenfalls reibungslos und friedlich.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Lungengesundheit oder Hauterkrankungen. Manchmal müssen Sie sich auch wohlfühlen, da das Streben nach zu viel Perfektion zu Selbststress führen kann.",
   "sajuFortune2024Im": "🌊 2024 Gapjin Jahr Im-Wasser Allgemeines Glück: 'Ein Jahr des flexiblen Wachstums wie fließendes Wasser'\n\n2024 ist ein Jahr, in dem die Energie von 'Sik-sin' und 'Pyeon-gwan' für Sie eintritt. Es ist wie ein großes Meer, das einen Wald befeuchtet, um Leben wachsen zu lassen. Es wird ein Jahr sein, in dem Sie Weisheit walten lassen, um schwierige Probleme zu lösen und Ihr Territorium zu erweitern.\n\n💼 [Karriere & Business]\nEine Zeit, in der kreative Problemlösungsfähigkeiten hervorstechen. Sie werden selbst in schwierigen Situationen Durchbrüche finden und Anerkennung für Ihre Fähigkeiten gewinnen. Besonders gute Ergebnisse werden in den Bereichen Bildung, Beratung und Planung erwartet. Eine Anpassung des Tempos ist jedoch erforderlich, da Sie aufgrund der übermäßigen Arbeitsbelastung erschöpft sein könnten.\n\n💰 [Reichtum]\nEin gutes Jahr, um durch Ihre Fähigkeiten oder Talente Einkommen zu schaffen. Eine Zeit, in der Essensglück und Reichtumsglück zusammen eintreffen. Es ist jedoch klug, Notfallfonds zu sichern, da plötzliche Ausgaben auftreten können.\n\n❤️ [Liebe & Beziehungen]\nSie werden gute Beziehungen zu den Menschen in Ihrer Umgebung pflegen, da Ihr Verständnis und Ihre Toleranz zunehmen. In romantischen Beziehungen werden Sie die wahren Gefühle des anderen durch tiefe Gespräche bestätigen. Wenn Sie Single sind, ist es sehr wahrscheinlich, dass Sie einen Partner mit einem angenehmen Gefühl treffen.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Gesundheit des Nieren- oder Blasensystems. Priorisieren Sie außerdem Ihre Handlungen, da der Versuch, zu viele Dinge gleichzeitig zu erledigen, Ihrer Gesundheit schaden kann.",
   "sajuFortune2024Gye": "💧 2024 Gapjin Jahr Gye-Wasser Allgemeines Glück: 'Chancen inmitten des Wandels ergreifen'\n\n2024 ist ein Jahr, in dem die Energie von 'Sang-gwan' und 'Jeong-gwan' für Sie eintritt. Es ist wie süßer Regen, der einen Wald befeuchtet, um alles wiederzubeleben. Es wird ein Jahr sein, in dem Sie Ihre Stimme erheben, um der Welt Ihre Anwesenheit zu verkünden und neue Möglichkeiten zu ergreifen.\n\n💼 [Karriere & Business]\nDie Beredsamkeit verbessert sich und kreative Ideen werden reichlich vorhanden sein. Sie werden exzellentes Talent in den Bereichen Marketing, PR und Kunst zeigen. Es ist jedoch Weisheit gefragt, um flexibel zu reagieren, da Rebellion gegen Chefs oder Organisationsregeln aufkommen kann.\n\n💰 [Reichtum]\nEin Jahr, in dem der Geldfluss aktiv wird. Es ergeben sich Gelegenheiten, das Einkommen durch den Einsatz von Witz und Schnelligkeit zu steigern. Seien Sie jedoch vorsichtig, da die Ausgaben aufgrund von impulsivem Konsum oder ausgefallenem Erscheinungsbild groß werden können.\n\n❤️ [Liebe & Beziehungen]\nSie werden mit überfließendem Charme und guten Konversationsfähigkeiten beliebt sein. In romantischen Beziehungen hauchen Sie durch ehrlichen emotionalen Ausdruck Leben ein, aber Rücksichtnahme ist erforderlich, da scharfe Worte manchmal verletzen können.\n\n⚠️ [Vorsicht]\nAchten Sie auf urologische Erkrankungen oder die Durchblutung. Vermeiden Sie es außerdem, schlecht über andere zu reden, und bewahren Sie jederzeit eine bescheidene Ausdrucksweise und Handlungsweise, da Sie Gegenstand von Gerüchten sein könnten.",
-  "sajuFortune2025Gap": "🌿 2025 Eulsa Year Gap-Wood General Fortune: 'Growth Amidst New Stage and Competition'\n\n2025 is a year where the energy of 'Geob-jae' and 'Sik-sin' enters for you. It's like a large tree in a forest harmonizing with ivy (Eul-wood) to grow together. Synergy occurs when together rather than alone, but at the same time, it will be a year where fierce competition cannot be avoided.\n\n💼 [Career & Business]\nActivity becomes vigorous and the desire for expression becomes strong. Opportunities will come to widely announce your ideas and talents to the world. Excellent results are expected for freelancers, those in performing arts, or sales. However, subtle conflicts may arise in relationships with colleagues or competitors, so wisdom to make them collaborators rather than enemies is needed.\n\n💰 [Wealth]\nWealth flow is active, but there may be as much money going out as coming in (influence of Geob-jae). Caution is needed as expenditures may occur due to gatherings with friends/colleagues or investment recommendations. Investing in self-development or business expansion is more advantageous in the long run than saving money.\n\n❤️ [Love & Relationships]\nSociability improves and you will meet many new people. Popularity rises in gatherings or group activities, and it's a good time to appeal charm to the opposite sex. However, as competitors may appear, it's good to express yourself actively if there's someone you like.\n\n⚠️ [Cautions]\nExcessive competitive spirit may lead to trouble. Also, movement luck increases due to the 'Sa-fire' energy, so pay attention to traffic safety and physical strength management.",
-  "sajuFortune2025Eul": "🌿 2025 Eulsa Year Eul-Wood General Fortune: 'A Brilliant Leap Revealing Your Colors'\n\n2025 is a year where the energy of 'Bi-gyeon' and 'Sang-gwan' enters for you. It's like flowers in a field in full bloom under the warm sun. It will be a dynamic year where you fully show off your individuality and talents and receive public attention.\n\n💼 [Career & Business]\nCreativity and artistic sense reach their peak. You will stand out greatly in tasks of planning and presenting ideas. Opportunities to become independent or lead new projects arise as your skills are recognized. However, coordination is needed as trying to go too far ahead may conflict with existing rules.\n\n💰 [Wealth]\nA year where income is created based on wit and skill. You may gain unexpected income through side jobs or creative activities. However, expenditures for dignity maintenance or entertainment may increase as you chase fancy things, so don't lose economic sense.\n\n❤️ [Love & Relationships]\nA time with overflowing charm, receiving attention from the opposite sex. In romantic relationships, you spend pleasant and lively times, but sometimes fights may occur due to your own stubbornness. If solo, you can look forward to a fateful meeting.\n\n⚠️ [Cautions]\nBe careful of slips of the tongue as it's an easy year to be subject to rumors. Also, regular sleep and rest are essential as you may consume too much energy and get tired easily.",
-  "sajuFortune2026Gap": "🌳 2026 Byeong-oh Year Gap-Wood General Fortune: 'Flame of Passion, Maximization of Activity'\n\n2026 is a year where the energy of 'Sik-sin' (Productivity) and 'Sang-gwan' (Expression) is very strong for you, a Gap-Wood. It is a situation where wood meets fire and burns vigorously, a period where your talent and expression burst out into the world without hesitation. Your presence is revealed even if you stay still, and your range of activities expands dramatically.\n\n💼 [Career & Business]\nIt is a very good time to start new projects or a business. Your ideas are realized, and you will be passionately immersed in work. You can achieve great results in fields that express yourself, such as art, broadcasting, sales, and education. However, you need to be cautious and double-check everything as you may make mistakes if you only run forward.\n\n💰 [Wealth]\nWealth follows as much as you are active. Income from business or side jobs may increase. However, as much as you earn, a lot of money may go out for investment or consumption. Investment for the future is good, but impulsive spending should be guarded against.\n\n❤️ [Love & Relationships]\nAppeal to the opposite sex with an honest and active attitude. Romantic luck heats up, but excessive emotional expression may burden the partner. It is also a year where children's luck enters very strongly.\n\n⚠️ [Precautions]\nIt is a year of extreme energy consumption. 'Burnout' may come, so physical strength management is essential. Be careful of rumors caused by slips of the tongue, and try not to insist only on your own arguments.",
-  "sajuFortune2026Eul": "🌸 2026 Byeong-oh Year Eul-Wood General Fortune: 'Brilliant Blooming, Full Flowering of Talent'\n\n2026 is a year where 'Sang-gwan' (Expression) is heavy for you, an Eul-Wood. It is a situation where flowers bloom under the hot sun, a period where your charm and talent reach their peak. You will be the protagonist who receives attention everywhere and taste brilliant achievements.\n\n💼 [Career & Business]\nUnconventional attempts that break existing frameworks succeed. You will stand out in design, fashion, beauty, and entertainment. You may receive promotion or scout offers at work, but be careful of friction with superiors. Your ability doubles in a free environment.\n\n💰 [Wealth]\nThe ability to create wealth becomes excellent. Your brand value rises and your worth increases. However, chasing glamour may lead to luxury or waste, so you must guard your wallet well.\n\n❤️ [Love & Relationships]\nPopularity with the opposite sex explodes. You will have a brilliant and passionate romance, but it may end shortly and intensely. Married people may have a lot to worry about regarding children.\n\n⚠️ [Precautions]\nEmotional ups and downs may become severe. If you cannot control your temper, hard-earned achievements may collapse. Have a law-abiding spirit to avoid legal issues or rumors.",
-  "sajuFortune2026Byeong": "☀️ 2026 Byeong-oh Year Byeong-Fire General Fortune: 'Two Suns, Intense Competition and Leap'\n\n2026 is a year where 'Bi-gyeon' (Friend) and 'Geob-jae' (Competitor) are very strong for you, a Byeong-Fire. It is a situation where two suns appear in the sky, a period where pride and competitive spirit reach the sky. Subjectivity becomes strong, you hate any interference, and you push through your path with determination.\n\n💼 [Career & Business]\nIt is a luck to win and achieve in competitive places. You can increase the scale through partnership or collaboration, but conflicts may arise due to profit distribution issues. It is a good opportunity for freelancers or professionals to make their names widely known.\n\n💰 [Wealth]\nMoney comes in, but there are also large holes for it to go out. Money may go out due to siblings, friends, or colleagues. Guaranteeing or lending money is absolutely forbidden. It is better to invest in honor or growing power rather than saving money.\n\n❤️ [Love & Relationships]\nYou may meet a lover like a friend or develop from a friend to a lover. However, if you have a partner, be careful as a love triangle or competitor may appear.\n\n⚠️ [Precautions]\nDogmatic actions may cause resentment from those around you. 'Humility' is the best tactic. Pay attention to cardiovascular disease or eye health.",
-  "sajuFortune2026Jeong": "🔥 2026 Byeong-oh Year Jeong-Fire General Fortune: 'Giant Flame, Expansion of Power'\n\n2026 is a year of 'Geob-jae' (Competitor) and 'Bi-gyeon' (Friend) for you, a Jeong-Fire. Like a candle meeting a furnace, it is a period where your power becomes massive. You can achieve things that were impossible alone through help or cooperation from those around you.\n\n💼 [Career & Business]\nA strong driving force arises. You will have the wisdom to overwhelm competitors or turn them into your side. Opportunities to exercise leadership in team projects or organizational life will come. However, if you try to monopolize results, you may be betrayed, so a posture of sharing credit is necessary.\n\n💰 [Wealth]\nSpeculative tendencies become strong. You will pursue 'high risk, high return,' and if lucky, you will touch a lot of money, but failure also has a large impact. Unexpected expenses may occur, so it is good to prepare an emergency fund.\n\n❤️ [Love & Relationships]\nThere is a high probability of meeting connections in social gatherings or group activities. Men should be careful as they may neglect their wives or girlfriends. Relationships with people around you become assets this year.\n\n⚠️ [Precautions]\nGreed leads to trouble. Refrain from unreasonable expansion or investment. Be careful of diseases caused by anger or stress.",
-  "sajuFortune2026Mu": "🌋 2026 Byeong-oh Year Mu-Earth General Fortune: 'Patience and Preparation Amidst Intense Heat'\n\n2026 is a year where the energy of 'Pyeon-in' (Intuition) and 'Jeong-in' (Knowledge) is strong for you, a Mu-Earth. It is like condensed energy just before a volcano erupts. It is the optimal time to fill your inner self and grow skills through study, art, and obtaining certifications.\n\n💼 [Career & Business]\nMental labor such as planning, research, and strategy establishment shines rather than active work. Document luck is good, so there are results in contracts or permit-related tasks. However, if you only think and postpone execution, you may miss opportunities, so bold decisiveness is also needed.\n\n💰 [Wealth]\nReal estate document luck is very strong. It is an opportunity to increase assets through sale or contract. Cash flow may be somewhat frustrating, but investment from a long-term perspective is promising.\n\n❤️ [Love & Relationships]\nInterference from mothers or superiors may increase. In romance, you will value mental communion, and connections with older people may be made.\n\n⚠️ [Precautions]\nToo many thoughts can lead to depression or lethargy. Outdoor activities or sweating through exercise help improve luck. As the ground cracks due to too much heat, be careful of dry skin or stomach disorders.",
-  "sajuFortune2026Gi": "🌾 2026 Byeong-oh Year Gi-Earth General Fortune: 'Solid Foundation and Definite Support'\n\n2026 is a year of 'Jeong-in' (Knowledge) and 'Pyeon-in' (Intuition) for you, a Gi-Earth. It is a situation where warm sunlight shines on the earth and ripens grains. It is a period of solidifying a stable foundation while receiving full support and love from superiors.\n\n💼 [Career & Business]\nYou will achieve the best results in everything related to study, such as promotion exams, certification exams, and degree attainment. At work, you will gain the trust of superiors and take on important positions. You will stand out in education, real estate, counseling, and welfare fields.\n\n💰 [Wealth]\nIt is a luck to hold documents. You may achieve the dream of owning a home or receive inheritance or gifts. Stable asset growth is possible, and it is a year where honor shines more than wealth.\n\n❤️ [Love & Relationships]\nIt is a year to be loved. You will receive dependable love from your lover or meet a partner with good conditions. Marriage luck also enters, and family life becomes harmonious.\n\n⚠️ [Precautions]\nIf you only try to receive, you may become lazy. A posture of sharing as much as you received is necessary. Discard dependency and grow self-reliance.",
-  "sajuFortune2026Gyeong": "⚔️ 2026 Byeong-oh Year Gyeong-Metal General Fortune: 'Birth of a Masterpiece Beyond Ordeal'\n\n2026 is a year where 'Pyeon-gwan' (Pressure) and 'Jeong-gwan' (Authority) are very powerful for you, a Gyeong-Metal. It is a situation of melting raw ore in a furnace to make a masterpiece sword. There may be strong pressure and stress, but if you endure it, you will gain immense authority and honor.\n\n💼 [Career & Business]\nYou may take on positions with heavy responsibility or handle difficult projects. However, this is a process of testing you, and if successfully completed, your status rises instantly. It is an opportunity for promotion for those in public office, military, police, and legal fields.\n\n💰 [Wealth]\nIt is a luck of honor and titles rather than money. As status rises, wealth will naturally follow, but money going out for dignity maintenance or entertainment is also significant.\n\n❤️ [Love & Relationships]\nFor women, it is a luck where a charismatic and capable man appears. Men have strong children's luck. Relationships with work superiors or elders become important.\n\n⚠️ [Precautions]\nHealth management is the top priority. Be careful of diseases or accidents caused by overwork. Especially lungs and large intestines may weaken. Find ways to relieve stress.",
-  "sajuFortune2026Sin": "💎 2026 Byeong-oh Year Sin-Metal General Fortune: 'Shining Jewel, Peak of Honor'\n\n2026 is a year of 'Jeong-gwan' (Authority) and 'Pyeon-gwan' (Pressure) for you, a Sin-Metal. Like a jewel shining under lights, it is a period where your value is revealed to the world and honor is elevated. You have deep connections with upright and stable workplaces or organizations.\n\n💼 [Career & Business]\nJob hunting, promotion, and transfer luck are very good. You may also receive scout offers by being recognized for your skills. If you follow principles and handle work correctly, you will receive respect from everyone.\n\n💰 [Wealth]\nStable salary or fixed income is guaranteed. If you protect honor rather than chasing wealth, wealth will naturally follow. You can benefit from your husband or workplace.\n\n❤️ [Love & Relationships]\nIt is the best marriage and dating luck for women. You can meet an upright and capable spouse. Men gain children or have joyful events due to children.\n\n⚠️ [Precautions]\nToo much heat can melt the jewel. Excessive work or stress may cause nervousness. You may appear inflexible due to strong principle-oriented tendencies, so be careful.",
-  "sajuFortune2026Im": "🌊 2026 Byeongo Year Im-Water General Fortune: 'A Dynamic Year of Expanding Activity Range'\n\n2026 is a year where the energy of 'Pyeon-jae' and 'Jeong-jae' enters for you. It's like a huge sea circulating actively by receiving the sun's heat and moving towards the wide world. It will be a dynamic year where economic activities become vigorous and opportunities to touch large wealth come.\n\n💼 [Career & Business]\nBusiness acumen is maximized. A very good year to pioneer new markets or reap large profits from investments. Luck where activity range can expand beyond domestic to overseas. Bold decisions lead to great results, but detailed review is essential.\n\n💰 [Wealth]\nWealth luck reaches its peak. Unexpected windfalls or large-scale business profits are expected. If you ride the flow of money well, you can form large assets. However, management is important as money going out can be as large as money coming in.\n\n❤️ [Love & Relationships]\nSociability improves and many people of the opposite sex gather around with overflowing charm. A good time to enjoy active dating. In romantic relationships, you spend happy times enjoying fancy dates and trips. However, be careful as you may neglect partners due to a too busy schedule.\n\n⚠️ [Cautions]\nPay attention to kidney function or blood circulation. Also, wisdom to know how to be satisfied at an appropriate level is needed as excessive greed may lead to trouble.",
-  "sajuFortune2026Gye": "💧 2026 Byeongo Year Gye-Water General Fortune: 'Gaining Practical Interests while Strengthening Internal Foundations'\n\n2026 is a year where the energy of 'Jeong-jae' and 'Pyeon-jae' enters for you. It's like sunshine shining after sweet rain, making the land full of life and abundance. You will achieve economic stability based on stable income and find small happinesses.\n\n💼 [Career & Business]\nYou handle assigned tasks perfectly with sincerity and meticulousness. Display excellent ability in finance, accounting, or management tasks. Recognition and rewards follow when you do your best in assigned work rather than excessive greed. You can grow step by step while building skills in a stable environment.\n\n💰 [Wealth]\nWealth luck is very good. Steady and stable income occurs, and you enjoy the joy of increasing assets through financial technology or savings. Small but definite profits gather to give great reward. Frugal spending habits shine this year.\n\n❤️ [Love & Relationships]\nYou give deep trust to partners with kindhearted and meticulous consideration. You grow a small but warm love while sharing daily lives. Relationships are also smooth and peaceful. You will play the role of a trusted advisor to people around you.\n\n⚠️ [Cautions]\nPay attention to eye diseases or urological system health. Also, sometimes practice looking at the world with a wide perspective as you may miss the big flow by paying attention to too detailed things.",
-  "sajuFortune2025Byeong": "🔥 2025 Eulsa Year Byeong-Fire General Fortune: 'Achievement and Competition Full of Passion'\n\n2025 is a year where the energy of 'Jeong-in' and 'Bi-gyeon' enters for you. It's like the sun in the sky meeting the heat on the ground to burn even hotter. You will gain strong support forces and push forward towards goals without hesitation based on confidence.\n\n💼 [Career & Business]\nYou will achieve great growth with the help of reliable helpers or mentors. Very advantageous for acquiring certifications or academic achievements. Collaboration with colleagues shines, and you will lead the team to success by exercising leadership. However, beware as excessive competitive spirit may harm relationships.\n\n💰 [Wealth]\nA time to increase wealth while sharing information with people around you. Income through joint investment or cooperation is expected. However, it's important to take care of practical interests as you may spend excessively due to pride or conscious of others' gaze.\n\n❤️ [Love & Relationships]\nA year where friendships deepen as there will be many gatherings with people. In romantic relationships, comfort like a friend becomes stronger. However, appropriate balance is needed as conflicts may arise by prioritizing friends over partners.\n\n⚠️ [Cautions]\nPay attention to blood circulation systems such as blood pressure or heart health. Also, always maintain peace of mind as impulsive emotions due to a fiery personality may ruin things.",
-  "sajuFortune2025Jeong": "🔥 2025 Eulsa Year Jeong-Fire General Fortune: 'Stability and Opportunity Found Amidst Change'\n\n2025 is a year where the energy of 'Pyeon-in' and 'Geob-jae' enters for you. It's like a candle flickering in the wind but eventually illuminating the surroundings and revealing its presence. Unexpected changes may come, but it will be a year where you wisely overcome them and turn them into opportunities.\n\n💼 [Career & Business]\nOriginal ideas and intuition shine. You will target niche markets that others haven't thought of or achieve deep results in professional fields. However, competition with colleagues becomes fierce and there may be people trying to snatch results, so pay attention to security maintenance and relationship management.\n\n💰 [Wealth]\nA year where there may be fluctuations in wealth luck. Conservative asset management is needed as unexpected expenditures may occur or losses may be seen in investments. However, income using your own professional skills will come in stably. It's better to avoid financial transactions.\n\n❤️ [Love & Relationships]\nYou may become passive in dating as thoughts increase. In romantic relationships, it's easy to feel disappointed over small things, so it's important to trust the other person and treat them with an open heart. Filling the inner self through time alone is also a good way.\n\n⚠️ [Cautions]\nBeware of nervous disorders or insomnia due to stress. It's important to manage your mind through meditation or light exercise, and try to have a positive mindset rather than negative thoughts.",
-  "sajuFortune2025Mu": "⛰️ 2025 Eulsa Year Mu-Earth General Fortune: 'A Year of Maturity Strengthening Internal Foundations Wisely'\n\n2025 is a year where the energy of 'Jeong-gwan' and 'Pyeon-in' enters for you. It's like warm heat permeating under a huge mountain to embrace everything. It will be a substantial year of adding your own depth while keeping social honor.\n\n💼 [Career & Business]\nYou will rise to a responsible position within the organization or opportunities for promotion will come. If you value principles and work sincerely, you will receive great recognition. At the same time, you achieve excellent results in acquiring professional knowledge or research tasks. However, flexible thinking is needed as you may refuse change by being caught in stereotypes.\n\n💰 [Wealth]\nStable income is guaranteed. It's advantageous to save sincerely and manage assets. Fortune related to real estate or documents is good, so it's worth considering long-term investments. However, avoid unreasonable investments by being shaken by surrounding temptations.\n\n❤️ [Love & Relationships]\nYou gain trust from people with dignified speech and actions. In romantic relationships, it's a good time to respect each other and develop into a serious relationship. If thinking about marriage, it's also good to make specific plans.\n\n⚠️ [Cautions]\nPay attention to digestive system or skin health. Also, practice making quick decisions by listening to surrounding advice as you may experience decision paralysis due to overthinking.",
-  "sajuFortune2025Gi": "🌾 2025 Eulsa Year Gi-Earth General Fortune: 'Achieving Goals with Responsibility'\n\n2025 is a year where the energy of 'Pyeon-gwan' and 'Jeong-in' enters for you. It's like sunshine shining after rain on a wide land to grow crops. There may be difficult processes, but it will be a rewarding year of eventually gaining honor and achieving goals.\n\n💼 [Career & Business]\nWork intensity may increase and difficult tasks may be given. However, you will prove your qualities as a leader by overcoming them with your skills and patience. You will pass through crises with the help or support of superiors, and as a result, you will taste a great sense of accomplishment.\n\n💰 [Wealth]\nA year where you need to pay attention to expenditure management. There may be a lot of money going out, such as unexpected taxes or public utility charges. However, as you can expect incentives or bonuses as a result of steady efforts, sincerity is the key to calling wealth.\n\n❤️ [Love & Relationships]\nA responsible appearance comes across as attractive to the opposite sex. In romantic relationships, the bond deepens as you listen to each other's hardships and comfort each other. However, efforts for frequent communication even if short are needed as you may neglect partners due to a busy daily life.\n\n⚠️ [Cautions]\nBeware of immunity decline due to overwork. It's important to manage physical strength with regular meals and exercise, and relieve stress with positive thoughts.",
-  "sajuFortune2025Gyeong": "⚔️ 2025 Eulsa Year Gyeong-Metal General Fortune: 'Gaining Honor while Taking Care of Practical Interests'\n\n2025 is a year where the energy of 'Jeong-jae' and 'Pyeon-gwan' enters for you. It's like a solid rock being heated by fire and reborn as a precious sword. You will gain definite rewards for your efforts and socially prove your value.\n\n💼 [Career & Business]\nYou achieve great results with result-oriented thinking and drive. Especially recognized for abilities in finance, management, and technology fields. Luck to solve difficult problems and gain honor is strong, but responsibility also grows, so you may feel pressure. Believe in yourself and go forward boldly.\n\n💰 [Wealth]\nWealth luck is very good. Besides stable income, you gain practical profits through investments or side jobs. You will accurately grasp the flow of money and efficiently manage assets. However, refrain from spending large sums for honor.\n\n❤️ [Love & Relationships]\nAppeal to the opposite sex with a sincere and reliable appearance. In romantic relationships, you give the other person a sense of relief with a responsible attitude. In relationships, you may give a somewhat strict image, so it's good to talk with some soft humor occasionally.\n\n⚠️ [Cautions]\nPay attention to bone or joint health, and respiratory diseases. Also, soothe yourself with a mind of 'this is enough' as you may pick on yourself due to perfectionist tendencies.",
-  "sajuFortune2025Sin": "💎 2025 Eulsa Year Sin-Metal General Fortune: 'A Year of Wisdom Shining Amidst Change'\n\n2025 is a year where the energy of 'Pyeon-jae' and 'Jeong-gwan' enters for you. It's like a sophisticated jewel revealing its value under brilliant lighting. It will be a pleasant year where social status rises along with unexpected windfalls.\n\n💼 [Career & Business]\nBusiness acumen improves and the ability to capture new opportunities is excellent. A time when bold challenges return as large profits. Within the organization, you gain trust with rational judgment and catch opportunities for promotion or transfer. However, be careful not to neglect the process by focusing too much on results.\n\n💰 [Wealth]\nA year where money luck enters. Opportunities to touch large wealth such as unexpected investment returns or inheritance arise. However, as expenditures may also become fancy, it's important to maintain planned spending habits.\n\n❤️ [Love & Relationships]\nYou become the protagonist in social gatherings with a fancy and attractive appearance. Dating luck is very strong, so you may receive advances from many people. In romantic relationships, you spend passionate and pleasant times. A good year to develop into a serious meeting.\n\n⚠️ [Cautions]\nPay attention to lung health or skin diseases. Also, always maintain humility and don't forget the mind to consider others as you may appear arrogant to people due to excessive confidence.",
-  "sajuFortune2025Im": "🌊 2025 Eulsa Year Im-Water General Fortune: 'Producing Results by Exercising Wisdom'\n\n2025 is a year where the energy of 'Sang-gwan' and 'Pyeon-jae' enters for you. It's like a large river winding and moistening a wide field. It will be a dynamic year of gaining large wealth and expanding activity range by exercising your talents and eloquence.\n\n💼 [Career & Business]\nEloquence improves and you achieve excellent results in marketing or PR fields. A very good time to commercialize your ideas or pioneer new markets. Will be the best year for those doing creative work. However, it's important to be polite as there may be friction with bosses.\n\n💰 [Wealth]\nWealth luck moves actively. Luck to earn money with your own skills is strong, and opportunities to roll large money come. However, caution is needed for speculative investments, and wealth luck will be maintained long only if you have a mind to give as much as you earned.\n\n❤️ [Love & Relationships]\nWith overflowing humor and charm, people never cease to be around you. A year where you can enjoy pleasant dating with high popularity among the opposite sex. In romantic relationships, you breathe life through diverse dates. However, be careful as a single light word may cause misunderstanding.\n\n⚠️ [Cautions]\nPay attention to kidney or urological system health. Also, pay attention to proper rest and nutrition as physical strength may be discharged due to a wide activity range.",
-  "sajuFortune2025Gye": "💧 2025 Eulsa Year Gye-Water General Fortune: 'A Year of Sincerity Producing Stable Fruits'\n\n2025 is a year where the energy of 'Sik-sin' and 'Jeong-jae' enters for you. It's like a clear drizzle moistening the land to prepare for a rich harvest. It will be a warm year where your efforts accumulate steadily and return as stable wealth and happiness.\n\n💼 [Career & Business]\nA year where sincerity becomes the best weapon. You produce steady results by fulfilling responsibilities and gain trust from colleagues. A good time to grow expertise, and you will feel rewarded through work you like. You can grow step by step in a stable environment.\n\n💰 [Wealth]\nA year that is economically relaxed and stable. Steady income occurs, and you will feel the fun of increasing assets frugally. There is food and clothing luck, so abundance is full in overall life. Savings are more advantageous than unreasonable investments.\n\n❤️ [Love & Relationships]\nYou give comfort to partners with a warm-hearted appearance. A year where you grow beautiful love while considering each other meticulously. If single, you are highly likely to meet a partner who communicates well and has similar values.\n\n⚠️ [Cautions]\nPay attention to stomach health or eating habit management. It's good to find vitality by giving new stimuli occasionally as you may become lazy by settling for comfort.",
-  "dreamResultModifier": " Es impliziert auch „{description}“.",
-  "@dreamResultModifier": {
-    "placeholders": {
-      "description": {
-        "type": "String"
-      }
-    }
-  },
-  "dreamResultNoSymbol": "Es wurden keine wichtigen symbolischen Schlüsselwörter gefunden.",
+  "sajuFortune2025Gap": "🌿 2025 Eulsa-Jahr Gap-Holz Allgemeines Glück: 'Wachstum inmitten neuer Phasen und Wettbewerb'\n\n2025 ist ein Jahr, in dem die Energie von 'Geob-jae' und 'Sik-sin' für Sie eintritt. Es ist wie ein großer Baum in einem Wald, der mit Efeu (Eul-Holz) harmoniert, um gemeinsam zu wachsen. Synergien entstehen eher gemeinsam als allein, aber gleichzeitig wird es ein Jahr sein, in dem heftiger Wettbewerb nicht vermieden werden kann.\n\n💼 [Karriere & Business]\nDie Aktivität wird lebhaft und der Wunsch nach Ausdruck wird stark. Es ergeben sich Gelegenheiten, Ihre Ideen und Talente der Welt weithin bekannt zu machen. Hervorragende Ergebnisse werden für Freiberufler, Personen in den darstellenden Künsten oder im Verkauf erwartet. Es können jedoch subtile Konflikte in Beziehungen zu Kollegen oder Konkurrenten auftreten, daher ist Weisheit gefragt, um sie eher zu Verbündeten als zu Feinden zu machen.\n\n💰 [Wohlstand]\nDer Wohlstandsfluss ist aktiv, aber es kann so viel Geld abfließen, wie hereinkommt (Einfluss von Geob-jae). Vorsicht ist geboten, da Ausgaben aufgrund von Treffen mit Freunden/Kollegen oder Investmentempfehlungen anfallen können. Investitionen in die Selbstentwicklung oder Geschäftserweiterung sind langfristig vorteilhafter als das Sparen von Geld.\n\n❤️ [Liebe & Beziehungen]\nDie Kontaktfreudigkeit verbessert sich und Sie werden viele neue Leute kennenlernen. Die Beliebtheit steigt bei Treffen oder Gruppenaktivitäten, und es ist eine gute Zeit, dem anderen Geschlecht Charme zu vermitteln. Da jedoch Konkurrenten auftreten können, ist es gut, sich aktiv auszudrücken, wenn es jemanden gibt, den Sie mögen.\n\n⚠️ [Vorsicht]\nÜbermäßiger Wettbewerbsgeist kann zu Problemen führen. Außerdem nimmt das Bewegungsglück aufgrund der 'Sa-Feuer'-Energie zu, achten Sie also auf Verkehrssicherheit und Kraftmanagement.",
+  "sajuFortune2025Eul": "🌿 2025 Eulsa-Jahr Eul-Holz Allgemeines Glück: 'Ein brillanter Sprung, der Ihre Farben offenbart'\n\n2025 ist ein Jahr, in dem die Energie von 'Bi-gyeon' und 'Sang-gwan' für Sie eintritt. Es ist wie Blumen auf einem Feld in voller Blüte unter der warmen Sonne. Es wird ein dynamisches Jahr sein, in dem Sie Ihre Individualität und Ihre Talente voll zur Geltung bringen und öffentliche Aufmerksamkeit erhalten.\n\n💼 [Karriere & Business]\nKreativität und künstlerisches Gespür erreichen ihren Höhepunkt. Sie werden bei der Planung und Präsentation von Ideen stark hervorstechen. Es ergeben sich Gelegenheiten, unabhängig zu werden oder neue Projekte zu leiten, da Ihre Fähigkeiten anerkannt werden. Es ist jedoch Koordination erforderlich, da der Versuch, zu weit vorauszugehen, mit bestehenden Regeln in Konflikt geraten kann.\n\n💰 [Wohlstand]\nEin Jahr, in dem Einkommen auf der Grundlage von Witz und Geschicklichkeit erzielt wird. Sie können unerwartete Einnahmen durch Nebenjobs oder kreative Aktivitäten erzielen. Da Sie jedoch glanzvollen Dingen nachjagen, können die Ausgaben für die Aufrechterhaltung der Würde oder für Unterhaltung steigen, verlieren Sie also nicht den wirtschaftlichen Sinn.\n\n❤️ [Liebe & Beziehungen]\nEine Zeit mit überströmendem Charme, in der Sie die Aufmerksamkeit des anderen Geschlechts auf sich ziehen. In romantischen Beziehungen verbringen Sie angenehme und lebhafte Zeiten, aber manchmal können Streitigkeiten aufgrund Ihrer eigenen Sturheit auftreten. Wenn Sie allein sind, können Sie sich auf eine schicksalhafte Begegnung freuen.\n\n⚠️ [Vorsicht]\nSeien Sie vorsichtig mit Versprechern, da es ein Jahr ist, in dem man leicht zum Gegenstand von Gerüchten werden kann. Außerdem sind regelmäßiger Schlaf und Ruhe unerlässlich, da Sie zu viel Energie verbrauchen und leicht ermüden können.",
+  "sajuFortune2026Gap": "🌳 2026 Byeong-oh-Jahr Gap-Holz Allgemeines Glück: 'Flamme der Leidenschaft, Maximierung der Aktivität'\n\n2026 ist ein Jahr, in dem die Energie von 'Sik-sin' (Produktivität) und 'Sang-gwan' (Ausdruck) für Sie, ein Gap-Holz, sehr stark ist. Es ist eine Situation, in der Holz auf Feuer trifft und kräftig brennt, eine Zeit, in der Ihr Talent und Ihr Ausdruck ohne Zögern in die Welt hinausplatzen. Ihre Anwesenheit wird offenbart, auch wenn Sie still bleiben, und Ihr Aktionsradius erweitert sich dramatisch.\n\n💼 [Karriere & Business]\nEs ist eine sehr gute Zeit, um neue Projekte oder ein Unternehmen zu starten. Ihre Ideen werden verwirklicht, und Sie werden leidenschaftlich in die Arbeit eintauchen. Sie können großartige Ergebnisse in Bereichen erzielen, in denen Sie sich selbst ausdrücken, wie Kunst, Rundfunk, Verkauf und Bildung. Sie müssen jedoch vorsichtig sein und alles doppelt überprüfen, da Sie Fehler machen könnten, wenn Sie nur nach vorne rennen.\n\n💰 [Wohlstand]\nDer Wohlstand folgt, so sehr Sie aktiv sind. Das Einkommen aus Geschäft oder Nebenjobs kann steigen. Doch so viel Sie verdienen, kann auch viel Geld für Investitionen oder Konsum abfließen. Investitionen für die Zukunft sind gut, aber vor impulsiven Ausgaben sollte man sich hüten.\n\n❤️ [Liebe & Beziehungen]\nSprechen Sie das andere Geschlecht mit einer ehrlichen und aktiven Haltung an. Das Liebesglück heizt sich auf, aber übermäßiger emotionaler Ausdruck könnte den Partner belasten. Es ist auch ein Jahr, in dem das Kinderglück sehr stark eintritt.\n\n⚠️ [Vorsicht]\nEs ist ein Jahr extremer Energieverschwendung. Ein 'Burnout' kann kommen, daher ist ein körperliches Kraftmanagement unerlässlich. Achten Sie auf Gerüchte, die durch Versprecher verursacht werden, und versuchen Sie, nicht nur auf Ihren eigenen Argumenten zu beharren.",
+  "sajuFortune2026Eul": "🌸 2026 Byeong-oh-Jahr Eul-Holz Allgemeines Glück: 'Brillantes Blühen, volle Entfaltung des Talents'\n\n2026 ist ein Jahr, in dem 'Sang-gwan' (Ausdruck) für Sie, ein Eul-Holz, schwer wiegt. Es ist eine Situation, in der Blumen unter der heißen Sonne blühen, eine Zeit, in der Ihr Charme und Ihr Talent ihren Höhepunkt erreichen. Sie werden der Protagonist sein, der überall Aufmerksamkeit erhält, und brillante Erfolge erzielen.\n\n💼 [Karriere & Business]\nUngewöhnliche Versuche, die bestehende Rahmenbedingungen sprengen, sind erfolgreich. Sie werden in den Bereichen Design, Mode, Schönheit und Unterhaltung hervorstechen. Sie könnten Beförderungs- oder Abwerbeangebote bei der Arbeit erhalten, aber achten Sie auf Reibungen mit Vorgesetzten. In einer freien Umgebung verdoppelt sich Ihre Fähigkeit.\n\n💰 [Wohlstand]\nDie Fähigkeit, Wohlstand zu schaffen, wird exzellent. Ihr Markenwert steigt und Ihr Wert nimmt zu. Das Streben nach Glamour kann jedoch zu Luxus oder Verschwendung führen, daher müssen Sie Ihren Geldbeutel gut hüten.\n\n❤️ [Liebe & Beziehungen]\nDie Popularität beim anderen Geschlecht explodiert. Sie werden eine brillante und leidenschaftliche Romanze haben, aber sie könnte kurz und intensiv enden. Verheiratete Menschen könnten sich viele Sorgen um ihre Kinder machen.\n\n⚠️ [Vorsicht]\nEmotionale Höhen und Tiefen können heftig werden. Wenn Sie Ihr Temperament nicht kontrollieren können, können hart erarbeitete Erfolge zusammenbrechen. Bewahren Sie einen gesetzestreuen Geist, um rechtliche Probleme oder Gerüchte zu vermeiden.",
+  "sajuFortune2026Byeong": "☀️ 2026 Byeong-oh-Jahr Byeong-Feuer Allgemeines Glück: 'Zwei Sonnen, intensiver Wettbewerb und Sprung'\n\n2026 ist ein Jahr, in dem 'Bi-gyeon' (Freund) und 'Geob-jae' (Konkurrent) für Sie, ein Byeong-Feuer, sehr stark sind. Es ist eine Situation, in der zwei Sonnen am Himmel erscheinen, eine Zeit, in der Stolz und Wettbewerbsgeist den Himmel erreichen. Die Subjektivität wird stark, Sie hassen jegliche Einmischung und gehen Ihren Weg mit Entschlossenheit.\n\n💼 [Karriere & Business]\nEs ist ein Glück, an wettbewerbsorientierten Orten zu gewinnen und Erfolge zu erzielen. Sie können den Umfang durch Partnerschaft oder Zusammenarbeit vergrößern, aber es können Konflikte aufgrund von Gewinnverteilungsfragen entstehen. Es ist eine gute Gelegenheit für Freiberufler oder Fachleute, ihren Namen weithin bekannt zu machen.\n\n💰 [Wohlstand]\nGeld kommt herein, aber es gibt auch große Löcher, durch die es wieder abfließt. Geld kann durch Geschwister, Freunde oder Kollegen verloren gehen. Das Bürgen oder Verleihen von Geld ist absolut verboten. Es ist besser, in Ehre oder wachsende Macht zu investieren, als Geld zu sparen.\n\n❤️ [Liebe & Beziehungen]\nSie können einen Liebhaber wie einen Freund treffen oder sich von einem Freund zu einem Liebhaber entwickeln. Wenn Sie jedoch einen Partner haben, seien Sie vorsichtig, da eine Dreiecksbeziehung oder ein Konkurrent auftauchen könnte.\n\n⚠️ [Vorsicht]\nEigenmächtiges Handeln kann Ressentiments bei den Menschen in Ihrer Umgebung hervorrufen. 'Bescheidenheit' ist die beste Taktik. Achten Sie auf Herz-Kreislauf-Erkrankungen oder Augengesundheit.",
+  "sajuFortune2026Jeong": "🔥 2026 Byeong-oh-Jahr Jeong-Feuer Allgemeines Glück: 'Riesige Flamme, Erweiterung der Macht'\n\n2026 ist ein Jahr von 'Geob-jae' (Konkurrent) und 'Bi-gyeon' (Freund) für Sie, ein Jeong-Feuer. Wie eine Kerze, die auf einen Ofen trifft, ist es eine Zeit, in der Ihre Macht massiv wird. Sie können Dinge erreichen, die allein unmöglich waren, durch Hilfe oder Zusammenarbeit von den Menschen um Sie herum.\n\n💼 [Karriere & Business]\nEine starke Triebkraft entsteht. Sie werden die Weisheit haben, Konkurrenten zu überwältigen oder sie auf Ihre Seite zu ziehen. Gelegenheiten, Führung in Teamprojekten oder im Organisationsleben auszuüben, werden kommen. Wenn Sie jedoch versuchen, Ergebnisse zu monopolisieren, könnten Sie verraten werden, daher ist eine Haltung des Teilens von Anerkennung notwendig.\n\n💰 [Wohlstand]\nSpekulative Tendenzen werden stark. Sie werden 'High Risk, High Return' verfolgen, und wenn Sie Glück haben, werden Sie viel Geld berühren, aber ein Scheitern hat auch große Auswirkungen. Unerwartete Ausgaben können auftreten, daher ist es gut, einen Notfallfonds vorzubereiten.\n\n❤️ [Liebe & Beziehungen]\nEs besteht eine hohe Wahrscheinlichkeit, Verbindungen in sozialen Zusammenkünften oder Gruppenaktivitäten zu treffen. Männer sollten vorsichtig sein, da sie ihre Frauen oder Freundinnen vernachlässigen könnten. Beziehungen zu Menschen in Ihrer Umgebung werden in diesem Jahr zu einem Aktivposten.\n\n⚠️ [Vorsicht]\nGier führt zu Problemen. Sehen Sie von unangemessenen Erweiterungen oder Investitionen ab. Achten Sie auf Krankheiten, die durch Ärger oder Stress verursacht werden.",
+  "sajuFortune2026Mu": "🌋 2026 Byeong-oh-Jahr Mu-Erde Allgemeines Glück: 'Geduld und Vorbereitung inmitten intensiver Hitze'\n\n2026 ist ein Jahr, in dem die Energie von 'Pyeon-in' (Intuition) und 'Jeong-in' (Wissen) für Sie, ein Mu-Erde, stark ist. Es ist wie kondensierte Energie kurz vor dem Ausbruch eines Vulkans. Es ist die optimale Zeit, um Ihr Inneres zu füllen und Fähigkeiten durch Studium, Kunst und den Erwerb von Zertifizierungen auszubauen.\n\n💼 [Karriere & Business]\nGeistige Arbeit wie Planung, Forschung und Strategieentwicklung glänzt eher als aktive Arbeit. Das Dokumentenglück ist gut, so dass es Ergebnisse bei Verträgen oder genehmigungsbezogenen Aufgaben gibt. Wenn Sie jedoch nur nachdenken und die Ausführung aufschieben, könnten Sie Gelegenheiten verpassen, so dass auch mutige Entschlossenheit gefragt ist.\n\n💰 [Wohlstand]\nDas Immobiliendokumentenglück ist sehr stark. Es ist eine Gelegenheit, das Vermögen durch Verkauf oder Vertrag zu steigern. Der Cashflow kann etwas frustrierend sein, aber Investitionen aus einer langfristigen Perspektive sind vielversprechend.\n\n❤️ [Liebe & Beziehungen]\nDie Einmischung von Müttern oder Vorgesetzten kann zunehmen. In der Romantik werden Sie geistige Gemeinschaft schätzen, und es können Verbindungen zu älteren Menschen geknüpft werden.\n\n⚠️ [Vorsicht]\nZu viele Gedanken können zu Depressionen oder Lethargie führen. Aktivitäten im Freien oder Schwitzen durch Sport helfen, das Glück zu verbessern. Da der Boden aufgrund der zu großen Hitze reißt, achten Sie auf trockene Haut oder Magenbeschwerden.",
+  "sajuFortune2026Gi": "🌾 2026 Byeong-oh-Jahr Gi-Erde Allgemeines Glück: 'Solides Fundament und definitive Unterstützung'\n\n2026 ist ein Jahr von 'Jeong-in' (Wissen) und 'Pyeon-in' (Intuition) für Sie, eine Gi-Erde. Es ist eine Situation, in der warmes Sonnenlicht auf die Erde scheint und das Getreide reifen lässt. Es ist eine Zeit der Festigung eines stabilen Fundaments, während Sie volle Unterstützung und Liebe von Vorgesetzten erhalten.\n\n💼 [Karriere & Business]\nSie werden die besten Ergebnisse in allem erzielen, was mit dem Studium zu tun hat, wie z. B. Beförderungsprüfungen, Zertifizierungsprüfungen und dem Erwerb von akademischen Graden. Bei der Arbeit werden Sie das Vertrauen der Vorgesetzten gewinnen und wichtige Positionen einnehmen. Sie werden in den Bereichen Bildung, Immobilien, Beratung und Soziales hervorstechen.\n\n💰 [Wohlstand]\nEs ist ein Glück, Dokumente in den Händen zu halten. Sie könnten den Traum vom Eigenheim verwirklichen oder Erbschaften oder Geschenke erhalten. Ein stabiles Vermögenswachstum ist möglich, und es ist ein Jahr, in dem Ehre mehr glänzt als Wohlstand.\n\n❤️ [Liebe & Beziehungen]\nEs ist ein Jahr, um geliebt zu werden. Sie werden verlässliche Liebe von Ihrem Partner erhalten oder einen Partner mit guten Bedingungen treffen. Das Heiratsglück tritt ebenfalls ein, und das Familienleben wird harmonisch.\n\n⚠️ [Vorsicht]\nWenn Sie nur versuchen zu empfangen, könnten Sie faul werden. Eine Haltung des Teilens, so viel wie Sie erhalten haben, ist notwendig. Legen Sie die Abhängigkeit ab und entwickeln Sie Eigenständigkeit.",
+  "sajuFortune2026Gyeong": "⚔️ 2026 Byeong-oh-Jahr Gyeong-Metall Allgemeines Glück: 'Geburt eines Meisterwerks jenseits der Prüfung'\n\n2026 ist ein Jahr, in dem 'Pyeon-gwan' (Druck) und 'Jeong-gwan' (Autorität) für Sie, ein Gyeong-Metall, sehr mächtig sind. Es ist eine Situation, in der Roherz in einem Ofen geschmolzen wird, um ein Meisterwerk-Schwert herzustellen. Es kann starker Druck und Stress auftreten, aber wenn Sie ihn ertragen, werden Sie immense Autorität und Ehre gewinnen.\n\n💼 [Karriere & Business]\nSie könnten Positionen mit großer Verantwortung übernehmen oder schwierige Projekte bearbeiten. Dies ist jedoch ein Prozess, der Sie prüft, und wenn er erfolgreich abgeschlossen wird, steigt Ihr Status sofort an. Es ist eine Gelegenheit zur Beförderung für Personen im öffentlichen Dienst, beim Militär, bei der Polizei und im juristischen Bereich.\n\n💰 [Wohlstand]\nEs ist eher ein Glück von Ehre und Titeln als von Geld. Wenn der Status steigt, wird der Wohlstand natürlich folgen, aber das Geld, das für die Aufrechterhaltung der Würde oder für Unterhaltung ausgegeben wird, ist ebenfalls beträchtlich.\n\n❤️ [Liebe & Beziehungen]\nFür Frauen ist es ein Glück, bei dem ein charismatischer und fähiger Mann erscheint. Männer haben ein starkes Kinderglück. Beziehungen zu Vorgesetzten oder Ältesten werden wichtig.\n\n⚠️ [Vorsicht]\nGesundheitsmanagement hat oberste Priorität. Achten Sie auf Krankheiten oder Unfälle, die durch Überarbeitung verursacht werden. Besonders Lunge und Dickdarm könnten geschwächt werden. Finden Sie Wege, um Stress abzubauen.",
+  "sajuFortune2026Sin": "💎 2026 Byeong-oh-Jahr Sin-Metall Allgemeines Glück: 'Glänzendes Juwel, Höhepunkt der Ehre'\n\n2026 ist ein Jahr von 'Jeong-gwan' (Autorität) und 'Pyeon-gwan' (Druck) für Sie, ein Sin-Metall. Wie ein Juwel, das unter Lichtern glänzt, ist es eine Zeit, in der Ihr Wert der Welt offenbart und die Ehre erhöht wird. Sie haben tiefe Verbindungen zu aufrechten und stabilen Arbeitsplätzen oder Organisationen.\n\n💼 [Karriere & Business]\nArbeitssuche, Beförderung und Versetzungsglück sind sehr gut. Sie könnten auch Abwerbeangebote erhalten, indem Sie für Ihre Fähigkeiten anerkannt werden. Wenn Sie Prinzipien folgen und die Arbeit korrekt erledigen, werden Sie Respekt von allen erhalten.\n\n💰 [Wohlstand]\nEin stabiles Gehalt oder ein festes Einkommen ist garantiert. Wenn Sie die Ehre schützen, anstatt dem Reichtum nachzujagen, wird der Wohlstand natürlich folgen. Sie können von Ihrem Ehemann oder Ihrem Arbeitsplatz profitieren.\n\n❤️ [Liebe & Beziehungen]\nEs ist das beste Heirats- und Dating-Glück für Frauen. Sie können einen aufrechten und fähigen Ehepartner treffen. Männer gewinnen Kinder oder haben freudige Ereignisse aufgrund von Kindern.\n\n⚠️ [Vorsicht]\nZu viel Hitze kann das Juwel schmelzen. Übermäßige Arbeit oder Stress können Nervosität verursachen. Sie könnten aufgrund starker Prinzipienorientierung unflexibel erscheinen, seien Sie also vorsichtig.",
+  "sajuFortune2026Im": "🌊 2026 Byeongo-Jahr Im-Wasser Allgemeines Glück: 'Ein dynamisches Jahr der Erweiterung des Aktionsradius'\n\n2026 ist ein Jahr, in dem die Energie von 'Pyeon-jae' und 'Jeong-jae' für Sie eintritt. Es ist wie ein riesiges Meer, das aktiv zirkuliert, indem es die Sonnenwärme empfängt und sich auf die weite Welt zubewegt. Es wird ein dynamisches Jahr sein, in dem die wirtschaftlichen Aktivitäten lebhaft werden und Gelegenheiten kommen, großen Wohlstand zu berühren.\n\n💼 [Karriere & Business]\nDer Geschäftssinn wird maximiert. Ein sehr gutes Jahr, um neue Märkte zu erschließen oder große Gewinne aus Investitionen zu ziehen. Glück, bei dem sich der Aktionsradius über das Inland hinaus nach Übersee ausdehnen kann. Mutige Entscheidungen führen zu großartigen Ergebnissen, aber eine detaillierte Prüfung ist unerlässlich.\n\n💰 [Wohlstand]\nDas Wohlstandsglück erreicht seinen Höhepunkt. Unerwartete Gewinne oder großflächige Geschäftsgewinne werden erwartet. Wenn Sie den Geldfluss gut reiten, können Sie große Vermögenswerte bilden. Das Management ist jedoch wichtig, da das Geld, das abfließt, genauso groß sein kann wie das Geld, das hereinkommt.\n\n❤️ [Liebe & Beziehungen]\nDie Kontaktfreudigkeit verbessert sich und viele Menschen des anderen Geschlechts versammeln sich mit überströmendem Charme um Sie herum. Eine gute Zeit, um aktives Dating zu genießen. In romantischen Beziehungen verbringen Sie glückliche Zeiten und genießen schicke Dates und Reisen. Seien Sie jedoch vorsichtig, da Sie Partner aufgrund eines zu vollen Terminkalenders vernachlässigen könnten.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Nierenfunktion oder den Blutkreislauf. Außerdem ist die Weisheit gefragt, zu wissen, wie man auf einem angemessenen Niveau zufrieden ist, da übermäßige Gier zu Problemen führen kann.",
+  "sajuFortune2026Gye": "💧 2026 Byeongo-Jahr Gye-Wasser Allgemeines Glück: 'Praktische Interessen gewinnen und gleichzeitig das innere Fundament stärken'\n\n2026 ist ein Jahr, in dem die Energie von 'Jeong-jae' und 'Pyeon-jae' für Sie eintritt. Es ist wie Sonnenschein nach einem süßen Regen, der das Land voller Leben und Überfluss macht. Sie werden wirtschaftliche Stabilität auf der Grundlage eines stabilen Einkommens erreichen und kleine Glücksmomente finden.\n\n💼 [Karriere & Business]\nSie erledigen die zugewiesenen Aufgaben perfekt mit Aufrichtigkeit und Gewissenhaftigkeit. Zeigen Sie exzellente Fähigkeiten bei Finanz-, Buchhaltungs- oder Managementaufgaben. Anerkennung und Belohnungen folgen, wenn Sie in der zugewiesenen Arbeit Ihr Bestes geben, anstatt übermäßige Gier zu entwickeln. Sie können Schritt für Schritt wachsen, während Sie in einem stabilen Umfeld Fähigkeiten aufbauen.\n\n💰 [Wohlstand]\nDas Wohlstandsglück ist sehr gut. Es entsteht ein stetiges und stabiles Einkommen, und Sie genießen die Freude, Ihr Vermögen durch Finanztechnologie oder Ersparnisse zu vermehren. Kleine, aber definitive Gewinne sammeln sich an, um eine große Belohnung zu geben. Sparsame Ausgabengewohnheiten glänzen in diesem Jahr.\n\n❤️ [Liebe & Beziehungen]\nSie schenken Ihren Partnern tiefes Vertrauen mit gütiger und gewissenhafter Rücksichtnahme. Sie lassen eine kleine, aber herzliche Liebe wachsen, während Sie den Alltag teilen. Die Beziehungen sind ebenfalls reibungslos und friedlich. Sie werden die Rolle eines vertrauenswürdigen Beraters für die Menschen um Sie herum spielen.\n\n⚠️ [Vorsicht]\nAchten Sie auf Augenkrankheiten oder die Gesundheit des urologischen Systems. Üben Sie auch manchmal, die Welt mit einer weiten Perspektive zu betrachten, da Sie den großen Fluss verpassen könnten, wenn Sie zu detaillierten Dingen Aufmerksamkeit schenken.",
+  "sajuFortune2025Byeong": "🔥 2025 Eulsa-Jahr Byeong-Feuer Allgemeines Glück: 'Erfolg und Wettbewerb voller Leidenschaft'\n\n2025 ist ein Jahr, in dem die Energie von 'Jeong-in' und 'Bi-gyeon' für Sie eintritt. Es ist wie die Sonne am Himmel, die auf die Hitze am Boden trifft, um noch heißer zu brennen. Sie werden starke Unterstützungskräfte gewinnen und auf der Grundlage von Selbstvertrauen ohne Zögern auf Ihre Ziele zusteuern.\n\n💼 [Karriere & Business]\nSie werden mit der Hilfe zuverlässiger Helfer oder Mentoren ein großes Wachstum erzielen. Sehr vorteilhaft für den Erwerb von Zertifizierungen oder akademischen Leistungen. Die Zusammenarbeit mit Kollegen glänzt, und Sie werden das Team zum Erfolg führen, indem Sie Führungsqualitäten beweisen. Seien Sie jedoch vorsichtig, da übermäßiger Wettbewerbsgeist Beziehungen schaden kann.\n\n💰 [Wohlstand]\nEine Zeit, um den Wohlstand zu mehren, während Sie Informationen mit Menschen in Ihrer Umgebung teilen. Einkommen durch gemeinsame Investitionen oder Kooperation wird erwartet. Es ist jedoch wichtig, auf praktische Interessen zu achten, da Sie aufgrund von Stolz oder dem Bewusstsein für die Blicke anderer übermäßig viel ausgeben könnten.\n\n❤️ [Liebe & Beziehungen]\nEin Jahr, in dem sich Freundschaften vertiefen, da es viele Treffen mit Menschen geben wird. In romantischen Beziehungen wird der Komfort wie bei einem Freund stärker. Es ist jedoch ein angemessenes Gleichgewicht erforderlich, da Konflikte entstehen können, wenn Freunde gegenüber Partnern priorisiert werden.\n\n⚠️ [Vorsicht]\nAchten Sie auf das Kreislaufsystem wie Blutdruck oder Herzgesundheit. Bewahren Sie außerdem stets den Seelenfrieden, da impulsive Emotionen aufgrund einer feurigen Persönlichkeit Dinge ruinieren können.",
+  "sajuFortune2025Jeong": "🔥 2025 Eulsa-Jahr Jeong-Feuer Allgemeines Glück: 'Stabilität und Chancen inmitten von Veränderungen'\n\n2025 ist ein Jahr, in dem die Energie von 'Pyeon-in' und 'Geob-jae' für Sie eintritt. Es ist wie eine Kerze, die im Wind flackert, aber schließlich die Umgebung erhellt und ihre Präsenz offenbart. Unerwartete Veränderungen können eintreten, aber es wird ein Jahr sein, in dem Sie diese weise überwinden und in Chancen verwandeln.\n\n💼 [Karriere & Business]\nOriginelle Ideen und Intuition glänzen. Sie werden Nischenmärkte anvisieren, an die andere nicht gedacht haben, oder tiefe Ergebnisse in Fachgebieten erzielen. Der Wettbewerb mit Kollegen wird jedoch hart, und es könnte Menschen geben, die versuchen, Ergebnisse wegzuschnappen, achten Sie also auf die Wahrung der Sicherheit und das Beziehungsmanagement.\n\n💰 [Wohlstand]\nEin Jahr, in dem es Schwankungen beim Wohlstandsglück geben kann. Eine konservative Vermögensverwaltung ist erforderlich, da unerwartete Ausgaben auftreten oder Verluste bei Investitionen auftreten können. Das Einkommen durch Ihre eigenen beruflichen Fähigkeiten wird jedoch stabil fließen. Es ist besser, Finanztransaktionen zu vermeiden.\n\n❤️ [Liebe & Beziehungen]\nSie könnten beim Dating passiv werden, da die Gedanken zunehmen. In romantischen Beziehungen ist man leicht enttäuscht über Kleinigkeiten, daher ist es wichtig, der anderen Person zu vertrauen und sie mit offenem Herzen zu behandeln. Das Füllen des Inneren durch Zeit allein ist ebenfalls ein guter Weg.\n\n⚠️ [Vorsicht]\nAchten Sie auf Nervenerkrankungen oder Schlaflosigkeit aufgrund von Stress. Es ist wichtig, Ihren Geist durch Meditation oder leichte Übungen zu beruhigen und zu versuchen, eher eine positive als eine negative Einstellung zu haben.",
+  "sajuFortune2025Mu": "⛰️ 2025 Eulsa-Jahr Mu-Erde Allgemeines Glück: 'Ein Jahr der Reife, in dem die internen Fundamente weise gestärkt werden'\n\n2025 ist ein Jahr, in dem die Energie von 'Jeong-gwan' und 'Pyeon-in' für Sie eintritt. Es ist wie warme Hitze, die unter einen riesigen Berg dringt, um alles zu umarmen. Es wird ein gehaltvolles Jahr sein, in dem Sie Ihre eigene Tiefe hinzufügen und gleichzeitig die soziale Ehre wahren.\n\n💼 [Karriere & Business]\nSie werden in eine verantwortungsvolle Position innerhalb der Organisation aufsteigen oder es ergeben sich Gelegenheiten für Beförderungen. Wenn Sie Prinzipien schätzen und aufrichtig arbeiten, werden Sie große Anerkennung erhalten. Gleichzeitig erzielen Sie hervorragende Ergebnisse beim Erwerb von Fachwissen oder bei Forschungsaufgaben. Es ist jedoch flexibles Denken erforderlich, da Sie Veränderungen ablehnen könnten, wenn Sie in Stereotypen verhaftet sind.\n\n💰 [Wohlstand]\nEin stabiles Einkommen ist garantiert. Es ist vorteilhaft, aufrichtig zu sparen und das Vermögen zu verwalten. Das Glück in Bezug auf Immobilien oder Dokumente ist gut, daher lohnt es sich, langfristige Investitionen in Betracht zu ziehen. Vermeiden Sie jedoch unvernünftige Investitionen, indem Sie sich von Versuchungen aus der Umgebung erschüttern lassen.\n\n❤️ [Liebe & Beziehungen]\nSie gewinnen das Vertrauen der Menschen durch würdevolle Worte und Taten. In romantischen Beziehungen ist es eine gute Zeit, einander zu respektieren und eine ernsthafte Beziehung zu entwickeln. Wenn Sie an eine Hochzeit denken, ist es auch gut, konkrete Pläne zu machen.\n\n⚠️ [Vorsicht]\nAchten Sie auf das Verdauungssystem oder die Hautgesundheit. Üben Sie außerdem, schnelle Entscheidungen zu treffen, indem Sie auf Ratschläge aus der Umgebung hören, da bei Ihnen aufgrund von zu viel Nachdenken eine Entscheidungsunfähigkeit auftreten kann.",
+  "sajuFortune2025Gi": "🌾 2025 Eulsa-Jahr Gi-Erde Allgemeines Glück: 'Ziele mit Verantwortung erreichen'\n\n2025 ist ein Jahr, in dem die Energie von 'Pyeon-gwan' und 'Jeong-in' für Sie eintritt. Es ist wie Sonnenschein, der nach dem Regen auf ein weites Land scheint, um Getreide wachsen zu lassen. Es mag schwierige Prozesse geben, aber es wird ein lohnendes Jahr sein, in dem Sie schließlich Ehre erlangen und Ziele erreichen.\n\n💼 [Karriere & Business]\nDie Arbeitsintensität kann zunehmen und es können schwierige Aufgaben gestellt werden. Sie werden jedoch Ihre Qualitäten als Führungskraft unter Beweis stellen, indem Sie diese mit Ihren Fähigkeiten und Ihrer Geduld überwinden. Sie werden Krisen mit Hilfe oder Unterstützung von Vorgesetzten meistern und als Ergebnis ein großes Erfolgsgefühl verspüren.\n\n💰 [Wohlstand]\nEin Jahr, in dem Sie auf das Ausgabenmanagement achten müssen. Es kann viel Geld abfließen, wie z. B. unerwartete Steuern oder Versorgungsgebühren. Da Sie jedoch als Ergebnis stetiger Bemühungen Anreize oder Boni erwarten können, ist Aufrichtigkeit der Schlüssel, um den Wohlstand herbeizurufen.\n\n❤️ [Liebe & Beziehungen]\nEin verantwortungsbewusstes Auftreten wirkt attraktiv auf das andere Geschlecht. In romantischen Beziehungen vertieft sich die Bindung, während Sie einander zuhören und sich gegenseitig trösten. Es sind jedoch Bemühungen um häufige Kommunikation erforderlich, auch wenn sie kurz ist, da Sie Partner aufgrund eines geschäftigen Alltags vernachlässigen könnten.\n\n⚠️ [Vorsicht]\nAchten Sie auf einen Rückgang der Immunität aufgrund von Überarbeitung. Es ist wichtig, die körperliche Kraft mit regelmäßigen Mahlzeiten und Bewegung zu verwalten und Stress mit positiven Gedanken abzubauen.",
+  "sajuFortune2025Gyeong": "⚔️ 2025 Eulsa-Jahr Gyeong-Metall Allgemeines Glück: 'Ehre erlangen und praktische Interessen wahren'\n\n2025 ist ein Jahr, in dem die Energie von 'Jeong-jae' und 'Pyeon-gwan' für Sie eintritt. Es ist wie ein fester Fels, der durch Feuer erhitzt und als kostbares Schwert wiedergeboren wird. Sie werden für Ihre Bemühungen definitiv belohnt und Ihren Wert gesellschaftlich unter Beweis stellen.\n\n💼 [Karriere & Business]\nSie erzielen großartige Ergebnisse mit ergebnisorientiertem Denken und Tatkraft. Besonders anerkannt werden Ihre Fähigkeiten in den Bereichen Finanzen, Management und Technologie. Das Glück, schwierige Probleme zu lösen und Ehre zu erlangen, ist groß, aber auch die Verantwortung wächst, sodass Sie Druck verspüren könnten. Glauben Sie an sich selbst und gehen Sie mutig voran.\n\n💰 [Wohlstand]\nDas Wohlstandsglück ist sehr gut. Neben einem stabilen Einkommen erzielen Sie praktische Gewinne durch Investitionen oder Nebenjobs. Sie werden den Geldfluss genau erfassen und Vermögenswerte effizient verwalten. Verzichten Sie jedoch darauf, große Summen für das Ansehen auszugeben.\n\n❤️ [Liebe & Beziehungen]\nSprechen Sie das andere Geschlecht mit einem aufrichtigen und zuverlässigen Auftreten an. In romantischen Beziehungen geben Sie der anderen Person durch eine verantwortungsbewusste Haltung ein Gefühl der Erleichterung. In Beziehungen vermitteln Sie vielleicht ein etwas strenges Bild, daher ist es gut, ab und zu mit etwas sanftem Humor zu sprechen.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Gesundheit von Knochen oder Gelenken sowie auf Atemwegserkrankungen. Beruhigen Sie sich außerdem mit der Einstellung 'das ist genug', da Sie aufgrund von perfektionistischen Tendenzen hart zu sich selbst sein könnten.",
+  "sajuFortune2025Sin": "💎 2025 Eulsa-Jahr Sin-Metall Allgemeines Glück: 'Ein Jahr der Weisheit, die inmitten von Veränderungen strahlt'\n\n2025 ist ein Jahr, in dem die Energie von 'Pyeon-jae' und 'Jeong-gwan' für Sie eintritt. Es ist wie ein edles Juwel, das unter brillanter Beleuchtung seinen Wert offenbart. Es wird ein angenehmes Jahr sein, in dem der soziale Status zusammen mit unerwarteten Glücksfällen steigt.\n\n💼 [Karriere & Business]\nDer Geschäftssinn verbessert sich und die Fähigkeit, neue Chancen zu ergreifen, ist exzellent. Eine Zeit, in der kühne Herausforderungen große Gewinne bringen. Innerhalb der Organisation gewinnen Sie Vertrauen durch rationales Urteilsvermögen und ergreifen Chancen für Beförderungen oder Versetzungen. Achten Sie jedoch darauf, den Prozess nicht zu vernachlässigen, indem Sie sich zu sehr auf Ergebnisse konzentrieren.\n\n💰 [Wohlstand]\nEin Jahr, in dem das Geldglück eintritt. Es ergeben sich Gelegenheiten, großen Wohlstand zu berühren, wie unerwartete Investitionsrenditen oder Erbschaften. Da die Ausgaben jedoch auch luxuriös werden können, ist es wichtig, geplante Konsumgewohnheiten beizubehalten.\n\n❤️ [Liebe & Beziehungen]\nSie werden zum Protagonisten bei gesellschaftlichen Zusammenkünften mit einem schicken und attraktiven Auftreten. Das Dating-Glück ist sehr stark, sodass Sie Avancen von vielen Menschen erhalten könnten. In romantischen Beziehungen verbringen Sie leidenschaftliche und angenehme Zeiten. Ein gutes Jahr, um sich zu einer ernsthaften Beziehung zu entwickeln.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Lungengesundheit oder Hautkrankheiten. Bewahren Sie außerdem stets Demut und vergessen Sie nicht, an andere zu denken, da Sie aufgrund von übermäßigem Selbstvertrauen auf andere arrogant wirken könnten.",
+  "sajuFortune2025Im": "🌊 2025 Eulsa-Jahr Im-Wasser Allgemeines Glück: 'Ergebnisse erzielen durch Ausübung von Weisheit'\n\n2025 ist ein Jahr, in dem die Energie von 'Sang-gwan' und 'Pyeon-jae' für Sie eintritt. Es ist wie ein großer Fluss, der sich windet und ein weites Feld befeuchtet. Es wird ein dynamisches Jahr sein, in dem Sie großen Wohlstand erlangen und Ihren Aktivitätsbereich erweitern, indem Sie Ihre Talente und Ihre Beredsamkeit einsetzen.\n\n💼 [Karriere & Business]\nDie Beredsamkeit verbessert sich und Sie erzielen exzellente Ergebnisse in den Bereichen Marketing oder PR. Eine sehr gute Zeit, um Ihre Ideen zu vermarkten oder neue Märkte zu erschließen. Es wird das beste Jahr für diejenigen sein, die kreativ arbeiten. Es ist jedoch wichtig, höflich zu sein, da es zu Reibungen mit Vorgesetzten kommen kann.\n\n💰 [Wohlstand]\nDas Wohlstandsglück bewegt sich aktiv. Das Glück, mit eigenen Fähigkeiten Geld zu verdienen, ist stark, und es ergeben sich Gelegenheiten, mit großem Geld umzugehen. Bei spekulativen Investitionen ist jedoch Vorsicht geboten, und das Wohlstandsglück bleibt nur dann lange erhalten, wenn Sie die Einstellung haben, so viel zu geben, wie Sie verdient haben.\n\n❤️ [Liebe & Beziehungen]\nMit überschäumendem Humor und Charme werden die Menschen nie aufhören, um Sie herum zu sein. Ein Jahr, in dem Sie angenehme Verabredungen mit hoher Beliebtheit beim anderen Geschlecht genießen können. In romantischen Beziehungen hauchen Sie der Beziehung durch vielfältige Dates Leben ein. Seien Sie jedoch vorsichtig, da ein einziges unbedachtes Wort Missverständnisse verursachen kann.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Gesundheit der Nieren oder des Harnsystems. Achten Sie außerdem auf angemessene Ruhe und Ernährung, da die körperliche Kraft aufgrund eines großen Aktivitätsbereichs erschöpft sein kann.",
+  "sajuFortune2025Gye": "💧 2025 Eulsa-Jahr Gye-Wasser Allgemeines Glück: 'Ein Jahr der Aufrichtigkeit, das stabile Früchte hervorbringt'\n\n2025 ist ein Jahr, in dem die Energie von 'Sik-sin' und 'Jeong-jae' für Sie eintritt. Es ist wie ein klarer Nieselregen, der das Land befeuchtet, um eine reiche Ernte vorzubereiten. Es wird ein warmes Jahr sein, in dem sich Ihre Bemühungen stetig ansammeln und als stabiler Wohlstand und Glück zurückkehren.\n\n💼 [Karriere & Business]\nEin Jahr, in dem Aufrichtigkeit zur besten Waffe wird. Sie erzielen stetige Ergebnisse, indem Sie Verantwortung übernehmen, und gewinnen Vertrauen von Kollegen. Eine gute Zeit, um Fachwissen aufzubauen, und Sie werden sich durch Arbeit, die Sie mögen, belohnt fühlen. Sie können in einem stabilen Umfeld Schritt für Schritt wachsen.\n\n💰 [Wohlstand]\nEin Jahr, das wirtschaftlich entspannt und stabil ist. Es fließen stetige Einnahmen, und Sie werden Freude daran haben, Ihr Vermögen sparsam zu mehren. Es gibt Glück in Bezug auf Nahrung und Kleidung, sodass die Fülle im gesamten Leben groß ist. Sparen ist vorteilhafter als unvernünftige Investitionen.\n\n❤️ [Liebe & Beziehungen]\nSie geben Partnern mit einem herzlichen Auftreten ein Gefühl von Komfort. Ein Jahr, in dem Sie eine schöne Liebe entwickeln, während Sie einander sorgfältig berücksichtigen. Wenn Sie Single sind, ist es sehr wahrscheinlich, dass Sie einen Partner treffen, mit dem die Kommunikation gut funktioniert und der ähnliche Werte hat.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Gesundheit des Magens oder die Verwaltung der Essgewohnheiten. Es ist gut, gelegentlich neue Impulse zu setzen, um Vitalität zu finden, da Sie durch das Verharren in Bequemlichkeit träge werden könnten.",
   "preparationForTomorrow": "Vorbereitung auf morgen",
   "howToMeetMoreLuck": "Dein Weg zum Glück",
   "enterName": "Gib deinen Namen ein",
@@ -739,7 +775,7 @@
   "drawOverOtherApps": "Über anderen Apps anzeigen",
   "overlayDescription": "Zeigt den Weckerbildschirm auch auf dem Sperrbildschirm oder während der Nutzung anderer Apps an.",
   "allSettingsCompleted": "Alle Einstellungen sind abgeschlossen.",
-  "allowAllItems": "Please allow all items",
+  "allowAllItems": "Bitte alle Berechtigungen aktivieren",
   "manualSettingsInfo": "Sie können Einstellungen direkt in den Android-Systemeinstellungen deaktivieren.",
   "takePhoto": "Foto aufnehmen",
   "selectPhoto": "Foto auswählen",
@@ -760,13 +796,13 @@
   "dayThu": "Do",
   "dayFri": "Fr",
   "daySat": "Sa",
-  "daySunFull": "Sunday",
-  "dayMonFull": "Monday",
-  "dayTueFull": "Tuesday",
-  "dayWedFull": "Wednesday",
-  "dayThuFull": "Thursday",
-  "dayFriFull": "Friday",
-  "daySatFull": "Saturday",
+  "daySunFull": "Sonntag",
+  "dayMonFull": "Montag",
+  "dayTueFull": "Dienstag",
+  "dayWedFull": "Mittwoch",
+  "dayThuFull": "Donnerstag",
+  "dayFriFull": "Freitag",
+  "daySatFull": "Samstag",
   "missionRewardEarned": "Herzlichen Glückwunsch! Du hast heute 5 Missionen abgeschlossen und 1 Glückskeks verdient!",
   "missionRewardEarnedWithCount": "Herzlichen Glückwunsch! Du hast heute {missions} Missionen abgeschlossen und {cookies} Glückskeks(e) verdient!",
   "@missionRewardEarnedWithCount": {
@@ -825,7 +861,7 @@
   "pencil": "Bleistift",
   "marker": "Marker",
   "eraser": "Radiergummi",
-  "adjustThickness": "Dicke anpassen",
+  "adjustThickness": "Stärke von {label} anpassen",
   "@adjustThickness": {
     "placeholders": {
       "label": {
@@ -872,7 +908,7 @@
   "@minutesLater": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -881,7 +917,7 @@
   "@timesCount": {
     "placeholders": {
       "count": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -994,7 +1030,7 @@
       }
     }
   },
-  "fortuneCatchTime": "Time: {seconds}s",
+  "fortuneCatchTime": "Zeit: {seconds}s",
   "@fortuneCatchTime": {
     "placeholders": {
       "seconds": {
@@ -1002,7 +1038,7 @@
       }
     }
   },
-  "fortuneCatchBest": "Best: {seconds}s",
+  "fortuneCatchBest": "Beste: {seconds}s",
   "@fortuneCatchBest": {
     "placeholders": {
       "seconds": {
@@ -1012,7 +1048,7 @@
   },
   "fortuneCatchAngryHint": "Vermeide den bösen Fortuni!",
   "fortuneCatchInstruction": "Fange die glücklichen Fortunis!",
-  "fortuneCatchPointMinus": "{points} points deducted",
+  "fortuneCatchPointMinus": "{points} Punkte abgezogen",
   "@fortuneCatchPointMinus": {
     "placeholders": {
       "points": {
@@ -1081,7 +1117,7 @@
   "initError": "Bei der Initialisierung ist ein Fehler aufgetreten.",
   "analyzingNextTarget": "Nächstes Ziel wird analysiert...",
   "errorOccurredGeneric": "Ein Fehler ist aufgetreten",
-  "missionSuccessWithCount": "{completed}/{total} Success!",
+  "missionSuccessWithCount": "{completed}/{total} Erfolg!",
   "@missionSuccessWithCount": {
     "placeholders": {
       "completed": {
@@ -1109,7 +1145,7 @@
   "@missionSnoozeMessage": {
     "placeholders": {
       "minutes": {
-        "type": "int"
+        "type": "String"
       }
     }
   },
@@ -1121,10 +1157,18 @@
   "correctAnswer": "Richtige Antwort!",
   "wrongAnswerRetry": "Falsch. Bitte versuchen Sie es erneut.",
   "correct": "Richtig!",
-  "walkToDismiss": "Please walk while holding your smartphone",
+  "walkToDismiss": "Bitte gehen Sie, während Sie Ihr Smartphone halten",
   "shakeCount": "Schüttelanzahl",
   "shakeTimes": "{count} Mal",
   "@shakeTimes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tapTimes": "{count} Tippen",
+  "@tapTimes": {
     "placeholders": {
       "count": {
         "type": "int"
@@ -1178,7 +1222,6 @@
       }
     }
   },
-  "defaultRingtone": "Standardklingelton",
   "classicAlarm": "Klassischer Wecker",
   "digitalAlarm": "Digitaler Wecker",
   "birdsSound": "Vögel zwitschern",
@@ -1193,7 +1236,6 @@
   "sirenSound": "Sirene",
   "swingingSound": "Schwingend",
   "telephoneBusy": "Telefon besetzt",
-  "defaultVibration": "Standardvibration",
   "shortVibration": "Kurze Wiederholung",
   "longVibration": "Lange Wiederholung",
   "heartbeatVibration": "Herzschlag",
@@ -1203,7 +1245,6 @@
   "batteryOptimizationPermissionDesc": "Die Batterieoptimierung muss deaktiviert sein, damit der Wecker pünktlich klingelt.",
   "overlayPermissionDesc": "Um den Missionsbildschirm anzuzeigen, wenn der Wecker klingelt, ist die Berechtigung \"Über anderen Apps anzeigen\" erforderlich.",
   "cameraMissionFirstImageError": "Bitte lege mindestens das erste Missionsbild fest.",
-  "cameraMissionSequentialImageError": "Bitte lege die Missionsbilder der Reihe nach fest.",
   "retry": "Wiederholen",
   "exactAlarmPermissionFail": "Wecker konnte nicht registriert werden. Die Berechtigung für exakten Wecker ist deaktiviert und muss eingestellt werden.",
   "batteryOptimizationPermissionFail": "Wecker konnte nicht registriert werden. Die Berechtigung zur Ausnahme von der Batterieoptimierung fehlt und muss eingestellt werden.",
@@ -1226,6 +1267,35 @@
   "turnOffAlarm": "Wecker ausschalten",
   "startMission": "Mission starten",
   "alarmSnooze": "Schlummern",
+  "snoozeMinutesUnlimited": "{minutes} Min (unbegrenzt)",
+  "@snoozeMinutesUnlimited": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "snoozeMinutesCount": "{minutes} Min ({current}/{total})",
+  "@snoozeMinutesCount": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      },
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "ringtone_fluttering_day": "Beschwingter Tag",
+  "ringtone_cozy_day": "Gemütlicher Tag",
+  "ringtone_sensible_day": "Besonnener Tag",
+  "ringtone_play_with_me": "Spiel mit mir",
+  "ringtone_refreshing_day": "Erfrischender Tag",
+  "ringtone_new_beginning": "Neuanfang",
+  "ringtone_self_love": "Selbstliebe",
   "fortuneTitle": "Glück prüfen",
   "fortuneMessage": "Prüfe deine Glücksergebnisse\nund erhalte versteckte Geschenke!",
   "fortuneAdButton": "Werbung ansehen und Ergebnisse prüfen",
@@ -1292,25 +1362,225 @@
   "tarotName19": "Die Sonne",
   "tarotName20": "Das Gericht",
   "tarotName21": "Die Welt",
-  "tarotKeywords1": "Schöpfung, Wille, Fähigkeit, Realisierung, Vielseitigkeit",
-  "tarotDescription1": "Der Magier trägt ein rotes Gewand, eine Hand zeigt zum Himmel und die andere zur Erde, was die himmlische Kraft auf die Erde bringt. Auf dem Tisch befinden sich vier Elemente (Stab, Kelch, Schwert, Münze), was bedeutet, dass Sie bereits über alle Werkzeuge und Fähigkeiten verfügen, um Ihre Ziele zu erreichen.",
-  "tarotLoveMeaning1": "Dies ist eine Zeit, in der Ihr Charme seinen Höhepunkt erreicht hat und Sie beim anderen Geschlecht beliebt sind. Wenn Sie sich in einer Kennenlernphase befinden, können Sie die Beziehung mit Ihrer geistreichen Ausdrucksweise vertiefen und die Führung übernehmen.",
-  "tarotLoveDetail1": "Es ist eine großartige Gelegenheit, das Herz des anderen Geschlechts zu erobern, da Ihr Charme und Ihr Talent strahlen. Wenn es jemanden gibt, den Sie mögen, zögern Sie nicht, aktiv auf ihn zuzugehen. Ihr Sinn für Humor und Ihre vernünftigen Gespräche werden die andere Person erfreuen und es Ihnen ermöglichen, die Beziehung proaktiv zu führen. Wenn Sie Single sind, können Sie von mehreren Personen angesprochen werden, und wenn Sie ein Paar sind, wird die andere Person sehr bewegt sein, wenn Sie die Dating-Route planen oder ein Ereignis vorbereiten. Gewinnen Sie die Liebe mit Selbstvertrauen.",
-  "tarotWealthMeaning1": "Dies ist der richtige Zeitpunkt, um Einnahmen mit Ihren Fähigkeiten und Fertigkeiten zu generieren. Wenn Sie die Ideen in Ihrem Kopf in die Realität umsetzen, wird dies zu finanziellen Ergebnissen führen.",
-  "tarotWealthDetail1": "Dies ist die Zeit, in der Ihr Wissen, Ihre Fähigkeiten und Ihre Ideen zu Geld werden. Geben Sie sich nicht nur mit einem Gehalt zufrieden; generieren Sie zusätzliches Einkommen durch Nebenjobs oder freiberufliche Tätigkeiten. Kreative Planung, Verkaufstalent und Redegewandtheit werden hervorragend unter Beweis gestellt, was zu höheren Einnahmen als erwartet führt. Da Ihr Urteilsvermögen bei der Geldverwaltung wahrscheinlich ins Schwarze trifft, werden Sie gute Ergebnisse erzielen, wenn Sie proaktiv einen Finanzplan aufstellen und in die Tat umsetzen.",
-  "tarotSuccessMeaning1": "Ihre Arbeitsfähigkeit wird hervorragend unter Beweis gestellt und von Ihren Mitmenschen anerkannt. Wenn Sie etwas geplant haben, ist jetzt der Zeitpunkt, es in die Tat umzusetzen.",
-  "tarotSuccessDetail1": "Sie können sich an Ihrem Arbeitsplatz oder in Ihrem Studium abheben, indem Sie Ihre Fähigkeiten voll ausschöpfen. Egal, welchem Problem Sie gegenüberstehen, Sie können es mit Ihrem eigenen Witz und Humor lösen, und Sie werden von Ihren Kollegen oder Vorgesetzten als 'fähige Person' anerkannt. Wenn Sie die Leitung eines neuen Projekts übernehmen oder eine wichtige Präsentation halten, können Sie diese erfolgreich abschließen. So wie sich Gelegenheiten für diejenigen ergeben, die vorbereitet sind, sind Sie bereits bestens vorbereitet. Glauben Sie an sich selbst und zeigen Sie Ihre Fähigkeiten selbstbewusst wie ein Protagonist auf der Bühne.",
+  "tarotKeywords0": "Neuanfänge, Abenteuer, Unschuld, Freiheit, Leichtsinn",
+  "tarotDesc0": "Der Narr steht prekär am Rande einer Klippe in farbenfroher Kleidung, aber sein Blick ist in die Ferne gerichtet, voller Hoffnung.",
+  "tarotLoveMeaning0": "Eine unerwartete neue Liebe kann eintreffen oder eine schicksalhafte Begegnung auf den ersten Blick.",
+  "tarotLoveDetail0": "Es ist eine Zeit, in der man die Liebe mit einem reinen Herzen wie ein Kind beginnen kann. Vergessen Sie alle vergangenen Wunden.",
+  "tarotWealthMeaning0": "Eine neue Investition oder ein neues Geschäftsobjekt könnte Ihnen ins Auge fallen.",
+  "tarotWealthDetail0": "Es ist eine Zeit, in der sich finanziell neue Möglichkeiten eröffnen. Sie können unerwartete Ergebnisse erzielen.",
+  "tarotSuccessMeaning0": "Es ist eine gute Zeit, ein neues Projekt zu starten oder den Job in einen völlig anderen Bereich zu wechseln.",
+  "tarotSuccessDetail0": "Wenn es etwas gibt, auf das Sie sich vorbereiten, machen Sie mutig den ersten Schritt.",
+  "tarotKeywords1": "Kreativität, Meisterschaft, Selbstausdruck, Einfallsreichtum, Wille",
+  "tarotDesc1": "Der Magier steht vor einem Tisch mit den Symbolen der vier Elemente. Eine Hand zeigt zum Himmel, die andere zur Erde, was die Fähigkeit symbolisiert, Ideen in die Realität umzusetzen.",
+  "tarotLoveMeaning1": "Dies ist eine hervorragende Gelegenheit, Ihren Charme spielen zu lassen und jemanden zu erobern.",
+  "tarotLoveDetail1": "Ihr Charisma und Ihre Talente sind auf dem Höhepunkt, was Sie für andere unwiderstehlich macht. Wenn Sie jemanden im Auge haben, zögern Sie nicht, die Initiative zu ergreifen. Ihr Sinn für Humor und Ihre geistreichen Gespräche werden Ihr Gegenüber fesseln und es Ihnen ermöglichen, die Beziehung zu lenken.",
+  "tarotWealthMeaning1": "Die ideale Zeit, um durch Ihre Fähigkeiten neue Einkommensquellen zu erschließen.",
+  "tarotWealthDetail1": "Ihre Kenntnisse, Fähigkeiten und Ideen können sich jetzt in reale finanzielle Gewinne verwandeln. Beschränken Sie sich nicht nur auf Ihr Grundgehalt; versuchen Sie, Ihre Hobbys zu monetarisieren oder freiberuflich tätig zu werden. Ihre kreative Planung wird Ihnen helfen, Einnahmen zu erzielen, die Ihre Erwartungen übertreffen.",
+  "tarotSuccessMeaning1": "Ihre beruflichen Fähigkeiten werden glänzen und Sie werden Anerkennung von Ihren Mitmenschen erhalten.",
+  "tarotSuccessDetail1": "Im Beruf oder Studium können Sie Ihr volles Potenzial entfalten und aus der Masse herausstechen. Was auch immer die Herausforderungen sein mögen, Sie werden sie dank Ihres Einfallsreichtums lösen. Ihre Kollegen und Vorgesetzten werden Sie als Experten anerkennen, also handeln Sie mit Selbstvertrauen.",
+  "tarotKeywords2": "Intuition, Geheimnis, Unterbewusstsein, innere Weisheit, Passivität",
+  "tarotDesc2": "Die Hohepriesterin sitzt zwischen einer weißen und einer schwarzen Säule und bewacht die Schriftrolle der Weisheit. Sie symbolisiert tiefe Intuition und das Gleichgewicht zwischen Bewusstsein und Unterbewusstsein.",
+  "tarotLoveMeaning2": "Eine Zeit, in der die spirituelle Verbindung wichtiger ist als die körperliche Anziehung.",
+  "tarotLoveDetail2": "Sie werden sich eher zu Menschen mit einer reichen inneren Welt hingezogen fühlen, mit denen Sie tiefe Gespräche führen können. Ihre Intuition ist geschärft, sodass Sie Ihren Partner ohne Worte verstehen können. Zu viel Zurückhaltung könnte jedoch zu Missverständnissen führen, also versuchen Sie, Ihre Gefühle ab und zu offen zu zeigen.",
+  "tarotWealthMeaning2": "Es ist Zeit, Ihr Vermögen zu schützen und die Situation zu beobachten, anstatt Risiken einzugehen.",
+  "tarotWealthDetail2": "Dies ist nicht der beste Zeitpunkt, um ohne Nachzudenken schnellen Gewinnen nachzujagen. Nehmen Sie sich stattdessen Zeit, den Markt zu analysieren und Finanzinstrumente zu studieren. Es ist eine Phase der «Aussaat», also seien Sie nicht beunruhigt, wenn die Früchte nicht sofort kommen.",
+  "tarotSuccessMeaning2": "Erfolg erwartet Sie in akademischen Aktivitäten, Forschung und intellektuellen Berufen.",
+  "tarotSuccessDetail2": "Konzentrieren Sie sich darauf, Ihr inneres Potenzial zu stärken und Ihre Kompetenzen zu verbessern, anstatt nach äußerem Glanz zu suchen. Sie werden herausragende Ergebnisse in Aufgaben erzielen, die eine gründliche Analyse erfordern. Ihre Weisheit und Vorsicht werden in entscheidenden Momenten der Schlüssel zum Erfolg sein.",
+  "tarotKeywords3": "Weiblichkeit, Schönheit, Natur, Fülle, Fruchtbarkeit",
+  "tarotDesc3": "Die Herrscherin ruht in einem blühenden Garten und repräsentiert materiellen Wohlstand und emotionale Großzügigkeit.",
+  "tarotLoveMeaning3": "Zeit des emotionalen Aufblühens und der Stärkung der affektiven Bindungen.",
+  "tarotLoveDetail3": "Ihr Charme und Ihre weibliche (oder empfängliche) Energie sind auf dem Maximum, was Sie unglaublich attraktiv macht. In Ihren Beziehungen wird Harmonie und gegenseitige Fürsorge herrschen, was es zu einem guten Zeitpunkt macht, über Heiratspläne zu sprechen. Wenn Sie Single sind, wird Ihnen ein Stilwechsel helfen, Aufmerksamkeit zu erregen.",
+  "tarotWealthMeaning3": "Zeitraum des materiellen Wohlstands und der finanziellen Stabilität.",
+  "tarotWealthDetail3": "Das finanzielle Glück ist auf Ihrer Seite. Ihre vergangenen Bemühungen werden Früchte tragen und Sie werden mehr Komfort genießen können. Sie könnten unerwartete Boni, Geschenke oder Gewinne aus erfolgreichen Investitionen erhalten. Teilen Sie Ihre positive Energie mit anderen, das wird noch mehr Glück anziehen.",
+  "tarotSuccessMeaning3": "Aktuelle Projekte kommen erfolgreich voran und bringen exzellente Ergebnisse.",
+  "tarotSuccessDetail3": "Es ist Zeit, die realen Früchte Ihrer Arbeit zu sehen. Projekte werden erfolgreich abgeschlossen, was sich in einer Beförderung oder einem Bonus niederschlagen könnte. Ihre kreative Vision und Ihr ästhetischer Sinn werden sehr geschätzt. Genießen Sie den Arbeitsprozess; dies wird Ihnen helfen, noch höhere Ziele zu erreichen.",
+  "tarotKeywords4": "Autorität, Struktur, Kontrolle, Führung, Logik",
+  "tarotDesc4": "Der Herrscher sitzt auf einem Steinthron in Rüstung und symbolisiert Festigkeit, Ordnung und Entschlossenheit in der Führung.",
+  "tarotLoveMeaning4": "Stabile Beziehung mit einem zuverlässigen und verantwortungsbewussten Partner.",
+  "tarotLoveDetail4": "Anstelle von flüchtigen Leidenschaften treten Vertrauen und Sicherheit für die Zukunft in den Vordergrund. Ihr Partner wird eine solide Stütze und ein Beschützer für Sie sein. Versuchen Sie, übermäßige Kontrolle und Sturheit in der Kommunikation zu vermeiden. Für Singles zeichnet sich eine Begegnung mit einer einflussreichen Person ab.",
+  "tarotWealthMeaning4": "Systematisches Asset-Management wird helfen, ein stabiles Kapital aufzubauen.",
+  "tarotWealthDetail4": "In Finanzangelegenheiten ist es entscheidend, sich an einen Plan und an Ihre Prinzipien zu halten. Wählen Sie anstelle von riskanten Spekulationen sichere Instrumente wie Einlagen oder Immobilien. Ihr Pragmatismus und Ihre Entschlossenheit werden Ihnen helfen, den Grundstein für dauerhaften Wohlstand zu legen.",
+  "tarotSuccessMeaning4": "Gute Chancen auf eine Beförderung oder eine Führungsposition.",
+  "tarotSuccessDetail4": "Ihre Position im Team festigt sich. Die Führungskräfte werden Ihre Qualitäten schätzen und könnten Ihnen die Leitung eines wichtigen Projekts oder einer Abteilung anvertrauen. Nutzen Sie Logik und kühles Kalkül, um berufliche Aufgaben zu lösen, und Sie werden das volle Vertrauen Ihrer Vorgesetzten gewinnen.",
+  "tarotKeywords5": "Tradition, Lehre, Überzeugungen, Rat, Vermittlung",
+  "tarotDesc5": "Der Hierophant symbolisiert soziale Normen und spirituelle Führung, indem er durch weise Ratschläge und traditionelle Werte führt.",
+  "tarotLoveMeaning5": "Seriöse und gesunde Beziehungen, die auf gegenseitigem Respekt basieren.",
+  "tarotLoveDetail5": "Sie werden nicht nach flüchtigen Abenteuern suchen, sondern nach einer tiefen Beziehung mit dem Ziel, eine Familie zu gründen. Jemandem über gemeinsame Freunde oder bei formellen Anlässen zu begegnen, könnte der Beginn von etwas Wichtigem sein. Wenn Streitigkeiten auftreten, fragen Sie Ältere um Rat; ihre Weisheit wird Ihnen helfen.",
+  "tarotWealthMeaning5": "Es ist besser, traditionelle und bewährte Sparmethoden zu befolgen.",
+  "tarotWealthDetail5": "Bevorzugen Sie Sicherheit gegenüber riskanten Investitionen. Bankeinlagen oder Versicherungen sind die am besten geeigneten Optionen. Die Beratung durch einen Finanzexperten oder die Aufrechterhaltung der Ehrlichkeit in Ihren Transaktionen wird Ihnen helfen, Ihr Vermögen zu bewahren und zu mehren.",
+  "tarotSuccessMeaning5": "Günstiger Zeitpunkt für den Abschluss von Verträgen und Partnerschaftsabkommen.",
+  "tarotSuccessDetail5": "Anstatt Probleme allein zu lösen, suchen Sie die Unterstützung von Kollegen oder Mentoren. Die Einhaltung von Unternehmensregeln und -verfahren ist der kürzeste Weg zur Anerkennung. Es ist auch eine günstige Zeit, um wichtige Dokumente zu unterzeichnen und berufliche Netzwerke aufzubauen.",
+  "tarotKeywords6": "Liebe, Harmonie, Beziehungen, gemeinsame Werte, Entscheidungen",
+  "tarotDesc6": "Adam und Eva stehen unter einer warmen Sonne und erhalten den Segen eines Engels.",
+  "tarotLoveMeaning6": "Dies ist eine der besten Zeiten für die Liebe, um zu erblühen.",
+  "tarotLoveDetail6": "Eine herzzerreißende Romanze erwartet Sie. Sie werden jemandem, zu dem Sie sich hingezogen fühlen, schnell näher kommen. Wenn Sie bereit sind, Ihre Liebe zu gestehen, ist die Erfolgsrate sehr hoch. Wählen Sie jedoch mit Bedacht, wohin Ihr Herz wirklich gehört.",
+  "tarotWealthMeaning6": "Ihr finanzielles Glück steigt, wenn Sie gemeinsam statt alleine handeln.",
+  "tarotWealthDetail6": "Die Zusammenarbeit mit jemandem, mit dem Sie sich gut verstehen, wird Synergien schaffen. Wenn Sie einen Partnerschaftsvorschlag erhalten, prüfen Sie ihn positiv. Es ist eine Zeit, in der Sie nützliche Informationen durch Kommunikation erhalten können. Passen Sie jedoch auf, dass die Ausgaben für Vergnügen nicht zu hoch werden.",
+  "tarotSuccessMeaning6": "Dies ist eine Zeit, in der Teamarbeit glänzt.",
+  "tarotSuccessDetail6": "Sie werden freudig mit Kollegen oder Geschäftspartnern zusammenarbeiten, die perfekt zu Ihnen passen. In Teamprojekten können Sie bessere Ergebnisse erzielen als bei Einzelaufgaben. Wenn Sie eine Arbeit wählen, die Sie wirklich lieben, werden Sie Ergebnisse erzielen, die Sie nicht bereuen werden.",
+  "tarotKeywords7": "Kontrolle, Wille, Erfolg, Handeln, Entschlossenheit",
+  "tarotDesc7": "Ein junger König in einem Streitwagen stürmt mit starkem Willen auf sein Ziel zu und erringt einen Sieg.",
+  "tarotLoveMeaning7": "Es ist eine Zeit, in der aktive romantische Bestrebungen erfolgreich sind.",
+  "tarotLoveDetail7": "Es ist an der Zeit, sich zu beeilen, um die Liebe zu gewinnen. Zögern Sie nicht und drücken Sie Ihr Herz ehrlich und stolz aus. Wenn Sie sich in einer Kennenlernphase befinden, ist es gut, die Beziehung klar zu definieren. Dynamische Dates oder gemeinsames Reisen werden Ihre Zuneigung vertiefen.",
+  "tarotWealthMeaning7": "Es ist an der Zeit, aggressiv vorzugehen, um den Zielgewinn zu erreichen.",
+  "tarotWealthDetail7": "Ein starker Antrieb ist erforderlich, um finanzielle Ziele zu erreichen. Treffen Sie mutige Entscheidungen, wenn sich die Gelegenheit bietet. Es ist vorteilhaft, sich auf Projekte zu konzentrieren, die kurzfristig Ergebnisse liefern. Ihre Leistung wird so stark steigen, wie Sie hart arbeiten.",
+  "tarotSuccessMeaning7": "Sie werden wahrscheinlich den Wettbewerb gewinnen und Ihre Ziele erreichen.",
+  "tarotSuccessDetail7": "Klare Zielerreichung wie Beförderung, Bestehen oder Vertragsunterzeichnung wird vorhergesagt. Je intensiver der Wettbewerb, desto mehr wird Ihr Kampfgeist brennen. Ihr Bild, Hindernisse direkt zu durchbrechen, wird einen tiefen Eindruck bei den Menschen um Sie herum hinterlassen.",
+  "tarotKeywords8": "Kraft, Mut, Überzeugung, Einfluss, Mitgefühl",
+  "tarotDesc8": "Eine Frau in Weiß geht sanft mit dem Maul eines Löwen um und symbolisiert spirituelle Stärke und Geduld.",
+  "tarotLoveMeaning8": "Es ist eine Zeit, in der Sie die Toleranz brauchen, um die andere Person so zu akzeptieren, wie sie ist.",
+  "tarotLoveDetail8": "Die aktuelle Liebe erfordert Geduld und Weisheit. Die Beziehung kann sich auf die nächste Stufe entwickeln, wenn Sie die Unzulänglichkeiten des anderen mit weitem Herzen akzeptieren. Eine sanfte, aber feste Haltung ist gefragt. Wenn Sie geduldig an ihrer Seite bleiben, wird Ihre Aufrichtigkeit schließlich ihr Herz öffnen.",
+  "tarotWealthMeaning8": "Stetiges Sparen und gesunde Konsumgewohnheiten sind die Geheimnisse zum Sammeln von Reichtum.",
+  "tarotWealthDetail8": "Ihr finanzielles Glück steigt allmählich an. Seien Sie nicht enttäuscht, wenn nicht sofort großes Geld hereinkommt. Verwalten Sie Ihr Vermögen treu, und es wird später als große Summe zurückkehren. Es ist vorteilhaft, festzuhalten, anstatt sich von kurzfristigen Schwankungen beeinflussen zu lassen.",
+  "tarotSuccessMeaning8": "Auch wenn Sie auf eine schwierige Aufgabe stoßen, können Sie damit weise umgehen.",
+  "tarotSuccessDetail8": "Ihnen könnte ein hartes Projekt oder eine heikle Aufgabe zugewiesen werden, aber Sie haben genug Potenzial, um sie zu lösen. Obwohl Sie nach außen hin weich erscheinen, zeichnen Sie sich dadurch aus, dass Sie Hindernisse mit starkem innerem Willen überwinden. Ihre ruhige Problemlösungsfähigkeit wird dazu führen, dass die Menschen Ihnen tiefes Vertrauen entgegenbringen.",
+  "tarotKeywords9": "Introspektion, Einsamkeit, innere Führung, Suche nach der Wahrheit",
+  "tarotDesc9": "Ein alter Mann mit einer Lampe auf einem dunklen, verschneiten Berg hört auf seine innere Stimme und erforscht die Wahrheit.",
+  "tarotLoveMeaning9": "Es ist eine Zeit, in der Sie Zeit für sich selbst brauchen oder tief über die Liebe nachdenken.",
+  "tarotLoveDetail9": "Jetzt ist eine Zeit, in der Sie Zeit brauchen, um auf sich selbst zurückzublicken, anstatt aktiv zu daten. Denken Sie tief darüber nach, welche Art von Liebe Sie wirklich wollen. Auch wenn Sie einen Partner haben, kann es helfen, etwas Abstand zu gewinnen, um das Wesen der Beziehung zu erkennen.",
+  "tarotWealthMeaning9": "Finanzielle Aktivitäten können etwas eingeschränkt sein.",
+  "tarotWealthDetail9": "Sie sollten eine konservative Haltung gegenüber Reichtum einnehmen. Anstatt neue Investitionen zu tätigen, ist es wichtig, Ihr aktuelles Vermögen gründlich zu prüfen. Investitionen in das Studium oder den Erwerb von Fähigkeiten zur Steigerung Ihres Wertes sind großartige Investitionen, die später zu größeren Gewinnen führen werden.",
+  "tarotSuccessMeaning9": "Sie erzielen Ergebnisse in Bereichen, in denen Fachwissen oder Fähigkeiten tiefgehend erforscht werden.",
+  "tarotSuccessDetail9": "Sie können hervorragende Ergebnisse bei Aufgaben erzielen, die tiefe Konzentration erfordern, wie Forschung, Planung oder Entwicklung. Es ist eine Zeit des stillen Aufbaus von Fähigkeiten. Wenn es ein ungelöstes Problem gibt, suchen Sie einen erfahrenen Mentor um Rat.",
+  "tarotKeywords10": "Viel Glück, Karma, Lebenszyklen, Schicksal, Wendepunkte",
+  "tarotDesc10": "Ein riesiges Schicksalsrad dreht sich und signalisiert den unvermeidlichen Fluss des Schicksals und den Beginn eines neuen Zyklus.",
+  "tarotLoveMeaning10": "Eine schicksalhafte Begegnung erwartet Sie.",
+  "tarotLoveDetail10": "Eine schicksalhafte Liebe wie im Film kommt auf Sie zu. Dramatische Ereignisse wie das Treffen mit jemandem an einem unerwarteten Ort können eintreten. Singles könnten jemanden treffen, in den sie sich auf den ersten Blick verlieben, während Paare feststellen werden, dass ihre Beziehung auf die nächste Stufe voranschreitet.",
+  "tarotWealthMeaning10": "Der Fluss des finanziellen Glücks verbessert sich.",
+  "tarotWealthDetail10": "Die Glücksgöttin lächelt Sie an. Ihr finanzielles Glück befindet sich auf einer Aufwärtskurve mit unerwarteten Einnahmen. Wenn der Geldumlauf reibungslos wird, brauchen Sie die Kühnheit, die Gelegenheit zu ergreifen. Vergessen Sie jedoch nicht die Weisheit, für die Zukunft zu sparen.",
+  "tarotSuccessMeaning10": "Die Situation wendet sich zu Ihren Gunsten.",
+  "tarotSuccessDetail10": "Ein Wendepunkt ist erreicht, an dem blockierte Angelegenheiten wieder fließen. Die Gezeiten wenden sich zu Ihren Gunsten, also zögern Sie nicht, neue Gelegenheiten zu ergreifen. Gelegenheiten für Veränderungen wie Beförderungen oder Karriereschritte werden Sie an einen höheren Ort bringen.",
+  "tarotKeywords11": "Gerechtigkeit, Fairness, Wahrheit, Ursache und Wirkung, Verantwortung",
+  "tarotDesc11": "Ein Richter in einer roten Robe hält ein Schwert in der rechten Hand und eine Waage in der linken.",
+  "tarotLoveMeaning11": "Es ist eine Beziehung, in der die Vernunft dem Gefühl vorausgeht.",
+  "tarotLoveDetail11": "Jetzt ist eine Zeit für rationales Urteilsvermögen. Schauen Sie zurück, um zu sehen, ob Ihre Beziehung ausgeglichen ist. Wenn Sie über eine Heirat nachdenken, könnten Sie die Bedingungen oder den Hintergrund Ihres Partners akribisch abwägen. Ehrliche und faire Gespräche werden die Lösung sein.",
+  "tarotWealthMeaning11": "Eine sorgfältige Prüfung bei Finanztransaktionen oder Verträgen ist erforderlich.",
+  "tarotWealthDetail11": "Es kann eine Situation entstehen, in der Sie bei finanziellen Angelegenheiten Recht von Unrecht unterscheiden müssen. Es ist eine gute Zeit, um finanzielle Beziehungen sauber zu klären. Überprüfen Sie Verträge sorgfältig auf nachteilige Klauseln und handeln Sie nach Prinzipien.",
+  "tarotSuccessMeaning11": "Sie erhalten eine faire Bewertung und eine legitime Entschädigung.",
+  "tarotSuccessDetail11": "Sie erhalten eine faire und objektive Bewertung Ihrer Arbeitsleistung. Wenn Sie hart gearbeitet haben, werden legitime Belohnungen wie Beförderungen oder Boni folgen. Wenn Sie Entscheidungen treffen, schließen Sie Emotionen aus und urteilen Sie streng nach Daten und Fakten.",
+  "tarotKeywords12": "Pause, Hingabe, Loslassen, neue Perspektiven",
+  "tarotDesc12": "Die Karte Der Gehängte symbolisiert eine Zeit des Stillstands und der bewussten Pause. Es ist eine Phase, in der man die Dinge aus einer völlig neuen Perspektive betrachten sollte. Manchmal ist es notwendig, alte Gewohnheiten loszulassen, um geistiges Wachstum zu ermöglichen.",
+  "tarotLoveMeaning12": "In der Liebe deutet diese Karte auf eine Phase der Unsicherheit oder des Abwartens hin. Es kann sein, dass eine Beziehung stagniert oder Gefühle nicht erwidert werden. Nutzen Sie diese Zeit, um innezuhalten und Ihre eigenen Wünsche und Bedürfnisse zu klären.",
+  "tarotLoveDetail12": "Es ist eine Zeit, in der rationales Urteilsvermögen schwierig ist, da man emotional feststeckt. Erzwingen Sie nichts, sondern lassen Sie die Dinge sich natürlich entwickeln. Geduld und Selbstreflexion führen Sie schließlich zur richtigen Entscheidung.",
+  "tarotWealthMeaning12": "Finanziell gesehen mahnt der Gehängte zur Vorsicht und zum Abwarten. Es ist kein guter Zeitpunkt für riskante Investitionen oder große Ausgaben. Überprüfen Sie Ihre Finanzen gründlich und suchen Sie nach versteckten Fehlern.",
+  "tarotWealthDetail12": "Ihr finanzieller Fluss könnte vorübergehend ins Stocken geraten. Nutzen Sie diese Pause, um Ihre Ausgabengewohnheiten zu überdenken und neue Sparstrategien zu entwickeln. Ein Perspektivwechsel kann Ihnen helfen, langfristig stabilere Einnahmen zu sichern.",
+  "tarotSuccessMeaning12": "Beruflich bedeutet diese Karte, dass Projekte vorübergehend zum Stillstand kommen könnten. Es ist eine Phase der Vorbereitung und des Lernens, nicht des schnellen Handelns. Akzeptieren Sie die Verzögerung als Chance zur Qualitätsverbesserung.",
+  "tarotSuccessDetail12": "Manchmal ist ein Rückzug notwendig, um später kraftvoller voranzukommen. Nutzen Sie die aktuelle Ruhephase für Fortbildungen oder strategische Planung. Wenn Sie Ihre Einstellung ändern, werden sich neue Türen öffnen, die Sie zuvor übersehen haben.",
+  "tarotKeywords13": "Ende, Wandel, Transformation, Übergang",
+  "tarotDesc13": "Die Karte Der Tod steht nicht für das physische Ende, sondern für eine tiefgreifende Transformation. Ein alter Lebensabschnitt endet, damit etwas Neues und Besseres entstehen kann. Akzeptieren Sie den Wandel als notwendigen Teil Ihrer persönlichen Entwicklung.",
+  "tarotLoveMeaning13": "In Beziehungen symbolisiert diese Karte das Ende einer Phase oder einer veralteten Dynamik. Dies kann eine Trennung bedeuten, aber auch eine tiefgreifende Erneuerung innerhalb der Partnerschaft. Platz für Neues wird erst geschaffen, wenn Altes losgelassen wird.",
+  "tarotLoveDetail13": "Es ist eine Zeit des emotionalen Umbruchs, die schmerzhaft sein kann, aber Heilung verspricht. Klammern Sie sich nicht an Vergangenes, das Ihnen nicht mehr guttut. Vertrauen Sie darauf, dass nach diesem Ende ein hoffnungsvoller Neuanfang auf Sie wartet.",
+  "tarotWealthMeaning13": "Finanziell deutet der Tod auf einschneidende Veränderungen hin, wie den Verlust einer Einnahmequelle oder das Scheitern einer Investition. Es ist eine Warnung, finanzielle Abhängigkeiten zu beenden. Ein radikaler Neuanfang in Ihrer Budgetplanung ist nun erforderlich.",
+  "tarotWealthDetail13": "Alte finanzielle Strukturen brechen zusammen, was Raum für modernere Ansätze schafft. Seien Sie bereit, sich von unrentablen Projekten zu trennen, auch wenn es schwerfällt. Langfristig wird dieser klare Schnitt Ihre wirtschaftliche Situation stabilisieren.",
+  "tarotSuccessMeaning13": "Im Beruf signalisiert der Tod den Abschluss eines großen Projekts oder einen Jobwechsel. Bestehende Strukturen könnten sich auflösen, was zunächst verunsichernd wirken kann. Sehen Sie dies als Chance, Ihre Karriere in eine völlig neue Richtung zu lenken.",
+  "tarotSuccessDetail13": "Widerstand gegen Veränderungen wird nur zu mehr Schwierigkeiten führen. Seien Sie proaktiv und verabschieden Sie sich von Aufgaben, die Sie nicht mehr erfüllen. Eine neue berufliche Identität wartet darauf, von Ihnen entdeckt und geformt zu werden.",
+  "tarotKeywords14": "Gleichgewicht, Mäßigung, Geduld, Zweck",
+  "tarotDesc14": "Die Mäßigkeit ruft dazu auf, Harmonie und Ausgeglichenheit in allen Lebensbereichen zu finden. Es geht darum, Extreme zu vermeiden und einen goldenen Mittelweg zu wählen. Geduld und Gelassenheit sind Ihre wichtigsten Werkzeuge in dieser Phase.",
+  "tarotLoveMeaning14": "In der Liebe steht diese Karte für eine harmonische und stabile Verbindung. Konflikte können durch ruhige Kommunikation und gegenseitiges Verständnis gelöst werden. Es ist eine Zeit des Zusammenwachsens und der emotionalen Heilung.",
+  "tarotLoveDetail14": "Pflegen Sie Ihre Beziehung mit Sanftheit und vermeiden Sie emotionale Ausbrüche. Ein ausgewogenes Geben und Nehmen stärkt das Band zwischen Ihnen und Ihrem Partner. Singles finden ihr Glück eher durch eine ruhige, freundschaftliche Annäherung.",
+  "tarotWealthMeaning14": "Finanziell bedeutet Mäßigkeit einen stabilen und kontrollierten Geldfluss. Es gibt keine großen Sprünge, aber auch keine gefährlichen Verluste. Fokusieren Sie sich darauf, Ihre Ressourcen klug und maßvoll zu verwalten.",
+  "tarotWealthDetail14": "Ihre finanzielle Stabilität folgt einem ruhigen Strom, wenn Sie unnötige Ausgaben vermeiden. Es ist eine gute Zeit für langfristige, risikoarme Sparpläne. Durch Geduld und konsequente Verwaltung wird Ihr Wohlstand stetig und sicher wachsen.",
+  "tarotSuccessMeaning14": "Beruflich deutet die Karte auf eine erfolgreiche Zusammenarbeit und ein angenehmes Arbeitsklima hin. Ihre Fähigkeit zur Vermittlung und zum Kompromiss wird besonders geschätzt. Projekte schreiten stetig voran, solange Sie das Tempo moderat halten.",
+  "tarotSuccessDetail14": "Erfolg stellt sich durch Beständigkeit und Diplomatie ein, nicht durch Aggressivität. Achten Sie auf eine gute Work-Life-Balance, um Ihre Leistungsfähigkeit langfristig zu erhalten. Ihre ruhige Art wirkt inspirierend auf Kollegen und Vorgesetzte.",
+  "tarotKeywords15": "Sucht, Materialismus, Kontrollverlust, Loslösung",
+  "tarotDesc15": "Der Teufel warnt vor Abhängigkeiten, Versuchungen und dem Verlust der inneren Freiheit. Oft sind wir an materielle Dinge oder negative Gedankenmuster gebunden, die uns am Wachstum hindern. Es ist an der Zeit, diese Ketten zu erkennen und sich bewusst davon zu lösen.",
+  "tarotLoveMeaning15": "In der Liebe deutet diese Karte auf eine intensive, aber oft toxische oder rein physische Anziehung hin. Besessenheit und Eifersucht können die Beziehung belasten. Hinterfragen Sie, ob Ihre Bindung auf wahrer Liebe oder auf bloßer Abhängigkeit basiert.",
+  "tarotLoveDetail15": "Es ist eine Zeit, in der das rationale Urteil durch starke Leidenschaft getrübt sein kann. Achten Sie darauf, sich nicht in einer Beziehung zu verlieren, die Ihnen Ihre Energie raubt. Wahre Erfüllung finden Sie erst, wenn Sie Ihre eigene Unabhängigkeit zurückgewinnen.",
+  "tarotWealthMeaning15": "Finanziell warnt der Teufel vor Gier und riskanten Verlockungen, die in die Schuldenfalle führen können. Seien Sie vorsichtig bei Angeboten, die zu gut klingen, um wahr zu sein. Materieller Besitz sollte nicht Ihr einziges Ziel sein.",
+  "tarotWealthDetail15": "Es besteht die Gefahr, ein Sklave des Geldes oder der Konsumlust zu werden. Überprüfen Sie Ihre Ausgaben auf zwanghafte Muster und vermeiden Sie neue Kredite. Nur durch bewusste Selbstbeherrschung können Sie Ihre finanzielle Freiheit bewahren oder wiedererlangen.",
+  "tarotSuccessMeaning15": "Beruflich kann der Teufel auf einen rücksichtslosen Ehrgeiz hindeuten, der Ihnen schaden könnte. Vielleicht fühlen Sie sich in einem Job gefangen oder unterdrückt. Hüten Sie sich davor, Ihre Werte für schnellen Erfolg zu opfern.",
+  "tarotSuccessDetail15": "Erfolg um jeden Preis wird langfristig zu Unzufriedenheit und Konflikten führen. Erkennen Sie Machtspiele im Arbeitsumfeld und distanzieren Sie sich davon. Suchen Sie nach Wegen, Ihre Arbeit wieder mit Ihren persönlichen Überzeugungen in Einklang zu bringen.",
+  "tarotKeywords16": "Plötzliche Veränderung, Umbruch, Chaos, Offenbarung",
+  "tarotDesc16": "Der Turm symbolisiert plötzliche und oft schockierende Ereignisse, die gewohnte Strukturen zum Einsturz bringen. Auch wenn dies zunächst beängstigend wirkt, dient es dazu, falsche Fundamente zu zerstören. Nur so kann Platz für eine ehrlichere und stabilere Zukunft geschaffen werden.",
+  "tarotLoveMeaning16": "In Beziehungen kann der Turm für plötzliche Konflikte, überraschende Enthüllungen oder eine Trennung stehen. Masken fallen und die Wahrheit kommt ans Licht, was schmerzhaft sein kann. Es ist jedoch eine notwendige Reinigung, um Klarheit über die Gefühle zu erhalten.",
+  "tarotLoveDetail16": "Ein unerwartetes Ereignis könnte Ihr Liebesleben erschüttern und Sie zur Neubewertung zwingen. Versuchen Sie nicht, das Alte gewaltsam festzuhalten, wenn es bereits zerbrochen ist. Nach dem Sturm wird sich zeigen, welche Bindungen stark genug für einen Neuanfang sind.",
+  "tarotWealthMeaning16": "Finanziell mahnt die Karte zur äußersten Vorsicht vor plötzlichen Verlusten oder finanziellen Katastrophen. Ein sicher geglaubtes Investment könnte scheitern oder unerwartete Kosten fallen an. Bereiten Sie sich auf unruhige Zeiten vor und sichern Sie ab, was möglich ist.",
+  "tarotWealthDetail16": "Finanzielle Strukturen, die auf Sand gebaut waren, könnten jetzt zusammenbrechen. Es ist eine harte Lektion in Sachen Geldmanagement, die Sie aber weiser machen wird. Nutzen Sie den Trümmerhaufen, um Ihre Finanzen von Grund auf neu und solider zu organisieren.",
+  "tarotSuccessMeaning16": "Beruflich deutet der Turm auf plötzliche Entlassungen, Firmenpleiten oder das Scheitern großer Projekte hin. Ihre Karriereplanung könnte komplett über den Haufen geworfen werden. Sehen Sie den Zusammenbruch als Befreiung von Aufgaben, die Sie ohnehin eingeschränkt haben.",
+  "tarotSuccessDetail16": "Wenn der gewohnte Rahmen wegbricht, entstehen völlig neue Möglichkeiten der Entfaltung. Seien Sie flexibel und bereit, sich schnell an die neue Situation anzupassen. Ihre Fähigkeit, aus Krisen gestärkt hervorzugehen, wird jetzt auf die Probe gestellt und gefördert.",
+  "tarotKeywords17": "Hoffnung, Glaube, Zweck, Erneuerung, Spiritualität",
+  "tarotDesc17": "Der Stern ist eine Karte der Hoffnung, der Inspiration und der göttlichen Führung. Nach einer schwierigen Zeit kehrt nun Ruhe und Zuversicht in Ihr Leben zurück. Vertrauen Sie auf Ihre Träume und darauf, dass das Universum Sie auf den richtigen Weg leitet.",
+  "tarotLoveMeaning17": "In der Liebe verspricht der Stern eine Zeit der Heilung und der tiefen emotionalen Verbundenheit. Bestehende Beziehungen erfahren eine neue Leichtigkeit und gegenseitiges Vertrauen. Für Singles deutet die Karte auf die Begegnung mit einem Seelenverwandten hin.",
+  "tarotLoveDetail17": "Ihr Herz öffnet sich wieder für die Liebe und Sie strahlen eine positive Energie aus. Es ist eine wunderbare Zeit, um gemeinsame Zukunftspläne zu schmieden und Wünsche zu äußern. Vertrauen Sie darauf, dass Ihre Sehnsüchte in Erfüllung gehen werden.",
+  "tarotWealthMeaning17": "Finanziell signalisiert der Stern eine langsame, aber stetige Verbesserung Ihrer Lage. Vorangegangene Sorgen lösen sich auf und neue Möglichkeiten für Einnahmen tun sich auf. Es ist eine Zeit der finanziellen Erholung und des Optimismus.",
+  "tarotWealthDetail17": "Ihr finanzieller Ausblick beginnt sich in eine positive Richtung zu bewegen. Frühere wirtschaftliche Schwierigkeiten werden durch kluge Entscheidungen und etwas Glück erwunden. Bleiben Sie geduldig, denn der Erfolg wird sich langfristig und nachhaltig einstellen.",
+  "tarotSuccessMeaning17": "Beruflich steht der Stern für Inspiration, Erfolg und die Anerkennung Ihrer Talente. Ihre Projekte stehen unter einem guten Stern und Sie finden innovative Lösungen für alte Probleme. Folgen Sie Ihrer Berufung, denn Ihr Weg ist nun klar vorgezeichnet.",
+  "tarotSuccessDetail17": "Ihre kreativen Ideen finden Gehör und führen zu bemerkenswerten Fortschritten. Es ist eine ideale Zeit für langfristige Planungen und den Aufbau von Netzwerken. Ihr authentisches Auftreten überzeugt Vorgesetzte und Geschäftspartner gleichermaßen.",
+  "tarotKeywords18": "Angst, Sorge, Illusion, Unterbewusstsein, Intuition",
+  "tarotDesc18": "Der Mond führt uns in die Welt der Träume, der Schatten und des Unbewussten. Nicht alles ist so, wie es auf den ersten Blick scheint, und Unsicherheit kann Ängste hervorrufen. Vertrauen Sie in dieser dunklen Phase weniger Ihrem Verstand als vielmehr Ihrer tiefen Intuition.",
+  "tarotLoveMeaning18": "In der Liebe deutet der Mond auf Geheimnisse, Missverständnisse oder verborgene Sehnsüchte hin. Vielleicht sind Sie sich Ihrer Gefühle unsicher oder es gibt Dinge, die noch nicht ausgesprochen wurden. Hüten Sie sich vor Täuschungen und hören Sie auf Ihr Bauchgefühl.",
+  "tarotLoveDetail18": "Es ist eine Zeit emotionaler Verwirrung, in der Sie sich leicht in Illusionen verlieren können. Suchen Sie das klärende Gespräch, aber überstürzen Sie keine wichtigen Entscheidungen. Erst wenn das Tageslicht zurückkehrt, werden Sie die Situation klarer beurteilen können.",
+  "tarotWealthMeaning18": "Finanziell mahnt der Mond zur Vorsicht, da Informationen unvollständig oder irreführend sein könnten. Es ist kein guter Zeitpunkt für undurchsichtige Geschäfte oder riskante Spekulationen. Achten Sie auf versteckte Kosten und prüfen Sie jedes Angebot dreifach.",
+  "tarotWealthDetail18": "Ihre finanzielle Situation könnte sich derzeit wie eine Wanderung im Nebel anfühlen. Vermeiden Sie impulsive Käufe oder Investitionen aus einer Stimmung heraus. Vertrauen Sie nur Fakten, die Sie selbst überprüft haben, und lassen Sie sich nicht von äußeren Schein blenden.",
+  "tarotSuccessMeaning18": "Beruflich symbolisiert der Mond eine Phase der Ungewissheit oder des Wandels hinter den Kulissen. Vielleicht gibt es Intrigen am Arbeitsplatz oder Sie zweifeln an Ihrem aktuellen Weg. Nutzen Sie Ihre Intuition, um Gefahren frühzeitig zu erkennen.",
+  "tarotSuccessDetail18": "Nicht alle Kollegen spielen mit offenen Karten, seien Sie also wachsam. Es ist eine gute Zeit für kreative Arbeit, die aus dem Unterbewusstsein schöpft, aber weniger für harte Verhandlungen. Warten Sie ab, bis sich der Nebel lichtet, bevor Sie den nächsten großen Karriereschritt machen.",
+  "tarotKeywords19": "Positivität, Spaß, Wärme, Erfolg, Vitalität",
+  "tarotDesc19": "Die Sonne ist eine der glücklichsten Karten und verspricht Erfolg, Lebensfreude und Vitalität. Alles liegt klar und deutlich vor Ihnen, und Sie strotzen nur so vor Energie. Genießen Sie diesen Moment des Triumphs und teilen Sie Ihr Glück mit Ihren Mitmenschen.",
+  "tarotLoveMeaning19": "In der Liebe steht die Sonne für eine Zeit voller Wärme, Leidenschaft und tiefer Zufriedenheit. Beziehungen blühen auf und gemeinsame Unternehmungen bringen viel Freude. Es ist eine Phase der Harmonie, in der sich alles zum Besten entwickelt.",
+  "tarotLoveDetail19": "Ihr Liebesleben ist von Optimismus und gegenseitiger Wertschätzung geprägt. Kleine Sorgen verschwinden im Licht der Sonne und machen Platz für echte Herzlichkeit. Singles haben jetzt die besten Chancen, jemanden zu treffen, der ihr Leben hell erleuchtet.",
+  "tarotWealthMeaning19": "Finanziell deutet die Sonne auf Wohlstand, Gewinn und eine äußerst positive Entwicklung hin. Ihre Bemühungen zahlen sich nun aus und Sie können mit finanzieller Sicherheit rechnen. Es ist eine großartige Zeit für Investitionen und neue Projekte.",
+  "tarotWealthDetail19": "Ein sonniger Tag für Ihre Finanzen ist angebrochen. Ihr Gespür für lukrative Gelegenheiten ist geschärft, was zu erheblichen Gewinnen führt. Nutzen Sie diese erfolgreiche Phase, um Ihre finanzielle Basis für die Zukunft weiter zu stärken.",
+  "tarotSuccessMeaning19": "Beruflich signalisiert die Sonne den absoluten Höhepunkt und die Krönung Ihrer Arbeit. Sie erhalten Anerkennung, Beförderungen oder schließen wichtige Projekte erfolgreich ab. Ihre positive Ausstrahlung macht Sie zum Mittelpunkt jeder beruflichen Gruppe.",
+  "tarotSuccessDetail19": "Erfolg kommt Ihnen jetzt fast mühelos entgegen, da Sie mit Begeisterung und Klarheit handeln. Es ist die ideale Zeit, um sich neuen Herausforderungen zu stellen oder eine Führungsposition zu übernehmen. Ihr Selbstvertrauen ist Ihr größtes Kapital und führt Sie zu neuen Bestleistungen.",
+  "tarotKeywords20": "Urteil, Wiedergeburt, innerer Ruf, Absolution",
+  "tarotDesc20": "Das Gericht steht für eine Phase der Selbsterkenntnis, der Abrechnung und der Neugeburt. Es ist an der Zeit, vergangene Taten zu bewerten und die notwendigen Konsequenzen daraus zu ziehen. Ein innerer Ruf fordert Sie auf, Ihre wahre Bestimmung zu finden und ein neues Kapitel zu beginnen.",
+  "tarotLoveMeaning20": "In der Liebe deutet diese Karte auf eine Klärung oder eine wichtige Entscheidung in einer Beziehung hin. Vielleicht kehrt ein früherer Partner zurück oder eine alte Wunde heilt endlich. Es ist eine Zeit der Vergebung und des ehrlichen Neuanfangs.",
+  "tarotLoveDetail20": "Sie erkennen jetzt klar, was Sie in einer Partnerschaft wirklich brauchen und was nicht. Seien Sie bereit, alte Muster loszulassen, um Platz für eine reifere Form der Liebe zu schaffen. Diese Transformation wird Ihr Liebesleben auf eine höhere Ebene heben.",
+  "tarotWealthMeaning20": "Finanziell bedeutet das Gericht, dass Sie nun die Früchte Ihrer vergangenen Entscheidungen ernten. Wenn Sie fleißig waren, erwartet Sie eine Belohnung oder eine unerwartete Rückzahlung. Es ist eine Zeit der finanziellen Bilanzierung und der Neuausrichtung.",
+  "tarotWealthDetail20": "Sie erhalten nun die gerechte Entlohnung für Ihre bisherigen Bemühungen. Vielleicht bietet sich eine Gelegenheit, alte Schulden zu begleichen oder ein vergessenes Erbe anzutreten. Nutzen Sie diese Klarheit, um Ihre Finanzen für die Zukunft nachhaltiger zu planen.",
+  "tarotSuccessMeaning20": "Beruflich signalisiert das Gericht eine wichtige Prüfung oder eine endgültige Entscheidung über Ihre Karriere. Ihr Potenzial wird erkannt und Sie könnten eine Berufung finden, die über einen bloßen Job hinausgeht. Seien Sie bereit, Verantwortung für Ihren Weg zu übernehmen.",
+  "tarotSuccessDetail20": "Vergangene Leistungen werden nun gewürdigt, was zu einem bedeutenden Karrieresprung führen kann. Es ist ein Moment der Wahrheit, in dem Sie sich Ihren Fehlern stellen und daraus lernen. Ein neuer, authentischerer Weg in Ihrem Berufsleben öffnet sich nun vor Ihnen.",
+  "tarotKeywords21": "Abschluss, Integration, Leistung, Reise",
+  "tarotDesc21": "Die Welt symbolisiert Vollendung, Erfolg und das Erreichen eines großen Ziels. Sie haben eine lange Reise hinter sich und alle Puzzleteile fügen sich nun zu einem harmonischen Ganzen zusammen. Genießen Sie das Gefühl der Ganzheit und feiern Sie Ihre bemerkenswerten Erfolge.",
+  "tarotLoveMeaning21": "In der Liebe steht die Welt für eine erfüllte Beziehung, die alle Herausforderungen gemeistert hat. Es ist ein Zustand tiefer Verbundenheit und des gemeinsamen Glücks. Singles finden jemanden, der sie vollkommen ergänzt und ihr Leben bereichert.",
+  "tarotLoveDetail21": "Sie haben in Herzensangelegenheiten Ihr Ziel erreicht und fühlen sich emotional angekommen. Es ist eine Zeit der Harmonie, in der Sie sich mit Ihrem Partner eins fühlen. Gemeinsame Reisen oder große Lebensereignisse wie eine Hochzeit stehen unter einem glücklichen Stern.",
+  "tarotWealthMeaning21": "Finanziell bedeutet die Welt absoluten Erfolg und die Erreichung finanzieller Freiheit. Ihre klugen Entscheidungen der Vergangenheit führen nun zu dauerhafter Stabilität. Es gibt keine ungelösten Probleme mehr und Ihr Wohlstand ist gesichert.",
+  "tarotWealthDetail21": "Sie haben Ihre finanziellen Ziele erreicht und können nun die Früchte Ihrer harten Arbeit genießen. Ihr Umgang mit Geld ist weise und vorausschauend, was Ihnen ein sorgenfreies Leben ermöglicht. Es ist die Zeit, den Wohlstand mit anderen zu teilen und das Leben zu genießen.",
+  "tarotSuccessMeaning21": "Beruflich signalisiert die Welt den krönenden Abschluss einer Karrierephase oder den weltweiten Erfolg eines Projekts. Sie haben alles erreicht, was Sie sich vorgenommen haben, und genießen hohes Ansehen. Neue Horizonte eröffnen sich für Sie, vielleicht sogar international.",
+  "tarotSuccessDetail21": "Ihr beruflicher Weg hat Sie zur Meisterschaft in Ihrem Bereich geführt. Sie fühlen sich kompetent und respektiert in allem, was Sie tun. Auch wenn dieser Zyklus nun abgeschlossen ist, sind Sie bereit, mit Ihrem Wissen und Ihrer Erfahrung die Welt zu erobern.",
+  "supplementRecordPrompt": "Bitte nehmen Sie Ihre Nahrungsergänzungsmittel ein und zeichnen Sie es auf!",
+  "snoozeQuestion": "Wann soll ich Sie erneut erinnern?",
+  "hoursShort": "Std.",
+  "minutesShort": "Min.",
+  "after": "nach",
+  "snoozeMessage": "Der Wecker klingelt in {minutes} Minuten erneut.",
+  "timesTaken": "{count} Mal eingenommen",
+  "dailyGoalTimes": "Ziel: {goal} Mal am Tag",
+  "didYouTakeSupplement": "Haben Sie Ihre Nahrungsergänzungsmittel eingenommen?",
+  "viewMissionRecords": "Missionsaufzeichnungen anzeigen",
+  "setTakingGoal": "Einnahmeziel festlegen",
+  "times": "Mal",
+  "dailyTakingGoal": "Tägliches Einnahmeziel",
+  "howManyTimesADay": "Wie oft am Tag nehmen Sie Nahrungsergänzungsmittel ein?",
+  "setGoalMl": "Ziel festlegen (ml)",
+  "sleepAnalysis": "Schlafanalyse",
+  "todaysSleep": "Heutiger Schlaf",
+  "sleepDuration": "Schlafdauer",
+  "wakeUpTime": "Aufwachzeit",
+  "weeklySleepPattern": "Wöchentliches Schlafmuster",
+  "sleepAdvice": "Sie behalten eine regelmäßige Schlafgewohnheit bei. Sie sind 30 Minuten früher ins Bett gegangen als gestern!",
+  "stopwatch": "Stoppuhr",
+  "lap": "Runde",
+  "stop": "Stopp",
+  "lapLabel": "Runde {index}",
+  "monday": "Mo",
+  "tuesday": "Di",
+  "wednesday": "Mi",
+  "thursday": "Do",
+  "friday": "Fr",
+  "saturday": "Sa",
+  "sunday": "So",
   "policy": "Bedingungen und Datenschutz",
   "support": "Support",
   "defaultAlarmBehavior": "Standard-Weckerverhalten",
   "defaultAlarmVolume": "Standard-Weckerlautstärke",
   "defaultAlarmVolumeDescription": "Die Standardlautstärke, die beim Erstellen eines neuen Weckers angewendet wird.",
   "gradualVolumeDescription": "Stellt den Weckerton so ein, dass er allmählich ansteigt.",
+  "defaultVibration": "Standardvibration",
   "defaultVibrationDescription": "Aktiviert die Vibration standardmäßig beim Erstellen eines neuen Weckers.",
   "defaultInterval": "Standardintervall",
   "maxSnoozeCountLabel": "Max. Schlummeranzahl",
-  "minutes": "Min",
-  "times": "Mal",
+  "minutes": "min",
   "cupsCount": "({current}/{goal} Tassen)",
   "@cupsCount": {
     "placeholders": {
@@ -1383,6 +1653,7 @@
   },
   "selectionComplete": "Auswahl abgeschlossen",
   "selectVibration": "Vibrationsmuster auswählen",
+  "cameraMissionSequentialImageError": "Bitte lege die Missionsbilder der Reihe nach fest.",
   "copyEmailAction": "E-Mail-Adresse kopieren",
   "addMissionTitle": "Neue Mission hinzufügen",
   "recommendedMissionList": "Empfohlene Missionen",
@@ -1399,7 +1670,6 @@
   "missionNameHint": "Missionsname eingeben (z. B. Ins Fitnessstudio gehen)",
   "selectCategory": "Kategorie auswählen",
   "getNotification": "Benachrichtigung erhalten",
-  "notificationTime": "Benachrichtigungszeit",
   "missionCategoryHealth": "Gesundheit",
   "missionCategoryStudy": "Lernen",
   "missionCategoryRoutine": "Routine",
@@ -1477,6 +1747,13 @@
   "luckyNumberAnalysisStep6": "Berechnung der optimalen Glückskombination...",
   "luckyNumberAnalysisStep7": "Analyse abgeschlossen! Generiere Glückszahlen",
   "luckyNumberAnalysisFinal": "Verarbeitung der finalen Daten...",
+  "luckyNumberAnalyzing": "Energie wird analysiert...",
+  "luckyNumberGeometric": "Geometrische Analyse...",
+  "luckyNumberPatterns": "Musterabgleich...",
+  "luckyNumberEnergy": "Energie wird harmonisiert...",
+  "luckyNumberCompleted": "Analyse abgeschlossen!",
+  "luckyNumberShare": "Ergebnisse teilen",
+  "luckyNumberRestart": "Nochmal versuchen",
   "luckyNumberGenerating": "Glückszahlen werden generiert...",
   "luckyNumberResultTitle": "Glückszahlengenerierung abgeschlossen",
   "luckyNumberResultSubtitle": "6 Zahlen + Zusatzzahl",
@@ -1617,14 +1894,6 @@
   "year": "J",
   "month": "M",
   "day": "T",
-  "dreamTitle": "Traumdeutung",
-  "dreamAnalyzing": "Dein Traum wird analysiert...",
-  "dreamHeaderTitle": "Was hast du\nletzte Nacht geträumt?",
-  "dreamHeaderSubtitle": "Schreibe deinen Traum frei auf,\nund wir analysieren die Schlüsselwörter für dich.",
-  "dreamInputHint": "z. B. Ich habe einen glänzenden Goldring auf der Straße gefunden.",
-  "dreamAnalyzeButton": "Traum kostenlos analysieren",
-  "dreamAdviceLabel": "Ratschlag",
-  "dreamDisclaimer": "Diese Interpretation dient der Unterhaltung und garantiert keine tatsächliche Bedeutung.",
   "sajuProfileTitle": "Hauptprofil der Vier Säulen des Schicksals bearbeiten",
   "sajuNameLabel": "Name",
   "sajuNameHint": "Bitte geben Sie Ihren Namen ein",
@@ -1662,6 +1931,7 @@
   "compatibilityDeleteTooltip": "Löschen",
   "compatibilityGenderMale": "Männlich",
   "compatibilityGenderFemale": "Weiblich",
+  "compatibilityInputTitle": "Kompatibilitätsinformationen Eingabe",
   "tojeongInputTitle": "Tojeong Jahresorakel Informationseingabe",
   "tojeongCheckFortune": "Überprüfen Sie Ihr {year}\nTojeong Jahresorakel",
   "@tojeongCheckFortune": {
@@ -1815,7 +2085,7 @@
       }
     }
   },
-  "newYearFortuneShareDesc": "New Year fortune for {name}.\n\n{desc}...",
+  "newYearFortuneShareDesc": "Neujahrs-Horoskop für {name}.\n\n{desc}...",
   "@newYearFortuneShareDesc": {
     "placeholders": {
       "name": {
@@ -2009,45 +2279,239 @@
   "compatibilityDescIncompatibleElement": "Da Sie unterschiedliche Temperamente haben, mag es sich anfangs ungewohnt anfühlen, aber es ist eine Freude, sich kennenzulernen.",
   "compatibilitySummaryDefaultConstellation": "Durchschnittliche Harmonie",
   "compatibilityDescDefaultConstellation": "Eine Beziehung, die basierend auf den Tierkreiszeichen einigermaßen gut zusammenpasst.",
-  "luckyNumberAnalyzing": "Energie wird analysiert...",
-  "luckyNumberGeometric": "Geometrische Analyse...",
-  "luckyNumberPatterns": "Musterabgleich...",
-  "luckyNumberEnergy": "Energie wird harmonisiert...",
-  "luckyNumberCompleted": "Analyse abgeschlossen!",
-  "luckyNumberShare": "Ergebnisse teilen",
-  "luckyNumberRestart": "Nochmal versuchen",
-  "loading": "Wird geladen...",
-  "useTwoCookies_v2": "2 Kekse verwenden",
-  "aiAnalyzingFace_v2": "KI analysiert dein Gesicht...",
-  "faceRecognitionComplete_v2": "Erkennung abgeschlossen",
-  "extractingFeatures_v2": "Merkmale werden extrahiert...",
-  "matchingFortuneData_v2": "Daten werden abgeglichen...",
-  "faceAnalysisComplete_v2": "Gesichtsanalyse abgeschlossen!",
-  "tapTimes": "{count} Tippen",
-  "@tapTimes": {
+  "routineMorningTitle": "Ein erfrischender Morgen! ☀️",
+  "routineMorningBody": "Haben Sie die für heute geplanten Routine-Missionen vergessen?",
+  "routineEveningTitle": "Gute Arbeit heute! ✨",
+  "routineEveningBody": "Haben Sie alle heutigen Missionen abgeschlossen? Schließen Sie Ihre Routine ab.",
+  "routineCheckTitle": "Überprüfen Sie Ihre heutigen Missionen! 🚀",
+  "routineCheckBody": "Befolgen Sie die Routine-Missionen und machen Sie Ihren Tag angenehm.",
+  "supplementNotificationTitle": "Erinnerung an Nahrungsergänzungsmittel",
+  "waterNotificationTitle": "Trinkerinnerung",
+  "routineNotificationTitle": "Tägliche Routine-Benachrichtigung",
+  "todaysFortuneNotificationTitle": "Dein heutiges Horoskop",
+  "afternoonFortuneNotificationBody": "Wie sieht dein Nachmittags-Horoskop aus? Gleich nachsehen!",
+  "morningFortuneNotificationBody": "Schau dir dein Horoskop an und starte voller Energie in den Tag!",
+  "fortunePassExpiryTitle": "Fortune Pass läuft heute ab",
+  "fortunePassExpiryBody": "Ihre Fortune Pass-Mitgliedschaft läuft heute ab. Erneuern Sie sie, um die Vorteile weiterhin zu nutzen!",
+  "takeNow": "Jetzt einnehmen",
+  "later": "Später",
+  "turnOffAlarmAction": "Alarm ausschalten",
+  "todaysFortuneNotification": "Heutige Horoskop-Benachrichtigung",
+  "enableNotification": "Benachrichtigung aktivieren",
+  "fortuneNotificationDescription": "Informiert Sie zur festgelegten Zeit über Ihr heutiges Horoskop.",
+  "morningNotificationTime": "Benachrichtigungszeit am Morgen",
+  "afternoonNotificationTime": "Benachrichtigungszeit am Nachmittag",
+  "morningFortuneTitle": "Morgen-Horoskop",
+  "afternoonFortuneTitle": "Nachmittag-Horoskop",
+  "type": "Typ",
+  "@minutesFormat": {
     "placeholders": {
-      "count": { "type": "int" }
+      "minutes": {
+        "type": "String"
+      }
     }
   },
-  "snoozeMinutesUnlimited": "{minutes} Min (unbegrenzt)",
-  "@snoozeMinutesUnlimited": {
+  "@categoryMissions": {
     "placeholders": {
-      "minutes": { "type": "int" }
+      "category": {
+        "type": "String"
+      }
     }
   },
-  "snoozeMinutesCount": "{minutes} Min ({current}/{total})",
-  "@snoozeMinutesCount": {
+  "@hourFormat": {
     "placeholders": {
-      "minutes": { "type": "int" },
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "hour": {
+        "type": "String"
+      }
     }
   },
-  "ringtone_fluttering_day": "Beschwingter Tag",
-  "ringtone_cozy_day": "Gemütlicher Tag",
-  "ringtone_sensible_day": "Besonnener Tag",
-  "ringtone_play_with_me": "Spiel mit mir",
-  "ringtone_refreshing_day": "Erfrischender Tag",
-  "ringtone_new_beginning": "Neuanfang",
-  "ringtone_self_love": "Selbstliebe"
+  "@tojeongShareTitle": {
+    "placeholders": {
+      "year": {
+        "type": "int"
+      }
+    }
+  },
+  "@tojeongCoreMessage": {
+    "placeholders": {
+      "sangsu": {
+        "type": "String"
+      },
+      "jungsu": {
+        "type": "String"
+      },
+      "hasu": {
+        "type": "String"
+      }
+    }
+  },
+  "@snoozeMessage": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "@timesTaken": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dailyGoalTimes": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "@lapLabel": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "supplementChannelDesc": "Kanal für Benachrichtigungen zur Einnahme von Nahrungsergänzungsmitteln.",
+  "waterChannelDesc": "Kanal für Benachrichtigungen zur Wassertrinkgewohnheit.",
+  "waterSummaryTitle": "Wassertrink-Benachrichtigung",
+  "dailyRoutineChannelDesc": "Kanal für tägliche Missions- und Gewohnheitsbildungs-Benachrichtigungen.",
+  "dailyRoutineSummaryTitle": "Tägliche Routine-Benachrichtigung",
+  "missionChannelName": "Missions-Benachrichtigung",
+  "missionChannelDesc": "Kanal für allgemeine Missions-Benachrichtigungen.",
+  "fortuneChannelName": "Glücks-Benachrichtigung",
+  "fortuneChannelDesc": "Kanal für tägliche Glücks-Check-Benachrichtigungen.",
+  "subscriptionChannelName": "Abonnement-Benachrichtigung",
+  "subscriptionChannelDesc": "Kanal für Fortune Pass-Ablauf- und Abonnement-Benachrichtigungen.",
+  "alarmChannelName": "Wecker",
+  "alarmChannelDesc": "Kanal für Aufwach- und Missions-Alarme.",
+  "shareViaKakao": "Über KakaoTalk teilen",
+  "shareViaSNS": "Über andere soziale Netzwerke teilen (Instagram, Twitter, etc.)",
+  "checkDetailResult": "Detailliertes Ergebnis prüfen",
+  "viewMyFortuneResult": "Mein Glücksergebnis anzeigen",
+  "takeSupplementNow": "Bitte nehmen Sie Ihre Nahrungsergänzungsmittel ein!",
+  "takeNowQuestion": "Möchten Sie es jetzt einnehmen?",
+  "eatNow": "Jetzt einnehmen",
+  "eatLater": "Später einnehmen",
+  "snoozeMessageGeneric": "Ich werde Sie in {minutes} Minuten erneut erinnern.",
+  "hours": "Stunden",
+  "@snoozeMessageGeneric": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "cheeringMessage4": "Lebhafter Morgen, glücklicher Start!",
+  "cheeringMessage5": "Hab einen lächelnden Tag.",
+  "cheeringMessage6": "Kopf hoch heute!",
+  "cheeringMessage7": "Du wirst heute genug strahlen.",
+  "cheeringMessage8": "Ich habe das Gefühl, dass etwas Gutes passieren wird!",
+  "cheeringMessage9": "Gute Arbeit heute. Ein kraftvoller Start!",
+  "cheeringMessage10": "Das Glück ist immer an deiner Seite.",
+  "cheeringMessage11": "Ich drücke dir heute die Daumen für deine Träume.",
+  "cheeringMessage12": "Erfrischender Morgen, angenehmer Tag!",
+  "cheeringMessage13": "Sei heute siegreich!",
+  "cheeringMessage14": "Du bist wertvoll, einfach weil du du bist.",
+  "cheeringMessage15": "Hab einen Tag voller angenehmer Dinge.",
+  "cheeringMessage16": "Ich hoffe, dein Tag funkelt heute!",
+  "cheeringMessage17": "Dein Lächeln erhellt die Welt.",
+  "cheeringMessage18": "Sei heute du selbst!",
+  "cheeringMessage19": "Beginne den Tag mit flatterndem Herzen.",
+  "cheeringMessage20": "Ein wunderbarer Tag erwartet dich.",
+  "cheeringMessage21": "Mit der Kraft der Positivität heute!",
+  "cheeringMessage22": "Ich unterstütze deinen Weg.",
+  "cheeringMessage23": "Mach das Beste aus dem heutigen Tag!",
+  "cheeringMessage24": "Möge das Glück mit dir sein!",
+  "cheeringMessage25": "Hab heute einen herzlichen Tag.",
+  "cheeringMessage26": "Du schaffst das!",
+  "cheeringMessage27": "Beginne den Tag mit Dankbarkeit.",
+  "cheeringMessage28": "Dein Wert ist unendlich.",
+  "cheeringMessage29": "Möge dein Tag mit einem Lächeln erblühen.",
+  "cheeringMessage30": "Hab eine gute Zeit mit guten Menschen!",
+  "cheeringMessage31": "Heute einen Schritt näher an deine Träume!",
+  "cheeringMessage32": "Du bist heute der Coolste.",
+  "cheeringMessage33": "Ein wunderbarer Tag wird kommen.",
+  "cheeringMessage34": "Genieße deinen Tag heute in aller Ruhe.",
+  "cheeringMessage35": "Deine Bemühungen werden dich nicht verraten.",
+  "cheeringMessage36": "Hab heute einen gesunden Tag.",
+  "cheeringMessage37": "Du wurdest geboren, um geliebt zu werden!",
+  "cheeringMessage38": "Sei heute mutig!",
+  "cheeringMessage39": "Eine strahlende Zukunft erwartet dich.",
+  "cheeringMessage40": "Hab einen tag voller Leidenschaft!",
+  "cheeringMessage41": "Ich hoffe, dein Geist ist in Frieden.",
+  "cheeringMessage42": "Finde heute das kleine Glück.",
+  "cheeringMessage43": "Du machst das schon gut genug.",
+  "cheeringMessage44": "Beginne den Tag hoffnungsvoll.",
+  "cheeringMessage45": "Deine Freundlichkeit ist eine große Stärke für jemanden.",
+  "cheeringMessage46": "Hab heute einen produktiven Tag.",
+  "cheeringMessage47": "Du hast die Kraft, die Welt zu verändern.",
+  "cheeringMessage48": "Klarer Tag heute!",
+  "cheeringMessage49": "Strahle deinen Charme nach Herzenslust aus.",
+  "cheeringMessage50": "Fülle deinen Tag heute mit Glück!",
+  "locationServiceDisabled": "Standortdienste sind deaktiviert.",
+  "locationPermissionDenied": "Standortberechtigung verweigert.",
+  "locationPermissionPermanentlyDenied": "Standortberechtigung dauerhaft verweigert.",
+  "deleteMissionTitle": "Mission löschen",
+  "deleteMissionConfirm": "Sind Sie sicher, dass Sie diese Mission löschen möchten?",
+  "yesDelete": "Ja, löschen",
+  "waterAlarmTitle": "Zeit, Wasser zu trinken! 💧",
+  "waterAlarmBody": "Wie wäre es mit einem Glas kühlem Wasser für Ihre Gesundheit?",
+  "supplementAlarmBody": "Vergiss nicht, deine Nahrungsergänzungsmittel für heute einzunehmen.",
+  "waterHabitChannelDesc": "Benachrichtigungskanal für die Wassertrinkgewohnheit.",
+  "pleaseSolveMath": "Bitte lösen Sie das Problem.",
+  "detectedLabel": "[Erkannt: {labels}]",
+  "defaultSleepDuration": "7 Std. 30 Min.",
+    "@detectedLabel": {
+    "placeholders": {
+      "labels": {
+        "type": "String"
+      }
+    }
+  },
+  "year2024Name": "Gap-Chin Jahr (Jahr des Blauen Drachen)",
+  "year2025Name": "Eul-Sa Jahr (Jahr der Blauen Schlange)",
+  "year2026Name": "Byeong-O Jahr (Jahr des Roten Pferdes)",
+  "supportEmailSubject": "[{appTitle} Anfrage] {title}",
+  "@supportEmailSubject": {
+    "placeholders": {
+      "appTitle": {
+        "type": "String"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "summary": "Zusammenfassung",
+  "monthlySummary": "Monatliche Zusammenfassung",
+  "monthlySuccessRate": "{month} Monatliche Erfolgsquote: {percentage}% ({success}/{total})",
+  "noMonthlyRecord": "Keine Aufzeichnungen für {month}",
+  "missionRecord": "Missionsrekord",
+  "supplementRecord": "Ergänzungsaufzeichnung",
+  "timeSaleCatchChance": "Nutzen Sie die 50% Rabatt-Chance!",
+  "@monthlySuccessRate": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "String"
+      },
+      "success": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@noMonthlyRecord": {
+    "placeholders": {
+      "month": {
+        "type": "int"
+      }
+    }
+  }
 }

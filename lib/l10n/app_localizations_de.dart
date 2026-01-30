@@ -30,6 +30,36 @@ class AppLocalizationsDe extends AppLocalizations {
   String get settings => 'Einstellungen';
 
   @override
+  String get language => 'Sprache';
+
+  @override
+  String get languageKorean => 'Koreanisch';
+
+  @override
+  String get languageEnglish => 'Englisch';
+
+  @override
+  String get languageJapanese => 'Japanisch';
+
+  @override
+  String get languageChinese => 'Chinesisch';
+
+  @override
+  String get languageRussian => 'Russisch';
+
+  @override
+  String get languageHindi => 'Hindi';
+
+  @override
+  String get languageSpanish => 'Spanisch';
+
+  @override
+  String get languageFrench => 'Französisch';
+
+  @override
+  String get languageGerman => 'Deutsch';
+
+  @override
   String get alarm => 'Wecker';
 
   @override
@@ -56,6 +86,38 @@ class AppLocalizationsDe extends AppLocalizations {
   String get confirm => 'Bestätigen';
 
   @override
+  String get missionSuccess => 'Mission erfolgreich!';
+
+  @override
+  String get cheeringMessage1 => 'Einen schönen Tag noch!';
+
+  @override
+  String get cheeringMessage2 => 'Ich drücke dir heute die Daumen!';
+
+  @override
+  String get cheeringMessage3 => 'Es wird ein wunderbarer Tag.';
+
+  @override
+  String get todaysCheering => 'Botschaft des Tages';
+
+  @override
+  String get notificationWakeUpBody => 'Zeit zum Aufstehen!';
+
+  @override
+  String get notificationMissionBody =>
+      'Erfülle die Mission und schalte den Wecker aus!';
+
+  @override
+  String get notificationSafetyBody =>
+      'Der Wecker wurde zwangsweise geschlossen! Bitte beende die Mission.';
+
+  @override
+  String get notificationRingingBody => 'Der Wecker klingelt!';
+
+  @override
+  String get snoozePrefix => '[Schlummern]';
+
+  @override
   String get exactAlarmPermissionRequired =>
       'Die Berechtigung \"Exakter Wecker\" ist erforderlich, damit der Wecker zur richtigen Zeit klingelt.';
 
@@ -73,12 +135,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get lessThanAMinuteRemaining => 'Klingelt in weniger als einer Minute';
 
   @override
-  String hoursMinutesRemaining(int hours, int minutes) {
+  String hoursMinutesRemaining(String hours, String minutes) {
     return 'Klingelt in $hours Std $minutes Min';
   }
 
   @override
-  String minutesRemaining(int minutes) {
+  String minutesRemaining(String minutes) {
     return 'Klingelt in $minutes Min';
   }
 
@@ -497,12 +559,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get slideToDismiss => 'Zum Ausschalten schieben';
 
   @override
-  String snoozeInfo(int minutes, int count) {
-    return '$minutes Min, $count Mal';
+  String snoozeInfo(String minutes, String count) {
+    return '$minutes Min x $count Mal';
   }
 
   @override
-  String snoozeInfoUnlimited(int minutes) {
+  String snoozeInfoUnlimited(String minutes) {
     return '$minutes Min, unbegrenzt';
   }
 
@@ -1137,7 +1199,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get yes => 'Ja';
 
   @override
-  String get no => 'Nein';
+  String get no => 'No';
 
   @override
   String get wealthLuckWithIcon => '💰 Wohlstandsglück';
@@ -1550,7 +1612,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get eyeAnalysisTypeSharp =>
-      'Your eyes are intense and clear, showing momentary judgment and drive that stand out very much.';
+      'Ihre scharfen, klaren Augen spiegeln schnelles Urteilsvermögen und starke Entschlossenheit wider.';
 
   @override
   String get eyeAnalysisTypeDeep =>
@@ -1611,6 +1673,122 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get mouthExpressionLucky =>
       'Ein weit geöffneter, lächelnder Mund ist erfrischend, strahlt positive Energie aus und ruft nach Glück in zwischenmenschlichen Beziehungen.';
+
+  @override
+  String get supplementAlarmTitle =>
+      'Zeit, deine Nahrungsergänzungsmittel einzunehmen! 💊';
+
+  @override
+  String get alarmVolume => 'Alarmlautstärke';
+
+  @override
+  String get alarmTimeList => 'Alarmzeitliste';
+
+  @override
+  String get noAlarmTimesAdded => 'Keine Alarmzeiten hinzugefügt';
+
+  @override
+  String get alarmTimeDeleted => 'Alarmzeit wurde gelöscht';
+
+  @override
+  String get addAlarmTime => 'Alarmzeit hinzufügen';
+
+  @override
+  String get editAlarmTime => 'Alarmzeit bearbeiten';
+
+  @override
+  String get defaultRingtone => 'Standardklingelton';
+
+  @override
+  String get takeSupplementsNow =>
+      'Bitte nehmen Sie Ihre Nahrungsergänzungsmittel ein und zeichnen Sie sie auf!';
+
+  @override
+  String get nextTime => 'Nächstes Mal einnehmen';
+
+  @override
+  String get take => 'Einnehmen';
+
+  @override
+  String get notifications => 'Benachrichtigungen';
+
+  @override
+  String get notificationTime => 'Benachrichtigungszeit';
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get end => 'Ende';
+
+  @override
+  String get notificationInterval => 'Benachrichtigungsintervall';
+
+  @override
+  String get waterDrankToday => 'Heute getrunkenes Wasser';
+
+  @override
+  String get goal => 'Ziel';
+
+  @override
+  String get cup => 'Tasse';
+
+  @override
+  String get waterIntakeRecord => 'Wasseraufnahme-Aufzeichnung';
+
+  @override
+  String get remainingAmount => 'Restbetrag';
+
+  @override
+  String get ml => 'ml';
+
+  @override
+  String minutesFormat(String minutes) {
+    return '$minutes Min.';
+  }
+
+  @override
+  String get drinkWater => 'Wasser trinken';
+
+  @override
+  String get supplement => 'Nahrungsergänzungsmittel';
+
+  @override
+  String get water => 'Wasser';
+
+  @override
+  String get morning => 'Vormittag';
+
+  @override
+  String get afternoon => 'Nachmittag';
+
+  @override
+  String get evening => 'Abend';
+
+  @override
+  String get takeSupplement => 'Nahrungsergänzungsmittel einnehmen';
+
+  @override
+  String get goalAchievedTitle => 'Ziel erreicht!';
+
+  @override
+  String get waterIntake => 'Wasseraufnahme';
+
+  @override
+  String get remindTime => 'Erinnerungszeit';
+
+  @override
+  String get alarmRingtone => 'Alarm-Klingelton';
+
+  @override
+  String get snoozeTime => 'Snooze-Zeit';
+
+  @override
+  String get snoozeDescription =>
+      'Standardzeit bei Auswahl von \'Später einnehmen\'';
+
+  @override
+  String get oneHour => '1 Stunde';
 
   @override
   String get mouthExpressionOpen =>
@@ -1747,83 +1925,83 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get sajuFortune2025Gap =>
-      '🌿 2025 Eulsa Year Gap-Wood General Fortune: \'Growth Amidst New Stage and Competition\'\n\n2025 is a year where the energy of \'Geob-jae\' and \'Sik-sin\' enters for you. It\'s like a large tree in a forest harmonizing with ivy (Eul-wood) to grow together. Synergy occurs when together rather than alone, but at the same time, it will be a year where fierce competition cannot be avoided.\n\n💼 [Career & Business]\nActivity becomes vigorous and the desire for expression becomes strong. Opportunities will come to widely announce your ideas and talents to the world. Excellent results are expected for freelancers, those in performing arts, or sales. However, subtle conflicts may arise in relationships with colleagues or competitors, so wisdom to make them collaborators rather than enemies is needed.\n\n💰 [Wealth]\nWealth flow is active, but there may be as much money going out as coming in (influence of Geob-jae). Caution is needed as expenditures may occur due to gatherings with friends/colleagues or investment recommendations. Investing in self-development or business expansion is more advantageous in the long run than saving money.\n\n❤️ [Love & Relationships]\nSociability improves and you will meet many new people. Popularity rises in gatherings or group activities, and it\'s a good time to appeal charm to the opposite sex. However, as competitors may appear, it\'s good to express yourself actively if there\'s someone you like.\n\n⚠️ [Cautions]\nExcessive competitive spirit may lead to trouble. Also, movement luck increases due to the \'Sa-fire\' energy, so pay attention to traffic safety and physical strength management.';
+      '🌿 2025 Eulsa-Jahr Gap-Holz Allgemeines Glück: \'Wachstum inmitten neuer Phasen und Wettbewerb\'\n\n2025 ist ein Jahr, in dem die Energie von \'Geob-jae\' und \'Sik-sin\' für Sie eintritt. Es ist wie ein großer Baum in einem Wald, der mit Efeu (Eul-Holz) harmoniert, um gemeinsam zu wachsen. Synergien entstehen eher gemeinsam als allein, aber gleichzeitig wird es ein Jahr sein, in dem heftiger Wettbewerb nicht vermieden werden kann.\n\n💼 [Karriere & Business]\nDie Aktivität wird lebhaft und der Wunsch nach Ausdruck wird stark. Es ergeben sich Gelegenheiten, Ihre Ideen und Talente der Welt weithin bekannt zu machen. Hervorragende Ergebnisse werden für Freiberufler, Personen in den darstellenden Künsten oder im Verkauf erwartet. Es können jedoch subtile Konflikte in Beziehungen zu Kollegen oder Konkurrenten auftreten, daher ist Weisheit gefragt, um sie eher zu Verbündeten als zu Feinden zu machen.\n\n💰 [Wohlstand]\nDer Wohlstandsfluss ist aktiv, aber es kann so viel Geld abfließen, wie hereinkommt (Einfluss von Geob-jae). Vorsicht ist geboten, da Ausgaben aufgrund von Treffen mit Freunden/Kollegen oder Investmentempfehlungen anfallen können. Investitionen in die Selbstentwicklung oder Geschäftserweiterung sind langfristig vorteilhafter als das Sparen von Geld.\n\n❤️ [Liebe & Beziehungen]\nDie Kontaktfreudigkeit verbessert sich und Sie werden viele neue Leute kennenlernen. Die Beliebtheit steigt bei Treffen oder Gruppenaktivitäten, und es ist eine gute Zeit, dem anderen Geschlecht Charme zu vermitteln. Da jedoch Konkurrenten auftreten können, ist es gut, sich aktiv auszudrücken, wenn es jemanden gibt, den Sie mögen.\n\n⚠️ [Vorsicht]\nÜbermäßiger Wettbewerbsgeist kann zu Problemen führen. Außerdem nimmt das Bewegungsglück aufgrund der \'Sa-Feuer\'-Energie zu, achten Sie also auf Verkehrssicherheit und Kraftmanagement.';
 
   @override
   String get sajuFortune2025Eul =>
-      '🌿 2025 Eulsa Year Eul-Wood General Fortune: \'A Brilliant Leap Revealing Your Colors\'\n\n2025 is a year where the energy of \'Bi-gyeon\' and \'Sang-gwan\' enters for you. It\'s like flowers in a field in full bloom under the warm sun. It will be a dynamic year where you fully show off your individuality and talents and receive public attention.\n\n💼 [Career & Business]\nCreativity and artistic sense reach their peak. You will stand out greatly in tasks of planning and presenting ideas. Opportunities to become independent or lead new projects arise as your skills are recognized. However, coordination is needed as trying to go too far ahead may conflict with existing rules.\n\n💰 [Wealth]\nA year where income is created based on wit and skill. You may gain unexpected income through side jobs or creative activities. However, expenditures for dignity maintenance or entertainment may increase as you chase fancy things, so don\'t lose economic sense.\n\n❤️ [Love & Relationships]\nA time with overflowing charm, receiving attention from the opposite sex. In romantic relationships, you spend pleasant and lively times, but sometimes fights may occur due to your own stubbornness. If solo, you can look forward to a fateful meeting.\n\n⚠️ [Cautions]\nBe careful of slips of the tongue as it\'s an easy year to be subject to rumors. Also, regular sleep and rest are essential as you may consume too much energy and get tired easily.';
+      '🌿 2025 Eulsa-Jahr Eul-Holz Allgemeines Glück: \'Ein brillanter Sprung, der Ihre Farben offenbart\'\n\n2025 ist ein Jahr, in dem die Energie von \'Bi-gyeon\' und \'Sang-gwan\' für Sie eintritt. Es ist wie Blumen auf einem Feld in voller Blüte unter der warmen Sonne. Es wird ein dynamisches Jahr sein, in dem Sie Ihre Individualität und Ihre Talente voll zur Geltung bringen und öffentliche Aufmerksamkeit erhalten.\n\n💼 [Karriere & Business]\nKreativität und künstlerisches Gespür erreichen ihren Höhepunkt. Sie werden bei der Planung und Präsentation von Ideen stark hervorstechen. Es ergeben sich Gelegenheiten, unabhängig zu werden oder neue Projekte zu leiten, da Ihre Fähigkeiten anerkannt werden. Es ist jedoch Koordination erforderlich, da der Versuch, zu weit vorauszugehen, mit bestehenden Regeln in Konflikt geraten kann.\n\n💰 [Wohlstand]\nEin Jahr, in dem Einkommen auf der Grundlage von Witz und Geschicklichkeit erzielt wird. Sie können unerwartete Einnahmen durch Nebenjobs oder kreative Aktivitäten erzielen. Da Sie jedoch glanzvollen Dingen nachjagen, können die Ausgaben für die Aufrechterhaltung der Würde oder für Unterhaltung steigen, verlieren Sie also nicht den wirtschaftlichen Sinn.\n\n❤️ [Liebe & Beziehungen]\nEine Zeit mit überströmendem Charme, in der Sie die Aufmerksamkeit des anderen Geschlechts auf sich ziehen. In romantischen Beziehungen verbringen Sie angenehme und lebhafte Zeiten, aber manchmal können Streitigkeiten aufgrund Ihrer eigenen Sturheit auftreten. Wenn Sie allein sind, können Sie sich auf eine schicksalhafte Begegnung freuen.\n\n⚠️ [Vorsicht]\nSeien Sie vorsichtig mit Versprechern, da es ein Jahr ist, in dem man leicht zum Gegenstand von Gerüchten werden kann. Außerdem sind regelmäßiger Schlaf und Ruhe unerlässlich, da Sie zu viel Energie verbrauchen und leicht ermüden können.';
 
   @override
   String get sajuFortune2026Gap =>
-      '🌳 2026 Byeong-oh Year Gap-Wood General Fortune: \'Flame of Passion, Maximization of Activity\'\n\n2026 is a year where the energy of \'Sik-sin\' (Productivity) and \'Sang-gwan\' (Expression) is very strong for you, a Gap-Wood. It is a situation where wood meets fire and burns vigorously, a period where your talent and expression burst out into the world without hesitation. Your presence is revealed even if you stay still, and your range of activities expands dramatically.\n\n💼 [Career & Business]\nIt is a very good time to start new projects or a business. Your ideas are realized, and you will be passionately immersed in work. You can achieve great results in fields that express yourself, such as art, broadcasting, sales, and education. However, you need to be cautious and double-check everything as you may make mistakes if you only run forward.\n\n💰 [Wealth]\nWealth follows as much as you are active. Income from business or side jobs may increase. However, as much as you earn, a lot of money may go out for investment or consumption. Investment for the future is good, but impulsive spending should be guarded against.\n\n❤️ [Love & Relationships]\nAppeal to the opposite sex with an honest and active attitude. Romantic luck heats up, but excessive emotional expression may burden the partner. It is also a year where children\'s luck enters very strongly.\n\n⚠️ [Precautions]\nIt is a year of extreme energy consumption. \'Burnout\' may come, so physical strength management is essential. Be careful of rumors caused by slips of the tongue, and try not to insist only on your own arguments.';
+      '🌳 2026 Byeong-oh-Jahr Gap-Holz Allgemeines Glück: \'Flamme der Leidenschaft, Maximierung der Aktivität\'\n\n2026 ist ein Jahr, in dem die Energie von \'Sik-sin\' (Produktivität) und \'Sang-gwan\' (Ausdruck) für Sie, ein Gap-Holz, sehr stark ist. Es ist eine Situation, in der Holz auf Feuer trifft und kräftig brennt, eine Zeit, in der Ihr Talent und Ihr Ausdruck ohne Zögern in die Welt hinausplatzen. Ihre Anwesenheit wird offenbart, auch wenn Sie still bleiben, und Ihr Aktionsradius erweitert sich dramatisch.\n\n💼 [Karriere & Business]\nEs ist eine sehr gute Zeit, um neue Projekte oder ein Unternehmen zu starten. Ihre Ideen werden verwirklicht, und Sie werden leidenschaftlich in die Arbeit eintauchen. Sie können großartige Ergebnisse in Bereichen erzielen, in denen Sie sich selbst ausdrücken, wie Kunst, Rundfunk, Verkauf und Bildung. Sie müssen jedoch vorsichtig sein und alles doppelt überprüfen, da Sie Fehler machen könnten, wenn Sie nur nach vorne rennen.\n\n💰 [Wohlstand]\nDer Wohlstand folgt, so sehr Sie aktiv sind. Das Einkommen aus Geschäft oder Nebenjobs kann steigen. Doch so viel Sie verdienen, kann auch viel Geld für Investitionen oder Konsum abfließen. Investitionen für die Zukunft sind gut, aber vor impulsiven Ausgaben sollte man sich hüten.\n\n❤️ [Liebe & Beziehungen]\nSprechen Sie das andere Geschlecht mit einer ehrlichen und aktiven Haltung an. Das Liebesglück heizt sich auf, aber übermäßiger emotionaler Ausdruck könnte den Partner belasten. Es ist auch ein Jahr, in dem das Kinderglück sehr stark eintritt.\n\n⚠️ [Vorsicht]\nEs ist ein Jahr extremer Energieverschwendung. Ein \'Burnout\' kann kommen, daher ist ein körperliches Kraftmanagement unerlässlich. Achten Sie auf Gerüchte, die durch Versprecher verursacht werden, und versuchen Sie, nicht nur auf Ihren eigenen Argumenten zu beharren.';
 
   @override
   String get sajuFortune2026Eul =>
-      '🌸 2026 Byeong-oh Year Eul-Wood General Fortune: \'Brilliant Blooming, Full Flowering of Talent\'\n\n2026 is a year where \'Sang-gwan\' (Expression) is heavy for you, an Eul-Wood. It is a situation where flowers bloom under the hot sun, a period where your charm and talent reach their peak. You will be the protagonist who receives attention everywhere and taste brilliant achievements.\n\n💼 [Career & Business]\nUnconventional attempts that break existing frameworks succeed. You will stand out in design, fashion, beauty, and entertainment. You may receive promotion or scout offers at work, but be careful of friction with superiors. Your ability doubles in a free environment.\n\n💰 [Wealth]\nThe ability to create wealth becomes excellent. Your brand value rises and your worth increases. However, chasing glamour may lead to luxury or waste, so you must guard your wallet well.\n\n❤️ [Love & Relationships]\nPopularity with the opposite sex explodes. You will have a brilliant and passionate romance, but it may end shortly and intensely. Married people may have a lot to worry about regarding children.\n\n⚠️ [Precautions]\nEmotional ups and downs may become severe. If you cannot control your temper, hard-earned achievements may collapse. Have a law-abiding spirit to avoid legal issues or rumors.';
+      '🌸 2026 Byeong-oh-Jahr Eul-Holz Allgemeines Glück: \'Brillantes Blühen, volle Entfaltung des Talents\'\n\n2026 ist ein Jahr, in dem \'Sang-gwan\' (Ausdruck) für Sie, ein Eul-Holz, schwer wiegt. Es ist eine Situation, in der Blumen unter der heißen Sonne blühen, eine Zeit, in der Ihr Charme und Ihr Talent ihren Höhepunkt erreichen. Sie werden der Protagonist sein, der überall Aufmerksamkeit erhält, und brillante Erfolge erzielen.\n\n💼 [Karriere & Business]\nUngewöhnliche Versuche, die bestehende Rahmenbedingungen sprengen, sind erfolgreich. Sie werden in den Bereichen Design, Mode, Schönheit und Unterhaltung hervorstechen. Sie könnten Beförderungs- oder Abwerbeangebote bei der Arbeit erhalten, aber achten Sie auf Reibungen mit Vorgesetzten. In einer freien Umgebung verdoppelt sich Ihre Fähigkeit.\n\n💰 [Wohlstand]\nDie Fähigkeit, Wohlstand zu schaffen, wird exzellent. Ihr Markenwert steigt und Ihr Wert nimmt zu. Das Streben nach Glamour kann jedoch zu Luxus oder Verschwendung führen, daher müssen Sie Ihren Geldbeutel gut hüten.\n\n❤️ [Liebe & Beziehungen]\nDie Popularität beim anderen Geschlecht explodiert. Sie werden eine brillante und leidenschaftliche Romanze haben, aber sie könnte kurz und intensiv enden. Verheiratete Menschen könnten sich viele Sorgen um ihre Kinder machen.\n\n⚠️ [Vorsicht]\nEmotionale Höhen und Tiefen können heftig werden. Wenn Sie Ihr Temperament nicht kontrollieren können, können hart erarbeitete Erfolge zusammenbrechen. Bewahren Sie einen gesetzestreuen Geist, um rechtliche Probleme oder Gerüchte zu vermeiden.';
 
   @override
   String get sajuFortune2026Byeong =>
-      '☀️ 2026 Byeong-oh Year Byeong-Fire General Fortune: \'Two Suns, Intense Competition and Leap\'\n\n2026 is a year where \'Bi-gyeon\' (Friend) and \'Geob-jae\' (Competitor) are very strong for you, a Byeong-Fire. It is a situation where two suns appear in the sky, a period where pride and competitive spirit reach the sky. Subjectivity becomes strong, you hate any interference, and you push through your path with determination.\n\n💼 [Career & Business]\nIt is a luck to win and achieve in competitive places. You can increase the scale through partnership or collaboration, but conflicts may arise due to profit distribution issues. It is a good opportunity for freelancers or professionals to make their names widely known.\n\n💰 [Wealth]\nMoney comes in, but there are also large holes for it to go out. Money may go out due to siblings, friends, or colleagues. Guaranteeing or lending money is absolutely forbidden. It is better to invest in honor or growing power rather than saving money.\n\n❤️ [Love & Relationships]\nYou may meet a lover like a friend or develop from a friend to a lover. However, if you have a partner, be careful as a love triangle or competitor may appear.\n\n⚠️ [Precautions]\nDogmatic actions may cause resentment from those around you. \'Humility\' is the best tactic. Pay attention to cardiovascular disease or eye health.';
+      '☀️ 2026 Byeong-oh-Jahr Byeong-Feuer Allgemeines Glück: \'Zwei Sonnen, intensiver Wettbewerb und Sprung\'\n\n2026 ist ein Jahr, in dem \'Bi-gyeon\' (Freund) und \'Geob-jae\' (Konkurrent) für Sie, ein Byeong-Feuer, sehr stark sind. Es ist eine Situation, in der zwei Sonnen am Himmel erscheinen, eine Zeit, in der Stolz und Wettbewerbsgeist den Himmel erreichen. Die Subjektivität wird stark, Sie hassen jegliche Einmischung und gehen Ihren Weg mit Entschlossenheit.\n\n💼 [Karriere & Business]\nEs ist ein Glück, an wettbewerbsorientierten Orten zu gewinnen und Erfolge zu erzielen. Sie können den Umfang durch Partnerschaft oder Zusammenarbeit vergrößern, aber es können Konflikte aufgrund von Gewinnverteilungsfragen entstehen. Es ist eine gute Gelegenheit für Freiberufler oder Fachleute, ihren Namen weithin bekannt zu machen.\n\n💰 [Wohlstand]\nGeld kommt herein, aber es gibt auch große Löcher, durch die es wieder abfließt. Geld kann durch Geschwister, Freunde oder Kollegen verloren gehen. Das Bürgen oder Verleihen von Geld ist absolut verboten. Es ist besser, in Ehre oder wachsende Macht zu investieren, als Geld zu sparen.\n\n❤️ [Liebe & Beziehungen]\nSie können einen Liebhaber wie einen Freund treffen oder sich von einem Freund zu einem Liebhaber entwickeln. Wenn Sie jedoch einen Partner haben, seien Sie vorsichtig, da eine Dreiecksbeziehung oder ein Konkurrent auftauchen könnte.\n\n⚠️ [Vorsicht]\nEigenmächtiges Handeln kann Ressentiments bei den Menschen in Ihrer Umgebung hervorrufen. \'Bescheidenheit\' ist die beste Taktik. Achten Sie auf Herz-Kreislauf-Erkrankungen oder Augengesundheit.';
 
   @override
   String get sajuFortune2026Jeong =>
-      '🔥 2026 Byeong-oh Year Jeong-Fire General Fortune: \'Giant Flame, Expansion of Power\'\n\n2026 is a year of \'Geob-jae\' (Competitor) and \'Bi-gyeon\' (Friend) for you, a Jeong-Fire. Like a candle meeting a furnace, it is a period where your power becomes massive. You can achieve things that were impossible alone through help or cooperation from those around you.\n\n💼 [Career & Business]\nA strong driving force arises. You will have the wisdom to overwhelm competitors or turn them into your side. Opportunities to exercise leadership in team projects or organizational life will come. However, if you try to monopolize results, you may be betrayed, so a posture of sharing credit is necessary.\n\n💰 [Wealth]\nSpeculative tendencies become strong. You will pursue \'high risk, high return,\' and if lucky, you will touch a lot of money, but failure also has a large impact. Unexpected expenses may occur, so it is good to prepare an emergency fund.\n\n❤️ [Love & Relationships]\nThere is a high probability of meeting connections in social gatherings or group activities. Men should be careful as they may neglect their wives or girlfriends. Relationships with people around you become assets this year.\n\n⚠️ [Precautions]\nGreed leads to trouble. Refrain from unreasonable expansion or investment. Be careful of diseases caused by anger or stress.';
+      '🔥 2026 Byeong-oh-Jahr Jeong-Feuer Allgemeines Glück: \'Riesige Flamme, Erweiterung der Macht\'\n\n2026 ist ein Jahr von \'Geob-jae\' (Konkurrent) und \'Bi-gyeon\' (Freund) für Sie, ein Jeong-Feuer. Wie eine Kerze, die auf einen Ofen trifft, ist es eine Zeit, in der Ihre Macht massiv wird. Sie können Dinge erreichen, die allein unmöglich waren, durch Hilfe oder Zusammenarbeit von den Menschen um Sie herum.\n\n💼 [Karriere & Business]\nEine starke Triebkraft entsteht. Sie werden die Weisheit haben, Konkurrenten zu überwältigen oder sie auf Ihre Seite zu ziehen. Gelegenheiten, Führung in Teamprojekten oder im Organisationsleben auszuüben, werden kommen. Wenn Sie jedoch versuchen, Ergebnisse zu monopolisieren, könnten Sie verraten werden, daher ist eine Haltung des Teilens von Anerkennung notwendig.\n\n💰 [Wohlstand]\nSpekulative Tendenzen werden stark. Sie werden \'High Risk, High Return\' verfolgen, und wenn Sie Glück haben, werden Sie viel Geld berühren, aber ein Scheitern hat auch große Auswirkungen. Unerwartete Ausgaben können auftreten, daher ist es gut, einen Notfallfonds vorzubereiten.\n\n❤️ [Liebe & Beziehungen]\nEs besteht eine hohe Wahrscheinlichkeit, Verbindungen in sozialen Zusammenkünften oder Gruppenaktivitäten zu treffen. Männer sollten vorsichtig sein, da sie ihre Frauen oder Freundinnen vernachlässigen könnten. Beziehungen zu Menschen in Ihrer Umgebung werden in diesem Jahr zu einem Aktivposten.\n\n⚠️ [Vorsicht]\nGier führt zu Problemen. Sehen Sie von unangemessenen Erweiterungen oder Investitionen ab. Achten Sie auf Krankheiten, die durch Ärger oder Stress verursacht werden.';
 
   @override
   String get sajuFortune2026Mu =>
-      '🌋 2026 Byeong-oh Year Mu-Earth General Fortune: \'Patience and Preparation Amidst Intense Heat\'\n\n2026 is a year where the energy of \'Pyeon-in\' (Intuition) and \'Jeong-in\' (Knowledge) is strong for you, a Mu-Earth. It is like condensed energy just before a volcano erupts. It is the optimal time to fill your inner self and grow skills through study, art, and obtaining certifications.\n\n💼 [Career & Business]\nMental labor such as planning, research, and strategy establishment shines rather than active work. Document luck is good, so there are results in contracts or permit-related tasks. However, if you only think and postpone execution, you may miss opportunities, so bold decisiveness is also needed.\n\n💰 [Wealth]\nReal estate document luck is very strong. It is an opportunity to increase assets through sale or contract. Cash flow may be somewhat frustrating, but investment from a long-term perspective is promising.\n\n❤️ [Love & Relationships]\nInterference from mothers or superiors may increase. In romance, you will value mental communion, and connections with older people may be made.\n\n⚠️ [Precautions]\nToo many thoughts can lead to depression or lethargy. Outdoor activities or sweating through exercise help improve luck. As the ground cracks due to too much heat, be careful of dry skin or stomach disorders.';
+      '🌋 2026 Byeong-oh-Jahr Mu-Erde Allgemeines Glück: \'Geduld und Vorbereitung inmitten intensiver Hitze\'\n\n2026 ist ein Jahr, in dem die Energie von \'Pyeon-in\' (Intuition) und \'Jeong-in\' (Wissen) für Sie, ein Mu-Erde, stark ist. Es ist wie kondensierte Energie kurz vor dem Ausbruch eines Vulkans. Es ist die optimale Zeit, um Ihr Inneres zu füllen und Fähigkeiten durch Studium, Kunst und den Erwerb von Zertifizierungen auszubauen.\n\n💼 [Karriere & Business]\nGeistige Arbeit wie Planung, Forschung und Strategieentwicklung glänzt eher als aktive Arbeit. Das Dokumentenglück ist gut, so dass es Ergebnisse bei Verträgen oder genehmigungsbezogenen Aufgaben gibt. Wenn Sie jedoch nur nachdenken und die Ausführung aufschieben, könnten Sie Gelegenheiten verpassen, so dass auch mutige Entschlossenheit gefragt ist.\n\n💰 [Wohlstand]\nDas Immobiliendokumentenglück ist sehr stark. Es ist eine Gelegenheit, das Vermögen durch Verkauf oder Vertrag zu steigern. Der Cashflow kann etwas frustrierend sein, aber Investitionen aus einer langfristigen Perspektive sind vielversprechend.\n\n❤️ [Liebe & Beziehungen]\nDie Einmischung von Müttern oder Vorgesetzten kann zunehmen. In der Romantik werden Sie geistige Gemeinschaft schätzen, und es können Verbindungen zu älteren Menschen geknüpft werden.\n\n⚠️ [Vorsicht]\nZu viele Gedanken können zu Depressionen oder Lethargie führen. Aktivitäten im Freien oder Schwitzen durch Sport helfen, das Glück zu verbessern. Da der Boden aufgrund der zu großen Hitze reißt, achten Sie auf trockene Haut oder Magenbeschwerden.';
 
   @override
   String get sajuFortune2026Gi =>
-      '🌾 2026 Byeong-oh Year Gi-Earth General Fortune: \'Solid Foundation and Definite Support\'\n\n2026 is a year of \'Jeong-in\' (Knowledge) and \'Pyeon-in\' (Intuition) for you, a Gi-Earth. It is a situation where warm sunlight shines on the earth and ripens grains. It is a period of solidifying a stable foundation while receiving full support and love from superiors.\n\n💼 [Career & Business]\nYou will achieve the best results in everything related to study, such as promotion exams, certification exams, and degree attainment. At work, you will gain the trust of superiors and take on important positions. You will stand out in education, real estate, counseling, and welfare fields.\n\n💰 [Wealth]\nIt is a luck to hold documents. You may achieve the dream of owning a home or receive inheritance or gifts. Stable asset growth is possible, and it is a year where honor shines more than wealth.\n\n❤️ [Love & Relationships]\nIt is a year to be loved. You will receive dependable love from your lover or meet a partner with good conditions. Marriage luck also enters, and family life becomes harmonious.\n\n⚠️ [Precautions]\nIf you only try to receive, you may become lazy. A posture of sharing as much as you received is necessary. Discard dependency and grow self-reliance.';
+      '🌾 2026 Byeong-oh-Jahr Gi-Erde Allgemeines Glück: \'Solides Fundament und definitive Unterstützung\'\n\n2026 ist ein Jahr von \'Jeong-in\' (Wissen) und \'Pyeon-in\' (Intuition) für Sie, eine Gi-Erde. Es ist eine Situation, in der warmes Sonnenlicht auf die Erde scheint und das Getreide reifen lässt. Es ist eine Zeit der Festigung eines stabilen Fundaments, während Sie volle Unterstützung und Liebe von Vorgesetzten erhalten.\n\n💼 [Karriere & Business]\nSie werden die besten Ergebnisse in allem erzielen, was mit dem Studium zu tun hat, wie z. B. Beförderungsprüfungen, Zertifizierungsprüfungen und dem Erwerb von akademischen Graden. Bei der Arbeit werden Sie das Vertrauen der Vorgesetzten gewinnen und wichtige Positionen einnehmen. Sie werden in den Bereichen Bildung, Immobilien, Beratung und Soziales hervorstechen.\n\n💰 [Wohlstand]\nEs ist ein Glück, Dokumente in den Händen zu halten. Sie könnten den Traum vom Eigenheim verwirklichen oder Erbschaften oder Geschenke erhalten. Ein stabiles Vermögenswachstum ist möglich, und es ist ein Jahr, in dem Ehre mehr glänzt als Wohlstand.\n\n❤️ [Liebe & Beziehungen]\nEs ist ein Jahr, um geliebt zu werden. Sie werden verlässliche Liebe von Ihrem Partner erhalten oder einen Partner mit guten Bedingungen treffen. Das Heiratsglück tritt ebenfalls ein, und das Familienleben wird harmonisch.\n\n⚠️ [Vorsicht]\nWenn Sie nur versuchen zu empfangen, könnten Sie faul werden. Eine Haltung des Teilens, so viel wie Sie erhalten haben, ist notwendig. Legen Sie die Abhängigkeit ab und entwickeln Sie Eigenständigkeit.';
 
   @override
   String get sajuFortune2026Gyeong =>
-      '⚔️ 2026 Byeong-oh Year Gyeong-Metal General Fortune: \'Birth of a Masterpiece Beyond Ordeal\'\n\n2026 is a year where \'Pyeon-gwan\' (Pressure) and \'Jeong-gwan\' (Authority) are very powerful for you, a Gyeong-Metal. It is a situation of melting raw ore in a furnace to make a masterpiece sword. There may be strong pressure and stress, but if you endure it, you will gain immense authority and honor.\n\n💼 [Career & Business]\nYou may take on positions with heavy responsibility or handle difficult projects. However, this is a process of testing you, and if successfully completed, your status rises instantly. It is an opportunity for promotion for those in public office, military, police, and legal fields.\n\n💰 [Wealth]\nIt is a luck of honor and titles rather than money. As status rises, wealth will naturally follow, but money going out for dignity maintenance or entertainment is also significant.\n\n❤️ [Love & Relationships]\nFor women, it is a luck where a charismatic and capable man appears. Men have strong children\'s luck. Relationships with work superiors or elders become important.\n\n⚠️ [Precautions]\nHealth management is the top priority. Be careful of diseases or accidents caused by overwork. Especially lungs and large intestines may weaken. Find ways to relieve stress.';
+      '⚔️ 2026 Byeong-oh-Jahr Gyeong-Metall Allgemeines Glück: \'Geburt eines Meisterwerks jenseits der Prüfung\'\n\n2026 ist ein Jahr, in dem \'Pyeon-gwan\' (Druck) und \'Jeong-gwan\' (Autorität) für Sie, ein Gyeong-Metall, sehr mächtig sind. Es ist eine Situation, in der Roherz in einem Ofen geschmolzen wird, um ein Meisterwerk-Schwert herzustellen. Es kann starker Druck und Stress auftreten, aber wenn Sie ihn ertragen, werden Sie immense Autorität und Ehre gewinnen.\n\n💼 [Karriere & Business]\nSie könnten Positionen mit großer Verantwortung übernehmen oder schwierige Projekte bearbeiten. Dies ist jedoch ein Prozess, der Sie prüft, und wenn er erfolgreich abgeschlossen wird, steigt Ihr Status sofort an. Es ist eine Gelegenheit zur Beförderung für Personen im öffentlichen Dienst, beim Militär, bei der Polizei und im juristischen Bereich.\n\n💰 [Wohlstand]\nEs ist eher ein Glück von Ehre und Titeln als von Geld. Wenn der Status steigt, wird der Wohlstand natürlich folgen, aber das Geld, das für die Aufrechterhaltung der Würde oder für Unterhaltung ausgegeben wird, ist ebenfalls beträchtlich.\n\n❤️ [Liebe & Beziehungen]\nFür Frauen ist es ein Glück, bei dem ein charismatischer und fähiger Mann erscheint. Männer haben ein starkes Kinderglück. Beziehungen zu Vorgesetzten oder Ältesten werden wichtig.\n\n⚠️ [Vorsicht]\nGesundheitsmanagement hat oberste Priorität. Achten Sie auf Krankheiten oder Unfälle, die durch Überarbeitung verursacht werden. Besonders Lunge und Dickdarm könnten geschwächt werden. Finden Sie Wege, um Stress abzubauen.';
 
   @override
   String get sajuFortune2026Sin =>
-      '💎 2026 Byeong-oh Year Sin-Metal General Fortune: \'Shining Jewel, Peak of Honor\'\n\n2026 is a year of \'Jeong-gwan\' (Authority) and \'Pyeon-gwan\' (Pressure) for you, a Sin-Metal. Like a jewel shining under lights, it is a period where your value is revealed to the world and honor is elevated. You have deep connections with upright and stable workplaces or organizations.\n\n💼 [Career & Business]\nJob hunting, promotion, and transfer luck are very good. You may also receive scout offers by being recognized for your skills. If you follow principles and handle work correctly, you will receive respect from everyone.\n\n💰 [Wealth]\nStable salary or fixed income is guaranteed. If you protect honor rather than chasing wealth, wealth will naturally follow. You can benefit from your husband or workplace.\n\n❤️ [Love & Relationships]\nIt is the best marriage and dating luck for women. You can meet an upright and capable spouse. Men gain children or have joyful events due to children.\n\n⚠️ [Precautions]\nToo much heat can melt the jewel. Excessive work or stress may cause nervousness. You may appear inflexible due to strong principle-oriented tendencies, so be careful.';
+      '💎 2026 Byeong-oh-Jahr Sin-Metall Allgemeines Glück: \'Glänzendes Juwel, Höhepunkt der Ehre\'\n\n2026 ist ein Jahr von \'Jeong-gwan\' (Autorität) und \'Pyeon-gwan\' (Druck) für Sie, ein Sin-Metall. Wie ein Juwel, das unter Lichtern glänzt, ist es eine Zeit, in der Ihr Wert der Welt offenbart und die Ehre erhöht wird. Sie haben tiefe Verbindungen zu aufrechten und stabilen Arbeitsplätzen oder Organisationen.\n\n💼 [Karriere & Business]\nArbeitssuche, Beförderung und Versetzungsglück sind sehr gut. Sie könnten auch Abwerbeangebote erhalten, indem Sie für Ihre Fähigkeiten anerkannt werden. Wenn Sie Prinzipien folgen und die Arbeit korrekt erledigen, werden Sie Respekt von allen erhalten.\n\n💰 [Wohlstand]\nEin stabiles Gehalt oder ein festes Einkommen ist garantiert. Wenn Sie die Ehre schützen, anstatt dem Reichtum nachzujagen, wird der Wohlstand natürlich folgen. Sie können von Ihrem Ehemann oder Ihrem Arbeitsplatz profitieren.\n\n❤️ [Liebe & Beziehungen]\nEs ist das beste Heirats- und Dating-Glück für Frauen. Sie können einen aufrechten und fähigen Ehepartner treffen. Männer gewinnen Kinder oder haben freudige Ereignisse aufgrund von Kindern.\n\n⚠️ [Vorsicht]\nZu viel Hitze kann das Juwel schmelzen. Übermäßige Arbeit oder Stress können Nervosität verursachen. Sie könnten aufgrund starker Prinzipienorientierung unflexibel erscheinen, seien Sie also vorsichtig.';
 
   @override
   String get sajuFortune2026Im =>
-      '🌊 2026 Byeongo Year Im-Water General Fortune: \'A Dynamic Year of Expanding Activity Range\'\n\n2026 is a year where the energy of \'Pyeon-jae\' and \'Jeong-jae\' enters for you. It\'s like a huge sea circulating actively by receiving the sun\'s heat and moving towards the wide world. It will be a dynamic year where economic activities become vigorous and opportunities to touch large wealth come.\n\n💼 [Career & Business]\nBusiness acumen is maximized. A very good year to pioneer new markets or reap large profits from investments. Luck where activity range can expand beyond domestic to overseas. Bold decisions lead to great results, but detailed review is essential.\n\n💰 [Wealth]\nWealth luck reaches its peak. Unexpected windfalls or large-scale business profits are expected. If you ride the flow of money well, you can form large assets. However, management is important as money going out can be as large as money coming in.\n\n❤️ [Love & Relationships]\nSociability improves and many people of the opposite sex gather around with overflowing charm. A good time to enjoy active dating. In romantic relationships, you spend happy times enjoying fancy dates and trips. However, be careful as you may neglect partners due to a too busy schedule.\n\n⚠️ [Cautions]\nPay attention to kidney function or blood circulation. Also, wisdom to know how to be satisfied at an appropriate level is needed as excessive greed may lead to trouble.';
+      '🌊 2026 Byeongo-Jahr Im-Wasser Allgemeines Glück: \'Ein dynamisches Jahr der Erweiterung des Aktionsradius\'\n\n2026 ist ein Jahr, in dem die Energie von \'Pyeon-jae\' und \'Jeong-jae\' für Sie eintritt. Es ist wie ein riesiges Meer, das aktiv zirkuliert, indem es die Sonnenwärme empfängt und sich auf die weite Welt zubewegt. Es wird ein dynamisches Jahr sein, in dem die wirtschaftlichen Aktivitäten lebhaft werden und Gelegenheiten kommen, großen Wohlstand zu berühren.\n\n💼 [Karriere & Business]\nDer Geschäftssinn wird maximiert. Ein sehr gutes Jahr, um neue Märkte zu erschließen oder große Gewinne aus Investitionen zu ziehen. Glück, bei dem sich der Aktionsradius über das Inland hinaus nach Übersee ausdehnen kann. Mutige Entscheidungen führen zu großartigen Ergebnissen, aber eine detaillierte Prüfung ist unerlässlich.\n\n💰 [Wohlstand]\nDas Wohlstandsglück erreicht seinen Höhepunkt. Unerwartete Gewinne oder großflächige Geschäftsgewinne werden erwartet. Wenn Sie den Geldfluss gut reiten, können Sie große Vermögenswerte bilden. Das Management ist jedoch wichtig, da das Geld, das abfließt, genauso groß sein kann wie das Geld, das hereinkommt.\n\n❤️ [Liebe & Beziehungen]\nDie Kontaktfreudigkeit verbessert sich und viele Menschen des anderen Geschlechts versammeln sich mit überströmendem Charme um Sie herum. Eine gute Zeit, um aktives Dating zu genießen. In romantischen Beziehungen verbringen Sie glückliche Zeiten und genießen schicke Dates und Reisen. Seien Sie jedoch vorsichtig, da Sie Partner aufgrund eines zu vollen Terminkalenders vernachlässigen könnten.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Nierenfunktion oder den Blutkreislauf. Außerdem ist die Weisheit gefragt, zu wissen, wie man auf einem angemessenen Niveau zufrieden ist, da übermäßige Gier zu Problemen führen kann.';
 
   @override
   String get sajuFortune2026Gye =>
-      '💧 2026 Byeongo Year Gye-Water General Fortune: \'Gaining Practical Interests while Strengthening Internal Foundations\'\n\n2026 is a year where the energy of \'Jeong-jae\' and \'Pyeon-jae\' enters for you. It\'s like sunshine shining after sweet rain, making the land full of life and abundance. You will achieve economic stability based on stable income and find small happinesses.\n\n💼 [Career & Business]\nYou handle assigned tasks perfectly with sincerity and meticulousness. Display excellent ability in finance, accounting, or management tasks. Recognition and rewards follow when you do your best in assigned work rather than excessive greed. You can grow step by step while building skills in a stable environment.\n\n💰 [Wealth]\nWealth luck is very good. Steady and stable income occurs, and you enjoy the joy of increasing assets through financial technology or savings. Small but definite profits gather to give great reward. Frugal spending habits shine this year.\n\n❤️ [Love & Relationships]\nYou give deep trust to partners with kindhearted and meticulous consideration. You grow a small but warm love while sharing daily lives. Relationships are also smooth and peaceful. You will play the role of a trusted advisor to people around you.\n\n⚠️ [Cautions]\nPay attention to eye diseases or urological system health. Also, sometimes practice looking at the world with a wide perspective as you may miss the big flow by paying attention to too detailed things.';
+      '💧 2026 Byeongo-Jahr Gye-Wasser Allgemeines Glück: \'Praktische Interessen gewinnen und gleichzeitig das innere Fundament stärken\'\n\n2026 ist ein Jahr, in dem die Energie von \'Jeong-jae\' und \'Pyeon-jae\' für Sie eintritt. Es ist wie Sonnenschein nach einem süßen Regen, der das Land voller Leben und Überfluss macht. Sie werden wirtschaftliche Stabilität auf der Grundlage eines stabilen Einkommens erreichen und kleine Glücksmomente finden.\n\n💼 [Karriere & Business]\nSie erledigen die zugewiesenen Aufgaben perfekt mit Aufrichtigkeit und Gewissenhaftigkeit. Zeigen Sie exzellente Fähigkeiten bei Finanz-, Buchhaltungs- oder Managementaufgaben. Anerkennung und Belohnungen folgen, wenn Sie in der zugewiesenen Arbeit Ihr Bestes geben, anstatt übermäßige Gier zu entwickeln. Sie können Schritt für Schritt wachsen, während Sie in einem stabilen Umfeld Fähigkeiten aufbauen.\n\n💰 [Wohlstand]\nDas Wohlstandsglück ist sehr gut. Es entsteht ein stetiges und stabiles Einkommen, und Sie genießen die Freude, Ihr Vermögen durch Finanztechnologie oder Ersparnisse zu vermehren. Kleine, aber definitive Gewinne sammeln sich an, um eine große Belohnung zu geben. Sparsame Ausgabengewohnheiten glänzen in diesem Jahr.\n\n❤️ [Liebe & Beziehungen]\nSie schenken Ihren Partnern tiefes Vertrauen mit gütiger und gewissenhafter Rücksichtnahme. Sie lassen eine kleine, aber herzliche Liebe wachsen, während Sie den Alltag teilen. Die Beziehungen sind ebenfalls reibungslos und friedlich. Sie werden die Rolle eines vertrauenswürdigen Beraters für die Menschen um Sie herum spielen.\n\n⚠️ [Vorsicht]\nAchten Sie auf Augenkrankheiten oder die Gesundheit des urologischen Systems. Üben Sie auch manchmal, die Welt mit einer weiten Perspektive zu betrachten, da Sie den großen Fluss verpassen könnten, wenn Sie zu detaillierten Dingen Aufmerksamkeit schenken.';
 
   @override
   String get sajuFortune2025Byeong =>
-      '🔥 2025 Eulsa Year Byeong-Fire General Fortune: \'Achievement and Competition Full of Passion\'\n\n2025 is a year where the energy of \'Jeong-in\' and \'Bi-gyeon\' enters for you. It\'s like the sun in the sky meeting the heat on the ground to burn even hotter. You will gain strong support forces and push forward towards goals without hesitation based on confidence.\n\n💼 [Career & Business]\nYou will achieve great growth with the help of reliable helpers or mentors. Very advantageous for acquiring certifications or academic achievements. Collaboration with colleagues shines, and you will lead the team to success by exercising leadership. However, beware as excessive competitive spirit may harm relationships.\n\n💰 [Wealth]\nA time to increase wealth while sharing information with people around you. Income through joint investment or cooperation is expected. However, it\'s important to take care of practical interests as you may spend excessively due to pride or conscious of others\' gaze.\n\n❤️ [Love & Relationships]\nA year where friendships deepen as there will be many gatherings with people. In romantic relationships, comfort like a friend becomes stronger. However, appropriate balance is needed as conflicts may arise by prioritizing friends over partners.\n\n⚠️ [Cautions]\nPay attention to blood circulation systems such as blood pressure or heart health. Also, always maintain peace of mind as impulsive emotions due to a fiery personality may ruin things.';
+      '🔥 2025 Eulsa-Jahr Byeong-Feuer Allgemeines Glück: \'Erfolg und Wettbewerb voller Leidenschaft\'\n\n2025 ist ein Jahr, in dem die Energie von \'Jeong-in\' und \'Bi-gyeon\' für Sie eintritt. Es ist wie die Sonne am Himmel, die auf die Hitze am Boden trifft, um noch heißer zu brennen. Sie werden starke Unterstützungskräfte gewinnen und auf der Grundlage von Selbstvertrauen ohne Zögern auf Ihre Ziele zusteuern.\n\n💼 [Karriere & Business]\nSie werden mit der Hilfe zuverlässiger Helfer oder Mentoren ein großes Wachstum erzielen. Sehr vorteilhaft für den Erwerb von Zertifizierungen oder akademischen Leistungen. Die Zusammenarbeit mit Kollegen glänzt, und Sie werden das Team zum Erfolg führen, indem Sie Führungsqualitäten beweisen. Seien Sie jedoch vorsichtig, da übermäßiger Wettbewerbsgeist Beziehungen schaden kann.\n\n💰 [Wohlstand]\nEine Zeit, um den Wohlstand zu mehren, während Sie Informationen mit Menschen in Ihrer Umgebung teilen. Einkommen durch gemeinsame Investitionen oder Kooperation wird erwartet. Es ist jedoch wichtig, auf praktische Interessen zu achten, da Sie aufgrund von Stolz oder dem Bewusstsein für die Blicke anderer übermäßig viel ausgeben könnten.\n\n❤️ [Liebe & Beziehungen]\nEin Jahr, in dem sich Freundschaften vertiefen, da es viele Treffen mit Menschen geben wird. In romantischen Beziehungen wird der Komfort wie bei einem Freund stärker. Es ist jedoch ein angemessenes Gleichgewicht erforderlich, da Konflikte entstehen können, wenn Freunde gegenüber Partnern priorisiert werden.\n\n⚠️ [Vorsicht]\nAchten Sie auf das Kreislaufsystem wie Blutdruck oder Herzgesundheit. Bewahren Sie außerdem stets den Seelenfrieden, da impulsive Emotionen aufgrund einer feurigen Persönlichkeit Dinge ruinieren können.';
 
   @override
   String get sajuFortune2025Jeong =>
-      '🔥 2025 Eulsa Year Jeong-Fire General Fortune: \'Stability and Opportunity Found Amidst Change\'\n\n2025 is a year where the energy of \'Pyeon-in\' and \'Geob-jae\' enters for you. It\'s like a candle flickering in the wind but eventually illuminating the surroundings and revealing its presence. Unexpected changes may come, but it will be a year where you wisely overcome them and turn them into opportunities.\n\n💼 [Career & Business]\nOriginal ideas and intuition shine. You will target niche markets that others haven\'t thought of or achieve deep results in professional fields. However, competition with colleagues becomes fierce and there may be people trying to snatch results, so pay attention to security maintenance and relationship management.\n\n💰 [Wealth]\nA year where there may be fluctuations in wealth luck. Conservative asset management is needed as unexpected expenditures may occur or losses may be seen in investments. However, income using your own professional skills will come in stably. It\'s better to avoid financial transactions.\n\n❤️ [Love & Relationships]\nYou may become passive in dating as thoughts increase. In romantic relationships, it\'s easy to feel disappointed over small things, so it\'s important to trust the other person and treat them with an open heart. Filling the inner self through time alone is also a good way.\n\n⚠️ [Cautions]\nBeware of nervous disorders or insomnia due to stress. It\'s important to manage your mind through meditation or light exercise, and try to have a positive mindset rather than negative thoughts.';
+      '🔥 2025 Eulsa-Jahr Jeong-Feuer Allgemeines Glück: \'Stabilität und Chancen inmitten von Veränderungen\'\n\n2025 ist ein Jahr, in dem die Energie von \'Pyeon-in\' und \'Geob-jae\' für Sie eintritt. Es ist wie eine Kerze, die im Wind flackert, aber schließlich die Umgebung erhellt und ihre Präsenz offenbart. Unerwartete Veränderungen können eintreten, aber es wird ein Jahr sein, in dem Sie diese weise überwinden und in Chancen verwandeln.\n\n💼 [Karriere & Business]\nOriginelle Ideen und Intuition glänzen. Sie werden Nischenmärkte anvisieren, an die andere nicht gedacht haben, oder tiefe Ergebnisse in Fachgebieten erzielen. Der Wettbewerb mit Kollegen wird jedoch hart, und es könnte Menschen geben, die versuchen, Ergebnisse wegzuschnappen, achten Sie also auf die Wahrung der Sicherheit und das Beziehungsmanagement.\n\n💰 [Wohlstand]\nEin Jahr, in dem es Schwankungen beim Wohlstandsglück geben kann. Eine konservative Vermögensverwaltung ist erforderlich, da unerwartete Ausgaben auftreten oder Verluste bei Investitionen auftreten können. Das Einkommen durch Ihre eigenen beruflichen Fähigkeiten wird jedoch stabil fließen. Es ist besser, Finanztransaktionen zu vermeiden.\n\n❤️ [Liebe & Beziehungen]\nSie könnten beim Dating passiv werden, da die Gedanken zunehmen. In romantischen Beziehungen ist man leicht enttäuscht über Kleinigkeiten, daher ist es wichtig, der anderen Person zu vertrauen und sie mit offenem Herzen zu behandeln. Das Füllen des Inneren durch Zeit allein ist ebenfalls ein guter Weg.\n\n⚠️ [Vorsicht]\nAchten Sie auf Nervenerkrankungen oder Schlaflosigkeit aufgrund von Stress. Es ist wichtig, Ihren Geist durch Meditation oder leichte Übungen zu beruhigen und zu versuchen, eher eine positive als eine negative Einstellung zu haben.';
 
   @override
   String get sajuFortune2025Mu =>
-      '⛰️ 2025 Eulsa Year Mu-Earth General Fortune: \'A Year of Maturity Strengthening Internal Foundations Wisely\'\n\n2025 is a year where the energy of \'Jeong-gwan\' and \'Pyeon-in\' enters for you. It\'s like warm heat permeating under a huge mountain to embrace everything. It will be a substantial year of adding your own depth while keeping social honor.\n\n💼 [Career & Business]\nYou will rise to a responsible position within the organization or opportunities for promotion will come. If you value principles and work sincerely, you will receive great recognition. At the same time, you achieve excellent results in acquiring professional knowledge or research tasks. However, flexible thinking is needed as you may refuse change by being caught in stereotypes.\n\n💰 [Wealth]\nStable income is guaranteed. It\'s advantageous to save sincerely and manage assets. Fortune related to real estate or documents is good, so it\'s worth considering long-term investments. However, avoid unreasonable investments by being shaken by surrounding temptations.\n\n❤️ [Love & Relationships]\nYou gain trust from people with dignified speech and actions. In romantic relationships, it\'s a good time to respect each other and develop into a serious relationship. If thinking about marriage, it\'s also good to make specific plans.\n\n⚠️ [Cautions]\nPay attention to digestive system or skin health. Also, practice making quick decisions by listening to surrounding advice as you may experience decision paralysis due to overthinking.';
+      '⛰️ 2025 Eulsa-Jahr Mu-Erde Allgemeines Glück: \'Ein Jahr der Reife, in dem die internen Fundamente weise gestärkt werden\'\n\n2025 ist ein Jahr, in dem die Energie von \'Jeong-gwan\' und \'Pyeon-in\' für Sie eintritt. Es ist wie warme Hitze, die unter einen riesigen Berg dringt, um alles zu umarmen. Es wird ein gehaltvolles Jahr sein, in dem Sie Ihre eigene Tiefe hinzufügen und gleichzeitig die soziale Ehre wahren.\n\n💼 [Karriere & Business]\nSie werden in eine verantwortungsvolle Position innerhalb der Organisation aufsteigen oder es ergeben sich Gelegenheiten für Beförderungen. Wenn Sie Prinzipien schätzen und aufrichtig arbeiten, werden Sie große Anerkennung erhalten. Gleichzeitig erzielen Sie hervorragende Ergebnisse beim Erwerb von Fachwissen oder bei Forschungsaufgaben. Es ist jedoch flexibles Denken erforderlich, da Sie Veränderungen ablehnen könnten, wenn Sie in Stereotypen verhaftet sind.\n\n💰 [Wohlstand]\nEin stabiles Einkommen ist garantiert. Es ist vorteilhaft, aufrichtig zu sparen und das Vermögen zu verwalten. Das Glück in Bezug auf Immobilien oder Dokumente ist gut, daher lohnt es sich, langfristige Investitionen in Betracht zu ziehen. Vermeiden Sie jedoch unvernünftige Investitionen, indem Sie sich von Versuchungen aus der Umgebung erschüttern lassen.\n\n❤️ [Liebe & Beziehungen]\nSie gewinnen das Vertrauen der Menschen durch würdevolle Worte und Taten. In romantischen Beziehungen ist es eine gute Zeit, einander zu respektieren und eine ernsthafte Beziehung zu entwickeln. Wenn Sie an eine Hochzeit denken, ist es auch gut, konkrete Pläne zu machen.\n\n⚠️ [Vorsicht]\nAchten Sie auf das Verdauungssystem oder die Hautgesundheit. Üben Sie außerdem, schnelle Entscheidungen zu treffen, indem Sie auf Ratschläge aus der Umgebung hören, da bei Ihnen aufgrund von zu viel Nachdenken eine Entscheidungsunfähigkeit auftreten kann.';
 
   @override
   String get sajuFortune2025Gi =>
-      '🌾 2025 Eulsa Year Gi-Earth General Fortune: \'Achieving Goals with Responsibility\'\n\n2025 is a year where the energy of \'Pyeon-gwan\' and \'Jeong-in\' enters for you. It\'s like sunshine shining after rain on a wide land to grow crops. There may be difficult processes, but it will be a rewarding year of eventually gaining honor and achieving goals.\n\n💼 [Career & Business]\nWork intensity may increase and difficult tasks may be given. However, you will prove your qualities as a leader by overcoming them with your skills and patience. You will pass through crises with the help or support of superiors, and as a result, you will taste a great sense of accomplishment.\n\n💰 [Wealth]\nA year where you need to pay attention to expenditure management. There may be a lot of money going out, such as unexpected taxes or public utility charges. However, as you can expect incentives or bonuses as a result of steady efforts, sincerity is the key to calling wealth.\n\n❤️ [Love & Relationships]\nA responsible appearance comes across as attractive to the opposite sex. In romantic relationships, the bond deepens as you listen to each other\'s hardships and comfort each other. However, efforts for frequent communication even if short are needed as you may neglect partners due to a busy daily life.\n\n⚠️ [Cautions]\nBeware of immunity decline due to overwork. It\'s important to manage physical strength with regular meals and exercise, and relieve stress with positive thoughts.';
+      '🌾 2025 Eulsa-Jahr Gi-Erde Allgemeines Glück: \'Ziele mit Verantwortung erreichen\'\n\n2025 ist ein Jahr, in dem die Energie von \'Pyeon-gwan\' und \'Jeong-in\' für Sie eintritt. Es ist wie Sonnenschein, der nach dem Regen auf ein weites Land scheint, um Getreide wachsen zu lassen. Es mag schwierige Prozesse geben, aber es wird ein lohnendes Jahr sein, in dem Sie schließlich Ehre erlangen und Ziele erreichen.\n\n💼 [Karriere & Business]\nDie Arbeitsintensität kann zunehmen und es können schwierige Aufgaben gestellt werden. Sie werden jedoch Ihre Qualitäten als Führungskraft unter Beweis stellen, indem Sie diese mit Ihren Fähigkeiten und Ihrer Geduld überwinden. Sie werden Krisen mit Hilfe oder Unterstützung von Vorgesetzten meistern und als Ergebnis ein großes Erfolgsgefühl verspüren.\n\n💰 [Wohlstand]\nEin Jahr, in dem Sie auf das Ausgabenmanagement achten müssen. Es kann viel Geld abfließen, wie z. B. unerwartete Steuern oder Versorgungsgebühren. Da Sie jedoch als Ergebnis stetiger Bemühungen Anreize oder Boni erwarten können, ist Aufrichtigkeit der Schlüssel, um den Wohlstand herbeizurufen.\n\n❤️ [Liebe & Beziehungen]\nEin verantwortungsbewusstes Auftreten wirkt attraktiv auf das andere Geschlecht. In romantischen Beziehungen vertieft sich die Bindung, während Sie einander zuhören und sich gegenseitig trösten. Es sind jedoch Bemühungen um häufige Kommunikation erforderlich, auch wenn sie kurz ist, da Sie Partner aufgrund eines geschäftigen Alltags vernachlässigen könnten.\n\n⚠️ [Vorsicht]\nAchten Sie auf einen Rückgang der Immunität aufgrund von Überarbeitung. Es ist wichtig, die körperliche Kraft mit regelmäßigen Mahlzeiten und Bewegung zu verwalten und Stress mit positiven Gedanken abzubauen.';
 
   @override
   String get sajuFortune2025Gyeong =>
-      '⚔️ 2025 Eulsa Year Gyeong-Metal General Fortune: \'Gaining Honor while Taking Care of Practical Interests\'\n\n2025 is a year where the energy of \'Jeong-jae\' and \'Pyeon-gwan\' enters for you. It\'s like a solid rock being heated by fire and reborn as a precious sword. You will gain definite rewards for your efforts and socially prove your value.\n\n💼 [Career & Business]\nYou achieve great results with result-oriented thinking and drive. Especially recognized for abilities in finance, management, and technology fields. Luck to solve difficult problems and gain honor is strong, but responsibility also grows, so you may feel pressure. Believe in yourself and go forward boldly.\n\n💰 [Wealth]\nWealth luck is very good. Besides stable income, you gain practical profits through investments or side jobs. You will accurately grasp the flow of money and efficiently manage assets. However, refrain from spending large sums for honor.\n\n❤️ [Love & Relationships]\nAppeal to the opposite sex with a sincere and reliable appearance. In romantic relationships, you give the other person a sense of relief with a responsible attitude. In relationships, you may give a somewhat strict image, so it\'s good to talk with some soft humor occasionally.\n\n⚠️ [Cautions]\nPay attention to bone or joint health, and respiratory diseases. Also, soothe yourself with a mind of \'this is enough\' as you may pick on yourself due to perfectionist tendencies.';
+      '⚔️ 2025 Eulsa-Jahr Gyeong-Metall Allgemeines Glück: \'Ehre erlangen und praktische Interessen wahren\'\n\n2025 ist ein Jahr, in dem die Energie von \'Jeong-jae\' und \'Pyeon-gwan\' für Sie eintritt. Es ist wie ein fester Fels, der durch Feuer erhitzt und als kostbares Schwert wiedergeboren wird. Sie werden für Ihre Bemühungen definitiv belohnt und Ihren Wert gesellschaftlich unter Beweis stellen.\n\n💼 [Karriere & Business]\nSie erzielen großartige Ergebnisse mit ergebnisorientiertem Denken und Tatkraft. Besonders anerkannt werden Ihre Fähigkeiten in den Bereichen Finanzen, Management und Technologie. Das Glück, schwierige Probleme zu lösen und Ehre zu erlangen, ist groß, aber auch die Verantwortung wächst, sodass Sie Druck verspüren könnten. Glauben Sie an sich selbst und gehen Sie mutig voran.\n\n💰 [Wohlstand]\nDas Wohlstandsglück ist sehr gut. Neben einem stabilen Einkommen erzielen Sie praktische Gewinne durch Investitionen oder Nebenjobs. Sie werden den Geldfluss genau erfassen und Vermögenswerte effizient verwalten. Verzichten Sie jedoch darauf, große Summen für das Ansehen auszugeben.\n\n❤️ [Liebe & Beziehungen]\nSprechen Sie das andere Geschlecht mit einem aufrichtigen und zuverlässigen Auftreten an. In romantischen Beziehungen geben Sie der anderen Person durch eine verantwortungsbewusste Haltung ein Gefühl der Erleichterung. In Beziehungen vermitteln Sie vielleicht ein etwas strenges Bild, daher ist es gut, ab und zu mit etwas sanftem Humor zu sprechen.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Gesundheit von Knochen oder Gelenken sowie auf Atemwegserkrankungen. Beruhigen Sie sich außerdem mit der Einstellung \'das ist genug\', da Sie aufgrund von perfektionistischen Tendenzen hart zu sich selbst sein könnten.';
 
   @override
   String get sajuFortune2025Sin =>
-      '💎 2025 Eulsa Year Sin-Metal General Fortune: \'A Year of Wisdom Shining Amidst Change\'\n\n2025 is a year where the energy of \'Pyeon-jae\' and \'Jeong-gwan\' enters for you. It\'s like a sophisticated jewel revealing its value under brilliant lighting. It will be a pleasant year where social status rises along with unexpected windfalls.\n\n💼 [Career & Business]\nBusiness acumen improves and the ability to capture new opportunities is excellent. A time when bold challenges return as large profits. Within the organization, you gain trust with rational judgment and catch opportunities for promotion or transfer. However, be careful not to neglect the process by focusing too much on results.\n\n💰 [Wealth]\nA year where money luck enters. Opportunities to touch large wealth such as unexpected investment returns or inheritance arise. However, as expenditures may also become fancy, it\'s important to maintain planned spending habits.\n\n❤️ [Love & Relationships]\nYou become the protagonist in social gatherings with a fancy and attractive appearance. Dating luck is very strong, so you may receive advances from many people. In romantic relationships, you spend passionate and pleasant times. A good year to develop into a serious meeting.\n\n⚠️ [Cautions]\nPay attention to lung health or skin diseases. Also, always maintain humility and don\'t forget the mind to consider others as you may appear arrogant to people due to excessive confidence.';
+      '💎 2025 Eulsa-Jahr Sin-Metall Allgemeines Glück: \'Ein Jahr der Weisheit, die inmitten von Veränderungen strahlt\'\n\n2025 ist ein Jahr, in dem die Energie von \'Pyeon-jae\' und \'Jeong-gwan\' für Sie eintritt. Es ist wie ein edles Juwel, das unter brillanter Beleuchtung seinen Wert offenbart. Es wird ein angenehmes Jahr sein, in dem der soziale Status zusammen mit unerwarteten Glücksfällen steigt.\n\n💼 [Karriere & Business]\nDer Geschäftssinn verbessert sich und die Fähigkeit, neue Chancen zu ergreifen, ist exzellent. Eine Zeit, in der kühne Herausforderungen große Gewinne bringen. Innerhalb der Organisation gewinnen Sie Vertrauen durch rationales Urteilsvermögen und ergreifen Chancen für Beförderungen oder Versetzungen. Achten Sie jedoch darauf, den Prozess nicht zu vernachlässigen, indem Sie sich zu sehr auf Ergebnisse konzentrieren.\n\n💰 [Wohlstand]\nEin Jahr, in dem das Geldglück eintritt. Es ergeben sich Gelegenheiten, großen Wohlstand zu berühren, wie unerwartete Investitionsrenditen oder Erbschaften. Da die Ausgaben jedoch auch luxuriös werden können, ist es wichtig, geplante Konsumgewohnheiten beizubehalten.\n\n❤️ [Liebe & Beziehungen]\nSie werden zum Protagonisten bei gesellschaftlichen Zusammenkünften mit einem schicken und attraktiven Auftreten. Das Dating-Glück ist sehr stark, sodass Sie Avancen von vielen Menschen erhalten könnten. In romantischen Beziehungen verbringen Sie leidenschaftliche und angenehme Zeiten. Ein gutes Jahr, um sich zu einer ernsthaften Beziehung zu entwickeln.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Lungengesundheit oder Hautkrankheiten. Bewahren Sie außerdem stets Demut und vergessen Sie nicht, an andere zu denken, da Sie aufgrund von übermäßigem Selbstvertrauen auf andere arrogant wirken könnten.';
 
   @override
   String get sajuFortune2025Im =>
-      '🌊 2025 Eulsa Year Im-Water General Fortune: \'Producing Results by Exercising Wisdom\'\n\n2025 is a year where the energy of \'Sang-gwan\' and \'Pyeon-jae\' enters for you. It\'s like a large river winding and moistening a wide field. It will be a dynamic year of gaining large wealth and expanding activity range by exercising your talents and eloquence.\n\n💼 [Career & Business]\nEloquence improves and you achieve excellent results in marketing or PR fields. A very good time to commercialize your ideas or pioneer new markets. Will be the best year for those doing creative work. However, it\'s important to be polite as there may be friction with bosses.\n\n💰 [Wealth]\nWealth luck moves actively. Luck to earn money with your own skills is strong, and opportunities to roll large money come. However, caution is needed for speculative investments, and wealth luck will be maintained long only if you have a mind to give as much as you earned.\n\n❤️ [Love & Relationships]\nWith overflowing humor and charm, people never cease to be around you. A year where you can enjoy pleasant dating with high popularity among the opposite sex. In romantic relationships, you breathe life through diverse dates. However, be careful as a single light word may cause misunderstanding.\n\n⚠️ [Cautions]\nPay attention to kidney or urological system health. Also, pay attention to proper rest and nutrition as physical strength may be discharged due to a wide activity range.';
+      '🌊 2025 Eulsa-Jahr Im-Wasser Allgemeines Glück: \'Ergebnisse erzielen durch Ausübung von Weisheit\'\n\n2025 ist ein Jahr, in dem die Energie von \'Sang-gwan\' und \'Pyeon-jae\' für Sie eintritt. Es ist wie ein großer Fluss, der sich windet und ein weites Feld befeuchtet. Es wird ein dynamisches Jahr sein, in dem Sie großen Wohlstand erlangen und Ihren Aktivitätsbereich erweitern, indem Sie Ihre Talente und Ihre Beredsamkeit einsetzen.\n\n💼 [Karriere & Business]\nDie Beredsamkeit verbessert sich und Sie erzielen exzellente Ergebnisse in den Bereichen Marketing oder PR. Eine sehr gute Zeit, um Ihre Ideen zu vermarkten oder neue Märkte zu erschließen. Es wird das beste Jahr für diejenigen sein, die kreativ arbeiten. Es ist jedoch wichtig, höflich zu sein, da es zu Reibungen mit Vorgesetzten kommen kann.\n\n💰 [Wohlstand]\nDas Wohlstandsglück bewegt sich aktiv. Das Glück, mit eigenen Fähigkeiten Geld zu verdienen, ist stark, und es ergeben sich Gelegenheiten, mit großem Geld umzugehen. Bei spekulativen Investitionen ist jedoch Vorsicht geboten, und das Wohlstandsglück bleibt nur dann lange erhalten, wenn Sie die Einstellung haben, so viel zu geben, wie Sie verdient haben.\n\n❤️ [Liebe & Beziehungen]\nMit überschäumendem Humor und Charme werden die Menschen nie aufhören, um Sie herum zu sein. Ein Jahr, in dem Sie angenehme Verabredungen mit hoher Beliebtheit beim anderen Geschlecht genießen können. In romantischen Beziehungen hauchen Sie der Beziehung durch vielfältige Dates Leben ein. Seien Sie jedoch vorsichtig, da ein einziges unbedachtes Wort Missverständnisse verursachen kann.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Gesundheit der Nieren oder des Harnsystems. Achten Sie außerdem auf angemessene Ruhe und Ernährung, da die körperliche Kraft aufgrund eines großen Aktivitätsbereichs erschöpft sein kann.';
 
   @override
   String get sajuFortune2025Gye =>
-      '💧 2025 Eulsa Year Gye-Water General Fortune: \'A Year of Sincerity Producing Stable Fruits\'\n\n2025 is a year where the energy of \'Sik-sin\' and \'Jeong-jae\' enters for you. It\'s like a clear drizzle moistening the land to prepare for a rich harvest. It will be a warm year where your efforts accumulate steadily and return as stable wealth and happiness.\n\n💼 [Career & Business]\nA year where sincerity becomes the best weapon. You produce steady results by fulfilling responsibilities and gain trust from colleagues. A good time to grow expertise, and you will feel rewarded through work you like. You can grow step by step in a stable environment.\n\n💰 [Wealth]\nA year that is economically relaxed and stable. Steady income occurs, and you will feel the fun of increasing assets frugally. There is food and clothing luck, so abundance is full in overall life. Savings are more advantageous than unreasonable investments.\n\n❤️ [Love & Relationships]\nYou give comfort to partners with a warm-hearted appearance. A year where you grow beautiful love while considering each other meticulously. If single, you are highly likely to meet a partner who communicates well and has similar values.\n\n⚠️ [Cautions]\nPay attention to stomach health or eating habit management. It\'s good to find vitality by giving new stimuli occasionally as you may become lazy by settling for comfort.';
+      '💧 2025 Eulsa-Jahr Gye-Wasser Allgemeines Glück: \'Ein Jahr der Aufrichtigkeit, das stabile Früchte hervorbringt\'\n\n2025 ist ein Jahr, in dem die Energie von \'Sik-sin\' und \'Jeong-jae\' für Sie eintritt. Es ist wie ein klarer Nieselregen, der das Land befeuchtet, um eine reiche Ernte vorzubereiten. Es wird ein warmes Jahr sein, in dem sich Ihre Bemühungen stetig ansammeln und als stabiler Wohlstand und Glück zurückkehren.\n\n💼 [Karriere & Business]\nEin Jahr, in dem Aufrichtigkeit zur besten Waffe wird. Sie erzielen stetige Ergebnisse, indem Sie Verantwortung übernehmen, und gewinnen Vertrauen von Kollegen. Eine gute Zeit, um Fachwissen aufzubauen, und Sie werden sich durch Arbeit, die Sie mögen, belohnt fühlen. Sie können in einem stabilen Umfeld Schritt für Schritt wachsen.\n\n💰 [Wohlstand]\nEin Jahr, das wirtschaftlich entspannt und stabil ist. Es fließen stetige Einnahmen, und Sie werden Freude daran haben, Ihr Vermögen sparsam zu mehren. Es gibt Glück in Bezug auf Nahrung und Kleidung, sodass die Fülle im gesamten Leben groß ist. Sparen ist vorteilhafter als unvernünftige Investitionen.\n\n❤️ [Liebe & Beziehungen]\nSie geben Partnern mit einem herzlichen Auftreten ein Gefühl von Komfort. Ein Jahr, in dem Sie eine schöne Liebe entwickeln, während Sie einander sorgfältig berücksichtigen. Wenn Sie Single sind, ist es sehr wahrscheinlich, dass Sie einen Partner treffen, mit dem die Kommunikation gut funktioniert und der ähnliche Werte hat.\n\n⚠️ [Vorsicht]\nAchten Sie auf die Gesundheit des Magens oder die Verwaltung der Essgewohnheiten. Es ist gut, gelegentlich neue Impulse zu setzen, um Vitalität zu finden, da Sie durch das Verharren in Bequemlichkeit träge werden könnten.';
 
   @override
   String get preparationForTomorrow => 'Vorbereitung auf morgen';
@@ -2073,7 +2251,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get allSettingsCompleted => 'Alle Einstellungen sind abgeschlossen.';
 
   @override
-  String get allowAllItems => 'Please allow all items';
+  String get allowAllItems => 'Bitte alle Berechtigungen aktivieren';
 
   @override
   String get manualSettingsInfo =>
@@ -2138,25 +2316,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get daySat => 'Sa';
 
   @override
-  String get daySunFull => 'Sunday';
+  String get daySunFull => 'Sonntag';
 
   @override
-  String get dayMonFull => 'Monday';
+  String get dayMonFull => 'Montag';
 
   @override
-  String get dayTueFull => 'Tuesday';
+  String get dayTueFull => 'Dienstag';
 
   @override
-  String get dayWedFull => 'Wednesday';
+  String get dayWedFull => 'Mittwoch';
 
   @override
-  String get dayThuFull => 'Thursday';
+  String get dayThuFull => 'Donnerstag';
 
   @override
-  String get dayFriFull => 'Friday';
+  String get dayFriFull => 'Freitag';
 
   @override
-  String get daySatFull => 'Saturday';
+  String get daySatFull => 'Samstag';
 
   @override
   String get missionRewardEarned =>
@@ -2269,7 +2447,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String adjustThickness(String label) {
-    return 'Dicke anpassen';
+    return 'Stärke von $label anpassen';
   }
 
   @override
@@ -2380,7 +2558,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noTime => 'Keine Zeit';
 
   @override
-  String minutesLater(int minutes) {
+  String minutesLater(String minutes) {
     return '$minutes Min später';
   }
 
@@ -2388,7 +2566,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get countLabel => 'Anzahl';
 
   @override
-  String timesCount(int count) {
+  String timesCount(String count) {
     return 'Insgesamt $count Mal';
   }
 
@@ -2590,12 +2768,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String fortuneCatchTime(int seconds) {
-    return 'Time: ${seconds}s';
+    return 'Zeit: ${seconds}s';
   }
 
   @override
   String fortuneCatchBest(int seconds) {
-    return 'Best: ${seconds}s';
+    return 'Beste: ${seconds}s';
   }
 
   @override
@@ -2606,7 +2784,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String fortuneCatchPointMinus(int points) {
-    return '$points points deducted';
+    return '$points Punkte abgezogen';
   }
 
   @override
@@ -2682,7 +2860,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String missionSuccessWithCount(int completed, int total) {
-    return '$completed/$total Success!';
+    return '$completed/$total Erfolg!';
   }
 
   @override
@@ -2707,7 +2885,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get allMissionsComplete => 'Alle Missionen abgeschlossen!';
 
   @override
-  String missionSnoozeMessage(int minutes) {
+  String missionSnoozeMessage(String minutes) {
     return 'Mission erfolgreich! Aber es wird in $minutes Minuten gemäß den Einstellungen erneut klingeln.';
   }
 
@@ -2737,7 +2915,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get correct => 'Richtig!';
 
   @override
-  String get walkToDismiss => 'Please walk while holding your smartphone';
+  String get walkToDismiss =>
+      'Bitte gehen Sie, während Sie Ihr Smartphone halten';
 
   @override
   String get shakeCount => 'Schüttelanzahl';
@@ -2819,9 +2998,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String deleteSelectedImagesConfirm(int count) {
     return 'Sind Sie sicher, dass Sie $count Bilder löschen möchten?\nDiese Aktion kann nicht rückgängig gemacht werden.';
   }
-
-  @override
-  String get defaultRingtone => 'Standardklingelton';
 
   @override
   String get classicAlarm => 'Klassischer Wecker';
@@ -2940,12 +3116,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get alarmSnooze => 'Schlummern';
 
   @override
-  String snoozeMinutesUnlimited(int minutes) {
+  String snoozeMinutesUnlimited(String minutes) {
     return '$minutes Min (unbegrenzt)';
   }
 
   @override
-  String snoozeMinutesCount(int minutes, int current, int total) {
+  String snoozeMinutesCount(String minutes, int current, int total) {
     return '$minutes Min ($current/$total)';
   }
 
@@ -2969,6 +3145,15 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get ringtone_self_love => 'Selbstliebe';
+
+  @override
+  String get cherry_stained_finger => 'Cherry Stained Finger';
+
+  @override
+  String get dancing_in_the_stars => 'Dancing In The Stars';
+
+  @override
+  String get nice_day => 'Nice Day';
 
   @override
   String get fortuneTitle => 'Glück prüfen';
@@ -3088,36 +3273,808 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tarotName21 => 'Die Welt';
 
   @override
-  String get tarotKeywords1 =>
-      'Schöpfung, Wille, Fähigkeit, Realisierung, Vielseitigkeit';
+  String get tarotKeywords0 =>
+      'Neuanfänge, Abenteuer, Unschuld, Freiheit, Leichtsinn';
 
   @override
-  String get tarotDescription1 =>
-      'Der Magier trägt ein rotes Gewand, eine Hand zeigt zum Himmel und die andere zur Erde, was die himmlische Kraft auf die Erde bringt. Auf dem Tisch befinden sich vier Elemente (Stab, Kelch, Schwert, Münze), was bedeutet, dass Sie bereits über alle Werkzeuge und Fähigkeiten verfügen, um Ihre Ziele zu erreichen.';
+  String get tarotDesc0 =>
+      'Der Narr steht prekär am Rande einer Klippe in farbenfroher Kleidung, aber sein Blick ist in die Ferne gerichtet, voller Hoffnung.';
+
+  @override
+  String get tarotLoveMeaning0 =>
+      'Eine unerwartete neue Liebe kann eintreffen oder eine schicksalhafte Begegnung auf den ersten Blick.';
+
+  @override
+  String get tarotLoveDetail0 =>
+      'Es ist eine Zeit, in der man die Liebe mit einem reinen Herzen wie ein Kind beginnen kann. Vergessen Sie alle vergangenen Wunden.';
+
+  @override
+  String get tarotWealthMeaning0 =>
+      'Eine neue Investition oder ein neues Geschäftsobjekt könnte Ihnen ins Auge fallen.';
+
+  @override
+  String get tarotWealthDetail0 =>
+      'Es ist eine Zeit, in der sich finanziell neue Möglichkeiten eröffnen. Sie können unerwartete Ergebnisse erzielen.';
+
+  @override
+  String get tarotSuccessMeaning0 =>
+      'Es ist eine gute Zeit, ein neues Projekt zu starten oder den Job in einen völlig anderen Bereich zu wechseln.';
+
+  @override
+  String get tarotSuccessDetail0 =>
+      'Wenn es etwas gibt, auf das Sie sich vorbereiten, machen Sie mutig den ersten Schritt.';
+
+  @override
+  String get tarotKeywords1 =>
+      'Kreativität, Meisterschaft, Selbstausdruck, Einfallsreichtum, Wille';
+
+  @override
+  String get tarotDesc1 =>
+      'Der Magier steht vor einem Tisch mit den Symbolen der vier Elemente. Eine Hand zeigt zum Himmel, die andere zur Erde, was die Fähigkeit symbolisiert, Ideen in die Realität umzusetzen.';
 
   @override
   String get tarotLoveMeaning1 =>
-      'Dies ist eine Zeit, in der Ihr Charme seinen Höhepunkt erreicht hat und Sie beim anderen Geschlecht beliebt sind. Wenn Sie sich in einer Kennenlernphase befinden, können Sie die Beziehung mit Ihrer geistreichen Ausdrucksweise vertiefen und die Führung übernehmen.';
+      'Dies ist eine hervorragende Gelegenheit, Ihren Charme spielen zu lassen und jemanden zu erobern.';
 
   @override
   String get tarotLoveDetail1 =>
-      'Es ist eine großartige Gelegenheit, das Herz des anderen Geschlechts zu erobern, da Ihr Charme und Ihr Talent strahlen. Wenn es jemanden gibt, den Sie mögen, zögern Sie nicht, aktiv auf ihn zuzugehen. Ihr Sinn für Humor und Ihre vernünftigen Gespräche werden die andere Person erfreuen und es Ihnen ermöglichen, die Beziehung proaktiv zu führen. Wenn Sie Single sind, können Sie von mehreren Personen angesprochen werden, und wenn Sie ein Paar sind, wird die andere Person sehr bewegt sein, wenn Sie die Dating-Route planen oder ein Ereignis vorbereiten. Gewinnen Sie die Liebe mit Selbstvertrauen.';
+      'Ihr Charisma und Ihre Talente sind auf dem Höhepunkt, was Sie für andere unwiderstehlich macht. Wenn Sie jemanden im Auge haben, zögern Sie nicht, die Initiative zu ergreifen. Ihr Sinn für Humor und Ihre geistreichen Gespräche werden Ihr Gegenüber fesseln und es Ihnen ermöglichen, die Beziehung zu lenken.';
 
   @override
   String get tarotWealthMeaning1 =>
-      'Dies ist der richtige Zeitpunkt, um Einnahmen mit Ihren Fähigkeiten und Fertigkeiten zu generieren. Wenn Sie die Ideen in Ihrem Kopf in die Realität umsetzen, wird dies zu finanziellen Ergebnissen führen.';
+      'Die ideale Zeit, um durch Ihre Fähigkeiten neue Einkommensquellen zu erschließen.';
 
   @override
   String get tarotWealthDetail1 =>
-      'Dies ist die Zeit, in der Ihr Wissen, Ihre Fähigkeiten und Ihre Ideen zu Geld werden. Geben Sie sich nicht nur mit einem Gehalt zufrieden; generieren Sie zusätzliches Einkommen durch Nebenjobs oder freiberufliche Tätigkeiten. Kreative Planung, Verkaufstalent und Redegewandtheit werden hervorragend unter Beweis gestellt, was zu höheren Einnahmen als erwartet führt. Da Ihr Urteilsvermögen bei der Geldverwaltung wahrscheinlich ins Schwarze trifft, werden Sie gute Ergebnisse erzielen, wenn Sie proaktiv einen Finanzplan aufstellen und in die Tat umsetzen.';
+      'Ihre Kenntnisse, Fähigkeiten und Ideen können sich jetzt in reale finanzielle Gewinne verwandeln. Beschränken Sie sich nicht nur auf Ihr Grundgehalt; versuchen Sie, Ihre Hobbys zu monetarisieren oder freiberuflich tätig zu werden. Ihre kreative Planung wird Ihnen helfen, Einnahmen zu erzielen, die Ihre Erwartungen übertreffen.';
 
   @override
   String get tarotSuccessMeaning1 =>
-      'Ihre Arbeitsfähigkeit wird hervorragend unter Beweis gestellt und von Ihren Mitmenschen anerkannt. Wenn Sie etwas geplant haben, ist jetzt der Zeitpunkt, es in die Tat umzusetzen.';
+      'Ihre beruflichen Fähigkeiten werden glänzen und Sie werden Anerkennung von Ihren Mitmenschen erhalten.';
 
   @override
   String get tarotSuccessDetail1 =>
-      'Sie können sich an Ihrem Arbeitsplatz oder in Ihrem Studium abheben, indem Sie Ihre Fähigkeiten voll ausschöpfen. Egal, welchem Problem Sie gegenüberstehen, Sie können es mit Ihrem eigenen Witz und Humor lösen, und Sie werden von Ihren Kollegen oder Vorgesetzten als \'fähige Person\' anerkannt. Wenn Sie die Leitung eines neuen Projekts übernehmen oder eine wichtige Präsentation halten, können Sie diese erfolgreich abschließen. So wie sich Gelegenheiten für diejenigen ergeben, die vorbereitet sind, sind Sie bereits bestens vorbereitet. Glauben Sie an sich selbst und zeigen Sie Ihre Fähigkeiten selbstbewusst wie ein Protagonist auf der Bühne.';
+      'Im Beruf oder Studium können Sie Ihr volles Potenzial entfalten und aus der Masse herausstechen. Was auch immer die Herausforderungen sein mögen, Sie werden sie dank Ihres Einfallsreichtums lösen. Ihre Kollegen und Vorgesetzten werden Sie als Experten anerkennen, also handeln Sie mit Selbstvertrauen.';
+
+  @override
+  String get tarotKeywords2 =>
+      'Intuition, Geheimnis, Unterbewusstsein, innere Weisheit, Passivität';
+
+  @override
+  String get tarotDesc2 =>
+      'Die Hohepriesterin sitzt zwischen einer weißen und einer schwarzen Säule und bewacht die Schriftrolle der Weisheit. Sie symbolisiert tiefe Intuition und das Gleichgewicht zwischen Bewusstsein und Unterbewusstsein.';
+
+  @override
+  String get tarotLoveMeaning2 =>
+      'Eine Zeit, in der die spirituelle Verbindung wichtiger ist als die körperliche Anziehung.';
+
+  @override
+  String get tarotLoveDetail2 =>
+      'Sie werden sich eher zu Menschen mit einer reichen inneren Welt hingezogen fühlen, mit denen Sie tiefe Gespräche führen können. Ihre Intuition ist geschärft, sodass Sie Ihren Partner ohne Worte verstehen können. Zu viel Zurückhaltung könnte jedoch zu Missverständnissen führen, also versuchen Sie, Ihre Gefühle ab und zu offen zu zeigen.';
+
+  @override
+  String get tarotWealthMeaning2 =>
+      'Es ist Zeit, Ihr Vermögen zu schützen und die Situation zu beobachten, anstatt Risiken einzugehen.';
+
+  @override
+  String get tarotWealthDetail2 =>
+      'Dies ist nicht der beste Zeitpunkt, um ohne Nachzudenken schnellen Gewinnen nachzujagen. Nehmen Sie sich stattdessen Zeit, den Markt zu analysieren und Finanzinstrumente zu studieren. Es ist eine Phase der «Aussaat», also seien Sie nicht beunruhigt, wenn die Früchte nicht sofort kommen.';
+
+  @override
+  String get tarotSuccessMeaning2 =>
+      'Erfolg erwartet Sie in akademischen Aktivitäten, Forschung und intellektuellen Berufen.';
+
+  @override
+  String get tarotSuccessDetail2 =>
+      'Konzentrieren Sie sich darauf, Ihr inneres Potenzial zu stärken und Ihre Kompetenzen zu verbessern, anstatt nach äußerem Glanz zu suchen. Sie werden herausragende Ergebnisse in Aufgaben erzielen, die eine gründliche Analyse erfordern. Ihre Weisheit und Vorsicht werden in entscheidenden Momenten der Schlüssel zum Erfolg sein.';
+
+  @override
+  String get tarotKeywords3 =>
+      'Weiblichkeit, Schönheit, Natur, Fülle, Fruchtbarkeit';
+
+  @override
+  String get tarotDesc3 =>
+      'Die Herrscherin ruht in einem blühenden Garten und repräsentiert materiellen Wohlstand und emotionale Großzügigkeit.';
+
+  @override
+  String get tarotLoveMeaning3 =>
+      'Zeit des emotionalen Aufblühens und der Stärkung der affektiven Bindungen.';
+
+  @override
+  String get tarotLoveDetail3 =>
+      'Ihr Charme und Ihre weibliche (oder empfängliche) Energie sind auf dem Maximum, was Sie unglaublich attraktiv macht. In Ihren Beziehungen wird Harmonie und gegenseitige Fürsorge herrschen, was es zu einem guten Zeitpunkt macht, über Heiratspläne zu sprechen. Wenn Sie Single sind, wird Ihnen ein Stilwechsel helfen, Aufmerksamkeit zu erregen.';
+
+  @override
+  String get tarotWealthMeaning3 =>
+      'Zeitraum des materiellen Wohlstands und der finanziellen Stabilität.';
+
+  @override
+  String get tarotWealthDetail3 =>
+      'Das finanzielle Glück ist auf Ihrer Seite. Ihre vergangenen Bemühungen werden Früchte tragen und Sie werden mehr Komfort genießen können. Sie könnten unerwartete Boni, Geschenke oder Gewinne aus erfolgreichen Investitionen erhalten. Teilen Sie Ihre positive Energie mit anderen, das wird noch mehr Glück anziehen.';
+
+  @override
+  String get tarotSuccessMeaning3 =>
+      'Aktuelle Projekte kommen erfolgreich voran und bringen exzellente Ergebnisse.';
+
+  @override
+  String get tarotSuccessDetail3 =>
+      'Es ist Zeit, die realen Früchte Ihrer Arbeit zu sehen. Projekte werden erfolgreich abgeschlossen, was sich in einer Beförderung oder einem Bonus niederschlagen könnte. Ihre kreative Vision und Ihr ästhetischer Sinn werden sehr geschätzt. Genießen Sie den Arbeitsprozess; dies wird Ihnen helfen, noch höhere Ziele zu erreichen.';
+
+  @override
+  String get tarotKeywords4 => 'Autorität, Struktur, Kontrolle, Führung, Logik';
+
+  @override
+  String get tarotDesc4 =>
+      'Der Herrscher sitzt auf einem Steinthron in Rüstung und symbolisiert Festigkeit, Ordnung und Entschlossenheit in der Führung.';
+
+  @override
+  String get tarotLoveMeaning4 =>
+      'Stabile Beziehung mit einem zuverlässigen und verantwortungsbewussten Partner.';
+
+  @override
+  String get tarotLoveDetail4 =>
+      'Anstelle von flüchtigen Leidenschaften treten Vertrauen und Sicherheit für die Zukunft in den Vordergrund. Ihr Partner wird eine solide Stütze und ein Beschützer für Sie sein. Versuchen Sie, übermäßige Kontrolle und Sturheit in der Kommunikation zu vermeiden. Für Singles zeichnet sich eine Begegnung mit einer einflussreichen Person ab.';
+
+  @override
+  String get tarotWealthMeaning4 =>
+      'Systematisches Asset-Management wird helfen, ein stabiles Kapital aufzubauen.';
+
+  @override
+  String get tarotWealthDetail4 =>
+      'In Finanzangelegenheiten ist es entscheidend, sich an einen Plan und an Ihre Prinzipien zu halten. Wählen Sie anstelle von riskanten Spekulationen sichere Instrumente wie Einlagen oder Immobilien. Ihr Pragmatismus und Ihre Entschlossenheit werden Ihnen helfen, den Grundstein für dauerhaften Wohlstand zu legen.';
+
+  @override
+  String get tarotSuccessMeaning4 =>
+      'Gute Chancen auf eine Beförderung oder eine Führungsposition.';
+
+  @override
+  String get tarotSuccessDetail4 =>
+      'Ihre Position im Team festigt sich. Die Führungskräfte werden Ihre Qualitäten schätzen und könnten Ihnen die Leitung eines wichtigen Projekts oder einer Abteilung anvertrauen. Nutzen Sie Logik und kühles Kalkül, um berufliche Aufgaben zu lösen, und Sie werden das volle Vertrauen Ihrer Vorgesetzten gewinnen.';
+
+  @override
+  String get tarotKeywords5 =>
+      'Tradition, Lehre, Überzeugungen, Rat, Vermittlung';
+
+  @override
+  String get tarotDesc5 =>
+      'Der Hierophant symbolisiert soziale Normen und spirituelle Führung, indem er durch weise Ratschläge und traditionelle Werte führt.';
+
+  @override
+  String get tarotLoveMeaning5 =>
+      'Seriöse und gesunde Beziehungen, die auf gegenseitigem Respekt basieren.';
+
+  @override
+  String get tarotLoveDetail5 =>
+      'Sie werden nicht nach flüchtigen Abenteuern suchen, sondern nach einer tiefen Beziehung mit dem Ziel, eine Familie zu gründen. Jemandem über gemeinsame Freunde oder bei formellen Anlässen zu begegnen, könnte der Beginn von etwas Wichtigem sein. Wenn Streitigkeiten auftreten, fragen Sie Ältere um Rat; ihre Weisheit wird Ihnen helfen.';
+
+  @override
+  String get tarotWealthMeaning5 =>
+      'Es ist besser, traditionelle und bewährte Sparmethoden zu befolgen.';
+
+  @override
+  String get tarotWealthDetail5 =>
+      'Bevorzugen Sie Sicherheit gegenüber riskanten Investitionen. Bankeinlagen oder Versicherungen sind die am besten geeigneten Optionen. Die Beratung durch einen Finanzexperten oder die Aufrechterhaltung der Ehrlichkeit in Ihren Transaktionen wird Ihnen helfen, Ihr Vermögen zu bewahren und zu mehren.';
+
+  @override
+  String get tarotSuccessMeaning5 =>
+      'Günstiger Zeitpunkt für den Abschluss von Verträgen und Partnerschaftsabkommen.';
+
+  @override
+  String get tarotSuccessDetail5 =>
+      'Anstatt Probleme allein zu lösen, suchen Sie die Unterstützung von Kollegen oder Mentoren. Die Einhaltung von Unternehmensregeln und -verfahren ist der kürzeste Weg zur Anerkennung. Es ist auch eine günstige Zeit, um wichtige Dokumente zu unterzeichnen und berufliche Netzwerke aufzubauen.';
+
+  @override
+  String get tarotKeywords6 =>
+      'Liebe, Harmonie, Beziehungen, gemeinsame Werte, Entscheidungen';
+
+  @override
+  String get tarotDesc6 =>
+      'Adam und Eva stehen unter einer warmen Sonne und erhalten den Segen eines Engels.';
+
+  @override
+  String get tarotLoveMeaning6 =>
+      'Dies ist eine der besten Zeiten für die Liebe, um zu erblühen.';
+
+  @override
+  String get tarotLoveDetail6 =>
+      'Eine herzzerreißende Romanze erwartet Sie. Sie werden jemandem, zu dem Sie sich hingezogen fühlen, schnell näher kommen. Wenn Sie bereit sind, Ihre Liebe zu gestehen, ist die Erfolgsrate sehr hoch. Wählen Sie jedoch mit Bedacht, wohin Ihr Herz wirklich gehört.';
+
+  @override
+  String get tarotWealthMeaning6 =>
+      'Ihr finanzielles Glück steigt, wenn Sie gemeinsam statt alleine handeln.';
+
+  @override
+  String get tarotWealthDetail6 =>
+      'Die Zusammenarbeit mit jemandem, mit dem Sie sich gut verstehen, wird Synergien schaffen. Wenn Sie einen Partnerschaftsvorschlag erhalten, prüfen Sie ihn positiv. Es ist eine Zeit, in der Sie nützliche Informationen durch Kommunikation erhalten können. Passen Sie jedoch auf, dass die Ausgaben für Vergnügen nicht zu hoch werden.';
+
+  @override
+  String get tarotSuccessMeaning6 =>
+      'Dies ist eine Zeit, in der Teamarbeit glänzt.';
+
+  @override
+  String get tarotSuccessDetail6 =>
+      'Sie werden freudig mit Kollegen oder Geschäftspartnern zusammenarbeiten, die perfekt zu Ihnen passen. In Teamprojekten können Sie bessere Ergebnisse erzielen als bei Einzelaufgaben. Wenn Sie eine Arbeit wählen, die Sie wirklich lieben, werden Sie Ergebnisse erzielen, die Sie nicht bereuen werden.';
+
+  @override
+  String get tarotKeywords7 =>
+      'Kontrolle, Wille, Erfolg, Handeln, Entschlossenheit';
+
+  @override
+  String get tarotDesc7 =>
+      'Ein junger König in einem Streitwagen stürmt mit starkem Willen auf sein Ziel zu und erringt einen Sieg.';
+
+  @override
+  String get tarotLoveMeaning7 =>
+      'Es ist eine Zeit, in der aktive romantische Bestrebungen erfolgreich sind.';
+
+  @override
+  String get tarotLoveDetail7 =>
+      'Es ist an der Zeit, sich zu beeilen, um die Liebe zu gewinnen. Zögern Sie nicht und drücken Sie Ihr Herz ehrlich und stolz aus. Wenn Sie sich in einer Kennenlernphase befinden, ist es gut, die Beziehung klar zu definieren. Dynamische Dates oder gemeinsames Reisen werden Ihre Zuneigung vertiefen.';
+
+  @override
+  String get tarotWealthMeaning7 =>
+      'Es ist an der Zeit, aggressiv vorzugehen, um den Zielgewinn zu erreichen.';
+
+  @override
+  String get tarotWealthDetail7 =>
+      'Ein starker Antrieb ist erforderlich, um finanzielle Ziele zu erreichen. Treffen Sie mutige Entscheidungen, wenn sich die Gelegenheit bietet. Es ist vorteilhaft, sich auf Projekte zu konzentrieren, die kurzfristig Ergebnisse liefern. Ihre Leistung wird so stark steigen, wie Sie hart arbeiten.';
+
+  @override
+  String get tarotSuccessMeaning7 =>
+      'Sie werden wahrscheinlich den Wettbewerb gewinnen und Ihre Ziele erreichen.';
+
+  @override
+  String get tarotSuccessDetail7 =>
+      'Klare Zielerreichung wie Beförderung, Bestehen oder Vertragsunterzeichnung wird vorhergesagt. Je intensiver der Wettbewerb, desto mehr wird Ihr Kampfgeist brennen. Ihr Bild, Hindernisse direkt zu durchbrechen, wird einen tiefen Eindruck bei den Menschen um Sie herum hinterlassen.';
+
+  @override
+  String get tarotKeywords8 => 'Kraft, Mut, Überzeugung, Einfluss, Mitgefühl';
+
+  @override
+  String get tarotDesc8 =>
+      'Eine Frau in Weiß geht sanft mit dem Maul eines Löwen um und symbolisiert spirituelle Stärke und Geduld.';
+
+  @override
+  String get tarotLoveMeaning8 =>
+      'Es ist eine Zeit, in der Sie die Toleranz brauchen, um die andere Person so zu akzeptieren, wie sie ist.';
+
+  @override
+  String get tarotLoveDetail8 =>
+      'Die aktuelle Liebe erfordert Geduld und Weisheit. Die Beziehung kann sich auf die nächste Stufe entwickeln, wenn Sie die Unzulänglichkeiten des anderen mit weitem Herzen akzeptieren. Eine sanfte, aber feste Haltung ist gefragt. Wenn Sie geduldig an ihrer Seite bleiben, wird Ihre Aufrichtigkeit schließlich ihr Herz öffnen.';
+
+  @override
+  String get tarotWealthMeaning8 =>
+      'Stetiges Sparen und gesunde Konsumgewohnheiten sind die Geheimnisse zum Sammeln von Reichtum.';
+
+  @override
+  String get tarotWealthDetail8 =>
+      'Ihr finanzielles Glück steigt allmählich an. Seien Sie nicht enttäuscht, wenn nicht sofort großes Geld hereinkommt. Verwalten Sie Ihr Vermögen treu, und es wird später als große Summe zurückkehren. Es ist vorteilhaft, festzuhalten, anstatt sich von kurzfristigen Schwankungen beeinflussen zu lassen.';
+
+  @override
+  String get tarotSuccessMeaning8 =>
+      'Auch wenn Sie auf eine schwierige Aufgabe stoßen, können Sie damit weise umgehen.';
+
+  @override
+  String get tarotSuccessDetail8 =>
+      'Ihnen könnte ein hartes Projekt oder eine heikle Aufgabe zugewiesen werden, aber Sie haben genug Potenzial, um sie zu lösen. Obwohl Sie nach außen hin weich erscheinen, zeichnen Sie sich dadurch aus, dass Sie Hindernisse mit starkem innerem Willen überwinden. Ihre ruhige Problemlösungsfähigkeit wird dazu führen, dass die Menschen Ihnen tiefes Vertrauen entgegenbringen.';
+
+  @override
+  String get tarotKeywords9 =>
+      'Introspektion, Einsamkeit, innere Führung, Suche nach der Wahrheit';
+
+  @override
+  String get tarotDesc9 =>
+      'Ein alter Mann mit einer Lampe auf einem dunklen, verschneiten Berg hört auf seine innere Stimme und erforscht die Wahrheit.';
+
+  @override
+  String get tarotLoveMeaning9 =>
+      'Es ist eine Zeit, in der Sie Zeit für sich selbst brauchen oder tief über die Liebe nachdenken.';
+
+  @override
+  String get tarotLoveDetail9 =>
+      'Jetzt ist eine Zeit, in der Sie Zeit brauchen, um auf sich selbst zurückzublicken, anstatt aktiv zu daten. Denken Sie tief darüber nach, welche Art von Liebe Sie wirklich wollen. Auch wenn Sie einen Partner haben, kann es helfen, etwas Abstand zu gewinnen, um das Wesen der Beziehung zu erkennen.';
+
+  @override
+  String get tarotWealthMeaning9 =>
+      'Finanzielle Aktivitäten können etwas eingeschränkt sein.';
+
+  @override
+  String get tarotWealthDetail9 =>
+      'Sie sollten eine konservative Haltung gegenüber Reichtum einnehmen. Anstatt neue Investitionen zu tätigen, ist es wichtig, Ihr aktuelles Vermögen gründlich zu prüfen. Investitionen in das Studium oder den Erwerb von Fähigkeiten zur Steigerung Ihres Wertes sind großartige Investitionen, die später zu größeren Gewinnen führen werden.';
+
+  @override
+  String get tarotSuccessMeaning9 =>
+      'Sie erzielen Ergebnisse in Bereichen, in denen Fachwissen oder Fähigkeiten tiefgehend erforscht werden.';
+
+  @override
+  String get tarotSuccessDetail9 =>
+      'Sie können hervorragende Ergebnisse bei Aufgaben erzielen, die tiefe Konzentration erfordern, wie Forschung, Planung oder Entwicklung. Es ist eine Zeit des stillen Aufbaus von Fähigkeiten. Wenn es ein ungelöstes Problem gibt, suchen Sie einen erfahrenen Mentor um Rat.';
+
+  @override
+  String get tarotKeywords10 =>
+      'Viel Glück, Karma, Lebenszyklen, Schicksal, Wendepunkte';
+
+  @override
+  String get tarotDesc10 =>
+      'Ein riesiges Schicksalsrad dreht sich und signalisiert den unvermeidlichen Fluss des Schicksals und den Beginn eines neuen Zyklus.';
+
+  @override
+  String get tarotLoveMeaning10 =>
+      'Eine schicksalhafte Begegnung erwartet Sie.';
+
+  @override
+  String get tarotLoveDetail10 =>
+      'Eine schicksalhafte Liebe wie im Film kommt auf Sie zu. Dramatische Ereignisse wie das Treffen mit jemandem an einem unerwarteten Ort können eintreten. Singles könnten jemanden treffen, in den sie sich auf den ersten Blick verlieben, während Paare feststellen werden, dass ihre Beziehung auf die nächste Stufe voranschreitet.';
+
+  @override
+  String get tarotWealthMeaning10 =>
+      'Der Fluss des finanziellen Glücks verbessert sich.';
+
+  @override
+  String get tarotWealthDetail10 =>
+      'Die Glücksgöttin lächelt Sie an. Ihr finanzielles Glück befindet sich auf einer Aufwärtskurve mit unerwarteten Einnahmen. Wenn der Geldumlauf reibungslos wird, brauchen Sie die Kühnheit, die Gelegenheit zu ergreifen. Vergessen Sie jedoch nicht die Weisheit, für die Zukunft zu sparen.';
+
+  @override
+  String get tarotSuccessMeaning10 =>
+      'Die Situation wendet sich zu Ihren Gunsten.';
+
+  @override
+  String get tarotSuccessDetail10 =>
+      'Ein Wendepunkt ist erreicht, an dem blockierte Angelegenheiten wieder fließen. Die Gezeiten wenden sich zu Ihren Gunsten, also zögern Sie nicht, neue Gelegenheiten zu ergreifen. Gelegenheiten für Veränderungen wie Beförderungen oder Karriereschritte werden Sie an einen höheren Ort bringen.';
+
+  @override
+  String get tarotKeywords11 =>
+      'Gerechtigkeit, Fairness, Wahrheit, Ursache und Wirkung, Verantwortung';
+
+  @override
+  String get tarotDesc11 =>
+      'Ein Richter in einer roten Robe hält ein Schwert in der rechten Hand und eine Waage in der linken.';
+
+  @override
+  String get tarotLoveMeaning11 =>
+      'Es ist eine Beziehung, in der die Vernunft dem Gefühl vorausgeht.';
+
+  @override
+  String get tarotLoveDetail11 =>
+      'Jetzt ist eine Zeit für rationales Urteilsvermögen. Schauen Sie zurück, um zu sehen, ob Ihre Beziehung ausgeglichen ist. Wenn Sie über eine Heirat nachdenken, könnten Sie die Bedingungen oder den Hintergrund Ihres Partners akribisch abwägen. Ehrliche und faire Gespräche werden die Lösung sein.';
+
+  @override
+  String get tarotWealthMeaning11 =>
+      'Eine sorgfältige Prüfung bei Finanztransaktionen oder Verträgen ist erforderlich.';
+
+  @override
+  String get tarotWealthDetail11 =>
+      'Es kann eine Situation entstehen, in der Sie bei finanziellen Angelegenheiten Recht von Unrecht unterscheiden müssen. Es ist eine gute Zeit, um finanzielle Beziehungen sauber zu klären. Überprüfen Sie Verträge sorgfältig auf nachteilige Klauseln und handeln Sie nach Prinzipien.';
+
+  @override
+  String get tarotSuccessMeaning11 =>
+      'Sie erhalten eine faire Bewertung und eine legitime Entschädigung.';
+
+  @override
+  String get tarotSuccessDetail11 =>
+      'Sie erhalten eine faire und objektive Bewertung Ihrer Arbeitsleistung. Wenn Sie hart gearbeitet haben, werden legitime Belohnungen wie Beförderungen oder Boni folgen. Wenn Sie Entscheidungen treffen, schließen Sie Emotionen aus und urteilen Sie streng nach Daten und Fakten.';
+
+  @override
+  String get tarotKeywords12 => 'Pause, Hingabe, Loslassen, neue Perspektiven';
+
+  @override
+  String get tarotDesc12 =>
+      'Die Karte Der Gehängte symbolisiert eine Zeit des Stillstands und der bewussten Pause. Es ist eine Phase, in der man die Dinge aus einer völlig neuen Perspektive betrachten sollte. Manchmal ist es notwendig, alte Gewohnheiten loszulassen, um geistiges Wachstum zu ermöglichen.';
+
+  @override
+  String get tarotLoveMeaning12 =>
+      'In der Liebe deutet diese Karte auf eine Phase der Unsicherheit oder des Abwartens hin. Es kann sein, dass eine Beziehung stagniert oder Gefühle nicht erwidert werden. Nutzen Sie diese Zeit, um innezuhalten und Ihre eigenen Wünsche und Bedürfnisse zu klären.';
+
+  @override
+  String get tarotLoveDetail12 =>
+      'Es ist eine Zeit, in der rationales Urteilsvermögen schwierig ist, da man emotional feststeckt. Erzwingen Sie nichts, sondern lassen Sie die Dinge sich natürlich entwickeln. Geduld und Selbstreflexion führen Sie schließlich zur richtigen Entscheidung.';
+
+  @override
+  String get tarotWealthMeaning12 =>
+      'Finanziell gesehen mahnt der Gehängte zur Vorsicht und zum Abwarten. Es ist kein guter Zeitpunkt für riskante Investitionen oder große Ausgaben. Überprüfen Sie Ihre Finanzen gründlich und suchen Sie nach versteckten Fehlern.';
+
+  @override
+  String get tarotWealthDetail12 =>
+      'Ihr finanzieller Fluss könnte vorübergehend ins Stocken geraten. Nutzen Sie diese Pause, um Ihre Ausgabengewohnheiten zu überdenken und neue Sparstrategien zu entwickeln. Ein Perspektivwechsel kann Ihnen helfen, langfristig stabilere Einnahmen zu sichern.';
+
+  @override
+  String get tarotSuccessMeaning12 =>
+      'Beruflich bedeutet diese Karte, dass Projekte vorübergehend zum Stillstand kommen könnten. Es ist eine Phase der Vorbereitung und des Lernens, nicht des schnellen Handelns. Akzeptieren Sie die Verzögerung als Chance zur Qualitätsverbesserung.';
+
+  @override
+  String get tarotSuccessDetail12 =>
+      'Manchmal ist ein Rückzug notwendig, um später kraftvoller voranzukommen. Nutzen Sie die aktuelle Ruhephase für Fortbildungen oder strategische Planung. Wenn Sie Ihre Einstellung ändern, werden sich neue Türen öffnen, die Sie zuvor übersehen haben.';
+
+  @override
+  String get tarotKeywords13 => 'Ende, Wandel, Transformation, Übergang';
+
+  @override
+  String get tarotDesc13 =>
+      'Die Karte Der Tod steht nicht für das physische Ende, sondern für eine tiefgreifende Transformation. Ein alter Lebensabschnitt endet, damit etwas Neues und Besseres entstehen kann. Akzeptieren Sie den Wandel als notwendigen Teil Ihrer persönlichen Entwicklung.';
+
+  @override
+  String get tarotLoveMeaning13 =>
+      'In Beziehungen symbolisiert diese Karte das Ende einer Phase oder einer veralteten Dynamik. Dies kann eine Trennung bedeuten, aber auch eine tiefgreifende Erneuerung innerhalb der Partnerschaft. Platz für Neues wird erst geschaffen, wenn Altes losgelassen wird.';
+
+  @override
+  String get tarotLoveDetail13 =>
+      'Es ist eine Zeit des emotionalen Umbruchs, die schmerzhaft sein kann, aber Heilung verspricht. Klammern Sie sich nicht an Vergangenes, das Ihnen nicht mehr guttut. Vertrauen Sie darauf, dass nach diesem Ende ein hoffnungsvoller Neuanfang auf Sie wartet.';
+
+  @override
+  String get tarotWealthMeaning13 =>
+      'Finanziell deutet der Tod auf einschneidende Veränderungen hin, wie den Verlust einer Einnahmequelle oder das Scheitern einer Investition. Es ist eine Warnung, finanzielle Abhängigkeiten zu beenden. Ein radikaler Neuanfang in Ihrer Budgetplanung ist nun erforderlich.';
+
+  @override
+  String get tarotWealthDetail13 =>
+      'Alte finanzielle Strukturen brechen zusammen, was Raum für modernere Ansätze schafft. Seien Sie bereit, sich von unrentablen Projekten zu trennen, auch wenn es schwerfällt. Langfristig wird dieser klare Schnitt Ihre wirtschaftliche Situation stabilisieren.';
+
+  @override
+  String get tarotSuccessMeaning13 =>
+      'Im Beruf signalisiert der Tod den Abschluss eines großen Projekts oder einen Jobwechsel. Bestehende Strukturen könnten sich auflösen, was zunächst verunsichernd wirken kann. Sehen Sie dies als Chance, Ihre Karriere in eine völlig neue Richtung zu lenken.';
+
+  @override
+  String get tarotSuccessDetail13 =>
+      'Widerstand gegen Veränderungen wird nur zu mehr Schwierigkeiten führen. Seien Sie proaktiv und verabschieden Sie sich von Aufgaben, die Sie nicht mehr erfüllen. Eine neue berufliche Identität wartet darauf, von Ihnen entdeckt und geformt zu werden.';
+
+  @override
+  String get tarotKeywords14 => 'Gleichgewicht, Mäßigung, Geduld, Zweck';
+
+  @override
+  String get tarotDesc14 =>
+      'Die Mäßigkeit ruft dazu auf, Harmonie und Ausgeglichenheit in allen Lebensbereichen zu finden. Es geht darum, Extreme zu vermeiden und einen goldenen Mittelweg zu wählen. Geduld und Gelassenheit sind Ihre wichtigsten Werkzeuge in dieser Phase.';
+
+  @override
+  String get tarotLoveMeaning14 =>
+      'In der Liebe steht diese Karte für eine harmonische und stabile Verbindung. Konflikte können durch ruhige Kommunikation und gegenseitiges Verständnis gelöst werden. Es ist eine Zeit des Zusammenwachsens und der emotionalen Heilung.';
+
+  @override
+  String get tarotLoveDetail14 =>
+      'Pflegen Sie Ihre Beziehung mit Sanftheit und vermeiden Sie emotionale Ausbrüche. Ein ausgewogenes Geben und Nehmen stärkt das Band zwischen Ihnen und Ihrem Partner. Singles finden ihr Glück eher durch eine ruhige, freundschaftliche Annäherung.';
+
+  @override
+  String get tarotWealthMeaning14 =>
+      'Finanziell bedeutet Mäßigkeit einen stabilen und kontrollierten Geldfluss. Es gibt keine großen Sprünge, aber auch keine gefährlichen Verluste. Fokusieren Sie sich darauf, Ihre Ressourcen klug und maßvoll zu verwalten.';
+
+  @override
+  String get tarotWealthDetail14 =>
+      'Ihre finanzielle Stabilität folgt einem ruhigen Strom, wenn Sie unnötige Ausgaben vermeiden. Es ist eine gute Zeit für langfristige, risikoarme Sparpläne. Durch Geduld und konsequente Verwaltung wird Ihr Wohlstand stetig und sicher wachsen.';
+
+  @override
+  String get tarotSuccessMeaning14 =>
+      'Beruflich deutet die Karte auf eine erfolgreiche Zusammenarbeit und ein angenehmes Arbeitsklima hin. Ihre Fähigkeit zur Vermittlung und zum Kompromiss wird besonders geschätzt. Projekte schreiten stetig voran, solange Sie das Tempo moderat halten.';
+
+  @override
+  String get tarotSuccessDetail14 =>
+      'Erfolg stellt sich durch Beständigkeit und Diplomatie ein, nicht durch Aggressivität. Achten Sie auf eine gute Work-Life-Balance, um Ihre Leistungsfähigkeit langfristig zu erhalten. Ihre ruhige Art wirkt inspirierend auf Kollegen und Vorgesetzte.';
+
+  @override
+  String get tarotKeywords15 =>
+      'Sucht, Materialismus, Kontrollverlust, Loslösung';
+
+  @override
+  String get tarotDesc15 =>
+      'Der Teufel warnt vor Abhängigkeiten, Versuchungen und dem Verlust der inneren Freiheit. Oft sind wir an materielle Dinge oder negative Gedankenmuster gebunden, die uns am Wachstum hindern. Es ist an der Zeit, diese Ketten zu erkennen und sich bewusst davon zu lösen.';
+
+  @override
+  String get tarotLoveMeaning15 =>
+      'In der Liebe deutet diese Karte auf eine intensive, aber oft toxische oder rein physische Anziehung hin. Besessenheit und Eifersucht können die Beziehung belasten. Hinterfragen Sie, ob Ihre Bindung auf wahrer Liebe oder auf bloßer Abhängigkeit basiert.';
+
+  @override
+  String get tarotLoveDetail15 =>
+      'Es ist eine Zeit, in der das rationale Urteil durch starke Leidenschaft getrübt sein kann. Achten Sie darauf, sich nicht in einer Beziehung zu verlieren, die Ihnen Ihre Energie raubt. Wahre Erfüllung finden Sie erst, wenn Sie Ihre eigene Unabhängigkeit zurückgewinnen.';
+
+  @override
+  String get tarotWealthMeaning15 =>
+      'Finanziell warnt der Teufel vor Gier und riskanten Verlockungen, die in die Schuldenfalle führen können. Seien Sie vorsichtig bei Angeboten, die zu gut klingen, um wahr zu sein. Materieller Besitz sollte nicht Ihr einziges Ziel sein.';
+
+  @override
+  String get tarotWealthDetail15 =>
+      'Es besteht die Gefahr, ein Sklave des Geldes oder der Konsumlust zu werden. Überprüfen Sie Ihre Ausgaben auf zwanghafte Muster und vermeiden Sie neue Kredite. Nur durch bewusste Selbstbeherrschung können Sie Ihre finanzielle Freiheit bewahren oder wiedererlangen.';
+
+  @override
+  String get tarotSuccessMeaning15 =>
+      'Beruflich kann der Teufel auf einen rücksichtslosen Ehrgeiz hindeuten, der Ihnen schaden könnte. Vielleicht fühlen Sie sich in einem Job gefangen oder unterdrückt. Hüten Sie sich davor, Ihre Werte für schnellen Erfolg zu opfern.';
+
+  @override
+  String get tarotSuccessDetail15 =>
+      'Erfolg um jeden Preis wird langfristig zu Unzufriedenheit und Konflikten führen. Erkennen Sie Machtspiele im Arbeitsumfeld und distanzieren Sie sich davon. Suchen Sie nach Wegen, Ihre Arbeit wieder mit Ihren persönlichen Überzeugungen in Einklang zu bringen.';
+
+  @override
+  String get tarotKeywords16 =>
+      'Plötzliche Veränderung, Umbruch, Chaos, Offenbarung';
+
+  @override
+  String get tarotDesc16 =>
+      'Der Turm symbolisiert plötzliche und oft schockierende Ereignisse, die gewohnte Strukturen zum Einsturz bringen. Auch wenn dies zunächst beängstigend wirkt, dient es dazu, falsche Fundamente zu zerstören. Nur so kann Platz für eine ehrlichere und stabilere Zukunft geschaffen werden.';
+
+  @override
+  String get tarotLoveMeaning16 =>
+      'In Beziehungen kann der Turm für plötzliche Konflikte, überraschende Enthüllungen oder eine Trennung stehen. Masken fallen und die Wahrheit kommt ans Licht, was schmerzhaft sein kann. Es ist jedoch eine notwendige Reinigung, um Klarheit über die Gefühle zu erhalten.';
+
+  @override
+  String get tarotLoveDetail16 =>
+      'Ein unerwartetes Ereignis könnte Ihr Liebesleben erschüttern und Sie zur Neubewertung zwingen. Versuchen Sie nicht, das Alte gewaltsam festzuhalten, wenn es bereits zerbrochen ist. Nach dem Sturm wird sich zeigen, welche Bindungen stark genug für einen Neuanfang sind.';
+
+  @override
+  String get tarotWealthMeaning16 =>
+      'Finanziell mahnt die Karte zur äußersten Vorsicht vor plötzlichen Verlusten oder finanziellen Katastrophen. Ein sicher geglaubtes Investment könnte scheitern oder unerwartete Kosten fallen an. Bereiten Sie sich auf unruhige Zeiten vor und sichern Sie ab, was möglich ist.';
+
+  @override
+  String get tarotWealthDetail16 =>
+      'Finanzielle Strukturen, die auf Sand gebaut waren, könnten jetzt zusammenbrechen. Es ist eine harte Lektion in Sachen Geldmanagement, die Sie aber weiser machen wird. Nutzen Sie den Trümmerhaufen, um Ihre Finanzen von Grund auf neu und solider zu organisieren.';
+
+  @override
+  String get tarotSuccessMeaning16 =>
+      'Beruflich deutet der Turm auf plötzliche Entlassungen, Firmenpleiten oder das Scheitern großer Projekte hin. Ihre Karriereplanung könnte komplett über den Haufen geworfen werden. Sehen Sie den Zusammenbruch als Befreiung von Aufgaben, die Sie ohnehin eingeschränkt haben.';
+
+  @override
+  String get tarotSuccessDetail16 =>
+      'Wenn der gewohnte Rahmen wegbricht, entstehen völlig neue Möglichkeiten der Entfaltung. Seien Sie flexibel und bereit, sich schnell an die neue Situation anzupassen. Ihre Fähigkeit, aus Krisen gestärkt hervorzugehen, wird jetzt auf die Probe gestellt und gefördert.';
+
+  @override
+  String get tarotKeywords17 =>
+      'Hoffnung, Glaube, Zweck, Erneuerung, Spiritualität';
+
+  @override
+  String get tarotDesc17 =>
+      'Der Stern ist eine Karte der Hoffnung, der Inspiration und der göttlichen Führung. Nach einer schwierigen Zeit kehrt nun Ruhe und Zuversicht in Ihr Leben zurück. Vertrauen Sie auf Ihre Träume und darauf, dass das Universum Sie auf den richtigen Weg leitet.';
+
+  @override
+  String get tarotLoveMeaning17 =>
+      'In der Liebe verspricht der Stern eine Zeit der Heilung und der tiefen emotionalen Verbundenheit. Bestehende Beziehungen erfahren eine neue Leichtigkeit und gegenseitiges Vertrauen. Für Singles deutet die Karte auf die Begegnung mit einem Seelenverwandten hin.';
+
+  @override
+  String get tarotLoveDetail17 =>
+      'Ihr Herz öffnet sich wieder für die Liebe und Sie strahlen eine positive Energie aus. Es ist eine wunderbare Zeit, um gemeinsame Zukunftspläne zu schmieden und Wünsche zu äußern. Vertrauen Sie darauf, dass Ihre Sehnsüchte in Erfüllung gehen werden.';
+
+  @override
+  String get tarotWealthMeaning17 =>
+      'Finanziell signalisiert der Stern eine langsame, aber stetige Verbesserung Ihrer Lage. Vorangegangene Sorgen lösen sich auf und neue Möglichkeiten für Einnahmen tun sich auf. Es ist eine Zeit der finanziellen Erholung und des Optimismus.';
+
+  @override
+  String get tarotWealthDetail17 =>
+      'Ihr finanzieller Ausblick beginnt sich in eine positive Richtung zu bewegen. Frühere wirtschaftliche Schwierigkeiten werden durch kluge Entscheidungen und etwas Glück erwunden. Bleiben Sie geduldig, denn der Erfolg wird sich langfristig und nachhaltig einstellen.';
+
+  @override
+  String get tarotSuccessMeaning17 =>
+      'Beruflich steht der Stern für Inspiration, Erfolg und die Anerkennung Ihrer Talente. Ihre Projekte stehen unter einem guten Stern und Sie finden innovative Lösungen für alte Probleme. Folgen Sie Ihrer Berufung, denn Ihr Weg ist nun klar vorgezeichnet.';
+
+  @override
+  String get tarotSuccessDetail17 =>
+      'Ihre kreativen Ideen finden Gehör und führen zu bemerkenswerten Fortschritten. Es ist eine ideale Zeit für langfristige Planungen und den Aufbau von Netzwerken. Ihr authentisches Auftreten überzeugt Vorgesetzte und Geschäftspartner gleichermaßen.';
+
+  @override
+  String get tarotKeywords18 =>
+      'Angst, Sorge, Illusion, Unterbewusstsein, Intuition';
+
+  @override
+  String get tarotDesc18 =>
+      'Der Mond führt uns in die Welt der Träume, der Schatten und des Unbewussten. Nicht alles ist so, wie es auf den ersten Blick scheint, und Unsicherheit kann Ängste hervorrufen. Vertrauen Sie in dieser dunklen Phase weniger Ihrem Verstand als vielmehr Ihrer tiefen Intuition.';
+
+  @override
+  String get tarotLoveMeaning18 =>
+      'In der Liebe deutet der Mond auf Geheimnisse, Missverständnisse oder verborgene Sehnsüchte hin. Vielleicht sind Sie sich Ihrer Gefühle unsicher oder es gibt Dinge, die noch nicht ausgesprochen wurden. Hüten Sie sich vor Täuschungen und hören Sie auf Ihr Bauchgefühl.';
+
+  @override
+  String get tarotLoveDetail18 =>
+      'Es ist eine Zeit emotionaler Verwirrung, in der Sie sich leicht in Illusionen verlieren können. Suchen Sie das klärende Gespräch, aber überstürzen Sie keine wichtigen Entscheidungen. Erst wenn das Tageslicht zurückkehrt, werden Sie die Situation klarer beurteilen können.';
+
+  @override
+  String get tarotWealthMeaning18 =>
+      'Finanziell mahnt der Mond zur Vorsicht, da Informationen unvollständig oder irreführend sein könnten. Es ist kein guter Zeitpunkt für undurchsichtige Geschäfte oder riskante Spekulationen. Achten Sie auf versteckte Kosten und prüfen Sie jedes Angebot dreifach.';
+
+  @override
+  String get tarotWealthDetail18 =>
+      'Ihre finanzielle Situation könnte sich derzeit wie eine Wanderung im Nebel anfühlen. Vermeiden Sie impulsive Käufe oder Investitionen aus einer Stimmung heraus. Vertrauen Sie nur Fakten, die Sie selbst überprüft haben, und lassen Sie sich nicht von äußeren Schein blenden.';
+
+  @override
+  String get tarotSuccessMeaning18 =>
+      'Beruflich symbolisiert der Mond eine Phase der Ungewissheit oder des Wandels hinter den Kulissen. Vielleicht gibt es Intrigen am Arbeitsplatz oder Sie zweifeln an Ihrem aktuellen Weg. Nutzen Sie Ihre Intuition, um Gefahren frühzeitig zu erkennen.';
+
+  @override
+  String get tarotSuccessDetail18 =>
+      'Nicht alle Kollegen spielen mit offenen Karten, seien Sie also wachsam. Es ist eine gute Zeit für kreative Arbeit, die aus dem Unterbewusstsein schöpft, aber weniger für harte Verhandlungen. Warten Sie ab, bis sich der Nebel lichtet, bevor Sie den nächsten großen Karriereschritt machen.';
+
+  @override
+  String get tarotKeywords19 => 'Positivität, Spaß, Wärme, Erfolg, Vitalität';
+
+  @override
+  String get tarotDesc19 =>
+      'Die Sonne ist eine der glücklichsten Karten und verspricht Erfolg, Lebensfreude und Vitalität. Alles liegt klar und deutlich vor Ihnen, und Sie strotzen nur so vor Energie. Genießen Sie diesen Moment des Triumphs und teilen Sie Ihr Glück mit Ihren Mitmenschen.';
+
+  @override
+  String get tarotLoveMeaning19 =>
+      'In der Liebe steht die Sonne für eine Zeit voller Wärme, Leidenschaft und tiefer Zufriedenheit. Beziehungen blühen auf und gemeinsame Unternehmungen bringen viel Freude. Es ist eine Phase der Harmonie, in der sich alles zum Besten entwickelt.';
+
+  @override
+  String get tarotLoveDetail19 =>
+      'Ihr Liebesleben ist von Optimismus und gegenseitiger Wertschätzung geprägt. Kleine Sorgen verschwinden im Licht der Sonne und machen Platz für echte Herzlichkeit. Singles haben jetzt die besten Chancen, jemanden zu treffen, der ihr Leben hell erleuchtet.';
+
+  @override
+  String get tarotWealthMeaning19 =>
+      'Finanziell deutet die Sonne auf Wohlstand, Gewinn und eine äußerst positive Entwicklung hin. Ihre Bemühungen zahlen sich nun aus und Sie können mit finanzieller Sicherheit rechnen. Es ist eine großartige Zeit für Investitionen und neue Projekte.';
+
+  @override
+  String get tarotWealthDetail19 =>
+      'Ein sonniger Tag für Ihre Finanzen ist angebrochen. Ihr Gespür für lukrative Gelegenheiten ist geschärft, was zu erheblichen Gewinnen führt. Nutzen Sie diese erfolgreiche Phase, um Ihre finanzielle Basis für die Zukunft weiter zu stärken.';
+
+  @override
+  String get tarotSuccessMeaning19 =>
+      'Beruflich signalisiert die Sonne den absoluten Höhepunkt und die Krönung Ihrer Arbeit. Sie erhalten Anerkennung, Beförderungen oder schließen wichtige Projekte erfolgreich ab. Ihre positive Ausstrahlung macht Sie zum Mittelpunkt jeder beruflichen Gruppe.';
+
+  @override
+  String get tarotSuccessDetail19 =>
+      'Erfolg kommt Ihnen jetzt fast mühelos entgegen, da Sie mit Begeisterung und Klarheit handeln. Es ist die ideale Zeit, um sich neuen Herausforderungen zu stellen oder eine Führungsposition zu übernehmen. Ihr Selbstvertrauen ist Ihr größtes Kapital und führt Sie zu neuen Bestleistungen.';
+
+  @override
+  String get tarotKeywords20 => 'Urteil, Wiedergeburt, innerer Ruf, Absolution';
+
+  @override
+  String get tarotDesc20 =>
+      'Das Gericht steht für eine Phase der Selbsterkenntnis, der Abrechnung und der Neugeburt. Es ist an der Zeit, vergangene Taten zu bewerten und die notwendigen Konsequenzen daraus zu ziehen. Ein innerer Ruf fordert Sie auf, Ihre wahre Bestimmung zu finden und ein neues Kapitel zu beginnen.';
+
+  @override
+  String get tarotLoveMeaning20 =>
+      'In der Liebe deutet diese Karte auf eine Klärung oder eine wichtige Entscheidung in einer Beziehung hin. Vielleicht kehrt ein früherer Partner zurück oder eine alte Wunde heilt endlich. Es ist eine Zeit der Vergebung und des ehrlichen Neuanfangs.';
+
+  @override
+  String get tarotLoveDetail20 =>
+      'Sie erkennen jetzt klar, was Sie in einer Partnerschaft wirklich brauchen und was nicht. Seien Sie bereit, alte Muster loszulassen, um Platz für eine reifere Form der Liebe zu schaffen. Diese Transformation wird Ihr Liebesleben auf eine höhere Ebene heben.';
+
+  @override
+  String get tarotWealthMeaning20 =>
+      'Finanziell bedeutet das Gericht, dass Sie nun die Früchte Ihrer vergangenen Entscheidungen ernten. Wenn Sie fleißig waren, erwartet Sie eine Belohnung oder eine unerwartete Rückzahlung. Es ist eine Zeit der finanziellen Bilanzierung und der Neuausrichtung.';
+
+  @override
+  String get tarotWealthDetail20 =>
+      'Sie erhalten nun die gerechte Entlohnung für Ihre bisherigen Bemühungen. Vielleicht bietet sich eine Gelegenheit, alte Schulden zu begleichen oder ein vergessenes Erbe anzutreten. Nutzen Sie diese Klarheit, um Ihre Finanzen für die Zukunft nachhaltiger zu planen.';
+
+  @override
+  String get tarotSuccessMeaning20 =>
+      'Beruflich signalisiert das Gericht eine wichtige Prüfung oder eine endgültige Entscheidung über Ihre Karriere. Ihr Potenzial wird erkannt und Sie könnten eine Berufung finden, die über einen bloßen Job hinausgeht. Seien Sie bereit, Verantwortung für Ihren Weg zu übernehmen.';
+
+  @override
+  String get tarotSuccessDetail20 =>
+      'Vergangene Leistungen werden nun gewürdigt, was zu einem bedeutenden Karrieresprung führen kann. Es ist ein Moment der Wahrheit, in dem Sie sich Ihren Fehlern stellen und daraus lernen. Ein neuer, authentischerer Weg in Ihrem Berufsleben öffnet sich nun vor Ihnen.';
+
+  @override
+  String get tarotKeywords21 => 'Abschluss, Integration, Leistung, Reise';
+
+  @override
+  String get tarotDesc21 =>
+      'Die Welt symbolisiert Vollendung, Erfolg und das Erreichen eines großen Ziels. Sie haben eine lange Reise hinter sich und alle Puzzleteile fügen sich nun zu einem harmonischen Ganzen zusammen. Genießen Sie das Gefühl der Ganzheit und feiern Sie Ihre bemerkenswerten Erfolge.';
+
+  @override
+  String get tarotLoveMeaning21 =>
+      'In der Liebe steht die Welt für eine erfüllte Beziehung, die alle Herausforderungen gemeistert hat. Es ist ein Zustand tiefer Verbundenheit und des gemeinsamen Glücks. Singles finden jemanden, der sie vollkommen ergänzt und ihr Leben bereichert.';
+
+  @override
+  String get tarotLoveDetail21 =>
+      'Sie haben in Herzensangelegenheiten Ihr Ziel erreicht und fühlen sich emotional angekommen. Es ist eine Zeit der Harmonie, in der Sie sich mit Ihrem Partner eins fühlen. Gemeinsame Reisen oder große Lebensereignisse wie eine Hochzeit stehen unter einem glücklichen Stern.';
+
+  @override
+  String get tarotWealthMeaning21 =>
+      'Finanziell bedeutet die Welt absoluten Erfolg und die Erreichung finanzieller Freiheit. Ihre klugen Entscheidungen der Vergangenheit führen nun zu dauerhafter Stabilität. Es gibt keine ungelösten Probleme mehr und Ihr Wohlstand ist gesichert.';
+
+  @override
+  String get tarotWealthDetail21 =>
+      'Sie haben Ihre finanziellen Ziele erreicht und können nun die Früchte Ihrer harten Arbeit genießen. Ihr Umgang mit Geld ist weise und vorausschauend, was Ihnen ein sorgenfreies Leben ermöglicht. Es ist die Zeit, den Wohlstand mit anderen zu teilen und das Leben zu genießen.';
+
+  @override
+  String get tarotSuccessMeaning21 =>
+      'Beruflich signalisiert die Welt den krönenden Abschluss einer Karrierephase oder den weltweiten Erfolg eines Projekts. Sie haben alles erreicht, was Sie sich vorgenommen haben, und genießen hohes Ansehen. Neue Horizonte eröffnen sich für Sie, vielleicht sogar international.';
+
+  @override
+  String get tarotSuccessDetail21 =>
+      'Ihr beruflicher Weg hat Sie zur Meisterschaft in Ihrem Bereich geführt. Sie fühlen sich kompetent und respektiert in allem, was Sie tun. Auch wenn dieser Zyklus nun abgeschlossen ist, sind Sie bereit, mit Ihrem Wissen und Ihrer Erfahrung die Welt zu erobern.';
+
+  @override
+  String get supplementRecordPrompt =>
+      'Bitte nehmen Sie Ihre Nahrungsergänzungsmittel ein und zeichnen Sie es auf!';
+
+  @override
+  String get snoozeQuestion => 'Wann soll ich Sie erneut erinnern?';
+
+  @override
+  String get hoursShort => 'Std.';
+
+  @override
+  String get minutesShort => 'Min.';
+
+  @override
+  String get after => 'nach';
+
+  @override
+  String snoozeMessage(int minutes) {
+    return 'Der Wecker klingelt in $minutes Minuten erneut.';
+  }
+
+  @override
+  String timesTaken(int count) {
+    return '$count Mal eingenommen';
+  }
+
+  @override
+  String dailyGoalTimes(int goal) {
+    return 'Ziel: $goal Mal am Tag';
+  }
+
+  @override
+  String get didYouTakeSupplement =>
+      'Haben Sie Ihre Nahrungsergänzungsmittel eingenommen?';
+
+  @override
+  String get viewMissionRecords => 'Missionsaufzeichnungen anzeigen';
+
+  @override
+  String get setTakingGoal => 'Einnahmeziel festlegen';
+
+  @override
+  String get times => 'Mal';
+
+  @override
+  String get dailyTakingGoal => 'Tägliches Einnahmeziel';
+
+  @override
+  String get howManyTimesADay =>
+      'Wie oft am Tag nehmen Sie Nahrungsergänzungsmittel ein?';
+
+  @override
+  String get setGoalMl => 'Ziel festlegen (ml)';
+
+  @override
+  String get sleepAnalysis => 'Schlafanalyse';
+
+  @override
+  String get todaysSleep => 'Heutiger Schlaf';
+
+  @override
+  String get sleepDuration => 'Schlafdauer';
+
+  @override
+  String get wakeUpTime => 'Aufwachzeit';
+
+  @override
+  String get weeklySleepPattern => 'Wöchentliches Schlafmuster';
+
+  @override
+  String get sleepAdvice =>
+      'Sie behalten eine regelmäßige Schlafgewohnheit bei. Sie sind 30 Minuten früher ins Bett gegangen als gestern!';
+
+  @override
+  String get stopwatch => 'Stoppuhr';
+
+  @override
+  String get lap => 'Runde';
+
+  @override
+  String get stop => 'Stopp';
+
+  @override
+  String lapLabel(int index) {
+    return 'Runde $index';
+  }
+
+  @override
+  String get monday => 'Mo';
+
+  @override
+  String get tuesday => 'Di';
+
+  @override
+  String get wednesday => 'Mi';
+
+  @override
+  String get thursday => 'Do';
+
+  @override
+  String get friday => 'Fr';
+
+  @override
+  String get saturday => 'Sa';
+
+  @override
+  String get sunday => 'So';
 
   @override
   String get policy => 'Bedingungen und Datenschutz';
@@ -3153,10 +4110,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get maxSnoozeCountLabel => 'Max. Schlummeranzahl';
 
   @override
-  String get minutes => 'Min';
-
-  @override
-  String get times => 'Mal';
+  String get minutes => 'min';
 
   @override
   String cupsCount(int current, int goal) {
@@ -3334,7 +4288,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get allMissions => 'Alle Missionen';
 
   @override
-  String categoryMissions(Object category) {
+  String categoryMissions(String category) {
     return '$category Missionen';
   }
 
@@ -3367,9 +4321,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get getNotification => 'Benachrichtigung erhalten';
-
-  @override
-  String get notificationTime => 'Benachrichtigungszeit';
 
   @override
   String get missionCategoryHealth => 'Gesundheit';
@@ -3448,7 +4399,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get weeklyForecast => 'Wöchentliche Vorhersage';
 
   @override
-  String hourFormat(Object hour) {
+  String hourFormat(String hour) {
     return '$hour Uhr';
   }
 
@@ -3562,6 +4513,27 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get luckyNumberAnalysisFinal => 'Verarbeitung der finalen Daten...';
+
+  @override
+  String get luckyNumberAnalyzing => 'Energie wird analysiert...';
+
+  @override
+  String get luckyNumberGeometric => 'Geometrische Analyse...';
+
+  @override
+  String get luckyNumberPatterns => 'Musterabgleich...';
+
+  @override
+  String get luckyNumberEnergy => 'Energie wird harmonisiert...';
+
+  @override
+  String get luckyNumberCompleted => 'Analyse abgeschlossen!';
+
+  @override
+  String get luckyNumberShare => 'Ergebnisse teilen';
+
+  @override
+  String get luckyNumberRestart => 'Nochmal versuchen';
 
   @override
   String get luckyNumberGenerating => 'Glückszahlen werden generiert...';
@@ -3929,6 +4901,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get compatibilityGenderFemale => 'Weiblich';
 
   @override
+  String get compatibilityInputTitle => 'Kompatibilitätsinformationen Eingabe';
+
+  @override
   String get tojeongInputTitle => 'Tojeong Jahresorakel Informationseingabe';
 
   @override
@@ -3986,7 +4961,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tojeongShareResult => 'Ergebnisse teilen';
 
   @override
-  String tojeongShareTitle(Object year) {
+  String tojeongShareTitle(int year) {
     return '$year Tojeong Jahresorakel Ergebnisse';
   }
 
@@ -4093,7 +5068,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String newYearFortuneShareDesc(String name, String desc) {
-    return 'New Year fortune for $name.\n\n$desc...';
+    return 'Neujahrs-Horoskop für $name.\n\n$desc...';
   }
 
   @override
@@ -4226,7 +5201,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sie werden durch Geduld eine Krise in eine Chance verwandeln.';
 
   @override
-  String tojeongCoreMessage(Object hasu, Object jungsu, Object sangsu) {
+  String tojeongCoreMessage(String sangsu, String jungsu, String hasu) {
     return 'In diesem Jahr, inmitten von $sangsu, $jungsu und schließlich $hasu';
   }
 
@@ -4509,4 +5484,397 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get compatibilityDescDefaultConstellation =>
       'Eine Beziehung, die basierend auf den Tierkreiszeichen einigermaßen gut zusammenpasst.';
+
+  @override
+  String get routineMorningTitle => 'Ein erfrischender Morgen! ☀️';
+
+  @override
+  String get routineMorningBody =>
+      'Haben Sie die für heute geplanten Routine-Missionen vergessen?';
+
+  @override
+  String get routineEveningTitle => 'Gute Arbeit heute! ✨';
+
+  @override
+  String get routineEveningBody =>
+      'Haben Sie alle heutigen Missionen abgeschlossen? Schließen Sie Ihre Routine ab.';
+
+  @override
+  String get routineCheckTitle => 'Überprüfen Sie Ihre heutigen Missionen! 🚀';
+
+  @override
+  String get routineCheckBody =>
+      'Befolgen Sie die Routine-Missionen und machen Sie Ihren Tag angenehm.';
+
+  @override
+  String get supplementNotificationTitle =>
+      'Erinnerung an Nahrungsergänzungsmittel';
+
+  @override
+  String get waterNotificationTitle => 'Trinkerinnerung';
+
+  @override
+  String get routineNotificationTitle => 'Tägliche Routine-Benachrichtigung';
+
+  @override
+  String get todaysFortuneNotificationTitle => 'Dein heutiges Horoskop';
+
+  @override
+  String get afternoonFortuneNotificationBody =>
+      'Wie sieht dein Nachmittags-Horoskop aus? Gleich nachsehen!';
+
+  @override
+  String get morningFortuneNotificationBody =>
+      'Schau dir dein Horoskop an und starte voller Energie in den Tag!';
+
+  @override
+  String get fortunePassExpiryTitle => 'Fortune Pass läuft heute ab';
+
+  @override
+  String get fortunePassExpiryBody =>
+      'Ihre Fortune Pass-Mitgliedschaft läuft heute ab. Erneuern Sie sie, um die Vorteile weiterhin zu nutzen!';
+
+  @override
+  String get takeNow => 'Jetzt einnehmen';
+
+  @override
+  String get later => 'Später';
+
+  @override
+  String get turnOffAlarmAction => 'Alarm ausschalten';
+
+  @override
+  String get todaysFortuneNotification => 'Heutige Horoskop-Benachrichtigung';
+
+  @override
+  String get enableNotification => 'Benachrichtigung aktivieren';
+
+  @override
+  String get fortuneNotificationDescription =>
+      'Informiert Sie zur festgelegten Zeit über Ihr heutiges Horoskop.';
+
+  @override
+  String get morningNotificationTime => 'Benachrichtigungszeit am Morgen';
+
+  @override
+  String get afternoonNotificationTime => 'Benachrichtigungszeit am Nachmittag';
+
+  @override
+  String get morningFortuneTitle => 'Morgen-Horoskop';
+
+  @override
+  String get afternoonFortuneTitle => 'Nachmittag-Horoskop';
+
+  @override
+  String get type => 'Typ';
+
+  @override
+  String get supplementChannelDesc =>
+      'Kanal für Benachrichtigungen zur Einnahme von Nahrungsergänzungsmitteln.';
+
+  @override
+  String get waterChannelDesc =>
+      'Kanal für Benachrichtigungen zur Wassertrinkgewohnheit.';
+
+  @override
+  String get waterSummaryTitle => 'Wassertrink-Benachrichtigung';
+
+  @override
+  String get dailyRoutineChannelDesc =>
+      'Kanal für tägliche Missions- und Gewohnheitsbildungs-Benachrichtigungen.';
+
+  @override
+  String get dailyRoutineSummaryTitle => 'Tägliche Routine-Benachrichtigung';
+
+  @override
+  String get missionChannelName => 'Missions-Benachrichtigung';
+
+  @override
+  String get missionChannelDesc =>
+      'Kanal für allgemeine Missions-Benachrichtigungen.';
+
+  @override
+  String get fortuneChannelName => 'Glücks-Benachrichtigung';
+
+  @override
+  String get fortuneChannelDesc =>
+      'Kanal für tägliche Glücks-Check-Benachrichtigungen.';
+
+  @override
+  String get subscriptionChannelName => 'Abonnement-Benachrichtigung';
+
+  @override
+  String get subscriptionChannelDesc =>
+      'Kanal für Fortune Pass-Ablauf- und Abonnement-Benachrichtigungen.';
+
+  @override
+  String get alarmChannelName => 'Wecker';
+
+  @override
+  String get alarmChannelDesc => 'Kanal für Aufwach- und Missions-Alarme.';
+
+  @override
+  String get shareViaKakao => 'Über KakaoTalk teilen';
+
+  @override
+  String get shareViaSNS =>
+      'Über andere soziale Netzwerke teilen (Instagram, Twitter, etc.)';
+
+  @override
+  String get checkDetailResult => 'Detailliertes Ergebnis prüfen';
+
+  @override
+  String get viewMyFortuneResult => 'Mein Glücksergebnis anzeigen';
+
+  @override
+  String get takeSupplementNow =>
+      'Bitte nehmen Sie Ihre Nahrungsergänzungsmittel ein!';
+
+  @override
+  String get takeNowQuestion => 'Möchten Sie es jetzt einnehmen?';
+
+  @override
+  String get eatNow => 'Jetzt einnehmen';
+
+  @override
+  String get eatLater => 'Später einnehmen';
+
+  @override
+  String snoozeMessageGeneric(int minutes) {
+    return 'Ich werde Sie in $minutes Minuten erneut erinnern.';
+  }
+
+  @override
+  String get hours => 'Stunden';
+
+  @override
+  String get cheeringMessage4 => 'Lebhafter Morgen, glücklicher Start!';
+
+  @override
+  String get cheeringMessage5 => 'Hab einen lächelnden Tag.';
+
+  @override
+  String get cheeringMessage6 => 'Kopf hoch heute!';
+
+  @override
+  String get cheeringMessage7 => 'Du wirst heute genug strahlen.';
+
+  @override
+  String get cheeringMessage8 =>
+      'Ich habe das Gefühl, dass etwas Gutes passieren wird!';
+
+  @override
+  String get cheeringMessage9 => 'Gute Arbeit heute. Ein kraftvoller Start!';
+
+  @override
+  String get cheeringMessage10 => 'Das Glück ist immer an deiner Seite.';
+
+  @override
+  String get cheeringMessage11 =>
+      'Ich drücke dir heute die Daumen für deine Träume.';
+
+  @override
+  String get cheeringMessage12 => 'Erfrischender Morgen, angenehmer Tag!';
+
+  @override
+  String get cheeringMessage13 => 'Sei heute siegreich!';
+
+  @override
+  String get cheeringMessage14 => 'Du bist wertvoll, einfach weil du du bist.';
+
+  @override
+  String get cheeringMessage15 => 'Hab einen Tag voller angenehmer Dinge.';
+
+  @override
+  String get cheeringMessage16 => 'Ich hoffe, dein Tag funkelt heute!';
+
+  @override
+  String get cheeringMessage17 => 'Dein Lächeln erhellt die Welt.';
+
+  @override
+  String get cheeringMessage18 => 'Sei heute du selbst!';
+
+  @override
+  String get cheeringMessage19 => 'Beginne den Tag mit flatterndem Herzen.';
+
+  @override
+  String get cheeringMessage20 => 'Ein wunderbarer Tag erwartet dich.';
+
+  @override
+  String get cheeringMessage21 => 'Mit der Kraft der Positivität heute!';
+
+  @override
+  String get cheeringMessage22 => 'Ich unterstütze deinen Weg.';
+
+  @override
+  String get cheeringMessage23 => 'Mach das Beste aus dem heutigen Tag!';
+
+  @override
+  String get cheeringMessage24 => 'Möge das Glück mit dir sein!';
+
+  @override
+  String get cheeringMessage25 => 'Hab heute einen herzlichen Tag.';
+
+  @override
+  String get cheeringMessage26 => 'Du schaffst das!';
+
+  @override
+  String get cheeringMessage27 => 'Beginne den Tag mit Dankbarkeit.';
+
+  @override
+  String get cheeringMessage28 => 'Dein Wert ist unendlich.';
+
+  @override
+  String get cheeringMessage29 => 'Möge dein Tag mit einem Lächeln erblühen.';
+
+  @override
+  String get cheeringMessage30 => 'Hab eine gute Zeit mit guten Menschen!';
+
+  @override
+  String get cheeringMessage31 => 'Heute einen Schritt näher an deine Träume!';
+
+  @override
+  String get cheeringMessage32 => 'Du bist heute der Coolste.';
+
+  @override
+  String get cheeringMessage33 => 'Ein wunderbarer Tag wird kommen.';
+
+  @override
+  String get cheeringMessage34 => 'Genieße deinen Tag heute in aller Ruhe.';
+
+  @override
+  String get cheeringMessage35 =>
+      'Deine Bemühungen werden dich nicht verraten.';
+
+  @override
+  String get cheeringMessage36 => 'Hab heute einen gesunden Tag.';
+
+  @override
+  String get cheeringMessage37 => 'Du wurdest geboren, um geliebt zu werden!';
+
+  @override
+  String get cheeringMessage38 => 'Sei heute mutig!';
+
+  @override
+  String get cheeringMessage39 => 'Eine strahlende Zukunft erwartet dich.';
+
+  @override
+  String get cheeringMessage40 => 'Hab einen tag voller Leidenschaft!';
+
+  @override
+  String get cheeringMessage41 => 'Ich hoffe, dein Geist ist in Frieden.';
+
+  @override
+  String get cheeringMessage42 => 'Finde heute das kleine Glück.';
+
+  @override
+  String get cheeringMessage43 => 'Du machst das schon gut genug.';
+
+  @override
+  String get cheeringMessage44 => 'Beginne den Tag hoffnungsvoll.';
+
+  @override
+  String get cheeringMessage45 =>
+      'Deine Freundlichkeit ist eine große Stärke für jemanden.';
+
+  @override
+  String get cheeringMessage46 => 'Hab heute einen produktiven Tag.';
+
+  @override
+  String get cheeringMessage47 => 'Du hast die Kraft, die Welt zu verändern.';
+
+  @override
+  String get cheeringMessage48 => 'Klarer Tag heute!';
+
+  @override
+  String get cheeringMessage49 => 'Strahle deinen Charme nach Herzenslust aus.';
+
+  @override
+  String get cheeringMessage50 => 'Fülle deinen Tag heute mit Glück!';
+
+  @override
+  String get locationServiceDisabled => 'Standortdienste sind deaktiviert.';
+
+  @override
+  String get locationPermissionDenied => 'Standortberechtigung verweigert.';
+
+  @override
+  String get locationPermissionPermanentlyDenied =>
+      'Standortberechtigung dauerhaft verweigert.';
+
+  @override
+  String get deleteMissionTitle => 'Mission löschen';
+
+  @override
+  String get deleteMissionConfirm =>
+      'Sind Sie sicher, dass Sie diese Mission löschen möchten?';
+
+  @override
+  String get yesDelete => 'Ja, löschen';
+
+  @override
+  String get waterAlarmTitle => 'Zeit, Wasser zu trinken! 💧';
+
+  @override
+  String get waterAlarmBody =>
+      'Wie wäre es mit einem Glas kühlem Wasser für Ihre Gesundheit?';
+
+  @override
+  String get supplementAlarmBody =>
+      'Vergiss nicht, deine Nahrungsergänzungsmittel für heute einzunehmen.';
+
+  @override
+  String get waterHabitChannelDesc =>
+      'Benachrichtigungskanal für die Wassertrinkgewohnheit.';
+
+  @override
+  String get pleaseSolveMath => 'Bitte lösen Sie das Problem.';
+
+  @override
+  String detectedLabel(String labels) {
+    return '[Erkannt: $labels]';
+  }
+
+  @override
+  String get defaultSleepDuration => '7 Std. 30 Min.';
+
+  @override
+  String get year2024Name => 'Gap-Chin Jahr (Jahr des Blauen Drachen)';
+
+  @override
+  String get year2025Name => 'Eul-Sa Jahr (Jahr der Blauen Schlange)';
+
+  @override
+  String get year2026Name => 'Byeong-O Jahr (Jahr des Roten Pferdes)';
+
+  @override
+  String supportEmailSubject(String appTitle, String title) {
+    return '[$appTitle Anfrage] $title';
+  }
+
+  @override
+  String get summary => 'Zusammenfassung';
+
+  @override
+  String get monthlySummary => 'Monatliche Zusammenfassung';
+
+  @override
+  String monthlySuccessRate(
+      int month, String percentage, int success, int total) {
+    return '$month Monatliche Erfolgsquote: $percentage% ($success/$total)';
+  }
+
+  @override
+  String noMonthlyRecord(int month) {
+    return 'Keine Aufzeichnungen für $month';
+  }
+
+  @override
+  String get missionRecord => 'Missionsrekord';
+
+  @override
+  String get supplementRecord => 'Ergänzungsaufzeichnung';
+
+  @override
+  String get timeSaleCatchChance => 'Nutzen Sie die 50% Rabatt-Chance!';
 }

@@ -1,54 +1,34 @@
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
+
 class PositiveMessages {
-  static const List<String> messages = [
-    "오늘 하루도 즐겁게 보내세요!",
-    "당신의 오늘을 응원합니다!",
-    "오늘도 멋진 하루가 될 거예요.",
-    "활기찬 아침, 행복한 시작!",
-    "미소 짓는 하루 되세요.",
-    "오늘 하루도 힘내세요!",
-    "당신은 오늘 충분히 빛날 거예요.",
-    "좋은 일이 생길 것 같은 예감!",
-    "오늘도 수고 많으셨습니다. 힘찬 시작!",
-    "행복은 늘 당신 곁에 있어요.",
-    "오늘도 당신의 꿈을 응원합니다.",
-    "상쾌한 아침, 기분 좋은 하루!",
-    "오늘 하루도 승리하세요!",
-    "당신은 존재만으로도 소중합니다.",
-    "기분 좋은 일이 가득한 하루 되세요.",
-    "오늘 하루도 반짝반짝 빛나길!",
-    "당신의 미소가 세상을 밝힙니다.",
-    "오늘 하루도 당신답게!",
-    "설레는 마음으로 오늘을 시작해요.",
-    "당신을 위한 멋진 하루가 기다려요.",
-    "오늘 하루도 긍정의 힘으로!",
-    "당신이 가는 길을 응원합니다.",
-    "오늘 하루도 최고로 만드세요!",
-    "행운이 당신과 함께하길!",
-    "오늘 하루도 따뜻하게 보내세요.",
-    "당신은 할 수 있어요!",
-    "오늘 하루도 감사하며 시작해요.",
-    "당신의 가치는 무한합니다.",
-    "오늘 하루도 웃음꽃 피우세요.",
-    "좋은 사람들과 좋은 시간 보내길!",
-    "오늘 하루도 꿈을 향해 한 걸음!",
-    "당신은 오늘 가장 멋진 사람입니다.",
-    "기적 같은 하루가 찾아올 거예요.",
-    "오늘 하루도 여유롭게 즐기세요.",
-    "당신의 노력은 배신하지 않아요.",
-    "오늘 하루도 건강하게 보내세요.",
-    "당신은 사랑받기 위해 태어난 사람!",
-    "오늘 하루도 용기 있게!",
-    "밝은 미래가 당신을 기다립니다.",
-    "오늘 하루도 열정 가득하게!",
-    "당신의 마음이 평안하길 바랍니다.",
-    "오늘 하루도 소소한 행복을 찾으세요.",
-    "당신은 이미 충분히 잘하고 있어요.",
-    "오늘 하루도 희망차게 시작해요.",
-    "당신의 친절이 누군가에게 큰 힘이 됩니다.",
-    "오늘 하루도 보람차게 보내세요.",
-    "당신은 세상을 바꾸는 힘이 있습니다.",
-    "오늘 하루도 맑음!",
-    "당신의 매력을 마음껏 발산하세요.",
-    "오늘 하루도 행복으로 꽉 채우세요!"
-  ];
+  static String getMessage(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final List<String> messages = [
+      l10n.cheeringMessage1, l10n.cheeringMessage2, l10n.cheeringMessage3, l10n.cheeringMessage4,
+      l10n.cheeringMessage5, l10n.cheeringMessage6, l10n.cheeringMessage7, l10n.cheeringMessage8,
+      l10n.cheeringMessage9, l10n.cheeringMessage10, l10n.cheeringMessage11, l10n.cheeringMessage12,
+      l10n.cheeringMessage13, l10n.cheeringMessage14, l10n.cheeringMessage15, l10n.cheeringMessage16,
+      l10n.cheeringMessage17, l10n.cheeringMessage18, l10n.cheeringMessage19, l10n.cheeringMessage20,
+      l10n.cheeringMessage21, l10n.cheeringMessage22, l10n.cheeringMessage23, l10n.cheeringMessage24,
+      l10n.cheeringMessage25, l10n.cheeringMessage26, l10n.cheeringMessage27, l10n.cheeringMessage28,
+      l10n.cheeringMessage29, l10n.cheeringMessage30, l10n.cheeringMessage31, l10n.cheeringMessage32,
+      l10n.cheeringMessage33, l10n.cheeringMessage34, l10n.cheeringMessage35, l10n.cheeringMessage36,
+      l10n.cheeringMessage37, l10n.cheeringMessage38, l10n.cheeringMessage39, l10n.cheeringMessage40,
+      l10n.cheeringMessage41, l10n.cheeringMessage42, l10n.cheeringMessage43, l10n.cheeringMessage44,
+      l10n.cheeringMessage45, l10n.cheeringMessage46, l10n.cheeringMessage47, l10n.cheeringMessage48,
+      l10n.cheeringMessage49, l10n.cheeringMessage50,
+    ];
+    return messages[Random().nextInt(messages.length)];
+  }
+
+  static List<String> getFallbackMessages(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      l10n.cheeringMessage1,
+      l10n.cheeringMessage2,
+      l10n.cheeringMessage3,
+    ];
+  }
 }

@@ -23,6 +23,7 @@ class MissionTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
     // 물 마시기/영양제/기상 알람 미션 여부 확인
@@ -33,27 +34,27 @@ class MissionTile extends ConsumerWidget {
 
     String displayTitle = mission.title;
     if (isWaterMission) {
-      displayTitle = AppLocalizations.of(context)!.missionWater;
+      displayTitle = l10n.missionWater;
     } else if (isSupplementMission) {
-      displayTitle = AppLocalizations.of(context)!.missionSupplement;
+      displayTitle = l10n.missionSupplement;
     } else if (isWakeUpMission) {
-      displayTitle = AppLocalizations.of(context)!.missionWakeUp;
+      displayTitle = l10n.missionWakeUp;
     } else if (mission.isSystemMission) {
       // Other system missions from defaultMissions list
       switch (mission.id) {
-        case 'gym': displayTitle = AppLocalizations.of(context)!.missionGym; break;
-        case 'workout': displayTitle = AppLocalizations.of(context)!.missionWorkout; break;
-        case 'diary': displayTitle = AppLocalizations.of(context)!.missionDiary; break;
-        case 'bed_making': displayTitle = AppLocalizations.of(context)!.missionBedMaking; break;
-        case 'stretching': displayTitle = AppLocalizations.of(context)!.missionStretching; break;
-        case 'reading': displayTitle = AppLocalizations.of(context)!.missionReading; break;
-        case 'planning': displayTitle = AppLocalizations.of(context)!.missionPlanning; break;
-        case 'breakfast': displayTitle = AppLocalizations.of(context)!.missionBreakfast; break;
-        case 'meditation': displayTitle = AppLocalizations.of(context)!.missionMeditation; break;
-        case 'english_words': displayTitle = AppLocalizations.of(context)!.missionLearnWords; break;
-        case 'ventilation': displayTitle = AppLocalizations.of(context)!.missionVentilation; break;
-        case 'cleaning': displayTitle = AppLocalizations.of(context)!.missionCleaning; break;
-        case 'gratitude_diary': displayTitle = AppLocalizations.of(context)!.missionGratitudeDiary; break;
+        case 'gym': displayTitle = l10n.missionGym; break;
+        case 'workout': displayTitle = l10n.missionWorkout; break;
+        case 'diary': displayTitle = l10n.missionDiary; break;
+        case 'bed_making': displayTitle = l10n.missionBedMaking; break;
+        case 'stretching': displayTitle = l10n.missionStretching; break;
+        case 'reading': displayTitle = l10n.missionReading; break;
+        case 'planning': displayTitle = l10n.missionPlanning; break;
+        case 'breakfast': displayTitle = l10n.missionBreakfast; break;
+        case 'meditation': displayTitle = l10n.missionMeditation; break;
+        case 'english_words': displayTitle = l10n.missionLearnWords; break;
+        case 'ventilation': displayTitle = l10n.missionVentilation; break;
+        case 'cleaning': displayTitle = l10n.missionCleaning; break;
+        case 'gratitude_diary': displayTitle = l10n.missionGratitudeDiary; break;
       }
     }
 
@@ -69,7 +70,7 @@ class MissionTile extends ConsumerWidget {
        final goalCups = (goal / cupSize).ceil();
 
        subtitle = Text(
-         AppLocalizations.of(context)!.cupsCount(currentCups, goalCups),
+         l10n.cupsCount(currentCups, goalCups),
          style: TextStyle(
            fontSize: 12,
            color: isCompleted 
@@ -84,7 +85,7 @@ class MissionTile extends ConsumerWidget {
        final goal = supplementState.settings.dailyGoal;
 
        subtitle = Text(
-         AppLocalizations.of(context)!.timesCount(current),
+         l10n.timesCount(current.toString()),
          style: TextStyle(
            fontSize: 12,
            color: isCompleted 
@@ -95,7 +96,7 @@ class MissionTile extends ConsumerWidget {
        );
     } else if (isWakeUpMission) {
       subtitle = Text(
-        isCompleted ? AppLocalizations.of(context)!.timesCount(1) : AppLocalizations.of(context)!.timesCount(0),
+        isCompleted ? l10n.timesCount('1') : l10n.timesCount('0'),
         style: TextStyle(
           fontSize: 12,
           color: isCompleted 
@@ -215,27 +216,27 @@ class MissionTile extends ConsumerWidget {
           builder: (context) => AlertDialog(
             backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: const Text(
-              '미션 삭제',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            title: Text(
+              l10n.deleteMissionTitle,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             content: Text(
-              '\'${mission.title}\' 미션을 삭제하시겠습니까?',
+              l10n.deleteMissionConfirm,
               style: const TextStyle(fontSize: 15),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: Text(
-                  '아니요',
+                  l10n.no,
                   style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
                 ),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text(
-                  '네, 삭제할게요',
-                  style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                child: Text(
+                  l10n.yesDelete,
+                  style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
                 ),
               ),
             ],

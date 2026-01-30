@@ -244,15 +244,59 @@ class SajuService {
 
   // Generate Yearly Fortune Text with context for localization
   static String getYearlyFortune(BuildContext context, SajuProfile profile, Map<String, Ganji> saju, int targetYear) {
-    final locale = Localizations.localeOf(context).languageCode;
+    final l10n = AppLocalizations.of(context)!;
     
-    // 기기 언어가 영어인 경우 영어 운세 반환
+    // Check for 2024, 2025 and 2026 which have detailed localizations
+    if (targetYear == 2024) {
+      final dayMaster = saju['day']!.cheongan;
+      switch (dayMaster) {
+        case Cheongan.gap: return l10n.sajuFortune2024Gap;
+        case Cheongan.eul: return l10n.sajuFortune2024Eul;
+        case Cheongan.byeong: return l10n.sajuFortune2024Byeong;
+        case Cheongan.jeong: return l10n.sajuFortune2024Jeong;
+        case Cheongan.mu: return l10n.sajuFortune2024Mu;
+        case Cheongan.gi: return l10n.sajuFortune2024Gi;
+        case Cheongan.gyeong: return l10n.sajuFortune2024Gyeong;
+        case Cheongan.sin: return l10n.sajuFortune2024Sin;
+        case Cheongan.im: return l10n.sajuFortune2024Im;
+        case Cheongan.gye: return l10n.sajuFortune2024Gye;
+      }
+    } else if (targetYear == 2025) {
+      final dayMaster = saju['day']!.cheongan;
+      switch (dayMaster) {
+        case Cheongan.gap: return l10n.sajuFortune2025Gap;
+        case Cheongan.eul: return l10n.sajuFortune2025Eul;
+        case Cheongan.byeong: return l10n.sajuFortune2025Byeong;
+        case Cheongan.jeong: return l10n.sajuFortune2025Jeong;
+        case Cheongan.mu: return l10n.sajuFortune2025Mu;
+        case Cheongan.gi: return l10n.sajuFortune2025Gi;
+        case Cheongan.gyeong: return l10n.sajuFortune2025Gyeong;
+        case Cheongan.sin: return l10n.sajuFortune2025Sin;
+        case Cheongan.im: return l10n.sajuFortune2025Im;
+        case Cheongan.gye: return l10n.sajuFortune2025Gye;
+      }
+    } else if (targetYear == 2026) {
+      final dayMaster = saju['day']!.cheongan;
+      switch (dayMaster) {
+        case Cheongan.gap: return l10n.sajuFortune2026Gap;
+        case Cheongan.eul: return l10n.sajuFortune2026Eul;
+        case Cheongan.byeong: return l10n.sajuFortune2026Byeong;
+        case Cheongan.jeong: return l10n.sajuFortune2026Jeong;
+        case Cheongan.mu: return l10n.sajuFortune2026Mu;
+        case Cheongan.gi: return l10n.sajuFortune2026Gi;
+        case Cheongan.gyeong: return l10n.sajuFortune2026Gyeong;
+        case Cheongan.sin: return l10n.sajuFortune2026Sin;
+        case Cheongan.im: return l10n.sajuFortune2026Im;
+        case Cheongan.gye: return l10n.sajuFortune2026Gye;
+      }
+    }
+
+    // Fallback for other years or when detailed fortune is not available
+    final locale = Localizations.localeOf(context).languageCode;
     if (locale == 'en') {
       return _generateEnglishYearlyFortune(profile, saju, targetYear);
     }
-    
-    // 기본적으로 한국어 운세 반환
-    return _generateYearlyFortune(profile, saju, targetYear);
+    return _generateYearlyFortune(l10n, profile, saju, targetYear);
   }
 
   // 영어 운세 생성
@@ -454,240 +498,32 @@ class SajuService {
   }
 
   // 한국어 운세 생성 (기존 로직)
-  static String _generateYearlyFortune(SajuProfile profile, Map<String, Ganji> saju, int targetYear) {
-    // 2024: Gap-Chin (Blue Dragon) - Wood/Earth
-    // 2025: Eul-Sa (Blue Snake) - Wood/Fire
-    // 2026: Byeong-O (Red Horse) - Fire/Fire
-    
+  static String _generateYearlyFortune(AppLocalizations l10n, SajuProfile profile, Map<String, Ganji> saju, int targetYear) {
     Cheongan dayMaster = saju['day']!.cheongan;
     Ohaeng myElement = dayMaster.ohaeng;
-    
-    String yearName = "";
-    Ohaeng yearElement = Ohaeng.wood; // Default
-    Ohaeng yearBranchElement = Ohaeng.fire; // Default
-    
-    if (targetYear == 2024) {
-      yearName = "갑진년(푸른 용의 해)";
-      yearElement = Ohaeng.wood; // Gap
-      yearBranchElement = Ohaeng.earth; // Chin
-    } else if (targetYear == 2025) {
-      yearName = "을사년(푸른 뱀의 해)";
-      yearElement = Ohaeng.wood; // Eul
-      yearBranchElement = Ohaeng.fire; // Sa
-    } else if (targetYear == 2026) {
-      yearName = "병오년(붉은 말의 해)";
-      yearElement = Ohaeng.fire; // Byeong
-      yearBranchElement = Ohaeng.fire; // O
-    }
-    
     String fortune = "";
-    
-    // Generalized logic based on Day Master vs Year Element
-    // This is very simplified.
-    
+
+    String yearName = "";
+    if (targetYear == 2024) {
+      yearName = "갑진년 (청룡의 해)";
+    } else if (targetYear == 2025) {
+      yearName = "을사년 (청사의 해)";
+    } else if (targetYear == 2026) {
+      yearName = "병오년 (적마의 해)";
+    }
+
     if (targetYear == 2025) {
-      // 2025년 을사년 (푸른 뱀의 해) 상세 운세
-      // 일간(Day Master)별 운세 로직
       switch (dayMaster) {
-        case Cheongan.gap: // 갑목 (甲)
-          fortune = "🌿 2025년 을사년 갑목(甲木) 총운: '새로운 무대와 경쟁 속의 성장'\n\n"
-              "2025년은 갑목인 당신에게 '겁재(刦財)'와 '식신(食神)'의 기운이 들어오는 해입니다. "
-              "마치 숲속의 큰 나무가 덩굴(을목)과 어우러져 함께 자라나는 형국입니다. "
-              "혼자보다는 함께할 때 시너지가 나지만, 동시에 치열한 경쟁을 피할 수 없는 한 해가 될 것입니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "활동력이 왕성해지고 표현욕구가 강해집니다. 당신의 아이디어와 재능을 세상에 널리 알릴 기회가 찾아옵니다. "
-              "프리랜서나 예체능, 영업직 종사자에게는 탁월한 성과가 기대됩니다. "
-              "다만, 동료나 경쟁자와의 관계에서 미묘한 갈등이 발생할 수 있으니, 적을 만들기보다는 협력자로 만드는 지혜가 필요합니다.\n\n"
-              "💰 [재물운]\n"
-              "재물 흐름은 활발하지만, 들어오는 만큼 나가는 돈도 많을 수 있습니다(겁재의 영향). "
-              "친구, 동료와의 모임이나 투자 권유로 인한 지출이 발생할 수 있으니 주의가 필요합니다. "
-              "돈을 모으기보다는 자기 계발이나 사업 확장에 투자하는 것이 장기적으로 유리할 수 있습니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "사교성이 좋아져 새로운 사람들을 많이 만나게 됩니다. 모임이나 단체 활동에서 인기가 높아지며, 이성에게도 매력을 어필하기 좋은 시기입니다. "
-              "다만, 경쟁자가 나타날 수 있으니 마음에 드는 상대가 있다면 적극적으로 표현하는 것이 좋습니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "지나친 승부욕은 화를 부를 수 있습니다. 또한, '사화(巳火)'의 역마 기운으로 인해 이동수가 많아지니 교통안전에 유의하고, 체력 관리에 신경 써야 합니다.";
-          break;
-        case Cheongan.eul: // 을목 (乙)
-          fortune = "🌸 2025년 을사년 을목(乙木) 총운: '꽃이 만발하는 화려한 표현의 시기'\n\n"
-              "2025년은 을목인 당신에게 '비견(比肩)'과 '상관(傷官)'의 해입니다. "
-              "자신과 같은 기운이 들어와 주체성이 강해지고, 꽃이 활짝 피어 향기를 뿜어내듯 당신의 매력을 발산하는 시기입니다. "
-              "'목화통명(木火通明)'의 기운으로 총명함과 창의력이 빛을 발합니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "예술, 디자인, 기획, 방송 등 창의적인 분야에서 두각을 나타낼 수 있습니다. "
-              "자신의 목소리를 내고 주도적으로 일을 추진하게 되며, 독립이나 창업을 꿈꾸기도 합니다. "
-              "기존의 질서나 틀을 깨고 새로운 시도를 하기에 아주 좋은 운기입니다. 말과 글을 다루는 직업군에서 큰 성과가 예상됩니다.\n\n"
-              "💰 [재물운]\n"
-              "자신의 재능으로 돈을 버는 형국입니다. 기술이나 아이디어로 수익을 창출할 수 있습니다. "
-              "다만, 기분파적인 소비 성향이 강해질 수 있고, 주변 사람들에게 베푸는 것을 좋아해 지출이 늘어날 수 있습니다. "
-              "계획적인 소비 습관이 필요합니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "화려한 매력으로 이성의 주목을 받게 됩니다. 연애운이 아주 활발하며, 열정적인 사랑을 할 가능성이 높습니다. "
-              "하지만 직설적인 화법으로 인해 구설수에 오를 수 있으니, 가까운 사이일수록 언행에 신중해야 합니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "자신감이 지나쳐 오만해 보일 수 있습니다. 윗사람과의 마찰을 조심하고, 법적인 문제나 규정을 어기지 않도록 주의하세요. "
-              "감정 기복을 잘 다스리는 것이 평온한 한 해를 보내는 열쇠입니다.";
-          break;
-        case Cheongan.byeong: // 병화 (丙)
-          fortune = "☀️ 2025년 을사년 병화(丙火) 총운: '태양이 숲을 비추는 성취와 문서운'\n\n"
-              "2025년은 병화인 당신에게 '정인(正印)'과 '비견(比肩)'의 해입니다. "
-              "태양이 푸른 숲(을목)을 비추어 생명력을 키우는 형상으로, 당신의 능력이 세상에 인정받고 든든한 지원군을 얻는 시기입니다. "
-              "학업과 문서, 자격과 관련된 일에서 큰 성과를 거둘 수 있습니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "승진, 합격, 포상 등 명예로운 일이 생길 수 있습니다. 윗사람이나 상사의 인정을 받게 되며, 중요한 프로젝트를 맡아 리더십을 발휘하게 됩니다. "
-              "자격증 취득이나 학위 논문 등 공부와 연구 분야에서도 좋은 결실을 맺을 수 있습니다. "
-              "사업가는 귀인의 도움으로 사업이 확장되거나 안정권에 접어들게 됩니다.\n\n"
-              "💰 [재물운]\n"
-              "문서운이 좋아 부동산 계약, 임대차 계약 등에서 유리한 고지를 점할 수 있습니다. "
-              "안정적인 수입이 예상되며, 투기보다는 저축이나 안전 자산 투자가 유리합니다. "
-              "형제나 친구와 동업을 논의할 수도 있으나, 신중하게 결정하는 것이 좋습니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "인기가 많아지고 주변에 사람이 모이는 시기입니다. 솔로는 소개팅이나 모임에서 좋은 인연을 만날 확률이 높습니다. "
-              "연인이 있다면 관계가 더욱 깊어지고 신뢰가 쌓이는 해가 될 것입니다. 어머니나 윗사람의 덕을 볼 수 있습니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "너무 강한 자존심은 고립을 자초할 수 있습니다. 주변의 조언을 귀담아듣는 열린 자세가 필요합니다. "
-              "활동량이 많아지니 과로하지 않도록 건강 관리에 유의하세요.";
-          break;
-        case Cheongan.jeong: // 정화 (丁)
-          fortune = "🔥 2025년 을사년 정화(丁火) 총운: '숨겨진 재능의 발견과 독창적 성공'\n\n"
-              "2025년은 정화인 당신에게 '편인(偏印)'과 '겁재(刦財)'의 해입니다. "
-              "촛불이 장작(을목)을 만나 활활 타오르는 형상으로, 당신의 잠재력과 특수한 재능이 폭발하는 시기입니다. "
-              "일반적이지 않은, 독창적이고 전문적인 분야에서 두각을 나타낼 수 있습니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "남들이 생각하지 못한 아이디어로 승부수를 띄울 수 있습니다. 기획, 연구, IT, 예술, 종교, 철학 등 정신적인 분야나 전문 기술 분야에서 유리합니다. "
-              "경쟁심이 발동하여 업무에 몰입하게 되며, 라이벌의 존재가 오히려 당신을 성장시키는 자극제가 됩니다. "
-              "다만, 한 가지 일에 끈기 있게 집중하는 것이 중요합니다.\n\n"
-              "💰 [재물운]\n"
-              "재물 흐름에 변동성이 큽니다. 예상치 못한 수익이 생길 수도 있지만, 충동적인 지출이나 투자 실패의 위험도 공존합니다. "
-              "정보를 바탕으로 한 신중한 투자가 필요하며, 귀가 얇아져 사기나 현혹에 넘어가지 않도록 주의해야 합니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "신비로운 매력으로 이성을 끌어당깁니다. 하지만 감정 기복이 심해져 연인 관계에서 오해가 생길 수 있습니다. "
-              "상대방을 의심하거나 집착하기보다는 솔직한 대화로 마음을 표현하는 것이 좋습니다. "
-              "인간관계에서는 호불호가 분명해져, 맞는 사람과는 아주 깊어지지만 아닌 사람과는 확실히 선을 긋게 됩니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "생각이 너무 많아지면 우울감이나 불안감에 빠질 수 있습니다. 명상이나 취미 활동으로 정신적인 안정을 찾는 것이 중요합니다. "
-              "건강 면에서는 심혈관 계통이나 눈 건강에 유의하세요.";
-          break;
-        case Cheongan.mu: // 무토 (戊)
-          fortune = "⛰️ 2025년 을사년 무토(戊土) 총운: '명예와 안정을 얻는 결실의 해'\n\n"
-              "2025년은 무토인 당신에게 '정관(正官)'과 '편인(偏印)'의 해입니다. "
-              "큰 산에 나무(을목)가 심어지는 형상으로, 민둥산이 푸른 숲이 되어 가치를 인정받는 시기입니다. "
-              "직장, 조직, 명예와 관련된 운이 상승하며, 사회적으로 안정된 위치를 확보하게 됩니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "취업 준비생에게는 합격의 기쁨이, 직장인에게는 승진이나 영전의 기회가 찾아옵니다. "
-              "자신의 직무에서 전문성을 인정받고, 조직 내에서 권한과 책임이 늘어납니다. "
-              "공직이나 대기업 등 안정된 조직과 인연이 깊으며, 자격증 취득이나 학위 이수 등 자기 계발에도 좋은 성과가 있습니다.\n\n"
-              "💰 [재물운]\n"
-              "안정적인 고정 수입이 늘어나는 해입니다. 부동산, 임대업, 문서와 관련된 재테크에서 이익을 볼 수 있습니다. "
-              "일확천금보다는 성실하게 모은 돈을 안전하게 불리는 것이 유리합니다. 신용 등급이 올라가거나 대출 등이 원활하게 해결될 수 있습니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "여성에게는 반듯하고 능력 있는 배우자감이 나타나는 운입니다. 남성은 자녀운이 좋아지거나 자녀로 인한 기쁨이 있을 수 있습니다. "
-              "전반적으로 대인관계가 원만하고, 신뢰를 바탕으로 한 진지한 만남이 이어질 것입니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "보수적인 성향이 강해져 융통성이 부족해질 수 있습니다. 변화를 두려워하지 말고 새로운 흐름을 받아들이는 유연함이 필요합니다. "
-              "위장병이나 소화기 계통의 건강 관리에 신경 쓰세요.";
-          break;
-        case Cheongan.gi: // 기토 (己)
-          fortune = "🌾 2025년 을사년 기토(己土) 총운: '책임감과 인내로 빚어내는 권위'\n\n"
-              "2025년은 기토인 당신에게 '편관(偏官)'과 '정인(正印)'의 해입니다. "
-              "논밭에 곡식(을목)을 심고 가꾸는 형상이나, 그 과정이 다소 고되고 힘들 수 있습니다. "
-              "하지만 '살인상생(殺印相生)'의 운으로, 어려움을 이겨내고 마침내 권위와 명예를 얻게 되는 전화위복의 시기입니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "업무량이 늘어나고 책임져야 할 일이 많아져 스트레스를 받을 수 있습니다. "
-              "하지만 이는 당신의 능력을 검증받는 과정이며, 이를 완수했을 때 큰 보상과 명예가 따릅니다. "
-              "특수직, 전문직, 관리직에서 두각을 나타내며, 난관을 해결하는 해결사로서의 면모를 보여주게 됩니다.\n\n"
-              "💰 [재물운]\n"
-              "돈보다는 명예를 추구해야 재물이 따라오는 형국입니다. 당장의 이익보다는 평판 관리와 브랜드 가치를 높이는 데 주력하세요. "
-              "부동산 문서운이 있어 내 집 마련이나 투자 목적으로 문서를 잡을 기회가 생길 수 있습니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "여성은 카리스마 있고 리더십 있는 남성을 만날 운입니다. 다만 상대방이 나를 힘들게 할 수도 있으니 신중한 선택이 필요합니다. "
-              "남성은 자녀 문제로 신경 쓸 일이 생길 수 있습니다. 대인관계에서는 의리와 신의를 지키는 모습으로 주변의 신망을 얻습니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "과도한 스트레스로 인한 건강 악화가 우려됩니다. 충분한 휴식과 마인드 컨트롤이 필수적입니다. "
-              "예민해지기 쉬우니 주변 사람들에게 짜증을 내지 않도록 감정을 잘 다스리세요.";
-          break;
-        case Cheongan.gyeong: // 경금 (庚)
-          fortune = "💎 2025년 을사년 경금(庚金) 총운: '원칙과 실속을 챙기는 결실의 계절'\n\n"
-              "2025년은 경금인 당신에게 '정재(正財)'와 '편관(偏官)'의 해입니다. "
-              "단단한 도끼로 나무(을목)를 다듬어 재목을 만드는 형상으로, 노력한 만큼 확실한 결실을 맺는 시기입니다. "
-              "재물운과 직장운이 동시에 좋아지며, 실속과 명분을 모두 챙길 수 있는 알찬 한 해입니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "직장에서는 승진, 연봉 인상 등 가시적인 성과가 나타납니다. 당신의 꼼꼼하고 원칙적인 일 처리가 빛을 발하여 조직의 인정을 받습니다. "
-              "사업가는 안정적인 거래처를 확보하고 매출이 꾸준히 상승하는 흐름을 탑니다. "
-              "다만, 과중한 업무로 인한 피로가 누적될 수 있으니 완급 조절이 필요합니다.\n\n"
-              "💰 [재물운]\n"
-              "재물운이 매우 좋습니다. 꼬박꼬박 들어오는 고정 수입이 늘어나고, 알뜰하게 모아 자산을 증식할 수 있습니다. "
-              "남자의 경우 아내의 내조나 도움으로 재산이 불어날 수 있습니다. 허황된 투자보다는 적금이나 우량주 등 안정적인 투자가 적합합니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "남성에게는 아주 좋은 연애운과 결혼운이 들어옵니다. 현명하고 알뜰한 배우자감을 만날 수 있습니다. "
-              "여성은 능력 있는 남성을 만나거나 남편의 사회적 지위가 올라가는 경사가 있습니다. "
-              "현실적이고 안정적인 관계를 추구하게 됩니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "너무 계산적이거나 인색한 모습으로 비칠 수 있으니 주변에 베푸는 여유를 가지세요. "
-              "원칙을 고수하다가 주변과 마찰을 빚을 수 있으니 유연한 태도가 필요합니다.";
-          break;
-        case Cheongan.sin: // 신금 (辛)
-          fortune = "💍 2025년 을사년 신금(辛金) 총운: '활동 무대 확장과 뜻밖의 횡재'\n\n"
-              "2025년은 신금인 당신에게 '편재(偏財)'와 '정관(正官)'의 해입니다. "
-              "예리한 보석이 빛을 받아 반짝이는 형상으로, 당신의 가치가 널리 알려지고 활동 영역이 넓어지는 시기입니다. "
-              "사업적 수완이 발휘되고 큰돈을 만질 수 있는 기회가 찾아옵니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "사업가에게는 최고의 한 해가 될 수 있습니다. 시장이 확대되고 새로운 아이템이 대박을 터뜨릴 수 있습니다. "
-              "직장인은 영업, 마케팅, 해외 관련 업무에서 탁월한 성과를 냅니다. "
-              "자신의 능력을 믿고 과감하게 도전해 볼 만한 시기입니다.\n\n"
-              "💰 [재물운]\n"
-              "재물운의 규모가 큽니다. 사업 수익, 인센티브, 투자 수익 등 비정기적인 큰 수입이 들어올 수 있습니다. "
-              "돈의 흐름을 읽는 감각이 뛰어나지며, 투자를 통해 자산을 불리기에 유리합니다. "
-              "다만, 씀씀이도 커질 수 있으니 지출 관리에 신경 써야 합니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "남녀 모두 이성운이 화려합니다. 즐겁고 유쾌한 만남이 많아지며, 매력적인 이성에게 대시를 받을 수 있습니다. "
-              "다만, 유흥이나 쾌락에 빠질 우려가 있으니 절제하는 지혜가 필요합니다. "
-              "대인관계가 넓어지고 다양한 분야의 사람들과 교류하게 됩니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "무리한 욕심은 화를 부를 수 있습니다. 특히 '을신충(乙辛沖)'으로 인해 신경이 예민해지거나 편두통, 관절 통증 등이 발생할 수 있으니 건강을 챙기세요. "
-              "결과를 빨리 보려고 서두르다 실수를 할 수 있으니 차분함을 유지하세요.";
-          break;
-        case Cheongan.im: // 임수 (壬)
-          fortune = "🌊 2025년 을사년 임수(壬水) 총운: '흐르는 물처럼 유연한 재물 활동'\n\n"
-              "2025년은 임수인 당신에게 '상관(傷官)'과 '편재(偏財)'의 해입니다. "
-              "큰 강물이 초원(을목)을 적시고 흐르는 형상으로, 당신의 재능과 언변으로 재물을 만들어내는 시기입니다. "
-              "두뇌 회전이 빠르고 임기응변이 뛰어나 위기를 기회로 바꾸는 능력이 발휘됩니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "창의력과 기획력이 돋보입니다. 말로 하는 직업, 유통, 교육, 서비스업 등에서 두각을 나타냅니다. "
-              "직장 생활보다는 자유로운 전문직이나 사업이 적성에 맞을 수 있습니다. "
-              "투잡이나 부업을 통해 추가 수익을 창출하려는 시도가 성공할 가능성이 높습니다.\n\n"
-              "💰 [재물운]\n"
-              "재물을 쫓아 바쁘게 움직이는 한 해입니다. 노력한 만큼 수익이 따르며, 재테크에 대한 관심이 높아집니다. "
-              "주식이나 코인 등 변동성이 있는 자산 투자에서 재미를 볼 수도 있지만, 리스크 관리도 필수적입니다. "
-              "돈을 버는 수완이 좋아지지만, 그만큼 소비 욕구도 강해집니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "남성은 이성 문제로 복잡해질 수 있습니다. 매력이 넘쳐 주변에 이성이 많지만, 진지한 관계보다는 가벼운 만남으로 흐를 수 있습니다. "
-              "여성은 자녀에게 좋은 일이 생기거나 임신, 출산의 기쁨이 있을 수 있습니다. "
-              "말실수로 인한 구설수를 조심해야 하며, 타인을 배려하는 화법이 필요합니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "법적인 문제나 관재구설에 휘말릴 수 있으니 준법정신을 지켜야 합니다. "
-              "윗사람에게 반항하는 기질이 나올 수 있으니 조직 생활에서는 겸손한 태도를 유지하는 것이 유리합니다.";
-          break;
-        case Cheongan.gye: // 계수 (癸)
-          fortune = "💧 2025년 을사년 계수(癸水) 총운: '소소한 행복과 안정적인 의식주'\n\n"
-              "2025년은 계수인 당신에게 '식신(食神)'과 '정재(正財)'의 해입니다. "
-              "봄비가 내려 새싹(을목)을 키우는 형상으로, 베푸는 마음으로 꾸준히 노력하여 알찬 수확을 거두는 시기입니다. "
-              "의식주가 풍요롭고 마음의 안정을 찾게 되는 평화로운 한 해가 될 것입니다.\n\n"
-              "💼 [직장 및 사업운]\n"
-              "자신의 전문 분야에서 꾸준히 실력을 쌓아 인정받게 됩니다. 연구, 교육, 제조, 요식업 등에서 좋은 성과가 있습니다. "
-              "무리하게 일을 벌이기보다는 현재의 위치를 지키며 내실을 다지는 것이 좋습니다. "
-              "성실함이 당신의 가장 큰 무기이며, 주변의 신뢰를 얻어 롱런할 수 있는 기반을 마련합니다.\n\n"
-              "💰 [재물운]\n"
-              "재물운이 아주 안정적입니다. 큰돈은 아니더라도 끊이지 않고 수입이 들어옵니다. "
-              "저축을 생활화하면 목돈을 마련할 수 있는 좋은 기회입니다. "
-              "가정을 꾸리거나 살림을 늘리는 데 돈을 쓰게 되며, 이는 긍정적인 지출입니다.\n\n"
-              "❤️ [연애 및 대인관계]\n"
-              "온화하고 다정다감한 매력으로 이성에게 어필합니다. 연애운이 좋으며, 결혼을 전제로 한 만남이 이루어질 수 있습니다. "
-              "가정이 화목하고 자녀운도 좋습니다. 주변 사람들을 챙기고 배려하는 모습에서 덕이 쌓입니다.\n\n"
-              "⚠️ [주의사항]\n"
-              "활동력이 다소 떨어지고 게을러질 수 있습니다. 현실에 안주하기보다는 적당한 긴장감을 유지하는 것이 좋습니다. "
-              "건강은 대체로 좋으나, 비뇨기 계통이나 신장 건강에 유의하세요.";
-          break;
+        case Cheongan.gap: return l10n.sajuFortune2025Gap;
+        case Cheongan.eul: return l10n.sajuFortune2025Eul;
+        case Cheongan.byeong: return l10n.sajuFortune2025Byeong;
+        case Cheongan.jeong: return l10n.sajuFortune2025Jeong;
+        case Cheongan.mu: return l10n.sajuFortune2025Mu;
+        case Cheongan.gi: return l10n.sajuFortune2025Gi;
+        case Cheongan.gyeong: return l10n.sajuFortune2025Gyeong;
+        case Cheongan.sin: return l10n.sajuFortune2025Sin;
+        case Cheongan.im: return l10n.sajuFortune2025Im;
+        case Cheongan.gye: return l10n.sajuFortune2025Gye;
       }
     } else if (targetYear == 2026) {
        // 2026년 병오년 (붉은 말의 해) 상세 운세

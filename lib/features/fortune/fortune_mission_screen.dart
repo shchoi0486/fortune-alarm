@@ -893,73 +893,31 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   }
 
   Widget _buildResultCard(String category, String title, Color color, TarotCard card) {
-    final isEnglish = Localizations.localeOf(context).languageCode == 'en';
-    
-    // Check if English content exists for all required fields
-    bool hasEnglishContent = true;
-    if (isEnglish) {
-      if (card.enKeywords == null || card.enDescription == null) {
-        hasEnglishContent = false;
-      } else if (category == "love" && (card.enLoveMeaning == null || card.enLoveDetail == null)) {
-        hasEnglishContent = false;
-      } else if (category == "wealth" && (card.enWealthMeaning == null || card.enWealthDetail == null)) {
-        hasEnglishContent = false;
-      } else if (category == "success" && (card.enSuccessMeaning == null || card.enSuccessDetail == null)) {
-        hasEnglishContent = false;
-      }
-    }
-
-    // If English mode but content is missing, we follow the rule: hide/translate Korean interpretations in English mode.
-    // We already checked hasEnglishContent. If it's English mode and we don't have English content,
-    // we should NOT show Korean. We'll show a "Translation coming soon" or similar placeholder.
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
     
     String keywords = "";
     String description = "";
     String meaning = "";
     String detail = "";
 
-    if (isEnglish) {
-      if (card.enKeywords != null) {
-        keywords = card.enKeywords!;
-      } else {
-        keywords = "Keywords available soon";
-      }
+    // 1. Get Keywords
+    keywords = card.getLocalizedKeywords(l10n);
 
-      if (card.enDescription != null) {
-        description = card.enDescription!;
-      } else {
-        description = "Interpretation for this card is being translated. Please check back later.";
-      }
+    // 2. Get Description
+    description = card.getLocalizedDesc(l10n);
 
-      if (category == "love") {
-        meaning = card.enLoveMeaning ?? "Love fortune details are coming soon.";
-        detail = card.enLoveDetail ?? "";
-      } else if (category == "wealth") {
-        meaning = card.enWealthMeaning ?? "Wealth fortune details are coming soon.";
-        detail = card.enWealthDetail ?? "";
-      } else {
-        meaning = card.enSuccessMeaning ?? "Success fortune details are coming soon.";
-        detail = card.enSuccessDetail ?? "";
-      }
-    } else {
-      // Korean mode
-      keywords = card.keywords;
-      description = card.description;
-      if (category == "love") {
-        meaning = card.loveMeaning;
-        detail = card.loveDetail;
-      } else if (category == "wealth") {
-        meaning = card.wealthMeaning;
-        detail = card.wealthDetail;
-      } else {
-        meaning = card.successMeaning;
-        detail = card.successDetail;
-      }
+    // 3. Get Category-specific Meaning & Detail
+    if (category == "love") {
+      meaning = card.getLocalizedLoveMeaning(l10n);
+      detail = card.getLocalizedLoveDetail(l10n);
+    } else if (category == "wealth") {
+      meaning = card.getLocalizedWealthMeaning(l10n);
+      detail = card.getLocalizedWealthDetail(l10n);
+    } else { // success
+      meaning = card.getLocalizedSuccessMeaning(l10n);
+      detail = card.getLocalizedSuccessDetail(l10n);
     }
-
-    // If we are in English mode and still have Korean content (heuristic: contains Korean characters)
-    // we might want to hide it or show a placeholder. 
-    // However, the best approach is to ensure tarot_data.dart has all en* fields.
     
     return Container(
       width: double.infinity,

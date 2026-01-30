@@ -10,6 +10,8 @@ import '../../alarm/ringtone_select_screen.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
+import 'package:fortune_alarm/l10n/app_localizations.dart';
+
 class SupplementAlarmScreen extends ConsumerStatefulWidget {
   const SupplementAlarmScreen({super.key});
 
@@ -51,7 +53,8 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
     final notifier = ref.read(supplementProvider.notifier);
     final settings = state.settings;
 
-    final nextAlarmStr = _getNextAlarmString(settings.reminderTimes, settings.isAlarmEnabled);
+    final l10n = AppLocalizations.of(context)!;
+    final nextAlarmStr = _getNextAlarmString(context, settings.reminderTimes, settings.isAlarmEnabled);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
@@ -62,7 +65,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
         backgroundColor: const Color(0xFFF8FAFC),
         appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle.dark,
-          title: const Text('영양제 알림', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          title: Text(l10n.supplementAlarmTitle, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
@@ -113,12 +116,12 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('알림 미루기 시간', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                              SizedBox(height: 4),
-                              Text('나중에 먹기 선택 시 기본 시간입니다', style: TextStyle(fontSize: 12, color: Colors.grey)),
+                              Text(l10n.snoozeTime, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 4),
+                              Text(l10n.snoozeDescription, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                             ],
                           ),
                           DropdownButton<int>(
@@ -127,7 +130,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                             items: [5, 10, 20, 30, 60].map((int value) {
                               return DropdownMenuItem<int>(
                                 value: value,
-                                child: Text(value >= 60 ? '1시간' : '$value분'),
+                                child: Text(value >= 60 ? l10n.oneHour : l10n.minutesFormat(value.toString())),
                               );
                             }).toList(),
                             onChanged: (val) {
@@ -142,8 +145,8 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                       // 벨소리 설정
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: const Text('알람 벨소리', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        subtitle: Text(_getRingtoneTitle(settings.ringtonePath ?? 'default'), style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                        title: Text(l10n.alarmRingtone, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        subtitle: Text(_getRingtoneTitle(context, settings.ringtonePath ?? 'default'), style: const TextStyle(fontSize: 12, color: Colors.grey)),
                         trailing: const Icon(Icons.arrow_forward_ios, size: 14),
                         onTap: () async {
                           final selectedPath = await showModalBottomSheet<String>(
@@ -167,7 +170,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('알람 볼륨', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              Text(l10n.alarmVolume, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                               Text('${((_draggingVolume ?? settings.volume) * 100).toInt()}%', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.orange)),
                             ],
                           ),
@@ -200,12 +203,12 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('알림 시간 목록', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(l10n.alarmTimeList, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                       if (settings.reminderTimes.length < 5)
                         TextButton.icon(
                           onPressed: () => _showCustomTimePicker(context, ref, settings.reminderTimes),
                           icon: const Icon(Icons.add_rounded, size: 20),
-                          label: const Text('추가'),
+                          label: Text(l10n.add),
                           style: TextButton.styleFrom(
                             foregroundColor: Colors.orange[700],
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -228,7 +231,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                         children: [
                           Icon(Icons.notifications_off_outlined, size: 48, color: Colors.grey[300]),
                           const SizedBox(height: 12),
-                          const Text('추가된 알림 시간이 없습니다', style: TextStyle(color: Colors.grey)),
+                          Text(l10n.noAlarmTimesAdded, style: const TextStyle(color: Colors.grey)),
                         ],
                       ),
                     ),
@@ -248,11 +251,37 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
     );
   }
 
-  String _getRingtoneTitle(String path) {
-    if (path == 'default') return '기본 벨소리';
+  String _getRingtoneTitle(BuildContext context, String path) {
+    if (path == 'default') return AppLocalizations.of(context)!.defaultRingtone;
     
     // "Category/filename" -> "filename"
     final filename = path.split('/').last;
+    final l10n = AppLocalizations.of(context)!;
+
+    // 번역 처리
+    switch (filename) {
+      case '설레는 하루': return l10n.ringtone_fluttering_day;
+      case '포근한 하루': return l10n.ringtone_cozy_day;
+      case '감각적인 하루': return l10n.ringtone_sensible_day;
+      case '나랑 놀자': return l10n.ringtone_play_with_me;
+      case '산뜻한 하루': return l10n.ringtone_refreshing_day;
+      case '새로운 시작': return l10n.ringtone_new_beginning;
+      case '자아도취': return l10n.ringtone_self_love;
+      case 'alarm_sound': return l10n.classicAlarm;
+      case 'morning': return l10n.digitalAlarm;
+      case 'birds': return l10n.birdsSound;
+      case 'waves': return l10n.wavesSound;
+      case 'cuckoo_cuckoo_clock': return l10n.cuckooClock;
+      case 'discreet': return l10n.calmAlarm;
+      case 'door_knock': return l10n.doorKnock;
+      case 'early_sunrise': return l10n.earlySunrise;
+      case 'good_morning': return l10n.goodMorningSound;
+      case 'in_a_hurry': return l10n.inAHurry;
+      case 'loving_you': return l10n.lovingYou;
+      case 'siren_air_raid': return l10n.sirenSound;
+      case 'swinging': return l10n.swingingSound;
+      case 'telephone_busy_signal': return l10n.telephoneBusy;
+    }
     
     // 언더바를 공백으로 변환하고 첫 글자 대문자화 등 포맷팅
     return filename.replaceAll('_', ' ');
@@ -308,10 +337,11 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
   }
 
   Widget _buildAlarmCard(BuildContext context, WidgetRef ref, String timeStr, int index, List<String> currentTimes) {
+    final l10n = AppLocalizations.of(context)!;
     final parts = timeStr.split(':');
     final hour = int.parse(parts[0]);
     final minute = int.parse(parts[1]);
-    final period = hour >= 12 ? '오후' : '오전';
+    final period = hour >= 12 ? l10n.pm : l10n.am;
     final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
     final displayMinute = minute.toString().padLeft(2, '0');
 
@@ -324,9 +354,9 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
         ref.read(supplementProvider.notifier).updateSettings(reminderTimes: newList);
         
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('알림 시간이 삭제되었습니다'),
-            duration: Duration(seconds: 2),
+          SnackBar(
+            content: Text(l10n.alarmTimeDeleted),
+            duration: const Duration(seconds: 2),
           ),
         );
       },
@@ -397,9 +427,10 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
     );
   }
 
-  String _getNextAlarmString(List<String> reminderTimes, bool isEnabled) {
+  String _getNextAlarmString(BuildContext context, List<String> reminderTimes, bool isEnabled) {
     if (!isEnabled || reminderTimes.isEmpty) return '';
 
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     DateTime? nextAlarmTime;
 
@@ -428,12 +459,13 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
     final hours = difference.inHours;
     final minutes = difference.inMinutes % 60;
 
-    if (hours == 0 && minutes == 0) return '1분 미만 후에 울려요';
-    if (hours > 0) return '$hours시간 $minutes분 후에 울려요';
-    return '$minutes분 후에 울려요';
+    if (hours == 0 && minutes == 0) return l10n.lessThanAMinuteRemaining;
+    if (hours > 0) return l10n.hoursMinutesRemaining(hours.toString(), minutes.toString());
+    return l10n.minutesRemaining(minutes.toString());
   }
 
   void _showCustomTimePicker(BuildContext context, WidgetRef ref, List<String> currentTimes, {int? index}) {
+    final l10n = AppLocalizations.of(context)!;
     int initialHour = 9;
     int initialMinute = 0;
 
@@ -466,10 +498,10 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                     children: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('취소', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                        child: Text(l10n.cancel, style: const TextStyle(color: Colors.grey, fontSize: 16)),
                       ),
                       Text(
-                        index == null ? '알림 시간 추가' : '알림 시간 수정',
+                        index == null ? l10n.addAlarmTime : l10n.editAlarmTime,
                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       TextButton(
@@ -489,7 +521,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                           ref.read(supplementProvider.notifier).updateSettings(reminderTimes: newList);
                           Navigator.pop(context);
                         },
-                        child: Text('저장', style: TextStyle(color: Colors.orange[700], fontSize: 16, fontWeight: FontWeight.bold)),
+                        child: Text(l10n.confirm, style: TextStyle(color: Colors.orange[700], fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -517,9 +549,9 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                                 }
                               });
                             },
-                            children: const [
-                              Center(child: Text('오전', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
-                              Center(child: Text('오후', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+                            children: [
+                              Center(child: Text(l10n.am, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
+                              Center(child: Text(l10n.pm, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold))),
                             ],
                           ),
                         ),

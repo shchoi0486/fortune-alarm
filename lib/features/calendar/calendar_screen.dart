@@ -164,7 +164,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Future<void> _loadEvents() async {
     final events = await _calendarService.loadEvents();
-    final holidays = await _holidayService.getHolidays(_focusedDay.year);
+    final locale = AppLocalizations.of(context)?.localeName ?? 'ko';
+    
+    // 언어 변경 시 캐시를 지우고 새로 로드하기 위해 clearCache 호출 고려 가능
+    // 하지만 매번 지우는 것은 비효율적이므로, locale이 포함된 cacheKey를 이미 사용 중임
+    
+    final holidays = await _holidayService.getHolidays(_focusedDay.year, appLocale: locale);
     
     setState(() {
       _events = {};

@@ -144,10 +144,11 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
   Future<void> _ensureForegroundServiceRunning() async {
     try {
       if (!await FlutterForegroundTask.isRunningService) {
+        final l10n = AppLocalizations.of(context)!;
         await FlutterForegroundTask.startService(
           serviceId: 256,
-          notificationTitle: '스냅 알람',
-          notificationText: '알람이 울리고 있습니다!',
+          notificationTitle: l10n.appTitle,
+          notificationText: l10n.notificationRingingBody,
           notificationIcon: NotificationIcon(
             metaDataName: 'com.seriessnap.fortunealarm.notification_icon',
             backgroundColor: const Color(0xFF5C6BC0),
@@ -828,7 +829,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                         ? ''
                         : (() {
                             if (alarm.maxSnoozeCount == 999) {
-                              return l10n.snoozeMinutesUnlimited(alarm.snoozeInterval);
+                              return l10n.snoozeMinutesUnlimited(alarm.snoozeInterval.toString());
                             }
                             final maxCount = alarm.maxSnoozeCount;
                             final remainingAfterTap = _snoozeRemainingAfterTap!;
@@ -838,7 +839,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                             var currentCount = maxCount - clampedRemaining;
                             if (currentCount < 1) currentCount = 1;
                             if (currentCount > maxCount) currentCount = maxCount;
-                            return l10n.snoozeMinutesCount(alarm.snoozeInterval, currentCount, maxCount);
+                            return l10n.snoozeMinutesCount(alarm.snoozeInterval.toString(), currentCount, maxCount);
                           })();
 
                     return Column(
@@ -949,13 +950,13 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                               final minutes = _alarm!.snoozeInterval;
 
                               if (maxCount == 999) {
-                                return '${l10n.alarmSnooze} ${l10n.snoozeMinutesUnlimited(minutes)}';
+                                return '${l10n.alarmSnooze} ${l10n.snoozeMinutesUnlimited(minutes.toString())}';
                               }
 
                               int currentCount = maxCount - currentRemaining + 1;
                               if (currentCount < 1) currentCount = 1;
                               if (currentCount > maxCount) currentCount = maxCount;
-                              return '${l10n.alarmSnooze} ${l10n.snoozeMinutesCount(minutes, currentCount, maxCount)}';
+                              return '${l10n.alarmSnooze} ${l10n.snoozeMinutesCount(minutes.toString(), currentCount, maxCount)}';
                             })(),
                             style: const TextStyle(
                               color: Colors.white,

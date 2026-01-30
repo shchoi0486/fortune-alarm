@@ -7,6 +7,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../data/models/alarm_model.dart';
 import '../data/models/math_difficulty.dart';
 import '../core/constants/mission_type.dart';
@@ -66,6 +67,21 @@ Future<void> alarmCallback(int id) async {
 
   // 즉시 알림 서비스 초기화 (Hive보다 먼저)
   final notificationService = NotificationService();
+  
+  // 로컬라이징 초기화
+  AppLocalizations? l10n;
+  try {
+    String langCode = Platform.localeName.split('_')[0];
+    Locale locale = Locale(langCode);
+    if (!AppLocalizations.supportedLocales.contains(locale)) {
+      locale = const Locale('en');
+    }
+    l10n = await AppLocalizations.delegate.load(locale);
+    debugPrint('[AlarmScheduler] Localization loaded for: ${locale.languageCode}');
+  } catch (e) {
+    debugPrint('[AlarmScheduler] Localization load failed: $e');
+  }
+
   try {
     await notificationService.init(null, isBackground: true);
     debugPrint('[AlarmScheduler] NotificationService Initialized Early.');
@@ -74,8 +90,8 @@ Future<void> alarmCallback(int id) async {
     // 상세 정보는 나중에 로드해서 업데이트하더라도, 소리와 진동은 즉시 시작해야 함.
     await notificationService.showAlarmNotification(
       id: id,
-      title: '스냅 알람',
-      body: '일어날 시간입니다!', // 초기 메시지 통일
+      title: l10n?.appTitle ?? 'Snap Alarm',
+      body: l10n?.notificationWakeUpBody ?? 'Time to wake up!', // 초기 메시지 통일
       payload: 'loading_$id', // 로딩 중임을 표시
       soundName: 'morning', // 기본 사운드 (안전장치)
       isVibrationEnabled: true,
@@ -95,8 +111,8 @@ Future<void> alarmCallback(int id) async {
     } else {
       await FlutterForegroundTask.startService(
         serviceId: 256,
-        notificationTitle: '스냅 알람',
-        notificationText: '일어날 시간입니다!',
+        notificationTitle: l10n?.appTitle ?? 'Snap Alarm',
+        notificationText: l10n?.notificationWakeUpBody ?? 'Time to wake up!',
         notificationIcon: NotificationIcon(
           metaDataName: 'com.seriessnap.fortunealarm.notification_icon',
         ),
@@ -159,13 +175,13 @@ Future<void> alarmCallback(int id) async {
       }
 
       String payload = alarm.id;
-      String body = '일어날 시간입니다!';
+      String body = l10n?.notificationWakeUpBody ?? 'Time to wake up!';
       if (alarm.missionType != MissionType.none) {
-        body = '미션을 수행하고 알람을 끄세요!';
+        body = l10n?.notificationMissionBody ?? 'Complete the mission to turn off the alarm!';
       }
       
       if (alarm.id.endsWith('_safety')) {
-        body = '알람이 강제로 종료되었습니다! 미션을 완료해주세요.';
+        body = l10n?.notificationSafetyBody ?? 'The alarm has been forced to close! Please complete the mission.';
       }
 
       // 미션 상태 체크 (중복 실행 방지)
@@ -207,9 +223,12 @@ Future<void> alarmCallback(int id) async {
         uiSendPort?.send(payload);
 
         // 설정된 알람 정보로 새 알림 생성
+        final locale = Locale(Platform.localeName.split('_')[0]);
+        final l10n = await AppLocalizations.delegate.load(locale);
+
         await notificationService.showAlarmNotification(
           id: id,
-          title: '스냅 알람',
+          title: l10n.appTitle,
           body: body,
           payload: payload,
           soundName: alarm.ringtonePath,
@@ -296,12 +315,20 @@ class AlarmSchedulerService {
     final safetyId = '${alarm.id}_safety';
     debugPrint('[AlarmScheduler] Scheduling Safety Alarm: $safetyId');
     
+    // 로컬라이징 가져오기
+    String langCode = Platform.localeName.split('_')[0];
+    Locale locale = Locale(langCode);
+    if (!AppLocalizations.supportedLocales.contains(locale)) {
+      locale = const Locale('en');
+    }
+    final l10n = await AppLocalizations.delegate.load(locale);
+
     // 1분 뒤에 울리는 안전 알람 생성
     final safetyTime = DateTime.now().add(const Duration(minutes: 1));
     final safetyAlarm = alarm.copyWith(
       id: safetyId,
       time: safetyTime,
-      label: '알람이 강제로 종료되었습니다!',
+      label: l10n.notificationSafetyBody,
       isEnabled: true,
     );
 
@@ -330,8 +357,8 @@ class AlarmSchedulerService {
     } else if (Platform.isIOS) {
       await NotificationService().scheduleAlarmNotification(
         id: stableId,
-        title: '스냅 알람',
-        body: '알람이 강제로 종료되었습니다!',
+        title: l10n.appTitle,
+        body: l10n.notificationSafetyBody,
         scheduledDate: safetyTime,
         payload: 'safety_$safetyId',
       );
@@ -457,10 +484,18 @@ class AlarmSchedulerService {
         );
       } else if (Platform.isIOS) {
         try {
+          // 로컬라이징 가져오기
+          String langCode = Platform.localeName.split('_')[0];
+          Locale locale = Locale(langCode);
+          if (!AppLocalizations.supportedLocales.contains(locale)) {
+            locale = const Locale('en');
+          }
+          final l10n = await AppLocalizations.delegate.load(locale);
+
           await NotificationService().scheduleAlarmNotification(
             id: alarmId,
-            title: '스냅 알람',
-            body: alarm.label.isEmpty ? '알람이 울리고 있습니다!' : alarm.label,
+            title: l10n.appTitle,
+            body: alarm.label.isEmpty ? l10n.notificationRingingBody : alarm.label,
             scheduledDate: scheduleTime,
             payload: 'alarm_${alarm.id}',
             soundName: alarm.ringtonePath,
@@ -511,6 +546,14 @@ class AlarmSchedulerService {
 
     final resolvedSnoozeTime = snoozeTime ?? DateTime.now().add(Duration(minutes: alarm.snoozeInterval));
     
+    // 로컬라이징 가져오기
+    String langCode = Platform.localeName.split('_')[0];
+    Locale locale = Locale(langCode);
+    if (!AppLocalizations.supportedLocales.contains(locale)) {
+      locale = const Locale('en');
+    }
+    final l10n = await AppLocalizations.delegate.load(locale);
+
     // ID 처리: 원본 ID 추출 후 _snooze 붙임
     String originalId = alarm.id.replaceAll('_snooze', '');
     final String snoozeId = '${originalId}_snooze';
@@ -519,7 +562,7 @@ class AlarmSchedulerService {
       id: snoozeId, 
       time: resolvedSnoozeTime,
       repeatDays: [false, false, false, false, false, false, false], // 스누즈는 항상 일회성
-      label: isFirstSnooze ? '[스누즈] ${alarm.label}' : alarm.label, // 이미 붙어있으면 유지
+      label: isFirstSnooze ? '${l10n.snoozePrefix} ${alarm.label}' : alarm.label, // 이미 붙어있으면 유지
       remainingSnoozeCount: newRemainingCount,
       isEnabled: true, // [중요] 스누즈 알람은 무조건 활성화 상태로 예약 (이전 알람이 비활성화되었을 수 있음)
       referenceImagePaths: alarm.referenceImagePaths, // [추가] 미션 이미지 경로 복사

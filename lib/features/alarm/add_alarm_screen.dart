@@ -442,34 +442,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       String getTitle(String path) {
         final fileName = path.split('/').last;
         final nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
-        
-        // Decode URI component just in case
-        final decodedName = Uri.decodeFull(nameWithoutExt);
-
-        final l10n = AppLocalizations.of(context)!;
-        // 간단한 매핑 예시 (필요 시 확장 가능)
-        if (decodedName == 'all') return l10n.bgFortuneFriends;
-        if (decodedName == 'dog') return l10n.bgMongChuni;
-        if (decodedName == 'panda') return l10n.bgPanChuni;
-        if (decodedName == 'rabbit') return l10n.bgToChuni;
-        if (decodedName == 'tiger') return l10n.bgHoChuni;
-        if (decodedName == 'moon') return l10n.bgMoon;
-        if (decodedName == 'bear') return l10n.bgBear;
-        if (decodedName == 'motji') return 'Motji';
-        if (decodedName == 'keepshining') return 'Keep Shining';
-        if (decodedName == 'enjoy the little things') return 'Enjoy the little things';
-        if (decodedName == 'badaui-mul-e-amseog-ui-sujig-syas') return l10n.bgSea;
-        if (decodedName == 'cat1') return '${l10n.assetCat(1)}';
-        if (decodedName == 'dog1') return '${l10n.assetDog(1)}';
-        if (decodedName == 'dog2') return '${l10n.assetDog(2)}';
-        if (decodedName == 'dog3') return '${l10n.assetDog(3)}';
-        if (decodedName == 'puppy') return '${l10n.assetDog(4)}';
-        if (decodedName == 'dog4') return '${l10n.assetDog(4)}';
-        if (decodedName == 'bridge') return l10n.bgBridge;
-        if (decodedName == 'road') return l10n.bgRoad;
-        if (decodedName == 'sea') return '${l10n.assetSea(2)}';
-        if (decodedName == 'sky') return l10n.bgSky;
-        return decodedName;
+        return Uri.decodeFull(nameWithoutExt);
       }
 
       // Helper to check if key belongs to a category folder
@@ -523,7 +496,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
             _characterAssets = characterPaths.map((path) {
                String title = getTitle(path);
                if (path.toLowerCase().endsWith('default.webp')) {
-                 title = '기본 배경';
+                 title = 'default';
                }
                return {
                 'title': title,
@@ -558,59 +531,92 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   String _getLocalizedTitle(BuildContext context, String title) {
     final l10n = AppLocalizations.of(context)!;
 
-    // Handle "Cat X" or "Dog X" or "Sea X"
-    final catRegExp = RegExp(r'고양이 (\d+)');
-    final dogRegExp = RegExp(r'강아지 (\d+)');
-    final seaRegExp = RegExp(r'바다 (\d+)');
+    // Handle parameterized keys (Korean/English/Filename)
+    final catRegExp = RegExp(r'(고양이|cat) (\d+)', caseSensitive: false);
+    final dogRegExp = RegExp(r'(강아지|dog) (\d+)', caseSensitive: false);
+    final seaRegExp = RegExp(r'(바다|sea) (\d+)', caseSensitive: false);
 
     var match = catRegExp.firstMatch(title);
     if (match != null) {
-      return l10n.assetCat(int.parse(match.group(1)!));
+      return l10n.assetCat(int.parse(match.group(2)!));
+    }
+    if (title.startsWith('cat')) {
+      final num = int.tryParse(title.replaceAll('cat', ''));
+      if (num != null) return l10n.assetCat(num);
     }
 
     match = dogRegExp.firstMatch(title);
     if (match != null) {
-      return l10n.assetDog(int.parse(match.group(1)!));
+      return l10n.assetDog(int.parse(match.group(2)!));
     }
+    if (title.startsWith('dog')) {
+      final num = int.tryParse(title.replaceAll('dog', ''));
+      if (num != null) return l10n.assetDog(num);
+    }
+    if (title == 'puppy') return l10n.assetDog(4);
 
     match = seaRegExp.firstMatch(title);
     if (match != null) {
-      return l10n.assetSea(int.parse(match.group(1)!));
+      return l10n.assetSea(int.parse(match.group(2)!));
     }
 
-    switch (title) {
+    switch (title.toLowerCase()) {
+      case 'default':
       case '기본 배경':
         return l10n.assetDefaultBackground;
+      case 'all':
       case '포츄니친구들':
         return l10n.assetFortuneyFriends;
+      case 'dog':
       case '몽츄니':
         return l10n.assetMongchuny;
+      case 'panda':
       case '판츄니':
         return l10n.assetPanchuny;
+      case 'rabbit':
       case '토춘이':
         return l10n.assetTochuny;
+      case 'tiger':
       case '호츄니':
         return l10n.assetHochuny;
+      case 'bear':
       case '곰돌이':
         return l10n.assetBear;
+      case 'moon':
       case '달':
         return l10n.assetMoon;
+      case 'bridge':
       case '다리':
         return l10n.assetBridge;
+      case 'road':
       case '도로':
         return l10n.assetRoad;
+      case 'sky':
       case '하늘':
         return l10n.assetSky;
+      case 'sea':
       case '바다':
         return l10n.assetSea(1);
+      case 'badaui-mul-e-amseog-ui-sujig-syas':
+        return l10n.bgSea;
       case '미니멀 그레이':
+      case 'minimal_gray':
         return l10n.assetMinimalGray;
       case '다크 모드':
+      case 'dark_mode':
         return l10n.assetDarkMode;
       case '소프트 블루':
+      case 'soft_blue':
         return l10n.assetSoftBlue;
       case '웜 베이지':
+      case 'warm_beige':
         return l10n.assetWarmBeige;
+      case 'motji':
+        return 'Motji';
+      case 'keepshining':
+        return 'Keep Shining';
+      case 'enjoy the little things':
+        return 'Enjoy the little things';
       default:
         return title;
     }
@@ -1056,10 +1062,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       l10n.categoryIllustration: _illustrationAssets,
       l10n.categoryLandscape: _landscapeAssets,
       l10n.categorySimple: [
-        {'title': '미니멀 그레이', 'image': 'color:0xFFF5F5F5', 'color': 0xFFF5F5F5},
-        {'title': '다크 모드', 'image': 'color:0xFF212121', 'color': 0xFF212121},
-        {'title': '소프트 블루', 'image': 'color:0xFFE3F2FD', 'color': 0xFFE3F2FD},
-        {'title': '웜 베이지', 'image': 'color:0xFFF5F5DC', 'color': 0xFFF5F5DC},
+        {'title': 'minimal_gray', 'image': 'color:0xFFF5F5F5', 'color': 0xFFF5F5F5},
+        {'title': 'dark_mode', 'image': 'color:0xFF212121', 'color': 0xFF212121},
+        {'title': 'soft_blue', 'image': 'color:0xFFE3F2FD', 'color': 0xFFE3F2FD},
+        {'title': 'warm_beige', 'image': 'color:0xFFF5F5DC', 'color': 0xFFF5F5DC},
       ],
     };
 
@@ -1341,7 +1347,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         final isSelected = _backgroundPath == item['image'];
         
         final title = _getLocalizedTitle(context, item['title'] as String);
-        final isDefaultBg = item['title'] == '기본 배경';
+        final isDefaultBg = item['title'] == 'default' || item['title'] == '기본 배경';
         // isSimple is already defined in outer scope, removing shadowed variable
         // final isSimple = category == '심플'; 
         // 기본 배경과 심플(색상)만 이름 표시, 나머지는 숨김
@@ -1840,11 +1846,11 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                           title: l10n.interval,
                                           currentValueText: _snoozeInterval == 0 
                                               ? AppLocalizations.of(context)!.none 
-                                              : AppLocalizations.of(context)!.minutesLater(_snoozeInterval),
+                                              : AppLocalizations.of(context)!.minutesLater(_snoozeInterval.toString()),
                                           isExpanded: isIntervalExpanded,
                                           onToggle: () => setModalState(() => isIntervalExpanded = !isIntervalExpanded),
                                           children: visibleIntervals.map((min) => buildOption(
-                                            AppLocalizations.of(context)!.minutesLater(min),
+                                            AppLocalizations.of(context)!.minutesLater(min.toString()),
                                             min,
                                             _snoozeInterval,
                                             (val) => updateSnooze(val, _maxSnoozeCount),
@@ -1855,11 +1861,11 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                           title: l10n.maxSnoozeCount,
                                           currentValueText: _maxSnoozeCount == 0 
                                               ? AppLocalizations.of(context)!.none 
-                                              : (_maxSnoozeCount == 999 ? l10n.unlimited : AppLocalizations.of(context)!.timesCount(_maxSnoozeCount)),
+                                              : (_maxSnoozeCount == 999 ? l10n.unlimited : AppLocalizations.of(context)!.timesCount(_maxSnoozeCount.toString())),
                                           isExpanded: isCountExpanded,
                                           onToggle: () => setModalState(() => isCountExpanded = !isCountExpanded),
                                           children: visibleCounts.map((count) => buildOption(
-                                            count == 999 ? l10n.unlimited : AppLocalizations.of(context)!.timesCount(count),
+                                            count == 999 ? l10n.unlimited : AppLocalizations.of(context)!.timesCount(count.toString()),
                                             count,
                                             _maxSnoozeCount,
                                             (val) => updateSnooze(_snoozeInterval, val),
@@ -2186,9 +2192,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     final minutes = totalMinutes % 60;
 
     if (hours > 0) {
-      return AppLocalizations.of(context)!.hoursMinutesRemaining(hours, minutes);
+      return AppLocalizations.of(context)!.hoursMinutesRemaining(hours.toString(), minutes.toString());
     } else {
-      return AppLocalizations.of(context)!.minutesRemaining(minutes);
+      return AppLocalizations.of(context)!.minutesRemaining(minutes.toString());
     }
   }
 
@@ -2658,8 +2664,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                               Text(
                                 (_snoozeInterval > 0 && _maxSnoozeCount > 0)
                                   ? (_maxSnoozeCount == 999 
-                                        ? AppLocalizations.of(context)!.snoozeInfoUnlimited(_snoozeInterval)
-                                        : AppLocalizations.of(context)!.snoozeInfo(_snoozeInterval, _maxSnoozeCount))
+                                        ? AppLocalizations.of(context)!.snoozeInfoUnlimited(_snoozeInterval.toString())
+                                        : AppLocalizations.of(context)!.snoozeInfo(_snoozeInterval.toString(), _maxSnoozeCount.toString()))
                                     : AppLocalizations.of(context)!.none,
                                 style: TextStyle(
                                   fontSize: 14,
@@ -3769,6 +3775,17 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       if (key.contains('/')) {
         final filename = key.split('/').last;
         return filename.replaceAll('_', ' ');
+      }
+
+      // Check for ringtone keys with extensions or in specific format
+      final cleanKey = key.split('.').first;
+      switch (cleanKey) {
+        case 'alarm_sound': return l10n.classicAlarm;
+        case 'cuckoo_cuckoo_clock': return l10n.cuckooClock;
+        case 'discreet': return l10n.calmAlarm;
+        case 'early_sunrise': return l10n.earlySunrise;
+        case 'loving_you': return l10n.lovingYou;
+        case 'swinging': return l10n.swingingSound;
       }
       
       return l10n.defaultRingtone;

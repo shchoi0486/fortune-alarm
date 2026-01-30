@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
 import 'package:intl/intl.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'providers/water_provider.dart';
 import 'widgets/wave_progress.dart';
 import 'water_alarm_screen.dart';
@@ -47,6 +48,7 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final waterState = ref.watch(waterProvider);
     final waterNotifier = ref.read(waterProvider.notifier);
 
@@ -112,9 +114,9 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
                             ),
                           ),
                         ),
-                        const Text(
-                          '물',
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+                        Text(
+                          l10n.missionWater,
+                          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ],
                     ),
@@ -226,7 +228,7 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
                                         _buildMenuItem(
                                           context,
                                           icon: Icons.bar_chart_rounded,
-                                          title: '미션 기록 보기',
+                                          title: l10n.viewMissionRecords,
                                           onTap: () {
                                             Navigator.push(context, MaterialPageRoute(builder: (_) => const WaterRecordScreen()));
                                           },
@@ -234,7 +236,7 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
                                         const SizedBox(height: 8),
                                         _buildMenuItem(
                                           context,
-                                          title: '목표',
+                                          title: l10n.goal,
                                           value: '${NumberFormat('#,###').format(dailyGoal)} ml',
                                           icon: Icons.edit_note,
                                           onTap: () {
@@ -244,7 +246,7 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
                                          const SizedBox(height: 8),
                                          _buildMenuItem(
                                           context,
-                                          title: '알림',
+                                          title: l10n.notifications,
                                           icon: Icons.notifications_none_rounded,
                                           trailing: Switch(
                                             value: waterState.settings.isAlarmEnabled,
@@ -364,11 +366,12 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
   }
 
   void _showGoalSettingDialog(BuildContext context, WidgetRef ref, int currentGoal) {
+     final l10n = AppLocalizations.of(context)!;
      final controller = TextEditingController(text: currentGoal.toString());
      showDialog(
        context: context,
        builder: (context) => AlertDialog(
-         title: const Text("목표 설정 (ml)"),
+         title: Text(l10n.setGoalMl),
          content: TextField(
            controller: controller,
            keyboardType: TextInputType.number,
@@ -379,7 +382,7 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
          actions: [
            TextButton(
              onPressed: () => Navigator.pop(context),
-             child: const Text("취소"),
+             child: Text(l10n.cancel),
            ),
            TextButton(
              onPressed: () {
@@ -389,7 +392,7 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
                }
                Navigator.pop(context);
              },
-             child: const Text("저장"),
+             child: Text(l10n.save),
            ),
          ],
        ),

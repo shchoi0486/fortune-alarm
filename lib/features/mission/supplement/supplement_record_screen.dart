@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'models/supplement_log.dart';
 
 class SupplementRecordScreen extends ConsumerStatefulWidget {
@@ -68,6 +69,7 @@ class _SupplementRecordScreenState extends ConsumerState<SupplementRecordScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (_isLoading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -77,7 +79,7 @@ class _SupplementRecordScreenState extends ConsumerState<SupplementRecordScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('미션 기록', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: Text(l10n.missionRecord, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -91,18 +93,19 @@ class _SupplementRecordScreenState extends ConsumerState<SupplementRecordScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildMonthlySummary(),
+            _buildMonthlySummary(context),
             const SizedBox(height: 20),
-            _buildCalendar(),
+            _buildCalendar(context),
             const SizedBox(height: 20),
-            _buildLegend(),
+            _buildLegend(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMonthlySummary() {
+  Widget _buildMonthlySummary(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final now = DateTime.now();
     final isCurrentMonth = now.year == _focusedDay.year && now.month == _focusedDay.month;
     
@@ -151,26 +154,28 @@ class _SupplementRecordScreenState extends ConsumerState<SupplementRecordScreen>
       children: [
         const Icon(Icons.medication, color: Colors.orangeAccent),
         const SizedBox(width: 8),
-        const Text(
-          '월간 요약',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Text(
+          l10n.monthlySummary,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         const Spacer(),
         if (totalDays > 0)
           Text(
-            '${_focusedDay.month}월 성공률: $percentage% ($successDays/$totalDays)',
+            l10n.monthlySuccessRate(_focusedDay.month, percentage.toString(), successDays, totalDays),
             style: const TextStyle(fontSize: 16, color: Colors.orangeAccent, fontWeight: FontWeight.bold),
           )
         else
           Text(
-            '${_focusedDay.month}월 기록 없음',
+            l10n.noMonthlyRecord(_focusedDay.month),
              style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
       ],
     );
   }
 
-  Widget _buildCalendar() {
+  Widget _buildCalendar(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toString();
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -185,12 +190,12 @@ class _SupplementRecordScreenState extends ConsumerState<SupplementRecordScreen>
       ),
       padding: const EdgeInsets.all(8),
       child: TableCalendar<SupplementLog>(
-        locale: 'ko_KR',
+        locale: locale,
         firstDay: DateTime.utc(2024, 1, 1),
         lastDay: DateTime.utc(2030, 12, 31),
         focusedDay: _focusedDay,
         calendarFormat: CalendarFormat.month,
-        availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+        availableCalendarFormats: {CalendarFormat.month: l10n.monthView},
         selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
         onDaySelected: (selectedDay, focusedDay) {
           setState(() {
@@ -273,12 +278,13 @@ class _SupplementRecordScreenState extends ConsumerState<SupplementRecordScreen>
     );
   }
 
-  Widget _buildLegend() {
+  Widget _buildLegend(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
-        _legendItem(Colors.grey[300]!, '섭취 기록'),
+        _legendItem(Colors.grey[300]!, l10n.supplementRecord),
         const SizedBox(width: 20),
-        _legendItem(Colors.orangeAccent, '목표 달성'),
+        _legendItem(Colors.orangeAccent, l10n.goalAchievedTitle),
       ],
     );
   }

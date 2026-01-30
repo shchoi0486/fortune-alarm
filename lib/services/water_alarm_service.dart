@@ -88,10 +88,12 @@ class WaterAlarmService {
       );
     } else if (Platform.isIOS) {
       try {
-        await NotificationService().scheduleAlarmNotification(
+        final notificationService = NotificationService();
+        final l10n = await notificationService.getL10n();
+        await notificationService.scheduleAlarmNotification(
           id: id,
-          title: '물 마실 시간이에요! 💧',
-          body: '건강한 습관을 위해 지금 물 한 잔 어떠세요?',
+          title: l10n.waterAlarmTitle,
+          body: l10n.waterAlarmBody,
           scheduledDate: time,
           payload: 'water_$id',
         );
@@ -142,11 +144,12 @@ class WaterAlarmService {
     if (shouldRing) {
       final notificationService = NotificationService();
       await notificationService.init(null);
+      final l10n = await notificationService.getL10n();
       
       await notificationService.showWaterNotification(
         id: id,
-        title: '물 마실 시간이에요!',
-        body: '건강을 위해 시원한 물 한 잔 어떠세요?',
+        title: l10n.waterAlarmTitle,
+        body: l10n.waterAlarmBody,
         payload: 'water_$id',
       );
     }

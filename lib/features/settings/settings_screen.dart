@@ -6,7 +6,9 @@ import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'dart:io';
 import 'package:package_info_plus/package_info_plus.dart'; // [추가]
 import '../../providers/theme_provider.dart';
+import '../../providers/locale_provider.dart';
 import '../../services/ad_service.dart';
+import '../../services/notification_service.dart';
 import '../../widgets/ad_widgets.dart';
 import 'notice_screen.dart';
 import 'faq_screen.dart';
@@ -58,6 +60,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
     final isDark = themeMode == ThemeMode.dark;
+    final currentLocale = ref.watch(localeProvider);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
@@ -73,6 +76,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             onChanged: (value) {
               ref.read(themeProvider.notifier).toggleTheme(value);
             },
+          ),
+          ListTile(
+            title: Text(AppLocalizations.of(context)!.language),
+            subtitle: Text(_getLanguageName(context, currentLocale?.languageCode)),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onTap: () => _showLanguagePicker(context, ref),
           ),
           if (Platform.isAndroid)
             _buildOptimizationTile(context),
@@ -180,6 +189,91 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
         ],
       ),
     ),
+  );
+}
+
+  String _getLanguageName(BuildContext context, String? languageCode) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (languageCode) {
+      case 'ko':
+        return l10n.languageKorean;
+      case 'en':
+        return l10n.languageEnglish;
+      case 'ja':
+        return l10n.languageJapanese;
+      case 'zh':
+        return l10n.languageChinese;
+      case 'ru':
+        return l10n.languageRussian;
+      case 'hi':
+        return l10n.languageHindi;
+      case 'es':
+        return l10n.languageSpanish;
+      case 'fr':
+        return l10n.languageFrench;
+      case 'de':
+        return l10n.languageGerman;
+      default:
+        // 시스템 언어인 경우 현재 적용된 언어 이름을 반환
+        final locale = Localizations.localeOf(context);
+        return _getLanguageName(context, locale.languageCode);
+    }
+  }
+
+  void _showLanguagePicker(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final currentLocale = ref.read(localeProvider);
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  l10n.language,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const Divider(height: 1),
+              Expanded(
+                child: ListView(
+                  children: [
+                    _buildLanguageTile(context, ref, 'ko', l10n.languageKorean, currentLocale?.languageCode == 'ko'),
+                    _buildLanguageTile(context, ref, 'en', l10n.languageEnglish, currentLocale?.languageCode == 'en'),
+                    _buildLanguageTile(context, ref, 'ja', l10n.languageJapanese, currentLocale?.languageCode == 'ja'),
+                    _buildLanguageTile(context, ref, 'zh', l10n.languageChinese, currentLocale?.languageCode == 'zh'),
+                    _buildLanguageTile(context, ref, 'ru', l10n.languageRussian, currentLocale?.languageCode == 'ru'),
+                    _buildLanguageTile(context, ref, 'hi', l10n.languageHindi, currentLocale?.languageCode == 'hi'),
+                    _buildLanguageTile(context, ref, 'es', l10n.languageSpanish, currentLocale?.languageCode == 'es'),
+                    _buildLanguageTile(context, ref, 'fr', l10n.languageFrench, currentLocale?.languageCode == 'fr'),
+                    _buildLanguageTile(context, ref, 'de', l10n.languageGerman, currentLocale?.languageCode == 'de'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLanguageTile(BuildContext context, WidgetRef ref, String code, String name, bool isSelected) {
+    return ListTile(
+      title: Text(name),
+      trailing: isSelected ? const Icon(Icons.check, color: Colors.blueAccent) : null,
+      onTap: () async {
+        await ref.read(localeProvider.notifier).setLocale(code);
+        // 알림 다시 스케줄링하여 언어 반영
+        await NotificationService().scheduleDefaultFortuneNotifications();
+        if (context.mounted) Navigator.pop(context);
+      },
     );
   }
 

@@ -30,6 +30,36 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settings => 'Paramètres';
 
   @override
+  String get language => 'Langue';
+
+  @override
+  String get languageKorean => 'Coréen';
+
+  @override
+  String get languageEnglish => 'Anglais';
+
+  @override
+  String get languageJapanese => 'Japonais';
+
+  @override
+  String get languageChinese => 'Chinois';
+
+  @override
+  String get languageRussian => 'Russe';
+
+  @override
+  String get languageHindi => 'Hindi';
+
+  @override
+  String get languageSpanish => 'Espagnol';
+
+  @override
+  String get languageFrench => 'Français';
+
+  @override
+  String get languageGerman => 'Allemand';
+
+  @override
   String get alarm => 'Alarme';
 
   @override
@@ -56,6 +86,38 @@ class AppLocalizationsFr extends AppLocalizations {
   String get confirm => 'Confirmer';
 
   @override
+  String get missionSuccess => 'Mission réussie !';
+
+  @override
+  String get cheeringMessage1 => 'Passez une excellente journée aujourd\'hui !';
+
+  @override
+  String get cheeringMessage2 => 'Je vous soutiens aujourd\'hui !';
+
+  @override
+  String get cheeringMessage3 => 'Ce sera une journée merveilleuse.';
+
+  @override
+  String get todaysCheering => 'Message du jour';
+
+  @override
+  String get notificationWakeUpBody => 'C\'est l\'heure de se réveiller !';
+
+  @override
+  String get notificationMissionBody =>
+      'Remplissez la mission et éteignez l\'alarme !';
+
+  @override
+  String get notificationSafetyBody =>
+      'L\'alarme a été fermée de force ! Veuillez terminer la mission.';
+
+  @override
+  String get notificationRingingBody => 'L\'alarme sonne !';
+
+  @override
+  String get snoozePrefix => '[Rappel]';
+
+  @override
   String get exactAlarmPermissionRequired =>
       'La permission \"Alarme exacte\" est requise pour sonner à l\'heure correcte.';
 
@@ -73,12 +135,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get lessThanAMinuteRemaining => 'Sonne dans moins d\'une minute';
 
   @override
-  String hoursMinutesRemaining(int hours, int minutes) {
+  String hoursMinutesRemaining(String hours, String minutes) {
     return 'Sonne dans ${hours}h ${minutes}m';
   }
 
   @override
-  String minutesRemaining(int minutes) {
+  String minutesRemaining(String minutes) {
     return 'Sonne dans ${minutes}m';
   }
 
@@ -390,31 +452,31 @@ class AppLocalizationsFr extends AppLocalizations {
   String get assetHochuny => 'Hochuny';
 
   @override
-  String get assetBear => 'Bear';
+  String get assetBear => 'Ours';
 
   @override
-  String get assetMoon => 'Moon';
+  String get assetMoon => 'Lune';
 
   @override
-  String get assetBridge => 'Bridge';
+  String get assetBridge => 'Pont';
 
   @override
-  String get assetRoad => 'Road';
+  String get assetRoad => 'Route';
 
   @override
-  String get assetSky => 'Sky';
+  String get assetSky => 'Ciel';
 
   @override
-  String get assetMinimalGray => 'Minimal Gray';
+  String get assetMinimalGray => 'Gris minimal';
 
   @override
-  String get assetDarkMode => 'Dark Mode';
+  String get assetDarkMode => 'Mode sombre';
 
   @override
-  String get assetSoftBlue => 'Soft Blue';
+  String get assetSoftBlue => 'Bleu doux';
 
   @override
-  String get assetWarmBeige => 'Warm Beige';
+  String get assetWarmBeige => 'Beige chaud';
 
   @override
   String assetCat(int number) {
@@ -501,12 +563,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get slideToDismiss => 'Faire glisser pour arrêter';
 
   @override
-  String snoozeInfo(int minutes, int count) {
-    return '$minutes min, $count fois';
+  String snoozeInfo(String minutes, String count) {
+    return '$minutes min x $count fois';
   }
 
   @override
-  String snoozeInfoUnlimited(int minutes) {
+  String snoozeInfoUnlimited(String minutes) {
     return '${minutes}m, Illimité';
   }
 
@@ -992,99 +1054,99 @@ class AppLocalizationsFr extends AppLocalizations {
       'Si vous pratiquez le partage chaleureux, cette chaleur vous reviendra sous forme de chance.';
 
   @override
-  String get todaysFaceFortune => 'Today\'s Face Fortune';
+  String get todaysFaceFortune => 'Physionomie du jour';
 
   @override
-  String get detailedAnalysis => 'Detailed Analysis';
+  String get detailedAnalysis => 'Analyse détaillée';
 
   @override
-  String get eyeInsight => '👁️ Eye (Insight)';
+  String get eyeInsight => '👁️ Œil (Perspicacité)';
 
   @override
-  String get noseWealth => '👃 Nose (Wealth)';
+  String get noseWealth => '👃 Nez (Richesse)';
 
   @override
-  String get mouthLateLuck => '👄 Mouth (Late Luck)';
+  String get mouthLateLuck => '👄 Bouche (Chance tardive)';
 
   @override
-  String get overallAnalysisTitle => 'Overall Analysis';
+  String get overallAnalysisTitle => 'Analyse globale';
 
   @override
-  String get shareResultTitle => 'Today\'s Face Result';
+  String get shareResultTitle => 'Résultat de la physionomie d\'aujourd\'hui';
 
   @override
   String shareResultDesc(String title) {
-    return 'AI face analysis result.\n$title';
+    return 'Résultat de l\'analyse du visage par l\'IA.\n$title';
   }
 
   @override
-  String get shareResultTotalScore => 'Total Score';
+  String get shareResultTotalScore => 'Score total';
 
   @override
-  String get shareResultWealth => 'Wealth Luck';
+  String get shareResultWealth => 'Chance de richesse';
 
   @override
-  String get shareResultLove => 'Love Luck';
+  String get shareResultLove => 'Chance d\'amour';
 
   @override
-  String get shareResultCareer => 'Career Luck';
+  String get shareResultCareer => 'Chance de carrière';
 
   @override
-  String get shareResultHealth => 'Health Luck';
+  String get shareResultHealth => 'Chance de santé';
 
   @override
-  String get shareResultText => 'Share Result';
+  String get shareResultText => 'Partager le résultat';
 
   @override
-  String get wakeUpComplete => 'Wake up complete!';
+  String get wakeUpComplete => 'Réveil terminé !';
 
   @override
-  String get collapseOptions => 'Collapse Options';
+  String get collapseOptions => 'Réduire les options';
 
   @override
-  String get expandOptions => 'More Options';
+  String get expandOptions => 'Plus d\'options';
 
   @override
-  String get snoozeAlarm => 'Snooze Alarm';
+  String get snoozeAlarm => 'Répéter l\'alarme';
 
   @override
   String get interval => 'Intervalle';
 
   @override
-  String get maxSnoozeCount => 'Max Snooze Count';
+  String get maxSnoozeCount => 'Nombre max de répétitions';
 
   @override
-  String get unlimited => 'Unlimited';
+  String get unlimited => 'Illimité';
 
   @override
-  String get permissionRequired => 'Permission Requise';
+  String get permissionRequired => 'Autorisation requise';
 
   @override
   String get exactAlarmFailMessage =>
-      'Failed to register alarm. Exact alarm permission is off and needs setting.';
+      'Échec de l\'enregistrement de l\'alarme. L\'autorisation d\'alarme exacte est désactivée et doit être configurée.';
 
   @override
   String get batteryOptimFailMessage =>
-      'Failed to register alarm. Battery optimization exception permission is missing.';
+      'Échec de l\'enregistrement de l\'alarme. L\'autorisation d\'exception d\'optimisation de la batterie est manquante.';
 
   @override
   String get overlayFailMessage =>
-      'Failed to register alarm. Display over other apps permission is missing.';
+      'Échec de l\'enregistrement de l\'alarme. L\'autorisation d\'affichage sur d\'autres applications est manquante.';
 
   @override
-  String get loadingDelay => 'Loading delay';
+  String get loadingDelay => 'Délai de chargement';
 
   @override
   String get loading => 'Chargement...';
 
   @override
-  String get previewFail => 'Preview failed';
+  String get previewFail => 'Échec de l\'aperçu';
 
   @override
-  String get bgDefault => 'Default Background';
+  String get bgDefault => 'Arrière-plan par défaut';
 
   @override
-  String get bgFortuneFriends => 'Fortune Friends';
+  String get bgFortuneFriends => 'Amis de la Fortune';
 
   @override
   String get bgMongChuni => 'Mongchuni';
@@ -1099,78 +1161,79 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bgHoChuni => 'Hochuni';
 
   @override
-  String get bgBear => 'Bear';
+  String get bgBear => 'Ours';
 
   @override
-  String get bgMoon => 'Moon';
+  String get bgMoon => 'Lune';
 
   @override
-  String get bgSea => 'Sea';
+  String get bgSea => 'Mer';
 
   @override
-  String get bgBridge => 'Bridge';
+  String get bgBridge => 'Pont';
 
   @override
-  String get bgRoad => 'Road';
+  String get bgRoad => 'Route';
 
   @override
-  String get bgSky => 'Sky';
+  String get bgSky => 'Ciel';
 
   @override
-  String get bgMinimalGray => 'Minimal Gray';
+  String get bgMinimalGray => 'Gris minimal';
 
   @override
-  String get bgDarkMode => 'Dark Mode';
+  String get bgDarkMode => 'Mode sombre';
 
   @override
-  String get bgSoftBlue => 'Soft Blue';
+  String get bgSoftBlue => 'Bleu doux';
 
   @override
-  String get bgWarmBeige => 'Warm Beige';
+  String get bgWarmBeige => 'Beige chaud';
 
   @override
-  String get dateFormatMdyE => 'MMM d (E)';
+  String get dateFormatMdyE => 'd MMM (E)';
 
   @override
-  String get deleteAlarm => 'Delete Alarm';
+  String get deleteAlarm => 'Supprimer l\'alarme';
 
   @override
-  String get confirmDelete => 'Are you sure you want to delete?';
+  String get confirmDelete => 'Êtes-vous sûr de vouloir supprimer ?';
 
   @override
-  String get yes => 'Yes';
+  String get yes => 'Oui';
 
   @override
-  String get no => 'No';
+  String get no => 'Non';
 
   @override
-  String get wealthLuckWithIcon => '💰 Wealth Luck';
+  String get wealthLuckWithIcon => '💰 Chance de richesse';
 
   @override
-  String get loveLuckWithIcon => '❤️ Love Luck';
+  String get loveLuckWithIcon => '❤️ Chance d\'amour';
 
   @override
-  String get careerLuckWithIcon => '💼 Career Luck';
+  String get careerLuckWithIcon => '💼 Chance de carrière';
 
   @override
-  String get healthLuckWithIcon => '💪 Health Luck';
+  String get healthLuckWithIcon => '💪 Chance de santé';
 
   @override
-  String get mouthFortune => '👄 Mouth (Maturity Luck)';
+  String get mouthFortune => '👄 Bouche (Chance de maturité)';
 
   @override
-  String get comprehensiveAnalysis => 'Comprehensive Analysis';
+  String get comprehensiveAnalysis => 'Analyse complète';
 
   @override
-  String get todaysFaceResult => 'Today\'s Face Analysis Result';
+  String get todaysFaceResult =>
+      'Résultat de l\'analyse du visage d\'aujourd\'hui';
 
   @override
   String faceAnalysisShareDesc(String title) {
-    return 'This is the AI face analysis result.\n$title';
+    return 'Ceci est le résultat de l\'analyse du visage par l\'IA.\n$title';
   }
 
   @override
-  String get shareResult => 'Share Result';
+  String get shareResult => 'Partager le résultat';
 
   @override
   String get faceVibeSmile0 =>
@@ -1617,6 +1680,122 @@ class AppLocalizationsFr extends AppLocalizations {
       'Une bouche largement souriante est rafraîchissante, émettant une énergie positive et attirant la chance dans les relations.';
 
   @override
+  String get supplementAlarmTitle =>
+      'C\'est l\'heure de prendre vos compléments ! 💊';
+
+  @override
+  String get alarmVolume => 'Volume de l\'alarme';
+
+  @override
+  String get alarmTimeList => 'Liste des heures d\'alarme';
+
+  @override
+  String get noAlarmTimesAdded => 'Aucune heure d\'alarme ajoutée';
+
+  @override
+  String get alarmTimeDeleted => 'Heure de l\'alarme supprimée';
+
+  @override
+  String get addAlarmTime => 'Ajouter l\'heure de l\'alarme';
+
+  @override
+  String get editAlarmTime => 'Modifier l\'heure de l\'alarme';
+
+  @override
+  String get defaultRingtone => 'Sonnerie par défaut';
+
+  @override
+  String get takeSupplementsNow =>
+      'Veuillez prendre vos suppléments et les enregistrer !';
+
+  @override
+  String get nextTime => 'Prendre plus tard';
+
+  @override
+  String get take => 'Prendre';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notificationTime => 'Heure de notification';
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get end => 'Fin';
+
+  @override
+  String get notificationInterval => 'Intervalle de notification';
+
+  @override
+  String get waterDrankToday => 'Eau bue aujourd\'hui';
+
+  @override
+  String get goal => 'Objectif';
+
+  @override
+  String get cup => 'Tasse';
+
+  @override
+  String get waterIntakeRecord => 'Enregistrement de l\'apport en eau';
+
+  @override
+  String get remainingAmount => 'Montant restant';
+
+  @override
+  String get ml => 'ml';
+
+  @override
+  String minutesFormat(String minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get drinkWater => 'Boire de l\'eau';
+
+  @override
+  String get supplement => 'Supplément';
+
+  @override
+  String get water => 'Eau';
+
+  @override
+  String get morning => 'Matin';
+
+  @override
+  String get afternoon => 'Après-midi';
+
+  @override
+  String get evening => 'Soir';
+
+  @override
+  String get takeSupplement => 'Prendre le supplément';
+
+  @override
+  String get goalAchievedTitle => 'Objectif atteint !';
+
+  @override
+  String get waterIntake => 'Apport en eau';
+
+  @override
+  String get remindTime => 'Heure de rappel';
+
+  @override
+  String get alarmRingtone => 'Sonnerie d\'alarme';
+
+  @override
+  String get snoozeTime => 'Temps de rappel';
+
+  @override
+  String get snoozeDescription =>
+      'Temps par défaut lors de la sélection de \'Prendre plus tard\'';
+
+  @override
+  String get oneHour => '1 heure';
+
+  @override
   String get mouthExpressionOpen =>
       'La bouche est légèrement ouverte, montrant une personnalité franche, mais attention parfois aux paroles imprudentes.';
 
@@ -1830,111 +2009,111 @@ class AppLocalizationsFr extends AppLocalizations {
       '💧 Fortune générale de l\'année Eulsa 2025 (Eau-Gye) : \'Une année de sincérité produisant des fruits stables\'\n\n2025 est une année où l\'énergie de \'Sik-sin\' et \'Jeong-jae\' entre en jeu pour vous. C\'est comme une petite bruine claire humidifiant la terre pour préparer une riche récolte. Ce sera une année chaleureuse où vos efforts s\'accumulent régulièrement et reviennent sous la forme d\'une richesse et d\'un bonheur stables.\n\n💼 [Carrière et Affaires]\nUne année où la sincérité devient votre meilleure arme. Vous produisez des résultats constants en assumant vos responsabilités et gagnez la confiance de vos collègues. Un bon moment pour accroître votre expertise, et vous vous sentirez récompensé par un travail que vous aimez. Vous pouvez grandir pas à pas dans un environnement stable.\n\n💰 [Richesse]\nUne année économiquement détendue et stable. Un revenu régulier apparaît, et vous ressentirez le plaisir d\'augmenter vos actifs de manière frugale. Il y a de la chance en matière de nourriture et de vêtements, l\'abondance est donc présente dans l\'ensemble de la vie. L\'épargne est plus avantageuse que les investissements déraisonnables.\n\n❤️ [Amour et Relations]\nVous apportez du réconfort à votre partenaire par une apparence chaleureuse. Une année où vous cultivez un bel amour tout en vous considérant méticuleusement. Si vous êtes célibataire, vous êtes très susceptible de rencontrer un partenaire qui communique bien et partage des valeurs similaires.\n\n⚠️ [Précautions]\nFaites attention à la santé de l\'estomac ou à la gestion des habitudes alimentaires. Il est bon de trouver de la vitalité en apportant de nouveaux stimuli occasionnellement car vous pourriez devenir paresseux en vous installant dans le confort.';
 
   @override
-  String get preparationForTomorrow => 'Preparation for Tomorrow';
+  String get preparationForTomorrow => 'Préparation pour demain';
 
   @override
-  String get howToMeetMoreLuck => 'How to meet more luck';
+  String get howToMeetMoreLuck => 'Comment attirer plus de chance';
 
   @override
-  String get enterName => 'Please enter your name';
+  String get enterName => 'Entrez votre nom';
 
   @override
   String fortuneDateConfirm(String date) {
-    return 'Would you like to check the fortune for $date?';
+    return 'Souhaitez-vous vérifier la fortune pour $date ?';
   }
 
   @override
-  String get colorPurple => 'Purple';
+  String get colorPurple => 'Violet';
 
   @override
-  String get colorBlue => 'Blue';
+  String get colorBlue => 'Bleu';
 
   @override
-  String get colorYellow => 'Yellow';
+  String get colorYellow => 'Jaune';
 
   @override
-  String get colorRed => 'Red';
+  String get colorRed => 'Rouge';
 
   @override
-  String get colorGreen => 'Green';
+  String get colorGreen => 'Vert';
 
   @override
-  String get colorPink => 'Pink';
+  String get colorPink => 'Rose';
 
   @override
   String get colorOrange => 'Orange';
 
   @override
-  String get colorWhite => 'White';
+  String get colorWhite => 'Blanc';
 
   @override
-  String get colorBlack => 'Black';
+  String get colorBlack => 'Noir';
 
   @override
-  String get itemPerfume => 'Perfume';
+  String get itemPerfume => 'Parfum';
 
   @override
-  String get itemHandkerchief => 'Handkerchief';
+  String get itemHandkerchief => 'Mouchoir';
 
   @override
-  String get itemRing => 'Ring';
+  String get itemRing => 'Bague';
 
   @override
-  String get itemWatch => 'Watch';
+  String get itemWatch => 'Montre';
 
   @override
-  String get itemGlasses => 'Glasses';
+  String get itemGlasses => 'Lunettes';
 
   @override
-  String get itemHat => 'Hat';
+  String get itemHat => 'Chapeau';
 
   @override
-  String get itemBook => 'Book';
+  String get itemBook => 'Livre';
 
   @override
-  String get itemEarphones => 'Earphones';
+  String get itemEarphones => 'Écouteurs';
 
   @override
-  String get itemMirror => 'Mirror';
+  String get itemMirror => 'Miroir';
 
   @override
-  String get itemPen => 'Pen';
+  String get itemPen => 'Stylo';
 
   @override
-  String get itemCoin => 'Coin';
+  String get itemCoin => 'Pièce';
 
   @override
-  String get itemKey => 'Key';
+  String get itemKey => 'Clé';
 
   @override
-  String get dirEast => 'East';
+  String get dirEast => 'Est';
 
   @override
-  String get dirWest => 'West';
+  String get dirWest => 'Ouest';
 
   @override
-  String get dirSouth => 'South';
+  String get dirSouth => 'Sud';
 
   @override
-  String get dirNorth => 'North';
+  String get dirNorth => 'Nord';
 
   @override
-  String get dirNorthEast => 'North-East';
+  String get dirNorthEast => 'Nord-Est';
 
   @override
-  String get dirSouthEast => 'South-East';
+  String get dirSouthEast => 'Sud-Est';
 
   @override
-  String get dirNorthWest => 'North-West';
+  String get dirNorthWest => 'Nord-Ouest';
 
   @override
-  String get dirSouthWest => 'South-West';
+  String get dirSouthWest => 'Sud-Ouest';
 
   @override
   String get general => 'Général';
 
   @override
-  String get darkMode => 'Mode Sombre';
+  String get darkMode => 'Mode sombre';
 
   @override
   String get darkModeDescription => 'Régler l\'écran en mode sombre.';
@@ -1955,7 +2134,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get weatherConditionSunny => 'Ensoleillé';
 
   @override
-  String get weatherConditionPartlyCloudy => 'Partly Cloudy';
+  String get weatherConditionPartlyCloudy => 'Partiellement nuageux';
 
   @override
   String get weatherConditionCloudy => 'Nuageux';
@@ -1964,25 +2143,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get weatherConditionFoggy => 'Brumeux';
 
   @override
-  String get weatherConditionDrizzle => 'Drizzle';
+  String get weatherConditionDrizzle => 'Bruine';
 
   @override
   String get weatherConditionRainy => 'Pluvieux';
 
   @override
-  String get weatherConditionFreezingRain => 'Freezing Rain';
+  String get weatherConditionFreezingRain => 'Pluie verglaçante';
 
   @override
   String get weatherConditionSnowy => 'Neigeux';
 
   @override
-  String get weatherConditionSnowGrains => 'Snow Grains';
+  String get weatherConditionSnowGrains => 'Neige en grains';
 
   @override
-  String get weatherConditionRainShowers => 'Rain Showers';
+  String get weatherConditionRainShowers => 'Averses de pluie';
 
   @override
-  String get weatherConditionSnowShowers => 'Snow Showers';
+  String get weatherConditionSnowShowers => 'Averses de neige';
 
   @override
   String get weatherConditionThunderstorm => 'Orage';
@@ -1997,13 +2176,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get airQualityBad => 'Mauvais';
 
   @override
-  String get airQualityVeryBad => 'Très Mauvais';
+  String get airQualityVeryBad => 'Très mauvais';
 
   @override
-  String get locationUnknown => 'Lieu Inconnu';
+  String get locationUnknown => 'Lieu inconnu';
 
   @override
-  String get locationError => 'Erreur de Localisation';
+  String get locationError => 'Erreur de localisation';
 
   @override
   String get faq => 'FAQ';
@@ -2078,7 +2257,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get allSettingsCompleted => 'Tous les paramètres sont terminés.';
 
   @override
-  String get allowAllItems => 'Please allow all items';
+  String get allowAllItems => 'Veuillez autoriser tous les éléments';
 
   @override
   String get manualSettingsInfo =>
@@ -2190,7 +2369,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get freeCharge => 'Recharge Gratuite';
 
   @override
-  String get fortunePass => 'Fortune Pass';
+  String get fortunePass => 'Pass Fortune';
 
   @override
   String get unlimitedNotSubscribed => 'Illimité non souscrit';
@@ -2386,7 +2565,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noTime => 'Aucune heure';
 
   @override
-  String minutesLater(int minutes) {
+  String minutesLater(String minutes) {
     return '$minutes min plus tard';
   }
 
@@ -2394,7 +2573,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get countLabel => 'Nombre';
 
   @override
-  String timesCount(int count) {
+  String timesCount(String count) {
     return 'Total $count fois';
   }
 
@@ -2423,32 +2602,32 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enterAlarmName => 'Veuillez entrer le nom de l\'alarme';
 
   @override
-  String get routineSummary => 'Routine Summary';
+  String get routineSummary => 'Résumé de la routine';
 
   @override
-  String get alarmOn => 'Alarm ON';
+  String get alarmOn => 'Alarme ACTIVÉE';
 
   @override
-  String get alarmOff => 'Alarm OFF';
+  String get alarmOff => 'Alarme DÉSACTIVÉE';
 
   @override
-  String get contentHint => 'Add content';
+  String get contentHint => 'Ajouter du contenu';
 
   @override
-  String get addEvent => 'Add Event';
+  String get addEvent => 'Ajouter un événement';
 
   @override
-  String get manageItem => 'Manage Item';
+  String get manageItem => 'Gérer l\'élément';
 
   @override
   String get manageItemDescription =>
-      'What would you like to do with this item?';
+      'Que souhaitez-vous faire de cet élément ?';
 
   @override
-  String get noTitle => 'No Title';
+  String get noTitle => 'Sans titre';
 
   @override
-  String get selectTitleColor => 'Select Title Color';
+  String get selectTitleColor => 'Sélectionner la couleur du titre';
 
   @override
   String get save => 'Enregistrer';
@@ -2457,7 +2636,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get missionNone => 'Aucune Mission';
 
   @override
-  String get missionSnap => 'Object Snap';
+  String get missionSnap => 'Capture d\'objet';
 
   @override
   String get missionMath => 'Problème Math';
@@ -2597,23 +2776,24 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String fortuneCatchTime(int seconds) {
-    return 'Time: ${seconds}s';
+    return 'Temps : ${seconds}s';
   }
 
   @override
   String fortuneCatchBest(int seconds) {
-    return 'Best: ${seconds}s';
+    return 'Meilleur : ${seconds}s';
   }
 
   @override
-  String get fortuneCatchAngryHint => 'Angry Fortuny is a penalty!';
+  String get fortuneCatchAngryHint => 'Fortuny en colère est une pénalité !';
 
   @override
-  String get fortuneCatchInstruction => 'Avoid angry Fortuni and catch them!';
+  String get fortuneCatchInstruction =>
+      'Évitez les Fortuni en colère et attrapez-les !';
 
   @override
   String fortuneCatchPointMinus(int points) {
-    return '$points points deducted';
+    return '$points points déduits';
   }
 
   @override
@@ -2713,7 +2893,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get allMissionsComplete => 'Toutes les missions sont terminées !';
 
   @override
-  String missionSnoozeMessage(int minutes) {
+  String missionSnoozeMessage(String minutes) {
     return 'Mission réussie ! Mais elle sonnera à nouveau dans $minutes minutes selon les paramètres.';
   }
 
@@ -2825,9 +3005,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String deleteSelectedImagesConfirm(int count) {
     return 'Êtes-vous sûr de vouloir supprimer $count images ?\nCette action est irréversible.';
   }
-
-  @override
-  String get defaultRingtone => 'Sonnerie par défaut';
 
   @override
   String get classicAlarm => 'Alarme Classique';
@@ -2946,12 +3123,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get alarmSnooze => 'Répéter';
 
   @override
-  String snoozeMinutesUnlimited(int minutes) {
+  String snoozeMinutesUnlimited(String minutes) {
     return '$minutes min (illimité)';
   }
 
   @override
-  String snoozeMinutesCount(int minutes, int current, int total) {
+  String snoozeMinutesCount(String minutes, int current, int total) {
     return '$minutes min ($current/$total)';
   }
 
@@ -2975,6 +3152,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ringtone_self_love => 'Amour de soi';
+
+  @override
+  String get cherry_stained_finger => 'Cherry Stained Finger';
+
+  @override
+  String get dancing_in_the_stars => 'Dancing In The Stars';
+
+  @override
+  String get nice_day => 'Nice Day';
 
   @override
   String get fortuneTitle => 'Vérifier la fortune';
@@ -3032,10 +3218,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tarotName0 => 'Le Fou';
 
   @override
-  String get tarotName1 => 'Le Magicien';
+  String get tarotName1 => 'Le Bateleur';
 
   @override
-  String get tarotName2 => 'La Grande Prêtresse';
+  String get tarotName2 => 'La Papesse';
 
   @override
   String get tarotName3 => 'L\'Impératrice';
@@ -3044,10 +3230,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tarotName4 => 'L\'Empereur';
 
   @override
-  String get tarotName5 => 'Le Hiérophante';
+  String get tarotName5 => 'Le Pape';
 
   @override
-  String get tarotName6 => 'Les Amoureux';
+  String get tarotName6 => 'L\'Amoureux';
 
   @override
   String get tarotName7 => 'Le Chariot';
@@ -3059,7 +3245,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tarotName9 => 'L\'Ermite';
 
   @override
-  String get tarotName10 => 'La Roue de la Fortune';
+  String get tarotName10 => 'La Roue de Fortune';
 
   @override
   String get tarotName11 => 'La Justice';
@@ -3095,36 +3281,810 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tarotName21 => 'Le Monde';
 
   @override
-  String get tarotKeywords1 =>
-      'Création, Volonté, Capacité, Réalisation, Polyvalence';
+  String get tarotKeywords0 =>
+      'Nouveaux départs, aventure, innocence, liberté, imprudence';
 
   @override
-  String get tarotDescription1 =>
-      'Le magicien porte une robe rouge, une main pointée vers le ciel et l\'autre vers le sol, apportant le pouvoir céleste sur terre. Il y a quatre éléments (bâton, coupe, épée, denier) sur la table, ce qui signifie que vous avez déjà tous les outils et capacités pour atteindre vos objectifs.';
+  String get tarotDesc0 =>
+      'Le Fou se tient précairement au bord d\'une falaise dans des vêtements colorés, mais son regard est fixé au loin, plein d\'espoir.';
+
+  @override
+  String get tarotLoveMeaning0 =>
+      'Un nouvel amour inattendu peut arriver, ou une rencontre fatidique au premier regard.';
+
+  @override
+  String get tarotLoveDetail0 =>
+      'C\'est un moment où vous pouvez commencer l\'amour avec un cœur pur comme un enfant. Oubliez toutes les blessures passées.';
+
+  @override
+  String get tarotWealthMeaning0 =>
+      'Un nouvel investissement ou un nouvel élément commercial peut attirer votre attention.';
+
+  @override
+  String get tarotWealthDetail0 =>
+      'C\'est un moment où de nouvelles opportunités s\'ouvrent financièrement. Vous pouvez obtenir des résultats inattendus.';
+
+  @override
+  String get tarotSuccessMeaning0 =>
+      'C\'est le bon moment pour commencer un nouveau projet ou changer d\'emploi pour un domaine complètement différent.';
+
+  @override
+  String get tarotSuccessDetail0 =>
+      'S\'il y a quelque chose que vous préparez, faites le premier pas avec audace.';
+
+  @override
+  String get tarotKeywords1 =>
+      'Créativité, maîtrise, expression de soi, ingéniosité, volonté';
+
+  @override
+  String get tarotDesc1 =>
+      'Le Bateleur se tient devant une table portant les symboles des quatre éléments. Une main vers le ciel et l\'autre vers la terre, il symbolise la capacité à manifester les idées dans la réalité.';
 
   @override
   String get tarotLoveMeaning1 =>
-      'C\'est une période où votre charme est à son apogée et où vous êtes populaire auprès du sexe opposé. Si vous êtes dans une relation naissante, vous pouvez développer la relation avec votre discours spirituel et prendre les devants.';
+      'C\'est une excellente occasion de montrer votre charme et de conquérir le cœur de quelqu\'un.';
 
   @override
   String get tarotLoveDetail1 =>
-      'C\'est une excellente occasion de capturer le cœur du sexe opposé alors que votre charme et votre talent brillent. S\'il y a quelqu\'un qui vous plaît, n\'hésitez pas à l\'approcher activement. Votre sens de l\'humour et votre conversation sensée raviront l\'autre personne et vous permettront de mener la relation de manière proactive. Si vous êtes célibataire, vous pouvez être approché par plusieurs personnes, et si vous êtes en couple, l\'autre personne sera grandement émue si vous menez la sortie ou préparez un événement. Gagnez l\'amour avec confiance.';
+      'Votre charisme et vos talents sont à leur apogée, vous rendant extrêmement attirant pour le sexe opposé. Si vous avez quelqu\'un en vue, n\'hésitez pas à prendre l\'initiative. Votre sens de l\'humour et votre conversation pleine d\'esprit captiveront votre partenaire, vous permettant de guider la relation.';
 
   @override
   String get tarotWealthMeaning1 =>
-      'C\'est le bon moment pour générer des revenus en utilisant vos capacités et vos compétences. Si vous concrétisez les idées que vous avez en tête, cela mènera à des résultats financiers.';
+      'Le moment idéal pour créer de nouvelles sources de revenus grâce à vos compétences.';
 
   @override
   String get tarotWealthDetail1 =>
-      'C\'est le moment où vos connaissances, vos compétences et vos idées deviennent de l\'argent. Ne vous contentez pas d\'un salaire ; générez des revenus supplémentaires via des activités secondaires ou en freelance. Votre planification créative, votre capacité de vente et votre aisance à l\'oral seront d\'excellents atouts, entraînant des revenus plus élevés que prévu. Comme votre jugement est susceptible de viser juste dans la gestion des fonds, vous obtiendrez de bons résultats si vous établissez de manière proactive un plan financier et le mettez en pratique.';
+      'Vos connaissances, vos compétences et vos idées peuvent se transformer en gains financiers réels dès maintenant. Ne vous limitez pas à votre salaire de base ; essayez de monétiser vos loisirs ou de vous lancer en freelance. Votre capacité de planification créative vous aidera à atteindre des revenus dépassant vos attentes.';
 
   @override
   String get tarotSuccessMeaning1 =>
-      'Votre capacité de travail sera excellemment démontrée et reconnue par votre entourage. Si vous avez quelque chose de prévu, c\'est le moment de le mettre en pratique.';
+      'Vos capacités professionnelles seront à l\'honneur et recevront la reconnaissance de votre entourage.';
 
   @override
   String get tarotSuccessDetail1 =>
-      'Vous pouvez vous démarquer sur votre lieu de travail ou dans vos études en utilisant pleinement vos capacités. Quel que soit le problème auquel vous faites face, vous pouvez le résoudre avec votre propre esprit et votre humour, et vous serez reconnu comme une \'personne capable\' par vos collègues ou supérieurs. Si vous prenez la tête d\'un nouveau projet ou faites une présentation importante, vous pouvez la terminer avec succès. Tout comme les opportunités viennent à ceux qui sont préparés, vous l\'êtes déjà pleinement. Croyez en vous et montrez vos compétences avec confiance comme un protagoniste sur scène.';
+      'Au travail ou dans vos études, vous pourrez démontrer tout votre potentiel et vous démarquer. Quels que soient les défis, vous les résoudrez grâce à votre ingéniosité et votre esprit vif. Vos collègues et supérieurs vous reconnaîtront comme un véritable expert, alors agissez avec assurance.';
+
+  @override
+  String get tarotKeywords2 =>
+      'Intuition, mystère, subconscient, sagesse intérieure, passivité';
+
+  @override
+  String get tarotDesc2 =>
+      'La Papesse est assise entre une colonne blanche et une colonne noire, gardant le parchemin de la sagesse. Elle symbolise l\'intuition profonde et l\'équilibre entre le conscient et l\'inconscient.';
+
+  @override
+  String get tarotLoveMeaning2 =>
+      'Une période où la connexion spirituelle est plus importante que l\'attraction physique.';
+
+  @override
+  String get tarotLoveDetail2 =>
+      'Vous serez plus attiré par des personnes ayant un monde intérieur riche avec qui vous pouvez avoir des conversations profondes. Votre intuition est aiguisée, vous permettant de comprendre votre partenaire sans paroles. Cependant, un excès de réserve pourrait causer des malentendus, alors essayez d\'exprimer vos sentiments sincèrement de temps en temps.';
+
+  @override
+  String get tarotWealthMeaning2 =>
+      'Il est temps de protéger vos actifs et d\'observer la situation plutôt que de prendre des risques.';
+
+  @override
+  String get tarotWealthDetail2 =>
+      'Ce n\'est pas le meilleur moment pour poursuivre des gains rapides sans réfléchir. Au lieu d\'agir impulsivement, consacrez du temps à l\'analyse du marché et à l\'étude des outils financiers. C\'est une étape de « semailles », alors ne vous angoissez pas si les fruits ne viennent pas immédiatement.';
+
+  @override
+  String get tarotSuccessMeaning2 =>
+      'Le succès vous attend dans les activités académiques, la recherche et les professions intellectuelles.';
+
+  @override
+  String get tarotSuccessDetail2 =>
+      'Concentrez-vous sur le renforcement de votre potentiel interne et l\'amélioration de vos compétences plutôt que sur l\'éclat extérieur. Vous obtiendrez des résultats exceptionnels dans les tâches nécessitant une analyse approfondie. Votre sagesse et votre prudence seront la clé du succès lors des moments décisifs.';
+
+  @override
+  String get tarotKeywords3 => 'Féminité, beauté, nature, abondance, fertilité';
+
+  @override
+  String get tarotDesc3 =>
+      'L\'Impératrice repose dans un jardin florissant, représentant la prospérité matérielle et la générosité émotionnelle.';
+
+  @override
+  String get tarotLoveMeaning3 =>
+      'Temps de floraison émotionnelle et de renforcement des liens affectifs.';
+
+  @override
+  String get tarotLoveDetail3 =>
+      'Votre charme et votre énergie féminine (ou réceptive) sont au maximum, vous rendant incroyablement attirante. Dans vos relations, il y aura de l\'harmonie et du soin mutuel, ce qui en fait un bon moment pour parler de mariage ou de projets familiaux. Si vous êtes célibataire, un changement de style vous aidera à attirer l\'attention.';
+
+  @override
+  String get tarotWealthMeaning3 =>
+      'Période de prospérité matérielle et de stabilité financière.';
+
+  @override
+  String get tarotWealthDetail3 =>
+      'La chance financière est de votre côté. Vos efforts passés porteront leurs fruits et vous pourrez profiter d\'un plus grand confort. Vous pourriez recevoir des bonus inattendus, des cadeaux ou des bénéfices d\'investissements réussis. Partagez votre énergie positive avec les autres, cela attirera encore plus de fortune.';
+
+  @override
+  String get tarotSuccessMeaning3 =>
+      'Les projets actuels progressent avec succès et apportent d\'excellents résultats.';
+
+  @override
+  String get tarotSuccessDetail3 =>
+      'Il est temps de voir les fruits réels de votre travail. Les projets se concluront avec succès, ce qui pourrait se traduire par une promotion ou une prime. Votre vision créative et votre sens esthétique seront très appréciés. Profitez du processus de travail ; cela vous aidera à atteindre des objectifs encore plus élevés.';
+
+  @override
+  String get tarotKeywords4 =>
+      'Autorité, structure, contrôle, leadership, logique';
+
+  @override
+  String get tarotDesc4 =>
+      'L\'Empereur est assis sur un trône de pierre en armure, symbolisant la fermeté, l\'ordre et la détermination dans le commandement.';
+
+  @override
+  String get tarotLoveMeaning4 =>
+      'Relation stable avec un partenaire fiable et responsable.';
+
+  @override
+  String get tarotLoveDetail4 =>
+      'Au lieu de passions éphémères, la confiance et la sécurité en l\'avenir prennent le devant de la scène. Votre partenaire sera un soutien solide et protecteur pour vous. Essayez d\'éviter le contrôle excessif et l\'entêtement dans la communication. Pour les célibataires, une rencontre avec une personne influente se dessine.';
+
+  @override
+  String get tarotWealthMeaning4 =>
+      'La gestion systématique des actifs aidera à construire un capital stable.';
+
+  @override
+  String get tarotWealthDetail4 =>
+      'En matière financière, il est crucial de s\'en tenir à un plan et à vos principes. Au lieu de spéculations risquées, choisissez des instruments sûrs comme les dépôts ou l\'immobilier. Votre pragmatisme et votre détermination vous aideront à jeter les bases d\'une richesse durable.';
+
+  @override
+  String get tarotSuccessMeaning4 =>
+      'De bonnes opportunités de promotion ou d\'obtenir un poste de leadership.';
+
+  @override
+  String get tarotSuccessDetail4 =>
+      'Votre position dans l\'équipe se renforce. Les dirigeants apprécieront vos qualités de meneur et pourraient vous confier la gestion d\'un projet ou d\'un département important. Utilisez la logique et le calcul froid pour résoudre les tâches professionnelles et vous gagnerez la confiance totale de vos supérieurs.';
+
+  @override
+  String get tarotKeywords5 =>
+      'Tradition, enseignement, croyances, conseil, médiation';
+
+  @override
+  String get tarotDesc5 =>
+      'Le Pape symbolise les normes sociales et le guide spirituel, menant à travers des conseils sages et des valeurs traditionnelles.';
+
+  @override
+  String get tarotLoveMeaning5 =>
+      'Relations sérieuses et saines basées sur le respect mutuel.';
+
+  @override
+  String get tarotLoveDetail5 =>
+      'Vous ne chercherez pas d\'aventures passagères, mais une relation profonde en vue de fonder une famille. Rencontrer quelqu\'un par des amis communs ou lors d\'événements formels pourrait être le début de quelque chose d\'important. Si des disputes surviennent, demandez conseil à vos aînés ; leur sagesse vous aidera.';
+
+  @override
+  String get tarotWealthMeaning5 =>
+      'Il est préférable de suivre des méthodes d\'épargne traditionnelles et éprouvées.';
+
+  @override
+  String get tarotWealthDetail5 =>
+      'Privilégiez la sécurité plutôt que les investissements risqués. Les dépôts bancaires ou les assurances seront les options les plus appropriées. La consultation d\'un expert financier ou le maintien de l\'honnêteté dans vos transactions vous aidera à conserver et à accroître votre patrimoine.';
+
+  @override
+  String get tarotSuccessMeaning5 =>
+      'Moment favorable pour signer des contrats et des accords de partenariat.';
+
+  @override
+  String get tarotSuccessDetail5 =>
+      'Au lieu de résoudre les problèmes seul, demandez le soutien de collègues ou de mentors. Respecter les règles et procédures de l\'entreprise est le chemin le plus court vers la reconnaissance. C\'est aussi une période propice pour signer des documents importants et établir des réseaux de contact professionnels.';
+
+  @override
+  String get tarotKeywords6 => 'Amour, harmonie, choix, union, partenariat';
+
+  @override
+  String get tarotDesc6 =>
+      'Sous les rayons d\'un soleil chaud, Adam et Ève reçoivent la bénédiction d\'un ange. C\'est le symbole de l\'union des âmes et d\'un choix de vie important.';
+
+  @override
+  String get tarotLoveMeaning6 =>
+      'L\'une des meilleures périodes pour l\'épanouissement de l\'amour.';
+
+  @override
+  String get tarotLoveDetail6 =>
+      'Un roman passionnant vous attend. Vous vous rapprocherez rapidement d\'une personne qui vous attire et ressentirez une profonde connexion spirituelle. Si vous prévoyez de déclarer vos sentiments, les chances de succès sont très élevées. Mais rappelez-vous : il vaut mieux choisir avec le cœur que de céder à une tentation momentanée.';
+
+  @override
+  String get tarotWealthMeaning6 =>
+      'Votre situation financière s\'améliorera en collaborant avec d\'autres.';
+
+  @override
+  String get tarotWealthDetail6 =>
+      'Travailler en équipe avec quelqu\'un qui pense comme vous apportera un effet de synergie et augmentera vos bénéfices. Si l\'on vous propose un partenariat, considérez-le sérieusement. La communication avec les autres vous aidera à obtenir des informations précieuses pour vos investissements. Cependant, surveillez vos dépenses de loisirs pour ne pas dépasser votre budget.';
+
+  @override
+  String get tarotSuccessMeaning6 =>
+      'C\'est le moment où le travail d\'équipe apporte des résultats brillants.';
+
+  @override
+  String get tarotSuccessDetail6 =>
+      'Vous vous entendez à merveille avec vos collègues et partenaires, et le travail vous est agréable. Dans des projets de groupe, vous accomplirez plus qu\'en solo, et la capacité à nouer des relations sera la clé du succès. En choisissant une tâche qui vous plaît vraiment, vous obtiendrez des résultats que vous ne regretterez pas.';
+
+  @override
+  String get tarotKeywords7 => 'Victoire, volonté, avance, conquête, triomphe';
+
+  @override
+  String get tarotDesc7 =>
+      'Le jeune roi sur son char avance avec détermination vers son objectif, tenant le sceptre du pouvoir. Sa volonté est inébranlable et le triomphe est proche.';
+
+  @override
+  String get tarotLoveMeaning7 =>
+      'Période où les actions décidées en amour apporteront le succès.';
+
+  @override
+  String get tarotLoveDetail7 =>
+      'Il est temps de lutter résolument pour votre amour. N\'hésitez pas et déclarez vos sentiments ouvertement ; même s\'il y a des concurrents, vous sortirez victorieux. Si vous êtes dans une phase d\'incertitude, prenez l\'initiative et définissez la relation. Les voyages ensemble ou les loisirs actifs renforceront votre lien.';
+
+  @override
+  String get tarotWealthMeaning7 =>
+      'Vous devez agir avec audace pour atteindre les objectifs financiers fixés.';
+
+  @override
+  String get tarotWealthDetail7 =>
+      'Vous avez maintenant besoin d\'une force motrice puissante pour réaliser vos plans. N\'hésitez pas à prendre des décisions importantes lorsque l\'occasion se présente. Concentrez-vous sur des projets à court terme ; maintenant, vos revenus dépendent directement de votre activité. Des dépenses liées aux voyages peuvent survenir, mais ce sera un investissement dans de nouvelles opportunités.';
+
+  @override
+  String get tarotSuccessMeaning7 =>
+      'Succès dans la compétition et atteinte des objectifs.';
+
+  @override
+  String get tarotSuccessDetail7 =>
+      'Le succès vous attend dans l\'atteinte de buts concrets : promotions, réussite aux examens ou conclusion d\'accords bénéfiques. Plus la compétition sera forte, plus votre esprit combatif sera élevé et, au final, la victoire sera vôtre. Votre détermination fera une grande impression sur vos collègues.';
+
+  @override
+  String get tarotKeywords8 =>
+      'Force, courage, patience, influence douce, maîtrise de soi';
+
+  @override
+  String get tarotDesc8 =>
+      'Une femme aux vêtements blancs ferme doucement la gueule d\'un lion, symbolisant la victoire de l\'esprit sur la force brute et la maîtrise de soi.';
+
+  @override
+  String get tarotLoveMeaning8 =>
+      'Période où vous devez faire preuve de patience et accepter votre partenaire tel qu\'il est.';
+
+  @override
+  String get tarotLoveDetail8 =>
+      'Vos relations exigent maintenant de la sagesse et de l\'endurance. En acceptant les défauts de votre partenaire avec un cœur ouvert, vous élevez le lien à un nouveau niveau. Il est important de guider en douceur, en faisant preuve de force intérieure. Si vous soutenez patiemment votre être cher, votre sincérité finira par faire fondre toute glace.';
+
+  @override
+  String get tarotWealthMeaning8 =>
+      'L\'épargne constante et les habitudes de dépenses raisonnables sont la clé de la richesse.';
+
+  @override
+  String get tarotWealthDetail8 =>
+      'Votre situation financière croît lentement mais sûrement. Ne vous découragez pas s\'il n\'y a pas de revenus énormes en ce moment ; continuez à gérer vos actifs régulièrement. Dans les investissements, ne vous laissez pas emporter par la panique face aux fluctuations temporaires. La capacité à contrôler vos désirs impulsifs est le chemin le plus court vers la prospérité.';
+
+  @override
+  String get tarotSuccessMeaning8 =>
+      'Vous pourrez gérer même les tâches les plus difficiles ou une direction exigeante.';
+
+  @override
+  String get tarotSuccessDetail8 =>
+      'Il est possible qu\'on vous confie un projet difficile, mais vous avez suffisamment de ressources internes pour le gérer. Votre douceur extérieure cache une volonté d\'acier qui vous aidera à surmonter tous les obstacles. Votre calme lors de la résolution de problèmes suscitera un profond respect et une confiance chez les autres.';
+
+  @override
+  String get tarotKeywords9 =>
+      'Introspection, solitude, recherche de la vérité, sagesse, repos';
+
+  @override
+  String get tarotDesc9 =>
+      'Un vieil homme avec une lanterne à la main est au sommet d\'une montagne enneigée, écoutant sa voix intérieure en quête de vérité.';
+
+  @override
+  String get tarotLoveMeaning9 =>
+      'Temps pour la solitude ou des réflexions profondes sur les relations.';
+
+  @override
+  String get tarotLoveDetail9 =>
+      'Maintenant, il est plus important de vous comprendre vous-même que de mener une vie sociale active. Ne cherchez pas de rencontres juste pour fuir la solitude ; réfléchissez au type d\'amour dont vous avez réellement besoin. Même si vous avez un partenaire, une petite distance vous aidera tous deux à mieux valoriser votre relation.';
+
+  @override
+  String get tarotWealthMeaning9 =>
+      'L\'activité financière peut diminuer temporairement.';
+
+  @override
+  String get tarotWealthDetail9 =>
+      'En matière d\'argent, il convient d\'adopter une attitude conservatrice maintenant. Il est plus important de conserver ce que vous avez que d\'essayer d\'augmenter le capital par des méthodes risquées. Investir dans votre propre éducation ou formation sera le meilleur investissement, qui portera ses fruits à l\'avenir.';
+
+  @override
+  String get tarotSuccessMeaning9 =>
+      'Succès dans les affaires nécessitant des connaissances approfondies, de la recherche ou de la maîtrise.';
+
+  @override
+  String get tarotSuccessDetail9 =>
+      'Vous obtiendrez d\'excellents résultats dans les travaux scientifiques, la planification ou le développement, où une immersion profonde dans le processus est requise. C\'est maintenant le moment d\'accumuler des forces, pas de les exhiber. Si vous êtes confronté à une tâche insoluble, demandez conseil à un mentor expérimenté.';
+
+  @override
+  String get tarotKeywords10 => 'Chance, changements, destin, cycles, tournant';
+
+  @override
+  String get tarotDesc10 =>
+      'La grande roue de la fortune tourne, annonçant des changements inévitables et le début d\'un nouveau cycle de vie.';
+
+  @override
+  String get tarotLoveMeaning10 => 'Une rencontre fatidique vous attend.';
+
+  @override
+  String get tarotLoveDetail10 =>
+      'L\'amour peut arriver soudainement, comme au cinéma. Des rencontres fortuites ou des retrouvailles inattendues avec d\'anciens amours sont possibles. Les célibataires peuvent tomber amoureux au premier regard, et ceux qui sont en couple sentiront la relation passer à un niveau supérieur.';
+
+  @override
+  String get tarotWealthMeaning10 =>
+      'La situation financière commence à s\'améliorer.';
+
+  @override
+  String get tarotWealthDetail10 =>
+      'La déesse Fortune vous sourit. Des rentrées d\'argent inattendues ou des bénéfices d\'investissements sont possibles. Le flux d\'argent devient plus stable et vous devez saisir les opportunités à temps. Cependant, rappelez-vous que la chance est cyclique ; montrez de la sagesse et épargnez une partie pour l\'avenir.';
+
+  @override
+  String get tarotSuccessMeaning10 =>
+      'Les circonstances penchent en votre faveur.';
+
+  @override
+  String get tarotSuccessDetail10 =>
+      'Une période importante arrive qui peut être un tournant dans votre carrière. Les dossiers qui étaient en pause commenceront à bouger. Les chances d\'une promotion ou d\'une offre d\'emploi avantageuse seront ce « vent favorable » qui vous emmènera vers de nouveaux sommets.';
+
+  @override
+  String get tarotKeywords11 =>
+      'Justice, équilibre, responsabilité, vérité, cause et effet';
+
+  @override
+  String get tarotDesc11 =>
+      'Un juge vêtu de rouge tient une épée dans la main droite et une balance dans la gauche. C\'est le symbole du jugement objectif et de la responsabilité de ses propres actes.';
+
+  @override
+  String get tarotLoveMeaning11 =>
+      'Une relation où la raison l\'emporte sur les sentiments.';
+
+  @override
+  String get tarotLoveDetail11 =>
+      'C\'est maintenant un moment où le jugement rationnel est plus nécessaire que de se laisser emporter par les émotions. Réfléchissez pour savoir si votre relation maintient l\'équilibre : si vous vous sacrifiez trop ou, au contraire, si vous ne faites que recevoir sans rien donner en retour. Si vous envisagez de vous marier, vous évaluerez méticuleusement les conditions et le passé de votre partenaire.';
+
+  @override
+  String get tarotWealthMeaning11 =>
+      'Une vérification méticuleuse est requise dans les transactions financières et les contrats.';
+
+  @override
+  String get tarotWealthDetail11 =>
+      'Des situations peuvent survenir où il est nécessaire de distinguer le vrai du faux sur le plan monétaire. C\'est un bon moment pour vous faire rembourser de l\'argent prêté ou pour liquider des comptes en suspens. Lors de la signature de contrats, examinez attentivement les clauses et agissez avec honnêteté et transparence en suivant les principes.';
+
+  @override
+  String get tarotSuccessMeaning11 =>
+      'Vous recevrez une évaluation juste de votre travail et une récompense appropriée.';
+
+  @override
+  String get tarotSuccessDetail11 =>
+      'Vos réalisations professionnelles recevront une évaluation juste et objective. Si vous avez travaillé dur, attendez-vous à une promotion ou à une prime. Vos capacités analytiques et votre précision seront très appréciées dans les domaines nécessitant de l\'exactitude. Lors de la prise de décisions, laissez de côté les émotions et basez-vous strictement sur les données et les faits.';
+
+  @override
+  String get tarotKeywords12 =>
+      'Sacrifice, patience, nouvelle perspective, stagnation, éveil';
+
+  @override
+  String get tarotDesc12 =>
+      'Un homme pendu à un arbre par un pied, à travers une souffrance volontaire, observe le monde sous un angle totalement nouveau et atteint l\'illumination. Le halo autour de sa tête signifie une croissance spirituelle.';
+
+  @override
+  String get tarotLoveMeaning12 =>
+      'La relation peut stagner ou les sentiments non partagés peuvent durer longtemps.';
+
+  @override
+  String get tarotLoveDetail12 =>
+      'Vous pouvez ressentir de la frustration face au manque de progrès en amour, mais maintenant la précipitation n\'aidera pas. Faites une pause, regardez la situation de l\'autre côté et réfléchissez si vous imposez vos sentiments à votre manière. Savoir se mettre à la place de l\'autre et faire preuve de patience finira par être la clé du cœur de votre partenaire.';
+
+  @override
+  String get tarotWealthMeaning12 =>
+      'Les flux d\'argent peuvent s\'arrêter temporairement, des pertes forcées sont possibles.';
+
+  @override
+  String get tarotWealthDetail12 =>
+      'Vous pouvez ressentir une stagnation de vos finances. Les investissements peuvent être « gelés » et les revenus attendus retardés. Plus vous vous agiterez, plus la situation sera complexe, il est donc préférable de rester calme. Utilisez ce temps pour revoir vos habitudes de dépenses et développer une nouvelle attitude envers l\'argent.';
+
+  @override
+  String get tarotSuccessMeaning12 =>
+      'Les choses peuvent ne pas se passer selon le plan, des retards sont possibles.';
+
+  @override
+  String get tarotSuccessDetail12 =>
+      'La suspension d\'un projet ou le retard dans les affaires peuvent causer du stress, mais ce n\'est pas un échec, c\'est un signal de « redémarrage ». N\'essayez pas de forcer les événements ; faites un pas en arrière et reconsidérez la stratégie globale. Rompre avec les vieux schémas vous aidera à trouver une solution géniale.';
+
+  @override
+  String get tarotKeywords13 =>
+      'Achèvement, changement, transformation, séparation, nouveau départ';
+
+  @override
+  String get tarotDesc13 =>
+      'Symbolise la fin complète de l\'ancien et la naissance du nouveau. Représente un processus de transformation douloureux mais inévitable, où la mort de l\'ancien dégage le chemin pour l\'avenir.';
+
+  @override
+  String get tarotLoveMeaning13 =>
+      'Signifie la fin d\'une relation ou un changement radical en elle.';
+
+  @override
+  String get tarotLoveDetail13 =>
+      'Il est possible que votre relation actuelle ait atteint sa limite. Au lieu d\'essayer de retenir ce qui s\'en va, montrez du courage et laissez faire la situation. La séparation est douloureuse, mais au bout de ce chemin vous attend sans doute un meilleur départ. Rappelez-vous : ce n\'est qu\'en vous libérant complètement des attachements et des blessures du passé que vous laisserez de la place pour qu\'une nouvelle personne entre dans votre vie.';
+
+  @override
+  String get tarotWealthMeaning13 =>
+      'Des pertes financières ou des échecs d\'investissement peuvent survenir.';
+
+  @override
+  String get tarotWealthDetail13 =>
+      'Des changements importants dans vos finances sont attendus. Vous pouvez faire face à des pertes là où vous ne les attendiez pas ou à des dépenses imprévues. C\'est un signal que les anciennes méthodes de gestion de capital ne fonctionnent plus. Utilisez ce moment pour solder vos dettes, couper les dépenses inutiles et commencer à construire une structure financière plus saine et plus stable.';
+
+  @override
+  String get tarotSuccessMeaning13 =>
+      'Le travail actuel peut être interrompu ou se terminer par un échec.';
+
+  @override
+  String get tarotSuccessDetail13 =>
+      'Un projet dans lequel vous avez mis beaucoup d\'efforts pourrait s\'arrêter, ou vous pourriez connaître des changements brusques dans votre carrière. Maintenant, vous pouvez ressentir l\'amertume de l\'échec, mais c\'est un signe du destin : il est temps de quitter ce qui ne vous convient pas et de chercher le chemin du véritable succès. Partez de zéro et un nouveau chapitre plus passionnant de votre vie s\'ouvrira.';
+
+  @override
+  String get tarotKeywords14 =>
+      'Équilibre, tempérance, harmonie, guérison, compromis';
+
+  @override
+  String get tarotDesc14 =>
+      'Un ange verse de l\'eau d\'une coupe à l\'autre, symbolisant l\'équilibre parfait entre la réalité et l\'idéal, ainsi que le flux harmonieux de la vie.';
+
+  @override
+  String get tarotLoveMeaning14 =>
+      'Processus dans lequel deux personnes différentes trouvent un langage commun et l\'harmonie.';
+
+  @override
+  String get tarotLoveDetail14 =>
+      'Pour cette période, un amour calme et profond est plus approprié que les passions turbulentes. En reconnaissant les différences de l\'autre et en les complétant, vous construisez un lien solide. Même si des disputes surviennent, la sagesse vous aidera à les résoudre par un dialogue serein. Votre attitude douce et attentionnée calmera votre partenaire et créera une atmosphère stable.';
+
+  @override
+  String get tarotWealthMeaning14 =>
+      'Il est important de maintenir l\'équilibre entre les revenus et les dépenses.';
+
+  @override
+  String get tarotWealthDetail14 =>
+      'La situation financière se stabilise. Au lieu de poursuivre des gains faciles, concentrez-vous sur la distribution efficace de vos actifs actuels. Avec la croissance des revenus, il est important de garder l\'habitude de contrôler les dépenses. Dans les investissements, il est préférable de suivre une stratégie de diversification ; la constance vous mènera finalement à la richesse.';
+
+  @override
+  String get tarotSuccessMeaning14 =>
+      'Votre capacité à arrondir les angles et à mener l\'équipe à l\'accord sera à son apogée.';
+
+  @override
+  String get tarotSuccessDetail14 =>
+      'Vous excellerez en tant que médiateur dans des projets d\'équipe, résolvant les conflits et augmentant l\'efficacité globale. Votre flexibilité et votre capacité d\'adaptation seront appréciées par vos collègues. Maintenant, il est important de maintenir l\'équilibre entre le travail et le repos pour éviter l\'épuisement professionnel. Une vision globale de la situation vous aidera à obtenir les meilleurs résultats.';
+
+  @override
+  String get tarotKeywords15 =>
+      'Tentation, dépendance, attachement, matérialisme, obsession';
+
+  @override
+  String get tarotDesc15 =>
+      'Symbole des désirs et des attachements qui nous enchaînent. Ce sont les tentations matérielles dont nous pouvons nous libérer si nous montrons de la volonté, mais dans lesquelles nous nous plongeons souvent tête baissée.';
+
+  @override
+  String get tarotLoveMeaning15 =>
+      'Signifie une relation attirée ou obsédée par un charme physique intense.';
+
+  @override
+  String get tarotLoveDetail15 =>
+      'Vous pourriez être irrésistiblement attiré par quelqu\'un, ce qui rend difficile la prise de décisions sensées. Une romance passionnée peut commencer, mais faites attention à ne pas tomber dans le piège de la jalousie et du contrôle excessifs. Réfléchissez si votre sentiment est un amour véritable ou simplement un désir de posséder l\'autre.';
+
+  @override
+  String get tarotWealthMeaning15 =>
+      'L\'avidité excessive peut mener à des investissements risqués ou à de grandes dépenses de loisirs.';
+
+  @override
+  String get tarotWealthDetail15 =>
+      'C\'est une période de nombreuses tentations financières. Méfiez-vous des offres douteuses d\'« argent facile » et des achats impulsifs qui peuvent vider votre portefeuille. Ne devenez pas l\'esclave de l\'argent et ne minez pas la confiance de votre entourage. Au lieu de nouveaux investissements, il est maintenant préférable de se concentrer sur la conservation de ce que vous avez.';
+
+  @override
+  String get tarotSuccessMeaning15 =>
+      'Pour le succès, vous pourriez être prêt à n\'importe quelle mesure.';
+
+  @override
+  String get tarotSuccessDetail15 =>
+      'La soif de pouvoir ou de reconnaissance peut vous faire voir vos collègues comme de simples concurrents. Faites attention à ne pas devenir un bourreau de travail, en oubliant la santé et le repos. Renoncez à l\'idée d\'obtenir tout tout de suite sans l\'effort adéquat. Une attitude honnête envers le travail vous aidera à vous libérer des chaînes internes.';
+
+  @override
+  String get tarotKeywords16 =>
+      'Effondrement, impact, changement brusque, libération, révélation';
+
+  @override
+  String get tarotDesc16 =>
+      'Un éclair frappe directement la tour, la faisant s\'écrouler et provoquant la chute des gens. Symbolise la rupture soudaine des vieilles valeurs par des forces extérieures et la rencontre avec la crue vérité.';
+
+  @override
+  String get tarotLoveMeaning16 =>
+      'Dans les relations, une crise grave ou une rupture soudaine est possible.';
+
+  @override
+  String get tarotLoveDetail16 =>
+      'Comme un éclair dans un ciel dégagé, un événement inattendu peut survenir dans votre vie personnelle. Vous pourriez être déçu par votre partenaire ou faire face à un conflit qui ébranle les fondations de votre relation. Mais ne désespérez pas : c\'est un processus de nettoyage des illusions. Sur les ruines de l\'ancien, quelque chose de plus fort et de plus authentique grandira avec le temps.';
+
+  @override
+  String get tarotWealthMeaning16 =>
+      'Vous devez vous préparer à des pertes financières soudaines ou à des chocs.';
+
+  @override
+  String get tarotWealthDetail16 =>
+      'Une période d\'extrême instabilité financière commence. Des pertes brusques ou l\'effondrement de projets d\'investissement sont possibles. Il est maintenant crucial de déplacer vos actifs dans un endroit sûr et d\'être vigilant. Rappelez-vous que cet effondrement vous aidera à revoir vos points de vue sur l\'argent, et qu\'après la chute vient toujours une période de reconstruction.';
+
+  @override
+  String get tarotSuccessMeaning16 =>
+      'Les projets peuvent être interrompus, des changements brusques de carrière ou des réajustements de personnel sont possibles.';
+
+  @override
+  String get tarotSuccessDetail16 =>
+      'Vous pouvez ressentir de l\'amertume parce que le projet que vous avez construit étape par étape s\'effondre. Mais cela n\'arrive pas à cause de votre faiblesse, mais à cause de changements inévitables. Gardez votre calme, évaluez la situation et commencez à chercher de nouvelles voies. Si vous pouvez transformer cette crise en opportunité, vous atteindrez des sommets encore plus élevés.';
+
+  @override
+  String get tarotKeywords17 =>
+      'Espoir, inspiration, guérison, optimisme, réalisation des désirs';
+
+  @override
+  String get tarotDesc17 =>
+      'Sous la lumière d\'une étoile brillante, une femme verse de l\'eau, symbolisant la paix après les épreuves et l\'espoir en un avenir radieux.';
+
+  @override
+  String get tarotLoveMeaning17 =>
+      'Période de rencontre avec l\'idéal ou réalisation du rêve d\'amour.';
+
+  @override
+  String get tarotLoveDetail17 =>
+      'Comme une étoile dans la nuit, un espoir radieux arrive dans votre vie. Vous pourriez rencontrer la personne de vos rêves, et votre charisme sincère sera extrêmement attirant pour les autres. Les blessures du passé se referment, laissant place à une énergie lumineuse qui vous permettra de croire à nouveau en l\'amour.';
+
+  @override
+  String get tarotWealthMeaning17 =>
+      'La situation financière commence à s\'améliorer progressivement.';
+
+  @override
+  String get tarotWealthDetail17 =>
+      'La chance avec l\'argent commence à tourner en votre faveur. Les difficultés économiques sont derrière vous et vous commencez à voir la lumière au bout du tunnel. Des idées créatives peuvent apporter des sources de revenus supplémentaires. Maintenant, il est important de penser à long terme : les investissements dans l\'avenir seront la clé.';
+
+  @override
+  String get tarotSuccessMeaning17 =>
+      'Une vague d\'inspiration vous attend et l\'occasion de faire connaître vos talents.';
+
+  @override
+  String get tarotSuccessDetail17 =>
+      'Vos idées recevront la reconnaissance et les éloges de vos collègues. Vous vous distinguerez particulièrement dans les domaines créatifs, le marketing ou la publicité ; c\'est maintenant le moment idéal pour lancer le projet dont vous avez toujours rêvé. Agissez avec confiance : vous avez toutes les chances de gagner en popularité et de renforcer votre autorité.';
+
+  @override
+  String get tarotKeywords18 =>
+      'Anxiété, illusion, incertitude, intuition, subconscient';
+
+  @override
+  String get tarotDesc18 =>
+      'Sous la lumière de la lune coexistent l\'anxiété et une incertitude brumeuse, symbolisant la vérité cachée et le monde du subconscient.';
+
+  @override
+  String get tarotLoveMeaning18 =>
+      'Incompréhension des sentiments du partenaire, offenses et soupçons possibles.';
+
+  @override
+  String get tarotLoveDetail18 =>
+      'Vous êtes comme dans un brouillard : les sentiments de votre partenaire ne sont pas clairs, ce qui génère de l\'anxiété. De petits malentendus peuvent se transformer en soupçons sérieux, vous volant votre tranquillité. Mais ne vous précipitez pas pour tirer des conclusions ; maintenant, il est préférable d\'adopter une posture d\'attente. Essayez de garder votre équilibre interne et de penser rationnellement.';
+
+  @override
+  String get tarotWealthMeaning18 =>
+      'Les perspectives financières sont brumeuses, risque élevé de tromperie ou de fraude.';
+
+  @override
+  String get tarotWealthDetail18 =>
+      'Votre vision de la situation est déformée maintenant. Vous pourriez facilement tomber dans les pièges d\'escrocs ou dans des promesses tentantes mais vides. Méfiez-vous des pièges cachés et faites preuve d\'une extrême prudence dans les affaires. Maintenant n\'est pas le moment pour de nouveaux projets ; il vaut mieux se concentrer sur la protection de ce que vous avez déjà.';
+
+  @override
+  String get tarotSuccessMeaning18 =>
+      'Période de confusion : les objectifs sont vagues, intrigues possibles dans l\'équipe.';
+
+  @override
+  String get tarotSuccessDetail18 =>
+      'Vous pouvez vous trouver dans une situation d\'incertitude, où la direction du développement du projet est floue et où les collègues murmurent dans votre dos. Faites attention à vos paroles et à vos actions. Maintenant, il sera plus sage d\'attendre que la situation s\'éclaircisse. Ne croyez pas aux rumeurs aveuglément, gardez votre calme et occupez-vous de vos affaires.';
+
+  @override
+  String get tarotKeywords19 =>
+      'Succès, bonheur, vitalité, positivisme, bénédiction';
+
+  @override
+  String get tarotDesc19 =>
+      'Sous un soleil radieux, un enfant sur un cheval blanc agite un drapeau, profitant de la vie. C\'est le symbole de la clarté totale, du succès et du bonheur.';
+
+  @override
+  String get tarotLoveMeaning19 =>
+      'Des relations bénies, brillantes et heureuses vous attendent.';
+
+  @override
+  String get tarotLoveDetail19 =>
+      'Un amour parfaitement heureux et béni est maintenant avec vous. Les malentendus et les conflits du passé disparaîtront et la confiance sera renforcée. Les célibataires rencontreront quelqu\'un qui dégage une énergie lumineuse. Des nouvelles joyeuses sont possibles, comme un mariage ou l\'agrandissement de la famille. C\'est un moment merveilleux pour profiter de l\'amour de manière pure et passionnée.';
+
+  @override
+  String get tarotWealthMeaning19 =>
+      'Votre situation financière est à son apogée.';
+
+  @override
+  String get tarotWealthDetail19 =>
+      'Votre « moment de gloire » est arrivé. Vos perspectives financières sont très solides, ce qui mène à une croissance des bénéfices. Tous vos efforts passés sont enfin récompensés. C\'est un bon moment pour des achats importants ou des investissements dans ce qui vous apporte de la joie. Profitez de votre succès et partagez-le avec les autres.';
+
+  @override
+  String get tarotSuccessMeaning19 =>
+      'Vos talents seront reconnus et vous serez au centre de l\'attention.';
+
+  @override
+  String get tarotSuccessDetail19 =>
+      'Les fanfares du succès retentissent. Tous vos travaux passés sont enfin valorisés positivement et présentés au monde. Le succès dans les affaires, une promotion ou la réussite brillante des examens vous attend. Votre confiance en vous et votre attitude positive vous aideront à atteindre n\'importe quel sommet. C\'est le moment de votre triomphe.';
+
+  @override
+  String get tarotKeywords20 =>
+      'Renaissance, récompense, nouvelle, décision, retrouvailles';
+
+  @override
+  String get tarotDesc20 =>
+      'Un ange sonne de la trompette dans le ciel et les gens dans les cercueils s\'éveillent, profitant de la vie. C\'est le symbole de la récompense pour les travaux passés et de l\'éveil à une nouvelle vie.';
+
+  @override
+  String get tarotLoveMeaning20 =>
+      'Une nouvelle d\'un ancien partenaire ou une opportunité de retrouvailles est possible.';
+
+  @override
+  String get tarotLoveDetail20 =>
+      'La nouvelle que vous attendiez tant arrivera. Si vous ne pouviez pas oublier un ancien amour ou espériez une rencontre, les chances de succès sont maintenant extrêmement élevées. Les relations incertaines peuvent enfin devenir sérieuses. Il est possible de reprendre contact avec une ancienne connaissance ; écoutez votre cœur et prenez une décision.';
+
+  @override
+  String get tarotWealthMeaning20 =>
+      'Les investissements passés peuvent apporter des bénéfices, le remboursement d\'anciennes dettes est possible.';
+
+  @override
+  String get tarotWealthDetail20 =>
+      'Le moment est venu de récolter les fruits des efforts passés. Des actions oubliées peuvent augmenter de prix, ou l\'on vous remboursera une dette sur laquelle vous ne comptiez plus. Une chance inattendue ou une opportunité de relancer avec succès une ancienne idée est possible. La décision que vous prendrez maintenant aura un grand impact.';
+
+  @override
+  String get tarotSuccessMeaning20 =>
+      'Vos travaux passés seront reconnus, des promotions ou des récompenses sont possibles.';
+
+  @override
+  String get tarotSuccessDetail20 =>
+      'Le jour du jugement est arrivé. Vos efforts passés ont enfin reçu une évaluation digne et une récompense, et les bonnes nouvelles, comme le son de la trompette, ne se feront pas attendre. Des offres d\'emploi avantageuses ou l\'opportunie de sortir de la stagnation sont possibles. Ne craignez pas les changements : saisissez l\'opportunité.';
+
+  @override
+  String get tarotKeywords21 =>
+      'Achèvement, intégration, accomplissement, fin heureuse, perfection';
+
+  @override
+  String get tarotDesc21 =>
+      'Symbole de l\'accomplissement total du but et de l\'harmonie idéale après un long voyage. Les quatre bêtes sacrées aux coins bénissent le monde parfait et présagent le début d\'un nouveau cycle.';
+
+  @override
+  String get tarotLoveMeaning21 =>
+      'Signifie la floraison et la plénitude de l\'amour. Une union avec le partenaire idéal et des moments de vrai bonheur vous attendent.';
+
+  @override
+  String get tarotLoveDetail21 =>
+      'Le moment est idéal pour mettre un point final à une longue relation et passer à un nouveau niveau, par exemple se marier. Vous vous assurerez que vous êtes les meilleurs partenaires l\'un pour l\'autre. Si vous êtes célibataire, vous rencontrerez une personne qui correspond totalement à vos idéaux. Il est possible de rencontrer quelqu\'un lors d\'un voyage.';
+
+  @override
+  String get tarotWealthMeaning21 =>
+      'Vous atteindrez l\'objectif financier fixé et obtiendrez la liberté économique.';
+
+  @override
+  String get tarotWealthDetail21 =>
+      'Vous avez atteint à 100 % vos objectifs d\'argent et êtes arrivé au niveau de liberté financière. De grands bénéfices de la coopération internationale ou des investissements sur les marchés mondiaux sont possibles. Votre portefeuille est équilibré. Profitez de l\'abondance et commencez à élargir vos horizons.';
+
+  @override
+  String get tarotSuccessMeaning21 =>
+      'Le projet sera achevé avec succès et vous recevrez la reconnaissance maximale.';
+
+  @override
+  String get tarotSuccessDetail21 =>
+      'Vous avez atteint le sommet de votre carrière. Le projet assigné se terminera par un succès brillant et vous recevrez les éloges mérités. Tous les objectifs fixés ont été atteints et il est temps de se préparer à sortir sur la scène mondiale. Des opportunités pour étudier ou travailler à l\'étranger s\'ouvrent.';
+
+  @override
+  String get supplementRecordPrompt =>
+      'Veuillez prendre vos compléments et les enregistrer !';
+
+  @override
+  String get snoozeQuestion => 'Quand dois-je vous le rappeler à nouveau ?';
+
+  @override
+  String get hoursShort => 'h';
+
+  @override
+  String get minutesShort => 'm';
+
+  @override
+  String get after => 'après';
+
+  @override
+  String snoozeMessage(int minutes) {
+    return 'L\'alarme sonnera de nouveau dans $minutes minutes.';
+  }
+
+  @override
+  String timesTaken(int count) {
+    return '$count fois pris';
+  }
+
+  @override
+  String dailyGoalTimes(int goal) {
+    return 'Objectif : $goal fois par jour';
+  }
+
+  @override
+  String get didYouTakeSupplement => 'Avez-vous pris vos compléments ?';
+
+  @override
+  String get viewMissionRecords => 'Voir les enregistrements de mission';
+
+  @override
+  String get setTakingGoal => 'Définir l\'objectif de prise';
+
+  @override
+  String get times => 'fois';
+
+  @override
+  String get dailyTakingGoal => 'Objectif de prise quotidien';
+
+  @override
+  String get howManyTimesADay =>
+      'Combien de fois par jour prenez-vous des compléments ?';
+
+  @override
+  String get setGoalMl => 'Définir l\'objectif (ml)';
+
+  @override
+  String get sleepAnalysis => 'Analyse du sommeil';
+
+  @override
+  String get todaysSleep => 'Sommeil d\'aujourd\'hui';
+
+  @override
+  String get sleepDuration => 'Durée du sommeil';
+
+  @override
+  String get wakeUpTime => 'Heure de réveil';
+
+  @override
+  String get weeklySleepPattern => 'Modèle de sommeil hebdomadaire';
+
+  @override
+  String get sleepAdvice =>
+      'Vous maintenez une habitude de sommeil régulière. Vous vous êtes couché 30 minutes plus tôt qu\'hier !';
+
+  @override
+  String get stopwatch => 'Chronomètre';
+
+  @override
+  String get lap => 'Tour';
+
+  @override
+  String get stop => 'Arrêt';
+
+  @override
+  String lapLabel(int index) {
+    return 'Tour $index';
+  }
+
+  @override
+  String get monday => 'Lun';
+
+  @override
+  String get tuesday => 'Mar';
+
+  @override
+  String get wednesday => 'Mer';
+
+  @override
+  String get thursday => 'Jeu';
+
+  @override
+  String get friday => 'Ven';
+
+  @override
+  String get saturday => 'Sam';
+
+  @override
+  String get sunday => 'Dim';
 
   @override
   String get policy => 'Conditions et Confidentialité';
@@ -3161,9 +4121,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get minutes => 'min';
-
-  @override
-  String get times => 'fois';
 
   @override
   String cupsCount(int current, int goal) {
@@ -3340,7 +4297,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get allMissions => 'Toutes les missions';
 
   @override
-  String categoryMissions(Object category) {
+  String categoryMissions(String category) {
     return 'Missions $category';
   }
 
@@ -3373,9 +4330,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get getNotification => 'Recevoir une notification';
-
-  @override
-  String get notificationTime => 'Heure de notification';
 
   @override
   String get missionCategoryHealth => 'Santé';
@@ -3455,7 +4409,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get weeklyForecast => 'Prévisions hebdomadaires';
 
   @override
-  String hourFormat(Object hour) {
+  String hourFormat(String hour) {
     return '${hour}h';
   }
 
@@ -3574,7 +4528,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get luckyNumberAnalysisFinal => 'Traitement des données finales...';
 
   @override
-  String get luckyNumberGenerating => 'Génération des numéros chance...';
+  String get luckyNumberAnalyzing => 'Analyse de l\'énergie...';
+
+  @override
+  String get luckyNumberGeometric => 'Analyse géométrique...';
+
+  @override
+  String get luckyNumberPatterns => 'Correspondance des motifs...';
+
+  @override
+  String get luckyNumberEnergy => 'Harmonisation de l\'énergie...';
+
+  @override
+  String get luckyNumberCompleted => 'Analyse terminée !';
+
+  @override
+  String get luckyNumberShare => 'Partager les résultats';
+
+  @override
+  String get luckyNumberRestart => 'Réessayer';
+
+  @override
+  String get luckyNumberGenerating => 'Génération des numéros de la chance...';
 
   @override
   String get luckyNumberResultTitle => 'Génération des numéros chance terminée';
@@ -3939,6 +4914,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get compatibilityGenderFemale => 'Femme';
 
   @override
+  String get compatibilityInputTitle =>
+      'Saisie des informations de compatibilité';
+
+  @override
   String get tojeongInputTitle =>
       'Saisie des informations de l\'Oracle Annuel de Tojeong';
 
@@ -3997,7 +4976,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tojeongShareResult => 'Partager les Résultats';
 
   @override
-  String tojeongShareTitle(Object year) {
+  String tojeongShareTitle(int year) {
     return 'Résultats de l\'Oracle Annuel de Tojeong $year';
   }
 
@@ -4240,7 +5219,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'vous transformerez la crise en opportunité grâce à la patience.';
 
   @override
-  String tojeongCoreMessage(Object hasu, Object jungsu, Object sangsu) {
+  String tojeongCoreMessage(String sangsu, String jungsu, String hasu) {
     return 'Cette année, entre $sangsu, $jungsu, et enfin $hasu';
   }
 
@@ -4518,4 +5497,409 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get compatibilityDescDefaultConstellation =>
       'Une relation qui s\'accorde raisonnablement bien sur la base des signes du zodiaque.';
+
+  @override
+  String get routineMorningTitle => 'Un matin rafraîchissant ! ☀️';
+
+  @override
+  String get routineMorningBody =>
+      'Avez-vous oublié les missions de routine prévues pour aujourd\'hui ?';
+
+  @override
+  String get routineEveningTitle => 'Bon travail aujourd\'hui ! ✨';
+
+  @override
+  String get routineEveningBody =>
+      'Avez-vous terminé toutes les missions d\'aujourd\'hui ? Terminez votre routine.';
+
+  @override
+  String get routineCheckTitle => 'Consultez vos missions d\'aujourd\'hui ! 🚀';
+
+  @override
+  String get routineCheckBody =>
+      'Suivez les missions de routine et rendez votre journée agréable.';
+
+  @override
+  String get supplementNotificationTitle => 'Rappel de suppléments';
+
+  @override
+  String get waterNotificationTitle => 'Rappel de boire de l\'eau';
+
+  @override
+  String get routineNotificationTitle => 'Notification de routine quotidienne';
+
+  @override
+  String get todaysFortuneNotificationTitle => 'Votre fortune d\'aujourd\'hui';
+
+  @override
+  String get afternoonFortuneNotificationBody =>
+      'Et votre fortune de l\'après-midi ? Vérifiez-la maintenant !';
+
+  @override
+  String get morningFortuneNotificationBody =>
+      'Consultez votre fortune et commencez la journée avec énergie !';
+
+  @override
+  String get fortunePassExpiryTitle => 'Fortune Pass expire aujourd\'hui';
+
+  @override
+  String get fortunePassExpiryBody =>
+      'Votre abonnement Fortune Pass expire aujourd\'hui. Renouvelez-le pour continuer à profiter des avantages !';
+
+  @override
+  String get takeNow => 'Prendre maintenant';
+
+  @override
+  String get later => 'Plus tard';
+
+  @override
+  String get turnOffAlarmAction => 'Arrêter l\'alarme';
+
+  @override
+  String get todaysFortuneNotification =>
+      'Notification de l\'horoscope du jour';
+
+  @override
+  String get enableNotification => 'Activer la notification';
+
+  @override
+  String get fortuneNotificationDescription =>
+      'Vous informe de votre horoscope du jour à l\'heure spécifiée.';
+
+  @override
+  String get morningNotificationTime => 'Heure de notification le matin';
+
+  @override
+  String get afternoonNotificationTime => 'Heure de notification l\'après-midi';
+
+  @override
+  String get morningFortuneTitle => 'Fortune du matin';
+
+  @override
+  String get afternoonFortuneTitle => 'Fortune de l\'après-midi';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get supplementChannelDesc =>
+      'Canal pour les notifications de prise de compléments.';
+
+  @override
+  String get waterChannelDesc =>
+      'Canal pour les notifications de l\'habitude de boire de l\'eau.';
+
+  @override
+  String get waterSummaryTitle => 'Notification de consommation d\'eau';
+
+  @override
+  String get dailyRoutineChannelDesc =>
+      'Canal pour les notifications de missions quotidiennes et de création d\'habitudes.';
+
+  @override
+  String get dailyRoutineSummaryTitle => 'Notification de routine quotidienne';
+
+  @override
+  String get missionChannelName => 'Notification de mission';
+
+  @override
+  String get missionChannelDesc =>
+      'Canal pour les notifications générales d\'exécution de mission.';
+
+  @override
+  String get fortuneChannelName => 'Notification de fortune';
+
+  @override
+  String get fortuneChannelDesc =>
+      'Canal pour les notifications quotidiennes de consultation de fortune.';
+
+  @override
+  String get subscriptionChannelName => 'Notification d\'abonnement';
+
+  @override
+  String get subscriptionChannelDesc =>
+      'Canal pour les notifications d\'expiration du Fortune Pass et d\'abonnement.';
+
+  @override
+  String get alarmChannelName => 'Alarme';
+
+  @override
+  String get alarmChannelDesc =>
+      'Canal pour les alarmes de réveil et d\'exécution de mission.';
+
+  @override
+  String get shareViaKakao => 'Partager via KakaoTalk';
+
+  @override
+  String get shareViaSNS =>
+      'Partager via d\'autres réseaux sociaux (Instagram, Twitter, etc.)';
+
+  @override
+  String get checkDetailResult => 'Vérifier le résultat détaillé';
+
+  @override
+  String get viewMyFortuneResult => 'Voir mon résultat de fortune';
+
+  @override
+  String get takeSupplementNow => 'Veuillez prendre vos compléments !';
+
+  @override
+  String get takeNowQuestion => 'Souhaitez-vous le prendre maintenant ?';
+
+  @override
+  String get eatNow => 'Prendre maintenant';
+
+  @override
+  String get eatLater => 'Prendre plus tard';
+
+  @override
+  String snoozeMessageGeneric(int minutes) {
+    return 'Je vous le rappellerai dans $minutes minutes.';
+  }
+
+  @override
+  String get hours => 'heures';
+
+  @override
+  String get cheeringMessage4 => 'Matinée vibrante, début heureux !';
+
+  @override
+  String get cheeringMessage5 => 'Passez une journée souriante.';
+
+  @override
+  String get cheeringMessage6 => 'Courage aujourd\'hui !';
+
+  @override
+  String get cheeringMessage7 => 'Vous brillerez assez aujourd\'hui.';
+
+  @override
+  String get cheeringMessage8 =>
+      'J\'ai le pressentiment que quelque chose de bien va arriver !';
+
+  @override
+  String get cheeringMessage9 =>
+      'Beau travail aujourd\'hui. Un départ vigoureux !';
+
+  @override
+  String get cheeringMessage10 => 'Le bonheur est toujours à vos côtés.';
+
+  @override
+  String get cheeringMessage11 => 'Je soutiens vos rêves aujourd\'hui.';
+
+  @override
+  String get cheeringMessage12 => 'Matinée rafraîchissante, journée agréable !';
+
+  @override
+  String get cheeringMessage13 => 'Soyez victorieux aujourd\'hui !';
+
+  @override
+  String get cheeringMessage14 =>
+      'Vous êtes précieux juste en étant vous-même.';
+
+  @override
+  String get cheeringMessage15 =>
+      'Passez une journée pleine de choses agréables.';
+
+  @override
+  String get cheeringMessage16 =>
+      'J\'espère que votre journée sera étincelante aujourd\'hui !';
+
+  @override
+  String get cheeringMessage17 => 'Votre sourire illumine le monde.';
+
+  @override
+  String get cheeringMessage18 => 'Soyez vous-même aujourd\'hui !';
+
+  @override
+  String get cheeringMessage19 =>
+      'Commencez aujourd\'hui avec un cœur battant.';
+
+  @override
+  String get cheeringMessage20 => 'Une journée merveilleuse vous attend.';
+
+  @override
+  String get cheeringMessage21 =>
+      'Avec le pouvoir de la positivité aujourd\'hui !';
+
+  @override
+  String get cheeringMessage22 => 'Je soutiens votre chemin.';
+
+  @override
+  String get cheeringMessage23 =>
+      'Faites d\'aujourd\'hui votre meilleur jour !';
+
+  @override
+  String get cheeringMessage24 => 'Que la chance soit avec vous !';
+
+  @override
+  String get cheeringMessage25 =>
+      'Passez une journée chaleureuse aujourd\'hui.';
+
+  @override
+  String get cheeringMessage26 => 'Vous pouvez le faire !';
+
+  @override
+  String get cheeringMessage27 => 'Commencez aujourd\'hui avec gratitude.';
+
+  @override
+  String get cheeringMessage28 => 'Votre valeur est infinie.';
+
+  @override
+  String get cheeringMessage29 => 'Que votre journée fleurisse de sourires.';
+
+  @override
+  String get cheeringMessage30 => 'Passez un bon moment avec des gens bien !';
+
+  @override
+  String get cheeringMessage31 =>
+      'Un pas de plus vers vos rêves aujourd\'hui !';
+
+  @override
+  String get cheeringMessage32 =>
+      'Vous êtes la personne la plus cool aujourd\'hui.';
+
+  @override
+  String get cheeringMessage33 => 'Une journée miraculeuse viendra.';
+
+  @override
+  String get cheeringMessage34 =>
+      'Profitez de votre journée à loisir aujourd\'hui.';
+
+  @override
+  String get cheeringMessage35 => 'Vos efforts ne vous trahiront pas.';
+
+  @override
+  String get cheeringMessage36 => 'Passez une journée saine aujourd\'hui.';
+
+  @override
+  String get cheeringMessage37 => 'Vous êtes né pour être aimé !';
+
+  @override
+  String get cheeringMessage38 => 'Soyez courageux aujourd\'hui !';
+
+  @override
+  String get cheeringMessage39 => 'Un avenir brillant vous attend.';
+
+  @override
+  String get cheeringMessage40 => 'Passez une journée pleine de passion !';
+
+  @override
+  String get cheeringMessage41 => 'J\'espère que votre esprit est en paix.';
+
+  @override
+  String get cheeringMessage42 => 'Trouvez un petit bonheur aujourd\'hui.';
+
+  @override
+  String get cheeringMessage43 => 'Vous vous en sortez déjà assez bien.';
+
+  @override
+  String get cheeringMessage44 => 'Commencez aujourd\'hui avec espoir.';
+
+  @override
+  String get cheeringMessage45 =>
+      'Votre gentillesse est une grande force pour quelqu\'un.';
+
+  @override
+  String get cheeringMessage46 => 'Passez une journée productive aujourd\'hui.';
+
+  @override
+  String get cheeringMessage47 => 'Vous avez le pouvoir de changer le monde.';
+
+  @override
+  String get cheeringMessage48 => 'Journée claire aujourd\'hui !';
+
+  @override
+  String get cheeringMessage49 => 'Exprimez votre charme à votre guise.';
+
+  @override
+  String get cheeringMessage50 =>
+      'Remplissez votre journée de bonheur aujourd\'hui !';
+
+  @override
+  String get locationServiceDisabled =>
+      'Les services de localisation sont désactivés.';
+
+  @override
+  String get locationPermissionDenied => 'Permission de localisation refusée.';
+
+  @override
+  String get locationPermissionPermanentlyDenied =>
+      'Permission de localisation refusée de manière permanente.';
+
+  @override
+  String get deleteMissionTitle => 'Supprimer la mission';
+
+  @override
+  String get deleteMissionConfirm =>
+      'Êtes-vous sûr de vouloir supprimer cette mission ?';
+
+  @override
+  String get yesDelete => 'Oui, supprimer';
+
+  @override
+  String get waterAlarmTitle => 'C\'est l\'heure de boire de l\'eau ! 💧';
+
+  @override
+  String get waterAlarmBody =>
+      'Que diriez-vous d\'un verre d\'eau fraîche pour votre santé ?';
+
+  @override
+  String get supplementAlarmBody =>
+      'N\'oubliez pas de prendre vos compléments aujourd\'hui.';
+
+  @override
+  String get waterHabitChannelDesc =>
+      'Canal de notification pour l\'habitude de boire de l\'eau.';
+
+  @override
+  String get pleaseSolveMath => 'Veuillez résoudre le problème.';
+
+  @override
+  String detectedLabel(String labels) {
+    return '[Détecté : $labels]';
+  }
+
+  @override
+  String get defaultSleepDuration => '7h 30m';
+
+  @override
+  String get year2024Name => 'Année Gap-Chin (Année du Dragon Bleu)';
+
+  @override
+  String get year2025Name => 'Année Eul-Sa (Année du Serpent Bleu)';
+
+  @override
+  String get year2026Name => 'Année Byeong-O (Année du Cheval Rouge)';
+
+  @override
+  String supportEmailSubject(String appTitle, String title) {
+    return '[$appTitle Demande] $title';
+  }
+
+  @override
+  String get summary => 'Résumé';
+
+  @override
+  String get monthlySummary => 'Résumé mensuel';
+
+  @override
+  String monthlySuccessRate(
+      int month, String percentage, int success, int total) {
+    return '$month Taux de réussite mensuel : $percentage% ($success/$total)';
+  }
+
+  @override
+  String noMonthlyRecord(int month) {
+    return 'Aucun enregistrement pour $month';
+  }
+
+  @override
+  String get missionRecord => 'Record de mission';
+
+  @override
+  String get supplementRecord => 'Enregistrement des suppléments';
+
+  @override
+  String get timeSaleCatchChance =>
+      'Saisissez la chance de 50 % de réduction !';
 }
