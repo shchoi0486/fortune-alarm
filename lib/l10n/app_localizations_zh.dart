@@ -9,7 +9,7 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appTitle => '幸运闹钟';
+  String get appTitle => 'Fortune Alarm';
 
   @override
   String get morningGreeting => '早上好！开启幸运的一天。';
@@ -509,6 +509,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deleteColorConfirm => '确定要从列表中删除该颜色吗？';
+
+  @override
+  String get deleteMission => '删除任务';
+
+  @override
+  String get deleteMissionConfirm => '您确定要删除这个任务吗？';
 
   @override
   String get randomBackgroundDesc => '每次闹钟响起都会换一张新背景！';
@@ -2170,6 +2176,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noEvents => '暂无日程。';
 
   @override
+  String get calendarDragGuide => '向下滑动以查看详细日历。';
+
+  @override
   String get noSavedMemos => '暂无保存的备忘录。';
 
   @override
@@ -3694,7 +3703,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get policy => '服务条款和隐私政策';
 
   @override
-  String get support => '支持';
+  String get support => '客户支持';
 
   @override
   String get defaultAlarmBehavior => '默认闹钟行为';
@@ -4241,10 +4250,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fortunePassCurrentStatus => '当前状态';
 
   @override
-  String get fortunePassStatusPremium => 'Premium';
+  String get fortunePassStatusPremium => '高级';
 
   @override
-  String get fortunePassStatusFree => 'Free';
+  String get fortunePassStatusFree => '免费';
 
   @override
   String get fortunePassStoreErrorTitle => '商店错误';
@@ -4425,10 +4434,34 @@ class AppLocalizationsZh extends AppLocalizations {
   String get compatibilityDescBest => '默契十足，相处自然，彼此成就。';
 
   @override
+  String get compatibilityDescBest_Youth =>
+      '你们两位是分享青涩且热情的爱情的最佳伙伴。看到你们支持彼此的梦想并共同成长的样子真的很美！你们是通过分享学习或职业方面的烦恼，给彼此带来积极影响的关系。如果能像现在这样珍惜和爱护对方，你们就是可以共同克服任何困难的天作之合。';
+
+  @override
+  String get compatibilityDescBest_Mature =>
+      '这是在人生的重要阶段成为彼此坚实后盾的最佳契合。你们可以建立在信任基础上的稳定且深厚的爱情。在共同解决现实问题的过程中，你们会更强烈地感受到彼此的珍贵，由于价值观一致，你们是规划未来时最好的伴侣。';
+
+  @override
+  String get compatibilityDescBest_Senior =>
+      '作为人生伴侣，你们是成为彼此温暖安慰和避风港的最佳缘分。即使不言语，心也能相通，有着深厚的情感交流。这是在照顾彼此健康和平静的同时，享受悠闲生活的成熟关系。你们尊重并包容彼此人生智慧的样子，是周围人学习的典范。';
+
+  @override
   String get compatibilityTitleGreat => '非常合拍';
 
   @override
   String get compatibilityDescGreat => '互补又能理解，越相处越舒服。';
+
+  @override
+  String get compatibilityDescGreat_Youth =>
+      '你们是给彼此带来积极能量的非常好的缘分。在一起时会感到非常愉快和幸福，甚至感觉不到时间的流逝。虽然有时会因为各自的个性而产生冲突，但你们有着充满活力的关系，可以通过对话迅速和好并发展成更深厚的关系。';
+
+  @override
+  String get compatibilityDescGreat_Mature =>
+      '你们是可以共同明智地应对现实问题的优秀伙伴。这是一种通过填补彼此不足来产生协同效应的关系。作为在平衡工作、爱情和家庭的同时支持彼此成长的成熟情侣，你们有着稳定的契合度，在一起的时间越长，协同效应就越明显。';
+
+  @override
+  String get compatibilityDescGreat_Senior =>
+      '你们是非常好的伙伴，可以在照顾彼此健康和平静的同时享受悠闲的生活。彼此的存在本身就是巨大的力量和安慰。这是一种通过分享爱好或散步等微小的日常生活来建立深厚情感纽带的关系。你们是细心照顾彼此健康的温暖情分。';
 
   @override
   String get compatibilityTitleGood => '不错的缘分';
@@ -4437,16 +4470,537 @@ class AppLocalizationsZh extends AppLocalizations {
   String get compatibilityDescGood => '只要多沟通，就能很稳定地走下去。';
 
   @override
+  String get compatibilityDescGood_Youth =>
+      '你们是品味和价值观非常契合的一对。虽然有时会斗嘴，但这个过程甚至也会成为更深入了解彼此的宝贵时间。如果能发挥将彼此的差异视为个性并稍微让步的美德，你们就有着足以持续幸福恋爱的良好契合度。';
+
+  @override
+  String get compatibilityDescGood_Mature =>
+      '你们是在尊重彼此价值观的同时和谐相处的一对。你们可以在现实和理想之间保持良好平衡的同时培养爱情。虽然有时会因为各自的固执而产生矛盾，但由于对彼此的信任深厚，你们有着可以毫无大碍地克服这些问题的稳固关系。';
+
+  @override
+  String get compatibilityDescGood_Senior =>
+      '你们是基于长期的经验和智慧包容彼此的和谐一对。通过分享微小的日常生活，你们可以享受平静的幸福。这是一种在尊重和体谅彼此生活习惯的同时，像朋友一样舒适相处的关系。只要可靠地守护在彼此身边，就是足够令人满意的纽带。';
+
+  @override
   String get compatibilityTitleEffort => '需要用心';
 
   @override
   String get compatibilityDescEffort => '需要磨合，但也有成长的空间。';
 
   @override
+  String get compatibilityDescEffort_Youth =>
+      '由于在不同的环境中成长，有很多需要磨合的地方。需要努力先理解对方的心情，而不是只坚持自己的主张。坦率地表达情感并增加对话时间，以免微小的误会变大，这将对维持关系有很大帮助。';
+
+  @override
+  String get compatibilityDescEffort_Mature =>
+      '由于各自的主见都很明确，可能会产生冲突点。尊重彼此的生活方式并稍微让步是维持关系的关键。当因为现实问题产生矛盾时，这个时期需要冷静地整理彼此立场，而不是感情用事。';
+
+  @override
+  String get compatibilityDescEffort_Senior =>
+      '由于长期固定的生活习惯差异，可能会感到不便。认可彼此的领域并保持体谅的心，是建立舒适关系的捷径。不要只坚持自己的方式，需要一颗首先考虑对方舒适度的温暖的心。请尝试集中精力提高共同度过的时光的质量。';
+
+  @override
   String get compatibilityTitleDifficult => '挑战较多';
 
   @override
   String get compatibilityDescDifficult => '容易误会与摩擦，建议放慢节奏好好沟通。';
+
+  @override
+  String get compatibilityDescDifficult_Youth =>
+      '性格或生活方式的差异可能会让人感觉很明显。需要学会通过冷静的对话来认可彼此的差异，而不是感情用事。比起试图改变对方，接受对方原本样子的耐心将是关系的钥匙。';
+
+  @override
+  String get compatibilityDescDifficult_Mature =>
+      '由于价值观差异或现实问题，烦恼可能会加深。需要深刻的理解和耐心，认可彼此差异的意志很重要。不要对彼此期待过高，尝试从微小的事情开始感恩。改变沟通方式也可能是一个很好的解决方案。';
+
+  @override
+  String get compatibilityDescDifficult_Senior =>
+      '由于彼此都很固执，沟通可能会遇到困难。接受对方现在的样子而不是被过去的经历所束缚是很重要的。一句温暖的话语而不是沉默可能是改善关系的开始。在尊重彼此独立性的同时保持最低限度礼貌的态度是必要的。';
+
+  @override
+  String get compatibilityAdvice_Youth =>
+      '多花时间分享和支持彼此的梦想。共同积累多样化的经验，如开始新的爱好或去旅行，将为关系注入巨大的活力。对话时，请先共情而不是指责。';
+
+  @override
+  String get compatibilityAdvice_Mature =>
+      '即使在忙碌的日常生活中，确保只有两个人的时间也很重要。认可彼此的辛劳并说一句温暖的话。需要保持一种不忘记恋爱初期悸动的态度，比如庆祝纪念日或定期约会。';
+
+  @override
+  String get compatibilityAdvice_Senior =>
+      '在共同照顾健康的同时，享受散步或轻旅行。分享彼此的人生智慧并建立情感纽带是很好的。增加可以共同舒适休息的时间，而不是过度的活动。细心检查并关心彼此的健康状况非常重要。';
+
+  @override
+  String get compatibilityLuck_Youth =>
+      '你们的能量相结合，创造了可以在学业或事业上取得巨大成就的运势。彼此成为对方的幸运符，计划的事情进展顺利，充满良好的气息。';
+
+  @override
+  String get compatibilityLuck_Mature =>
+      '这是一种在共同管理资产或规划未来时会有好运随之而来的契合。协同效应非常好，有很强的财运和成功运，经济稳定和社会地位可以共同提升。';
+
+  @override
+  String get compatibilityLuck_Senior =>
+      '这是一种情感稳定和平静常驻的运势。彼此成为对方最好的健康补充剂，气运中充满了长寿和健康度过平静晚年的福分。这是一种对后代也有积极影响的有德缘分。';
+
+  @override
+  String get tarotLoveMeaning0_Senior => '与其寻找新的刺激，不如在日常生活的微小变化中寻找乐趣。';
+
+  @override
+  String get tarotLoveDetail0_Senior =>
+      '与其制定宏伟的计划，不如向周围的人分享你长期积累的知识和才华。在帮助或建议他人的过程中，你会感受到巨大的成就感和深厚的纽带。';
+
+  @override
+  String get tarotLoveMeaning1_Senior => '睿智而冷静的谈话会让关系更加深厚。';
+
+  @override
+  String get tarotLoveDetail1_Senior =>
+      '倾听并共情对方就足够了。如果不急躁地慢慢分享心声，即使不用言语，也能感受到相通的深厚纽带。花点时间修身养性。';
+
+  @override
+  String get tarotLoveMeaning2_Senior => '宽容的心会让周围的人感到幸福。';
+
+  @override
+  String get tarotLoveDetail2_Senior =>
+      '温暖的母亲般的心照顾周围的人。对配偶或家人的一句温暖的话语会成为巨大的力量回到你身边。家中充满平安，所以请以轻松的心情享受日常生活。';
+
+  @override
+  String get tarotLoveMeaning3_Senior => '负责任的态度守护着家庭的和谐。';
+
+  @override
+  String get tarotLoveDetail3_Senior =>
+      '在家庭中站稳脚跟并领导。有时可能需要严厉，但最终，这必须基于对家人深厚的爱。你的奉献和努力会给家人带来安全感。';
+
+  @override
+  String get tarotLoveMeaning4_Senior => '重视传统和礼仪，保持稳定的关系。';
+
+  @override
+  String get tarotLoveDetail4_Senior =>
+      '长期坚持的价值观或规则给关系带来稳定性。倾听周围人的建议，但不要失去你的信念。礼貌和尊重的态度会给对方深厚的信任感。';
+
+  @override
+  String get tarotLoveMeaning5_Senior => '在选择的十字路口需要谨慎。';
+
+  @override
+  String get tarotLoveDetail5_Senior =>
+      '专注于你现在珍贵的关系，而不是周围的诱惑或新的变化。当你的心动摇时，反思你丰富的人生经验会有所帮助。正确的选择最终会带来和平的未来。';
+
+  @override
+  String get tarotLoveMeaning6_Senior => '以坚强的意志克服困难，实现和谐。';
+
+  @override
+  String get tarotLoveDetail6_Senior =>
+      '即使产生冲突，也不要放弃，通过谈话来解决。你坚定的意志和耐心最终会结出硕果。在设定目标并共同努力的过程中，会建立起更牢固的纽带。';
+
+  @override
+  String get tarotLoveMeaning7_Senior => '用耐心和仁慈让关系变得顺滑。';
+
+  @override
+  String get tarotLoveDetail7_Senior =>
+      '需要温和的劝说和理解而不是强迫。你成熟的态度会打动对方的心。与其生气，不如多一点微笑的余暇。';
+
+  @override
+  String get tarotLoveMeaning8_Senior => '在孤独中发现真正的自我并获得智慧。';
+
+  @override
+  String get tarotLoveDetail8_Senior =>
+      '花点时间独处并回顾过去的人生也是好的。在寂静中获得的感悟会让未来的关系更加丰富。不要急躁，慢慢面对自己。';
+
+  @override
+  String get tarotLoveMeaning9_Senior => '顺应命运的流动，接受改变。';
+
+  @override
+  String get tarotLoveDetail9_Senior =>
+      '即使发生意想不到的变化，也不要慌张。这可能是为了更好的未来而进行的过程。如果你以积极的心态接受改变，新的运气会找到你的关系。';
+
+  @override
+  String get tarotLoveMeaning10_Senior => '冷静的判断和公正的态度建立信任。';
+
+  @override
+  String get tarotLoveDetail10_Senior =>
+      '以客观的视角看待情况，而不是偏向情感。公正诚实的态度会让你受到周围人的尊重。明辨是非，但不要忘记温暖的关怀。';
+
+  @override
+  String get tarotLoveMeaning11_Senior => '耐心和牺牲会换来更大的爱。';
+
+  @override
+  String get tarotLoveDetail11_Senior =>
+      '默默守护你的位置并奉献自己而不是期待立即回报。你的诚意最终会传达给对方并给人留下深刻印象。如果你明智地度过困难局面，最终会看到光明。';
+
+  @override
+  String get tarotLoveMeaning12_Senior => '倒空不必要的东西，准备新的开始。';
+
+  @override
+  String get tarotLoveDetail12_Senior =>
+      '放下过去的执着或旧习惯。新的希望和能量会填满倒空的地方。不要害怕改变，勇敢地迈出一步。';
+
+  @override
+  String get tarotLoveMeaning13_Senior => '通过节制和和谐保持和平的关系。';
+
+  @override
+  String get tarotLoveDetail13_Senior =>
+      '重要的是控制你的心并保持平衡，不要做得太过分。当你承认彼此的差异并努力实现和谐时，真正的和平就会到来。在简单的日常生活中寻找幸福。';
+
+  @override
+  String get tarotLoveMeaning14_Senior => '需要理性控制而不是本能欲望。';
+
+  @override
+  String get tarotLoveDetail14_Senior =>
+      '追求自由舒适的关系，而不是执着或束缚。你应该努力拨开你心中的阴影，走向光明的地方。爱自己是改善关系的开始。';
+
+  @override
+  String get tarotLoveMeaning15_Senior => '即使在突然的变化中也要保持坚定的中心。';
+
+  @override
+  String get tarotLoveDetail15_Senior =>
+      '可能会产生意想不到的冲突，但这反而是重新整理关系的机会。如果你不慌不忙地冷静应对，你将能够建立更牢固的纽带。';
+
+  @override
+  String get tarotLoveMeaning16_Senior => '希望的星光灿烂地照耀着你的关系。';
+
+  @override
+  String get tarotLoveDetail16_Senior =>
+      '艰难时期过后和平与安息到来。梦想积极的未来并共同规划。你开朗的能量会给周围的人带来巨大的喜悦。';
+
+  @override
+  String get tarotLoveMeaning17_Senior => '摆脱焦虑，相信你的直觉前进。';
+
+  @override
+  String get tarotLoveDetail17_Senior =>
+      '首先考虑对彼此的信任，而不是心中的疑虑。就像雾散后的晴空一样，随着时间的推移，真相会显露出来。需要冷静等待而不急躁的智慧。';
+
+  @override
+  String get tarotLoveMeaning18_Senior => '在灿烂的阳光下充满喜悦和祝福。';
+
+  @override
+  String get tarotLoveDetail18_Senior =>
+      '充满活力和积极能量。与家人或熟人度过愉快的时光，享受幸福。你开朗的微笑会融化所有的冲突。';
+
+  @override
+  String get tarotLoveMeaning19_Senior => '看到你努力的成果，准备新的飞跃。';
+
+  @override
+  String get tarotLoveDetail19_Senior =>
+      '随着你的努力得到认可而感到收获。可能会听到好消息，所以请以开放的心态接受。是时候整理过去，走向新的希望了。';
+
+  @override
+  String get tarotLoveMeaning20_Senior => '实现圆满与和谐，享受最好的幸福。';
+
+  @override
+  String get tarotLoveDetail20_Senior =>
+      '长途跋涉结束时获得的平安和满足感满溢。在实现完美和谐的同时享受日常的幸福，不再有更多奢求。你的智慧将是照亮周围的光。';
+
+  @override
+  String get tarotLoveMeaning21_Senior => '以自由纯洁的心享受日常的乐趣。';
+
+  @override
+  String get tarotLoveDetail21_Senior =>
+      '尝试以不受束缚的自由精神与周围的人相处。新的邂逅或经历会给你的生活注入活力。拥有一颗以轻松心情看世界的余暇。';
+
+  @override
+  String get tarotWealthMeaning0_Senior => '这是一个需要稳定资产管理和分享智慧的时期。';
+
+  @override
+  String get tarotWealthDetail0_Senior =>
+      '与其进行新的投资，不如专注于守护和管理现有资产。基于你的经验，为家人或周围的人提供经济帮助或建议，也将是非常有意义的。';
+
+  @override
+  String get tarotWealthMeaning1_Senior => '有望通过利用知识和经验创造收益。';
+
+  @override
+  String get tarotWealthDetail1_Senior =>
+      '你积累已久的专业知识或技能可能会转化为经济价值。不要急躁，冷静地等待机会，将会取得丰硕的成果。';
+
+  @override
+  String get tarotWealthMeaning2_Senior => '享受与家人分享丰饶成果的喜悦。';
+
+  @override
+  String get tarotWealthDetail2_Senior =>
+      '这是财富聚集在家庭中并寻求稳定的时期。你宽广的心胸会让周围感到温暖，这份福气也会回到你身边。请以悠闲的心情享受日常生活。';
+
+  @override
+  String get tarotSuccessMeaning0_Senior => '与其追求新的挑战，不如追求圆满的收尾，这更为重要。';
+
+  @override
+  String get tarotSuccessDetail0_Senior =>
+      '专注于整理和总结一直以来取得的成果。你的成功不在于结果，而在于过程中展现的诚实与智慧。请向周围传播正能量。';
+
+  @override
+  String get tarotSuccessMeaning1_Senior => '内心的平静和精神上的成长是真正的成功。';
+
+  @override
+  String get tarotSuccessDetail1_Senior =>
+      '与其追求社会地位或名誉，不如关注你内心的平静。通过冥想或阅读等方式，抽出时间修身养性。深刻的洞察力将使你更加闪耀。';
+
+  @override
+  String get tarotSuccessMeaning2_Senior => '家庭的和谐与健康是最高的成就。';
+
+  @override
+  String get tarotSuccessDetail2_Senior =>
+      '能与家人和谐相处并保持健康，就已经是足够成功的人生了。在琐碎的日常中寻找幸福，并心存感激。你的存在本身就是家人的巨大力量。';
+
+  @override
+  String get tarotWealthMeaning3_Senior => '负责任的资产运营将带来家族的繁荣。';
+
+  @override
+  String get tarotWealthDetail3_Senior =>
+      '通过稳定的收入来源和计划性的消费，保持家庭财务的稳定。你的经济智慧将成为子女们的重要教训。';
+
+  @override
+  String get tarotWealthMeaning4_Senior => '这是采用传统储蓄和管理方式更有利的时期。';
+
+  @override
+  String get tarotWealthDetail4_Senior =>
+      '建议采用经过验证的资产管理方式，而不是复杂的金融产品。谨慎而保守的态度是守护财产的关键。';
+
+  @override
+  String get tarotWealthMeaning5_Senior => '在与财富相关的选择中发挥人生智慧。';
+
+  @override
+  String get tarotWealthDetail5_Senior => '与其贪心，不如满足于现状并注重内涵。正确的选择将保障晚年的安宁。';
+
+  @override
+  String get tarotWealthMeaning6_Senior => '通过耐心可以克服困难的经济状况。';
+
+  @override
+  String get tarotWealthDetail6_Senior =>
+      '虽然可能会有暂时的资金压力，但如果明智应对，可以将危机转化为机遇。请减少不必要的支出。';
+
+  @override
+  String get tarotWealthMeaning7_Senior => '这是一个通过施予获得更大丰饶的时期。';
+
+  @override
+  String get tarotWealthDetail7_Senior =>
+      '如果在周围积德，财运会从意想不到的地方降临。分享的喜悦将使你的生活更加丰富。';
+
+  @override
+  String get tarotWealthMeaning8_Senior => '在简朴的生活中领悟真正财富的意义。';
+
+  @override
+  String get tarotWealthDetail8_Senior =>
+      '与其追求物质上的丰饶，不如寻找内心的从容。节制的生活反而会带来经济上的稳定。';
+
+  @override
+  String get tarotWealthMeaning9_Senior => '财运流转的时期，请灵活应对。';
+
+  @override
+  String get tarotWealthDetail9_Senior =>
+      '可能会出现意想不到的收益或支出。如果顺应变化并明智地运营资产，就不会有太大问题。';
+
+  @override
+  String get tarotWealthMeaning10_Senior => '公正透明的财产管理会提升信任。';
+
+  @override
+  String get tarotWealthDetail10_Senior =>
+      '在继承或赠与等财产问题上坚持原则非常重要。正直的态度可以防止纠纷并带来和平。';
+
+  @override
+  String get tarotWealthMeaning11_Senior => '与其追求眼前利益，不如为未来做出牺牲，这是更有价值的时期。';
+
+  @override
+  String get tarotWealthDetail11_Senior =>
+      '为子女或后代提供的经济支持将来会成为巨大的欣慰。请保持耐心并维持长期视角。';
+
+  @override
+  String get tarotWealthMeaning12_Senior => '放下对财富的执着，寻找内心的平静。';
+
+  @override
+  String get tarotWealthDetail12_Senior =>
+      '你将体验到通过清空反而获得充实的神秘经历。放下不必要的占有欲，以轻松的心情对待日常生活。';
+
+  @override
+  String get tarotWealthMeaning13_Senior => '平衡的消费习惯将带来经济自由。';
+
+  @override
+  String get tarotWealthDetail13_Senior =>
+      '追求收入与支出的和谐，并警惕过度的贪心。节制的生活将为您带来持续的稳定。';
+
+  @override
+  String get tarotWealthMeaning14_Senior => '战胜物质诱惑，进行理性的判断。';
+
+  @override
+  String get tarotWealthDetail14_Senior =>
+      '应警惕甜蜜的投资建议或盲目的扩张。相信你丰富的经验并慎重决定，是守护财产之路。';
+
+  @override
+  String get tarotWealthMeaning15_Senior => '冷静应对突然的经济变化。';
+
+  @override
+  String get tarotWealthDetail15_Senior =>
+      '越是危机时刻，越需要回归基本的智慧。不要慌张，仔细检查资产状态以尽量减少损失。';
+
+  @override
+  String get tarotWealthMeaning16_Senior => '财运的明亮星光照耀着你的前程。';
+
+  @override
+  String get tarotWealthDetail16_Senior =>
+      '经济困难得到解决，稳定趋势开始的时期。请以积极的心态规划未来并享受安宁。';
+
+  @override
+  String get tarotWealthMeaning17_Senior => '不要被不确定的信息迷惑，相信直觉。';
+
+  @override
+  String get tarotWealthDetail17_Senior =>
+      '需要耐心等待财富相关的迷雾散去、真相显现。比起急于决定，不如留出时间观察。';
+
+  @override
+  String get tarotWealthMeaning18_Senior => '在丰饶的财运中充满喜悦的时期。';
+
+  @override
+  String get tarotWealthDetail18_Senior =>
+      '对努力的充分回报随之而来，经济上变得宽裕。请与周围的人分享幸福，度过受祝福的时光。';
+
+  @override
+  String get tarotWealthMeaning19_Senior => '获得应有的回报，并制定新的经济计划。';
+
+  @override
+  String get tarotWealthDetail19_Senior =>
+      '长期的诚实努力被认可为经济成果的时刻。整理过去，为稳定的未来迈出新的一步。';
+
+  @override
+  String get tarotWealthMeaning20_Senior => '财运圆满，享受无以复加的丰饶。';
+
+  @override
+  String get tarotWealthDetail20_Senior =>
+      '经济稳定达到巅峰，晚年生活得到保障。是你智慧的资产管理发光发热的时刻。';
+
+  @override
+  String get tarotWealthMeaning21_Senior => '享受不被金钱束缚的自由丰饶。';
+
+  @override
+  String get tarotWealthDetail21_Senior =>
+      '与其追求物质占有，不如将价值放在生活乐趣上的时期。以悠闲的心情享受世界，财富自然会随之而来。';
+
+  @override
+  String get tarotSuccessMeaning3_Senior => '人生的阅历发光发热，赢得尊重的时期。';
+
+  @override
+  String get tarotSuccessDetail3_Senior =>
+      '你的领导力和智慧将成为周围人的榜样。与其依靠权威，不如用包容力来引导，这样才能体会到真正的成功。';
+
+  @override
+  String get tarotSuccessMeaning4_Senior => '坚守长久以来信念的你，其人生本身就是成功。';
+
+  @override
+  String get tarotSuccessDetail4_Senior =>
+      '矢志不渝坚守的价值观结出硕果的时刻。你坚持原则的生活将成为指引后辈正确道路的里程碑。';
+
+  @override
+  String get tarotSuccessMeaning5_Senior => '确立正确的价值观将决定人生后半程的成功。';
+
+  @override
+  String get tarotSuccessDetail5_Senior =>
+      '在名誉与利益之间需要做出明智选择的时期。基于你丰富的经验所做的决定将保障平和的未来。';
+
+  @override
+  String get tarotSuccessMeaning6_Senior => '坚持不懈的努力最终将带来胜利。';
+
+  @override
+  String get tarotSuccessDetail6_Senior =>
+      '任何障碍都无法动摇你的意志. 不放弃并不断前进的你，本身就已经是一份巨大的成功。';
+
+  @override
+  String get tarotSuccessMeaning7_Senior => '内心的坚韧体现为柔和的人格魅力。';
+
+  @override
+  String get tarotSuccessDetail7_Senior =>
+      '这是以柔克刚的时期. 当你用耐心和慈爱包容周围时，你的名誉将进一步提升。';
+
+  @override
+  String get tarotSuccessMeaning8_Senior => '孤独修行后获得的智慧是最高的成就。';
+
+  @override
+  String get tarotSuccessDetail8_Senior =>
+      '这是领悟他人无法看到的深奥真理的时刻. 安静的反思时间将使你成为更加成熟、有深度的人。';
+
+  @override
+  String get tarotSuccessMeaning9_Senior => '乘着变化的浪潮，抓住新的机遇。';
+
+  @override
+  String get tarotSuccessDetail9_Senior =>
+      '这是人生开启新篇章的时期. 不要害怕改变，积极地接受它，你将获得意想不到的巨大成果。';
+
+  @override
+  String get tarotSuccessMeaning10_Senior => '大公无私的态度让你的名誉更加闪耀。';
+
+  @override
+  String get tarotSuccessDetail10_Senior =>
+      '比起私利，追求正义的姿态会赢得周围的尊重。你的正直最终将成为开启最大成功的钥匙。';
+
+  @override
+  String get tarotSuccessMeaning11_Senior => '不畏牺牲的高尚精神将获得胜利。';
+
+  @override
+  String get tarotSuccessDetail11_Senior =>
+      '即使现在很辛苦，这也是为了崇高目标而忍耐的时期. 你的奉献将来会作为美丽的成功留在历史和人们的记忆中。';
+
+  @override
+  String get tarotSuccessMeaning12_Senior => '放下旧的成功标准，寻找新的价值。';
+
+  @override
+  String get tarotSuccessDetail12_Senior =>
+      '比起执着于过去的荣光，领悟当下的珍贵更为重要. 通过清空获得的和平才是真正人生的成功。';
+
+  @override
+  String get tarotSuccessMeaning13_Senior => '和谐与节制的美学完成的时期。';
+
+  @override
+  String get tarotSuccessDetail13_Senior =>
+      '不偏不倚、平衡的生活是最高的美德. 你节制的姿态将向周围传播和平与稳定。';
+
+  @override
+  String get tarotSuccessMeaning14_Senior => '克服内心的阴影并获得自由才是成功。';
+
+  @override
+  String get tarotSuccessDetail14_Senior =>
+      '从束缚自己的桎梏中解脱，寻找真正的自我. 在获得内心自由的瞬间，你将成为世界上最成功的人。';
+
+  @override
+  String get tarotSuccessMeaning15_Senior => '需要将危机转化为机遇的大胆气魄。';
+
+  @override
+  String get tarotSuccessDetail15_Senior =>
+      '突然的变化是让你变得更加坚强的过程. 冷静应对并建立新秩序时，会随之而来更大的成就。';
+
+  @override
+  String get tarotSuccessMeaning16_Senior => '梦想希望的未来，获得新的灵感。';
+
+  @override
+  String get tarotSuccessDetail16_Senior =>
+      '疲惫的灵魂得到安息，产生新梦想的时期. 你创造性的能量将照亮周围并结出幸福的果实。';
+
+  @override
+  String get tarotSuccessMeaning17_Senior => '相信直觉，默默走你自己的路。';
+
+  @override
+  String get tarotSuccessDetail17_Senior =>
+      '即使在混乱的情况下，也要倾听内心的声音. 随着时间的推移，你的选择将被证明是正确的。';
+
+  @override
+  String get tarotSuccessMeaning18_Senior => '充满生命力的能量带来最高的成就。';
+
+  @override
+  String get tarotSuccessDetail18_Senior =>
+      '身心健康、充满活力的时期. 与周围分享正能量，享受生命的喜悦，这才是真正的成功。';
+
+  @override
+  String get tarotSuccessMeaning19_Senior => '响应召唤，承担新的社会角色。';
+
+  @override
+  String get tarotSuccessDetail19_Senior =>
+      '会出现需要你的经验和智慧的地方. 带着新的使命感为社会做出贡献时，你会感受到更大的意义和成功。';
+
+  @override
+  String get tarotSuccessMeaning20_Senior => '完成人生旅程，实现完美的和谐。';
+
+  @override
+  String get tarotSuccessDetail20_Senior =>
+      '这是一种无需再追求什么的完美满足和平静状态. 你的生活本身将成为一件作品，给周围的人带来深切的感动。';
+
+  @override
+  String get tarotSuccessMeaning21_Senior => '不受束缚的自由生活是最高的成功。';
+
+  @override
+  String get tarotSuccessDetail21_Senior =>
+      '摆脱世俗的标准，享受你自己的幸福. 像在世间旅行一样以轻松的心情生活的你，才是真正的胜利者。';
 
   @override
   String get compatibilityResultButton => '查看结果';
@@ -4683,6 +5237,22 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get compatibilitySummary => '总结';
+
+  @override
+  String get compatibilitySectionLuck => '运势协同';
+
+  @override
+  String get compatibilitySectionAdvice => '关系建议';
+
+  @override
+  String get compatibilitySectionPositive => '积极方面';
+
+  @override
+  String get compatibilitySectionCaution => '注意事项';
+
+  @override
+  String get compatibilityLunarDisclaimer =>
+      '※ 目前阴历生日是按阳历基准分析的。为了更准确的分析，今后将更新阴历转换功能。';
 
   @override
   String get tojeongSaveAndCheckButton => '保存并查看土亭秘诀年运';
@@ -5286,9 +5856,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get deleteMissionTitle => '删除任务';
-
-  @override
-  String get deleteMissionConfirm => '您确定要删除这个任务吗？';
 
   @override
   String get yesDelete => '是的，删除';

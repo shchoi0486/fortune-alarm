@@ -1084,6 +1084,18 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete this color from the list?'**
   String get deleteColorConfirm;
 
+  /// No description provided for @deleteMission.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Mission'**
+  String get deleteMission;
+
+  /// No description provided for @deleteMissionConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this mission?'**
+  String get deleteMissionConfirm;
+
   /// No description provided for @randomBackgroundDesc.
   ///
   /// In en, this message translates to:
@@ -4281,6 +4293,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No events scheduled.'**
   String get noEvents;
+
+  /// No description provided for @calendarDragGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag down to view detailed calendar.'**
+  String get calendarDragGuide;
 
   /// No description provided for @noSavedMemos.
   ///
@@ -8428,6 +8446,24 @@ abstract class AppLocalizations {
   /// **'The best compatibility you could ask for. Don\'t let each other go!'**
   String get compatibilityDescBest;
 
+  /// No description provided for @compatibilityDescBest_Youth.
+  ///
+  /// In en, this message translates to:
+  /// **'You two are the best partners for a fresh and passionate love. It\'s beautiful to see you supporting each other\'s dreams and growing together! You are a relationship that provides positive stimulation to each other by sharing concerns about studies or career. If you cherish and care for each other as you do now, you are a match made in heaven that can overcome any trial together.'**
+  String get compatibilityDescBest_Youth;
+
+  /// No description provided for @compatibilityDescBest_Mature.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the best compatibility to be a strong support for each other during important stages of life. You can build a stable and deep love based on trust. You will feel each other\'s preciousness more strongly in the process of solving realistic problems together, and your values match so well that you couldn\'t find a better partner to plan your future with.'**
+  String get compatibilityDescBest_Mature;
+
+  /// No description provided for @compatibilityDescBest_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'You are the best match to be a warm comfort and a safe haven for each other as life companions. You can share a deep connection where hearts communicate even without words. It\'s a mature relationship where you can enjoy a relaxed life while taking care of each other\'s health and peace. Your way of respecting and embracing each other\'s life wisdom is a beautiful journey that serves as a model for those around you.'**
+  String get compatibilityDescBest_Senior;
+
   /// No description provided for @compatibilityTitleGreat.
   ///
   /// In en, this message translates to:
@@ -8439,6 +8475,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A great partner who is a huge support to each other.'**
   String get compatibilityDescGreat;
+
+  /// No description provided for @compatibilityDescGreat_Youth.
+  ///
+  /// In en, this message translates to:
+  /// **'You are a very good match that gives positive energy to each other. You can spend such happy and enjoyable times together that you won\'t even notice time passing. Although you may clash occasionally due to your unique personalities, you have a vibrant relationship where you can quickly reconcile through conversation and develop into an even deeper bond.'**
+  String get compatibilityDescGreat_Youth;
+
+  /// No description provided for @compatibilityDescGreat_Mature.
+  ///
+  /// In en, this message translates to:
+  /// **'You are wonderful partners who can wisely navigate realistic problems together. It\'s a relationship where you create synergy by filling each other\'s deficiencies. As a mature couple who balances work, love, and home well while supporting each other\'s growth, you have a stable compatibility where synergy shines more as you stay together.'**
+  String get compatibilityDescGreat_Mature;
+
+  /// No description provided for @compatibilityDescGreat_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'You are very good partners who can enjoy a relaxed life while taking care of each other\'s health and peace. Your mere presence is a great strength and comfort to each other. It\'s a relationship where you build deep emotional bonds by sharing small daily lives such as hobbies or walks. You are a warm and affectionate match that meticulously takes care of each other\'s health.'**
+  String get compatibilityDescGreat_Senior;
 
   /// No description provided for @compatibilityTitleGood.
   ///
@@ -8452,6 +8506,24 @@ abstract class AppLocalizations {
   /// **'There are some differences, but you can have a beautiful love while adjusting to each other.'**
   String get compatibilityDescGood;
 
+  /// No description provided for @compatibilityDescGood_Youth.
+  ///
+  /// In en, this message translates to:
+  /// **'You are a couple with well-matched tastes and values. Although you might bicker occasionally, even those processes will be precious times to get to know each other more deeply. If you exercise the virtue of recognizing each other\'s differences as individuality and yielding a little, you have a good compatibility that can sufficiently continue a happy relationship.'**
+  String get compatibilityDescGood_Youth;
+
+  /// No description provided for @compatibilityDescGood_Mature.
+  ///
+  /// In en, this message translates to:
+  /// **'You are a couple who blends harmoniously while respecting each other\'s values. You can grow your love while maintaining a good balance between reality and ideals. Although conflicts may arise occasionally due to each other\'s stubbornness, you have a solid relationship where deep trust allows you to overcome them without major issues.'**
+  String get compatibilityDescGood_Mature;
+
+  /// No description provided for @compatibilityDescGood_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'You are a harmonious couple who embraces each other based on long experience and wisdom. You can enjoy peaceful happiness by sharing small daily routines. It\'s a relationship where you can stay comfortably like friends while respecting and considering each other\'s lifestyle habits. Just reliably staying by each other\'s side is a sufficiently satisfying bond.'**
+  String get compatibilityDescGood_Senior;
+
   /// No description provided for @compatibilityTitleEffort.
   ///
   /// In en, this message translates to:
@@ -8464,6 +8536,24 @@ abstract class AppLocalizations {
   /// **'There are many differences. Understanding and consideration are key to the relationship.'**
   String get compatibilityDescEffort;
 
+  /// No description provided for @compatibilityDescEffort_Youth.
+  ///
+  /// In en, this message translates to:
+  /// **'Since you grew up in different environments, there are many things to adjust. You need to make an effort to understand each other\'s feelings first rather than just asserting your own arguments. Honestly expressing emotions and spending more time in conversation so that small misunderstandings don\'t grow will be a great help in maintaining the relationship.'**
+  String get compatibilityDescEffort_Youth;
+
+  /// No description provided for @compatibilityDescEffort_Mature.
+  ///
+  /// In en, this message translates to:
+  /// **'Conflicts may arise because each person\'s perspective is distinct. Respecting each other\'s lifestyles and yielding a little is the key to maintaining the relationship. When conflicts arise due to realistic problems, it\'s a time when wisdom is needed to calmly organize each other\'s positions rather than reacting emotionally.'**
+  String get compatibilityDescEffort_Mature;
+
+  /// No description provided for @compatibilityDescEffort_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Discomfort may arise due to lifestyle habits that have been fixed for a long time. Recognizing each other\'s space and having a considerate mind is the shortcut to creating a comfortable relationship. Rather than insisting only on your own way, you need a warm heart that considers the other\'s comfort first. Try focusing on improving the quality of the time you spend together.'**
+  String get compatibilityDescEffort_Senior;
+
   /// No description provided for @compatibilityTitleDifficult.
   ///
   /// In en, this message translates to:
@@ -8475,6 +8565,852 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Personality differences can be large. You need to deeply understand each other\'s differences.'**
   String get compatibilityDescDifficult;
+
+  /// No description provided for @compatibilityDescDifficult_Youth.
+  ///
+  /// In en, this message translates to:
+  /// **'Differences in personality or lifestyle can feel significant. You need to learn how to recognize each other\'s differences through calm conversation rather than reacting emotionally. Patience to accept each other as they are rather than trying to change each other will be the key to the relationship.'**
+  String get compatibilityDescDifficult_Youth;
+
+  /// No description provided for @compatibilityDescDifficult_Mature.
+  ///
+  /// In en, this message translates to:
+  /// **'Concerns may deepen due to differences in values or realistic problems. Deep understanding and patience are required, and the will to recognize each other\'s differences is important. Rather than expecting too much from each other, try to have a heart of gratitude for small things. Changing the way you communicate can also be a good solution.'**
+  String get compatibilityDescDifficult_Mature;
+
+  /// No description provided for @compatibilityDescDifficult_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Communication may be difficult because each other\'s stubbornness is strong. It\'s important to accept the other person as they are now rather than being tied to past experiences. A warm word rather than silence can be the start of improving the relationship. An attitude of maintaining minimum courtesy while respecting each other\'s independence is required.'**
+  String get compatibilityDescDifficult_Senior;
+
+  /// No description provided for @compatibilityAdvice_Youth.
+  ///
+  /// In en, this message translates to:
+  /// **'Spend more time sharing and supporting each other\'s dreams. Accumulating diverse experiences together, such as starting new hobbies or going on trips, will be a great vitality to the relationship. When talking, try to empathize first rather than criticize.'**
+  String get compatibilityAdvice_Youth;
+
+  /// No description provided for @compatibilityAdvice_Mature.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s important to secure time for just the two of you even in a busy daily life. Acknowledge each other\'s hard work and offer a warm word. You need an attitude of trying not to forget the excitement of the early days of dating by celebrating anniversaries or enjoying regular dates.'**
+  String get compatibilityAdvice_Mature;
+
+  /// No description provided for @compatibilityAdvice_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy walks or light trips while taking care of health together. It\'s good to build emotional bonds by sharing each other\'s life wisdom. Focus on increasing the time you can rest comfortably together rather than excessive activities. Meticulously checking and caring for each other\'s health status is important.'**
+  String get compatibilityAdvice_Senior;
+
+  /// No description provided for @compatibilityLuck_Youth.
+  ///
+  /// In en, this message translates to:
+  /// **'Your energies are combined, creating a fortune where you can achieve great accomplishments in studies or career. A good energy flows where you become each other\'s lucky charm, and things you plan work out smoothly.'**
+  String get compatibilityLuck_Youth;
+
+  /// No description provided for @compatibilityLuck_Mature.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a compatibility where great luck follows when managing assets or planning for the future together. The synergy is very good, and there is a strong fortune for wealth and success where economic stability and social status can rise together.'**
+  String get compatibilityLuck_Mature;
+
+  /// No description provided for @compatibilityLuck_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a fortune where emotional stability and peace reside. You become each other\'s best health supplement, and the energy is full of blessings for a long and healthy life in a peaceful retirement. It\'s a virtuous bond that also has a positive impact on descendants.'**
+  String get compatibilityLuck_Senior;
+
+  /// No description provided for @tarotLoveMeaning0_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time to find joy in small daily changes rather than new excitement.'**
+  String get tarotLoveMeaning0_Senior;
+
+  /// No description provided for @tarotLoveDetail0_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your long-accumulated know-how and talents with those around you rather than grand plans. You will feel great reward and a deep bond in the process of helping or advising someone.'**
+  String get tarotLoveDetail0_Senior;
+
+  /// No description provided for @tarotLoveMeaning1_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Wise and calm conversation makes the relationship deeper.'**
+  String get tarotLoveMeaning1_Senior;
+
+  /// No description provided for @tarotLoveDetail1_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening and empathizing with the other person is enough. If you share your heart slowly without rushing, you will be able to feel a deep bond that communicates even without words. Take time to cultivate your inner self.'**
+  String get tarotLoveDetail1_Senior;
+
+  /// No description provided for @tarotLoveMeaning2_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A tolerant heart makes people around you happy.'**
+  String get tarotLoveMeaning2_Senior;
+
+  /// No description provided for @tarotLoveDetail2_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time to take care of your surroundings with a warm, mother-like heart. A warm word to your spouse or family will come back as a great strength. Peace is full in the house, so enjoy daily life with a relaxed mind.'**
+  String get tarotLoveDetail2_Senior;
+
+  /// No description provided for @tarotLoveMeaning3_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A responsible attitude protects the harmony of the family.'**
+  String get tarotLoveMeaning3_Senior;
+
+  /// No description provided for @tarotLoveDetail3_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time to take the center and lead in the family. Sometimes you may need to be strict, but in the end, it must be based on deep love for the family. Your dedication and effort will give the family a sense of stability.'**
+  String get tarotLoveDetail3_Senior;
+
+  /// No description provided for @tarotLoveMeaning4_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Value tradition and courtesy and maintain a stable relationship.'**
+  String get tarotLoveMeaning4_Senior;
+
+  /// No description provided for @tarotLoveDetail4_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-held values or rules give stability to the relationship. Listen to the advice of those around you, but don\'t lose your conviction. A polite and respectful attitude will give deep trust to the other person.'**
+  String get tarotLoveDetail4_Senior;
+
+  /// No description provided for @tarotLoveMeaning5_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when prudence is needed at the crossroads of choice.'**
+  String get tarotLoveMeaning5_Senior;
+
+  /// No description provided for @tarotLoveDetail5_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on your current precious relationships rather than surrounding temptations or new changes. When your heart is shaken, reflecting on your rich life experience helps. The right choice will eventually bring a peaceful future.'**
+  String get tarotLoveDetail5_Senior;
+
+  /// No description provided for @tarotLoveMeaning6_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Overcome difficulties with strong will and achieve harmony.'**
+  String get tarotLoveMeaning6_Senior;
+
+  /// No description provided for @tarotLoveDetail6_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Even if conflict arises, don\'t give up and solve it through conversation. Your firm will and patience will eventually bear good fruit. A stronger bond will be created in the process of setting goals and working together.'**
+  String get tarotLoveDetail6_Senior;
+
+  /// No description provided for @tarotLoveMeaning7_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Make the relationship smooth with patience and benevolence.'**
+  String get tarotLoveMeaning7_Senior;
+
+  /// No description provided for @tarotLoveDetail7_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when gentle persuasion and understanding are needed rather than forcing. Your mature attitude will move the other person\'s heart. Have the leisure to smile once more rather than getting angry.'**
+  String get tarotLoveDetail7_Senior;
+
+  /// No description provided for @tarotLoveMeaning8_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover your true self in solitude and gain wisdom.'**
+  String get tarotLoveMeaning8_Senior;
+
+  /// No description provided for @tarotLoveDetail8_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s also good to take a moment of your own and look back on the life you\'ve passed. The realization gained in the stillness will make future relationships richer. Don\'t rush and face yourself slowly.'**
+  String get tarotLoveDetail8_Senior;
+
+  /// No description provided for @tarotLoveMeaning9_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave yourself to the flow of fate and accept change.'**
+  String get tarotLoveMeaning9_Senior;
+
+  /// No description provided for @tarotLoveDetail9_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t be flustered even if unexpected changes occur. This can be a process for a better future. If you accept change with a positive mind, new luck will find your relationship.'**
+  String get tarotLoveDetail9_Senior;
+
+  /// No description provided for @tarotLoveMeaning10_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A cool-headed judgment and just attitude build trust.'**
+  String get tarotLoveMeaning10_Senior;
+
+  /// No description provided for @tarotLoveDetail10_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Look at the situation with an objective view rather than being biased by emotions. A fair and honest attitude will make you respected by those around you. Be clear about right and wrong, but don\'t forget warm consideration.'**
+  String get tarotLoveDetail10_Senior;
+
+  /// No description provided for @tarotLoveMeaning11_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Patience and sacrifice come back as greater love.'**
+  String get tarotLoveMeaning11_Senior;
+
+  /// No description provided for @tarotLoveDetail11_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time to silently keep your place and dedicate yourself rather than expecting immediate rewards. Your sincerity will eventually be delivered to the other person and give deep impression. If you endure difficult situations wisely, you will eventually see the light.'**
+  String get tarotLoveDetail11_Senior;
+
+  /// No description provided for @tarotLoveMeaning12_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty unnecessary things and prepare for a new start.'**
+  String get tarotLoveMeaning12_Senior;
+
+  /// No description provided for @tarotLoveDetail12_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s time to let go of past obsessions or old habits. New hope and energy will be filled in the emptied place. Don\'t fear change and take a step forward with courage.'**
+  String get tarotLoveDetail12_Senior;
+
+  /// No description provided for @tarotLoveMeaning13_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain a peaceful relationship through moderation and harmony.'**
+  String get tarotLoveMeaning13_Senior;
+
+  /// No description provided for @tarotLoveDetail13_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s important to control your heart and keep balance so as not to overdo it. True peace comes when you acknowledge each other\'s differences and try to achieve harmony. Find happiness in simple daily life.'**
+  String get tarotLoveDetail13_Senior;
+
+  /// No description provided for @tarotLoveMeaning14_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when rational control is needed rather than instinctive desires.'**
+  String get tarotLoveMeaning14_Senior;
+
+  /// No description provided for @tarotLoveDetail14_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Aim for a free and comfortable relationship rather than obsession or restraint. You should try to lift the dark shadow in your heart and move to a bright place. Loving yourself is the start of improving the relationship.'**
+  String get tarotLoveDetail14_Senior;
+
+  /// No description provided for @tarotLoveMeaning15_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep an unwavering center even in sudden changes.'**
+  String get tarotLoveMeaning15_Senior;
+
+  /// No description provided for @tarotLoveDetail15_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected conflicts may arise, but this is rather an opportunity to reorganize the relationship. If you cope calmly without being flustered, you will be able to form a stronger bond.'**
+  String get tarotLoveDetail15_Senior;
+
+  /// No description provided for @tarotLoveMeaning16_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'The starlight of hope brightly shines on your relationship.'**
+  String get tarotLoveMeaning16_Senior;
+
+  /// No description provided for @tarotLoveDetail16_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when peace and rest come after a difficult period. Dream of a positive future and plan together. Your bright energy will be a great joy to those around you.'**
+  String get tarotLoveDetail16_Senior;
+
+  /// No description provided for @tarotLoveMeaning17_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Shake off anxiety and move forward believing in your intuition.'**
+  String get tarotLoveMeaning17_Senior;
+
+  /// No description provided for @tarotLoveDetail17_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Think of trust in each other first rather than doubts in your heart. Like the clear sky after the fog lifts, the truth will be revealed over time. Wisdom to wait calmly without being hasty is needed.'**
+  String get tarotLoveDetail17_Senior;
+
+  /// No description provided for @tarotLoveMeaning18_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time full of joy and blessings under the bright sun.'**
+  String get tarotLoveMeaning18_Senior;
+
+  /// No description provided for @tarotLoveDetail18_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time overflowing with active and positive energy. Spend a pleasant time with family or acquaintances and enjoy happiness. Your bright smile will melt all conflicts.'**
+  String get tarotLoveDetail18_Senior;
+
+  /// No description provided for @tarotLoveMeaning19_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'See the fruit of your efforts and prepare for a new leap.'**
+  String get tarotLoveMeaning19_Senior;
+
+  /// No description provided for @tarotLoveDetail19_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time to feel rewarded as your hard work is recognized. Good news may be heard, so accept it with an open heart. It\'s time to organize the past and move toward new hope.'**
+  String get tarotLoveDetail19_Senior;
+
+  /// No description provided for @tarotLoveMeaning20_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Achieve completion and harmony and enjoy the best happiness.'**
+  String get tarotLoveMeaning20_Senior;
+
+  /// No description provided for @tarotLoveDetail20_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time full of peace and satisfaction gained at the end of a long journey. Enjoy daily happiness while achieving perfect harmony with nothing more to wish for. Your wisdom will be the light that brightens the surroundings.'**
+  String get tarotLoveDetail20_Senior;
+
+  /// No description provided for @tarotLoveMeaning21_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy the pleasure of daily life with a free and pure heart.'**
+  String get tarotLoveMeaning21_Senior;
+
+  /// No description provided for @tarotLoveDetail21_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Try to get along with people around you with a free spirit that is not bound. New encounters or experiences will breathe vitality into your life. Have the leisure to look at the world with a light heart.'**
+  String get tarotLoveDetail21_Senior;
+
+  /// No description provided for @tarotWealthMeaning0_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time for stable asset management and the wisdom of sharing.'**
+  String get tarotWealthMeaning0_Senior;
+
+  /// No description provided for @tarotWealthDetail0_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on protecting and managing your current assets rather than new investments. Sharing your economic wisdom or giving advice to family and those around you will be very rewarding.'**
+  String get tarotWealthDetail0_Senior;
+
+  /// No description provided for @tarotWealthMeaning1_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue generation using knowledge and experience is expected.'**
+  String get tarotWealthMeaning1_Senior;
+
+  /// No description provided for @tarotWealthDetail1_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Your specialized knowledge or skills accumulated over a long time can return as economic value. Wait calmly for opportunities without rushing, and you will bear good fruit.'**
+  String get tarotWealthDetail1_Senior;
+
+  /// No description provided for @tarotWealthMeaning2_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy the joy of sharing bountiful fruits with your family.'**
+  String get tarotWealthMeaning2_Senior;
+
+  /// No description provided for @tarotWealthDetail2_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth accumulates in the house and it\'s a time to find stability. Your generous heart will make your surroundings warm, and that blessing will return to you. Enjoy daily life with a relaxed mind.'**
+  String get tarotWealthDetail2_Senior;
+
+  /// No description provided for @tarotSuccessMeaning0_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time when concluding with a graceful finish is more important than new challenges.'**
+  String get tarotSuccessMeaning0_Senior;
+
+  /// No description provided for @tarotSuccessDetail0_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Focus on organizing and concluding the achievements you\'ve built up. Your success lies in the sincerity and wisdom shown in the process rather than the result. Spread positive influence around you.'**
+  String get tarotSuccessDetail0_Senior;
+
+  /// No description provided for @tarotSuccessMeaning1_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Inner peace and spiritual growth are true successes.'**
+  String get tarotSuccessMeaning1_Senior;
+
+  /// No description provided for @tarotSuccessDetail1_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Your inner peace is more important than social status or honor. Take time to cultivate your inner self through meditation or reading. Deep insight will make you shine even more.'**
+  String get tarotSuccessDetail1_Senior;
+
+  /// No description provided for @tarotSuccessMeaning2_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Family harmony and health are the greatest achievements.'**
+  String get tarotSuccessMeaning2_Senior;
+
+  /// No description provided for @tarotSuccessDetail2_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Living harmoniously with family and maintaining health is a sufficiently successful life. Find happiness in small daily routines and have a grateful heart. Your existence itself is a great strength to your family.'**
+  String get tarotSuccessDetail2_Senior;
+
+  /// No description provided for @tarotWealthMeaning3_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Responsible asset operation brings prosperity to the family.'**
+  String get tarotWealthMeaning3_Senior;
+
+  /// No description provided for @tarotWealthDetail3_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintain household stability through stable income sources and planned consumption. Your economic wisdom will be a great lesson for your children.'**
+  String get tarotWealthDetail3_Senior;
+
+  /// No description provided for @tarotWealthMeaning4_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time when traditional ways of saving and management are advantageous.'**
+  String get tarotWealthMeaning4_Senior;
+
+  /// No description provided for @tarotWealthDetail4_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'We recommend verified asset management methods rather than complex financial products. A cautious and conservative attitude is key to protecting your assets.'**
+  String get tarotWealthDetail4_Senior;
+
+  /// No description provided for @tarotWealthMeaning5_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Exercise life wisdom in choices related to wealth.'**
+  String get tarotWealthMeaning5_Senior;
+
+  /// No description provided for @tarotWealthDetail5_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s better to be satisfied with your current life and be substantial rather than being greedy. The right choice guarantees peace in old age.'**
+  String get tarotWealthDetail5_Senior;
+
+  /// No description provided for @tarotWealthMeaning6_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficult economic situations can also be overcome with patience.'**
+  String get tarotWealthMeaning6_Senior;
+
+  /// No description provided for @tarotWealthDetail6_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'There may be temporary cash flow pressure, but if you deal with it wisely, you can turn crisis into opportunity. Reduce unnecessary spending.'**
+  String get tarotWealthDetail6_Senior;
+
+  /// No description provided for @tarotWealthMeaning7_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time when you gain greater abundance through giving.'**
+  String get tarotWealthMeaning7_Senior;
+
+  /// No description provided for @tarotWealthDetail7_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'If you accumulate virtue around you, wealth luck will follow from unexpected places. The joy of sharing will make your life even richer.'**
+  String get tarotWealthDetail7_Senior;
+
+  /// No description provided for @tarotWealthMeaning8_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Realize the true meaning of wealth in a simple life.'**
+  String get tarotWealthMeaning8_Senior;
+
+  /// No description provided for @tarotWealthDetail8_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s important to find leisure of mind rather than material abundance. A disciplined life will rather bring economic stability.'**
+  String get tarotWealthDetail8_Senior;
+
+  /// No description provided for @tarotWealthMeaning9_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'The flow of wealth is changing, so deal with it flexibly.'**
+  String get tarotWealthMeaning9_Senior;
+
+  /// No description provided for @tarotWealthDetail9_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected income or expenses may occur. If you adapt to change and manage your assets wisely, there will be no major problems.'**
+  String get tarotWealthDetail9_Senior;
+
+  /// No description provided for @tarotWealthMeaning10_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Fair and transparent property management increases trust.'**
+  String get tarotWealthMeaning10_Senior;
+
+  /// No description provided for @tarotWealthDetail10_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s important to follow principles in property issues such as inheritance or gift. An honest attitude prevents disputes and brings peace.'**
+  String get tarotWealthDetail10_Senior;
+
+  /// No description provided for @tarotWealthMeaning11_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time when sacrifice for the future is more valuable than immediate gain.'**
+  String get tarotWealthMeaning11_Senior;
+
+  /// No description provided for @tarotWealthDetail11_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Economic support for children or descendants will return as a great reward later. Be patient and maintain a long-term perspective.'**
+  String get tarotWealthDetail11_Senior;
+
+  /// No description provided for @tarotWealthMeaning12_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Let go of obsession with wealth and find peace of mind.'**
+  String get tarotWealthMeaning12_Senior;
+
+  /// No description provided for @tarotWealthDetail12_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'You will have a mysterious experience where you are filled by emptying. Let go of unnecessary possessiveness and face daily life with a light heart.'**
+  String get tarotWealthDetail12_Senior;
+
+  /// No description provided for @tarotWealthMeaning13_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced consumption habits give economic freedom.'**
+  String get tarotWealthMeaning13_Senior;
+
+  /// No description provided for @tarotWealthDetail13_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Seek harmony between income and expenditure and beware of excessive greed. A disciplined life will bring you continuous stability.'**
+  String get tarotWealthDetail13_Senior;
+
+  /// No description provided for @tarotWealthMeaning14_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Overcome material temptations and judge rationally.'**
+  String get tarotWealthMeaning14_Senior;
+
+  /// No description provided for @tarotWealthDetail14_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'You must be careful of sweet investment offers or excessive expansion. Trusting your rich experience and making cautious decisions is the way to protect your assets.'**
+  String get tarotWealthDetail14_Senior;
+
+  /// No description provided for @tarotWealthMeaning15_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Respond calmly to sudden economic changes.'**
+  String get tarotWealthMeaning15_Senior;
+
+  /// No description provided for @tarotWealthDetail15_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'In a crisis situation, the wisdom of returning to basics is needed. Don\'t be flustered and meticulously check your asset status to minimize damage.'**
+  String get tarotWealthDetail15_Senior;
+
+  /// No description provided for @tarotWealthMeaning16_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A bright star of wealth luck shines on your future.'**
+  String get tarotWealthMeaning16_Senior;
+
+  /// No description provided for @tarotWealthDetail16_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when economic hardships are resolved and a stable flow begins. Design your future with a positive mind and enjoy peace.'**
+  String get tarotWealthDetail16_Senior;
+
+  /// No description provided for @tarotWealthMeaning17_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t be deceived by uncertain information and trust your intuition.'**
+  String get tarotWealthMeaning17_Senior;
+
+  /// No description provided for @tarotWealthDetail17_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Patience is needed to wait until the fog related to wealth lifts and the truth is revealed. Take your time and watch rather than making a hasty decision.'**
+  String get tarotWealthDetail17_Senior;
+
+  /// No description provided for @tarotWealthMeaning18_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time full of joy with bountiful wealth luck.'**
+  String get tarotWealthMeaning18_Senior;
+
+  /// No description provided for @tarotWealthDetail18_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Sufficient rewards follow your efforts and economic leisure arises. Share happiness with those around you and spend a blessed time.'**
+  String get tarotWealthDetail18_Senior;
+
+  /// No description provided for @tarotWealthMeaning19_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive just rewards and make a new economic plan.'**
+  String get tarotWealthMeaning19_Senior;
+
+  /// No description provided for @tarotWealthDetail19_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when your sincerity is recognized as economic achievement. Organize the past and take a new step for a stable future.'**
+  String get tarotWealthDetail19_Senior;
+
+  /// No description provided for @tarotWealthMeaning20_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Wealth luck is completed and you enjoy unparalleled abundance.'**
+  String get tarotWealthMeaning20_Senior;
+
+  /// No description provided for @tarotWealthDetail20_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Economic stability reaches its peak and a peaceful retirement is guaranteed. It\'s the moment when your wise asset management shines.'**
+  String get tarotWealthDetail20_Senior;
+
+  /// No description provided for @tarotWealthMeaning21_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy free abundance without being bound by wealth.'**
+  String get tarotWealthMeaning21_Senior;
+
+  /// No description provided for @tarotWealthDetail21_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time to value the joy of life rather than material possession. If you enjoy the world with a relaxed mind, wealth will naturally follow.'**
+  String get tarotWealthDetail21_Senior;
+
+  /// No description provided for @tarotSuccessMeaning3_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time when life experience shines and you receive respect.'**
+  String get tarotSuccessMeaning3_Senior;
+
+  /// No description provided for @tarotSuccessDetail3_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Your leadership and wisdom serve as a great model for those around you. You will taste true success when you lead with tolerance rather than authority.'**
+  String get tarotSuccessDetail3_Senior;
+
+  /// No description provided for @tarotSuccessMeaning4_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Your life itself, having kept long-held convictions, is success.'**
+  String get tarotSuccessMeaning4_Senior;
+
+  /// No description provided for @tarotSuccessDetail4_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when unwavering values bear fruit. Your principled life will serve as a milestone presenting the right path to juniors.'**
+  String get tarotSuccessDetail4_Senior;
+
+  /// No description provided for @tarotSuccessMeaning5_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Establishing the right values determines success in the second half of life.'**
+  String get tarotSuccessMeaning5_Senior;
+
+  /// No description provided for @tarotSuccessDetail5_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time to make a wise choice between honor and profit. Decisions made based on your rich experience will guarantee a peaceful future.'**
+  String get tarotSuccessDetail5_Senior;
+
+  /// No description provided for @tarotSuccessMeaning6_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Persistent effort finally brings victory.'**
+  String get tarotSuccessMeaning6_Senior;
+
+  /// No description provided for @tarotSuccessDetail6_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'No obstacle can break your will. Your appearance of moving forward without giving up is already a huge success.'**
+  String get tarotSuccessDetail6_Senior;
+
+  /// No description provided for @tarotSuccessMeaning7_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Inner strength appears as a soft charisma.'**
+  String get tarotSuccessMeaning7_Senior;
+
+  /// No description provided for @tarotSuccessDetail7_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when softness overcomes strength. When you embrace surroundings with patience and benevolence, your honor will be even higher.'**
+  String get tarotSuccessDetail7_Senior;
+
+  /// No description provided for @tarotSuccessMeaning8_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Wisdom gained after solitary practice is the highest achievement.'**
+  String get tarotSuccessMeaning8_Senior;
+
+  /// No description provided for @tarotSuccessDetail8_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a time when you realize deep truths that others cannot see. Quiet reflection time will make you a more mature and deep human being.'**
+  String get tarotSuccessDetail8_Senior;
+
+  /// No description provided for @tarotSuccessMeaning9_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Ride the wave of change and grab new opportunities.'**
+  String get tarotSuccessMeaning9_Senior;
+
+  /// No description provided for @tarotSuccessDetail9_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A new chapter of life is opening. If you accept change positively without fearing it, you will achieve unexpectedly great results.'**
+  String get tarotSuccessDetail9_Senior;
+
+  /// No description provided for @tarotSuccessMeaning10_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A fair and just attitude makes your honor shine even more.'**
+  String get tarotSuccessMeaning10_Senior;
+
+  /// No description provided for @tarotSuccessDetail10_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance following justice rather than private interest calls for respect from surroundings. Your honesty will eventually be the key to the greatest success.'**
+  String get tarotSuccessDetail10_Senior;
+
+  /// No description provided for @tarotSuccessMeaning11_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A noble spirit that is not afraid of sacrifice wins.'**
+  String get tarotSuccessMeaning11_Senior;
+
+  /// No description provided for @tarotSuccessDetail11_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Even if it\'s hard for now, it\'s a time to endure for a noble goal. Your dedication will remain as a beautiful success in the memory of history and people in the future.'**
+  String get tarotSuccessDetail11_Senior;
+
+  /// No description provided for @tarotSuccessMeaning12_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Let go of old standards of success and find new values.'**
+  String get tarotSuccessMeaning12_Senior;
+
+  /// No description provided for @tarotSuccessDetail12_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s important to realize the preciousness of the present rather than obsessing over past glory. Peace gained by emptying is true success in life.'**
+  String get tarotSuccessDetail12_Senior;
+
+  /// No description provided for @tarotSuccessMeaning13_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time when the aesthetics of harmony and moderation are completed.'**
+  String get tarotSuccessMeaning13_Senior;
+
+  /// No description provided for @tarotSuccessDetail13_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A balanced life that does not lean to either side is the highest virtue. Your disciplined appearance will spread peace and stability to your surroundings.'**
+  String get tarotSuccessDetail13_Senior;
+
+  /// No description provided for @tarotSuccessMeaning14_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Overcoming inner darkness and gaining freedom is success.'**
+  String get tarotSuccessMeaning14_Senior;
+
+  /// No description provided for @tarotSuccessDetail14_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Find your true self by escaping from the restraints that bound you. The moment you gain freedom of mind, you will be the most successful person in the world.'**
+  String get tarotSuccessDetail14_Senior;
+
+  /// No description provided for @tarotSuccessMeaning15_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time when boldness to turn crisis into opportunity is needed.'**
+  String get tarotSuccessMeaning15_Senior;
+
+  /// No description provided for @tarotSuccessDetail15_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Sudden change is a process of making you stronger. When you establish a new order by responding calmly, greater achievements will follow.'**
+  String get tarotSuccessDetail15_Senior;
+
+  /// No description provided for @tarotSuccessMeaning16_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Dream of a hopeful future and gain new inspiration.'**
+  String get tarotSuccessMeaning16_Senior;
+
+  /// No description provided for @tarotSuccessDetail16_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest comes to a tired soul and new dreams arise. Your creative energy will brighten surroundings and bear happy fruits.'**
+  String get tarotSuccessDetail16_Senior;
+
+  /// No description provided for @tarotSuccessMeaning17_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Trust your intuition and silently go your way.'**
+  String get tarotSuccessMeaning17_Senior;
+
+  /// No description provided for @tarotSuccessDetail17_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to your inner voice even in confusing situations. Over time, your choice will be proven right.'**
+  String get tarotSuccessDetail17_Senior;
+
+  /// No description provided for @tarotSuccessMeaning18_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Vibrant energy brings the highest achievement.'**
+  String get tarotSuccessMeaning18_Senior;
+
+  /// No description provided for @tarotSuccessDetail18_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A time when body and mind are healthy and vibrant. Sharing positive energy with surroundings and enjoying the joy of life is true success.'**
+  String get tarotSuccessDetail18_Senior;
+
+  /// No description provided for @tarotSuccessMeaning19_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Respond to the call and perform a new social role.'**
+  String get tarotSuccessMeaning19_Senior;
+
+  /// No description provided for @tarotSuccessDetail19_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Places that need your experience and wisdom arise. You will feel greater reward and success when you contribute to society with a new sense of mission.'**
+  String get tarotSuccessDetail19_Senior;
+
+  /// No description provided for @tarotSuccessMeaning20_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the journey of life and achieve perfect harmony.'**
+  String get tarotSuccessMeaning20_Senior;
+
+  /// No description provided for @tarotSuccessDetail20_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A state of perfect satisfaction and peace with nothing more to achieve. Your life itself will become a work of art and give deep impression to surroundings.'**
+  String get tarotSuccessDetail20_Senior;
+
+  /// No description provided for @tarotSuccessMeaning21_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'A free life without being bound is the highest success.'**
+  String get tarotSuccessMeaning21_Senior;
+
+  /// No description provided for @tarotSuccessDetail21_Senior.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy your own happiness away from the world\'s standards. You, who live as if traveling the world with a light heart, are the true winner.'**
+  String get tarotSuccessDetail21_Senior;
 
   /// No description provided for @compatibilityResultButton.
   ///
@@ -8871,6 +9807,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Summary'**
   String get compatibilitySummary;
+
+  /// No description provided for @compatibilitySectionLuck.
+  ///
+  /// In en, this message translates to:
+  /// **'Luck Synergy'**
+  String get compatibilitySectionLuck;
+
+  /// No description provided for @compatibilitySectionAdvice.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship Advice'**
+  String get compatibilitySectionAdvice;
+
+  /// No description provided for @compatibilitySectionPositive.
+  ///
+  /// In en, this message translates to:
+  /// **'Positive Aspects'**
+  String get compatibilitySectionPositive;
+
+  /// No description provided for @compatibilitySectionCaution.
+  ///
+  /// In en, this message translates to:
+  /// **'Things to Watch Out For'**
+  String get compatibilitySectionCaution;
+
+  /// No description provided for @compatibilityLunarDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'* Note: Lunar birth dates are currently analyzed based on Solar dates. Lunar conversion will be updated soon.'**
+  String get compatibilityLunarDisclaimer;
 
   /// No description provided for @tojeongSaveAndCheckButton.
   ///
@@ -10035,12 +11001,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete Mission'**
   String get deleteMissionTitle;
-
-  /// No description provided for @deleteMissionConfirm.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to delete this mission?'**
-  String get deleteMissionConfirm;
 
   /// No description provided for @yesDelete.
   ///

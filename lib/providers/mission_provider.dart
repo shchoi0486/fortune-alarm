@@ -451,6 +451,35 @@ class MissionNotifier extends ChangeNotifier {
     }
   }
 
+  // 커스텀 미션 히스토리에만 추가 (이미 있는 타이틀이면 추가 안함)
+  Future<void> addCustomMissionToHistory(String title, String icon, MissionCategory category) async {
+    final customBox = await Hive.openBox<MissionModel>('custom_missions');
+    final exists = customBox.values.any((m) => m.title == title);
+    
+    if (!exists) {
+      final newMission = MissionModel(
+        id: const Uuid().v4(),
+        title: title,
+        icon: icon,
+        category: category,
+        isSystemMission: false,
+      );
+      await customBox.put(newMission.id, newMission);
+      _customMissions = customBox.values.toList();
+      notifyListeners();
+    }
+  }
+
+  // 커스텀 미션 히스토리에서 삭제
+  Future<void> deleteCustomMissionFromHistory(String id) async {
+    final customBox = await Hive.openBox<MissionModel>('custom_missions');
+    if (customBox.containsKey(id)) {
+      await customBox.delete(id);
+      _customMissions = customBox.values.toList();
+      notifyListeners();
+    }
+  }
+
   // 미션 추가 (커스텀 미션 포함)
   Future<void> addMission(String title, String icon, MissionCategory category, {
     bool isCustom = false, 

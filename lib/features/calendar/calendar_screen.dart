@@ -286,6 +286,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
           event: event,
           themeColor: _getAccentColor(isDark),
           isFullScreen: true,
+          onDelete: (eventToDelete) async {
+            await _deleteEvent(eventToDelete);
+          },
           onSave: (savedEvent, isTimeManuallySet) async {
             var eventToSave = savedEvent;
 
@@ -701,32 +704,116 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 
   Widget _buildCalendarView(Color themeColor) {
-    return Column(
-      children: [
-        _isExpanded
-            ? Expanded(child: _buildGestureCalendar(themeColor, true))
-            : _buildGestureCalendar(themeColor, false),
-        if (!_isExpanded) const SizedBox(height: 2),
-        if (!_isExpanded)
-          Expanded(
-            child: ValueListenableBuilder<List<CalendarEvent>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                if (value.isEmpty) {
-                  return Center(child: Text(AppLocalizations.of(context)!.noEvents, style: const TextStyle(fontSize: 13)));
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    final event = value[index];
-                    return _buildEventItem(event);
-                  },
-                );
-              },
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onVerticalDragEnd: (details) {
+        if (details.primaryVelocity! > 0) { // 아래로 드래그
+          setState(() {
+            _isExpanded = true;
+            _calendarFormat = CalendarFormat.month; // 확장 시 월간 뷰로 전환
+          });
+        } else if (details.primaryVelocity! < 0) { // 위로 드래그
+          setState(() {
+            _isExpanded = false;
+            // 축소 시 포맷은 유지 (사용자가 주간 뷰를 원하면 버튼 사용)
+          });
+        }
+      },
+      child: Column(
+        children: [
+          _isExpanded
+              ? Expanded(child: _buildGestureCalendar(themeColor, true))
+              : _buildGestureCalendar(themeColor, false),
+          if (!_isExpanded) const SizedBox(height: 2),
+          if (!_isExpanded)
+            Expanded(
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onHorizontalDragEnd: (details) {
+                  if (details.primaryVelocity! < 0) { // 왼쪽으로 드래그 (다음 달)
+                    final nextMonth = DateTime(_focusedDay.year, _focusedDay.month + 1, 1);
+                    final oldYear = _focusedDay.year;
+                    setState(() {
+                      _focusedDay = nextMonth;
+                      // 다음 달의 같은 날짜 혹은 마지막 날을 선택
+                      final lastDayNextMonth = DateTime(nextMonth.year, nextMonth.month + 1, 0).day;
+                      final currentDay = _selectedDay?.day ?? 1;
+                      final targetDay = currentDay > lastDayNextMonth ? lastDayNextMonth : currentDay;
+                      final newSelectedDay = DateTime(nextMonth.year, nextMonth.month, targetDay);
+                      _selectedDay = newSelectedDay;
+                      _selectedEvents.value = _getEventsForDay(newSelectedDay);
+                      
+                      if (oldYear != nextMonth.year) {
+                        _loadEvents();
+                      }
+                    });
+                  } else if (details.primaryVelocity! > 0) { // 오른쪽으로 드래그 (이전 달)
+                    final prevMonth = DateTime(_focusedDay.year, _focusedDay.month - 1, 1);
+                    final oldYear = _focusedDay.year;
+                    setState(() {
+                      _focusedDay = prevMonth;
+                      // 이전 달의 같은 날짜 혹은 마지막 날을 선택
+                      final lastDayPrevMonth = DateTime(prevMonth.year, prevMonth.month + 1, 0).day;
+                      final currentDay = _selectedDay?.day ?? 1;
+                      final targetDay = currentDay > lastDayPrevMonth ? lastDayPrevMonth : currentDay;
+                      final newSelectedDay = DateTime(prevMonth.year, prevMonth.month, targetDay);
+                      _selectedDay = newSelectedDay;
+                      _selectedEvents.value = _getEventsForDay(newSelectedDay);
+
+                      if (oldYear != prevMonth.year) {
+                        _loadEvents();
+                      }
+                    });
+                  }
+                },
+                child: ValueListenableBuilder<List<CalendarEvent>>(
+                  valueListenable: _selectedEvents,
+                  builder: (context, value, _) {
+                  if (value.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.keyboard_double_arrow_down_rounded,
+                            color: isDark ? Colors.white38 : Colors.black26,
+                            size: 28,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            AppLocalizations.of(context)!.calendarDragGuide,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: isDark ? Colors.white38 : Colors.black38,
+                            ),
+                          ),
+                          const SizedBox(height: 60),
+                          Text(
+                            AppLocalizations.of(context)!.noEvents,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: isDark ? Colors.white70 : Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    itemCount: value.length,
+                    itemBuilder: (context, index) {
+                      final event = value[index];
+                      return _buildEventItem(event);
+                    },
+                  );
+                },
+              ),
             ),
           ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -1300,16 +1387,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           color: isHoliday ? Colors.redAccent.withOpacity(0.1) : Color(event.titleColor),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: Text(
-                          event.title,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: isHoliday ? Colors.redAccent : Colors.white,
-                            fontWeight: FontWeight.bold,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            isHoliday && event.title.length > 5 
+                                ? '${event.title.substring(0, 5)}...' 
+                                : event.title,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: isHoliday ? Colors.redAccent : Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.visible,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),
@@ -1327,101 +1419,86 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accentColor = _getAccentColor(isDark);
 
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onVerticalDragEnd: (details) {
-        if (details.primaryVelocity! > 0) { // 아래로 드래그
-          setState(() {
-            _isExpanded = true;
-            _calendarFormat = CalendarFormat.month; // 확장 시 월간 뷰로 전환
-          });
-        } else if (details.primaryVelocity! < 0) { // 위로 드래그
-          setState(() {
-            _isExpanded = false;
-            // 축소 시 포맷은 유지 (사용자가 주간 뷰를 원하면 버튼 사용)
-          });
-        }
-      },
-      child: TableCalendar<CalendarEvent>(
-        availableGestures: AvailableGestures.horizontalSwipe,
-        shouldFillViewport: isExpanded,
-        locale: AppLocalizations.of(context)?.localeName ?? 'ko',
+    return TableCalendar<CalendarEvent>(
+      availableGestures: AvailableGestures.horizontalSwipe,
+      shouldFillViewport: isExpanded,
+      locale: AppLocalizations.of(context)?.localeName ?? 'ko',
       firstDay: DateTime.utc(1900, 1, 1),
-        lastDay: DateTime.utc(2030, 12, 31),
-        focusedDay: _focusedDay,
-        calendarFormat: _calendarFormat,
-        selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-        eventLoader: _getEventsForDay,
-        startingDayOfWeek: StartingDayOfWeek.sunday,
-        daysOfWeekHeight: 32.0, // 요일 헤더 높이 축소
-        calendarStyle: CalendarStyle(
-          outsideDaysVisible: isExpanded, // 확장 상태일 때만 외부 날짜 표시 (전체 그리드 채우기 위해)
-          cellMargin: isExpanded ? EdgeInsets.zero : const EdgeInsets.all(4), // 확장 시 여백 제거하여 그리드 연결
-          
-          // 기본 날짜 스타일 (빌더에서 처리하므로 기본값 유지)
-          defaultTextStyle: const TextStyle(fontWeight: FontWeight.w500),
-          
-          // 선택된 날짜
-          selectedDecoration: BoxDecoration(
-            color: accentColor,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: accentColor.withOpacity(0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          
-          // 오늘 날짜
-          todayDecoration: BoxDecoration(
-            color: accentColor.withOpacity(0.2),
-            shape: BoxShape.circle,
-          ),
-          todayTextStyle: TextStyle(
-            color: accentColor, 
-            fontWeight: FontWeight.bold
-          ),
-          
-          // 마커 스타일 (기본 마커 숨김)
-          markerDecoration: const BoxDecoration(color: Colors.transparent),
+      lastDay: DateTime.utc(2030, 12, 31),
+      focusedDay: _focusedDay,
+      calendarFormat: _calendarFormat,
+      selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+      eventLoader: _getEventsForDay,
+      startingDayOfWeek: StartingDayOfWeek.sunday,
+      daysOfWeekHeight: 32.0, // 요일 헤더 높이 축소
+      calendarStyle: CalendarStyle(
+        outsideDaysVisible: isExpanded, // 확장 상태일 때만 외부 날짜 표시 (전체 그리드 채우기 위해)
+        cellMargin: isExpanded ? EdgeInsets.zero : const EdgeInsets.all(4), // 확장 시 여백 제거하여 그리드 연결
+        
+        // 기본 날짜 스타일 (빌더에서 처리하므로 기본값 유지)
+        defaultTextStyle: const TextStyle(fontWeight: FontWeight.w500),
+        
+        // 선택된 날짜
+        selectedDecoration: BoxDecoration(
+          color: accentColor,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: accentColor.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        calendarBuilders: CalendarBuilders(
-          // 확장된 뷰일 때 전체 셀 커스텀
-          prioritizedBuilder: isExpanded ? (context, day, focusedDay) {
-            return _buildExpandedDayCell(context, day, focusedDay);
-          } : null,
+        
+        // 오늘 날짜
+        todayDecoration: BoxDecoration(
+          color: accentColor.withOpacity(0.2),
+          shape: BoxShape.circle,
+        ),
+        todayTextStyle: TextStyle(
+          color: accentColor, 
+          fontWeight: FontWeight.bold
+        ),
+        
+        // 마커 스타일 (기본 마커 숨김)
+        markerDecoration: const BoxDecoration(color: Colors.transparent),
+      ),
+      calendarBuilders: CalendarBuilders(
+        // 확장된 뷰일 때 전체 셀 커스텀
+        prioritizedBuilder: isExpanded ? (context, day, focusedDay) {
+          return _buildExpandedDayCell(context, day, focusedDay);
+        } : null,
 
-          // 선택된 날짜 커스텀
-          selectedBuilder: (context, day, focusedDay) {
-            return Center(
-              child: Container(
-                width: 24, // 날짜 숫자만 감쌀 정도의 작은 사이즈
-                height: 24,
-                decoration: BoxDecoration(
-                  color: accentColor,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: accentColor.withOpacity(0.3),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  '${day.day}',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
+        // 선택된 날짜 커스텀
+        selectedBuilder: (context, day, focusedDay) {
+          return Center(
+            child: Container(
+              width: 24, // 날짜 숫자만 감쌀 정도의 작은 사이즈
+              height: 24,
+              decoration: BoxDecoration(
+                color: accentColor,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: accentColor.withOpacity(0.3),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
                   ),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                '${day.day}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
                 ),
               ),
-            );
-          },
+            ),
+          );
+        },
 
           // 오늘 날짜 커스텀
           todayBuilder: (context, day, focusedDay) {
@@ -1577,9 +1654,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             _loadEvents();
           }
         },
-      ),
-    );
-  }
+      );
+    }
 
   Widget _buildMemoList() {
     // 공휴일을 제외한 이벤트만 필터링하여 날짜별로 그룹화

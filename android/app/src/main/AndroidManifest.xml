@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     
     <!-- [1] 권한 설정 구역 (Permissions) -->
     <!-- 인터넷 권한 (AdMob, Firebase, 날씨 등) -->
@@ -91,6 +92,12 @@
         <meta-data
             android:name="com.seriessnap.fortunealarm.notification_icon"
             android:resource="@mipmap/launcher_icon" />
+
+        <!-- [Android 16 대응] AppLovin orientation 제한 해제 (대형 화면 기기 대응) -->
+        <activity
+            android:name="com.applovin.adview.AppLovinFullscreenActivity"
+            android:screenOrientation="unspecified"
+            tools:replace="android:screenOrientation" />
 
         <!-- [2] 알람 매니저 설정 구역 (Service & Receiver) -->
         <!-- 앱이 꺼져도 알람이 울리게 하는 핵심 부품들입니다 -->

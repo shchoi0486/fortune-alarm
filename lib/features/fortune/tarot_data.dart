@@ -114,7 +114,33 @@ class TarotCard {
     }
   }
 
-  String getLocalizedLoveMeaning(AppLocalizations l10n) {
+  String getLocalizedLoveMeaning(AppLocalizations l10n, {String? ageGroup}) {
+    if (ageGroup == 'senior') {
+      switch (id) {
+        case 0: return l10n.tarotLoveMeaning0_Senior;
+        case 1: return l10n.tarotLoveMeaning1_Senior;
+        case 2: return l10n.tarotLoveMeaning2_Senior;
+        case 3: return l10n.tarotLoveMeaning3_Senior;
+        case 4: return l10n.tarotLoveMeaning4_Senior;
+        case 5: return l10n.tarotLoveMeaning5_Senior;
+        case 6: return l10n.tarotLoveMeaning6_Senior;
+        case 7: return l10n.tarotLoveMeaning7_Senior;
+        case 8: return l10n.tarotLoveMeaning8_Senior;
+        case 9: return l10n.tarotLoveMeaning9_Senior;
+        case 10: return l10n.tarotLoveMeaning10_Senior;
+        case 11: return l10n.tarotLoveMeaning11_Senior;
+        case 12: return l10n.tarotLoveMeaning12_Senior;
+        case 13: return l10n.tarotLoveMeaning13_Senior;
+        case 14: return l10n.tarotLoveMeaning14_Senior;
+        case 15: return l10n.tarotLoveMeaning15_Senior;
+        case 16: return l10n.tarotLoveMeaning16_Senior;
+        case 17: return l10n.tarotLoveMeaning17_Senior;
+        case 18: return l10n.tarotLoveMeaning18_Senior;
+        case 19: return l10n.tarotLoveMeaning19_Senior;
+        case 20: return l10n.tarotLoveMeaning20_Senior;
+        case 21: return l10n.tarotLoveMeaning21_Senior;
+      }
+    }
     switch (id) {
       case 0: return l10n.tarotLoveMeaning0;
       case 1: return l10n.tarotLoveMeaning1;
@@ -142,7 +168,33 @@ class TarotCard {
     }
   }
 
-  String getLocalizedLoveDetail(AppLocalizations l10n) {
+  String getLocalizedLoveDetail(AppLocalizations l10n, {String? ageGroup}) {
+    if (ageGroup == 'senior') {
+      switch (id) {
+        case 0: return l10n.tarotLoveDetail0_Senior;
+        case 1: return l10n.tarotLoveDetail1_Senior;
+        case 2: return l10n.tarotLoveDetail2_Senior;
+        case 3: return l10n.tarotLoveDetail3_Senior;
+        case 4: return l10n.tarotLoveDetail4_Senior;
+        case 5: return l10n.tarotLoveDetail5_Senior;
+        case 6: return l10n.tarotLoveDetail6_Senior;
+        case 7: return l10n.tarotLoveDetail7_Senior;
+        case 8: return l10n.tarotLoveDetail8_Senior;
+        case 9: return l10n.tarotLoveDetail9_Senior;
+        case 10: return l10n.tarotLoveDetail10_Senior;
+        case 11: return l10n.tarotLoveDetail11_Senior;
+        case 12: return l10n.tarotLoveDetail12_Senior;
+        case 13: return l10n.tarotLoveDetail13_Senior;
+        case 14: return l10n.tarotLoveDetail14_Senior;
+        case 15: return l10n.tarotLoveDetail15_Senior;
+        case 16: return l10n.tarotLoveDetail16_Senior;
+        case 17: return l10n.tarotLoveDetail17_Senior;
+        case 18: return l10n.tarotLoveDetail18_Senior;
+        case 19: return l10n.tarotLoveDetail19_Senior;
+        case 20: return l10n.tarotLoveDetail20_Senior;
+        case 21: return l10n.tarotLoveDetail21_Senior;
+      }
+    }
     switch (id) {
       case 0: return l10n.tarotLoveDetail0;
       case 1: return l10n.tarotLoveDetail1;
@@ -170,7 +222,33 @@ class TarotCard {
     }
   }
 
-  String getLocalizedWealthMeaning(AppLocalizations l10n) {
+  String getLocalizedWealthMeaning(AppLocalizations l10n, {String? ageGroup}) {
+    if (ageGroup == 'senior') {
+      switch (id) {
+        case 0: return l10n.tarotWealthMeaning0_Senior;
+        case 1: return l10n.tarotWealthMeaning1_Senior;
+        case 2: return l10n.tarotWealthMeaning2_Senior;
+        case 3: return l10n.tarotWealthMeaning3_Senior;
+        case 4: return l10n.tarotWealthMeaning4_Senior;
+        case 5: return l10n.tarotWealthMeaning5_Senior;
+        case 6: return l10n.tarotWealthMeaning6_Senior;
+        case 7: return l10n.tarotWealthMeaning7_Senior;
+        case 8: return l10n.tarotWealthMeaning8_Senior;
+        case 9: return l10n.tarotWealthMeaning9_Senior;
+        case 10: return l10n.tarotWealthMeaning10_Senior;
+        case 11: return l10n.tarotWealthMeaning11_Senior;
+        case 12: return l10n.tarotWealthMeaning12_Senior;
+        case 13: return l10n.tarotWealthMeaning13_Senior;
+        case 14: return l10n.tarotWealthMeaning14_Senior;
+        case 15: return l10n.tarotWealthMeaning15_Senior;
+        case 16: return l10n.tarotWealthMeaning16_Senior;
+        case 17: return l10n.tarotWealthMeaning17_Senior;
+        case 18: return l10n.tarotWealthMeaning18_Senior;
+        case 19: return l10n.tarotWealthMeaning19_Senior;
+        case 20: return l10n.tarotWealthMeaning20_Senior;
+        case 21: return l10n.tarotWealthMeaning21_Senior;
+      }
+    }
     switch (id) {
       case 0: return l10n.tarotWealthMeaning0;
       case 1: return l10n.tarotWealthMeaning1;
@@ -198,7 +276,33 @@ class TarotCard {
     }
   }
 
-  String getLocalizedWealthDetail(AppLocalizations l10n) {
+  String getLocalizedWealthDetail(AppLocalizations l10n, {String? ageGroup}) {
+    if (ageGroup == 'senior') {
+      switch (id) {
+        case 0: return l10n.tarotWealthDetail0_Senior;
+        case 1: return l10n.tarotWealthDetail1_Senior;
+        case 2: return l10n.tarotWealthDetail2_Senior;
+        case 3: return l10n.tarotWealthDetail3_Senior;
+        case 4: return l10n.tarotWealthDetail4_Senior;
+        case 5: return l10n.tarotWealthDetail5_Senior;
+        case 6: return l10n.tarotWealthDetail6_Senior;
+        case 7: return l10n.tarotWealthDetail7_Senior;
+        case 8: return l10n.tarotWealthDetail8_Senior;
+        case 9: return l10n.tarotWealthDetail9_Senior;
+        case 10: return l10n.tarotWealthDetail10_Senior;
+        case 11: return l10n.tarotWealthDetail11_Senior;
+        case 12: return l10n.tarotWealthDetail12_Senior;
+        case 13: return l10n.tarotWealthDetail13_Senior;
+        case 14: return l10n.tarotWealthDetail14_Senior;
+        case 15: return l10n.tarotWealthDetail15_Senior;
+        case 16: return l10n.tarotWealthDetail16_Senior;
+        case 17: return l10n.tarotWealthDetail17_Senior;
+        case 18: return l10n.tarotWealthDetail18_Senior;
+        case 19: return l10n.tarotWealthDetail19_Senior;
+        case 20: return l10n.tarotWealthDetail20_Senior;
+        case 21: return l10n.tarotWealthDetail21_Senior;
+      }
+    }
     switch (id) {
       case 0: return l10n.tarotWealthDetail0;
       case 1: return l10n.tarotWealthDetail1;
@@ -226,7 +330,33 @@ class TarotCard {
     }
   }
 
-  String getLocalizedSuccessMeaning(AppLocalizations l10n) {
+  String getLocalizedSuccessMeaning(AppLocalizations l10n, {String? ageGroup}) {
+    if (ageGroup == 'senior') {
+      switch (id) {
+        case 0: return l10n.tarotSuccessMeaning0_Senior;
+        case 1: return l10n.tarotSuccessMeaning1_Senior;
+        case 2: return l10n.tarotSuccessMeaning2_Senior;
+        case 3: return l10n.tarotSuccessMeaning3_Senior;
+        case 4: return l10n.tarotSuccessMeaning4_Senior;
+        case 5: return l10n.tarotSuccessMeaning5_Senior;
+        case 6: return l10n.tarotSuccessMeaning6_Senior;
+        case 7: return l10n.tarotSuccessMeaning7_Senior;
+        case 8: return l10n.tarotSuccessMeaning8_Senior;
+        case 9: return l10n.tarotSuccessMeaning9_Senior;
+        case 10: return l10n.tarotSuccessMeaning10_Senior;
+        case 11: return l10n.tarotSuccessMeaning11_Senior;
+        case 12: return l10n.tarotSuccessMeaning12_Senior;
+        case 13: return l10n.tarotSuccessMeaning13_Senior;
+        case 14: return l10n.tarotSuccessMeaning14_Senior;
+        case 15: return l10n.tarotSuccessMeaning15_Senior;
+        case 16: return l10n.tarotSuccessMeaning16_Senior;
+        case 17: return l10n.tarotSuccessMeaning17_Senior;
+        case 18: return l10n.tarotSuccessMeaning18_Senior;
+        case 19: return l10n.tarotSuccessMeaning19_Senior;
+        case 20: return l10n.tarotSuccessMeaning20_Senior;
+        case 21: return l10n.tarotSuccessMeaning21_Senior;
+      }
+    }
     switch (id) {
       case 0: return l10n.tarotSuccessMeaning0;
       case 1: return l10n.tarotSuccessMeaning1;
@@ -254,7 +384,33 @@ class TarotCard {
     }
   }
 
-  String getLocalizedSuccessDetail(AppLocalizations l10n) {
+  String getLocalizedSuccessDetail(AppLocalizations l10n, {String? ageGroup}) {
+    if (ageGroup == 'senior') {
+      switch (id) {
+        case 0: return l10n.tarotSuccessDetail0_Senior;
+        case 1: return l10n.tarotSuccessDetail1_Senior;
+        case 2: return l10n.tarotSuccessDetail2_Senior;
+        case 3: return l10n.tarotSuccessDetail3_Senior;
+        case 4: return l10n.tarotSuccessDetail4_Senior;
+        case 5: return l10n.tarotSuccessDetail5_Senior;
+        case 6: return l10n.tarotSuccessDetail6_Senior;
+        case 7: return l10n.tarotSuccessDetail7_Senior;
+        case 8: return l10n.tarotSuccessDetail8_Senior;
+        case 9: return l10n.tarotSuccessDetail9_Senior;
+        case 10: return l10n.tarotSuccessDetail10_Senior;
+        case 11: return l10n.tarotSuccessDetail11_Senior;
+        case 12: return l10n.tarotSuccessDetail12_Senior;
+        case 13: return l10n.tarotSuccessDetail13_Senior;
+        case 14: return l10n.tarotSuccessDetail14_Senior;
+        case 15: return l10n.tarotSuccessDetail15_Senior;
+        case 16: return l10n.tarotSuccessDetail16_Senior;
+        case 17: return l10n.tarotSuccessDetail17_Senior;
+        case 18: return l10n.tarotSuccessDetail18_Senior;
+        case 19: return l10n.tarotSuccessDetail19_Senior;
+        case 20: return l10n.tarotSuccessDetail20_Senior;
+        case 21: return l10n.tarotSuccessDetail21_Senior;
+      }
+    }
     switch (id) {
       case 0: return l10n.tarotSuccessDetail0;
       case 1: return l10n.tarotSuccessDetail1;

@@ -13,6 +13,18 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
     _loadAlarms();
   }
 
+  Future<void> deleteAlarm(AlarmModel alarm) async {
+    try {
+      final box = await Hive.openBox<AlarmModel>('alarms');
+      await box.delete(alarm.id);
+      await box.flush();
+      
+      state = state.where((a) => a.id != alarm.id).toList();
+    } catch (e) {
+      debugPrint('Error deleting alarm from Hive: $e');
+    }
+  }
+
   Future<void> _loadAlarms() async {
     try {
       final box = await Hive.openBox<AlarmModel>('alarms');

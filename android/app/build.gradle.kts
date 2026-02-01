@@ -52,9 +52,10 @@ android {
     
     dependencies {
         implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
+        implementation("androidx.activity:activity-ktx:1.9.3")
         coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
         // AppLovin Mediation Adapter
-        implementation("com.google.ads.mediation:applovin:13.0.1.0")
+        implementation("com.google.ads.mediation:applovin:13.1.0.0")
         // Unity Ads Mediation Adapter
         implementation("com.google.ads.mediation:unity:4.12.5.0")
         // Unity Ads SDK (Explicitly added to resolve R8 classpath issues)

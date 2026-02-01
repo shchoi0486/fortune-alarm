@@ -145,11 +145,12 @@ class SajuService {
 
     // 3. Day Pillar (Il-ju)
     // Reference: 2024-01-01 is Gap-Ja (0).
-    DateTime referenceDate = DateTime(2024, 1, 1);
+    // Use UTC for consistent day difference calculation (avoids DST issues)
+    DateTime dateOnly = DateTime.utc(birthDate.year, birthDate.month, birthDate.day);
+    DateTime referenceDate = DateTime.utc(2024, 1, 1);
     
-    // Calculate difference in days
-    // Use UTC to avoid DST issues or just pure day difference
-    int diffDays = birthDate.difference(referenceDate).inDays;
+    // Calculate difference in days (exactly 24-hour periods in UTC)
+    int diffDays = dateOnly.difference(referenceDate).inDays;
     
     // 2024-01-01 is 0 (Gap-Ja).
     // Future date: 0 + diff

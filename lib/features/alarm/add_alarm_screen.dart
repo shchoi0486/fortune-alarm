@@ -2261,6 +2261,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
             icon: Icon(Icons.close, color: isDarkMode ? Colors.white : Colors.black),
             onPressed: () => Navigator.pop(context),
           ),
+          actions: [
+            if (widget.alarm != null)
+              IconButton(
+                icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                onPressed: _confirmDelete,
+              ),
+          ],
         ),
       body: Column(
         children: [
@@ -4195,6 +4202,65 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       }
     }
   }
+
+  Future<void> _confirmDelete() async {
+    final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? const Color(0xFF2C2C2C) : Colors.white,
+        title: Text(
+          l10n.delete,
+          style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+        ),
+        content: Text(
+          l10n.deleteConfirmMessage(_labelController.text.trim().isEmpty ? l10n.noTitle : _labelController.text.trim()),
+          style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.cancel, style: const TextStyle(color: Colors.grey)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(
+              l10n.delete,
+              style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && widget.alarm != null) {
+       setState(() => _isSaving = true);
+       try {
+         // 1. 알람 스케줄링 취소
+         await AlarmSchedulerService.cancelAlarm(widget.alarm!);
+         
+         // 2. 알람 리스트 프로바이더에서 삭제 (Hive 삭제 포함)
+         await ref.read(alarmListProvider.notifier).deleteAlarm(widget.alarm!);
+         
+         if (mounted) {
+           Navigator.pop(context);
+         }
+       } catch (e) {
+          debugPrint('Error deleting alarm: $e');
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(l10n.errorOccurred(e.toString()))),
+            );
+          }
+        } finally {
+         if (mounted) {
+           setState(() => _isSaving = false);
+         }
+       }
+     }
+   }
 
   Future<void> _showPermissionDialog(String title, String content) async {
     return showDialog(

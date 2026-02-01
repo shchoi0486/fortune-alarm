@@ -1205,12 +1205,12 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
         },
         behavior: HitTestBehavior.opaque,
         child: Container(
-          padding: const EdgeInsets.only(top: 5, bottom: 5),
+          padding: const EdgeInsets.only(top: 7, bottom: 7),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TweenAnimationBuilder<double>(
-                tween: Tween(begin: 1.0, end: isSelected ? 1.2 : 1.0),
+                tween: Tween(begin: 1.0, end: isSelected ? 1.15 : 1.0),
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.easeOutBack,
                 builder: (context, value, child) {
@@ -1218,20 +1218,20 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                     scale: value,
                     child: Icon(
                       isSelected ? selectedIcon : icon,
-                      size: 24,
+                      size: 26,
                       color: isSelected ? selectedColor : unselectedColor,
                     ),
                   );
                 },
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 4),
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   color: isSelected ? selectedColor : unselectedColor,
-                  letterSpacing: -0.3,
+                  letterSpacing: -0.5,
                 ),
               ),
             ],
@@ -1530,51 +1530,28 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
             Expanded(child: _screens[currentIndex]),
           ],
         ),
-        bottomNavigationBar: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF121212) : Colors.white,
-                border: Border(
-                  top: BorderSide(
-                    color: isDark ? Colors.white12 : const Color(0xFFE0E0E0),
-                    width: 0.5,
-                  ),
-                ),
-              ),
-              child: SafeArea(
-                bottom: false, // 광고가 아래에 있으므로 SafeArea bottom은 false
-                child: Row(
-                  children: [
-                    _buildNavItem(Icons.alarm_outlined, Icons.alarm_rounded, AppLocalizations.of(context)!.alarm, 0),
-                    _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, AppLocalizations.of(context)!.calendar, 1),
-                    _buildNavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, AppLocalizations.of(context)!.fortune, 2),
-                    _buildNavItem(Icons.task_alt_outlined, Icons.task_alt_rounded, AppLocalizations.of(context)!.mission, 3),
-                    _buildNavItem(Icons.settings_outlined, Icons.settings_rounded, AppLocalizations.of(context)!.settings, 4),
-                  ],
-                ),
-              ),
-          ),
-          // 광고와 내비게이션 바 사이의 미세한 경계 및 여백
-          Divider(
-            height: 1,
-            thickness: 0.5,
-            color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
-          ),
-          // 시스템 내비게이션 바(뒤로가기 버튼 등) 위에 광고가 표시되도록 SafeArea 적용
-          // top: false로 설정하여 위쪽 여백은 무시하고 아래쪽(시스템 바)만 고려
-          // minimum 패딩을 추가하여 광고 dismiss 창 등이 내비게이션 바를 침범하지 않도록 함
-          Container(
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
             color: isDark ? const Color(0xFF121212) : Colors.white,
-            child: const SafeArea(
-              top: false,
-              bottom: true,
-              minimum: EdgeInsets.only(bottom: 2.0),
-              child: BottomBannerAd(),
+            border: Border(
+              top: BorderSide(
+                color: isDark ? Colors.white12 : const Color(0xFFE0E0E0),
+                width: 0.5,
+              ),
             ),
           ),
-          ],
+          child: SafeArea(
+            top: false,
+            child: Row(
+              children: [
+                _buildNavItem(Icons.alarm_outlined, Icons.alarm_rounded, AppLocalizations.of(context)!.alarm, 0),
+                _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, AppLocalizations.of(context)!.calendar, 1),
+                _buildNavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, AppLocalizations.of(context)!.fortune, 2),
+                _buildNavItem(Icons.task_alt_outlined, Icons.task_alt_rounded, AppLocalizations.of(context)!.mission, 3),
+                _buildNavItem(Icons.settings_outlined, Icons.settings_rounded, AppLocalizations.of(context)!.settings, 4),
+              ],
+            ),
+          ),
         ),
       ),
     ),

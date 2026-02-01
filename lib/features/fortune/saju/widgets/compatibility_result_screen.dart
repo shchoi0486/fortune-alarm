@@ -146,9 +146,60 @@ class _CompatibilityResultScreenState extends State<CompatibilityResultScreen> w
               ),
               const SizedBox(height: 40),
               
-              // 4. Details List
+              // 4. Details List (3 Boxes: Zodiac, Inner, Constellation)
               ..._result.details.map((detail) => _buildDetailCard(detail, isDarkMode)),
-  
+              
+              const SizedBox(height: 20),
+              
+              // 5. Additional Sections (Moved below detail cards)
+              _buildSectionCard(
+                title: l10n.compatibilitySectionLuck,
+                content: _result.luckSynergy,
+                isDarkMode: isDarkMode,
+                icon: Icons.auto_awesome,
+                iconColor: Colors.amber,
+              ),
+              
+              _buildSectionCard(
+                title: l10n.compatibilitySectionAdvice,
+                content: _result.relationshipAdvice,
+                isDarkMode: isDarkMode,
+                icon: Icons.lightbulb_outline,
+                iconColor: Colors.blueAccent,
+              ),
+              
+              if (_result.positivePoints.isNotEmpty)
+                _buildSectionCard(
+                  title: l10n.compatibilitySectionPositive,
+                  points: _result.positivePoints,
+                  isDarkMode: isDarkMode,
+                  icon: Icons.add_circle_outline,
+                  iconColor: Colors.green,
+                ),
+                
+              if (_result.cautionPoints.isNotEmpty)
+                _buildSectionCard(
+                  title: l10n.compatibilitySectionCaution,
+                  points: _result.cautionPoints,
+                  isDarkMode: isDarkMode,
+                  icon: Icons.warning_amber_rounded,
+                  iconColor: Colors.orange,
+                ),
+
+              if (_result.lunarDisclaimer != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  child: Text(
+                    _result.lunarDisclaimer!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: isDarkMode ? Colors.grey[500] : Colors.grey[600],
+                      fontStyle: FontStyle.italic,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
               const SizedBox(height: 40),
               
               // 공유하기 버튼 추가
@@ -433,6 +484,96 @@ class _CompatibilityResultScreenState extends State<CompatibilityResultScreen> w
               height: 1.5,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSectionCard({
+    required String title,
+    String? content,
+    List<String>? points,
+    required bool isDarkMode,
+    required IconData icon,
+    required Color iconColor,
+  }) {
+    final cardColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
+    final textColor = isDarkMode ? Colors.white : Colors.black87;
+    final subTextColor = isDarkMode ? Colors.grey[400] : Colors.grey[700];
+
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: iconColor, size: 24),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: textColor,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (content != null)
+            Text(
+              content,
+              style: TextStyle(
+                fontSize: 15,
+                color: subTextColor,
+                height: 1.6,
+              ),
+            ),
+          if (points != null)
+            ...points.map((point) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6),
+                        child: Container(
+                          width: 4,
+                          height: 4,
+                          decoration: const BoxDecoration(
+                            color: Colors.pinkAccent,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          point,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: subTextColor,
+                            height: 1.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )),
         ],
       ),
     );

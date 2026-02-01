@@ -2,7 +2,7 @@ package com.seriessnap.fortunealarm
 
 import android.os.Build
 import android.os.Bundle
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
 import android.app.KeyguardManager
 import android.content.Context
@@ -14,15 +14,16 @@ import android.content.Intent
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
 
 import android.os.PowerManager
-import androidx.core.view.WindowCompat // [추가]
+import androidx.activity.enableEdgeToEdge // [추가]
+import androidx.core.view.WindowCompat 
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterFragmentActivity() {
     private val CHANNEL = "com.seriessnap.fortunealarm/foreground"
     private var methodChannel: MethodChannel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // [Android 15 대응] Edge-to-Edge 강제 활성화 (Flutter SystemChrome과 호환성 확보)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        // [Android 15 대응] Edge-to-Edge 활성화
+        enableEdgeToEdge()
         
         super.onCreate(savedInstanceState)
         configureWindow()
@@ -33,13 +34,13 @@ class MainActivity: FlutterActivity() {
 
         // 네이티브 광고 팩토리 등록
         GoogleMobileAdsPlugin.registerNativeAdFactory(
-            flutterEngine, "listTile", ListTileNativeAdFactory(context)
+            flutterEngine, "listTile", ListTileNativeAdFactory(this)
         )
         GoogleMobileAdsPlugin.registerNativeAdFactory(
-            flutterEngine, "dialogAd", DialogNativeAdFactory(context)
+            flutterEngine, "dialogAd", DialogNativeAdFactory(this)
         )
         GoogleMobileAdsPlugin.registerNativeAdFactory(
-            flutterEngine, "textBanner", TextBannerNativeAdFactory(context)
+            flutterEngine, "textBanner", TextBannerNativeAdFactory(this)
         )
         
         methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)

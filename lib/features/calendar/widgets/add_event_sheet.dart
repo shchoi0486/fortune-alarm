@@ -66,6 +66,7 @@ class MemoBlock {
 class AddEventSheet extends StatefulWidget {
   final DateTime selectedDate;
   final Function(CalendarEvent, bool) onSave;
+  final Function(CalendarEvent)? onDelete;
   final CalendarEvent? event;
   final Color themeColor;
   final bool isFullScreen;
@@ -74,6 +75,7 @@ class AddEventSheet extends StatefulWidget {
     super.key,
     required this.selectedDate,
     required this.onSave,
+    this.onDelete,
     this.event,
     this.themeColor = const Color(0xFFE57373),
     this.isFullScreen = false,
@@ -1425,10 +1427,17 @@ class _AddEventSheetState extends State<AddEventSheet> {
             },
           ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.black54),
-            onPressed: () {},
-          ),
+          if (widget.event != null && widget.onDelete != null)
+            TextButton(
+              onPressed: _confirmDelete,
+              child: Text(
+                AppLocalizations.of(context)!.delete,
+                style: const TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           const SizedBox(width: 8),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -2556,6 +2565,46 @@ class _AddEventSheetState extends State<AddEventSheet> {
         ),
       ),
     );
+  }
+
+  Future<void> _confirmDelete() async {
+    final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: isDark ? const Color(0xFF2C2C2C) : Colors.white,
+        title: Text(
+          l10n.delete,
+          style: TextStyle(color: isDark ? Colors.white : Colors.black87),
+        ),
+        content: Text(
+          l10n.deleteConfirmMessage(_titleController.text.trim().isEmpty ? l10n.noTitle : _titleController.text.trim()),
+          style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.cancel, style: const TextStyle(color: Colors.grey)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(
+              l10n.delete,
+              style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true && widget.onDelete != null && widget.event != null) {
+      widget.onDelete!(widget.event!);
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    }
   }
 
   void _save() {

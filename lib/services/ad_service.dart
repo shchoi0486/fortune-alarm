@@ -83,9 +83,6 @@ class AdService {
   static final List<Completer<void>> _listAdWaiters = <Completer<void>>[];
   static int _listAdLoadingCount = 0;
 
-  static NativeAd? _preloadedTextBannerAd;
-  static Completer<void>? _textBannerLoadCompleter;
-
   // 전면 광고 관련
   static InterstitialAd? _interstitialAd;
   static bool _isInterstitialAdLoading = false;
@@ -172,7 +169,6 @@ class AdService {
       for (int i = 0; i < _listAdPoolSize; i++) {
         Timer(Duration(milliseconds: 250 * i), preloadListAd);
       }
-      preloadTextBannerAd();
     });
 
     // 4. 구독 상태 실시간 동기화 (CookieService 스트림 감시)
@@ -465,37 +461,6 @@ class AdService {
     adToLoad.load();
   }
 
-  static void preloadTextBannerAd() {
-    if (_preloadedTextBannerAd != null) return;
-
-    final completer = Completer<void>();
-    _textBannerLoadCompleter = completer;
-
-    _preloadedTextBannerAd = NativeAd(
-      adUnitId: nativeAdUnitId,
-      factoryId: 'textBanner',
-      request: const AdRequest(),
-      listener: NativeAdListener(
-        onAdLoaded: (ad) {
-          if (!completer.isCompleted) {
-            completer.complete();
-          }
-        },
-        onAdFailedToLoad: (ad, error) {
-          ad.dispose();
-          if (_preloadedTextBannerAd == ad) {
-            _preloadedTextBannerAd = null;
-            _textBannerLoadCompleter = null;
-          }
-          if (!completer.isCompleted) {
-            completer.completeError(error);
-          }
-          Future.delayed(const Duration(seconds: 30), preloadTextBannerAd);
-        },
-      ),
-    )..load();
-  }
-
   /// 사전 로드된 종료 광고 가져오기 (소비됨)
   /// 반환값: (광고 객체, 로딩 완료 Future)
   static (NativeAd?, Future<void>?) getExitAd() {
@@ -523,17 +488,5 @@ class AdService {
     final waiter = Completer<void>();
     _listAdWaiters.add(waiter);
     return (null, waiter.future);
-  }
-
-  static (NativeAd?, Future<void>?) getTextBannerAd() {
-    final ad = _preloadedTextBannerAd;
-    final future = _textBannerLoadCompleter?.future;
-
-    _preloadedTextBannerAd = null;
-    _textBannerLoadCompleter = null;
-
-    Timer(const Duration(seconds: 1), preloadTextBannerAd);
-
-    return (ad, future);
   }
 }

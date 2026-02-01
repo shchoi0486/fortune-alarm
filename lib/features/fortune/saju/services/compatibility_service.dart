@@ -8,12 +8,22 @@ class CompatibilityScore {
   final String title;
   final String description;
   final List<CompatibilityDetail> details;
+  final String luckSynergy;
+  final String relationshipAdvice;
+  final List<String> positivePoints;
+  final List<String> cautionPoints;
+  final String? lunarDisclaimer;
 
   CompatibilityScore({
     required this.totalScore,
     required this.title,
     required this.description,
     required this.details,
+    required this.luckSynergy,
+    required this.relationshipAdvice,
+    required this.positivePoints,
+    required this.cautionPoints,
+    this.lunarDisclaimer,
   });
 }
 
@@ -160,12 +170,32 @@ class CompatibilityService {
     }
   }
 
+  static int _calculateAge(DateTime birthDate) {
+    final now = DateTime.now();
+    int age = now.year - birthDate.year;
+    if (now.month < birthDate.month || (now.month == birthDate.month && now.day < birthDate.day)) {
+      age--;
+    }
+    return age;
+  }
+
   static CompatibilityScore analyze(SajuProfile p1, SajuProfile p2, AppLocalizations l10n) {
     int score = 50; // Base score
     List<CompatibilityDetail> details = [];
 
     final saju1 = SajuService.calculateSaju(p1);
     final saju2 = SajuService.calculateSaju(p2);
+
+    final age1 = _calculateAge(p1.birthDate);
+    final age2 = _calculateAge(p2.birthDate);
+    final avgAge = (age1 + age2) / 2;
+
+    String ageGroup = "Mature";
+    if (avgAge < 30) {
+      ageGroup = "Youth";
+    } else if (avgAge >= 50) {
+      ageGroup = "Senior";
+    }
 
     // 1. 띠 궁합 (겉궁합) - Year Pillar Jiji
     final year1 = saju1['year']!.jiji;
@@ -320,22 +350,48 @@ class CompatibilityService {
 
     String title;
     String description;
+    String advice;
+    String luck;
 
     if (score >= 90) {
       title = l10n.compatibilityTitleBest;
-      description = l10n.compatibilityDescBest;
+      description = ageGroup == "Youth" ? l10n.compatibilityDescBest_Youth : (ageGroup == "Mature" ? l10n.compatibilityDescBest_Mature : l10n.compatibilityDescBest_Senior);
     } else if (score >= 80) {
       title = l10n.compatibilityTitleGreat;
-      description = l10n.compatibilityDescGreat;
-    } else if (score >= 60) {
+      description = ageGroup == "Youth" ? l10n.compatibilityDescGreat_Youth : (ageGroup == "Mature" ? l10n.compatibilityDescGreat_Mature : l10n.compatibilityDescGreat_Senior);
+    } else if (score >= 65) {
       title = l10n.compatibilityTitleGood;
-      description = l10n.compatibilityDescGood;
-    } else if (score >= 40) {
+      description = ageGroup == "Youth" ? l10n.compatibilityDescGood_Youth : (ageGroup == "Mature" ? l10n.compatibilityDescGood_Mature : l10n.compatibilityDescGood_Senior);
+    } else if (score >= 50) {
       title = l10n.compatibilityTitleEffort;
-      description = l10n.compatibilityDescEffort;
+      description = ageGroup == "Youth" ? l10n.compatibilityDescEffort_Youth : (ageGroup == "Mature" ? l10n.compatibilityDescEffort_Mature : l10n.compatibilityDescEffort_Senior);
     } else {
       title = l10n.compatibilityTitleDifficult;
-      description = l10n.compatibilityDescDifficult;
+      description = ageGroup == "Youth" ? l10n.compatibilityDescDifficult_Youth : (ageGroup == "Mature" ? l10n.compatibilityDescDifficult_Mature : l10n.compatibilityDescDifficult_Senior);
+    }
+
+    advice = ageGroup == "Youth" ? l10n.compatibilityAdvice_Youth : (ageGroup == "Mature" ? l10n.compatibilityAdvice_Mature : l10n.compatibilityAdvice_Senior);
+    luck = ageGroup == "Youth" ? l10n.compatibilityLuck_Youth : (ageGroup == "Mature" ? l10n.compatibilityLuck_Mature : l10n.compatibilityLuck_Senior);
+
+    List<String> positivePoints = [];
+    List<String> cautionPoints = [];
+    String? lunarDisclaimer;
+
+    if (details.isNotEmpty) {
+      final positiveDetails = details.where((d) => d.isPositive).toList();
+      final negativeDetails = details.where((d) => !d.isPositive).toList();
+      
+      for (var i = 0; i < positiveDetails.length && i < 2; i++) {
+        positivePoints.add("${positiveDetails[i].summary}: ${positiveDetails[i].description}");
+      }
+      
+      for (var i = 0; i < negativeDetails.length && i < 1; i++) {
+        cautionPoints.add("${negativeDetails[i].summary}: ${negativeDetails[i].description}");
+      }
+
+      if (p1.isLunar || p2.isLunar) {
+        lunarDisclaimer = l10n.compatibilityLunarDisclaimer;
+      }
     }
 
     return CompatibilityScore(
@@ -343,6 +399,11 @@ class CompatibilityService {
       title: title,
       description: description,
       details: details,
+      luckSynergy: luck,
+      relationshipAdvice: advice,
+      positivePoints: positivePoints,
+      cautionPoints: cautionPoints,
+      lunarDisclaimer: lunarDisclaimer,
     );
   }
 

@@ -207,6 +207,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                   children: [
                     // '전체' 필터
                     ChoiceChip(
+                      showCheckmark: false,
                       label: Text(
                         '✨ ${l10n.all}',
                         style: TextStyle(
@@ -218,10 +219,9 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                       selected: _selectedCategoryFilter == null,
                       selectedColor: Colors.blueAccent,
                       backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                      shape: StadiumBorder(
                         side: BorderSide(
-                          color: _selectedCategoryFilter == null ? Colors.blueAccent : Colors.transparent,
+                          color: _selectedCategoryFilter == null ? Colors.transparent : (isDark ? Colors.grey[700]! : Colors.grey[300]!),
                         ),
                       ),
                       onSelected: (selected) {
@@ -235,6 +235,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                     ...MissionCategory.values.map((category) {
                       final isSelected = _selectedCategoryFilter == category;
                       return ChoiceChip(
+                        showCheckmark: false,
                         label: Text(
                           '${_categoryIcons[category]} ${_getCategoryName(category, context)}',
                           style: TextStyle(
@@ -246,6 +247,11 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                         selected: isSelected,
                         selectedColor: Colors.blueAccent,
                         backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
+                        shape: StadiumBorder(
+                          side: BorderSide(
+                            color: isSelected ? Colors.transparent : (isDark ? Colors.grey[700]! : Colors.grey[300]!),
+                          ),
+                        ),
                         onSelected: (selected) {
                           if (selected) {
                             setState(() {
@@ -390,32 +396,94 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                         final isLast = mission == customMissions.last;
                         return Column(
                           children: [
-                            CheckboxListTile(
-                              value: isSelected,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  if (value == true) {
-                                    _selectedCustomMissions.add(mission);
-                                  } else {
-                                    _selectedCustomMissions.remove(mission);
-                                  }
-                                });
-                              },
-                              title: Text(
-                                mission.title,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    if (isSelected) {
+                                      _selectedCustomMissions.remove(mission);
+                                    } else {
+                                      _selectedCustomMissions.add(mission);
+                                    }
+                                  });
+                                },
+                                borderRadius: BorderRadius.circular(12),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        mission.icon,
+                                        style: const TextStyle(fontSize: 20),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Text(
+                                          mission.title,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.close,
+                                          size: 18,
+                                          color: isDark ? Colors.grey[500] : Colors.grey[400],
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () async {
+                                          final bool? confirm = await showDialog<bool>(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              title: Text(l10n.delete),
+                                              content: Text(l10n.deleteMissionConfirm),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(context, false),
+                                                  child: Text(l10n.cancel),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(context, true),
+                                                  child: Text(
+                                                    l10n.delete,
+                                                    style: const TextStyle(color: Colors.red),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+
+                                          if (confirm == true) {
+                                            await ref.read(missionProvider).deleteCustomMissionFromHistory(mission.id);
+                                            setState(() {
+                                              _selectedCustomMissions.remove(mission);
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Checkbox(
+                                        value: isSelected,
+                                        onChanged: (bool? value) {
+                                          setState(() {
+                                            if (value == true) {
+                                              _selectedCustomMissions.add(mission);
+                                            } else {
+                                              _selectedCustomMissions.remove(mission);
+                                            }
+                                          });
+                                        },
+                                        activeColor: Colors.blueAccent,
+                                        visualDensity: VisualDensity.compact,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              secondary: Text(
-                                mission.icon,
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                              activeColor: Colors.blueAccent,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-                              visualDensity: VisualDensity.compact,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             if (!isLast)
                               Divider(
@@ -435,9 +503,49 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                 ],
 
                 // 3. 직접 입력 섹션
-                Text(
-                  l10n.createYourOwnMission,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      l10n.createYourOwnMission,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    if (_titleController.text.trim().isNotEmpty)
+                       TextButton(
+                         onPressed: () async {
+                           final title = _titleController.text.trim();
+                           final icon = _categoryIcons[_selectedCategory]!;
+                           final category = _selectedCategory;
+                           
+                           // 1. 커스텀 미션 히스토리에 추가
+                           await ref.read(missionProvider).addCustomMissionToHistory(
+                             title,
+                             icon,
+                             category,
+                           );
+                           
+                           // 2. 추가된 미션을 선택 목록에 자동 추가하기 위해 새로 로드된 customMissions에서 찾음
+                           final newCustomMissions = ref.read(missionProvider).customMissions;
+                           final addedMission = newCustomMissions.firstWhere((m) => m.title == title);
+                           
+                           setState(() {
+                             _selectedCustomMissions.add(addedMission);
+                             _titleController.clear();
+                           });
+                         },
+                         style: TextButton.styleFrom(
+                           visualDensity: VisualDensity.compact,
+                           padding: const EdgeInsets.symmetric(horizontal: 12),
+                         ),
+                         child: Text(
+                           l10n.add,
+                           style: const TextStyle(
+                             color: Colors.blueAccent,
+                             fontWeight: FontWeight.bold,
+                           ),
+                         ),
+                       ),
+                  ],
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -476,6 +584,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                       return Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: ChoiceChip(
+                          showCheckmark: false,
                           label: Text(
                             '${_categoryIcons[category]} ${_getCategoryName(category, context)}',
                             style: TextStyle(
@@ -486,8 +595,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                           selected: isSelected,
                           selectedColor: Colors.blueAccent,
                           backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                          shape: StadiumBorder(
                             side: BorderSide(
                               color: isSelected ? Colors.transparent : (isDark ? Colors.grey[700]! : Colors.grey[300]!),
                             ),

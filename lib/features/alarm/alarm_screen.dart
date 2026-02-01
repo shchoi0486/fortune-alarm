@@ -343,7 +343,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                             height: 12,
                             color: isDark ? Colors.grey[700] : Colors.grey[400],
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: 6),
                           _buildSnoozeInfo(alarm, secondaryTextColor, disabledTextColor),
                         ],
                         const Spacer(),
@@ -450,14 +450,14 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         }
 
         return Padding(
-          padding: const EdgeInsets.only(right: 6),
+          padding: const EdgeInsets.only(right: 4),
           child: Text(
             days[index],
             style: TextStyle(
               color: getDayColor(),
               fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-              fontSize: 14,
-              letterSpacing: 0,
+              fontSize: 13,
+              letterSpacing: -0.5,
             ),
           ),
         );
@@ -479,8 +479,9 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
           fontSize: 12,
           fontWeight: FontWeight.w500,
         ),
-        overflow: TextOverflow.ellipsis,
+        overflow: TextOverflow.visible,
         maxLines: 1,
+        softWrap: false,
       ),
     );
   }

@@ -10,6 +10,7 @@ import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'tarot_data.dart'; // 타로 데이터 import
+import '../../providers/saju_provider.dart';
 import '../../data/models/alarm_model.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
@@ -69,6 +70,8 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   bool _isChecking = false; // 결과 확인 중 상태
   int? _animatingCardIndex; // 현재 이동 중인 카드 인덱스
 
+  String? _ageGroup;
+
   @override
   void initState() {
     super.initState();
@@ -77,9 +80,34 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     Vibration.cancel();
     
     _loadAlarm();
+    _loadUserAgeGroup();
     _startInactivityTimer();
     // 미션 화면 진입 시 알람 소리를 직접 제어하지 않고 
     // AlarmRingingScreen에서 일시 정지된 상태로 진입함.
+  }
+
+  Future<void> _loadUserAgeGroup() async {
+    try {
+      final mainProfile = ref.read(sajuProvider).mainProfile;
+      if (mainProfile != null) {
+        final age = DateTime.now().year - mainProfile.birthDate.year;
+        if (age >= 50) {
+          setState(() {
+            _ageGroup = 'senior';
+          });
+        } else if (age < 30) {
+          setState(() {
+            _ageGroup = 'youth';
+          });
+        } else {
+          setState(() {
+            _ageGroup = 'mature';
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Error loading user age group: $e');
+    }
   }
 
   Future<void> _loadAlarm() async {
@@ -909,14 +937,14 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
 
     // 3. Get Category-specific Meaning & Detail
     if (category == "love") {
-      meaning = card.getLocalizedLoveMeaning(l10n);
-      detail = card.getLocalizedLoveDetail(l10n);
+      meaning = card.getLocalizedLoveMeaning(l10n, ageGroup: _ageGroup);
+      detail = card.getLocalizedLoveDetail(l10n, ageGroup: _ageGroup);
     } else if (category == "wealth") {
-      meaning = card.getLocalizedWealthMeaning(l10n);
-      detail = card.getLocalizedWealthDetail(l10n);
+      meaning = card.getLocalizedWealthMeaning(l10n, ageGroup: _ageGroup);
+      detail = card.getLocalizedWealthDetail(l10n, ageGroup: _ageGroup);
     } else { // success
-      meaning = card.getLocalizedSuccessMeaning(l10n);
-      detail = card.getLocalizedSuccessDetail(l10n);
+      meaning = card.getLocalizedSuccessMeaning(l10n, ageGroup: _ageGroup);
+      detail = card.getLocalizedSuccessDetail(l10n, ageGroup: _ageGroup);
     }
     
     return Container(

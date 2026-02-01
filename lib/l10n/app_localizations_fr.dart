@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'Réveil Fortune';
+  String get appTitle => 'Fortune Alarm';
 
   @override
   String get morningGreeting => 'Bonjour ! Commencez votre journée chanceuse.';
@@ -526,6 +526,13 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get deleteColorConfirm =>
       'Êtes-vous sûr de vouloir supprimer cette couleur de la liste ?';
+
+  @override
+  String get deleteMission => 'Supprimer la mission';
+
+  @override
+  String get deleteMissionConfirm =>
+      'Êtes-vous sûr de vouloir supprimer cette mission ?';
 
   @override
   String get randomBackgroundDesc =>
@@ -1721,7 +1728,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notificationTime => 'Heure de notification';
 
   @override
-  String get start => 'Start';
+  String get start => 'Démarrer';
 
   @override
   String get end => 'Fin';
@@ -2426,6 +2433,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noEvents => 'Aucun événement prévu.';
+
+  @override
+  String get calendarDragGuide =>
+      'Glissez vers le bas pour voir le calendrier détaillé.';
 
   @override
   String get noSavedMemos => 'Aucun mémo ou événement enregistré.';
@@ -3154,13 +3165,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get ringtone_self_love => 'Amour de soi';
 
   @override
-  String get cherry_stained_finger => 'Cherry Stained Finger';
+  String get cherry_stained_finger => 'Doigt teinté de cerise';
 
   @override
-  String get dancing_in_the_stars => 'Dancing In The Stars';
+  String get dancing_in_the_stars => 'Dansant dans les étoiles';
 
   @override
-  String get nice_day => 'Nice Day';
+  String get nice_day => 'Bonne journée';
 
   @override
   String get fortuneTitle => 'Vérifier la fortune';
@@ -4090,7 +4101,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get policy => 'Conditions et Confidentialité';
 
   @override
-  String get support => 'Support';
+  String get support => 'Assistance';
 
   @override
   String get defaultAlarmBehavior => 'Comportement d\'alarme par défaut';
@@ -4871,21 +4882,57 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get compatibilityDescBest =>
-      'La meilleure compatibilité que vous puissiez demander. Ne vous laissez pas partir !';
+      'La meilleure compatibilité que vous puissiez demander. Ne vous lâchez pas !';
+
+  @override
+  String get compatibilityDescBest_Youth =>
+      'Vous êtes les meilleurs partenaires pour un amour frais et passionné. C\'est beau de vous voir soutenir les rêves de l\'autre et grandir ensemble ! Vous formez une relation qui s\'apporte une stimulation positive en partageant vos préoccupations sur vos études ou votre carrière. Si vous vous chérissez et prenez soin l\'un de l\'autre comme vous le faites maintenant, vous êtes un couple idéal capable de surmonter toutes les épreuves ensemble.';
+
+  @override
+  String get compatibilityDescBest_Mature =>
+      'Vous êtes des partenaires idéaux qui s\'apportent stabilité et force mutuelle. C\'est une relation mature où vous avez confiance dans les valeurs de l\'autre et construisez un avenir ensemble. Vous comprenez profondément les objectifs de vie de chacun et êtes les meilleurs soutiens l\'un pour l\'autre. Avec la confiance mutuelle comme base, vous pouvez mener une vie commune heureuse et prospère.';
+
+  @override
+  String get compatibilityDescBest_Senior =>
+      'Vous êtes de merveilleux compagnons qui passent leurs années dorées ensemble avec chaleur. C\'est une relation profonde où vous respectez la sagesse de l\'autre et vous apportez un soutien émotionnel mutuel. Vous êtes des partenaires qui partagent les petites joies du quotidien et prennent soin de la santé de l\'autre. Vous formez une union précieuse qui mène une vie paisible et heureuse, pleine de souvenirs partagés.';
 
   @override
   String get compatibilityTitleGreat => 'Une très bonne relation 💕';
 
   @override
   String get compatibilityDescGreat =>
-      'Un excellent partenaire qui est un grand soutien l\'un pour l\'autre.';
+      'Un excellent partenaire qui est un grand soutien mutuel.';
 
   @override
-  String get compatibilityTitleGood => 'Un couple bien assorti 😊';
+  String get compatibilityDescGreat_Youth =>
+      'C\'est une relation pleine d\'énergie et d\'excitation. Vous avez des intérêts et des valeurs similaires, ce qui vous permet de profiter de beaucoup de temps ensemble. Vous êtes un couple qui grandit ensemble en se motivant mutuellement. Si vous surmontez les petites différences con compréhension, vous pourrez développer un amour encore plus profond.';
+
+  @override
+  String get compatibilityDescGreat_Mature =>
+      'Vous êtes un couple avec une très grande affinité en termes de style de vie et de valeurs. Vous respectez le travail et l\'espace social de l\'autre tout en offrant un solide soutien émotionnel. C\'est une relation stable qui résout les problèmes ensemble et planifie un avenir solide. Si vous maintenez la communication, vous aurez une relation que les autres envieront.';
+
+  @override
+  String get compatibilityDescGreat_Senior =>
+      'Vous êtes des partenaires qui s\'apportent réconfort et tranquillité dans la vie. Vous partagez les loisirs de l\'autre et profitez d\'un temps relaxant ensemble. C\'est une relation où vous valorisez les expériences de vie de l\'autre et vous soutenez mutuellement. Si vous prenez soin l\'un de l\'autre et restez attentifs à la santé de chacun, vous passerez des années dorées très stables et heureuses.';
+
+  @override
+  String get compatibilityTitleGood => 'Un couple qui s\'entend bien 😊';
 
   @override
   String get compatibilityDescGood =>
-      'Il y a quelques différences, mais vous pouvez avoir un bel amour tout en vous ajustant l\'un à l\'autre.';
+      'Il y a quelques différences, mais vous pouvez avoir un bel amour en vous adaptant l\'un à l\'autre.';
+
+  @override
+  String get compatibilityDescGood_Youth =>
+      'Vous êtes un couple qui construit un bel amour grâce à une adaptation mutuelle. Bien qu\'il puisse y avoir des différences de personnalité, vous pouvez avoir une bonne relation si vous faites des efforts pour vous comprendre. Il est important de respecter l\'individualité de l\'autre et de trouver des points communs à travers des conversations honnêtes.';
+
+  @override
+  String get compatibilityDescGood_Mature =>
+      'Vous formez une relation qui reste stable grâce à la considération et aux efforts mutuels. Il peut y avoir des situations où vous différez sur des problèmes pratiques ou des décisions de vie, mais vous pouvez les résoudre par le dialogue. Si vous vous concentrez sur les forces de l\'autre et vous soutenez mutuellement, vous serez un couple solide.';
+
+  @override
+  String get compatibilityDescGood_Senior =>
+      'Vous êtes des compagnons qui mènent une vie paisible tout en s\'adaptant au rythme de l\'autre. Il est important de respecter les habitudes de vie de l\'autre et de construire une intimité à travers de petites conversations quotidiennes. Si vous veillez sur la santé de l\'autre et vous soutenez mutuellement, vous profiterez d\'une relation confortable.';
 
   @override
   String get compatibilityTitleEffort => 'Des efforts sont nécessaires 🧐';
@@ -4895,11 +4942,588 @@ class AppLocalizationsFr extends AppLocalizations {
       'Il y a beaucoup de différences. La compréhension et la considération sont les clés de la relation.';
 
   @override
-  String get compatibilityTitleDifficult => 'Besoin de beaucoup s\'ajuster 😅';
+  String get compatibilityDescEffort_Youth =>
+      'Vous êtes un couple qui doit grandir ensemble à travers de nombreuses conversations et de la compréhension. Des désaccords fréquents peuvent survenir en raison de personnalités différentes, mais si vous voyez cela comme un processus pour apprendre à vous connaître, vous pourrez vous développer. Il est important de comprendre le point de vue de l\'autre plutôt que d\'imposer son propre avis.';
+
+  @override
+  String get compatibilityDescEffort_Mature =>
+      'C\'est une relation qui demande beaucoup de patience et d\'adaptation car les styles de vie peuvent être différents. Il peut y avoir des frictions sur des questions pratiques, il est donc important d\'établir des règles claires et de se respecter mutuellement. Si vous vous efforcez de voir les différences non pas comme un conflit mais comme un complément, vous pourrez maintenir la relation.';
+
+  @override
+  String get compatibilityDescEffort_Senior =>
+      'Vous êtes des partenaires qui doivent se laisser de l\'espace mutuellement et s\'efforcer de comprendre les habitudes de vie de l\'autre. Il est important d\'accepter les habitudes ancrées depuis longtemps plutôt que d\'essayer de les changer. Si vous vous concentrez sur des intérêts communs et vous soutenez émotionnellement, vous pourrez mener une relation stable.';
+
+  @override
+  String get compatibilityTitleDifficult =>
+      'Nécessite beaucoup d\'ajustements 😅';
 
   @override
   String get compatibilityDescDifficult =>
-      'Les différences de personnalité peuvent être importantes. Vous devez comprendre profondément les différences de chacun.';
+      'Les différences de personnalité peuvent être importantes. Vous devez comprendre profondément les différences de l\'autre.';
+
+  @override
+  String get compatibilityDescDifficult_Youth =>
+      'Les différences de personnalité peuvent être importantes, ce qui peut mener à des conflits fréquents. C\'est une relation qui demande un amour profond et la volonté de changer pour l\'autre. Plutôt que d\'essayer de contrôler l\'autre, il est important d\'accepter son individualité telle qu\'elle est et de trouver un terrain d\'entente par un dialogue continu.';
+
+  @override
+  String get compatibilityDescDifficult_Mature =>
+      'Comme les valeurs et les objectifs de vie peuvent être très différents, beaucoup d\'efforts sont nécessaires pour trouver une direction commune. Il peut être difficile de trouver des compromis sur des décisions de vie importantes, une communication très honnête et profonde est donc essentielle. Si vous voyez les différences de l\'autre comme une opportunité de croissance personnelle, vous pourrez surmonter les difficultés.';
+
+  @override
+  String get compatibilityDescDifficult_Senior =>
+      'Il est important de reconnaître les différences dans les modes de vie que chacun a développés au fil du temps et de respecter l\'espace personnel de l\'autre. Plutôt que d\'essayer de conformer le partenaire à ses propres idées, il est préférable de construire une relation où l\'on s\'accepte mutuellement tel que l\'on est. Cela demande beaucoup de patience et de compréhension pour trouver la paix ensemble.';
+
+  @override
+  String get compatibilityAdvice_Youth =>
+      'Essayez de voir le monde du point de vue de votre partenaire. De petites surprises et des paroles de soutien sincères peuvent renforcer votre relation. Planifiez des activités ensemble qui vous passionnent tous les deux et créez de beaux souvenirs.';
+
+  @override
+  String get compatibilityAdvice_Mature =>
+      'Une communication honnête sur vos objectifs et vos attentes est la clé. Soutenez-vous mutuellement dans votre développement professionnel, mais n\'oubliez pas de consacrer du temps à votre relation. Une planification financière commune et une vision de l\'avenir vous apporteront de la sécurité.';
+
+  @override
+  String get compatibilityAdvice_Senior =>
+      'Prenez soin de votre santé ensemble et profitez de promenades ou de petits voyages. Partagez votre sagesse de vie et construisez un lien émotionnel profond. Créez une atmosphère chaleureuse à la maison où vous vous sentez tous les deux à l\'aise et en sécurité.';
+
+  @override
+  String get compatibilityLuck_Youth =>
+      'C\'est une phase de chance où votre passion et votre énergie feront briller votre avenir ensemble. Vous aurez de nombreuses occasions de grandir ensemble et de réaliser vos rêves. Votre amour sera perçu comme une force positive par votre entourage.';
+
+  @override
+  String get compatibilityLuck_Mature =>
+      'C\'est un temps de stabilité et de croissance. Vos efforts conjoints porteront leurs fruits, que ce soit sur le plan financier ou dans la profondeur de votre relation. Vous construisez une base solide pour les années à venir.';
+
+  @override
+  String get compatibilityLuck_Senior =>
+      'C\'est une chance caractérisée par la tranquillité, la paix et l\'attention mutuelle. Vous êtes comme un baume pour l\'âme de l\'autre. Ce temps est rempli d\'une profonde gratitude et de la joie de partager le voyage de la vie.';
+
+  @override
+  String get tarotLoveMeaning0_Senior =>
+      'C\'est une période pour trouver de la joie dans de petits changements quotidiens plutôt que dans une nouvelle excitation.';
+
+  @override
+  String get tarotLoveDetail0_Senior =>
+      'Partagez votre savoir-faire et vos talents accumulés de longue date avec ceux qui vous entourent plutôt que de grands projets. Vous ressentirez une grande récompense et un lien profond en aidant ou en conseillant quelqu\'un.';
+
+  @override
+  String get tarotLoveMeaning1_Senior =>
+      'Écoutez votre voix intérieure et prenez le temps de vous regarder.';
+
+  @override
+  String get tarotLoveDetail1_Senior =>
+      'Un moment calme et paisible est nécessaire. Plutôt que d\'être avec beaucoup de monde, méditez seul ou profitez de vos passe-temps pour recharger votre esprit. Cette maturité intérieure sera le fondement d\'une vie plus stable.';
+
+  @override
+  String get tarotLoveMeaning2_Senior =>
+      'Utilisez votre riche expérience et votre sagesse pour guider ceux qui vous entourent.';
+
+  @override
+  String get tarotLoveDetail2_Senior =>
+      'Votre jugement calme et votre perspective large seront d\'une grande aide pour de nombreuses personnes. Votre statut et votre influence augmenteront, et vous gagnerez la confiance profonde des gens. Soyez un mentor chaleureux capable d\'embrasser les autres.';
+
+  @override
+  String get tarotLoveMeaning3_Senior =>
+      'C\'est une période où l\'abondance matérielle et émotionnelle est atteinte en même temps.';
+
+  @override
+  String get tarotLoveDetail3_Senior =>
+      'Profitez des fruits de votre dur travail. Vous pouvez ressentir la joie de vivre tout en partageant des sentiments chaleureux avec votre famille ou vos connaissances proches. La générosité vous apportera une chance encore plus grande.';
+
+  @override
+  String get tarotLoveMeaning4_Senior =>
+      'Un sens aigu de la responsabilité et du leadership sont nécessaires.';
+
+  @override
+  String get tarotLoveDetail4_Senior =>
+      'Organisez votre environnement avec une volonté ferme et menez votre vie avec conviction. Votre présence stable donnera la tranquillité d\'esprit à votre famille et à ceux qui vous entourent. Cependant, n\'oubliez pas d\'avoir un cœur flexible.';
+
+  @override
+  String get tarotLoveMeaning5_Senior =>
+      'C\'est une période pour suivre les valeurs traditionnelles et rechercher la paix spirituelle.';
+
+  @override
+  String get tarotLoveDetail5_Senior =>
+      'Trouvez le sens de la vie dans la sagesse ou les enseignements de longue date. Partager vos idées profondes avec la jeune génération apportera une grande récompense. Votre attitude humble et sincère attirera les gens.';
+
+  @override
+  String get tarotLoveMeaning6_Senior =>
+      'Une relation harmonieuse avec les gens autour de vous est la clé de la chance.';
+
+  @override
+  String get tarotLoveDetail6_Senior =>
+      'Maintenez une relation équilibrée basée sur le respect mutuel et la compréhension. Une communication profonde avec une personne précieuse sera une grande source de force dans votre vie. C\'est une période pour ressentir à nouveau l\'importance de la camaraderie.';
+
+  @override
+  String get tarotLoveMeaning7_Senior =>
+      'Agissez hardiment avec un objectif clair en tête.';
+
+  @override
+  String get tarotLoveDetail7_Senior =>
+      'Même si vous êtes à un âge avancé, votre passion est toujours belle. S\'il y a quelque chose que vous voulez accomplir, poursuivez-le avec courage. Votre attitude proactive insufflera une nouvelle vitalité dans votre vie quotidienne.';
+
+  @override
+  String get tarotLoveMeaning8_Senior =>
+      'Une perspective juste et équilibrée est nécessaire.';
+
+  @override
+  String get tarotLoveDetail8_Senior =>
+      'Gérez les choses calmement et logiquement. En cas de conflit ou de choix, suivre votre conscience apportera les meilleurs résultats. Votre intégrité vous vaudra le respect de ceux qui vous entourent.';
+
+  @override
+  String get tarotLoveMeaning9_Senior =>
+      'C\'est une période pour regarder calmement votre vie et trouver la vérité intérieure.';
+
+  @override
+  String get tarotLoveDetail9_Senior =>
+      'Tenez-vous à l\'écart de l\'agitation et prenez du temps pour vous. Dans le silence, vous trouverez un nouveau sens à la vie et obtiendrez une croissance spirituelle. C\'est un moment précieux pour l\'autoréflexion.';
+
+  @override
+  String get tarotLoveMeaning10_Senior =>
+      'Acceptez naturellement le flux de la vie et attendez une nouvelle opportunité.';
+
+  @override
+  String get tarotLoveDetail10_Senior =>
+      'La vie a ses hauts et ses bas. Même si les choses ne se passent pas comme prévu, ne soyez pas déçu et attendez le bon moment. Un changement positif viendra bientôt, alors ayez l\'esprit détendu.';
+
+  @override
+  String get tarotLoveMeaning11_Senior =>
+      'Contrôlez votre esprit avec force intérieure et patience.';
+
+  @override
+  String get tarotLoveDetail11_Senior =>
+      'Le pouvoir de gérer des situations difficiles avec un cœur chaleureux plutôt que par la force est nécessaire. Votre douceur et votre tolérance auront le pouvoir de toucher le cœur des autres. Faites confiance à votre force intérieure.';
+
+  @override
+  String get tarotLoveMeaning12_Senior =>
+      'C\'est un moment où une nouvelle perspective et un sacrifice sont nécessaires.';
+
+  @override
+  String get tarotLoveDetail12_Senior =>
+      'Essayez de regarder le monde sous un angle différent. Même si les choses semblent s\'arrêter pour un moment, c\'est un processus de préparation pour un plus grand saut. La patience et un cœur dévoué apporteront des fruits précieux.';
+
+  @override
+  String get tarotLoveMeaning13_Senior =>
+      'L\'ancien se termine et un nouveau départ approche.';
+
+  @override
+  String get tarotLoveDetail13_Senior =>
+      'Lâchez le passé et préparez-vous pour un nouveau chapitre de votre vie. Le changement peut être inhabituel, mais c\'est un processus essentiel pour la croissance. Si vous acceptez le flux du changement avec un cœur léger, une nouvelle chance viendra.';
+
+  @override
+  String get tarotLoveMeaning14_Senior =>
+      'L\'équilibre et la modération sont les valeurs les plus importantes.';
+
+  @override
+  String get tarotLoveDetail14_Senior =>
+      'Évitez les excès en tout et maintenez un juste milieu. La tranquillité d\'esprit et un mode de vie sain vous apporteront de la stabilité. Maintenez une vie quotidienne harmonieuse en combinant bien différents éléments.';
+
+  @override
+  String get tarotLoveMeaning15_Senior =>
+      'Faites attention à l\'avidité excessive ou à l\'obsession.';
+
+  @override
+  String get tarotLoveDetail15_Senior =>
+      'Regardez en arrière pour voir si vous êtes lié par des choses matérielles ou de vieilles habitudes. Lâcher prise vous fera vous sentir libre. Si vous trouvez votre vrai moi loin de la tentation, votre chance s\'améliorera.';
+
+  @override
+  String get tarotLoveMeaning16_Senior =>
+      'Un changement soudain peut être une opportunité pour un nouveau saut.';
+
+  @override
+  String get tarotLoveDetail16_Senior =>
+      'Même si un événement inattendu se produit, ne soyez pas troublé et acceptez-le comme un processus de rupture de l\'ancien cadre. Après la crise, une base plus forte et plus solide sera préparée. Ayez la sagesse de surmonter les difficultés.';
+
+  @override
+  String get tarotLoveMeaning17_Senior =>
+      'Un moment où l\'espoir et la lumière remplissent votre vie.';
+
+  @override
+  String get tarotLoveDetail17_Senior =>
+      'Regardez vers l\'avenir avec un esprit positif. Vos rêves et vos souhaits se réalisent progressivement. Partager votre énergie lumineuse avec ceux qui vous entourent apportera un bonheur encore plus grand.';
+
+  @override
+  String get tarotLoveMeaning18_Senior =>
+      'Ne soyez pas anxieux face à l\'incertitude et faites confiance à votre intuition.';
+
+  @override
+  String get tarotLoveDetail18_Senior =>
+      'Même si l\'avenir semble incertain, il n\'y a pas lieu de s\'inquiéter à l\'avance. Écoutez votre voix intérieure et avancez lentement. Avec le temps, le brouillard se dissipera et un chemin clair apparaîtra.';
+
+  @override
+  String get tarotLoveMeaning19_Senior =>
+      'C\'est un moment pour profiter pleinement de la joie et de la vitalité de la vie.';
+
+  @override
+  String get tarotLoveDetail19_Senior =>
+      'Profitez de chaque jour avec un cœur brillant et positif comme le soleil. Votre présence elle-même sera une grande force pour votre famille et vos voisins. Soyez reconnaissant pour les petits bonheurs de la vie quotidienne et vivez une vie vibrante.';
+
+  @override
+  String get tarotLoveMeaning20_Senior =>
+      'Un moment où les résultats de vos efforts passés sont récompensés.';
+
+  @override
+  String get tarotLoveDetail20_Senior =>
+      'Le temps de la récolte est venu. Votre vie sincère a porté ses fruits, et vous recevrez reconnaissance et éloges de la part de ceux qui vous entourent. Acceptez ce résultat avec un cœur reconnaissant et préparez-vous pour un nouveau voyage.';
+
+  @override
+  String get tarotLoveMeaning21_Senior =>
+      'Profitez du plaisir de la vie quotidienne avec un cœur libre et pur.';
+
+  @override
+  String get tarotLoveDetail21_Senior =>
+      'Essayez de vous entendre avec les gens autour de vous avec un esprit libre qui n\'est pas lié. De nouvelles rencontres ou expériences insuffleront de la vitalité dans votre vie. Ayez le loisir de regarder le monde avec un cœur léger.';
+
+  @override
+  String get tarotWealthMeaning0_Senior =>
+      'C\'est une période pour une gestion d\'actifs stable et la sagesse du partage.';
+
+  @override
+  String get tarotWealthDetail0_Senior =>
+      'Concentrez-vous sur la protection et la gestion de vos actifs actuels plutôt que sur de nouveaux investissements. Partager votre sagesse économique ou donner des conseils à votre famille et à votre entourage sera très gratifiant.';
+
+  @override
+  String get tarotWealthMeaning1_Senior =>
+      'Écoutez votre intuition et agissez avec prudence.';
+
+  @override
+  String get tarotWealthDetail1_Senior =>
+      'Vos connaissances spécialisées ou vos compétences accumulées sur une longue période peuvent se transformer en valeur économique. Attendez calmement les opportunités sans vous précipiter, et vous porterez de bons fruits.';
+
+  @override
+  String get tarotWealthMeaning2_Senior =>
+      'Une base financière solide est établie grâce à la sagesse et à l\'expérience.';
+
+  @override
+  String get tarotWealthDetail2_Senior =>
+      'La richesse s\'accumule dans la maison et c\'est le moment de trouver la stabilité. Votre cœur généreux rendra votre entourage chaleureux, et cette bénédiction vous reviendra. Profitez de la vie quotidienne avec un esprit détendu.';
+
+  @override
+  String get tarotSuccessMeaning0_Senior =>
+      'C\'est une période où une fin gracieuse est plus importante qu\'un nouveau défi.';
+
+  @override
+  String get tarotSuccessDetail0_Senior =>
+      'Concentrez-vous sur l\'organisation et la conclusion des réalisations que vous avez bâties. Votre succès réside dans la sincérité et la sagesse manifestées dans le processus plutôt que dans le résultat. Répandez une influence positive autour de vous.';
+
+  @override
+  String get tarotSuccessMeaning1_Senior =>
+      'Préparez-vous pour l\'avenir avec de nouveaux objectifs créatifs.';
+
+  @override
+  String get tarotSuccessDetail1_Senior =>
+      'Votre paix intérieure est plus importante que le statut social ou l\'honneur. Prenez le temps de cultiver votre moi intérieur par la méditation ou la lecture. Une vision profonde vous fera briller encore plus.';
+
+  @override
+  String get tarotSuccessMeaning2_Senior =>
+      'Menez les autres avec sagesse et expérience.';
+
+  @override
+  String get tarotSuccessDetail2_Senior =>
+      'Vivre en harmonie avec sa famille et maintenir sa santé est une vie suffisamment réussie. Trouvez le bonheur dans les petites routines quotidiennes et ayez un cœur reconnaissant. Votre existence elle-même est une grande force pour votre famille.';
+
+  @override
+  String get tarotWealthMeaning3_Senior =>
+      'C\'est une période d\'abondance matérielle et de stabilité.';
+
+  @override
+  String get tarotWealthDetail3_Senior =>
+      'Maintenez la stabilité du foyer grâce à des sources de revenus stables et une consommation planifiée. Votre sagesse économique sera une grande leçon pour vos enfants.';
+
+  @override
+  String get tarotWealthMeaning4_Senior =>
+      'Un leadership responsable apporte le succès financier.';
+
+  @override
+  String get tarotWealthDetail4_Senior =>
+      'Nous recommandons des méthodes de gestion d\'actifs vérifiées plutôt que des produits financiers complexes. Une attitude prudente et conservatrice est la clé pour protéger vos actifs.';
+
+  @override
+  String get tarotWealthMeaning5_Senior =>
+      'Le respect des principes apporte une stabilité financière à long terme.';
+
+  @override
+  String get tarotWealthDetail5_Senior =>
+      'Il vaut mieux se contenter de sa vie actuelle et être solide plutôt que d\'être cupide. Le bon choix garantit la paix dans la vieillesse.';
+
+  @override
+  String get tarotWealthMeaning6_Senior =>
+      'Une opportunité financière inattendue peut se présenter par le biais d\'une connaissance.';
+
+  @override
+  String get tarotWealthDetail6_Senior =>
+      'Il peut y avoir une pression temporaire sur les flux de trésorerie, mais si vous la gérez avec sagesse, vous pouvez transformer la crise en opportunité. Réduisez les dépenses inutiles.';
+
+  @override
+  String get tarotWealthMeaning7_Senior =>
+      'Le succès peut être obtenu grâce à une action rapide et décisive.';
+
+  @override
+  String get tarotWealthDetail7_Senior =>
+      'Si vous accumulez de la vertu autour de vous, la chance de richesse suivra de lieux inattendus. La joie du partage rendra votre vie encore plus riche.';
+
+  @override
+  String get tarotWealthMeaning8_Senior =>
+      'Une gestion financière juste et équilibrée est nécessaire.';
+
+  @override
+  String get tarotWealthDetail8_Senior =>
+      'Il est important de trouver la tranquillité d\'esprit plutôt que l\'abondance matérielle. Une vie disciplinée apportera plutôt une stabilité économique.';
+
+  @override
+  String get tarotWealthMeaning9_Senior =>
+      'Prenez le temps de revoir vos plans financiers.';
+
+  @override
+  String get tarotWealthDetail9_Senior =>
+      'Des revenus ou des dépenses imprévus peuvent survenir. Si vous vous adaptez au changement et gérez vos actifs avec sagesse, il n\'y aura pas de problèmes majeurs.';
+
+  @override
+  String get tarotWealthMeaning10_Senior =>
+      'La fortune change, alors préparez-vous pour l\'avenir.';
+
+  @override
+  String get tarotWealthDetail10_Senior =>
+      'Il est important de suivre les principes dans les questions de propriété telles que l\'héritage ou la donation. Une attitude honnête prévient les litiges et apporte la paix.';
+
+  @override
+  String get tarotWealthMeaning11_Senior =>
+      'Surmontez les difficultés financières avec patience et force intérieure.';
+
+  @override
+  String get tarotWealthDetail11_Senior =>
+      'Le soutien économique pour les enfants ou les descendants reviendra comme une grande récompense plus tard. Soyez patient et maintenez une perspective à long terme.';
+
+  @override
+  String get tarotWealthMeaning12_Senior =>
+      'Une nouvelle perspective sur l\'argent est nécessaire.';
+
+  @override
+  String get tarotWealthDetail12_Senior =>
+      'Vous vivrez une expérience mystérieuse où vous serez comblé en vous vidant. Lâchez les possessions inutiles et affrontez la vie quotidienne avec un cœur léger.';
+
+  @override
+  String get tarotWealthMeaning13_Senior =>
+      'Un changement financier majeur arrive, alors préparez-vous.';
+
+  @override
+  String get tarotWealthDetail13_Senior =>
+      'Recherchez l\'harmonie entre les revenus et les dépenses et méfiez-vous de la cupidité excessive. Une vie disciplinée vous apportera une stabilité continue.';
+
+  @override
+  String get tarotWealthMeaning14_Senior =>
+      'Évitez les dépenses excessives et maintenez la modération.';
+
+  @override
+  String get tarotWealthDetail14_Senior =>
+      'Vous devez vous méfier des offres d\'investissement alléchantes ou d\'une expansion excessive. Faire confiance à votre riche expérience et prendre des décisions prudentes est le moyen de protéger vos actifs.';
+
+  @override
+  String get tarotWealthMeaning15_Senior =>
+      'Méfiez-vous des tentations financières excessives.';
+
+  @override
+  String get tarotWealthDetail15_Senior =>
+      'Dans une situation de crise, la sagesse du retour aux sources est nécessaire. Ne soyez pas déconcerté et vérifiez méticuleusement l\'état de vos actifs pour minimiser les dommages.';
+
+  @override
+  String get tarotWealthMeaning16_Senior =>
+      'Un changement soudain peut être une opportunité pour un nouveau saut financier.';
+
+  @override
+  String get tarotWealthDetail16_Senior =>
+      'C\'est un moment où les difficultés économiques se résolvent et où un flux stable commence. Concevez votre avenir avec un esprit positif et profitez de la paix.';
+
+  @override
+  String get tarotWealthMeaning17_Senior =>
+      'L\'espoir et la chance financière commencent à briller.';
+
+  @override
+  String get tarotWealthDetail17_Senior =>
+      'La patience est nécessaire pour attendre que le brouillard lié à la richesse se lève et que la vérité soit révélée. Prenez votre temps et observez plutôt que de prendre une décision hâtive.';
+
+  @override
+  String get tarotWealthMeaning18_Senior =>
+      'Faites attention aux risques financiers invisibles.';
+
+  @override
+  String get tarotWealthDetail18_Senior =>
+      'Des récompenses suffisantes suivent vos efforts et un loisir économique apparaît. Partagez le bonheur avec ceux qui vous entourent et passez un temps béni.';
+
+  @override
+  String get tarotWealthMeaning19_Senior =>
+      'C\'est une période pour profiter de l\'abondance matérielle et de la vitalité.';
+
+  @override
+  String get tarotWealthDetail19_Senior =>
+      'C\'est un moment où votre sincérité est reconnue comme une réussite économique. Organisez le passé et faites un nouveau pas pour un avenir stable.';
+
+  @override
+  String get tarotWealthMeaning20_Senior =>
+      'Les efforts passés portent leurs fruits sous forme de récompenses financières.';
+
+  @override
+  String get tarotWealthDetail20_Senior =>
+      'La stabilité économique atteint son apogée et une retraite paisible est garantie. C\'est le moment où votre gestion avisée des actifs brille.';
+
+  @override
+  String get tarotWealthMeaning21_Senior =>
+      'Maintenez la liberté financière avec un cœur pur.';
+
+  @override
+  String get tarotWealthDetail21_Senior =>
+      'C\'est un moment pour valoriser la joie de vivre plutôt que la possession matérielle. Si vous appréciez le monde avec un esprit détendu, la richesse suivra naturellement.';
+
+  @override
+  String get tarotSuccessMeaning3_Senior =>
+      'Vos efforts portent leurs fruits et vous atteignez la stabilité.';
+
+  @override
+  String get tarotSuccessDetail3_Senior =>
+      'Votre leadership et votre sagesse servent de modèle pour ceux qui vous entourent. Vous goûterez au vrai succès lorsque vous dirigerez avec tolérance plutôt qu\'avec autorité.';
+
+  @override
+  String get tarotSuccessMeaning4_Senior =>
+      'Un leadership fort apporte le succès dans votre domaine.';
+
+  @override
+  String get tarotSuccessDetail4_Senior =>
+      'C\'est un moment où les valeurs inébranlables portent leurs fruits. Votre vie fondée sur des principes servira de jalon présentant le bon chemin aux plus jeunes.';
+
+  @override
+  String get tarotSuccessMeaning5_Senior =>
+      'Maintenez l\'honneur et suivez les valeurs traditionnelles.';
+
+  @override
+  String get tarotSuccessDetail5_Senior =>
+      'C\'est le moment de faire un choix judicieux entre l\'honneur et le profit. Les décisions prises sur la base de votre riche expérience garantiront un avenir paisible.';
+
+  @override
+  String get tarotSuccessMeaning6_Senior =>
+      'Un nouveau partenariat ou une collaboration apporte de bons résultats.';
+
+  @override
+  String get tarotSuccessDetail6_Senior =>
+      'Aucun obstacle ne peut briser votre volonté. Votre apparence d\'aller de l\'avant sans abandonner est déjà un énorme succès.';
+
+  @override
+  String get tarotSuccessMeaning7_Senior =>
+      'Avancez hardiment vers votre objectif.';
+
+  @override
+  String get tarotSuccessDetail7_Senior =>
+      'C\'est un moment où la douceur l\'emporte sur la force. Lorsque vous embrassez l\'entourage avec patience et bienveillance, votre honneur sera encore plus élevé.';
+
+  @override
+  String get tarotSuccessMeaning8_Senior =>
+      'Un jugement juste et un équilibre sont les clés du succès.';
+
+  @override
+  String get tarotSuccessDetail8_Senior =>
+      'C\'est un moment où vous réalisez des vérités profondes que les autres ne peuvent pas voir. Un temps de réflexion tranquille fera de vous un être humain plus mature et profond.';
+
+  @override
+  String get tarotSuccessMeaning9_Senior =>
+      'Prenez le temps de revoir vos réalisations.';
+
+  @override
+  String get tarotSuccessDetail9_Senior =>
+      'Un nouveau chapitre de la vie s\'ouvre. Si vous acceptez positivement le changement sans le craindre, vous obtiendrez des résultats inattendus et formidables.';
+
+  @override
+  String get tarotSuccessMeaning10_Senior =>
+      'Acceptez le changement de destin et cherchez une nouvelle voie.';
+
+  @override
+  String get tarotSuccessDetail10_Senior =>
+      'Le fait de suivre la justice plutôt que l\'intérêt privé appelle au respect de l\'entourage. Votre honnêteté sera finalement la clé du plus grand succès.';
+
+  @override
+  String get tarotSuccessMeaning11_Senior =>
+      'Surmontez les défis avec persévérance et patience.';
+
+  @override
+  String get tarotSuccessDetail11_Senior =>
+      'Même si c\'est dur pour l\'instant, c\'est le moment de tenir bon pour un but noble. Votre dévouement restera comme un beau succès dans la mémoire de l\'histoire et des gens à l\'avenir.';
+
+  @override
+  String get tarotSuccessMeaning12_Senior =>
+      'Considérez le succès d\'un point de vue différent.';
+
+  @override
+  String get tarotSuccessDetail12_Senior =>
+      'Il est important de réaliser le caractère précieux du présent plutôt que de s\'obséder pour la gloire passée. La paix acquise par le vide est le vrai succès dans la vie.';
+
+  @override
+  String get tarotSuccessMeaning13_Senior =>
+      'Une phase se termine et un nouveau chapitre commence.';
+
+  @override
+  String get tarotSuccessDetail13_Senior =>
+      'Une vie équilibrée qui ne penche d\'aucun côté est la plus haute vertu. Votre apparence disciplinée répandra la paix et la stabilité dans votre entourage.';
+
+  @override
+  String get tarotSuccessMeaning14_Senior =>
+      'Maintenez l\'équilibre et gérez votre succès avec modération.';
+
+  @override
+  String get tarotSuccessDetail14_Senior =>
+      'Trouvez votre vrai moi en échappant aux contraintes qui vous liaient. Au moment où vous gagnerez la liberté d\'esprit, vous serez la personne la plus prospère au monde.';
+
+  @override
+  String get tarotSuccessMeaning15_Senior =>
+      'Méfiez-vous de l\'obsession du succès ou du pouvoir.';
+
+  @override
+  String get tarotSuccessDetail15_Senior =>
+      'Le changement soudain est un processus qui vous rend plus fort. Lorsque vous établissez un nouvel ordre en répondant calmement, de plus grandes réalisations suivront.';
+
+  @override
+  String get tarotSuccessMeaning16_Senior =>
+      'Un changement inattendu peut être un tournant vers un plus grand succès.';
+
+  @override
+  String get tarotSuccessDetail16_Senior =>
+      'Le repos vient à une âme fatiguée et de nouveaux rêves surgissent. Votre énergie créative éclairera l\'entourage et portera des fruits heureux.';
+
+  @override
+  String get tarotSuccessMeaning17_Senior =>
+      'Une vision claire et de l\'espoir mènent au succès.';
+
+  @override
+  String get tarotSuccessDetail17_Senior =>
+      'Écoutez votre voix intérieure même dans des situations confuses. Avec le temps, votre choix s\'avérera juste.';
+
+  @override
+  String get tarotSuccessMeaning18_Senior =>
+      'Ne soyez pas anxieux face à l\'incertitude et faites confiance à votre intuition.';
+
+  @override
+  String get tarotSuccessDetail18_Senior =>
+      'Un moment où le corps et l\'esprit sont sains et dynamiques. Partager une énergie positive avec son entourage et profiter de la joie de vivre est le vrai succès.';
+
+  @override
+  String get tarotSuccessMeaning19_Senior =>
+      'Célébrez vos réalisations et profitez de la joie du succès.';
+
+  @override
+  String get tarotSuccessDetail19_Senior =>
+      'Des endroits qui ont besoin de votre expérience et de votre sagesse surgissent. Vous ressentirez une plus grande récompense et un plus grand succès lorsque vous contribuerez à la société avec un nouveau sens de la mission.';
+
+  @override
+  String get tarotSuccessMeaning20_Senior =>
+      'Vos efforts de longue date sont officiellement reconnus.';
+
+  @override
+  String get tarotSuccessDetail20_Senior =>
+      'Un état de satisfaction et de paix parfaite avec plus rien à accomplir. Votre vie elle-même deviendra une œuvre d\'art et donnera une impression profonde à votre entourage.';
+
+  @override
+  String get tarotSuccessMeaning21_Senior =>
+      'Atteignez le succès final avec un esprit libre.';
+
+  @override
+  String get tarotSuccessDetail21_Senior =>
+      'Profitez de votre propre bonheur loin des standards du monde. Vous, qui vivez comme si vous voyagiez dans le monde avec un cœur léger, êtes le vrai gagnant.';
 
   @override
   String get compatibilityResultButton => 'Voir le résultat de compatibilité';
@@ -5147,6 +5771,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get compatibilitySummary => 'Résumé';
+
+  @override
+  String get compatibilitySectionLuck => 'Synergie de Chance';
+
+  @override
+  String get compatibilitySectionAdvice => 'Conseils de Relation';
+
+  @override
+  String get compatibilitySectionPositive => 'Aspects Positifs';
+
+  @override
+  String get compatibilitySectionCaution => 'Points de Vigilance';
+
+  @override
+  String get compatibilityLunarDisclaimer =>
+      '* Remarque : Les dates de naissance lunaires sont actuellement analysées sur la base des dates solaires. La conversion lunaire sera bientôt mise à jour.';
 
   @override
   String get tojeongSaveAndCheckButton =>
@@ -5828,10 +6468,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deleteMissionTitle => 'Supprimer la mission';
-
-  @override
-  String get deleteMissionConfirm =>
-      'Êtes-vous sûr de vouloir supprimer cette mission ?';
 
   @override
   String get yesDelete => 'Oui, supprimer';
