@@ -158,9 +158,9 @@ class AdService {
     initFuture.then((_) {
       debugPrint('AdMob SDK initialized');
       
-      // 비구독자만 전면형 광고 프리로드
+      // 비구독자만 보상형 및 종료 광고 프리로드 (전면 광고는 제외)
       if (!isSubscriber) {
-        Timer(const Duration(seconds: 2), loadInterstitialAd);
+        // Timer(const Duration(seconds: 2), loadInterstitialAd); // [제거] 전면 광고는 더 이상 사용하지 않음
         Timer(const Duration(seconds: 1), preloadRewardedAd);
         Timer(const Duration(seconds: 1), preloadExitAd);
       }
@@ -226,6 +226,10 @@ class AdService {
 
   /// 전면 광고 로드
   static void loadInterstitialAd() {
+    // [수정] 정책에 따라 전면 광고를 더 이상 로드하지 않음
+    return;
+
+    /* // 기존 로직 비활성화
     if (_interstitialAd != null || _isInterstitialAdLoading) return;
     
     _isInterstitialAdLoading = true;
@@ -245,11 +249,18 @@ class AdService {
         },
       ),
     );
+    */
   }
 
   /// 전면 광고 표시
   /// [onAdDismissed] 광고가 닫혔을 때 실행할 콜백
   static void showInterstitialAd({VoidCallback? onAdDismissed}) {
+    // [수정] 정책에 따라 전면 광고를 더 이상 표시하지 않음
+    debugPrint('Skipping InterstitialAd as per policy');
+    onAdDismissed?.call();
+    return;
+
+    /* // 기존 로직 비활성화
     // 구독자는 전면 광고를 보지 않음 (사용자 경험 개선)
     if (isSubscriber) {
       debugPrint('Skipping InterstitialAd for subscriber');
@@ -282,6 +293,7 @@ class AdService {
     );
 
     _interstitialAd!.show();
+    */
   }
 
   /// 보상형 광고 사전 로드
