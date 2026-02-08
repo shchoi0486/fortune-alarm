@@ -6081,6 +6081,16 @@ class AppLocalizationsRu extends AppLocalizations {
   String get routineNotificationTitle => 'Ежедневное уведомление о рутине';
 
   @override
+  String get routineNotificationDescription =>
+      'Получайте уведомления утром и вечером, чтобы не отставать от своих рутинных задач.';
+
+  @override
+  String get morningRoutineTime => 'Время утренней рутины';
+
+  @override
+  String get eveningRoutineTime => 'Время вечерней рутины';
+
+  @override
   String get todaysFortuneNotificationTitle => 'Сегодняшнее предсказание';
 
   @override

@@ -10462,6 +10462,24 @@ abstract class AppLocalizations {
   /// **'Daily Routine Reminder'**
   String get routineNotificationTitle;
 
+  /// No description provided for @routineNotificationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified in the morning and evening to keep up with your routine missions.'**
+  String get routineNotificationDescription;
+
+  /// No description provided for @morningRoutineTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning Routine Time'**
+  String get morningRoutineTime;
+
+  /// No description provided for @eveningRoutineTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening Routine Time'**
+  String get eveningRoutineTime;
+
   /// No description provided for @todaysFortuneNotificationTitle.
   ///
   /// In en, this message translates to:

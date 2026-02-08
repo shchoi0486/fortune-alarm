@@ -27,7 +27,7 @@ class NotificationService {
   Future<AppLocalizations> _getL10n() async {
     String languageCode = 'ko';
     try {
-      // settings 박스에서 언어 설정을 가져옴 (alarm_settings_screen.dart와 동일한 로직)
+      // settings 박스에서 언어 설정을 가져옴
       final settingsBox = await Hive.openBox('settings');
       languageCode = settingsBox.get('language', defaultValue: Platform.localeName.split('_')[0]);
     } catch (_) {
@@ -35,7 +35,13 @@ class NotificationService {
       languageCode = Platform.localeName.split('_')[0];
     }
     
-    return await AppLocalizations.delegate.load(Locale(languageCode));
+    // 지원하지 않는 언어일 경우 영어(en)로 폴백
+    Locale locale = Locale(languageCode);
+    if (!AppLocalizations.supportedLocales.contains(locale)) {
+      locale = const Locale('en');
+    }
+    
+    return await AppLocalizations.delegate.load(locale);
   }
 
   // 알림 그룹화를 위한 키

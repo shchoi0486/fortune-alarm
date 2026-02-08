@@ -222,7 +222,6 @@
   "deleteColor": "Удалить цвет",
   "deleteColorConfirm": "Вы уверены, что хотите удалить этот цвет из списка?",
   "deleteMission": "Удалить миссию",
-  "deleteMissionConfirm": "Вы уверены, что хотите удалить эту миссию из списка?",
   "randomBackgroundDesc": "Новый фон при каждом срабатывании будильника!",
   "backgroundDeleted": "Изображение удалено.",
   "pickFromDevice": "Выбрать из устройства",
@@ -2677,5 +2676,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "routineNotificationDescription": "Получайте уведомления утром и вечером, чтобы не отставать от своих рутинных задач.",
+  "morningRoutineTime": "Время утренней рутины",
+  "eveningRoutineTime": "Время вечерней рутины"
 }

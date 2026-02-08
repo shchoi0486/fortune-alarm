@@ -6169,6 +6169,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get routineNotificationTitle => 'Notification de routine quotidienne';
 
   @override
+  String get routineNotificationDescription =>
+      'Recevez des notifications le matin et le soir pour rester à jour dans vos missions de routine.';
+
+  @override
+  String get morningRoutineTime => 'Heure de la routine matinale';
+
+  @override
+  String get eveningRoutineTime => 'Heure de la routine du soir';
+
+  @override
   String get todaysFortuneNotificationTitle => 'Votre fortune d\'aujourd\'hui';
 
   @override

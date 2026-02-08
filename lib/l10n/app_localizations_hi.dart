@@ -6106,6 +6106,16 @@ class AppLocalizationsHi extends AppLocalizations {
   String get routineNotificationTitle => 'दैनिक दिनचर्या सूचना';
 
   @override
+  String get routineNotificationDescription =>
+      'अपनी नियमित मिशनों के साथ बने रहने के लिए सुबह और शाम को सूचित रहें।';
+
+  @override
+  String get morningRoutineTime => 'सुबह की दिनचर्या का समय';
+
+  @override
+  String get eveningRoutineTime => 'शाम की दिनचर्या का समय';
+
+  @override
   String get todaysFortuneNotificationTitle => 'आज का भाग्य';
 
   @override

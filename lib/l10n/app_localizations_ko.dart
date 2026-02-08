@@ -5783,6 +5783,15 @@ class AppLocalizationsKo extends AppLocalizations {
   String get routineNotificationTitle => '데일리 루틴 알림';
 
   @override
+  String get routineNotificationDescription => '루틴 미션 수행을 위해 오전/오후에 알림을 드립니다.';
+
+  @override
+  String get morningRoutineTime => '오전 루틴 알림 시간';
+
+  @override
+  String get eveningRoutineTime => '오후 루틴 알림 시간';
+
+  @override
   String get todaysFortuneNotificationTitle => '오늘의 운세';
 
   @override

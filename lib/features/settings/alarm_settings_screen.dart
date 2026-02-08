@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../services/notification_service.dart';
+import '../../services/routine_alarm_service.dart';
 
 class AlarmSettingsScreen extends ConsumerStatefulWidget {
   const AlarmSettingsScreen({super.key});
@@ -58,6 +59,15 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
       );
     } else {
       await NotificationService().cancelAllFortuneNotifications();
+    }
+  }
+
+  Future<void> _saveRoutineSettings() async {
+    final enabled = _settingsBox.get('routine_notification_enabled', defaultValue: true);
+    if (enabled) {
+      await RoutineAlarmService.scheduleDailyReminders();
+    } else {
+      await RoutineAlarmService.cancelAll();
     }
   }
 
@@ -168,12 +178,45 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
                   'daily_fortune_time1',
                   '08:00',
                   isDark,
+                  onConfirm: _saveFortuneSettings,
                 ),
                 _buildTimeTile(
                   AppLocalizations.of(context)!.afternoonNotificationTime,
                   'daily_fortune_time2',
                   '13:00',
                   isDark,
+                  onConfirm: _saveFortuneSettings,
+                ),
+              ],
+            ],
+            isDark,
+          ),
+          const SizedBox(height: 24),
+          _buildSection(
+            AppLocalizations.of(context)!.routineNotificationTitle,
+            [
+              _buildSwitchTile(
+                AppLocalizations.of(context)!.enableNotification,
+                AppLocalizations.of(context)!.routineNotificationDescription,
+                'routine_notification_enabled',
+                true,
+                isDark,
+                onChanged: (_) => _saveRoutineSettings(),
+              ),
+              if (_settingsBox.get('routine_notification_enabled', defaultValue: true)) ...[
+                _buildTimeTile(
+                  AppLocalizations.of(context)!.morningRoutineTime,
+                  'morning_routine_time',
+                  '08:00',
+                  isDark,
+                  onConfirm: _saveRoutineSettings,
+                ),
+                _buildTimeTile(
+                  AppLocalizations.of(context)!.eveningRoutineTime,
+                  'evening_routine_time',
+                  '21:00',
+                  isDark,
+                  onConfirm: _saveRoutineSettings,
                 ),
               ],
             ],
@@ -186,7 +229,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
   );
 }
 
-  Widget _buildTimeTile(String title, String key, String defaultValue, bool isDark) {
+  Widget _buildTimeTile(String title, String key, String defaultValue, bool isDark, {VoidCallback? onConfirm}) {
     final timeStr = _settingsBox.get(key, defaultValue: defaultValue);
     final parts = timeStr.split(':');
     final time = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
@@ -232,7 +275,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
                       CupertinoButton(
                         child: Text(AppLocalizations.of(context)!.confirm),
                         onPressed: () {
-                          _saveFortuneSettings();
+                          if (onConfirm != null) onConfirm();
                           Navigator.pop(context);
                         },
                       ),
@@ -245,7 +288,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
                       use24hFormat: false,
                       onDateTimeChanged: (DateTime newDateTime) {
                         setState(() {
-                          _settingsBox.put(key, "${newDateTime.hour}:${newDateTime.minute}");
+                          _settingsBox.put(key, "${newDateTime.hour.toString().padLeft(2, '0')}:${newDateTime.minute.toString().padLeft(2, '0')}");
                         });
                       },
                     ),

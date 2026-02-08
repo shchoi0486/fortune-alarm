@@ -10,9 +10,12 @@ import 'package:collection/collection.dart';
 import 'package:slide_to_act/slide_to_act.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import 'package:flutter/services.dart';
+import 'dart:typed_data';
 
 import '../../providers/alarm_list_provider.dart';
 import '../../services/notification_service.dart';
+import '../../services/alarm_scheduler_service.dart';
 import '../../data/models/alarm_model.dart';
 import '../mission/widgets/mission_success_overlay.dart';
 
@@ -25,10 +28,12 @@ class SimpleAlarmScreen extends ConsumerStatefulWidget {
   ConsumerState<SimpleAlarmScreen> createState() => _SimpleAlarmScreenState();
 }
 
-class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
+class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> with WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
+  Timer? _volumeEnforcementTimer;
   Timer? _volumeTimer;
   Timer? _timeTimer;
+  Timer? _inactivityTimer;
   DateTime _now = DateTime.now();
   AlarmModel? _alarm;
   bool _isLoading = true;
@@ -50,7 +55,16 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
   @override
   void initState() {
     super.initState();
+    
+    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
+    Vibration.cancel();
+    
+    WidgetsBinding.instance.addObserver(this);
+    
     _loadAlarm();
+    _startInactivityTimer();
+    _startVolumeEnforcement();
+    
     // 미션 화면 진입 시 알람 소리를 직접 제어하지 않고 
     // AlarmRingingScreen에서 일시 정지된 상태로 진입함.
     _timeTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -60,6 +74,58 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
         });
       }
     });
+  }
+
+  void _startInactivityTimer() {
+    _inactivityTimer?.cancel();
+    _inactivityTimer = Timer(const Duration(minutes: 2), () {
+      if (mounted) {
+        debugPrint('[SimpleAlarmScreen] Inactivity timeout - returning to ringing screen');
+        Navigator.of(context).pop('timeout');
+      }
+    });
+  }
+
+  void _startVolumeEnforcement() {
+    if (Platform.isAndroid) {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      _volumeEnforcementTimer?.cancel();
+      _volumeEnforcementTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (!mounted || _isSuccess) {
+          timer.cancel();
+          return;
+        }
+        try {
+          await channel.invokeMethod('setMaxAlarmVolume');
+        } catch (e) {
+          debugPrint('Error setting max alarm volume: $e');
+        }
+      });
+    }
+  }
+
+  DateTime? _backgroundTime;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _backgroundTime = DateTime.now();
+      debugPrint('[SimpleAlarmScreen] App paused at: $_backgroundTime');
+    } else if (state == AppLifecycleState.resumed) {
+      if (_backgroundTime != null) {
+        final now = DateTime.now();
+        final diff = now.difference(_backgroundTime!).inMinutes;
+        debugPrint('[SimpleAlarmScreen] App resumed. Background duration: $diff minutes');
+        
+        if (diff >= 15) {
+          debugPrint('[SimpleAlarmScreen] Background duration exceeds 15 minutes. Closing mission.');
+          if (mounted && !_isSuccess) {
+            Navigator.of(context).pop('timeout');
+          }
+        }
+      }
+      _backgroundTime = null;
+    }
   }
 
   Future<void> _loadAlarm() async {
@@ -76,6 +142,8 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
           _alarm = alarm;
           _isLoading = false;
         });
+        // 미션 진입 시 알람 소리 및 진동 중지
+        _stopAlarm();
       }
     } catch (e) {
       debugPrint('Error loading alarm in SimpleAlarmScreen: $e');
@@ -85,70 +153,81 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _volumeTimer?.cancel();
+    _volumeEnforcementTimer?.cancel();
     _timeTimer?.cancel();
+    _inactivityTimer?.cancel();
+    _stopAlarm();
     _audioPlayer.dispose();
     super.dispose();
   }
 
   Future<void> _playAlarm() async {
-    if (widget.alarmId == null) return;
+    if (widget.alarmId == null || _alarm == null) return;
 
-    final alarmList = ref.read(alarmListProvider);
-    final alarm = alarmList.firstWhereOrNull((a) => a.id == widget.alarmId);
-    
-    if (alarm == null) return;
+    final alarm = _alarm!;
 
     try {
-              if (alarm.isSoundEnabled) {
-                // 'default' ringtone with gradual volume enabled -> fallback to AudioPlayer 'alarm_sound'
-                // to ensure volume fade-in works correctly.
-                bool useAudioPlayer = alarm.ringtonePath != 'default' || alarm.isGradualVolume;
+      if (alarm.isSoundEnabled) {
+        String path = alarm.ringtonePath ?? 'default';
+        debugPrint('[SimpleAlarm] Playing alarm sound: $path');
+        
+        if (path == 'default' || path.isEmpty) {
+          await FlutterRingtonePlayer().playAlarm(
+            looping: true, 
+            volume: alarm.volume, 
+            asAlarm: true
+          );
+        } else {
+          // 커스텀 사운드 재생
+          try {
+            if (Platform.isAndroid) {
+              await _audioPlayer.setAudioContext(AudioContext(
+                android: AudioContextAndroid(
+                  isSpeakerphoneOn: true,
+                  stayAwake: true,
+                  contentType: AndroidContentType.sonification,
+                  usageType: AndroidUsageType.alarm,
+                  audioFocus: AndroidAudioFocus.gain,
+                ),
+              ));
+            }
+            
+            await _audioPlayer.stop();
+            await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+            
+            try {
+              await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
+            } catch (e) {
+              debugPrint('[SimpleAlarm] AssetSource failed, trying BytesSource fallback: $e');
+              final ByteData data = await rootBundle.load('assets/sounds/$path.ogg');
+              final Uint8List bytes = data.buffer.asUint8List();
+              await _audioPlayer.setSource(BytesSource(bytes));
+            }
+            
+            double targetVolume = alarm.volume;
+            if (targetVolume <= 0) targetVolume = 0.5;
+            
+            await _audioPlayer.setVolume(targetVolume);
+            await _audioPlayer.resume();
+          } catch (ae) {
+            debugPrint('[SimpleAlarm] AudioPlayer error: $ae. Falling back to system default.');
+            await FlutterRingtonePlayer().playAlarm(
+              looping: true, 
+              volume: alarm.volume, 
+              asAlarm: true
+            );
+          }
+        }
+      }
 
-                if (!useAudioPlayer) {
-                   await FlutterRingtonePlayer().playAlarm(
-                     looping: true, 
-                     volume: alarm.volume, 
-                     asAlarm: true
-                   );
-                } else {
-                   String path = alarm.ringtonePath ?? 'alarm_sound';
-                   if (path == 'default') path = 'alarm_sound';
-                   
-                   String ext = 'ogg';
-                   
-                   await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-                   await _audioPlayer.setSource(AssetSource('sounds/$path.$ext'));
-                   
-                   double initialVolume = alarm.isGradualVolume ? 0.1 : alarm.volume;
-                   await _audioPlayer.setVolume(initialVolume);
-                   await _audioPlayer.resume();
-                   
-                   if (alarm.isGradualVolume) {
-                     _startVolumeFadeIn(alarm.volume);
-                   }
-                }
-              }
-
-              if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
+      if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
          _playVibration(alarm.vibrationPattern);
       }
     } catch (e) {
       debugPrint('Error playing alarm: $e');
     }
-  }
-
-  void _startVolumeFadeIn(double targetVolume) {
-    _volumeTimer?.cancel();
-    double currentVolume = 0.1;
-    _volumeTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
-      currentVolume += 0.1;
-      if (currentVolume >= targetVolume) {
-        currentVolume = targetVolume;
-        timer.cancel();
-      }
-      await _audioPlayer.setVolume(currentVolume);
-    });
   }
 
   void _playVibration(String? pattern) {
@@ -177,11 +256,29 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
   Future<void> _stopAlarm() async {
     try {
       _volumeTimer?.cancel();
+      _volumeEnforcementTimer?.cancel();
       await _audioPlayer.stop();
       await FlutterRingtonePlayer().stop();
       Vibration.cancel();
       if (widget.alarmId != null) {
-        await NotificationService().cancelNotification(widget.alarmId!.hashCode);
+        final int stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
+        await NotificationService().cancelNotification(stableId);
+      }
+
+      // 미션 상태 초기화
+      if (_isSuccess) {
+        try {
+          final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+          await box.delete('active_ringing_alarm_id');
+          await box.delete('active_ringing_set_at');
+          await box.delete('active_alarm_mission_base_id');
+          await box.delete('active_alarm_mission_started_at');
+          await box.delete('active_alarm_mission_background_path');
+          await box.flush();
+          debugPrint('[SimpleAlarm] Hive state cleared successfully');
+        } catch (e) {
+          debugPrint('[SimpleAlarm] Error clearing Hive state: $e');
+        }
       }
     } catch (e) {
       debugPrint('Error stopping alarm: $e');

@@ -172,11 +172,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                         Text(
                           isNameMissing 
                             ? l10n.enterName
-                            : l10n.greeting(
-                                userName.length > 2 
-                                  ? userName.substring(1) 
-                                  : userName
-                              ),
+                            : l10n.greeting(userName),
                           style: TextStyle(
                             fontSize: isNameMissing ? 22 : 24, // 크기 살짝 조정
                             fontWeight: FontWeight.bold,

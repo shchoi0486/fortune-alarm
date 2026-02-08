@@ -222,7 +222,6 @@
   "deleteColor": "रंग हटाएं",
   "deleteColorConfirm": "क्या आप वाकई इस रंग को सूची से हटाना चाहते हैं?",
   "deleteMission": "मिशन हटाएं",
-  "deleteMissionConfirm": "क्या आप वाकई इस मिशन को सूची से हटाना चाहते हैं?",
   "randomBackgroundDesc": "हर बार अलार्म बजने पर एक नई पृष्ठभूमि!",
   "backgroundDeleted": "पृष्ठभूमि छवि हटा दी गई।",
   "pickFromDevice": "डिवाइस से चुनें",
@@ -2677,5 +2676,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "routineNotificationDescription": "अपनी नियमित मिशनों के साथ बने रहने के लिए सुबह और शाम को सूचित रहें।",
+  "morningRoutineTime": "सुबह की दिनचर्या का समय",
+  "eveningRoutineTime": "शाम की दिनचर्या का समय"
 }

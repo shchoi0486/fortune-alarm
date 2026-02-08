@@ -222,7 +222,6 @@
   "deleteColor": "删除颜色",
   "deleteColorConfirm": "确定要从列表中删除该颜色吗？",
   "deleteMission": "删除任务",
-  "deleteMissionConfirm": "确定要从列表中删除该任务吗？",
   "randomBackgroundDesc": "每次闹钟响起都会换一张新背景！",
   "backgroundDeleted": "背景已删除。",
   "pickFromDevice": "从设备选择",
@@ -2677,5 +2676,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "routineNotificationDescription": "早晚接收通知，跟上您的常规任务。",
+  "morningRoutineTime": "早间例行时间",
+  "eveningRoutineTime": "晚间例行时间"
 }

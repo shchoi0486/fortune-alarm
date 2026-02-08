@@ -222,7 +222,6 @@
   "deleteColor": "Farbe löschen",
   "deleteColorConfirm": "Sind Sie sicher, dass Sie diese Farbe aus der Liste löschen möchten?",
   "deleteMission": "Mission löschen",
-  "deleteMissionConfirm": "Sind Sie sicher, dass Sie diese Mission aus der Liste löschen möchten?",
   "randomBackgroundDesc": "Jedes Mal ein neuer Hintergrund, wenn der Wecker klingelt!",
   "backgroundDeleted": "Hintergrundbild gelöscht.",
   "pickFromDevice": "Vom Gerät auswählen",
@@ -2677,5 +2676,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "routineNotificationDescription": "Lassen Sie sich morgens und abends benachrichtigen, um mit Ihren Routine-Aufgaben Schritt zu halten.",
+  "morningRoutineTime": "Morgenroutine-Zeit",
+  "eveningRoutineTime": "Abendroutine-Zeit"
 }

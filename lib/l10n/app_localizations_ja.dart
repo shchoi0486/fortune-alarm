@@ -5718,6 +5718,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get routineNotificationTitle => 'デイルーチン通知';
 
   @override
+  String get routineNotificationDescription =>
+      'ルーチンミッションに遅れないよう、朝と夕方に通知を受け取ります。';
+
+  @override
+  String get morningRoutineTime => 'モーニングルーチンの時間';
+
+  @override
+  String get eveningRoutineTime => 'イブニングルーチンの時間';
+
+  @override
   String get todaysFortuneNotificationTitle => '今日の運勢';
 
   @override

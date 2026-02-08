@@ -65,21 +65,38 @@ Future<void> alarmCallback(int id) async {
   debugPrint('[AlarmScheduler] --- Alarm Callback Start ---');
   debugPrint('[AlarmScheduler] ID received: $id');
 
-  // 즉시 알림 서비스 초기화 (Hive보다 먼저)
+  // 2. Hive 및 데이터 로드 경로 준비 (로컬라이징을 위해 조기 실행)
+  String? path;
+  try {
+    final directory = await getApplicationDocumentsDirectory();
+    path = directory.path;
+    if (!Hive.isBoxOpen('settings')) {
+      await Hive.initFlutter(path);
+    }
+  } catch (e) {
+    debugPrint('[AlarmScheduler] Early Hive Init Error: $e');
+  }
+
+  // 즉시 알림 서비스 초기화
   final notificationService = NotificationService();
   
-  // 로컬라이징 초기화
+  // 로컬라이징 초기화 (Hive 설정 반영)
   AppLocalizations? l10n;
   try {
-    String langCode = Platform.localeName.split('_')[0];
-    Locale locale = Locale(langCode);
-    if (!AppLocalizations.supportedLocales.contains(locale)) {
-      locale = const Locale('en');
-    }
-    l10n = await AppLocalizations.delegate.load(locale);
-    debugPrint('[AlarmScheduler] Localization loaded for: ${locale.languageCode}');
+    l10n = await notificationService.getL10n();
+    debugPrint('[AlarmScheduler] Localization loaded from settings.');
   } catch (e) {
-    debugPrint('[AlarmScheduler] Localization load failed: $e');
+    debugPrint('[AlarmScheduler] Localization load failed, falling back to system: $e');
+    try {
+      String langCode = Platform.localeName.split('_')[0];
+      Locale locale = Locale(langCode);
+      if (!AppLocalizations.supportedLocales.contains(locale)) {
+        locale = const Locale('en');
+      }
+      l10n = await AppLocalizations.delegate.load(locale);
+    } catch (e2) {
+      debugPrint('[AlarmScheduler] System localization fallback failed: $e2');
+    }
   }
 
   try {
@@ -104,7 +121,7 @@ Future<void> alarmCallback(int id) async {
   // 날짜/시간 포맷팅 초기화
   await initializeDateFormatting();
 
-  // 2. Foreground Service 시작 (앱 유지력 강화)
+  // 3. Foreground Service 시작 (앱 유지력 강화)
   try {
     if (await FlutterForegroundTask.isRunningService) {
       await FlutterForegroundTask.restartService();
@@ -128,23 +145,16 @@ Future<void> alarmCallback(int id) async {
     debugPrint('[AlarmScheduler] Foreground Service Start Failed: $e');
   }
 
-  // 3. Hive 및 데이터 로드
+  // 4. Hive 어댑터 등록 및 알람 데이터 로드
   Box<AlarmModel>? box;
   try {
-    final directory = await getApplicationDocumentsDirectory();
-    final path = directory.path;
-    debugPrint('[AlarmScheduler] Isolate Hive Path: $path');
-    
     // Hive 초기화 (안전하게)
     try {
-      if (!Hive.isBoxOpen('alarms')) {
-        await Hive.initFlutter(path);
-        if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(AlarmModelAdapter());
-        if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(MissionTypeAdapter());
-        if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
-      }
+      if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(AlarmModelAdapter());
+      if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(MissionTypeAdapter());
+      if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
     } catch (e) {
-      debugPrint('[AlarmScheduler] Hive Init Error: $e');
+      debugPrint('[AlarmScheduler] Hive Adapter Registration Error: $e');
     }
 
     // 알람 데이터 검색
@@ -222,20 +232,19 @@ Future<void> alarmCallback(int id) async {
         final SendPort? uiSendPort = IsolateNameServer.lookupPortByName(kAlarmPortName);
         uiSendPort?.send(payload);
 
-        // 설정된 알람 정보로 새 알림 생성
-        final locale = Locale(Platform.localeName.split('_')[0]);
-        final l10n = await AppLocalizations.delegate.load(locale);
-
-        await notificationService.showAlarmNotification(
-          id: id,
-          title: l10n.appTitle,
-          body: body,
-          payload: payload,
-          soundName: alarm.ringtonePath,
-          vibrationPattern: alarm.vibrationPattern,
-          isGradualVolume: alarm.isGradualVolume,
-          isVibrationEnabled: alarm.isVibrationEnabled,
-        );
+        // 설정된 알람 정보로 새 알림 생성 (기존에 로드된 l10n 재사용)
+        if (l10n != null) {
+          await notificationService.showAlarmNotification(
+            id: id,
+            title: l10n.appTitle,
+            body: body,
+            payload: payload,
+            soundName: alarm.ringtonePath,
+            vibrationPattern: alarm.vibrationPattern,
+            isGradualVolume: alarm.isGradualVolume,
+            isVibrationEnabled: alarm.isVibrationEnabled,
+          );
+        }
         debugPrint('[AlarmScheduler] Notification CREATED with real data (Sound: ${alarm.ringtonePath}, Vibration: ${alarm.isVibrationEnabled}).');
       } else {
         debugPrint('[AlarmScheduler] Suppressing ringing due to active mission.');
@@ -315,13 +324,8 @@ class AlarmSchedulerService {
     final safetyId = '${alarm.id}_safety';
     debugPrint('[AlarmScheduler] Scheduling Safety Alarm: $safetyId');
     
-    // 로컬라이징 가져오기
-    String langCode = Platform.localeName.split('_')[0];
-    Locale locale = Locale(langCode);
-    if (!AppLocalizations.supportedLocales.contains(locale)) {
-      locale = const Locale('en');
-    }
-    final l10n = await AppLocalizations.delegate.load(locale);
+    // 로컬라이징 가져오기 (설정된 언어 반영)
+    final l10n = await NotificationService().getL10n();
 
     // 1분 뒤에 울리는 안전 알람 생성
     final safetyTime = DateTime.now().add(const Duration(minutes: 1));
@@ -484,13 +488,8 @@ class AlarmSchedulerService {
         );
       } else if (Platform.isIOS) {
         try {
-          // 로컬라이징 가져오기
-          String langCode = Platform.localeName.split('_')[0];
-          Locale locale = Locale(langCode);
-          if (!AppLocalizations.supportedLocales.contains(locale)) {
-            locale = const Locale('en');
-          }
-          final l10n = await AppLocalizations.delegate.load(locale);
+          // 로컬라이징 가져오기 (설정된 언어 반영)
+          final l10n = await NotificationService().getL10n();
 
           await NotificationService().scheduleAlarmNotification(
             id: alarmId,
@@ -675,8 +674,8 @@ class AlarmSchedulerService {
       final weekdayIndex = checkDate.weekday - 1;
       
       if (repeatDays[weekdayIndex]) {
-        // 현재 시간 이후여야 함
-        if (checkDate.isAfter(now)) {
+        // 현재 시간 이후여야 함 (최소 1분 여유)
+        if (checkDate.isAfter(now.add(const Duration(seconds: 30)))) {
            return checkDate;
         }
       }

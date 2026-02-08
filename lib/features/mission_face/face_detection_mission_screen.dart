@@ -12,6 +12,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:vibration/vibration.dart';
 import 'package:collection/collection.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:fortune_alarm/data/models/alarm_model.dart';
 import 'package:fortune_alarm/providers/alarm_list_provider.dart';
 import 'package:fortune_alarm/services/notification_service.dart';
 import 'package:fortune_alarm/services/alarm_scheduler_service.dart';
@@ -32,6 +34,7 @@ class FaceDetectionMissionScreen extends ConsumerStatefulWidget {
 class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissionScreen> with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
+  Timer? _volumeEnforcementTimer;
   final MLService _mlService = MLService();
   CameraController? _controller;
   bool _isCameraInitialized = false;
@@ -49,6 +52,7 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   Size? _lastImageSize;
   InputImageRotation? _lastRotation;
   final _FaceAnalysisAccumulator _analysisAccumulator = _FaceAnalysisAccumulator();
+  DateTime? _backgroundTime;
 
   @override
   void initState() {
@@ -63,8 +67,10 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
       vsync: this,
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
-    _stopAlarm(); // Start mission in silence as requested
+    
     _initializeCamera();
+    _startVolumeEnforcement();
+    _stopAlarm();
   }
 
   Future<void> _initializeCamera() async {
@@ -330,6 +336,24 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
     DeviceOrientation.landscapeRight: 270,
   };
 
+  void _startVolumeEnforcement() {
+    if (Platform.isAndroid) {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      _volumeEnforcementTimer?.cancel();
+      _volumeEnforcementTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (!mounted || _isSuccess) {
+          timer.cancel();
+          return;
+        }
+        try {
+          await channel.invokeMethod('setMaxAlarmVolume');
+        } catch (e) {
+          debugPrint('Error setting max alarm volume: $e');
+        }
+      });
+    }
+  }
+
   Future<void> _playAlarm() async {
     if (widget.alarmId == null) return;
 
@@ -339,8 +363,58 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
     if (alarm == null) return;
 
     try {
-      // 미션 수행 화면에서는 알람 소리 재생하지 않음
-      // 알람 소리는 알람 울림 스크린(alarm_ringing_screen.dart)에서만 재생
+      if (alarm.isSoundEnabled) {
+        String path = alarm.ringtonePath ?? 'default';
+        debugPrint('[FaceDetectionMission] Playing alarm sound: $path');
+        
+        if (path == 'default' || path.isEmpty) {
+          await FlutterRingtonePlayer().playAlarm(
+            looping: true, 
+            volume: alarm.volume, 
+            asAlarm: true
+          );
+        } else {
+          // 커스텀 사운드 재생
+          try {
+            if (Platform.isAndroid) {
+              await _audioPlayer.setAudioContext(AudioContext(
+                android: AudioContextAndroid(
+                  isSpeakerphoneOn: true,
+                  stayAwake: true,
+                  contentType: AndroidContentType.sonification,
+                  usageType: AndroidUsageType.alarm,
+                  audioFocus: AndroidAudioFocus.gain,
+                ),
+              ));
+            }
+            
+            await _audioPlayer.stop();
+            await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+            
+            try {
+              await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
+            } catch (e) {
+              debugPrint('[FaceDetectionMission] AssetSource failed, trying BytesSource fallback: $e');
+              final ByteData data = await rootBundle.load('assets/sounds/$path.ogg');
+              final Uint8List bytes = data.buffer.asUint8List();
+              await _audioPlayer.setSource(BytesSource(bytes));
+            }
+            
+            double targetVolume = alarm.volume;
+            if (targetVolume <= 0) targetVolume = 0.5;
+            
+            _startVolumeFadeIn(targetVolume);
+            await _audioPlayer.resume();
+          } catch (ae) {
+            debugPrint('[FaceDetectionMission] AudioPlayer error: $ae. Falling back to system default.');
+            await FlutterRingtonePlayer().playAlarm(
+              looping: true, 
+              volume: alarm.volume, 
+              asAlarm: true
+            );
+          }
+        }
+      }
 
       if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
          _playVibration(alarm.vibrationPattern);
@@ -389,6 +463,7 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   Future<void> _stopAlarm() async {
     try {
       _volumeTimer?.cancel();
+      _volumeEnforcementTimer?.cancel();
       await _audioPlayer.stop();
       await FlutterRingtonePlayer().stop();
       Vibration.cancel();
@@ -399,6 +474,22 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
         await NotificationService().cancelNotification(stableId);
         debugPrint('[FaceDetectionMission] Alarm stopped and notification cancelled for $stableId');
       }
+
+      // 미션 상태 초기화
+      if (_isSuccess) {
+        try {
+          final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+          await box.delete('active_ringing_alarm_id');
+          await box.delete('active_ringing_set_at');
+          await box.delete('active_alarm_mission_base_id');
+          await box.delete('active_alarm_mission_started_at');
+          await box.delete('active_alarm_mission_background_path');
+          await box.flush();
+          debugPrint('[FaceDetectionMission] Hive state cleared successfully');
+        } catch (e) {
+          debugPrint('[FaceDetectionMission] Error clearing Hive state: $e');
+        }
+      }
     } catch (e) {
       debugPrint('Error stopping alarm: $e');
     }
@@ -407,10 +498,23 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // 미션 성공 후 광고 등이 뜰 때 화면이 닫히지 않도록 _isSuccess 체크 추가
-      if (mounted && !_isSuccess) {
-        Navigator.of(context).pop('timeout');
+      _backgroundTime = DateTime.now();
+      debugPrint('[FaceDetectionMissionScreen] App paused at: $_backgroundTime');
+    } else if (state == AppLifecycleState.resumed) {
+      if (_backgroundTime != null) {
+        final now = DateTime.now();
+        final diff = now.difference(_backgroundTime!).inMinutes;
+        debugPrint('[FaceDetectionMissionScreen] App resumed. Background duration: $diff minutes');
+        
+        if (diff >= 15) {
+          debugPrint('[FaceDetectionMissionScreen] Background duration exceeds 15 minutes. Closing mission.');
+          if (mounted && !_isSuccess) {
+            _stopAlarm();
+            Navigator.of(context).pop('timeout');
+          }
+        }
       }
+      _backgroundTime = null;
     }
   }
 
@@ -419,6 +523,9 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
     WidgetsBinding.instance.removeObserver(this);
     _scanController.dispose();
     _timer?.cancel();
+    _volumeTimer?.cancel();
+    _volumeEnforcementTimer?.cancel();
+    _stopAlarm();
     _controller?.dispose();
     _audioPlayer.dispose();
     super.dispose();

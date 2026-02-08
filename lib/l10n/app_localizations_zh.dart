@@ -5586,6 +5586,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get routineNotificationTitle => '日常常规通知';
 
   @override
+  String get routineNotificationDescription => '早晚接收通知，跟上您的常规任务。';
+
+  @override
+  String get morningRoutineTime => '早间例行时间';
+
+  @override
+  String get eveningRoutineTime => '晚间例行时间';
+
+  @override
   String get todaysFortuneNotificationTitle => '今日运势';
 
   @override

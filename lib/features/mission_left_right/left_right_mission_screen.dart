@@ -8,6 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vibration/vibration.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:fortune_alarm/services/alarm_scheduler_service.dart';
+import 'package:fortune_alarm/services/notification_service.dart';
 
 import '../../data/models/alarm_model.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
@@ -27,6 +30,8 @@ class LeftRightMissionScreen extends ConsumerStatefulWidget {
 class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
   final Random _random = Random();
   final AudioPlayer _audioPlayer = AudioPlayer();
+  Timer? _volumeEnforcementTimer;
+  Timer? _volumeTimer;
 
   AlarmModel? _alarm;
   bool _isLoading = true;
@@ -37,6 +42,8 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
   int _streak = 0;
   bool _wrongFlash = false;
   bool _isSuccess = false;
+
+  DateTime? _backgroundTime;
 
   Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
     if (alarm == null) return null;
@@ -78,6 +85,7 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
     _expectLeft = _random.nextBool();
     _loadAlarm();
     _startInactivityTimer();
+    _startVolumeEnforcement();
 
     _characterController = AnimationController(
       vsync: this,
@@ -95,21 +103,143 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
     ]).animate(_characterController);
 
     _characterRotate = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: -0.1).chain(CurveTween(curve: Curves.easeInOut)), weight: 50),
-      TweenSequenceItem(tween: Tween(begin: -0.1, end: 0.0).chain(CurveTween(curve: Curves.easeInOut)), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: -0.05, end: 0.05).chain(CurveTween(curve: Curves.easeInOut)), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 0.05, end: -0.05).chain(CurveTween(curve: Curves.easeInOut)), weight: 50),
     ]).animate(_characterController);
 
     _characterScale = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.05), weight: 50),
-      TweenSequenceItem(tween: Tween(begin: 1.05, end: 1.0), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.05).chain(CurveTween(curve: Curves.easeInOut)), weight: 50),
+      TweenSequenceItem(tween: Tween(begin: 1.05, end: 1.0).chain(CurveTween(curve: Curves.easeInOut)), weight: 50),
     ]).animate(_characterController);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // 미션 성공 후 광고 등이 뜰 때 화면이 닫히지 않도록 _isSuccess 체크 추가
-      if (mounted && !_isSuccess) Navigator.of(context).pop('timeout');
+      _backgroundTime = DateTime.now();
+      debugPrint('[LeftRightMissionScreen] App paused at: $_backgroundTime');
+    } else if (state == AppLifecycleState.resumed) {
+      if (_backgroundTime != null) {
+        final now = DateTime.now();
+        final diff = now.difference(_backgroundTime!).inMinutes;
+        debugPrint('[LeftRightMissionScreen] App resumed. Background duration: $diff minutes');
+        
+        if (diff >= 15) {
+          debugPrint('[LeftRightMissionScreen] Background duration exceeds 15 minutes. Closing mission.');
+          if (mounted) {
+            Navigator.of(context).pop('timeout');
+          }
+        }
+      }
+      _backgroundTime = null;
+    }
+  }
+
+  void _startVolumeEnforcement() {
+    if (Platform.isAndroid) {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      _volumeEnforcementTimer?.cancel();
+      _volumeEnforcementTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (!mounted || _isSuccess) {
+          timer.cancel();
+          return;
+        }
+        try {
+          await channel.invokeMethod('setMaxAlarmVolume');
+        } catch (e) {
+          debugPrint('Error setting max alarm volume: $e');
+        }
+      });
+    }
+  }
+
+  Future<void> _playAlarm() async {
+    if (widget.alarmId == null || _alarm == null) return;
+
+    final alarm = _alarm!;
+
+    try {
+      if (alarm.isSoundEnabled) {
+        String path = alarm.ringtonePath ?? 'default';
+        debugPrint('[LeftRightMission] Playing alarm sound: $path');
+        
+        if (path == 'default' || path.isEmpty) {
+          await FlutterRingtonePlayer().playAlarm(
+            looping: true, 
+            volume: alarm.volume, 
+            asAlarm: true
+          );
+        } else {
+          // 커스텀 사운드 재생
+          try {
+            if (Platform.isAndroid) {
+              await _audioPlayer.setAudioContext(AudioContext(
+                android: AudioContextAndroid(
+                  isSpeakerphoneOn: true,
+                  stayAwake: true,
+                  contentType: AndroidContentType.sonification,
+                  usageType: AndroidUsageType.alarm,
+                  audioFocus: AndroidAudioFocus.gain,
+                ),
+              ));
+            }
+            
+            await _audioPlayer.stop();
+            await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+            
+            try {
+              await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
+            } catch (e) {
+              debugPrint('[LeftRightMission] AssetSource failed, trying BytesSource fallback: $e');
+              final ByteData data = await rootBundle.load('assets/sounds/$path.ogg');
+              final Uint8List bytes = data.buffer.asUint8List();
+              await _audioPlayer.setSource(BytesSource(bytes));
+            }
+            
+            double targetVolume = alarm.volume;
+            if (targetVolume <= 0) targetVolume = 0.5;
+            
+            await _audioPlayer.setVolume(targetVolume);
+            await _audioPlayer.resume();
+          } catch (ae) {
+            debugPrint('[LeftRightMission] AudioPlayer error: $ae. Falling back to system default.');
+            await FlutterRingtonePlayer().playAlarm(
+              looping: true, 
+              volume: alarm.volume, 
+              asAlarm: true
+            );
+          }
+        }
+      }
+
+      if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
+         _playVibration(alarm.vibrationPattern);
+      }
+    } catch (e) {
+      debugPrint('Error playing alarm: $e');
+    }
+  }
+
+  void _playVibration(String? pattern) {
+    Vibration.cancel();
+    switch (pattern) {
+      case 'short':
+        Vibration.vibrate(pattern: [0, 500, 500, 500, 500], repeat: 0);
+        break;
+      case 'long':
+        Vibration.vibrate(pattern: [0, 2000, 2000, 2000, 2000], repeat: 0);
+        break;
+      case 'heartbeat':
+        Vibration.vibrate(pattern: [0, 200, 100, 200, 1000, 200, 100, 200, 1000], repeat: 0);
+        break;
+      case 'sos':
+        Vibration.vibrate(pattern: [0, 200, 100, 200, 100, 200, 500, 500, 200, 500, 200, 500, 500, 200, 100, 200, 100, 200], repeat: 0);
+        break;
+      case 'quick':
+        Vibration.vibrate(pattern: [0, 100, 50, 100, 50, 100, 50, 100, 50, 100], repeat: 0);
+        break;
+      default:
+        Vibration.vibrate(pattern: [0, 1000, 1000], repeat: 0);
     }
   }
 
@@ -118,8 +248,46 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
     WidgetsBinding.instance.removeObserver(this);
     _inactivityTimer?.cancel();
     _characterController.dispose();
+    _volumeTimer?.cancel();
+    _volumeEnforcementTimer?.cancel();
+    _stopAlarm();
     _audioPlayer.dispose();
     super.dispose();
+  }
+
+  Future<void> _stopAlarm() async {
+    try {
+      // 소리/진동 정지
+      _volumeTimer?.cancel();
+      _volumeEnforcementTimer?.cancel();
+      await _audioPlayer.stop();
+      await FlutterRingtonePlayer().stop();
+      Vibration.cancel();
+      
+      // 알림(Notification) 제거
+      if (widget.alarmId != null) {
+        final stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
+        await NotificationService().cancelNotification(stableId);
+      }
+
+      // 미션 상태 초기화
+      if (_isSuccess) {
+        try {
+          final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+          await box.delete('active_ringing_alarm_id');
+          await box.delete('active_ringing_set_at');
+          await box.delete('active_alarm_mission_base_id');
+          await box.delete('active_alarm_mission_started_at');
+          await box.delete('active_alarm_mission_background_path');
+          await box.flush();
+          debugPrint('[LeftRightMission] Hive state cleared successfully');
+        } catch (e) {
+          debugPrint('[LeftRightMission] Error clearing Hive state: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error stopping alarm: $e');
+    }
   }
 
   Future<void> _loadAlarm() async {
@@ -135,6 +303,7 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
           _alarm = alarm;
           _isLoading = false;
         });
+        _stopAlarm();
       }
     } catch (_) {
       if (mounted) setState(() => _isLoading = false);

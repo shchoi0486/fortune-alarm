@@ -222,7 +222,6 @@
   "deleteColor": "Eliminar Color",
   "deleteColorConfirm": "¿Estás seguro de que deseas eliminar este color de la lista?",
   "deleteMission": "Eliminar misión",
-  "deleteMissionConfirm": "¿Estás seguro de que deseas eliminar esta misión de la lista?",
   "randomBackgroundDesc": "¡Un nuevo fondo cada vez que suene la alarma!",
   "backgroundDeleted": "Imagen de fondo eliminada.",
   "pickFromDevice": "Elegir del dispositivo",
@@ -2677,5 +2676,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "routineNotificationDescription": "Recibe notificaciones por la mañana y por la noche para estar al día con tus misiones rutinarias.",
+  "morningRoutineTime": "Hora de la rutina matutina",
+  "eveningRoutineTime": "Hora de la rutina vespertina"
 }

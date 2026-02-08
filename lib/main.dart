@@ -211,10 +211,23 @@ Future<bool> _shouldSuppressAlarmHandling(String payload) async {
     if (startedAt == null) return false;
 
     final now = DateTime.now();
-    if (now.difference(startedAt) >= const Duration(minutes: 2)) {
+    // 미션 시작 후 15분 이내에는 동일한 알람의 중복 처리를 방지합니다.
+    // (대부분의 미션은 15분 이내에 완료 가능하며, 15분이 지나면 비정상 종료로 간주)
+    if (now.difference(startedAt) >= const Duration(minutes: 15)) {
       await box.delete('active_alarm_mission_base_id');
       await box.delete('active_alarm_mission_started_at');
       return false;
+    }
+
+    // 포어그라운드 서비스가 실행 중인지도 함께 확인 (더 강력한 체크)
+    if (Platform.isAndroid) {
+      final isRunning = await FlutterForegroundTask.isRunningService;
+      if (!isRunning) {
+        // 서비스가 꺼져있다면 미션이 중단된 것으로 간주
+        await box.delete('active_alarm_mission_base_id');
+        await box.delete('active_alarm_mission_started_at');
+        return false;
+      }
     }
 
     String cleanPayload = payload.replaceAll('_snooze', '');

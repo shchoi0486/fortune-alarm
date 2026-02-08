@@ -33,6 +33,7 @@ class ShakeMissionScreen extends ConsumerStatefulWidget {
 class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
+  Timer? _volumeEnforcementTimer;
   Timer? _inactivityTimer;
   AlarmModel? _alarm;
   
@@ -71,9 +72,10 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
     _loadAlarmSettings();
     _startShakeDetection();
 
-    // 미션 화면 진입 시 알람 소리를 직접 제어하지 않고 
-    // AlarmRingingScreen에서 일시 정지된 상태로 진입함.
     _startInactivityTimer();
+    _startVolumeEnforcement();
+    // 미션 진입 시 알람 소리 및 진동 중지
+    _stopAlarm();
   }
 
   void _startInactivityTimer() {
@@ -142,6 +144,24 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
     });
   }
 
+  void _startVolumeEnforcement() {
+    if (Platform.isAndroid) {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      _volumeEnforcementTimer?.cancel();
+      _volumeEnforcementTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (!mounted || _isSuccess) {
+          timer.cancel();
+          return;
+        }
+        try {
+          await channel.invokeMethod('setMaxAlarmVolume');
+        } catch (e) {
+          debugPrint('Error setting max alarm volume: $e');
+        }
+      });
+    }
+  }
+
   Future<void> _playAlarm() async {
     if (widget.alarmId == null) return;
 
@@ -151,8 +171,58 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
     if (alarm == null) return;
 
     try {
-      // 미션 수행 화면에서는 알람 소리 재생하지 않음
-      // 알람 소리는 알람 울림 스크린(alarm_ringing_screen.dart)에서만 재생
+      if (alarm.isSoundEnabled) {
+        String path = alarm.ringtonePath ?? 'default';
+        debugPrint('[ShakeMission] Playing alarm sound: $path');
+        
+        if (path == 'default' || path.isEmpty) {
+          await FlutterRingtonePlayer().playAlarm(
+            looping: true, 
+            volume: alarm.volume, 
+            asAlarm: true
+          );
+        } else {
+          // 커스텀 사운드 재생
+          try {
+            if (Platform.isAndroid) {
+              await _audioPlayer.setAudioContext(AudioContext(
+                android: AudioContextAndroid(
+                  isSpeakerphoneOn: true,
+                  stayAwake: true,
+                  contentType: AndroidContentType.sonification,
+                  usageType: AndroidUsageType.alarm,
+                  audioFocus: AndroidAudioFocus.gain,
+                ),
+              ));
+            }
+            
+            await _audioPlayer.stop();
+            await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+            
+            try {
+              await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
+            } catch (e) {
+              debugPrint('[ShakeMission] AssetSource failed, trying BytesSource fallback: $e');
+              final ByteData data = await rootBundle.load('assets/sounds/$path.ogg');
+              final Uint8List bytes = data.buffer.asUint8List();
+              await _audioPlayer.setSource(BytesSource(bytes));
+            }
+            
+            double targetVolume = alarm.volume;
+            if (targetVolume <= 0) targetVolume = 0.5;
+            
+            await _audioPlayer.setVolume(targetVolume);
+            await _audioPlayer.resume();
+          } catch (ae) {
+            debugPrint('[ShakeMission] AudioPlayer error: $ae. Falling back to system default.');
+            await FlutterRingtonePlayer().playAlarm(
+              looping: true, 
+              volume: alarm.volume, 
+              asAlarm: true
+            );
+          }
+        }
+      }
 
       if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
          _playVibration(alarm.vibrationPattern);
@@ -201,6 +271,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
   Future<void> _stopAlarm() async {
     try {
       _volumeTimer?.cancel();
+      _volumeEnforcementTimer?.cancel();
       await _audioPlayer.stop();
       await FlutterRingtonePlayer().stop();
       Vibration.cancel();
@@ -208,6 +279,22 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
       if (widget.alarmId != null) {
         final int stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
         await NotificationService().cancelNotification(stableId);
+      }
+
+      // 미션 상태 초기화
+      if (_isSuccess) {
+        try {
+          final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+          await box.delete('active_ringing_alarm_id');
+          await box.delete('active_ringing_set_at');
+          await box.delete('active_alarm_mission_base_id');
+          await box.delete('active_alarm_mission_started_at');
+          await box.delete('active_alarm_mission_background_path');
+          await box.flush();
+          debugPrint('[ShakeMission] Hive state cleared successfully');
+        } catch (e) {
+          debugPrint('[ShakeMission] Error clearing Hive state: $e');
+        }
       }
     } catch (e) {
       debugPrint('Error stopping alarm: $e');
@@ -255,14 +342,27 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
     }
   }
 
+  DateTime? _backgroundTime;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // 미션 성공 후 결과 다이얼로그(광고)가 뜬 상태에서 앱이 일시정지되어도 
-      // 다이얼로그가 닫히지 않도록 _isSuccess 상태 체크 추가
-      if (mounted && !_isSuccess) {
-        Navigator.of(context).pop('timeout');
+      _backgroundTime = DateTime.now();
+      debugPrint('[ShakeMissionScreen] App paused at: $_backgroundTime');
+    } else if (state == AppLifecycleState.resumed) {
+      if (_backgroundTime != null) {
+        final now = DateTime.now();
+        final diff = now.difference(_backgroundTime!).inMinutes;
+        debugPrint('[ShakeMissionScreen] App resumed. Background duration: $diff minutes');
+        
+        if (diff >= 15) {
+          debugPrint('[ShakeMissionScreen] Background duration exceeds 15 minutes. Closing mission.');
+          if (mounted) {
+            Navigator.of(context).pop('timeout');
+          }
+        }
       }
+      _backgroundTime = null;
     }
   }
 
@@ -270,6 +370,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _volumeTimer?.cancel();
+    _volumeEnforcementTimer?.cancel();
     _inactivityTimer?.cancel();
     _audioPlayer.dispose();
     _accelerometerSubscription?.cancel();

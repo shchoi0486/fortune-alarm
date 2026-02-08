@@ -1,6 +1,7 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:io';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 
@@ -19,10 +20,45 @@ class RoutineAlarmService {
       }
     }
 
-    // 오전 8시 알림
-    await _scheduleOne(8, 0, _morningId, 'morning');
-    // 오후 9시 알림
-    await _scheduleOne(21, 0, _eveningId, 'evening');
+    final box = await Hive.openBox('alarm_settings');
+    final enabled = box.get('routine_notification_enabled', defaultValue: true);
+    
+    if (!enabled) {
+      await cancelAll();
+      return;
+    }
+
+    final morningTimeStr = box.get('morning_routine_time', defaultValue: '08:00');
+    final eveningTimeStr = box.get('evening_routine_time', defaultValue: '21:00');
+
+    final morningParts = morningTimeStr.split(':');
+    final eveningParts = eveningTimeStr.split(':');
+
+    // 오전 알림
+    await _scheduleOne(
+      int.parse(morningParts[0]), 
+      int.parse(morningParts[1]), 
+      _morningId, 
+      'morning'
+    );
+    // 오후 알림
+    await _scheduleOne(
+      int.parse(eveningParts[0]), 
+      int.parse(eveningParts[1]), 
+      _eveningId, 
+      'evening'
+    );
+  }
+
+  static Future<void> cancelAll() async {
+    if (Platform.isAndroid) {
+      await AndroidAlarmManager.cancel(_morningId);
+      await AndroidAlarmManager.cancel(_eveningId);
+    } else if (Platform.isIOS) {
+      await NotificationService().cancelNotification(_morningId);
+      await NotificationService().cancelNotification(_eveningId);
+    }
+    debugPrint('[RoutineAlarm] All routine alarms canceled');
   }
 
   static Future<void> _scheduleOne(int hour, int minute, int id, String type) async {
@@ -47,8 +83,7 @@ class RoutineAlarmService {
         allowWhileIdle: true,
       );
     } else if (Platform.isIOS) {
-      final locale = Locale(Platform.localeName.split('_')[0]);
-      final l10n = await AppLocalizations.delegate.load(locale);
+      final l10n = await NotificationService().getL10n();
 
       String title = l10n.routineCheckTitle;
       String body = l10n.routineCheckBody;
@@ -79,8 +114,7 @@ class RoutineAlarmService {
     final notificationService = NotificationService();
     await notificationService.init(null);
 
-    final locale = Locale(Platform.localeName.split('_')[0]);
-    final l10n = await AppLocalizations.delegate.load(locale);
+    final l10n = await notificationService.getL10n();
 
     String title = l10n.routineCheckTitle;
     String body = l10n.routineCheckBody;

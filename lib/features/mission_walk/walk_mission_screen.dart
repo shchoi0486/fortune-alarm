@@ -32,6 +32,7 @@ class WalkMissionScreen extends ConsumerStatefulWidget {
 
 class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with TickerProviderStateMixin, WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
+  Timer? _volumeEnforcementTimer;
   Timer? _volumeTimer;
   Timer? _inactivityTimer;
   AlarmModel? _alarm;
@@ -81,6 +82,7 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     _loadAlarmSettings();
     _startWalkDetection();
     _startInactivityTimer();
+    _startVolumeEnforcement();
 
     _animationController = AnimationController(
       vsync: this,
@@ -110,14 +112,135 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     });
   }
 
+  void _startVolumeEnforcement() {
+    if (Platform.isAndroid) {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      _volumeEnforcementTimer?.cancel();
+      _volumeEnforcementTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (!mounted || _isSuccess) {
+          timer.cancel();
+          return;
+        }
+        try {
+          await channel.invokeMethod('setMaxAlarmVolume');
+        } catch (e) {
+          debugPrint('Error setting max alarm volume: $e');
+        }
+      });
+    }
+  }
+
+  Future<void> _playAlarm() async {
+    if (widget.alarmId == null || _alarm == null) return;
+
+    final alarm = _alarm!;
+
+    try {
+      if (alarm.isSoundEnabled) {
+        String path = alarm.ringtonePath ?? 'default';
+        debugPrint('[WalkMission] Playing alarm sound: $path');
+        
+        if (path == 'default' || path.isEmpty) {
+          await FlutterRingtonePlayer().playAlarm(
+            looping: true, 
+            volume: alarm.volume, 
+            asAlarm: true
+          );
+        } else {
+          // 커스텀 사운드 재생
+          try {
+            if (Platform.isAndroid) {
+              await _audioPlayer.setAudioContext(AudioContext(
+                android: AudioContextAndroid(
+                  isSpeakerphoneOn: true,
+                  stayAwake: true,
+                  contentType: AndroidContentType.sonification,
+                  usageType: AndroidUsageType.alarm,
+                  audioFocus: AndroidAudioFocus.gain,
+                ),
+              ));
+            }
+            
+            await _audioPlayer.stop();
+            await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+            
+            try {
+              await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
+            } catch (e) {
+              debugPrint('[WalkMission] AssetSource failed, trying BytesSource fallback: $e');
+              final ByteData data = await rootBundle.load('assets/sounds/$path.ogg');
+              final Uint8List bytes = data.buffer.asUint8List();
+              await _audioPlayer.setSource(BytesSource(bytes));
+            }
+            
+            double targetVolume = alarm.volume;
+            if (targetVolume <= 0) targetVolume = 0.5;
+            
+            await _audioPlayer.setVolume(targetVolume);
+            await _audioPlayer.resume();
+          } catch (ae) {
+            debugPrint('[WalkMission] AudioPlayer error: $ae. Falling back to system default.');
+            await FlutterRingtonePlayer().playAlarm(
+              looping: true, 
+              volume: alarm.volume, 
+              asAlarm: true
+            );
+          }
+        }
+      }
+
+      if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
+         _playVibration(alarm.vibrationPattern);
+      }
+    } catch (e) {
+      debugPrint('Error playing alarm: $e');
+    }
+  }
+
+  void _playVibration(String? pattern) {
+    Vibration.cancel();
+    switch (pattern) {
+      case 'short':
+        Vibration.vibrate(pattern: [0, 500, 500, 500, 500], repeat: 0);
+        break;
+      case 'long':
+        Vibration.vibrate(pattern: [0, 2000, 2000, 2000, 2000], repeat: 0);
+        break;
+      case 'heartbeat':
+        Vibration.vibrate(pattern: [0, 200, 100, 200, 1000, 200, 100, 200, 1000], repeat: 0);
+        break;
+      case 'sos':
+        Vibration.vibrate(pattern: [0, 200, 100, 200, 100, 200, 500, 500, 200, 500, 200, 500, 500, 200, 100, 200, 100, 200], repeat: 0);
+        break;
+      case 'quick':
+        Vibration.vibrate(pattern: [0, 100, 50, 100, 50, 100, 50, 100, 50, 100], repeat: 0);
+        break;
+      default:
+        Vibration.vibrate(pattern: [0, 1000, 1000], repeat: 0);
+    }
+  }
+
+  DateTime? _backgroundTime;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // 미션 성공 후 결과 다이얼로그(광고)가 뜬 상태에서 앱이 일시정지되어도 
-      // 다이얼로그가 닫히지 않도록 _isSuccess 상태 체크 추가
-      if (mounted && !_isSuccess) {
-        Navigator.of(context).pop('timeout');
+      _backgroundTime = DateTime.now();
+      debugPrint('[WalkMissionScreen] App paused at: $_backgroundTime');
+    } else if (state == AppLifecycleState.resumed) {
+      if (_backgroundTime != null) {
+        final now = DateTime.now();
+        final diff = now.difference(_backgroundTime!).inMinutes;
+        debugPrint('[WalkMissionScreen] App resumed. Background duration: $diff minutes');
+        
+        if (diff >= 15) {
+          debugPrint('[WalkMissionScreen] Background duration exceeds 15 minutes. Closing mission.');
+          if (mounted) {
+            Navigator.of(context).pop('timeout');
+          }
+        }
       }
+      _backgroundTime = null;
     }
   }
 
@@ -130,7 +253,9 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     _accelerometerSubscription?.cancel();
     _gyroSubscription?.cancel();
     _volumeTimer?.cancel();
+    _volumeEnforcementTimer?.cancel();
     _inactivityTimer?.cancel();
+    _stopAlarm();
     _audioPlayer.dispose();
     super.dispose();
   }
@@ -180,6 +305,8 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
         _alarm = alarm;
         _targetStepCount = alarm!.walkStepCount;
       });
+      // 미션 진입 시 알람 소리 및 진동 중지
+      _stopAlarm();
     }
   }
 
@@ -251,6 +378,7 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
   Future<void> _stopAlarm() async {
     try {
       _volumeTimer?.cancel();
+      _volumeEnforcementTimer?.cancel();
       await _audioPlayer.stop();
       await FlutterRingtonePlayer().stop();
       Vibration.cancel();
@@ -258,6 +386,22 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
       if (widget.alarmId != null) {
         final int stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
         await NotificationService().cancelNotification(stableId);
+      }
+
+      // 미션 상태 초기화
+      if (_isSuccess) {
+        try {
+          final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+          await box.delete('active_ringing_alarm_id');
+          await box.delete('active_ringing_set_at');
+          await box.delete('active_alarm_mission_base_id');
+          await box.delete('active_alarm_mission_started_at');
+          await box.delete('active_alarm_mission_background_path');
+          await box.flush();
+          debugPrint('[WalkMission] Hive state cleared successfully');
+        } catch (e) {
+          debugPrint('[WalkMission] Error clearing Hive state: $e');
+        }
       }
     } catch (e) {
       debugPrint('Error stopping alarm: $e');

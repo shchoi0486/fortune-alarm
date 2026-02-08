@@ -222,7 +222,6 @@
   "deleteColor": "色を削除",
   "deleteColorConfirm": "この色をリストから削除してもよろしいですか？",
   "deleteMission": "ミッションを削除",
-  "deleteMissionConfirm": "このミッションをリストから削除してもよろしいですか？",
   "randomBackgroundDesc": "アラーム가鳴るたびに新しい背景に！",
   "backgroundDeleted": "背景画像が削除されました。",
   "pickFromDevice": "デバイスから選択",
@@ -2677,5 +2676,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "routineNotificationDescription": "ルーチンミッションに遅れないよう、朝と夕方に通知を受け取ります。",
+  "morningRoutineTime": "モーニングルーチンの時間",
+  "eveningRoutineTime": "イブニングルーチンの時間"
 }

@@ -8,6 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vibration/vibration.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:fortune_alarm/services/alarm_scheduler_service.dart';
+import 'package:fortune_alarm/services/notification_service.dart';
 
 import '../../data/models/alarm_model.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
@@ -36,7 +39,11 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
   bool _pulse = false;
   bool _isSuccess = false;
 
+  DateTime? _backgroundTime;
+
   final AudioPlayer _audioPlayer = AudioPlayer();
+  Timer? _volumeEnforcementTimer;
+  Timer? _volumeTimer;
 
   final List<_TapEffectData> _effects = [];
   final Random _random = Random();
@@ -79,23 +86,184 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
     _loadAlarm();
     _startInactivityTimer();
     _decayTimer = Timer.periodic(const Duration(milliseconds: 180), (_) => _tickDecay());
+    _startVolumeEnforcement();
+  }
+
+  void _startVolumeEnforcement() {
+    if (Platform.isAndroid) {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      _volumeEnforcementTimer?.cancel();
+      _volumeEnforcementTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (!mounted || _isSuccess) {
+          timer.cancel();
+          return;
+        }
+        try {
+          await channel.invokeMethod('setMaxAlarmVolume');
+        } catch (e) {
+          debugPrint('Error setting max alarm volume: $e');
+        }
+      });
+    }
+  }
+
+  Future<void> _playAlarm() async {
+    if (widget.alarmId == null || _alarm == null) return;
+
+    final alarm = _alarm!;
+
+    try {
+      if (alarm.isSoundEnabled) {
+        String path = alarm.ringtonePath ?? 'default';
+        debugPrint('[TapSprintMission] Playing alarm sound: $path');
+        
+        if (path == 'default' || path.isEmpty) {
+          await FlutterRingtonePlayer().playAlarm(
+            looping: true, 
+            volume: alarm.volume, 
+            asAlarm: true
+          );
+        } else {
+          // 커스텀 사운드 재생
+          try {
+            if (Platform.isAndroid) {
+              await _audioPlayer.setAudioContext(AudioContext(
+                android: AudioContextAndroid(
+                  isSpeakerphoneOn: true,
+                  stayAwake: true,
+                  contentType: AndroidContentType.sonification,
+                  usageType: AndroidUsageType.alarm,
+                  audioFocus: AndroidAudioFocus.gain,
+                ),
+              ));
+            }
+            
+            await _audioPlayer.stop();
+            await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+            
+            try {
+              await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
+            } catch (e) {
+              debugPrint('[TapSprintMission] AssetSource failed, trying BytesSource fallback: $e');
+              final ByteData data = await rootBundle.load('assets/sounds/$path.ogg');
+              final Uint8List bytes = data.buffer.asUint8List();
+              await _audioPlayer.setSource(BytesSource(bytes));
+            }
+            
+            double targetVolume = alarm.volume;
+            if (targetVolume <= 0) targetVolume = 0.5;
+            
+            await _audioPlayer.setVolume(targetVolume);
+            await _audioPlayer.resume();
+          } catch (ae) {
+            debugPrint('[TapSprintMission] AudioPlayer error: $ae. Falling back to system default.');
+            await FlutterRingtonePlayer().playAlarm(
+              looping: true, 
+              volume: alarm.volume, 
+              asAlarm: true
+            );
+          }
+        }
+      }
+
+      if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
+         _playVibration(alarm.vibrationPattern);
+      }
+    } catch (e) {
+      debugPrint('Error playing alarm: $e');
+    }
+  }
+
+  void _playVibration(String? pattern) {
+    Vibration.cancel();
+    switch (pattern) {
+      case 'short':
+        Vibration.vibrate(pattern: [0, 500, 500, 500, 500], repeat: 0);
+        break;
+      case 'long':
+        Vibration.vibrate(pattern: [0, 2000, 2000, 2000, 2000], repeat: 0);
+        break;
+      case 'heartbeat':
+        Vibration.vibrate(pattern: [0, 200, 100, 200, 1000, 200, 100, 200, 1000], repeat: 0);
+        break;
+      case 'sos':
+        Vibration.vibrate(pattern: [0, 200, 100, 200, 100, 200, 500, 500, 200, 500, 200, 500, 500, 200, 100, 200, 100, 200], repeat: 0);
+        break;
+      case 'quick':
+        Vibration.vibrate(pattern: [0, 100, 50, 100, 50, 100, 50, 100, 50, 100], repeat: 0);
+        break;
+      default:
+        Vibration.vibrate(pattern: [0, 1000, 1000], repeat: 0);
+    }
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // 미션 성공 후 광고 등이 뜰 때 화면이 닫히지 않도록 _isSuccess 체크 추가
-      if (mounted && !_isSuccess) Navigator.of(context).pop('timeout');
+      _backgroundTime = DateTime.now();
+      debugPrint('[TapSprintMissionScreen] App paused at: $_backgroundTime');
+    } else if (state == AppLifecycleState.resumed) {
+      if (_backgroundTime != null) {
+        final now = DateTime.now();
+        final diff = now.difference(_backgroundTime!).inMinutes;
+        debugPrint('[TapSprintMissionScreen] App resumed. Background duration: $diff minutes');
+        
+        if (diff >= 15) {
+          debugPrint('[TapSprintMissionScreen] Background duration exceeds 15 minutes. Closing mission.');
+          if (mounted) {
+            Navigator.of(context).pop('timeout');
+          }
+        }
+      }
+      _backgroundTime = null;
     }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _decayTimer?.cancel();
     _inactivityTimer?.cancel();
+    _decayTimer?.cancel();
+    _volumeTimer?.cancel();
+    _volumeEnforcementTimer?.cancel();
+    _stopAlarm();
     _audioPlayer.dispose();
     super.dispose();
+  }
+
+  Future<void> _stopAlarm() async {
+    try {
+      // 소리/진동 정지
+      _volumeTimer?.cancel();
+      _volumeEnforcementTimer?.cancel();
+      await _audioPlayer.stop();
+      await FlutterRingtonePlayer().stop();
+      Vibration.cancel();
+      
+      // 알림(Notification) 제거
+      if (widget.alarmId != null) {
+        final stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
+        await NotificationService().cancelNotification(stableId);
+      }
+
+      // 미션 상태 초기화
+      if (_isSuccess) {
+        try {
+          final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+          await box.delete('active_ringing_alarm_id');
+          await box.delete('active_ringing_set_at');
+          await box.delete('active_alarm_mission_base_id');
+          await box.delete('active_alarm_mission_started_at');
+          await box.delete('active_alarm_mission_background_path');
+          await box.flush();
+          debugPrint('[TapSprintMission] Hive state cleared successfully');
+        } catch (e) {
+          debugPrint('[TapSprintMission] Error clearing Hive state: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error stopping alarm: $e');
+    }
   }
 
   Future<void> _playSfx(String assetPath, {double volume = 0.5, Duration? maxDuration}) async {
@@ -124,6 +292,7 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
           _alarm = alarm;
           _isLoading = false;
         });
+        _stopAlarm();
       }
     } catch (_) {
       if (mounted) setState(() => _isLoading = false);

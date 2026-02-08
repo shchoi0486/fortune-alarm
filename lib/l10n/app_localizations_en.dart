@@ -6118,6 +6118,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get routineNotificationTitle => 'Daily Routine Reminder';
 
   @override
+  String get routineNotificationDescription =>
+      'Get notified in the morning and evening to keep up with your routine missions.';
+
+  @override
+  String get morningRoutineTime => 'Morning Routine Time';
+
+  @override
+  String get eveningRoutineTime => 'Evening Routine Time';
+
+  @override
   String get todaysFortuneNotificationTitle => 'Today\'s Fortune';
 
   @override

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +31,10 @@ class FortuneMissionScreen extends ConsumerStatefulWidget {
   ConsumerState<FortuneMissionScreen> createState() => _FortuneMissionScreenState();
 }
 
-class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> with TickerProviderStateMixin, FortuneAccessMixin {
+class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> with TickerProviderStateMixin, FortuneAccessMixin, WidgetsBindingObserver {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Timer? _volumeTimer;
+  Timer? _volumeEnforcementTimer;
   Timer? _inactivityTimer;
   AlarmModel? _alarm;
   bool _isLoading = true;
@@ -79,11 +81,55 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
     Vibration.cancel();
     
+    WidgetsBinding.instance.addObserver(this);
+    
     _loadAlarm();
     _loadUserAgeGroup();
     _startInactivityTimer();
-    // 미션 화면 진입 시 알람 소리를 직접 제어하지 않고 
-    // AlarmRingingScreen에서 일시 정지된 상태로 진입함.
+    _startVolumeEnforcement();
+    _stopAlarm();
+  }
+
+  void _startVolumeEnforcement() {
+    if (Platform.isAndroid) {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      _volumeEnforcementTimer?.cancel();
+      _volumeEnforcementTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (!mounted || _missionStep == 2) { // 미션 성공(결과 화면) 시 중지
+          timer.cancel();
+          return;
+        }
+        try {
+          await channel.invokeMethod('setMaxAlarmVolume');
+        } catch (e) {
+          debugPrint('Error setting max alarm volume: $e');
+        }
+      });
+    }
+  }
+
+  DateTime? _backgroundTime;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _backgroundTime = DateTime.now();
+      debugPrint('[FortuneMissionScreen] App paused at: $_backgroundTime');
+    } else if (state == AppLifecycleState.resumed) {
+      if (_backgroundTime != null) {
+        final now = DateTime.now();
+        final diff = now.difference(_backgroundTime!).inMinutes;
+        debugPrint('[FortuneMissionScreen] App resumed. Background duration: $diff minutes');
+        
+        if (diff >= 15) {
+          debugPrint('[FortuneMissionScreen] Background duration exceeds 15 minutes. Closing mission.');
+          if (mounted) {
+            Navigator.of(context).pop('timeout');
+          }
+        }
+      }
+      _backgroundTime = null;
+    }
   }
 
   Future<void> _loadUserAgeGroup() async {
@@ -174,11 +220,47 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     _startInactivityTimer();
   }
 
+  Future<void> _stopAlarm() async {
+    try {
+      _volumeTimer?.cancel();
+      _volumeEnforcementTimer?.cancel();
+      _inactivityTimer?.cancel();
+      _loadingTimer?.cancel();
+      
+      await _audioPlayer.stop();
+      await FlutterRingtonePlayer().stop();
+      Vibration.cancel();
+
+      if (widget.alarmId != null) {
+        final stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
+        await NotificationService().cancelNotification(stableId);
+      }
+
+      // 미션 상태 초기화
+      if (_missionStep == 2) {
+        try {
+          final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+          await box.delete('active_ringing_alarm_id');
+          await box.delete('active_ringing_set_at');
+          await box.delete('active_alarm_mission_base_id');
+          await box.delete('active_alarm_mission_started_at');
+          await box.delete('active_alarm_mission_background_path');
+          await box.flush();
+          debugPrint('[FortuneMission] Hive state cleared successfully');
+        } catch (e) {
+          debugPrint('[FortuneMission] Error clearing Hive state: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error stopping alarm: $e');
+    }
+  }
+
   @override
   void dispose() {
-    _volumeTimer?.cancel();
-    _loadingTimer?.cancel();
-    _inactivityTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    _volumeEnforcementTimer?.cancel();
+    _stopAlarm();
     _audioPlayer.dispose();
     super.dispose();
   }
@@ -193,29 +275,55 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
 
     try {
       if (alarm.isSoundEnabled) {
-        bool useAudioPlayer = alarm.ringtonePath != 'default' || alarm.isGradualVolume;
-
-        if (!useAudioPlayer) {
-           await FlutterRingtonePlayer().playAlarm(
-             looping: true, 
-             volume: alarm.volume, 
-             asAlarm: true
-           );
+        String path = alarm.ringtonePath ?? 'default';
+        debugPrint('[FortuneMission] Playing alarm sound: $path');
+        
+        if (path == 'default' || path.isEmpty) {
+          await FlutterRingtonePlayer().playAlarm(
+            looping: true, 
+            volume: alarm.volume, 
+            asAlarm: true
+          );
         } else {
-           String path = alarm.ringtonePath ?? 'alarm_sound';
-           if (path == 'default') path = 'alarm_sound';
-           String ext = 'ogg';
-           
-           await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-           await _audioPlayer.setSource(AssetSource('sounds/$path.$ext'));
-           
-           double initialVolume = alarm.isGradualVolume ? 0.1 : alarm.volume;
-           await _audioPlayer.setVolume(initialVolume);
-           await _audioPlayer.resume();
-           
-           if (alarm.isGradualVolume) {
-             _startVolumeFadeIn(alarm.volume);
-           }
+          // 커스텀 사운드 재생
+          try {
+            if (Platform.isAndroid) {
+              await _audioPlayer.setAudioContext(AudioContext(
+                android: AudioContextAndroid(
+                  isSpeakerphoneOn: true,
+                  stayAwake: true,
+                  contentType: AndroidContentType.sonification,
+                  usageType: AndroidUsageType.alarm,
+                  audioFocus: AndroidAudioFocus.gain,
+                ),
+              ));
+            }
+            
+            await _audioPlayer.stop();
+            await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+            
+            try {
+              await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
+            } catch (e) {
+              debugPrint('[FortuneMission] AssetSource failed, trying BytesSource fallback: $e');
+              final ByteData data = await rootBundle.load('assets/sounds/$path.ogg');
+              final Uint8List bytes = data.buffer.asUint8List();
+              await _audioPlayer.setSource(BytesSource(bytes));
+            }
+            
+            double targetVolume = alarm.volume;
+            if (targetVolume <= 0) targetVolume = 0.5;
+            
+            _startVolumeFadeIn(targetVolume);
+            await _audioPlayer.resume();
+          } catch (ae) {
+            debugPrint('[FortuneMission] AudioPlayer error: $ae. Falling back to system default.');
+            await FlutterRingtonePlayer().playAlarm(
+              looping: true, 
+              volume: alarm.volume, 
+              asAlarm: true
+            );
+          }
         }
       }
 
@@ -260,21 +368,6 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
         break;
       default:
         Vibration.vibrate(pattern: [0, 1000, 1000], repeat: 0);
-    }
-  }
-
-  Future<void> _stopAlarm() async {
-    try {
-      _volumeTimer?.cancel();
-      await _audioPlayer.stop();
-      await FlutterRingtonePlayer().stop();
-      Vibration.cancel();
-      if (widget.alarmId != null) {
-        final stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
-        await NotificationService().cancelNotification(stableId);
-      }
-    } catch (e) {
-      debugPrint('Error stopping alarm: $e');
     }
   }
 

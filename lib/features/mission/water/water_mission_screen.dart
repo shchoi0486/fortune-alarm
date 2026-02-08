@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
 import 'package:intl/intl.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'providers/water_provider.dart';
 import 'widgets/wave_progress.dart';
@@ -27,14 +29,42 @@ class _WaterMissionScreenState extends ConsumerState<WaterMissionScreen> {
   @override
   void initState() {
     super.initState();
-    // 미션 진입 시 알람 진동이 남아있을 수 있으므로 명시적으로 정지
-    Vibration.cancel();
+    // 미션 진입 시 알람 진동 및 소리가 남아있을 수 있으므로 명시적으로 정지
+    _stopAlarm();
   }
 
   @override
   void dispose() {
+    _stopAlarm();
     _audioPlayer.dispose();
     super.dispose();
+  }
+
+  Future<void> _stopAlarm() async {
+    try {
+      // 소리/진동 정지
+      await _audioPlayer.stop();
+      await FlutterRingtonePlayer().stop();
+      Vibration.cancel();
+
+      // 미션 상태 초기화
+      if (_isSuccess) {
+        try {
+          final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+          await box.delete('active_ringing_alarm_id');
+          await box.delete('active_ringing_set_at');
+          await box.delete('active_alarm_mission_base_id');
+          await box.delete('active_alarm_mission_started_at');
+          await box.delete('active_alarm_mission_background_path');
+          await box.flush();
+          debugPrint('[WaterMission] Hive state cleared successfully');
+        } catch (e) {
+          debugPrint('[WaterMission] Error clearing Hive state: $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error stopping alarm: $e');
+    }
   }
 
   Future<void> _playSfx(String assetPath) async {

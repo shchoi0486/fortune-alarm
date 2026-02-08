@@ -208,8 +208,34 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
         }
 
         // 화면이 완전히 빌드된 후 소리를 재생하기 위해 약간의 딜레이를 줍니다.
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (mounted && !_isMissionStarted && _snoozeTargetTime == null) {
+        Future.delayed(const Duration(milliseconds: 500), () async {
+          if (!mounted) return;
+
+          // [추가] 이전에 미션이 진행 중이었는지 확인하여 자동 복구 시도
+          try {
+            final appStateBox = await Hive.openBox('app_state');
+            final activeBaseId = appStateBox.get('active_alarm_mission_base_id') as String?;
+            final startedAtStr = appStateBox.get('active_alarm_mission_started_at') as String?;
+            
+            if (activeBaseId != null && startedAtStr != null) {
+              final startedAt = DateTime.tryParse(startedAtStr);
+              final now = DateTime.now();
+              
+              // 15분 이내에 시작된 미션이 있다면 자동 복구
+              if (startedAt != null && now.difference(startedAt) < const Duration(minutes: 15)) {
+                final currentBaseId = widget.alarmId.replaceAll('_snooze', '');
+                if (activeBaseId == currentBaseId) {
+                  debugPrint('[AlarmRingingScreen] Detected active mission in progress. Auto-restoring mission screen.');
+                  _startMission();
+                  return;
+                }
+              }
+            }
+          } catch (e) {
+            debugPrint('[AlarmRingingScreen] Error checking mission restore: $e');
+          }
+
+          if (!_isMissionStarted && _snoozeTargetTime == null) {
             _playAlarm();
           }
         });
@@ -404,13 +430,33 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     }
   }
 
+  DateTime? _backgroundTime;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.paused) {
+      _backgroundTime = DateTime.now();
+      debugPrint('[AlarmRingingScreen] App paused at: $_backgroundTime');
+    } else if (state == AppLifecycleState.resumed) {
       final route = ModalRoute.of(context);
       if (route?.isCurrent ?? true) {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
       }
+
+      if (_backgroundTime != null) {
+        final now = DateTime.now();
+        final diff = now.difference(_backgroundTime!).inMinutes;
+        debugPrint('[AlarmRingingScreen] App resumed. Background duration: $diff minutes');
+        
+        if (diff >= 15) {
+          debugPrint('[AlarmRingingScreen] Background duration exceeds 15 minutes. Closing screen.');
+          if (mounted && !_isMissionCompleted) {
+            _stopAlarm();
+            _closeToMain();
+          }
+        }
+      }
+      _backgroundTime = null;
     }
   }
 
@@ -423,21 +469,14 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     _timeTimer?.cancel();
     _missionTimeoutTimer?.cancel();
     
-    // 미션이 완료되지 않은 상태에서 dispose가 호출된 경우 (예: 사용자가 앱을 강제로 끔)
-    // 알람 소리를 끄지 않고 서비스가 유지되도록 하거나, 로그를 남겨 재실행을 유도할 수 있습니다.
-    if (!_isMissionCompleted) {
-      debugPrint('[AlarmRingingScreen] WARNING: UI disposed without mission completion!');
-      // 여기서 소리를 끄지 않으면 앱이 죽어도 서비스 Isolate에서 소리가 계속 날 가능성이 높아집니다.
-      // 하지만 현재 구조상 UI Isolate의 _audioPlayer는 앱 종료 시 함께 죽으므로,
-      // 서비스 측에서 소리를 재생하는 로직으로의 전환이 궁극적인 해결책입니다.
-      
-      // 우선은 사용자가 알람을 우회했음을 기록하여 다음 앱 실행 시 바로 알람 화면으로 보내는 용도로 활용 가능
-    } else {
-      // 정상적으로 화면이 종료될 때 안전 장치 해제
+    // 알람 소리 및 진동 중지 보장
+    if (!_isMissionCompleted && !_isMissionStarted) {
+       _stopAlarm();
+    } else if (_isMissionCompleted) {
+      // 정상적으로 완료된 경우 안전 장치 해제
       if (_alarm != null) {
         AlarmSchedulerService.cancelSafetyAlarm(_alarm!.id);
       }
-      // 알람 소리 및 진동 중지 보장
       _stopAlarm();
     }
 
@@ -640,6 +679,10 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
 
       final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
       await NotificationService().cancelNotification(stableId);
+
+      // [추가] 안전 알람 취소
+      final String originalId = widget.alarmId.replaceAll('_snooze', '');
+      await AlarmSchedulerService.cancelSafetyAlarm(originalId);
 
       if (await FlutterForegroundTask.isRunningService) {
         debugPrint('[AlarmRingingScreen] Stopping Foreground Service...');
@@ -987,12 +1030,19 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                             bool hasRepeat = _alarm!.repeatDays.any((d) => d);
                             await AlarmSchedulerService.cancelAlarm(_alarm!, cancelMain: !hasRepeat);
                             
+                            // [추가] 안전 알람 취소
+                            final String originalId = widget.alarmId.replaceAll('_snooze', '');
+                            await AlarmSchedulerService.cancelSafetyAlarm(originalId);
+                            
                             debugPrint('[AlarmRingingScreen] Simple alarm turned off (Snooze cancelled).');
 
                             // 4. 알람 리스트 업데이트 (단일 알람 비활성화 등)
                             try {
                               final notifier = ref.read(alarmListProvider.notifier);
                               await notifier.completeAlarm(widget.alarmId);
+                              
+                              // 기상 미션 성공 처리 연동 (미션 없음 시에도 완료 처리)
+                              await ref.read(missionProvider).completeWakeUpMission();
                             } catch (e) {
                               debugPrint('Error completing wakeup mission: $e');
                             }
@@ -1113,7 +1163,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
         );
         break;
       case MissionType.supplement:
-        nextScreen = const SupplementMissionScreen();
+        nextScreen = SupplementMissionScreen(alarmId: widget.alarmId);
         break;
       default:
         nextScreen = SimpleAlarmScreen(alarmId: widget.alarmId);

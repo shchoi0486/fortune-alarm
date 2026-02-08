@@ -51,6 +51,7 @@ class MissionCameraScreen extends ConsumerStatefulWidget {
 class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with WidgetsBindingObserver {
   final MLService _mlService = MLService();
   final AudioPlayer _audioPlayer = AudioPlayer();
+  Timer? _volumeEnforcementTimer;
   Timer? _volumeTimer;
   Timer? _timeTimer;
   Timer? _inactivityTimer;
@@ -101,8 +102,28 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
     WidgetsBinding.instance.addObserver(this);
     
     _isDisposed = false;
+    _startVolumeEnforcement();
     _startInactivityTimer();
+    _resetInactivityTimer();
     _initializeAll();
+  }
+
+  void _startVolumeEnforcement() {
+    if (Platform.isAndroid) {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      _volumeEnforcementTimer?.cancel();
+      _volumeEnforcementTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (!mounted || _isSuccess) {
+          timer.cancel();
+          return;
+        }
+        try {
+          await channel.invokeMethod('setMaxAlarmVolume');
+        } catch (e) {
+          debugPrint('Error setting max alarm volume: $e');
+        }
+      });
+    }
   }
 
   Future<void> _initializeAll() async {
@@ -200,6 +221,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
         setState(() {
           _alarm = alarm;
         });
+        _stopAlarm();
       }
     } catch (e) {
       debugPrint('Error loading alarm info: $e');
@@ -207,43 +229,68 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
   }
 
   Future<void> _playAlarm() async {
-    if (widget.alarmId == null) return;
+    if (widget.alarmId == null || _alarm == null) return;
 
-    final alarmList = ref.read(alarmListProvider);
-    final alarm = alarmList.firstWhereOrNull((a) => a.id == widget.alarmId);
-    
-    if (alarm == null) return;
+    final alarm = _alarm!;
 
-    debugPrint("[MissionCamera] Analyzing reference image: ${_referenceImage!.path}");
     try {
-      // 소리 재생
       if (alarm.isSoundEnabled) {
-        if (alarm.ringtonePath == 'default') {
-           // 기본 알람음은 시스템 설정을 따르거나 FlutterRingtonePlayer 사용
-           // 점점 커지는 볼륨은 오디오 파일 재생 시에만 완벽 지원
-           await FlutterRingtonePlayer().playAlarm(
-             looping: true, 
-             volume: alarm.isGradualVolume ? 0.1 : alarm.volume, 
-             asAlarm: true
-           );
+        String path = alarm.ringtonePath ?? 'default';
+        debugPrint('[CameraMission] Playing alarm sound: $path');
+        
+        if (path == 'default' || path.isEmpty) {
+          await FlutterRingtonePlayer().playAlarm(
+            looping: true, 
+            volume: alarm.volume, 
+            asAlarm: true
+          );
         } else {
-           String path = alarm.ringtonePath ?? 'alarm_sound';
-           String ext = 'ogg';
-           
-           await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-           await _audioPlayer.setSource(AssetSource('sounds/$path.$ext'));
-           
-           double initialVolume = alarm.isGradualVolume ? 0.1 : alarm.volume;
-           await _audioPlayer.setVolume(initialVolume);
-           await _audioPlayer.resume();
-           
-           if (alarm.isGradualVolume) {
-             _startVolumeFadeIn(alarm.volume);
-           }
+          // 커스텀 사운드 재생
+          try {
+            if (Platform.isAndroid) {
+              await _audioPlayer.setAudioContext(AudioContext(
+                android: AudioContextAndroid(
+                  isSpeakerphoneOn: true,
+                  stayAwake: true,
+                  contentType: AndroidContentType.sonification,
+                  usageType: AndroidUsageType.alarm,
+                  audioFocus: AndroidAudioFocus.gain,
+                ),
+              ));
+            }
+            
+            await _audioPlayer.stop();
+            await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+            
+            try {
+              await _audioPlayer.setSource(AssetSource('sounds/$path.ogg'));
+            } catch (e) {
+              debugPrint('[CameraMission] AssetSource failed, trying BytesSource fallback: $e');
+              final ByteData data = await rootBundle.load('assets/sounds/$path.ogg');
+              final Uint8List bytes = data.buffer.asUint8List();
+              await _audioPlayer.setSource(BytesSource(bytes));
+            }
+            
+            double targetVolume = alarm.volume;
+            if (targetVolume <= 0) targetVolume = 0.5;
+            
+            await _audioPlayer.setVolume(targetVolume);
+            await _audioPlayer.resume();
+            
+            if (alarm.isGradualVolume) {
+              _startVolumeFadeIn(alarm.volume);
+            }
+          } catch (ae) {
+            debugPrint('[CameraMission] AudioPlayer error: $ae. Falling back to system default.');
+            await FlutterRingtonePlayer().playAlarm(
+              looping: true, 
+              volume: alarm.volume, 
+              asAlarm: true
+            );
+          }
         }
       }
 
-      // 진동 재생
       if (alarm.isVibrationEnabled && await Vibration.hasVibrator() == true) {
          _playVibration(alarm.vibrationPattern);
       }
@@ -267,7 +314,6 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
 
   void _playVibration(String? pattern) {
     Vibration.cancel();
-    // repeat: 0 (인덱스 0부터 반복)
     switch (pattern) {
       case 'short':
         Vibration.vibrate(pattern: [0, 500, 500, 500, 500], repeat: 0);
@@ -292,15 +338,29 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
   Future<void> _stopAlarm() async {
     try {
       _volumeTimer?.cancel();
-      // 1. UI에서 재생한 소리/진동 정지
+      _volumeEnforcementTimer?.cancel();
       await _audioPlayer.stop();
       await FlutterRingtonePlayer().stop();
       Vibration.cancel();
-      
-      // 2. 백그라운드 알림(Notification) 제거 및 소리 정지
       if (widget.alarmId != null) {
-        final stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
+        final int stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
         await NotificationService().cancelNotification(stableId);
+      }
+
+      // 미션 상태 초기화
+      if (_isSuccess) {
+        try {
+          final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
+          await box.delete('active_ringing_alarm_id');
+          await box.delete('active_ringing_set_at');
+          await box.delete('active_alarm_mission_base_id');
+          await box.delete('active_alarm_mission_started_at');
+          await box.delete('active_alarm_mission_background_path');
+          await box.flush();
+          debugPrint('[CameraMission] Hive state cleared successfully');
+        } catch (e) {
+          debugPrint('[CameraMission] Error clearing Hive state: $e');
+        }
       }
     } catch (e) {
       debugPrint('Error stopping alarm: $e');
@@ -539,26 +599,41 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
     }
   }
 
+  DateTime? _backgroundTime;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      // 미션 성공 후 결과 다이얼로그(광고)가 뜬 상태에서 앱이 일시정지되어도 
-      // 다이얼로그가 닫히지 않도록 _isSuccess 상태 체크 추가
-      if (mounted && !_isDisposed && !_isSuccess) {
-        debugPrint('[MissionCameraScreen] App paused - returning to ringing screen');
-        Navigator.of(context).pop('timeout');
+      _backgroundTime = DateTime.now();
+      debugPrint('[MissionCameraScreen] App paused at: $_backgroundTime');
+    } else if (state == AppLifecycleState.resumed) {
+      if (_backgroundTime != null) {
+        final now = DateTime.now();
+        final diff = now.difference(_backgroundTime!).inMinutes;
+        debugPrint('[MissionCameraScreen] App resumed. Background duration: $diff minutes');
+        
+        if (diff >= 15) {
+          debugPrint('[MissionCameraScreen] Background duration exceeds 15 minutes. Closing mission.');
+          if (mounted && !_isSuccess) {
+            Navigator.of(context).pop('timeout');
+          }
+        }
       }
+      _backgroundTime = null;
     }
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _isDisposed = true;
+    WidgetsBinding.instance.removeObserver(this);
     _volumeTimer?.cancel();
+    _volumeEnforcementTimer?.cancel();
     _timeTimer?.cancel();
     _inactivityTimer?.cancel();
     _audioPlayer.dispose();
+    _mlService.dispose();
+    _stopAlarm();
     
     // 카메라 리소스 해제
     ref.read(cameraControllerProvider.notifier).disposeCamera();

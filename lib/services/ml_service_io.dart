@@ -22,23 +22,7 @@ class MLService {
   // Singleton pattern
   static final MLService _instance = MLService._internal();
   factory MLService() => _instance;
-  MLService._internal()
-      : _faceDetector = FaceDetector(
-          options: FaceDetectorOptions(
-            performanceMode: FaceDetectorMode.fast,
-            enableLandmarks: true,
-            enableContours: true,
-            enableClassification: true,
-            minFaceSize: 0.15,
-          ),
-        ),
-        _objectDetector = ObjectDetector(
-          options: ObjectDetectorOptions(
-            mode: DetectionMode.stream,
-            classifyObjects: true,
-            multipleObjects: true,
-          ),
-        );
+  MLService._internal();
 
   // TensorFlow Lite Components
   Interpreter? _interpreter;
@@ -47,7 +31,8 @@ class MLService {
   bool _isModelLoaded = false;
   
   // Face Detector (ML Kit)
-  final FaceDetector _faceDetector;
+  FaceDetector? _faceDetector;
+  ObjectDetector? _objectDetector;
   
   // Caching
   String? _cachedReferencePath;
@@ -56,43 +41,63 @@ class MLService {
   List<double>? _cachedReferenceHistogram; // 색상 히스토그램 캐시
   int _successStreak = 0;
 
-  final ObjectDetector _objectDetector;
-
   // 얼굴 감지 메서드 (외부 호출용)
   Future<List<Face>> processFaces(InputImage inputImage) async {
-    return await _faceDetector.processImage(inputImage);
+    if (_faceDetector == null) await initialize();
+    return await _faceDetector!.processImage(inputImage);
   }
 
   Future<void> initialize() async {
-    if (_isModelLoaded) return;
+    if (_isModelLoaded && _faceDetector != null && _objectDetector != null) return;
+    
     try {
-      // MobileNet V1 Quantized Model
-      final options = InterpreterOptions();
-      // Android에서는 GPU Delegate 등을 사용할 수 있으나, 호환성을 위해 기본 CPU 사용
-      
-      _interpreter = await Interpreter.fromAsset(
-        'assets/ml/mobilenet_v1_1.0_224_quant.tflite',
-        options: options,
+      // 1. ML Kit Detectors 초기화
+      _faceDetector ??= FaceDetector(
+        options: FaceDetectorOptions(
+          performanceMode: FaceDetectorMode.fast,
+          enableLandmarks: true,
+          enableContours: true,
+          enableClassification: true,
+          minFaceSize: 0.15,
+        ),
       );
-      
-      final labelData = await rootBundle.loadString('assets/ml/labels_mobilenet_quant_v1_224.txt');
-      _labels = labelData.split('\n');
 
-      try {
-        _efficientNetInterpreter = await Interpreter.fromAsset(
-          'assets/ml/efficientnet-lite0.tflite',
+      _objectDetector ??= ObjectDetector(
+        options: ObjectDetectorOptions(
+          mode: DetectionMode.stream,
+          classifyObjects: true,
+          multipleObjects: true,
+        ),
+      );
+
+      // 2. TFLite Models 초기화
+      if (!_isModelLoaded) {
+        final options = InterpreterOptions();
+        
+        _interpreter = await Interpreter.fromAsset(
+          'assets/ml/mobilenet_v1_1.0_224_quant.tflite',
           options: options,
         );
-        debugPrint('EfficientNet Lite0 model loaded');
-      } catch (e) {
-        _efficientNetInterpreter = null; // 로드 실패 시 null로 명시적 설정
-        debugPrint('EfficientNet Lite0 model load failed (shape recognition disabled): $e');
+        
+        final labelData = await rootBundle.loadString('assets/ml/labels_mobilenet_quant_v1_224.txt');
+        _labels = labelData.split('\n');
+
+        try {
+          _efficientNetInterpreter = await Interpreter.fromAsset(
+            'assets/ml/efficientnet-lite0.tflite',
+            options: options,
+          );
+          debugPrint('EfficientNet Lite0 model loaded');
+        } catch (e) {
+          _efficientNetInterpreter = null;
+          debugPrint('EfficientNet Lite0 model load failed: $e');
+        }
+        
+        _isModelLoaded = true;
+        debugPrint('TensorFlow Lite Model Loaded: ${_labels.length} labels');
       }
-      
-      _isModelLoaded = true;
-      debugPrint('TensorFlow Lite Model Loaded: ${_labels.length} labels');
     } catch (e) {
-      debugPrint('Failed to load TFLite model: $e');
+      debugPrint('Failed to initialize MLService: $e');
     }
   }
 
@@ -339,7 +344,7 @@ class MLService {
           final mlKitInput = _inputImageFromCameraImage(cameraImage, camera);
           if (mlKitInput != null) {
             try {
-              final objects = await _objectDetector.processImage(mlKitInput);
+              final objects = await _objectDetector?.processImage(mlKitInput);
               final bgNames = {
                 'wall',
                 'floor',
@@ -347,8 +352,8 @@ class MLService {
                 'room',
                 'sky',
               };
-              for (final obj in objects) {
-                for (final label in obj.labels) {
+              for (final obj in objects ?? []) {
+                for (final label in obj.labels ?? []) {
                   final text = label.text.toLowerCase();
                   if (bgNames.contains(text)) {
                     isBackgroundByMlKit = true;
@@ -451,8 +456,8 @@ class MLService {
             // 얼굴은 ML Kit 사용 (훨씬 정확함)
             final mlKitInput = _inputImageFromCameraImage(cameraImage, camera);
             if (mlKitInput != null) {
-              final faces = await _faceDetector.processImage(mlKitInput);
-              if (faces.isNotEmpty) {
+              final faces = await _faceDetector?.processImage(mlKitInput);
+              if (faces?.isNotEmpty ?? false) {
                 return MissionValidationResult(
                   isSuccess: true, 
                   message: "얼굴 인식 성공", 
@@ -913,7 +918,14 @@ class MLService {
   void dispose() {
     _interpreter?.close();
     _efficientNetInterpreter?.close();
-    _faceDetector.close();
-    _objectDetector.close();
+    _faceDetector?.close();
+    _objectDetector?.close();
+    
+    _interpreter = null;
+    _efficientNetInterpreter = null;
+    _faceDetector = null;
+    _objectDetector = null;
+    _isModelLoaded = false;
+    debugPrint('MLService disposed and resources released');
   }
 }
