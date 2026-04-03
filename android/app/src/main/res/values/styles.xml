@@ -5,12 +5,13 @@
         <!-- Show a splash screen on the activity. Automatically removed when
              the Flutter engine draws its first frame -->
         <item name="android:windowBackground">@drawable/launch_background</item>
-        <item name="android:forceDarkAllowed">false</item>
         <!-- [Android 15 대응] windowFullscreen 제거 (Edge-to-Edge 정책 준수) -->
         <!-- <item name="android:windowFullscreen">true</item> -->
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <!-- [Android 15 대응] shortEdges 대신 default 사용 권장 (Edge-to-Edge 시 자동 적용) -->
-        <item name="android:windowLayoutInDisplayCutoutMode">default</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
     </style>
     <!-- Theme applied to the Android Window as soon as the process has started.
          This theme determines the color of the Android Window while your
