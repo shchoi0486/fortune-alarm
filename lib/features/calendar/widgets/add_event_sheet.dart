@@ -1444,7 +1444,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
             child: ElevatedButton(
               onPressed: _save,
               style: ElevatedButton.styleFrom(
-                backgroundColor: blueTheme,
+                backgroundColor: const Color(0xFFF97316), // 저장 버튼 색상을 오렌지색으로 고정
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 elevation: 0,
@@ -1498,7 +1498,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                      Row(
                        children: [
                          Text(
-                           DateFormat.yMMMMd(AppLocalizations.of(context)?.localeName ?? 'ko').format(widget.selectedDate),
+                           DateFormat.yMd(AppLocalizations.of(context)?.localeName ?? 'ko').format(widget.selectedDate),
                            style: TextStyle(
                              fontSize: 18, 
                              fontWeight: FontWeight.bold, 
@@ -2291,8 +2291,8 @@ class _AddEventSheetState extends State<AddEventSheet> {
             ElevatedButton(
               onPressed: _save,
               style: ElevatedButton.styleFrom(
-                backgroundColor: blueTheme,
-                foregroundColor: blueTheme.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                backgroundColor: const Color(0xFFF97316), // 저장 버튼 색상을 오렌지색으로 고정
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 elevation: 0,
                 shape: RoundedRectangleBorder(

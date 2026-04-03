@@ -289,7 +289,7 @@ class _LuckyNumberScreenState extends State<LuckyNumberScreen> with FortuneAcces
         ),
         const SizedBox(height: 20),
         // Intro screen native ad
-        const DetailedAdWidget(
+        const ListAdWidget(
           margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         ),
         const Spacer(),
@@ -453,7 +453,7 @@ class _LuckyNumberScreenState extends State<LuckyNumberScreen> with FortuneAcces
               }),
               const SizedBox(height: 20),
               // Result screen native ad
-              const DetailedAdWidget(
+              const ListAdWidget(
                 margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
               ),
               const SizedBox(height: 20),

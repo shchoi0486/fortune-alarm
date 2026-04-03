@@ -10,6 +10,7 @@ import '../data/models/mission_model.dart';
 import '../data/models/daily_mission_log.dart';
 import '../core/constants/mission_category.dart';
 import '../services/cookie_service.dart';
+import '../services/user_activity_service.dart';
 import '../services/notification_service.dart';
 
 final missionProvider = ChangeNotifierProvider<MissionNotifier>((ref) {
@@ -145,6 +146,8 @@ class MissionNotifier extends ChangeNotifier {
         if (!currentCompleted.contains(missionId)) {
           currentCompleted.add(missionId);
           changed = true;
+          // 루틴 완료 기록
+          UserActivityService.recordRoutineCheck();
         }
       } else {
         if (currentCompleted.contains(missionId)) {

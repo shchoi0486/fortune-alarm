@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../providers/saju_provider.dart';
+import '../../providers/theme_provider.dart';
 import 'generic_fortune_screen.dart';
 import 'fortune_mission_screen.dart';
 import 'lucky_number_screen.dart';
@@ -15,6 +16,7 @@ import 'tojeong/tojeong_input_screen.dart';
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:fortune_alarm/services/cookie_service.dart';
+import '../../services/user_activity_service.dart';
 import 'package:fortune_alarm/widgets/ad_widgets.dart';
 import 'mixins/fortune_access_mixin.dart';
 
@@ -29,6 +31,7 @@ class FortuneScreen extends ConsumerStatefulWidget {
 
 class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAccessMixin {
   Box? _fortuneBox;
+  Color get primaryColor => ref.watch(themeProvider).primaryColor;
   // _cookieService is also in mixin but private there, so we keep this one for local usage
   final CookieService _localCookieService = CookieService();
 
@@ -78,7 +81,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
       {'name': l10n.colorRed, 'color': Colors.red, 'bg': Colors.red[100]},
       {'name': l10n.colorGreen, 'color': Colors.green, 'bg': Colors.green[100]},
       {'name': l10n.colorPink, 'color': Colors.pink, 'bg': Colors.pink[100]},
-      {'name': l10n.colorOrange, 'color': Colors.orange, 'bg': Colors.orange[100]},
+      {'name': l10n.colorOrange, 'color': primaryColor, 'bg': primaryColor.withOpacity(0.1)},
       {'name': l10n.colorWhite, 'color': Colors.grey, 'bg': Colors.grey[200]},
       {'name': l10n.colorBlack, 'color': Colors.black, 'bg': Colors.grey[300]},
     ];
@@ -107,10 +110,10 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor = isDarkMode ? const Color(0xFF121212) : Colors.white;
-    final cardColor = isDarkMode ? const Color(0xFF1E1E1E) : Colors.white;
+    final cardColor = isDarkMode ? const Color(0xFF1C1C1E) : Colors.white;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
     final subTextColor = isDarkMode ? Colors.grey[400] : Colors.grey;
-    final dividerColor = isDarkMode ? Colors.grey[800] : (isDarkMode ? Colors.grey[800] : const Color(0xFFF2F4F6));
+    final dividerColor = isDarkMode ? Colors.grey[800] : const Color(0xFFF2F4F6);
 
     final sajuState = ref.watch(sajuProvider);
 
@@ -120,7 +123,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         backgroundColor: backgroundColor,
         body: Center(
           child: CircularProgressIndicator(
-            color: isDarkMode ? Colors.white : Colors.black,
+            color: primaryColor,
           ),
         ),
       );
@@ -147,7 +150,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                 12, // 20에서 12로 축소
               ),
             decoration: BoxDecoration(
-              color: cardColor,
+              color: backgroundColor,
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.zero,
                 bottomRight: Radius.zero,
@@ -203,7 +206,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                           padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: Colors.amber.withOpacity(0.5), width: 2),
+                            border: Border.all(color: primaryColor.withOpacity(0.5), width: 2),
                           ),
                           child: CircleAvatar(
                             radius: 28, // 22에서 28로 확대
@@ -231,14 +234,14 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                     _buildQuickLuckChip(
                       AppLocalizations.of(context)!.luckyColor, 
                       dailyLuck['color']['name'] as String, 
-                      dailyLuck['color']['bg'] as Color, 
+                      dailyLuck['color']['color'] as Color, 
                       dailyLuck['color']['color'] as Color, 
                       isDarkMode
                     ),
                     const SizedBox(width: 8),
-                    _buildQuickLuckChip(AppLocalizations.of(context)!.luckyItem, dailyLuck['item'] as String, Colors.blue[100]!, Colors.blue, isDarkMode),
+                    _buildQuickLuckChip(AppLocalizations.of(context)!.luckyItem, dailyLuck['item'] as String, isDarkMode ? Colors.white70 : Colors.blueGrey, isDarkMode ? Colors.white : Colors.black87, isDarkMode),
                     const SizedBox(width: 8),
-                    _buildQuickLuckChip(AppLocalizations.of(context)!.luckyDirection, dailyLuck['direction'] as String, Colors.orange[100]!, Colors.orange, isDarkMode),
+                    _buildQuickLuckChip(AppLocalizations.of(context)!.luckyDirection, dailyLuck['direction'] as String, isDarkMode ? Colors.white70 : Colors.blueGrey, isDarkMode ? Colors.white : Colors.black87, isDarkMode),
                   ],
                 ),
               ],
@@ -258,11 +261,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                   
                   const SizedBox(height: 12), // 10에서 12로 증대하여 상단 카드와의 간격 통일
 
-                  // 리스트 네이티브 광고 (알람, 운세, 미션에만 노출)
-                  const DetailedAdWidget(
-                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                  ),
-
+                  // Native Ad (Top) - Removed and moved to bottom of MainScreen
+                  
                   const SizedBox(height: 12), // 10에서 12로 증대하여 하단 텍스트와의 간격 통일
                   
                   Padding(
@@ -283,7 +283,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                   // 운세 그리드 메뉴
                   _buildFortuneGrid(isDarkMode, textColor, subTextColor!),
                   
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 120),
                 ],
               ),
             ),
@@ -294,7 +294,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
     );
   }
 
-  Widget _buildQuickLuckChip(String label, String value, Color bgColor, Color textColor, bool isDarkMode) {
+  Widget _buildQuickLuckChip(String label, String value, Color accentColor, Color textColor, bool isDarkMode) {
     final l10n = AppLocalizations.of(context)!;
     String icon = "";
     if (label == l10n.luckyColor) {
@@ -306,41 +306,62 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
     }
 
     final isWhite = value == l10n.colorWhite;
+    // 배경색을 흰색(라이트) 또는 짙은회색(다크)으로 통일
+    final chipBgColor = isDarkMode ? const Color(0xFF1C1C1E) : Colors.white;
+    final borderColor = isDarkMode 
+        ? Colors.white.withOpacity(0.08) 
+        : (isWhite ? const Color(0xFFE2E8F0) : accentColor.withOpacity(0.15));
 
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4), // 8에서 6으로 축소
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
         decoration: BoxDecoration(
-          color: isDarkMode ? Colors.white.withOpacity(0.05) : bgColor.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(16),
+          color: chipBgColor,
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isDarkMode 
-                ? Colors.white.withOpacity(0.1) 
-                : (isWhite ? const Color(0xFFCBD5E1) : bgColor.withOpacity(0.3)),
-            width: isWhite ? 1.5 : 1,
+            color: borderColor,
+            width: 1,
           ),
+          boxShadow: [
+            if (!isDarkMode)
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+          ],
         ),
         child: Column(
           children: [
-            Text(icon, style: const TextStyle(fontSize: 14)),
-            const SizedBox(height: 4),
+            // 아이콘 배경
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: isDarkMode ? Colors.white.withOpacity(0.05) : accentColor.withOpacity(0.06),
+                shape: BoxShape.circle,
+              ),
+              child: Text(icon, style: const TextStyle(fontSize: 18)),
+            ),
+            const SizedBox(height: 10),
             Text(
               label, 
               style: TextStyle(
-                fontSize: 11, // 9에서 11로 확대
-                fontWeight: FontWeight.bold, // 굵게 변경
-                color: isDarkMode ? Colors.white70 : Colors.black87 // 가독성을 위해 색상도 살짝 진하게 조정
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: isDarkMode ? Colors.white54 : Colors.black54,
+                letterSpacing: -0.2,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 1),
+            const SizedBox(height: 4),
             Text(
               value, 
               style: TextStyle(
-                fontSize: 12, 
+                fontSize: 14, 
                 fontWeight: FontWeight.bold, 
-                color: isDarkMode ? Colors.white : textColor.withOpacity(0.9)
+                color: isDarkMode ? Colors.white : textColor.withOpacity(0.85),
+                letterSpacing: -0.3,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -365,7 +386,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         ),
         gradient: LinearGradient(
           colors: isDarkMode 
-            ? [const Color(0xFF1E1E1E), const Color(0xFF252525)] // 다크모드 배경색 수정
+            ? [const Color(0xFF1C1C1E), const Color(0xFF252525)] // 다크모드 배경색 수정
             : [const Color(0xFFFFFFFF), const Color(0xFFF8FAFC)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -383,6 +404,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         child: InkWell(
           onTap: () {
             HapticFeedback.mediumImpact();
+            UserActivityService.recordFortuneView();
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const FortuneMissionScreen()),
@@ -403,7 +425,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                       shape: BoxShape.circle,
                       gradient: RadialGradient(
                         colors: [
-                          (isDarkMode ? Colors.blue : Colors.amber).withOpacity(0.1),
+                          primaryColor.withOpacity(0.1),
                           Colors.transparent,
                         ],
                       ),
@@ -418,19 +440,18 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: (isDarkMode ? Colors.blue : Colors.amber).withOpacity(0.1),
+                          color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.03),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: (isDarkMode ? Colors.blue : Colors.amber).withOpacity(0.2)),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text("✨", style: TextStyle(fontSize: 10, color: isDarkMode ? Colors.blue[300] : Colors.amber[700])),
+                            Text("✨", style: TextStyle(fontSize: 10, color: isDarkMode ? Colors.white70 : Colors.black54)),
                             const SizedBox(width: 4),
                             Text(
                               l10n.todaysRecommendation,
                               style: TextStyle(
-                                color: isDarkMode ? Colors.blue[300] : Colors.amber[700],
+                                color: isDarkMode ? Colors.white70 : Colors.black54,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -531,8 +552,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                         onPressed: () => Navigator.pop(context, tempDate),
                         child: Text(
                           AppLocalizations.of(context)!.confirm,
-                          style: const TextStyle(
-                            color: Colors.blueAccent,
+                          style: TextStyle(
+                            color: primaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
@@ -569,7 +590,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
 
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).toString();
-    final dateStr = DateFormat.yMMMMd(locale).format(pickedDate);
+    final dateStr = DateFormat.yMd(locale).format(pickedDate);
     
     final bool? confirmed = await showDialog<bool>(
       context: context,
@@ -591,8 +612,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
               child: ElevatedButton(
                 onPressed: () => Navigator.pop(context, true),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  foregroundColor: Colors.white,
+                  backgroundColor: primaryColor,
+                  foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
                 child: Text(l10n.confirm, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -681,7 +702,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
           
           return Container(
             decoration: BoxDecoration(
-              color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
+              color: isDarkMode ? const Color(0xFF1C1C1E) : Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[200]!,
@@ -700,6 +721,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
               child: InkWell(
                 onTap: () {
                   HapticFeedback.selectionClick();
+                  UserActivityService.recordFortuneView();
                   
                   if (item['target'] == 'specific_date') {
                     _handleSpecificDateFortune(context);
@@ -786,8 +808,8 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                 width: 4,
                 height: 20,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Colors.amber, Colors.orange],
+                  gradient: LinearGradient(
+                    colors: [primaryColor.withOpacity(0.7), primaryColor],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
@@ -848,6 +870,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
         child: InkWell(
           onTap: () {
             HapticFeedback.selectionClick();
+            UserActivityService.recordFortuneView();
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: title)),

@@ -4,8 +4,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:path/path.dart' as path;
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/theme_provider.dart';
 
-class RingtoneSelectScreen extends StatefulWidget {
+class RingtoneSelectScreen extends ConsumerStatefulWidget {
   final String? initialRingtonePath;
 
   const RingtoneSelectScreen({
@@ -14,10 +16,10 @@ class RingtoneSelectScreen extends StatefulWidget {
   });
 
   @override
-  State<RingtoneSelectScreen> createState() => _RingtoneSelectScreenState();
+  ConsumerState<RingtoneSelectScreen> createState() => _RingtoneSelectScreenState();
 }
 
-class _RingtoneSelectScreenState extends State<RingtoneSelectScreen> with SingleTickerProviderStateMixin {
+class _RingtoneSelectScreenState extends ConsumerState<RingtoneSelectScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final AudioPlayer _audioPlayer = AudioPlayer();
   
@@ -252,77 +254,82 @@ class _RingtoneSelectScreenState extends State<RingtoneSelectScreen> with Single
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = Colors.cyan;
+    final primaryColor = ref.watch(themeProvider).primaryColor;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        children: [
-          // 상단 핸들바 및 타이틀 영역
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  l10n.ringtoneSelect,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: isDarkMode ? Colors.white : Colors.black,
-                  ),
-                ),
-                // 닫기 버튼 (원형 배경)
-                GestureDetector(
-                  onTap: () {
-                    _stopPreview();
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: isDarkMode ? Colors.black45 : Colors.grey[200],
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.close,
-                      size: 20,
-                      color: isDarkMode ? Colors.white : Colors.black54,
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: BoxDecoration(
+          color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          children: [
+            // 상단 핸들바 및 타이틀 영역
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.ringtoneSelect,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: isDarkMode ? Colors.white : Colors.black,
                     ),
                   ),
-                ),
-              ],
+                  // 닫기 버튼 (원형 배경)
+                  GestureDetector(
+                    onTap: () {
+                      _stopPreview();
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: isDarkMode ? Colors.black45 : Colors.grey[200],
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.close,
+                        size: 20,
+                        color: isDarkMode ? Colors.white : Colors.black54,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          
-          const SizedBox(height: 12),
+            
+            const SizedBox(height: 12),
 
-          // 탭 바
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: isDarkMode ? Colors.white10 : Colors.grey[200]!,
-                  width: 1,
+            // 탭 바
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: isDarkMode ? Colors.white10 : Colors.grey[200]!,
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: TabBar(
+                  controller: _tabController,
+                  labelColor: primaryColor,
+                  unselectedLabelColor: isDarkMode ? Colors.grey : Colors.black54,
+                  indicatorColor: primaryColor,
+                  indicatorWeight: 3,
+                  tabs: _ringtonesByCategory.keys.map((category) => Text(_getCategoryLabel(context, category))).toList(),
+                  labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  unselectedLabelStyle: const TextStyle(fontSize: 15),
+                  labelPadding: const EdgeInsets.symmetric(vertical: 8),
                 ),
               ),
             ),
-            child: TabBar(
-              controller: _tabController,
-              labelColor: primaryColor,
-              unselectedLabelColor: isDarkMode ? Colors.grey : Colors.black54,
-              indicatorColor: primaryColor,
-              indicatorWeight: 3,
-              tabs: _ringtonesByCategory.keys.map((category) => Text(_getCategoryLabel(context, category))).toList(),
-              labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              unselectedLabelStyle: const TextStyle(fontSize: 15),
-              labelPadding: const EdgeInsets.symmetric(vertical: 8),
-            ),
-          ),
 
           // 벨소리 리스트
           Expanded(
@@ -440,11 +447,14 @@ class _RingtoneSelectScreenState extends State<RingtoneSelectScreen> with Single
                 child: ElevatedButton(
                   onPressed: () {
                     _stopPreview();
-                    Navigator.pop(context, _selectedPath);
+                    Navigator.pop(context, {
+                      'path': _selectedPath,
+                      'name': _getDisplayName(_selectedPath ?? 'default'),
+                    });
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
-                    foregroundColor: Colors.white,
+                    foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -460,6 +470,7 @@ class _RingtoneSelectScreenState extends State<RingtoneSelectScreen> with Single
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

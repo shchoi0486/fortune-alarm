@@ -398,7 +398,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
               spreadRadius: 5,
             ),
           ],
-          border: Border.all(color: Colors.redAccent.withOpacity(0.3), width: 2),
+          border: Border.all(color: const Color(0xFFF97316).withOpacity(0.3), width: 2),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -423,17 +423,17 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                 Icon(
                   Icons.card_giftcard,
                   size: 150,
-                  color: Colors.redAccent.withOpacity(0.05),
+                  color: const Color(0xFFF97316).withOpacity(0.05),
                 ),
                 Column(
                   children: [
                     const Text(
                       "50%",
-                      style: TextStyle(color: Colors.redAccent, fontSize: 60, fontWeight: FontWeight.w900),
+                      style: TextStyle(color: Color(0xFFF97316), fontSize: 60, fontWeight: FontWeight.w900),
                     ),
                     Text(
                       l10n.fortunePassOffLabel(50).split(" ").last,
-                      style: const TextStyle(color: Colors.redAccent, fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(color: Color(0xFFF97316), fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -446,12 +446,12 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
             ),
             Text(
               l10n.fortunePassTimeSalePriceDiscount("29,400"),
-              style: const TextStyle(color: Colors.redAccent, fontSize: 32, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Color(0xFFF97316), fontSize: 32, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
               l10n.fortunePassTimeSaleBadge,
-              style: const TextStyle(color: Colors.orange, fontSize: 14, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Color(0xFFF97316), fontSize: 14, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
             SizedBox(
@@ -463,7 +463,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                   _startCountdown();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.redAccent,
+                  backgroundColor: const Color(0xFFF97316),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   elevation: 0,
@@ -519,8 +519,8 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
           iconTheme: IconThemeData(color: textColor),
           bottom: TabBar(
             controller: _tabController,
-            indicatorColor: Colors.blueAccent,
-            labelColor: isDark ? Colors.white : Colors.blueAccent,
+            indicatorColor: const Color(0xFFF97316),
+            labelColor: isDark ? Colors.white : const Color(0xFFF97316),
             unselectedLabelColor: isDark ? Colors.grey : Colors.grey[400],
             tabs: [
               Tab(text: l10n.fortunePassTabFree),
@@ -585,7 +585,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                 if (_isLoadingProducts)
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 40),
-                    child: Center(child: CircularProgressIndicator(color: Colors.blueAccent)),
+                    child: Center(child: CircularProgressIndicator(color: Color(0xFFF97316))),
                   )
                 else ...[
                   Container(
@@ -605,7 +605,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                         ),
                         TextButton(
                           onPressed: _isStoreAvailable ? _restorePurchases : null,
-                          child: Text(l10n.fortunePassRestore, style: const TextStyle(color: Colors.blueAccent)),
+                          child: Text(l10n.fortunePassRestore, style: const TextStyle(color: Color(0xFFF97316))),
                         ),
                       ],
                     ),
@@ -682,7 +682,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _remainingDiscountSeconds > 0 ? Colors.redAccent : Colors.blueAccent,
+                  backgroundColor: _remainingDiscountSeconds > 0 ? Colors.redAccent : const Color(0xFFF97316),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   elevation: 0,
@@ -747,7 +747,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                 _hasActiveSubscription ? l10n.fortunePassStatusPremium : l10n.fortunePassStatusFree,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: _hasActiveSubscription ? Colors.blueAccent : subTextColor,
+                  color: _hasActiveSubscription ? const Color(0xFFF97316) : subTextColor,
                 ),
               ),
             ],
@@ -832,14 +832,14 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isSelected 
-              ? (isTimeSaleActive ? Colors.redAccent : Colors.blueAccent) 
+              ? (isTimeSaleActive ? const Color(0xFFF97316) : const Color(0xFFF97316)) 
               : borderColor,
           width: isSelected ? 2.5 : 1.5,
         ),
         boxShadow: [
           if (isSelected)
             BoxShadow(
-              color: (isTimeSaleActive ? Colors.redAccent : Colors.blueAccent).withOpacity(0.2),
+              color: (isTimeSaleActive ? const Color(0xFFF97316) : const Color(0xFFF97316)).withOpacity(0.2),
               blurRadius: 12,
               spreadRadius: 2,
             ),
@@ -913,11 +913,11 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: isSelected 
-                            ? (isTimeSaleActive ? Colors.redAccent : Colors.blueAccent) 
+                            ? (isTimeSaleActive ? const Color(0xFFF97316) : const Color(0xFFF97316)) 
                             : (isDark ? Colors.white.withOpacity(0.3) : Colors.black.withOpacity(0.1)),
                         width: 2,
                       ),
-                      color: isSelected ? (isTimeSaleActive ? Colors.redAccent : Colors.blueAccent) : Colors.transparent,
+                      color: isSelected ? (isTimeSaleActive ? const Color(0xFFF97316) : const Color(0xFFF97316)) : Colors.transparent,
                     ),
                     child: isSelected 
                         ? const Icon(Icons.check, size: 14, color: Colors.white) 
@@ -968,8 +968,8 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
                             priceText,
                             style: TextStyle(
                               color: isTimeSaleActive 
-                                  ? Colors.redAccent 
-                                  : (isDiscountedPlan ? (isDark ? Colors.blueAccent : const Color(0xFF1976D2)) : textColor), 
+                                  ? const Color(0xFFF97316) 
+                                  : (isDiscountedPlan ? (isDark ? const Color(0xFFF97316) : const Color(0xFFF97316)) : textColor), 
                               fontSize: 22, 
                               fontWeight: FontWeight.w900,
                             ),

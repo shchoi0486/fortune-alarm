@@ -1,1 +1,113 @@
-{}
+{
+  "de": [
+    "quickAlarm",
+    "setQuickAlarm",
+    "addMinutes",
+    "ringingAt",
+    "pleaseSetTime",
+    "alarmSaved",
+    "alarmScheduledTitle",
+    "alarmScheduledBody",
+    "goodDay",
+    "luckyDay",
+    "cheerUp",
+    "stayHappy",
+    "youCanDoIt"
+  ],
+
+  "es": [
+    "quickAlarm",
+    "setQuickAlarm",
+    "addMinutes",
+    "ringingAt",
+    "pleaseSetTime",
+    "alarmSaved",
+    "alarmScheduledTitle",
+    "alarmScheduledBody",
+    "goodDay",
+    "luckyDay",
+    "cheerUp",
+    "stayHappy",
+    "youCanDoIt"
+  ],
+
+  "fr": [
+    "quickAlarm",
+    "setQuickAlarm",
+    "addMinutes",
+    "ringingAt",
+    "pleaseSetTime",
+    "alarmSaved",
+    "alarmScheduledTitle",
+    "alarmScheduledBody",
+    "goodDay",
+    "luckyDay",
+    "cheerUp",
+    "stayHappy",
+    "youCanDoIt"
+  ],
+
+  "hi": [
+    "quickAlarm",
+    "setQuickAlarm",
+    "addMinutes",
+    "ringingAt",
+    "pleaseSetTime",
+    "alarmSaved",
+    "alarmScheduledTitle",
+    "alarmScheduledBody",
+    "goodDay",
+    "luckyDay",
+    "cheerUp",
+    "stayHappy",
+    "youCanDoIt"
+  ],
+
+  "ja": [
+    "quickAlarm",
+    "setQuickAlarm",
+    "addMinutes",
+    "ringingAt",
+    "pleaseSetTime",
+    "alarmSaved",
+    "alarmScheduledTitle",
+    "alarmScheduledBody",
+    "goodDay",
+    "luckyDay",
+    "cheerUp",
+    "stayHappy",
+    "youCanDoIt"
+  ],
+
+  "ru": [
+    "quickAlarm",
+    "setQuickAlarm",
+    "addMinutes",
+    "ringingAt",
+    "pleaseSetTime",
+    "alarmSaved",
+    "alarmScheduledTitle",
+    "alarmScheduledBody",
+    "goodDay",
+    "luckyDay",
+    "cheerUp",
+    "stayHappy",
+    "youCanDoIt"
+  ],
+
+  "zh": [
+    "quickAlarm",
+    "setQuickAlarm",
+    "addMinutes",
+    "ringingAt",
+    "pleaseSetTime",
+    "alarmSaved",
+    "alarmScheduledTitle",
+    "alarmScheduledBody",
+    "goodDay",
+    "luckyDay",
+    "cheerUp",
+    "stayHappy",
+    "youCanDoIt"
+  ]
+}

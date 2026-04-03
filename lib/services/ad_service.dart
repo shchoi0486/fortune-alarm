@@ -380,7 +380,7 @@ class AdService {
       nativeAdOptions: NativeAdOptions(
         videoOptions: VideoOptions(
           startMuted: true,
-          customControlsRequested: false,
+          customControlsRequested: true, // [수정] 재생/음소거 버튼 숨김
           clickToExpandRequested: false,
         ),
       ),
@@ -429,6 +429,14 @@ class AdService {
       adUnitId: nativeAdAdvancedUnitId,
       factoryId: 'listTile',
       request: const AdRequest(),
+      nativeAdOptions: NativeAdOptions(
+        mediaAspectRatio: MediaAspectRatio.landscape, // 영상/이미지가 잘 보이도록 가로 비율 설정
+        videoOptions: VideoOptions(
+          startMuted: true, // 소리 없이 시작 (알람 소리와 겹치지 않게)
+          customControlsRequested: true, // [수정] 재생/음소거 버튼 숨김
+          clickToExpandRequested: false,
+        ),
+      ),
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           debugPrint('Preloaded List Ad loaded');

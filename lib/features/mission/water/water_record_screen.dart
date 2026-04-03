@@ -160,7 +160,7 @@ class _WaterRecordScreenState extends ConsumerState<WaterRecordScreen> {
 
     return Row(
       children: [
-        const Icon(Icons.local_drink, color: Colors.blueAccent),
+        const Icon(Icons.local_drink, color: Color(0xFFF97316)),
         const SizedBox(width: 8),
         Text(
           l10n.monthlySummary,
@@ -170,7 +170,7 @@ class _WaterRecordScreenState extends ConsumerState<WaterRecordScreen> {
         if (totalDays > 0)
           Text(
             l10n.monthlySuccessRate(_focusedDay.month, percentage.toString(), successDays, totalDays),
-            style: const TextStyle(fontSize: 16, color: Colors.blueAccent, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, color: Color(0xFFF97316), fontWeight: FontWeight.bold),
           )
         else
           Text(
@@ -239,7 +239,7 @@ class _WaterRecordScreenState extends ConsumerState<WaterRecordScreen> {
                return Container(
                 margin: const EdgeInsets.all(6),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF4FC3F7), // Light Blue
+                  color: Color(0xFFF97316),
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
@@ -275,7 +275,7 @@ class _WaterRecordScreenState extends ConsumerState<WaterRecordScreen> {
              return Container(
                margin: const EdgeInsets.all(6),
                decoration: BoxDecoration(
-                 border: Border.all(color: const Color(0xFF4FC3F7)),
+                 border: Border.all(color: const Color(0xFFF97316)),
                  shape: BoxShape.circle,
                ),
                alignment: Alignment.center,
@@ -296,7 +296,7 @@ class _WaterRecordScreenState extends ConsumerState<WaterRecordScreen> {
       children: [
         _legendItem(Colors.grey[300]!, l10n.waterIntake),
         const SizedBox(width: 20),
-        _legendItem(const Color(0xFF4FC3F7), l10n.goalAchievedTitle),
+        _legendItem(const Color(0xFFF97316), l10n.goalAchievedTitle),
       ],
     );
   }

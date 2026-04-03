@@ -607,7 +607,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                                   fit: BoxFit.scaleDown,
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                  "${DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(profile.birthDate)} ${profile.birthTime ?? (l10n.unknownTime)}",
+                                  "${DateFormat.yMd(Localizations.localeOf(context).toString()).format(profile.birthDate)} ${profile.birthTime ?? (l10n.unknownTime)}",
                                   style: TextStyle(
                                       fontSize: 14,
                                       color: Colors.grey[500],
@@ -828,7 +828,7 @@ class _TojeongInputScreenState extends State<TojeongInputScreen> with FortuneAcc
                 children: [
                   Expanded(
                     child: Text(
-                      DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(_birthDate),
+                      DateFormat.yMd(Localizations.localeOf(context).toString()).format(_birthDate),
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
                       overflow: TextOverflow.ellipsis,
                     ),

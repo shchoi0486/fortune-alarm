@@ -29,6 +29,7 @@ import 'features/settings/settings_screen.dart';
 import 'features/fortune/fortune_screen.dart';
 import 'features/fortune/fortune_pass_screen.dart';
 import 'services/supplement_alarm_service.dart';
+import 'services/fortune_push_service.dart';
 import 'services/routine_alarm_service.dart';
 
 import 'features/alarm/alarm_ringing_screen.dart';
@@ -97,7 +98,7 @@ void main() async {
       (id, title, body, payload) => _onNotificationTap(payload),
       onNotificationResponse: _onNotificationResponse
     );
-    await notificationService.scheduleDefaultFortuneNotifications();
+    await FortunePushService.scheduleDailyPush();
     await AlarmSchedulerService.init();
     SupplementAlarmService.init(hivePath: appDocumentDir.path);
     await RoutineAlarmService.scheduleDailyReminders();
@@ -151,8 +152,20 @@ void main() async {
       final payload = notificationAppLaunchDetails!.notificationResponse?.payload;
       debugPrint('[Main] App launched via notification. Payload: $payload');
       if (payload != null) {
-        // _onNotificationTap 함수 내부에 Navigator 준비 대기 로직이 포함되어 있음
-        _onNotificationTap(payload);
+        try {
+          final appStateBox = Hive.box('app_state');
+          final lastPayload = appStateBox.get('last_handled_launch_payload');
+          if (lastPayload == payload) {
+            _initialNotificationHandled = true;
+          } else {
+            await appStateBox.put('last_handled_launch_payload', payload);
+            _initialNotificationHandled = true;
+            _onNotificationTap(payload);
+          }
+        } catch (_) {
+          _initialNotificationHandled = true;
+          _onNotificationTap(payload);
+        }
       }
     }
   } catch (e) {
@@ -202,7 +215,11 @@ Future<void> _requestPermissions() async {
 
 Future<bool> _shouldSuppressAlarmHandling(String payload) async {
   try {
-    final box = await Hive.openBox('app_state');
+    // app_state 박스가 이미 열려 있으면 그대로 사용
+    final Box box = Hive.isBoxOpen('app_state') 
+        ? Hive.box('app_state') 
+        : await Hive.openBox('app_state');
+        
     final activeBaseId = box.get('active_alarm_mission_base_id') as String?;
     final startedAtStr = box.get('active_alarm_mission_started_at') as String?;
     if (activeBaseId == null || startedAtStr == null) return false;
@@ -211,23 +228,10 @@ Future<bool> _shouldSuppressAlarmHandling(String payload) async {
     if (startedAt == null) return false;
 
     final now = DateTime.now();
-    // 미션 시작 후 15분 이내에는 동일한 알람의 중복 처리를 방지합니다.
-    // (대부분의 미션은 15분 이내에 완료 가능하며, 15분이 지나면 비정상 종료로 간주)
-    if (now.difference(startedAt) >= const Duration(minutes: 15)) {
+    if (now.difference(startedAt) >= const Duration(minutes: 2)) {
       await box.delete('active_alarm_mission_base_id');
       await box.delete('active_alarm_mission_started_at');
       return false;
-    }
-
-    // 포어그라운드 서비스가 실행 중인지도 함께 확인 (더 강력한 체크)
-    if (Platform.isAndroid) {
-      final isRunning = await FlutterForegroundTask.isRunningService;
-      if (!isRunning) {
-        // 서비스가 꺼져있다면 미션이 중단된 것으로 간주
-        await box.delete('active_alarm_mission_base_id');
-        await box.delete('active_alarm_mission_started_at');
-        return false;
-      }
     }
 
     String cleanPayload = payload.replaceAll('_snooze', '');
@@ -290,6 +294,8 @@ Future<void> _onNotificationResponse(NotificationResponse response) async {
 }
 
 Map<String, DateTime> _handledSupplementAlarms = {};
+String? _lastHandledAlarmTapKey;
+DateTime? _lastHandledAlarmTapAt;
 
 void _handleMissionAction(String? actionId, String? payload) {
   if (payload == null) return;
@@ -411,10 +417,68 @@ void _registerPort() {
   });
 }
 
+String? _buildAlarmTapThrottleKey(String payload) {
+  if (payload.startsWith('supplement_') ||
+      payload.startsWith('water_') ||
+      payload.startsWith('mission_') ||
+      payload.startsWith('fortune_daily') ||
+      payload == 'routine_daily') {
+    return null;
+  }
+
+  if (payload.startsWith('loading_')) {
+    final stableId = int.tryParse(payload.replaceFirst('loading_', ''));
+    if (stableId == null) return null;
+    return 'stable_$stableId';
+  }
+
+  return 'stable_${AlarmSchedulerService.getStableId(payload)}';
+}
+
+Future<bool> _isDuplicateAlarmTap(String payload) async {
+  final key = _buildAlarmTapThrottleKey(payload);
+  if (key == null) return false;
+
+  final now = DateTime.now();
+  if (_lastHandledAlarmTapKey == key &&
+      _lastHandledAlarmTapAt != null &&
+      now.difference(_lastHandledAlarmTapAt!) < const Duration(seconds: 8)) {
+    return true;
+  }
+
+  try {
+    final box = Hive.isBoxOpen('app_state')
+        ? Hive.box('app_state')
+        : await Hive.openBox('app_state');
+    final lastKey = box.get('last_handled_alarm_tap_key') as String?;
+    final lastAtStr = box.get('last_handled_alarm_tap_at') as String?;
+    if (lastKey == key && lastAtStr != null) {
+      final lastAt = DateTime.tryParse(lastAtStr);
+      if (lastAt != null && now.difference(lastAt) < const Duration(seconds: 8)) {
+        _lastHandledAlarmTapKey = key;
+        _lastHandledAlarmTapAt = now;
+        return true;
+      }
+    }
+
+    await box.put('last_handled_alarm_tap_key', key);
+    await box.put('last_handled_alarm_tap_at', now.toIso8601String());
+  } catch (_) {}
+
+  _lastHandledAlarmTapKey = key;
+  _lastHandledAlarmTapAt = now;
+  return false;
+}
+
   // 알림 클릭 시 실행될 콜백
 Future<void> _onNotificationTap(String? payload) async {
   debugPrint('[Main] _onNotificationTap called with payload: $payload');
   if (payload == null || payload.isEmpty) return;
+
+  if (await _isDuplicateAlarmTap(payload)) {
+    debugPrint('[Main] Duplicate alarm tap ignored: $payload');
+    return;
+  }
 
   if (await _shouldSuppressAlarmHandling(payload)) {
     try {
@@ -592,7 +656,9 @@ class FortuneAlarmApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
+    final themeState = ref.watch(themeProvider);
+    final themeMode = themeState.themeMode;
+    final primaryColor = themeState.primaryColor;
     final locale = ref.watch(localeProvider);
     
     return MaterialApp(
@@ -610,7 +676,7 @@ class FortuneAlarmApp extends ConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blueAccent,
+          seedColor: primaryColor, // 선명한 오렌지색으로 변경
           brightness: Brightness.light,
         ).copyWith(
           surface: Colors.white,
@@ -620,7 +686,7 @@ class FortuneAlarmApp extends ConsumerWidget {
         cardColor: Colors.white,
         navigationBarTheme: NavigationBarThemeData(
           backgroundColor: Colors.white,
-          indicatorColor: Colors.blueAccent.withOpacity(0.1),
+          indicatorColor: primaryColor.withOpacity(0.1),
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Colors.white,
@@ -634,7 +700,7 @@ class FortuneAlarmApp extends ConsumerWidget {
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blueAccent,
+          seedColor: primaryColor,
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
@@ -644,10 +710,10 @@ class FortuneAlarmApp extends ConsumerWidget {
           foregroundColor: Colors.white,
           elevation: 0,
         ),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          backgroundColor: Color(0xFF121212),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: const Color(0xFF121212),
           elevation: 0,
-          selectedItemColor: Colors.blueAccent,
+          selectedItemColor: primaryColor,
           unselectedItemColor: Colors.grey,
         ),
       ),
@@ -735,16 +801,29 @@ class _SplashScreenState extends State<SplashScreen> {
 
     try {
       final restored = await _tryRestoreAlarmOnSplash();
-      if (restored) return;
+      if (restored) {
+        await Future.delayed(const Duration(milliseconds: 1500));
+        if (!mounted) return;
+        Navigator.of(context).pushAndRemoveUntil(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => const MainScreen(),
+            transitionDuration: Duration.zero,
+            reverseTransitionDuration: Duration.zero,
+          ),
+          (route) => false,
+        );
+        return;
+      }
     } catch (_) {}
     
     // 1. 펜딩 알람이 있는지 확인
     bool hasPending = false;
     try {
-      if (Hive.isBoxOpen('app_state')) {
-        await Hive.box('app_state').close();
-      }
-      final appStateBox = await Hive.openBox('app_state');
+      // app_state 박스가 이미 열려 있으면 그대로 사용 (닫고 다시 여는 과정에서 발생하는 프리징 방지)
+      final Box appStateBox = Hive.isBoxOpen('app_state') 
+          ? Hive.box('app_state') 
+          : await Hive.openBox('app_state');
+          
       hasPending = appStateBox.containsKey('pending_alarm_payload');
       
       if (hasPending) {
@@ -881,7 +960,12 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
   }
 
   Future<void> _runStartupCheckSequence() async {
-    await _runStartupAlarmChecks();
+    try {
+      await _runStartupAlarmChecks().timeout(
+        const Duration(seconds: 6),
+        onTimeout: () {},
+      );
+    } catch (_) {}
     if (mounted) {
       setState(() {
         _isStartupCheckDone = true;
@@ -895,10 +979,28 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
 
   Future<void> _runStartupAlarmChecks() async {
     try {
-      await _checkNotificationLaunch();
-      await _checkPendingAlarmFlag();
-      await _checkActiveAlarmNotificationRestore();
-      await _checkActiveRingingRestore();
+      await _checkNotificationLaunch().timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {},
+      );
+    } catch (_) {}
+    try {
+      await _checkPendingAlarmFlag().timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {},
+      );
+    } catch (_) {}
+    try {
+      await _checkActiveAlarmNotificationRestore().timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {},
+      );
+    } catch (_) {}
+    try {
+      await _checkActiveRingingRestore().timeout(
+        const Duration(seconds: 2),
+        onTimeout: () {},
+      );
     } catch (_) {}
   }
 
@@ -932,11 +1034,17 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
 
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         int retries = 0;
-        while (navigatorKey.currentState == null && retries < 30) {
+        // 최대 5초(100ms * 50회)까지만 대기하도록 수정하여 무한 루프 방지
+        while (navigatorKey.currentState == null && retries < 50) {
           await Future.delayed(const Duration(milliseconds: 100));
           retries++;
         }
-        await _onNotificationTap('loading_$alarmNotiId');
+        
+        if (navigatorKey.currentState != null) {
+          await _onNotificationTap('loading_$alarmNotiId');
+        } else {
+          debugPrint('[Main] Navigator check FAILED after 5s. Moving to Main directly.');
+        }
       });
     } catch (_) {}
   }
@@ -965,15 +1073,14 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
 
     bool needsOptimization = false;
 
-    // 배터리 최적화가 되어있지 않거나 (즉, 권한 거부 상태), 
-    // 다른 앱 위에 표시 권한이 없거나,
-    // 위치 권한이 없거나,
-    // 정확한 알람 권한이 없는 경우 시트 표시
+    // [수정] 위치 권한은 날씨용이므로 필수 최적화 대상에서 제외 (선택 사항)
     if (!notificationStatus.isGranted) needsOptimization = true;
     if (!batteryStatus.isGranted) needsOptimization = true;
     if (!systemAlertWindowStatus.isGranted) needsOptimization = true;
-    if (!locationStatus.isGranted) needsOptimization = true;
     if (exactStatus != null && !exactStatus.isGranted) needsOptimization = true;
+    
+    // 위치 권한이 없더라도 다른 필수 권한이 다 있으면 시트를 띄우지 않음
+    // (사용자가 설정에서 나중에 켤 수 있음)
 
     if (needsOptimization && mounted) {
       showDialog(
@@ -993,7 +1100,12 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
     if (_initialNotificationHandled) return;
 
     final notificationService = NotificationService();
-    final details = await notificationService.flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    final details = await notificationService.flutterLocalNotificationsPlugin
+        .getNotificationAppLaunchDetails()
+        .timeout(
+          const Duration(seconds: 2),
+          onTimeout: () => null,
+        );
     
     if (details != null && details.didNotificationLaunchApp) {
       final response = details.notificationResponse;
@@ -1032,14 +1144,9 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
   Future<void> _checkPendingAlarmFlag() async {
     debugPrint('[Main] _checkPendingAlarmFlag started.');
     try {
-      // 최신 데이터를 위해 박스를 닫고 다시 엽니다 (백그라운드 isolate와의 동기화 보장)
-      if (Hive.isBoxOpen('app_state')) {
-        debugPrint('[Main] app_state box is open. Closing to ensure fresh data...');
-        await Hive.box('app_state').close();
-      }
-      
-      final appStateBox = await Hive.openBox('app_state');
-      debugPrint('[Main] app_state box re-opened.');
+      final Box appStateBox = Hive.isBoxOpen('app_state')
+          ? Hive.box('app_state')
+          : await Hive.openBox('app_state');
       
       final payload = appStateBox.get('pending_alarm_payload');
       final setAtStr = appStateBox.get('pending_alarm_set_at');
@@ -1138,11 +1245,11 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
     if (_initialNotificationHandled) return;
 
     try {
-      if (Hive.isBoxOpen('app_state')) {
-        await Hive.box('app_state').close();
-      }
-
-      final appStateBox = await Hive.openBox('app_state');
+      // app_state 박스가 이미 열려 있는지 확인하고 열려 있으면 그대로 사용
+      final Box appStateBox = Hive.isBoxOpen('app_state') 
+          ? Hive.box('app_state') 
+          : await Hive.openBox('app_state');
+          
       final alarmId = appStateBox.get('active_ringing_alarm_id') as String?;
       final setAtStr = appStateBox.get('active_ringing_set_at') as String?;
 
@@ -1207,8 +1314,8 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
     final isSelected = currentIndex == index;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
-    // 이미지와 유사한 세련된 하늘색 계열
-    final selectedColor = const Color(0xFF3894FF); 
+    // 테마 설정에 따른 색상 적용
+    final selectedColor = ref.watch(themeProvider).primaryColor; 
     final unselectedColor = isDark ? const Color(0xFF999999) : const Color(0xFF74777F);
     
     return Expanded(
@@ -1218,7 +1325,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
         },
         behavior: HitTestBehavior.opaque,
         child: Container(
-          padding: const EdgeInsets.only(top: 7, bottom: 7),
+          padding: const EdgeInsets.only(top: 8, bottom: 8),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -1231,17 +1338,17 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                     scale: value,
                     child: Icon(
                       isSelected ? selectedIcon : icon,
-                      size: 26,
+                      size: 22,
                       color: isSelected ? selectedColor : unselectedColor,
                     ),
                   );
                 },
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 3),
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 10,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   color: isSelected ? selectedColor : unselectedColor,
                   letterSpacing: -0.5,
@@ -1421,7 +1528,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                             onPressed: () => Navigator.of(dialogContext).pop(true),
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.white,
-                              backgroundColor: Colors.redAccent,
+                              backgroundColor: const Color(0xFFF97316),
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -1501,7 +1608,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [Colors.redAccent, Colors.orangeAccent],
+                        colors: [Color(0xFFF97316), Color(0xFFFB923C)],
                       ),
                     ),
                     child: Row(
@@ -1515,7 +1622,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                           child: Text(
                             timeStr,
                             style: const TextStyle(
-                              color: Colors.redAccent,
+                              color: Color(0xFFF97316),
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                             ),
@@ -1553,17 +1660,44 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
               ),
             ),
           ),
-          child: SafeArea(
-            top: false,
-            child: Row(
-              children: [
-                _buildNavItem(Icons.alarm_outlined, Icons.alarm_rounded, AppLocalizations.of(context)!.alarm, 0),
-                _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, AppLocalizations.of(context)!.calendar, 1),
-                _buildNavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, AppLocalizations.of(context)!.fortune, 2),
-                _buildNavItem(Icons.task_alt_outlined, Icons.task_alt_rounded, AppLocalizations.of(context)!.mission, 3),
-                _buildNavItem(Icons.settings_outlined, Icons.settings_rounded, AppLocalizations.of(context)!.settings, 4),
-              ],
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 1. 메뉴 아이콘 (메뉴바)
+              SafeArea(
+                top: false,
+                bottom: false,
+                child: Row(
+                  children: [
+                    _buildNavItem(Icons.alarm_outlined, Icons.alarm_rounded, AppLocalizations.of(context)!.alarm, 0),
+                    _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, AppLocalizations.of(context)!.calendar, 1),
+                    _buildNavItem(Icons.auto_awesome_outlined, Icons.auto_awesome_rounded, AppLocalizations.of(context)!.fortune, 2),
+                    _buildNavItem(Icons.task_alt_outlined, Icons.task_alt_rounded, AppLocalizations.of(context)!.mission, 3),
+                    _buildNavItem(Icons.settings_outlined, Icons.settings_rounded, AppLocalizations.of(context)!.settings, 4),
+                  ],
+                ),
+              ),
+              
+              // 2. 텍스트 광고 (메뉴바와 시스템 네비게이션바 사이)
+              ListAdWidget(
+                height: 35,
+                margin: EdgeInsets.zero,
+                backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
+                factoryId: 'textBanner',
+                showBorder: false,
+                showShadow: false,
+                borderRadius: 0,
+                border: Border(
+                  top: BorderSide(
+                    color: isDark ? Colors.white12 : const Color(0xFFE0E0E0),
+                    width: 0.5,
+                  ),
+                ),
+              ),
+              
+              // 시스템 네비게이션바 영역 확보
+              SafeArea(top: false, child: const SizedBox.shrink()),
+            ],
           ),
         ),
       ),

@@ -54,7 +54,7 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blueAccent,
+                    color: Color(0xFFF97316),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -62,11 +62,11 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
-                    color: Colors.blue[50],
+                    color: const Color(0xFFF97316).withOpacity(0.05),
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.blueAccent.withOpacity(0.1),
+                        color: const Color(0xFFF97316).withOpacity(0.1),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -95,13 +95,13 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: const Color(0xFFF97316),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18),
                       ),
                       elevation: 4,
-                      shadowColor: Colors.blueAccent.withOpacity(0.5),
+                      shadowColor: const Color(0xFFF97316).withOpacity(0.5),
                     ),
                     child: Text(
                       AppLocalizations.of(context)!.confirm,

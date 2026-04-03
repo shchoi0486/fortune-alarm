@@ -3,8 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import '../../providers/theme_provider.dart';
 import '../../services/notification_service.dart';
-import '../../services/routine_alarm_service.dart';
+import '../../services/fortune_push_service.dart';
 
 class AlarmSettingsScreen extends ConsumerStatefulWidget {
   const AlarmSettingsScreen({super.key});
@@ -16,6 +17,7 @@ class AlarmSettingsScreen extends ConsumerStatefulWidget {
 class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
   late Box _settingsBox;
   bool _isLoading = true;
+  Color get primaryColor => ref.watch(themeProvider).primaryColor;
 
   @override
   void initState() {
@@ -34,40 +36,9 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
     final enabled = _settingsBox.get('daily_fortune_enabled', defaultValue: true);
     
     if (enabled) {
-      final l10n = await _getL10n();
-      final time1Str = _settingsBox.get('daily_fortune_time1', defaultValue: '08:00');
-      final time2Str = _settingsBox.get('daily_fortune_time2', defaultValue: '13:00');
-      
-      final parts1 = time1Str.split(':');
-      final time1 = TimeOfDay(hour: int.parse(parts1[0]), minute: int.parse(parts1[1]));
-      
-      final parts2 = time2Str.split(':');
-      final time2 = TimeOfDay(hour: int.parse(parts2[0]), minute: int.parse(parts2[1]));
-
-      await NotificationService().scheduleDailyFortuneNotification(
-        id: 40001,
-        time: time1,
-        title: l10n.morningFortuneTitle,
-        body: l10n.morningFortuneNotificationBody,
-      );
-      
-      await NotificationService().scheduleDailyFortuneNotification(
-        id: 40002,
-        time: time2,
-        title: l10n.afternoonFortuneTitle,
-        body: l10n.afternoonFortuneNotificationBody,
-      );
+      await FortunePushService.scheduleDailyPush();
     } else {
-      await NotificationService().cancelAllFortuneNotifications();
-    }
-  }
-
-  Future<void> _saveRoutineSettings() async {
-    final enabled = _settingsBox.get('routine_notification_enabled', defaultValue: true);
-    if (enabled) {
-      await RoutineAlarmService.scheduleDailyReminders();
-    } else {
-      await RoutineAlarmService.cancelAll();
+      await FortunePushService.cancelAll();
     }
   }
 
@@ -172,53 +143,6 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
                 isDark,
                 onChanged: (_) => _saveFortuneSettings(),
               ),
-              if (_settingsBox.get('daily_fortune_enabled', defaultValue: true)) ...[
-                _buildTimeTile(
-                  AppLocalizations.of(context)!.morningNotificationTime,
-                  'daily_fortune_time1',
-                  '08:00',
-                  isDark,
-                  onConfirm: _saveFortuneSettings,
-                ),
-                _buildTimeTile(
-                  AppLocalizations.of(context)!.afternoonNotificationTime,
-                  'daily_fortune_time2',
-                  '13:00',
-                  isDark,
-                  onConfirm: _saveFortuneSettings,
-                ),
-              ],
-            ],
-            isDark,
-          ),
-          const SizedBox(height: 24),
-          _buildSection(
-            AppLocalizations.of(context)!.routineNotificationTitle,
-            [
-              _buildSwitchTile(
-                AppLocalizations.of(context)!.enableNotification,
-                AppLocalizations.of(context)!.routineNotificationDescription,
-                'routine_notification_enabled',
-                true,
-                isDark,
-                onChanged: (_) => _saveRoutineSettings(),
-              ),
-              if (_settingsBox.get('routine_notification_enabled', defaultValue: true)) ...[
-                _buildTimeTile(
-                  AppLocalizations.of(context)!.morningRoutineTime,
-                  'morning_routine_time',
-                  '08:00',
-                  isDark,
-                  onConfirm: _saveRoutineSettings,
-                ),
-                _buildTimeTile(
-                  AppLocalizations.of(context)!.eveningRoutineTime,
-                  'evening_routine_time',
-                  '21:00',
-                  isDark,
-                  onConfirm: _saveRoutineSettings,
-                ),
-              ],
             ],
             isDark,
           ),
@@ -229,7 +153,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
   );
 }
 
-  Widget _buildTimeTile(String title, String key, String defaultValue, bool isDark, {VoidCallback? onConfirm}) {
+  Widget _buildTimeTile(String title, String key, String defaultValue, bool isDark) {
     final timeStr = _settingsBox.get(key, defaultValue: defaultValue);
     final parts = timeStr.split(':');
     final time = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
@@ -275,7 +199,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
                       CupertinoButton(
                         child: Text(AppLocalizations.of(context)!.confirm),
                         onPressed: () {
-                          if (onConfirm != null) onConfirm();
+                          _saveFortuneSettings();
                           Navigator.pop(context);
                         },
                       ),
@@ -288,7 +212,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
                       use24hFormat: false,
                       onDateTimeChanged: (DateTime newDateTime) {
                         setState(() {
-                          _settingsBox.put(key, "${newDateTime.hour.toString().padLeft(2, '0')}:${newDateTime.minute.toString().padLeft(2, '0')}");
+                          _settingsBox.put(key, "${newDateTime.hour}:${newDateTime.minute}");
                         });
                       },
                     ),
@@ -348,14 +272,21 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
             children: [
               Icon(Icons.volume_mute, size: 20, color: Colors.grey[400]),
               Expanded(
-                child: Slider(
-                  value: value,
-                  onChanged: (newValue) {
-                    setState(() {
-                      _settingsBox.put(key, newValue);
-                    });
-                  },
-                  activeColor: Colors.blueAccent,
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    trackHeight: 1.0,
+                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                    overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
+                  ),
+                  child: Slider(
+                    value: value,
+                    onChanged: (newValue) {
+                      setState(() {
+                        _settingsBox.put(key, newValue);
+                      });
+                    },
+                    activeColor: primaryColor,
+                  ),
                 ),
               ),
               Icon(Icons.volume_up, size: 20, color: Colors.grey[400]),
@@ -378,7 +309,8 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
         });
         if (onChanged != null) onChanged(newValue);
       },
-      activeThumbColor: Colors.blueAccent,
+      activeColor: Colors.white,
+      activeTrackColor: primaryColor,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     );
   }

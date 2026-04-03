@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import 'package:fortune_alarm/providers/theme_provider.dart';
 import '../../../data/models/mission_model.dart';
 import '../water/providers/water_provider.dart';
 import '../supplement/providers/supplement_provider.dart';
@@ -25,6 +26,8 @@ class MissionTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    final primaryColor = ref.watch(themeProvider).primaryColor;
     
     // 물 마시기/영양제/기상 알람 미션 여부 확인
     final isWaterMission = mission.id == 'water_2l';
@@ -74,9 +77,9 @@ class MissionTile extends ConsumerWidget {
          style: TextStyle(
            fontSize: 12,
            color: isCompleted 
-               ? (isDark ? Colors.green[300]!.withOpacity(0.7) : Colors.green[700]!.withOpacity(0.7))
-               : Colors.blueAccent,
-           fontWeight: FontWeight.w500,
+              ? (isDark ? Colors.green[300]!.withOpacity(0.7) : Colors.green[700]!.withOpacity(0.7))
+              : primaryColor,
+          fontWeight: FontWeight.w500,
          ),
        );
     } else if (isSupplementMission) {
@@ -90,7 +93,7 @@ class MissionTile extends ConsumerWidget {
            fontSize: 12,
            color: isCompleted 
                ? (isDark ? Colors.green[300]!.withOpacity(0.7) : Colors.green[700]!.withOpacity(0.7))
-               : Colors.orange[700],
+               : primaryColor,
            fontWeight: FontWeight.w500,
          ),
        );
@@ -139,7 +142,7 @@ class MissionTile extends ConsumerWidget {
           decoration: BoxDecoration(
             color: isCompleted 
                 ? (isDark ? Colors.green[900]!.withOpacity(0.2) : Colors.green[50])
-                : (isDark ? Colors.blue[900]!.withOpacity(0.2) : Colors.blue[50]),
+                : primaryColor.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
           child: Text(

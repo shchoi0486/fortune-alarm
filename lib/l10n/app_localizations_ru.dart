@@ -577,6 +577,51 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get quickAlarm => 'Quick Alarm';
+
+  @override
+  String get setQuickAlarm => 'Set Quick Alarm';
+
+  @override
+  String addMinutes(String minutes) {
+    return '+ ${minutes}m';
+  }
+
+  @override
+  String ringingAt(String time) {
+    return 'Rings at $time';
+  }
+
+  @override
+  String get pleaseSetTime => 'Please set the time.';
+
+  @override
+  String get alarmSaved => 'Alarm saved.';
+
+  @override
+  String get alarmScheduledTitle => 'Alarm Scheduled';
+
+  @override
+  String alarmScheduledBody(String time) {
+    return 'Alarm will ring at $time.';
+  }
+
+  @override
+  String get goodDay => 'It\'s going to be a wonderful day!';
+
+  @override
+  String get luckyDay => 'Wishing you a day full of luck!';
+
+  @override
+  String get cheerUp => 'Have a great and productive day!';
+
+  @override
+  String get stayHappy => 'Enjoy every moment today!';
+
+  @override
+  String get youCanDoIt => 'You can do anything today!';
+
+  @override
   String get noActiveAlarms => 'Нет активных будильников';
 
   @override
@@ -1197,7 +1242,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bgWarmBeige => 'Теплый бежевый';
 
   @override
-  String get dateFormatMdyE => 'd MMM (E)';
+  String get dateFormatMdyE => 'd/M (E)';
 
   @override
   String get deleteAlarm => 'Удалить будильник';
@@ -6079,16 +6124,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get routineNotificationTitle => 'Ежедневное уведомление о рутине';
-
-  @override
-  String get routineNotificationDescription =>
-      'Получайте уведомления утром и вечером, чтобы не отставать от своих рутинных задач.';
-
-  @override
-  String get morningRoutineTime => 'Время утренней рутины';
-
-  @override
-  String get eveningRoutineTime => 'Время вечерней рутины';
 
   @override
   String get todaysFortuneNotificationTitle => 'Сегодняшнее предсказание';

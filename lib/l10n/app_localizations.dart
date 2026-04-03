@@ -1168,6 +1168,84 @@ abstract class AppLocalizations {
   /// **'{minutes}m · Unlimited'**
   String snoozeInfoUnlimited(String minutes);
 
+  /// No description provided for @quickAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Alarm'**
+  String get quickAlarm;
+
+  /// No description provided for @setQuickAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Quick Alarm'**
+  String get setQuickAlarm;
+
+  /// No description provided for @addMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'+ {minutes}m'**
+  String addMinutes(String minutes);
+
+  /// No description provided for @ringingAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Rings at {time}'**
+  String ringingAt(String time);
+
+  /// No description provided for @pleaseSetTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Please set the time.'**
+  String get pleaseSetTime;
+
+  /// No description provided for @alarmSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm saved.'**
+  String get alarmSaved;
+
+  /// No description provided for @alarmScheduledTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm Scheduled'**
+  String get alarmScheduledTitle;
+
+  /// No description provided for @alarmScheduledBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm will ring at {time}.'**
+  String alarmScheduledBody(String time);
+
+  /// No description provided for @goodDay.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s going to be a wonderful day!'**
+  String get goodDay;
+
+  /// No description provided for @luckyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishing you a day full of luck!'**
+  String get luckyDay;
+
+  /// No description provided for @cheerUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a great and productive day!'**
+  String get cheerUp;
+
+  /// No description provided for @stayHappy.
+  ///
+  /// In en, this message translates to:
+  /// **'Enjoy every moment today!'**
+  String get stayHappy;
+
+  /// No description provided for @youCanDoIt.
+  ///
+  /// In en, this message translates to:
+  /// **'You can do anything today!'**
+  String get youCanDoIt;
+
   /// No description provided for @noActiveAlarms.
   ///
   /// In en, this message translates to:
@@ -2215,7 +2293,7 @@ abstract class AppLocalizations {
   /// No description provided for @dateFormatMdyE.
   ///
   /// In en, this message translates to:
-  /// **'MMM d (E)'**
+  /// **'M/d (E)'**
   String get dateFormatMdyE;
 
   /// No description provided for @deleteAlarm.
@@ -10461,24 +10539,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Daily Routine Reminder'**
   String get routineNotificationTitle;
-
-  /// No description provided for @routineNotificationDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Get notified in the morning and evening to keep up with your routine missions.'**
-  String get routineNotificationDescription;
-
-  /// No description provided for @morningRoutineTime.
-  ///
-  /// In en, this message translates to:
-  /// **'Morning Routine Time'**
-  String get morningRoutineTime;
-
-  /// No description provided for @eveningRoutineTime.
-  ///
-  /// In en, this message translates to:
-  /// **'Evening Routine Time'**
-  String get eveningRoutineTime;
 
   /// No description provided for @todaysFortuneNotificationTitle.
   ///

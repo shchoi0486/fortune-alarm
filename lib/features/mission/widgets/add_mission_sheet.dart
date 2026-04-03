@@ -171,7 +171,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                     style: TextStyle(
                       fontSize: 16, 
                       fontWeight: FontWeight.bold,
-                      color: canSubmit ? Colors.blueAccent : Colors.grey,
+                      color: canSubmit ? const Color(0xFFF97316) : Colors.grey,
                     )
                   ),
                 ),
@@ -217,7 +217,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                         ),
                       ),
                       selected: _selectedCategoryFilter == null,
-                      selectedColor: Colors.blueAccent,
+                      selectedColor: const Color(0xFFF97316),
                       backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
                       shape: StadiumBorder(
                         side: BorderSide(
@@ -245,7 +245,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                           ),
                         ),
                         selected: isSelected,
-                        selectedColor: Colors.blueAccent,
+                        selectedColor: const Color(0xFFF97316),
                         backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
                         shape: StadiumBorder(
                           side: BorderSide(
@@ -310,7 +310,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                   filteredRecommendedMissions.every((m) => _selectedRecommendedMissions.contains(m))
                                       ? l10n.deselectAll
                                       : l10n.selectAll,
-                                  style: const TextStyle(fontSize: 12, color: Colors.blueAccent),
+                                  style: const TextStyle(fontSize: 12, color: const Color(0xFFF97316)),
                                 ),
                               ),
                             ],
@@ -344,7 +344,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                   mission.icon,
                                   style: const TextStyle(fontSize: 20),
                                 ),
-                                activeColor: Colors.blueAccent,
+                                activeColor: const Color(0xFFF97316),
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                                 visualDensity: VisualDensity.compact,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -477,7 +477,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                             }
                                           });
                                         },
-                                        activeColor: Colors.blueAccent,
+                                        activeColor: const Color(0xFFF97316),
                                         visualDensity: VisualDensity.compact,
                                       ),
                                     ],
@@ -538,11 +538,11 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                            padding: const EdgeInsets.symmetric(horizontal: 12),
                          ),
                          child: Text(
-                           l10n.add,
-                           style: const TextStyle(
-                             color: Colors.blueAccent,
-                             fontWeight: FontWeight.bold,
-                           ),
+                             l10n.add,
+                             style: const TextStyle(
+                               color: const Color(0xFFF97316),
+                               fontWeight: FontWeight.bold,
+                             ),
                          ),
                        ),
                   ],
@@ -593,7 +593,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                             ),
                           ),
                           selected: isSelected,
-                          selectedColor: Colors.blueAccent,
+                          selectedColor: const Color(0xFFF97316),
                           backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
                           shape: StadiumBorder(
                             side: BorderSide(
@@ -642,7 +642,8 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                   _isAlarmEnabled = value;
                                 });
                               },
-                              activeColor: Colors.blueAccent,
+                              activeColor: Colors.white,
+                              activeTrackColor: const Color(0xFFF97316),
                             ),
                           ),
                         ],
@@ -711,12 +712,12 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                     ),
                                   ),
                                   child: Text(
-                                    _alarmTime.format(context),
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blueAccent,
-                                    ),
+                                      _alarmTime.format(context),
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: const Color(0xFFF97316),
+                                      ),
                                   ),
                                 ),
                               ],

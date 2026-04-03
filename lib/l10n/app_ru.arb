@@ -222,6 +222,7 @@
   "deleteColor": "Удалить цвет",
   "deleteColorConfirm": "Вы уверены, что хотите удалить этот цвет из списка?",
   "deleteMission": "Удалить миссию",
+  "deleteMissionConfirm": "Вы уверены, что хотите удалить эту миссию из списка?",
   "randomBackgroundDesc": "Новый фон при каждом срабатывании будильника!",
   "backgroundDeleted": "Изображение удалено.",
   "pickFromDevice": "Выбрать из устройства",
@@ -459,7 +460,7 @@
   "bgDarkMode": "Темная тема",
   "bgSoftBlue": "Нежно-голубой",
   "bgWarmBeige": "Теплый бежевый",
-  "dateFormatMdyE": "d MMM (E)",
+  "dateFormatMdyE": "d/M (E)",
   "deleteAlarm": "Удалить будильник",
   "confirmDelete": "Вы уверены, что хотите удалить его?",
   "yes": "Да",
@@ -2676,8 +2677,5 @@
         "type": "int"
       }
     }
-  },
-  "routineNotificationDescription": "Получайте уведомления утром и вечером, чтобы не отставать от своих рутинных задач.",
-  "morningRoutineTime": "Время утренней рутины",
-  "eveningRoutineTime": "Время вечерней рутины"
+  }
 }

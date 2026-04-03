@@ -12,6 +12,7 @@ import '../data/models/alarm_model.dart';
 import '../data/models/math_difficulty.dart';
 import '../core/constants/mission_type.dart';
 import 'notification_service.dart';
+import 'fortune_push_service.dart';
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:path_provider/path_provider.dart';
@@ -65,46 +66,29 @@ Future<void> alarmCallback(int id) async {
   debugPrint('[AlarmScheduler] --- Alarm Callback Start ---');
   debugPrint('[AlarmScheduler] ID received: $id');
 
-  // 2. Hive 및 데이터 로드 경로 준비 (로컬라이징을 위해 조기 실행)
-  String? path;
-  try {
-    final directory = await getApplicationDocumentsDirectory();
-    path = directory.path;
-    if (!Hive.isBoxOpen('settings')) {
-      await Hive.initFlutter(path);
-    }
-  } catch (e) {
-    debugPrint('[AlarmScheduler] Early Hive Init Error: $e');
-  }
-
-  // 즉시 알림 서비스 초기화
+  // 즉시 알림 서비스 초기화 (Hive보다 먼저)
   final notificationService = NotificationService();
   
-  // 로컬라이징 초기화 (Hive 설정 반영)
+  // 로컬라이징 초기화
   AppLocalizations? l10n;
   try {
-    l10n = await notificationService.getL10n();
-    debugPrint('[AlarmScheduler] Localization loaded from settings.');
-  } catch (e) {
-    debugPrint('[AlarmScheduler] Localization load failed, falling back to system: $e');
-    try {
-      String langCode = Platform.localeName.split('_')[0];
-      Locale locale = Locale(langCode);
-      if (!AppLocalizations.supportedLocales.contains(locale)) {
-        locale = const Locale('en');
-      }
-      l10n = await AppLocalizations.delegate.load(locale);
-    } catch (e2) {
-      debugPrint('[AlarmScheduler] System localization fallback failed: $e2');
+    String langCode = Platform.localeName.split('_')[0];
+    Locale locale = Locale(langCode);
+    if (!AppLocalizations.supportedLocales.contains(locale)) {
+      locale = const Locale('en');
     }
+    l10n = await AppLocalizations.delegate.load(locale);
+    debugPrint('[AlarmScheduler] Localization loaded for: ${locale.languageCode}');
+  } catch (e) {
+    debugPrint('[AlarmScheduler] Localization load failed: $e');
   }
 
   try {
     await notificationService.init(null, isBackground: true);
     debugPrint('[AlarmScheduler] NotificationService Initialized Early.');
     
-    // [핵심] 무엇이든 간에 일단 알람을 울려서 깨운다.
-    // 상세 정보는 나중에 로드해서 업데이트하더라도, 소리와 진동은 즉시 시작해야 함.
+    // [핵심] 무엇이든 간에 일단 알람을 울려서 깨운다. (Fail-safe)
+    // 상세 정보 로딩 전이라도 일단 기본 알림을 띄웁니다.
     await notificationService.showAlarmNotification(
       id: id,
       title: l10n?.appTitle ?? 'Snap Alarm',
@@ -121,7 +105,7 @@ Future<void> alarmCallback(int id) async {
   // 날짜/시간 포맷팅 초기화
   await initializeDateFormatting();
 
-  // 3. Foreground Service 시작 (앱 유지력 강화)
+  // 2. Foreground Service 시작 (앱 유지력 강화)
   try {
     if (await FlutterForegroundTask.isRunningService) {
       await FlutterForegroundTask.restartService();
@@ -139,22 +123,28 @@ Future<void> alarmCallback(int id) async {
     debugPrint('[AlarmScheduler] Foreground Service Started.');
     
     // 서비스가 시작된 후 앱 실행 시도 (전체 화면 알람을 위해)
-    // 서비스가 활성화된 상태에서 launchApp()이 더 잘 작동함
     _launchAppWithRetry();
   } catch (e) {
     debugPrint('[AlarmScheduler] Foreground Service Start Failed: $e');
   }
 
-  // 4. Hive 어댑터 등록 및 알람 데이터 로드
+  // 3. Hive 및 데이터 로드
   Box<AlarmModel>? box;
   try {
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+    debugPrint('[AlarmScheduler] Isolate Hive Path: $path');
+    
     // Hive 초기화 (안전하게)
     try {
-      if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(AlarmModelAdapter());
-      if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(MissionTypeAdapter());
-      if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
+      if (!Hive.isBoxOpen('alarms')) {
+        await Hive.initFlutter(path);
+        if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(AlarmModelAdapter());
+        if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(MissionTypeAdapter());
+        if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
+      }
     } catch (e) {
-      debugPrint('[AlarmScheduler] Hive Adapter Registration Error: $e');
+      debugPrint('[AlarmScheduler] Hive Init Error: $e');
     }
 
     // 알람 데이터 검색
@@ -171,16 +161,43 @@ Future<void> alarmCallback(int id) async {
       debugPrint('[AlarmScheduler] Error opening Hive box: $e');
     }
 
-    // 4. 알람 상세 정보로 알림 업데이트 (데이터 로드 성공 시)
+    // 4. 알람 로직 수행 (데이터 로드 성공 시)
     if (alarm != null && alarm.isEnabled) {
-      debugPrint('[AlarmScheduler] Found Alarm: ${alarm.id}, Updating Notification...');
-      
-      // 시간 검증
+      debugPrint('[AlarmScheduler] Found Alarm: ${alarm.id}.');
+
+      // -------------------------------------------------------------------------
+      // [CRITICAL FIX] 다음 알람 예약 로직을 최우선으로 이동 (선 예약, 후 실행)
+      // 앱이 소리 재생 중 강제 종료되더라도 다음 알람은 이미 시스템에 등록되어 있어야 합니다.
+      // -------------------------------------------------------------------------
+      if (alarm.repeatDays.any((d) => d)) {
+        debugPrint('[AlarmScheduler] [Priority] Rescheduling next repeat IMMEDIATELY...');
+        DateTime referenceTime = DateTime.now();
+        if (referenceTime.isBefore(alarm.time)) referenceTime = alarm.time;
+        
+        final nextTime = AlarmSchedulerService.calculateNextTime(alarm.time, alarm.repeatDays, referenceTime: referenceTime);
+        final nextAlarm = alarm.copyWith(time: nextTime);
+        
+        // Hive 업데이트
+        await box?.put(nextAlarm.id, nextAlarm);
+        
+        // AndroidAlarmManager에 다음 스케줄 등록
+        // [중요] isRescheduling: true로 설정하여 현재 울리고 있는 소리(Notification)를 끄지 않도록 함
+        await AlarmSchedulerService.scheduleAlarm(nextAlarm, isRescheduling: true);
+        debugPrint('[AlarmScheduler] [Priority] Next alarm secured at $nextTime');
+      } else {
+        // 일회성 알람인 경우 비활성화 처리
+        debugPrint('[AlarmScheduler] [Priority] One-time alarm. Disabling in DB.');
+        final updatedAlarm = alarm.copyWith(isEnabled: false);
+        await box?.put(updatedAlarm.id, updatedAlarm);
+      }
+      // -------------------------------------------------------------------------
+
+      // 시간 검증 (너무 늦게 울린 경우)
       final now = DateTime.now();
       final difference = now.difference(alarm.time);
       if (difference.inMinutes > 90) {
-        debugPrint('[AlarmScheduler] Too late (>90m). Cancelling.');
-        await notificationService.cancelNotification(id); // 늦었으면 취소
+        debugPrint('[AlarmScheduler] Too late (>90m). Cancelling notification.');
+        await notificationService.cancelNotification(id); 
         return;
       }
 
@@ -222,7 +239,7 @@ Future<void> alarmCallback(int id) async {
           await stateBox.flush(); // [중요] 즉시 파일에 쓰기 보장
           debugPrint('[AlarmScheduler] Pending alarm flag stored and flushed for payload: $payload');
           
-          // 페이로드 저장 후 다시 한 번 앱 실행 시도 (확실하게 하기 위해)
+          // 페이로드 저장 후 다시 한 번 앱 실행 시도
           _launchAppWithRetry();
         } catch (e) {
           debugPrint('[AlarmScheduler] Failed to store pending alarm flag: $e');
@@ -232,41 +249,28 @@ Future<void> alarmCallback(int id) async {
         final SendPort? uiSendPort = IsolateNameServer.lookupPortByName(kAlarmPortName);
         uiSendPort?.send(payload);
 
-        // 설정된 알람 정보로 새 알림 생성 (기존에 로드된 l10n 재사용)
-        if (l10n != null) {
-          await notificationService.showAlarmNotification(
-            id: id,
-            title: l10n.appTitle,
-            body: body,
-            payload: payload,
-            soundName: alarm.ringtonePath,
-            vibrationPattern: alarm.vibrationPattern,
-            isGradualVolume: alarm.isGradualVolume,
-            isVibrationEnabled: alarm.isVibrationEnabled,
-          );
-        }
+        // 설정된 알람 정보로 새 알림 생성 (실제 소리와 진동으로 업데이트)
+        final locale = Locale(Platform.localeName.split('_')[0]);
+        final l10n = await AppLocalizations.delegate.load(locale);
+
+        await notificationService.showAlarmNotification(
+          id: id,
+          title: l10n.appTitle,
+          body: body,
+          payload: payload,
+          soundName: alarm.ringtonePath,
+          vibrationPattern: alarm.vibrationPattern,
+          isGradualVolume: alarm.isGradualVolume,
+          isVibrationEnabled: alarm.isVibrationEnabled,
+        );
         debugPrint('[AlarmScheduler] Notification CREATED with real data (Sound: ${alarm.ringtonePath}, Vibration: ${alarm.isVibrationEnabled}).');
       } else {
         debugPrint('[AlarmScheduler] Suppressing ringing due to active mission.');
-        await notificationService.cancelNotification(id); // 억제해야 하면 기존 알림 취소
+        await notificationService.cancelNotification(id); 
       }
-
-      // 다음 알람 예약
-      if (alarm.repeatDays.any((d) => d)) {
-        debugPrint('[AlarmScheduler] Rescheduling next repeat...');
-        DateTime referenceTime = DateTime.now();
-        if (referenceTime.isBefore(alarm.time)) referenceTime = alarm.time;
-        final nextTime = AlarmSchedulerService._calculateNextTime(alarm.time, alarm.repeatDays, referenceTime: referenceTime);
-        final nextAlarm = alarm.copyWith(time: nextTime);
-        await box?.put(nextAlarm.id, nextAlarm);
-        await AlarmSchedulerService.scheduleAlarm(nextAlarm);
-      } else {
-        final updatedAlarm = alarm.copyWith(isEnabled: false);
-        await box?.put(updatedAlarm.id, updatedAlarm);
-      }
+      
     } else {
       debugPrint('[AlarmScheduler] Alarm not found or disabled. Keeping fallback notification.');
-      // 데이터가 없어도 폴백 알림은 유지됨 (사용자가 깨야 하므로)
     }
 
   } catch (e, stackTrace) {
@@ -303,6 +307,69 @@ class AlarmSchedulerService {
   @pragma('vm:entry-point')
   static Future<void> init() async {
     await AndroidAlarmManager.initialize();
+    // [추가] 앱 시작 시 자가 치유(Self-Healing): 
+    // OS 업데이트나 강제 종료로 인해 사라진 알람 스케줄을 복구합니다.
+    _rescheduleExistingAlarms();
+  }
+
+  /// 앱 시작 시 기존 알람 상태를 확인하고 필요한 경우 재스케줄링
+  static Future<void> _rescheduleExistingAlarms() async {
+    try {
+      debugPrint('[AlarmScheduler] Checking for alarms to reschedule...');
+      // Hive가 이미 초기화되었다고 가정 (main.dart에서 호출)
+      // 만약 초기화되지 않았다면 에러가 날 수 있으므로 체크
+      if (!Hive.isBoxOpen('alarms')) {
+        // 경로를 알 수 없으므로 여기서는 안전하게 리턴하거나, 
+        // main에서 init 호출 순서를 보장해야 함.
+        // 보통 init()은 Hive.initFlutter() 이후에 호출됨.
+        final dir = await getApplicationDocumentsDirectory();
+        Hive.init(dir.path);
+      }
+      
+      final box = await Hive.openBox<AlarmModel>('alarms');
+      final now = DateTime.now();
+
+      for (final alarm in box.values) {
+        if (!alarm.isEnabled) continue;
+
+        // 1. 이미 지난 알람인지 확인
+        if (alarm.time.isBefore(now)) {
+           // 반복 알람이면 다음 시간으로 갱신 후 예약
+           if (alarm.repeatDays.any((d) => d)) {
+             debugPrint('[AlarmScheduler] Found stale repeating alarm: ${alarm.id}. Updating to next occurrence.');
+             final nextTime = calculateNextTime(alarm.time, alarm.repeatDays);
+             final nextAlarm = alarm.copyWith(time: nextTime);
+             await box.put(nextAlarm.id, nextAlarm);
+             await scheduleAlarm(nextAlarm);
+           } else {
+             // [수정] 5분 -> 30분으로 조정 (사용자 피드백 반영)
+             // 너무 긴 시간(예: 60분)은 이미 기상 시간이 한참 지나 의미가 없을 수 있으므로 30분으로 타협합니다.
+             // 재부팅이나 시스템 업데이트 등 불가피한 지연 상황에서도 최소한의 신뢰성을 보장합니다.
+             if (now.difference(alarm.time).inMinutes > 30) {
+               debugPrint('[AlarmScheduler] Found stale one-time alarm: ${alarm.id}. Disabling.');
+               final disabledAlarm = alarm.copyWith(isEnabled: false);
+               await box.put(disabledAlarm.id, disabledAlarm);
+             } else {
+                // 최근(30분 이내)에 놓친거라면 즉시 실행을 위해 스케줄링 시도
+                debugPrint('[AlarmScheduler] Found recently missed one-time alarm: ${alarm.id}. Retrying.');
+                await scheduleAlarm(alarm);
+             }
+           }
+        } else {
+          // 2. 미래의 알람이면, 시스템 AlarmManager에 다시 등록 (덮어쓰기)
+          // OS가 알람을 날렸을 경우를 대비해 무조건 재등록
+          debugPrint('[AlarmScheduler] Refreshing future alarm: ${alarm.id} at ${alarm.time}');
+          await scheduleAlarm(alarm);
+        }
+      }
+
+      // [추가] 데일리 운세 알림의 텍스트 언어를 최신 상태로 갱신하기 위해 재스케줄링
+      // 상황 기반 운세 알림 갱신
+      await FortunePushService.scheduleDailyPush();
+
+    } catch (e) {
+      debugPrint('[AlarmScheduler] Error during rescheduleExistingAlarms: $e');
+    }
   }
 
   // String ID를 안정적인 int ID로 변환 (앱 재시작 후에도 동일한 ID 보장)
@@ -324,8 +391,13 @@ class AlarmSchedulerService {
     final safetyId = '${alarm.id}_safety';
     debugPrint('[AlarmScheduler] Scheduling Safety Alarm: $safetyId');
     
-    // 로컬라이징 가져오기 (설정된 언어 반영)
-    final l10n = await NotificationService().getL10n();
+    // 로컬라이징 가져오기
+    String langCode = Platform.localeName.split('_')[0];
+    Locale locale = Locale(langCode);
+    if (!AppLocalizations.supportedLocales.contains(locale)) {
+      locale = const Locale('en');
+    }
+    final l10n = await AppLocalizations.delegate.load(locale);
 
     // 1분 뒤에 울리는 안전 알람 생성
     final safetyTime = DateTime.now().add(const Duration(minutes: 1));
@@ -387,7 +459,8 @@ class AlarmSchedulerService {
   }
 
   @pragma('vm:entry-point')
-  static Future<bool> scheduleAlarm(AlarmModel alarm) async {
+  // [수정] isRescheduling 옵션 추가: 알람이 울려서 다음 일정을 예약하는 경우, 기존 소리를 끄지 않기 위함
+  static Future<bool> scheduleAlarm(AlarmModel alarm, {bool isRescheduling = false}) async {
     try {
       debugPrint('[AlarmScheduler] --- Scheduling Start ---');
       debugPrint('[AlarmScheduler] ID: ${alarm.id}');
@@ -395,7 +468,10 @@ class AlarmSchedulerService {
       
       // 1. 기존 알람 취소 (중복 예약 방지)
       // 스누즈도 취소함 (메인 알람 예약 시 스누즈를 건드릴 필요가 없음)
-      await cancelAlarm(alarm, cancelMain: true, cancelSnooze: true ); 
+      // [수정] 재스케줄링 중에는 취소를 건너뜀 (소리 끊김 방지, AlarmManager는 ID가 같으면 자동 덮어쓰기 함)
+      if (!isRescheduling) {
+        await cancelAlarm(alarm, cancelMain: true, cancelSnooze: true ); 
+      }
 
       if (Platform.isAndroid) {
         // 정확한 알람 권한 확인 (Android 12+)
@@ -443,6 +519,13 @@ class AlarmSchedulerService {
       // 1분 이내의 과거라면 즉시 울리도록 처리 (사용자가 방금 설정한 것으로 간주)
       DateTime scheduleTime = alarm.time;
       if (scheduleTime.isBefore(now)) {
+        // [중요] 재스케줄링(반복 알람 자동 생성) 중이거나, 현재 시간과 너무 가까운 과거(10초 이내)라면 
+        // 즉시 실행을 방지하여 무한 루프를 막습니다.
+        if (isRescheduling || now.difference(scheduleTime).inSeconds < 10) {
+          debugPrint('[AlarmScheduler] Alarm time is in the past ($scheduleTime). Skipping immediate fire to prevent loop.');
+          return false;
+        }
+
         final diff = now.difference(scheduleTime);
         if (diff.inMinutes < 1) {
           debugPrint('[AlarmScheduler] Alarm time is in the past but within 1 minute. Scheduling for immediate fire.');
@@ -488,8 +571,13 @@ class AlarmSchedulerService {
         );
       } else if (Platform.isIOS) {
         try {
-          // 로컬라이징 가져오기 (설정된 언어 반영)
-          final l10n = await NotificationService().getL10n();
+          // 로컬라이징 가져오기
+          String langCode = Platform.localeName.split('_')[0];
+          Locale locale = Locale(langCode);
+          if (!AppLocalizations.supportedLocales.contains(locale)) {
+            locale = const Locale('en');
+          }
+          final l10n = await AppLocalizations.delegate.load(locale);
 
           await NotificationService().scheduleAlarmNotification(
             id: alarmId,
@@ -663,7 +751,7 @@ class AlarmSchedulerService {
   }
 
   // 다음 반복 시간 계산 헬퍼
-  static DateTime _calculateNextTime(DateTime alarmTime, List<bool> repeatDays, {DateTime? referenceTime}) {
+  static DateTime calculateNextTime(DateTime alarmTime, List<bool> repeatDays, {DateTime? referenceTime}) {
     final now = referenceTime ?? DateTime.now();
     // 기준 시간 (오늘 날짜 + 알람 시간)
     DateTime candidate = DateTime(now.year, now.month, now.day, alarmTime.hour, alarmTime.minute);
@@ -674,8 +762,8 @@ class AlarmSchedulerService {
       final weekdayIndex = checkDate.weekday - 1;
       
       if (repeatDays[weekdayIndex]) {
-        // 현재 시간 이후여야 함 (최소 1분 여유)
-        if (checkDate.isAfter(now.add(const Duration(seconds: 30)))) {
+        // 현재 시간(referenceTime)보다 충분히 이후여야 함 (1분 이내의 미래면 건너뜀)
+        if (checkDate.isAfter(now.add(const Duration(minutes: 1)))) {
            return checkDate;
         }
       }

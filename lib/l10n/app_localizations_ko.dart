@@ -566,6 +566,51 @@ class AppLocalizationsKo extends AppLocalizations {
   }
 
   @override
+  String get quickAlarm => '퀵 알람';
+
+  @override
+  String get setQuickAlarm => '퀵 알람 설정';
+
+  @override
+  String addMinutes(String minutes) {
+    return '+ $minutes분';
+  }
+
+  @override
+  String ringingAt(String time) {
+    return '$time에 울림';
+  }
+
+  @override
+  String get pleaseSetTime => '시간을 설정해주세요.';
+
+  @override
+  String get alarmSaved => '알람이 저장되었습니다.';
+
+  @override
+  String get alarmScheduledTitle => '알람 설정됨';
+
+  @override
+  String alarmScheduledBody(String time) {
+    return '$time에 알람이 울립니다.';
+  }
+
+  @override
+  String get goodDay => '오늘도 좋은 일만 가득할 거예요!';
+
+  @override
+  String get luckyDay => '행운이 함께하는 하루 되세요!';
+
+  @override
+  String get cheerUp => '오늘 하루도 화이팅!';
+
+  @override
+  String get stayHappy => '오늘도 행복한 시간 보내세요!';
+
+  @override
+  String get youCanDoIt => '당신은 무엇이든 할 수 있어요!';
+
+  @override
   String get noActiveAlarms => '활성화된 알람 없음';
 
   @override
@@ -1167,7 +1212,7 @@ class AppLocalizationsKo extends AppLocalizations {
   String get bgWarmBeige => '웜 베이지';
 
   @override
-  String get dateFormatMdyE => 'M월 d일 (E)';
+  String get dateFormatMdyE => 'M/d (E)';
 
   @override
   String get deleteAlarm => '알람 삭제';
@@ -5781,15 +5826,6 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get routineNotificationTitle => '데일리 루틴 알림';
-
-  @override
-  String get routineNotificationDescription => '루틴 미션 수행을 위해 오전/오후에 알림을 드립니다.';
-
-  @override
-  String get morningRoutineTime => '오전 루틴 알림 시간';
-
-  @override
-  String get eveningRoutineTime => '오후 루틴 알림 시간';
 
   @override
   String get todaysFortuneNotificationTitle => '오늘의 운세';

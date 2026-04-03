@@ -58,8 +58,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
 
   @override
   Widget build(BuildContext context) {
-    final themeMode = ref.watch(themeProvider);
-    final isDark = themeMode == ThemeMode.dark;
+    final themeState = ref.watch(themeProvider);
+    final isDark = themeState.themeMode == ThemeMode.dark;
+    final primaryColor = themeState.primaryColor;
     final currentLocale = ref.watch(localeProvider);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -72,6 +73,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
           SwitchListTile(
             title: Text(AppLocalizations.of(context)!.darkMode),
             subtitle: Text(AppLocalizations.of(context)!.darkModeDescription),
+            activeColor: Colors.white,
+            activeTrackColor: primaryColor,
             value: isDark,
             onChanged: (value) {
               ref.read(themeProvider.notifier).toggleTheme(value);
@@ -171,10 +174,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
               return const SizedBox.shrink(); // 대상이 아니면 버튼 숨김
             },
           ),
-          // 설정 화면 하단 네이티브 광고 추가
-          const DetailedAdWidget(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          ),
+          // 설정 화면 하단 네이티브 광고 - Removed and moved to bottom of MainScreen
+          
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 32, 16, 8),
             child: Text(
@@ -185,7 +186,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
               ),
             ),
           ),
-          const SizedBox(height: 80),
+          const SizedBox(height: 120),
         ],
       ),
     ),
@@ -265,9 +266,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
   }
 
   Widget _buildLanguageTile(BuildContext context, WidgetRef ref, String code, String name, bool isSelected) {
+    final primaryColor = ref.watch(themeProvider).primaryColor;
     return ListTile(
       title: Text(name),
-      trailing: isSelected ? const Icon(Icons.check, color: Colors.blueAccent) : null,
+      trailing: isSelected ? Icon(Icons.check, color: primaryColor) : null,
       onTap: () async {
         await ref.read(localeProvider.notifier).setLocale(code);
         // 알림 다시 스케줄링하여 언어 반영
@@ -317,7 +319,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
         return ListTile(
           title: Text(l10n.alarmOptimization),
           subtitle: Text(allGranted ? l10n.allOptimizationsCompleted : l10n.optimizationNeeded),
-          leading: Icon(Icons.rocket_launch, color: allGranted ? Colors.green : Colors.orange),
+          leading: Icon(Icons.rocket_launch, color: allGranted ? Colors.green : ref.watch(themeProvider).primaryColor),
           trailing: const Icon(Icons.arrow_forward_ios, size: 16),
           onTap: () => _showOptimizationBottomSheet(context),
         );
@@ -341,12 +343,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
   }
 }
 
-class _OptimizationBottomSheetContent extends StatefulWidget {
+class _OptimizationBottomSheetContent extends ConsumerStatefulWidget {
   @override
-  State<_OptimizationBottomSheetContent> createState() => _OptimizationBottomSheetContentState();
+  ConsumerState<_OptimizationBottomSheetContent> createState() => _OptimizationBottomSheetContentState();
 }
 
-class _OptimizationBottomSheetContentState extends State<_OptimizationBottomSheetContent> with WidgetsBindingObserver {
+class _OptimizationBottomSheetContentState extends ConsumerState<_OptimizationBottomSheetContent> with WidgetsBindingObserver {
   Map<Permission, PermissionStatus> _statuses = {};
   bool _isLoading = true;
 
@@ -394,6 +396,7 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = ref.watch(themeProvider).primaryColor;
     final l10n = AppLocalizations.of(context)!;
     
     if (_isLoading) {
@@ -401,7 +404,7 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
         height: 300,
         child: Center(
           child: CircularProgressIndicator(
-            color: isDark ? Colors.blueAccent : null,
+            color: primaryColor,
           ),
         ),
       );
@@ -583,8 +586,8 @@ class _OptimizationBottomSheetContentState extends State<_OptimizationBottomShee
       trailing: Switch(
         value: isGranted,
         onChanged: (_) => onTap(),
-        activeThumbColor: Colors.green,
-        activeTrackColor: Colors.green.withOpacity(0.3),
+        activeColor: Colors.white,
+        activeTrackColor: const Color(0xFFF97316),
       ),
     );
   }

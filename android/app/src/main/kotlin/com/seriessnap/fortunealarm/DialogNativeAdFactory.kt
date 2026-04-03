@@ -22,13 +22,22 @@ class DialogNativeAdFactory(private val context: Context) : GoogleMobileAdsPlugi
             this.mediaView = mediaView
 
             val iconView = findViewById<ImageView>(R.id.ad_app_icon)
-            val icon = nativeAd.icon
-            if (icon != null) {
-                iconView.setImageDrawable(icon.drawable)
-                this.iconView = iconView
-                iconView.visibility = View.VISIBLE
+            
+            // 1. 미디어 콘텐츠(영상/큰 이미지) 우선 확인
+            if (nativeAd.mediaContent != null && (nativeAd.mediaContent!!.hasVideoContent() || nativeAd.mediaContent!!.mainImage != null)) {
+                mediaView.visibility = View.VISIBLE
+                iconView.visibility = View.GONE // 미디어가 있으면 아이콘은 숨김 (중복 방지)
             } else {
-                iconView.visibility = View.GONE
+                mediaView.visibility = View.GONE
+                // 2. 미디어가 없으면 아이콘 표시 시도
+                val icon = nativeAd.icon
+                if (icon != null) {
+                    iconView.setImageDrawable(icon.drawable)
+                    this.iconView = iconView
+                    iconView.visibility = View.VISIBLE
+                } else {
+                    iconView.visibility = View.GONE
+                }
             }
 
             val headlineView = findViewById<TextView>(R.id.ad_headline)

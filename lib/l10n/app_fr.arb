@@ -222,6 +222,7 @@
   "deleteColor": "Supprimer la couleur",
   "deleteColorConfirm": "Êtes-vous sûr de vouloir supprimer cette couleur de la liste ?",
   "deleteMission": "Supprimer la mission",
+  "deleteMissionConfirm": "Êtes-vous sûr de vouloir supprimer cette mission de la liste ?",
   "randomBackgroundDesc": "Un nouvel arrière-plan à chaque sonnerie d'alarme !",
   "backgroundDeleted": "Image d'arrière-plan supprimée.",
   "pickFromDevice": "Choisir depuis l'appareil",
@@ -459,7 +460,7 @@
   "bgDarkMode": "Mode sombre",
   "bgSoftBlue": "Bleu doux",
   "bgWarmBeige": "Beige chaud",
-  "dateFormatMdyE": "d MMM (E)",
+  "dateFormatMdyE": "d/M (E)",
   "deleteAlarm": "Supprimer l'alarme",
   "confirmDelete": "Êtes-vous sûr de vouloir supprimer ?",
   "yes": "Oui",
@@ -2676,8 +2677,5 @@
         "type": "int"
       }
     }
-  },
-  "routineNotificationDescription": "Recevez des notifications le matin et le soir pour rester à jour dans vos missions de routine.",
-  "morningRoutineTime": "Heure de la routine matinale",
-  "eveningRoutineTime": "Heure de la routine du soir"
+  }
 }

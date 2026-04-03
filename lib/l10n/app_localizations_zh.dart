@@ -559,6 +559,51 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get quickAlarm => 'Quick Alarm';
+
+  @override
+  String get setQuickAlarm => 'Set Quick Alarm';
+
+  @override
+  String addMinutes(String minutes) {
+    return '+ ${minutes}m';
+  }
+
+  @override
+  String ringingAt(String time) {
+    return 'Rings at $time';
+  }
+
+  @override
+  String get pleaseSetTime => 'Please set the time.';
+
+  @override
+  String get alarmSaved => 'Alarm saved.';
+
+  @override
+  String get alarmScheduledTitle => 'Alarm Scheduled';
+
+  @override
+  String alarmScheduledBody(String time) {
+    return 'Alarm will ring at $time.';
+  }
+
+  @override
+  String get goodDay => 'It\'s going to be a wonderful day!';
+
+  @override
+  String get luckyDay => 'Wishing you a day full of luck!';
+
+  @override
+  String get cheerUp => 'Have a great and productive day!';
+
+  @override
+  String get stayHappy => 'Enjoy every moment today!';
+
+  @override
+  String get youCanDoIt => 'You can do anything today!';
+
+  @override
   String get noActiveAlarms => '没有正在响的闹钟';
 
   @override
@@ -1087,7 +1132,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bgWarmBeige => '暖米色';
 
   @override
-  String get dateFormatMdyE => 'M月d日（E）';
+  String get dateFormatMdyE => 'M/d (E)';
 
   @override
   String get deleteAlarm => '删除闹钟';
@@ -5584,15 +5629,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get routineNotificationTitle => '日常常规通知';
-
-  @override
-  String get routineNotificationDescription => '早晚接收通知，跟上您的常规任务。';
-
-  @override
-  String get morningRoutineTime => '早间例行时间';
-
-  @override
-  String get eveningRoutineTime => '晚间例行时间';
 
   @override
   String get todaysFortuneNotificationTitle => '今日运势';

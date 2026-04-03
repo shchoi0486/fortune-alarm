@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/theme_provider.dart';
 import '../../providers/mission_provider.dart';
 import '../../widgets/ad_widgets.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
@@ -17,6 +18,7 @@ class MissionScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final missionState = ref.watch(missionProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = ref.watch(themeProvider).primaryColor;
     
     if (missionState.isLoading) {
       return const Center(child: CircularProgressIndicator());
@@ -63,7 +65,7 @@ class MissionScreen extends ConsumerWidget {
                           decoration: BoxDecoration(
                             color: missionState.isGoalAchieved 
                               ? Colors.green.withOpacity(0.1) 
-                              : Colors.blue.withOpacity(0.1),
+                              : primaryColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -71,7 +73,7 @@ class MissionScreen extends ConsumerWidget {
                                 ? AppLocalizations.of(context)!.goalAchieved(missionState.completedCount)
                                 : AppLocalizations.of(context)!.missionProgress(missionState.completedCount),
                             style: TextStyle(
-                              color: missionState.isGoalAchieved ? Colors.green : Colors.blue,
+                              color: missionState.isGoalAchieved ? Colors.green : primaryColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -89,7 +91,7 @@ class MissionScreen extends ConsumerWidget {
                           minHeight: 10,
                           backgroundColor: Colors.grey.withOpacity(0.2),
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            missionState.isGoalAchieved ? Colors.green : Colors.blueAccent,
+                            missionState.isGoalAchieved ? Colors.green : primaryColor,
                           ),
                         ),
                       ),
@@ -149,7 +151,7 @@ class MissionScreen extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
+                          color: const Color(0xFFF97316).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
@@ -157,7 +159,7 @@ class MissionScreen extends ConsumerWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Colors.blue,
+                            color: const Color(0xFFF97316),
                           ),
                         ),
                       ),
@@ -238,20 +240,20 @@ class MissionScreen extends ConsumerWidget {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.1),
+                            color: const Color(0xFFF97316).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.add, size: 16, color: Colors.blue),
+                              const Icon(Icons.add, size: 16, color: const Color(0xFFF97316)),
                               const SizedBox(width: 4),
                               Text(
                                 AppLocalizations.of(context)!.addMission,
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
+                                  color: const Color(0xFFF97316),
                                 ),
                               ),
                             ],
@@ -406,14 +408,9 @@ class MissionScreen extends ConsumerWidget {
           ),
         ),
 
-        // 5. 광고 (통계 패널 위로 이동)
-        const SliverToBoxAdapter(
-          child: DetailedAdWidget(
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          ),
-        ),
-
-            // 6. 통계 패널 (나의 미션 기록)
+        // Native Ad - Removed and moved to bottom of MainScreen
+        
+        // 6. 통계 패널 (나의 미션 기록)
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 12),
@@ -509,7 +506,7 @@ class MissionScreen extends ConsumerWidget {
             ),
 
             // 하단 여백
-            const SliverToBoxAdapter(child: SizedBox(height: 100)),
+            const SliverToBoxAdapter(child: SizedBox(height: 120)),
           ],
             ),
           ),

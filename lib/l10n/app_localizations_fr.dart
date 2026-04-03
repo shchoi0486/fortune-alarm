@@ -580,6 +580,51 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get quickAlarm => 'Quick Alarm';
+
+  @override
+  String get setQuickAlarm => 'Set Quick Alarm';
+
+  @override
+  String addMinutes(String minutes) {
+    return '+ ${minutes}m';
+  }
+
+  @override
+  String ringingAt(String time) {
+    return 'Rings at $time';
+  }
+
+  @override
+  String get pleaseSetTime => 'Please set the time.';
+
+  @override
+  String get alarmSaved => 'Alarm saved.';
+
+  @override
+  String get alarmScheduledTitle => 'Alarm Scheduled';
+
+  @override
+  String alarmScheduledBody(String time) {
+    return 'Alarm will ring at $time.';
+  }
+
+  @override
+  String get goodDay => 'It\'s going to be a wonderful day!';
+
+  @override
+  String get luckyDay => 'Wishing you a day full of luck!';
+
+  @override
+  String get cheerUp => 'Have a great and productive day!';
+
+  @override
+  String get stayHappy => 'Enjoy every moment today!';
+
+  @override
+  String get youCanDoIt => 'You can do anything today!';
+
+  @override
   String get noActiveAlarms => 'Pas d\'alarmes actives';
 
   @override
@@ -1198,7 +1243,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bgWarmBeige => 'Beige chaud';
 
   @override
-  String get dateFormatMdyE => 'd MMM (E)';
+  String get dateFormatMdyE => 'd/M (E)';
 
   @override
   String get deleteAlarm => 'Supprimer l\'alarme';
@@ -6167,16 +6212,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get routineNotificationTitle => 'Notification de routine quotidienne';
-
-  @override
-  String get routineNotificationDescription =>
-      'Recevez des notifications le matin et le soir pour rester à jour dans vos missions de routine.';
-
-  @override
-  String get morningRoutineTime => 'Heure de la routine matinale';
-
-  @override
-  String get eveningRoutineTime => 'Heure de la routine du soir';
 
   @override
   String get todaysFortuneNotificationTitle => 'Votre fortune d\'aujourd\'hui';

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/theme_provider.dart';
 
-class OptimizationBottomSheet extends StatefulWidget {
+class OptimizationBottomSheet extends ConsumerStatefulWidget {
   const OptimizationBottomSheet({super.key});
 
   @override
-  State<OptimizationBottomSheet> createState() => _OptimizationBottomSheetState();
+  ConsumerState<OptimizationBottomSheet> createState() => _OptimizationBottomSheetState();
 }
 
-class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with WidgetsBindingObserver {
+class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomSheet> with WidgetsBindingObserver {
   Map<Permission, PermissionStatus> _statuses = {};
   bool _isLoading = true;
 
@@ -59,6 +61,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = ref.watch(themeProvider).primaryColor;
     final l10n = AppLocalizations.of(context)!;
     final size = MediaQuery.of(context).size;
     
@@ -67,7 +70,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
         height: 350,
         child: Center(
           child: CircularProgressIndicator(
-            color: isDark ? Colors.blueAccent : null,
+            color: primaryColor,
           ),
         ),
       );
@@ -79,10 +82,14 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
     final isSystemAlertGranted = _statuses[Permission.systemAlertWindow]?.isGranted ?? false;
     final isLocationGranted = _statuses[Permission.location]?.isGranted ?? false;
     
-    final allGranted = isNotificationGranted && isBatteryOptimized && isExactAlarmGranted && isSystemAlertGranted && isLocationGranted;
+    // [수정] 필수 권한들만 체크 (위치 권한은 선택 사항으로 변경)
+    final isCriticalGranted = isNotificationGranted && isBatteryOptimized && isExactAlarmGranted && isSystemAlertGranted;
+    
+    // UI 표시용 (모든 항목 체크 여부)
+    final allItemsChecked = isCriticalGranted && isLocationGranted;
 
     return WillPopScope(
-      onWillPop: () async => allGranted, // 모든 권한 허용 전에는 뒤로가기 버튼으로 못 닫음
+      onWillPop: () async => isCriticalGranted, // 필수 권한 허용 전에는 뒤로가기 버튼으로 못 닫음
       child: Dialog(
         backgroundColor: Colors.transparent,
         insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -116,15 +123,15 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                             letterSpacing: -0.5,
                           ),
                         ),
-                        if (allGranted)
+                        if (isCriticalGranted)
                           const Icon(Icons.check_circle, color: Colors.green, size: 20)
                         else
-                          Icon(Icons.info_outline_rounded, color: isDark ? Colors.blue[300] : Colors.blue[600], size: 20),
+                          Icon(Icons.info_outline_rounded, color: primaryColor, size: 20),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      allGranted 
+                      isCriticalGranted 
                         ? l10n.allOptimizationsCompleted 
                         : l10n.optimizationNeeded,
                       style: TextStyle(
@@ -134,7 +141,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                         color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
-                    if (!allGranted) ...[
+                    if (!isCriticalGranted) ...[
                       const SizedBox(height: 4),
                       Text(
                         l10n.optimizationDescription,
@@ -157,6 +164,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                   children: [
                     _buildSwitchTile(
                       context: context,
+                      ref: ref,
                       title: l10n.allowNotificationPermission,
                       subtitle: l10n.notificationPermissionDescription,
                       value: isNotificationGranted,
@@ -171,6 +179,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     ),
                     _buildSwitchTile(
                       context: context,
+                      ref: ref,
                       title: l10n.excludeBatteryOptimization,
                       subtitle: l10n.batteryOptimizationDescription,
                       value: isBatteryOptimized,
@@ -189,6 +198,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     ),
                     _buildSwitchTile(
                       context: context,
+                      ref: ref,
                       title: l10n.allowExactAlarm,
                       subtitle: l10n.exactAlarmDescription,
                       value: isExactAlarmGranted,
@@ -198,6 +208,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     ),
                     _buildSwitchTile(
                       context: context,
+                      ref: ref,
                       title: l10n.drawOverOtherApps,
                       subtitle: l10n.overlayDescription,
                       value: isSystemAlertGranted,
@@ -212,9 +223,11 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     ),
                     _buildSwitchTile(
                       context: context,
+                      ref: ref,
                       title: l10n.locationPermissionTitle,
                       subtitle: l10n.locationPermissionDesc,
                       value: isLocationGranted,
+                      isOptional: true, // [추가] 선택 사항 표시
                       onChanged: (value) async {
                         if (value) {
                           await Permission.location.request();
@@ -235,9 +248,9 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: allGranted ? () => Navigator.pop(context) : null,
+                  onPressed: isCriticalGranted ? () => Navigator.pop(context) : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: allGranted ? const Color(0xFF3894FF) : Colors.grey[400],
+                    backgroundColor: isCriticalGranted ? primaryColor : Colors.grey[400],
                     foregroundColor: Colors.white,
                     disabledBackgroundColor: isDark ? Colors.grey[800] : Colors.grey[300],
                     disabledForegroundColor: isDark ? Colors.grey[600] : Colors.grey[500],
@@ -248,7 +261,7 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
                     ),
                   ),
                   child: Text(
-                    allGranted ? l10n.confirm : l10n.allowAllItems,
+                    isCriticalGranted ? l10n.confirm : l10n.allowAllItems,
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -263,12 +276,16 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
 
   Widget _buildSwitchTile({
     required BuildContext context,
+    required WidgetRef ref,
     required String title,
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
+    bool isOptional = false, // [추가]
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = ref.watch(themeProvider).primaryColor;
+    final l10n = AppLocalizations.of(context)!;
     
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -278,14 +295,36 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? Colors.white : Colors.black87,
-                    letterSpacing: -0.3,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? Colors.white : Colors.black87,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                    if (isOptional) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                        decoration: BoxDecoration(
+                          color: isDark ? Colors.grey[800] : Colors.grey[200],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          l10n.optional,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.grey[400] : Colors.grey[600],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -307,8 +346,8 @@ class _OptimizationBottomSheetState extends State<OptimizationBottomSheet> with 
             child: Switch(
               value: value,
               onChanged: onChanged,
-              activeThumbColor: const Color(0xFF3894FF),
-              activeTrackColor: const Color(0xFF3894FF).withOpacity(0.3),
+              activeThumbColor: Colors.white,
+              activeTrackColor: primaryColor,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
           ),

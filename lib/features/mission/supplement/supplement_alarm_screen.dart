@@ -11,6 +11,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import 'package:fortune_alarm/providers/theme_provider.dart';
 
 class SupplementAlarmScreen extends ConsumerStatefulWidget {
   const SupplementAlarmScreen({super.key});
@@ -49,6 +50,8 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeState = ref.watch(themeProvider);
+    final primaryColor = themeState.primaryColor;
     final state = ref.watch(supplementProvider);
     final notifier = ref.read(supplementProvider.notifier);
     final settings = state.settings;
@@ -84,12 +87,12 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                     padding: const EdgeInsets.only(bottom: 20, left: 4),
                     child: Row(
                       children: [
-                        Icon(Icons.alarm, size: 16, color: Colors.orange[700]),
+                        Icon(Icons.alarm, size: 16, color: primaryColor),
                         const SizedBox(width: 8),
                         Text(
                           nextAlarmStr,
                           style: TextStyle(
-                            color: Colors.orange[700],
+                            color: primaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
@@ -171,24 +174,33 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(l10n.alarmVolume, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                              Text('${((_draggingVolume ?? settings.volume) * 100).toInt()}%', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.orange)),
+                              Text('${((_draggingVolume ?? settings.volume) * 100).toInt()}%', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: primaryColor)),
                             ],
                           ),
-                          Slider(
-                            value: _draggingVolume ?? settings.volume,
-                            activeColor: Colors.orange,
-                            onChanged: (val) {
-                              setState(() {
-                                _draggingVolume = val;
-                              });
-                            },
-                            onChangeEnd: (val) {
-                              setState(() {
-                                _draggingVolume = null;
-                              });
-                              notifier.updateSettings(volume: val);
-                              _playPreview(settings.ringtonePath ?? 'default', val);
-                            },
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              trackHeight: 1.0,
+                              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                              overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
+                              activeTrackColor: primaryColor,
+                              inactiveTrackColor: primaryColor.withOpacity(0.1),
+                              thumbColor: primaryColor,
+                            ),
+                            child: Slider(
+                              value: _draggingVolume ?? settings.volume,
+                              onChanged: (val) {
+                                setState(() {
+                                  _draggingVolume = val;
+                                });
+                              },
+                              onChangeEnd: (val) {
+                                setState(() {
+                                  _draggingVolume = null;
+                                });
+                                notifier.updateSettings(volume: val);
+                                _playPreview(settings.ringtonePath ?? 'default', val);
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -210,7 +222,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                           icon: const Icon(Icons.add_rounded, size: 20),
                           label: Text(l10n.add),
                           style: TextButton.styleFrom(
-                            foregroundColor: Colors.orange[700],
+                            foregroundColor: primaryColor,
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
@@ -337,6 +349,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
   }
 
   Widget _buildAlarmCard(BuildContext context, WidgetRef ref, String timeStr, int index, List<String> currentTimes) {
+    final primaryColor = ref.watch(themeProvider).primaryColor;
     final l10n = AppLocalizations.of(context)!;
     final parts = timeStr.split(':');
     final hour = int.parse(parts[0]);
@@ -394,7 +407,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: Colors.orange[50],
+                      color: primaryColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
@@ -402,7 +415,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
-                        color: Colors.orange[800],
+                        color: primaryColor,
                       ),
                     ),
                   ),
@@ -521,7 +534,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                           ref.read(supplementProvider.notifier).updateSettings(reminderTimes: newList);
                           Navigator.pop(context);
                         },
-                        child: Text(l10n.confirm, style: TextStyle(color: Colors.orange[700], fontSize: 16, fontWeight: FontWeight.bold)),
+                        child: Text(l10n.confirm, style: TextStyle(color: ref.watch(themeProvider).primaryColor, fontSize: 16, fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),

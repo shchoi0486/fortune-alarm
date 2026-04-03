@@ -2,17 +2,17 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 import 'dart:io';
-import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 import 'notification_service.dart';
+import '../core/constants/push_messages.dart';
 
 @pragma('vm:entry-point')
 class RoutineAlarmService {
-  static const int _morningId = 30001;
   static const int _eveningId = 30002;
 
-  // 데일리 루틴 알람 스케줄링
+  // 데일리 루틴 알람 스케줄링 (상황 기반: 매일 저녁 8시 30분)
   static Future<void> scheduleDailyReminders() async {
     if (Platform.isAndroid) {
       if (await Permission.scheduleExactAlarm.isDenied) {
@@ -20,45 +20,20 @@ class RoutineAlarmService {
       }
     }
 
-    final box = await Hive.openBox('alarm_settings');
-    final enabled = box.get('routine_notification_enabled', defaultValue: true);
-    
-    if (!enabled) {
-      await cancelAll();
-      return;
-    }
-
-    final morningTimeStr = box.get('morning_routine_time', defaultValue: '08:00');
-    final eveningTimeStr = box.get('evening_routine_time', defaultValue: '21:00');
-
-    final morningParts = morningTimeStr.split(':');
-    final eveningParts = eveningTimeStr.split(':');
-
-    // 오전 알림
-    await _scheduleOne(
-      int.parse(morningParts[0]), 
-      int.parse(morningParts[1]), 
-      _morningId, 
-      'morning'
-    );
-    // 오후 알림
-    await _scheduleOne(
-      int.parse(eveningParts[0]), 
-      int.parse(eveningParts[1]), 
-      _eveningId, 
-      'evening'
-    );
+    // 오후 8시 30분 알림 1회만 등록
+    await _scheduleOne(20, 30, _eveningId, 'evening');
   }
 
+  // 알람 취소
   static Future<void> cancelAll() async {
     if (Platform.isAndroid) {
-      await AndroidAlarmManager.cancel(_morningId);
       await AndroidAlarmManager.cancel(_eveningId);
+      await AndroidAlarmManager.cancel(30001); // 기존 아침 알람 취소
     } else if (Platform.isIOS) {
-      await NotificationService().cancelNotification(_morningId);
       await NotificationService().cancelNotification(_eveningId);
+      await NotificationService().cancelNotification(30001);
     }
-    debugPrint('[RoutineAlarm] All routine alarms canceled');
+    debugPrint('[RoutineAlarm] Canceled all routine alarms.');
   }
 
   static Future<void> _scheduleOne(int hour, int minute, int id, String type) async {
@@ -83,23 +58,12 @@ class RoutineAlarmService {
         allowWhileIdle: true,
       );
     } else if (Platform.isIOS) {
-      final l10n = await NotificationService().getL10n();
-
-      String title = l10n.routineCheckTitle;
-      String body = l10n.routineCheckBody;
-      
-      if (id == _morningId) {
-        title = l10n.routineMorningTitle;
-        body = l10n.routineMorningBody;
-      } else if (id == _eveningId) {
-        title = l10n.routineEveningTitle;
-        body = l10n.routineEveningBody;
-      }
+      final msg = PushMessages.getRandomRoutineMessage();
 
       await NotificationService().scheduleAlarmNotification(
         id: id,
-        title: title,
-        body: body,
+        title: msg['title']!,
+        body: msg['body']!,
         scheduledDate: scheduledTime,
         payload: 'routine_daily',
       );
@@ -111,28 +75,35 @@ class RoutineAlarmService {
     WidgetsFlutterBinding.ensureInitialized();
     debugPrint('[RoutineAlarm] Fired! ID: $id');
 
-    final notificationService = NotificationService();
-    await notificationService.init(null);
-
-    final l10n = await notificationService.getL10n();
-
-    String title = l10n.routineCheckTitle;
-    String body = l10n.routineCheckBody;
+    await Hive.initFlutter();
     
-    if (id == _morningId) {
-      title = l10n.routineMorningTitle;
-      body = l10n.routineMorningBody;
-    } else if (id == _eveningId) {
-      title = l10n.routineEveningTitle;
-      body = l10n.routineEveningBody;
-    }
+    // 오늘 날짜 문자열
+    final todayStr = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    
+    // 상태 확인
+    final box = await Hive.openBox('user_activity');
+    final lastRoutineCheckDate = box.get('last_routine_check_date', defaultValue: '');
+    
+    if (lastRoutineCheckDate != todayStr) {
+      final notificationService = NotificationService();
+            await notificationService.init(null);
+            
+            String langCode = 'ko';
+            try {
+              final settingsBox = await Hive.openBox('settings');
+              langCode = settingsBox.get('language', defaultValue: 'ko');
+            } catch (_) {}
 
-    await notificationService.showRoutineNotification(
-      id: id,
-      title: title,
-      body: body,
-      payload: 'routine_daily',
-    );
+            final msg = PushMessages.getRandomRoutineMessage(langCode);
+            await notificationService.showRoutineNotification(
+        id: id,
+        title: msg['title']!,
+        body: msg['body']!,
+        payload: 'routine_daily',
+      );
+    } else {
+      debugPrint('[RoutineAlarm] Routine already checked today ($todayStr). Skipping push.');
+    }
 
     // 다음 날 같은 시간으로 재예약
     final now = DateTime.now();

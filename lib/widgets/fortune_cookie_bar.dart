@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../providers/theme_provider.dart';
 import '../providers/mission_provider.dart';
 import '../providers/weather_provider.dart';
 import '../providers/notification_provider.dart';
@@ -19,6 +20,7 @@ class FortuneCookieBar extends ConsumerWidget {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final iconColor = isDarkMode ? Colors.white : Colors.black87;
     final textColor = isDarkMode ? Colors.white : Colors.black87;
+    final primaryColor = ref.watch(themeProvider).primaryColor;
     final l10n = AppLocalizations.of(context)!;
 
     return Container(
@@ -65,7 +67,7 @@ class FortuneCookieBar extends ConsumerWidget {
                             width: 6,
                             height: 6,
                             decoration: BoxDecoration(
-                              color: _getDustColor(weather.fineDustStatusKey),
+                              color: _getDustColor(weather.fineDustStatusKey, primaryColor),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -89,7 +91,7 @@ class FortuneCookieBar extends ConsumerWidget {
                 height: 20, 
                 child: CircularProgressIndicator(strokeWidth: 2)
               ),
-              error: (err, stack) => const Icon(Icons.error_outline, size: 24, color: Colors.red),
+              error: (err, stack) => Icon(Icons.error_outline, size: 24, color: primaryColor),
             ),
           ),
           
@@ -97,84 +99,53 @@ class FortuneCookieBar extends ConsumerWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Fortune Cookie Count Widget - Compact Style
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const AccountManagementScreen()),
-                  );
-                },
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+              // Theme Palette
+              IconButton(
+                icon: Icon(Icons.palette_outlined, color: primaryColor, size: 24),
+                onPressed: () => _showColorPicker(context, ref),
+              ),
+
+              // Notification Badge
+              Stack(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.notifications_outlined, color: iconColor, size: 24),
+                    onPressed: () {
+                      ref.read(hasNewNotificationProvider.notifier).state = false;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l10n.noNotifications ?? 'No new notifications.'),
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    },
                   ),
-                  child: Row(
-                    children: [
-                      const Text('🥠', style: TextStyle(fontSize: 14)),
-                      const SizedBox(width: 4),
-                      Text(
-                        '$count',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: textColor,
+                  if (hasNewNotification)
+                    Positioned(
+                      right: 12,
+                      top: 12,
+                      child: Container(
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 1.5),
                         ),
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                ],
               ),
-              const SizedBox(width: 8),
               
-              // Notification Icon
-               Stack(
-                 children: [
-                   GestureDetector(
-                     onTap: () {
-                       ref.read(hasNewNotificationProvider.notifier).state = false;
-                       
-                       // TODO: Implement notification list or popup
-                       ScaffoldMessenger.of(context).showSnackBar(
-                         SnackBar(
-                           content: Text(l10n.noNotifications ?? 'No new notifications.'),
-                           duration: const Duration(seconds: 1),
-                         ),
-                       );
-                     },
-                     child: Icon(Icons.notifications_outlined, size: 24, color: iconColor),
-                   ),
-                   // New notification badge - 새로운 알림이 있을 때만 표시
-                   if (hasNewNotification)
-                     Positioned(
-                       top: 2,
-                       right: 2,
-                       child: Container(
-                         width: 6,
-                         height: 6,
-                         decoration: const BoxDecoration(
-                           color: Colors.red,
-                           shape: BoxShape.circle,
-                         ),
-                       ),
-                     ),
-                 ],
-               ),
-              
-              const SizedBox(width: 8),
-              
-              // Profile Icon
-              GestureDetector(
-                onTap: () {
+              // Account Settings
+              IconButton(
+                icon: Icon(Icons.settings_outlined, color: iconColor, size: 24),
+                onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => const AccountManagementScreen()),
                   );
                 },
-                child: Icon(Icons.person_outline, size: 24, color: iconColor),
               ),
             ],
           ),
@@ -183,11 +154,109 @@ class FortuneCookieBar extends ConsumerWidget {
     );
   }
 
-  Color _getDustColor(String statusKey) {
+  void _showColorPicker(BuildContext context, WidgetRef ref) {
+    final themeState = ref.read(themeProvider);
+    final isDark = themeState.themeMode == ThemeMode.dark;
+    
+    final List<Color> colors = [
+      const Color(0xFFF97316), // Orange (Default)
+      const Color(0xFFFB923C), // Pastel Orange
+      const Color(0xFFEAB308), // Yellow
+      const Color(0xFFFBBF24), // Pastel Yellow
+      const Color(0xFFEF4444), // Red
+      const Color(0xFFF87171), // Pastel Red
+      const Color(0xFFEC4899), // Pink
+      const Color(0xFF8B5CF6), // Purple
+      const Color(0xFF10B981), // Green
+      const Color(0xFF34D399), // Pastel Green
+      const Color(0xFF3B82F6), // Blue
+      const Color(0xFF60A5FA), // Pastel Blue
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '테마 색상',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
+              ),
+              const SizedBox(height: 24),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: colors.length,
+                itemBuilder: (context, index) {
+                  final color = colors[index];
+                  final isSelected = themeState.primaryColor.value == color.value;
+                  
+                  return GestureDetector(
+                    onTap: () {
+                      ref.read(themeProvider.notifier).setPrimaryColor(color);
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: color,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected 
+                              ? (isDark ? Colors.white : Colors.black) 
+                              : Colors.transparent,
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: color.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: isSelected
+                          ? Icon(
+                              Icons.check,
+                              size: 20,
+                              color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                            )
+                          : null,
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Color _getDustColor(String statusKey, Color primaryColor) {
     switch (statusKey) {
       case 'airQualityGood': return Colors.green;
       case 'airQualityNormal': return Colors.blue;
-      case 'airQualityBad': return Colors.orange;
+      case 'airQualityBad': return primaryColor;
       case 'airQualityVeryBad': return Colors.red;
       default: return Colors.grey;
     }
@@ -201,6 +270,7 @@ class WeatherDetailSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final weatherAsync = ref.watch(weatherProvider);
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = ref.watch(themeProvider).primaryColor;
     final l10n = AppLocalizations.of(context)!;
 
     return DraggableScrollableSheet(
@@ -279,7 +349,7 @@ class WeatherDetailSheet extends ConsumerWidget {
                                     Icon(
                                       Icons.location_on_rounded,
                                       size: 14,
-                                      color: isDarkMode ? Colors.blueAccent[100] : Colors.blueAccent,
+                                      color: primaryColor,
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
@@ -706,7 +776,7 @@ String _getWeatherEmoji(String condition) {
 
 Color _getWeatherColor(String condition) {
   switch (condition) {
-    case 'Sunny': return Colors.orange;
+    case 'Sunny': return const Color(0xFFF97316);
     case 'PartlyCloudy': return Colors.blueGrey;
     case 'Cloudy': return Colors.grey;
     case 'Foggy': return Colors.blueGrey[200]!;

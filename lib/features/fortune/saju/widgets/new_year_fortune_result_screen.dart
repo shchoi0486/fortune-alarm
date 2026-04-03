@@ -191,7 +191,7 @@ class _NewYearFortuneResultScreenState extends State<NewYearFortuneResultScreen>
           ),
           const SizedBox(height: 8),
           Text(
-            "${DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(widget.profile.birthDate)} "
+            "${DateFormat.yMd(Localizations.localeOf(context).toString()).format(widget.profile.birthDate)} "
             "(${widget.profile.isLunar ? l10n.sajuLunar : l10n.sajuSolar}, ${widget.profile.birthTime})",
             style: TextStyle(
               fontSize: 14, 

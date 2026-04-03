@@ -118,7 +118,7 @@ class _TojeongScreenState extends State<TojeongScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      DateFormat.yMMMMd(Localizations.localeOf(context).toString()).format(_birthDate),
+                      DateFormat.yMd(Localizations.localeOf(context).toString()).format(_birthDate),
                       style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     const Icon(Icons.calendar_today, size: 20, color: Colors.grey),

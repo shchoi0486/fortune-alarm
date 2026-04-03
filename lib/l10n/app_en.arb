@@ -259,6 +259,40 @@
       }
     }
   },
+  "quickAlarm": "Quick Alarm",
+  "setQuickAlarm": "Set Quick Alarm",
+  "addMinutes": "+ {minutes}m",
+  "@addMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "ringingAt": "Rings at {time}",
+  "@ringingAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "pleaseSetTime": "Please set the time.",
+  "alarmSaved": "Alarm saved.",
+  "alarmScheduledTitle": "Alarm Scheduled",
+  "alarmScheduledBody": "Alarm will ring at {time}.",
+  "@alarmScheduledBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "goodDay": "It's going to be a wonderful day!",
+  "luckyDay": "Wishing you a day full of luck!",
+  "cheerUp": "Have a great and productive day!",
+  "stayHappy": "Enjoy every moment today!",
+  "youCanDoIt": "You can do anything today!",
   "noActiveAlarms": "No active alarms",
   "wealth": "Wealth",
   "love": "Relationship",
@@ -460,7 +494,7 @@
   "bgDarkMode": "Dark Mode",
   "bgSoftBlue": "Soft Blue",
   "bgWarmBeige": "Warm Beige",
-  "dateFormatMdyE": "MMM d (E)",
+  "dateFormatMdyE": "M/d (E)",
   "deleteAlarm": "Delete Alarm",
   "confirmDelete": "Are you sure you want to delete?",
   "yes": "Yes",
@@ -2452,9 +2486,6 @@
   "supplementNotificationTitle": "Supplement Reminder",
   "waterNotificationTitle": "Water Reminder",
   "routineNotificationTitle": "Daily Routine Reminder",
-  "routineNotificationDescription": "Get notified in the morning and evening to keep up with your routine missions.",
-  "morningRoutineTime": "Morning Routine Time",
-  "eveningRoutineTime": "Evening Routine Time",
   "todaysFortuneNotificationTitle": "Today's Fortune",
   "afternoonFortuneNotificationBody": "How about your afternoon fortune? Check it now!",
   "morningFortuneNotificationBody": "Check your fortune and start your day with energy!",

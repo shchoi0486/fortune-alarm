@@ -18,6 +18,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import 'package:fortune_alarm/providers/theme_provider.dart';
 import '../../core/constants/mission_type.dart';
 import '../../data/models/alarm_model.dart';
 import '../../data/models/math_difficulty.dart';
@@ -38,6 +39,8 @@ class AddAlarmScreen extends ConsumerStatefulWidget {
 }
 
 class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
+  Color get primaryColor => ref.watch(themeProvider).primaryColor;
+  bool get isDarkMode => Theme.of(context).brightness == Brightness.dark;
   bool _isSaving = false;
   bool _didHydrateFromHive = false;
   late DateTime _selectedTime;
@@ -166,7 +169,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       _selectedMission = MissionType.none;
       _labelController = TextEditingController();
       _referenceImagePaths = [null, null, null];
-      _repeatDays = List.generate(7, (index) => false);
+      _repeatDays = List.generate(7, (index) => true);
       _isVibrationEnabled = true;
       _isSoundEnabled = true;
       _volume = 1.0;
@@ -752,7 +755,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                         ),
                         const SizedBox(height: 16),
                         ListTile(
-                          leading: const Icon(Icons.camera_alt, color: Colors.cyan),
+                          leading: Icon(Icons.camera_alt, color: isDarkMode ? Colors.white70 : Colors.black54),
                           title: Text(AppLocalizations.of(context)!.takePhoto, style: const TextStyle(fontWeight: FontWeight.bold)),
                           onTap: () {
                             Navigator.pop(context);
@@ -760,7 +763,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                           },
                         ),
                         ListTile(
-                          leading: const Icon(Icons.photo_library, color: Colors.cyan),
+                          leading: Icon(Icons.photo_library, color: isDarkMode ? Colors.white70 : Colors.black54),
                           title: Text(AppLocalizations.of(context)!.pickFromDevice, style: const TextStyle(fontWeight: FontWeight.bold)),
                           onTap: () {
                             Navigator.pop(context);
@@ -858,7 +861,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(8),
                                           border: Border.all(
-                                            color: isSelected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[300]!),
+                                            color: isSelected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white10 : Colors.grey[300]!),
                                             width: isSelected ? 2 : 1,
                                           ),
                                           image: DecorationImage(
@@ -873,14 +876,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                           right: 2,
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color: isSelected ? Colors.cyan : Colors.black45,
+                                              color: isSelected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : Colors.black45,
                                               shape: BoxShape.circle,
                                               border: Border.all(color: Colors.white, width: 1.5),
                                             ),
                                             child: Icon(
                                               isSelected ? Icons.check : Icons.close,
                                               size: 14,
-                                              color: Colors.white,
+                                              color: isSelected ? (isDarkMode ? Colors.black : Colors.white) : Colors.white,
                                             ),
                                           ),
                                         ),
@@ -1260,10 +1263,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.purple.withOpacity(0.1),
+                      color: (isDarkMode ? Colors.white : Colors.black).withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.color_lens_rounded, color: Colors.purple, size: 28),
+                    child: Icon(Icons.color_lens_rounded, color: isDarkMode ? Colors.white70 : Colors.black87, size: 28),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -1328,7 +1331,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: color,
-                border: isSelected ? Border.all(color: Colors.cyan, width: 3) : Border.all(color: Colors.black12, width: 0.5),
+                border: isSelected 
+                                ? Border.all(color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), width: 1.5) 
+                                : Border.all(color: Colors.black12, width: 0.5),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
@@ -1443,7 +1448,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.cyan, width: 3),
+                        border: Border.all(color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), width: 1.5),
                       ),
                     ),
                   ),
@@ -1576,13 +1581,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF3B30),
-                            foregroundColor: Colors.white,
+                            backgroundColor: primaryColor,
+                            foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
                             elevation: 8,
-                            shadowColor: Colors.black45,
+                            shadowColor: primaryColor.withOpacity(0.3),
                           ),
                           child: Text(
                             l10n.selectionComplete,
@@ -1631,18 +1636,18 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: isSelected ? Colors.cyan : (isDarkMode ? Colors.white24 : Colors.grey[400]!),
+                            color: isSelected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white24 : Colors.grey[400]!),
                             width: 1.5,
                           ),
-                          color: isSelected ? Colors.cyan : Colors.transparent,
+                          color: isSelected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : Colors.transparent,
                         ),
                         child: isSelected
                             ? Center(
                                 child: Container(
                                   width: 6.5,
                                   height: 6.5,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
+                                  decoration: BoxDecoration(
+                                    color: isDarkMode ? Colors.black : Colors.white,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -1702,10 +1707,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                         ),
                         Text(
                           currentValueText,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.cyan,
+                            color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                           ),
                         ),
                       ],
@@ -1820,7 +1825,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                       ),
                                       Switch.adaptive(
                                         value: isSnoozeEnabled,
-                                        activeColor: Colors.cyan,
+                                        activeColor: primaryColor,
                                         onChanged: (val) {
                                           if (val) {
                                             updateSnooze(_lastSnoozeInterval, _lastMaxSnoozeCount);
@@ -2032,8 +2037,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: _backgroundPath == assetPath ? Colors.cyan : Colors.transparent,
-                width: 2,
+                color: _backgroundPath == assetPath ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : Colors.transparent,
+                width: 1.2,
               ),
               image: DecorationImage(
                 image: ResizeImage(AssetImage(assetPath), width: 200, height: 200),
@@ -2068,8 +2073,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                     fit: BoxFit.cover,
                   ),
                   border: Border.all(
-                    color: _backgroundPath == filePath ? Colors.cyan : Colors.white,
-                    width: 2,
+                    color: _backgroundPath == filePath ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : Colors.transparent,
+                    width: 1.2,
                   ),
                 ),
               ),
@@ -2096,6 +2101,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   }
 
   Widget _buildColorOption(Color color) {
+    final isSelected = _backgroundPath == 'color:${color.value}';
     return GestureDetector(
       onTap: () {
         Navigator.pop(context);
@@ -2111,7 +2117,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
+              border: Border.all(
+                color: isSelected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : Colors.transparent,
+                width: 1.2,
+              ),
             ),
           ),
           const SizedBox(height: 4),
@@ -2199,18 +2208,17 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   }
 
   Widget _buildSettingSection({required String title, required Widget child, Widget? trailing}) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(18),
+      margin: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
         color: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 6),
+            color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -2220,19 +2228,22 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 16,
-                  color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
-                  letterSpacing: -0.5,
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13,
+                    color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                    letterSpacing: -0.5,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               if (trailing != null) trailing,
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 4),
           child,
         ],
       ),
@@ -2241,7 +2252,6 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return AnnotatedRegion(
       value: (isDarkMode ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark).copyWith(
         statusBarColor: Colors.transparent,
@@ -2264,7 +2274,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           actions: [
             if (widget.alarm != null)
               IconButton(
-                icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                icon: Icon(Icons.delete_outline, color: isDarkMode ? Colors.white60 : Colors.black45),
                 onPressed: _confirmDelete,
               ),
           ],
@@ -2273,155 +2283,245 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                 _buildSettingSection(
                   title: AppLocalizations.of(context)!.setTime,
                   child: Column(
                     children: [
-                      _buildCustomTimePicker(),
-                      const SizedBox(height: 8),
-                      Center(
-                        child: Text(
-                          _getRemainingTimeText(),
-                          style: TextStyle(
-                            color: Colors.cyan[700],
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 4),
-
-                // 기상 미션
-                _buildSettingSection(
-                  title: AppLocalizations.of(context)!.wakeUpMission,
-                  child: Column(
-                    children: [
-                      _buildMissionSelector(),
-                      if (_isCameraMission) ...[
-                        const SizedBox(height: 16),
-                        _buildCameraMissionImageSlots(),
-                      ],
-                    ],
-                  ),
-                ),
-
-                if (_selectedMission == MissionType.math) ...[
-                  _buildSettingSection(
-                    title: AppLocalizations.of(context)!.difficulty,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildMathDifficultySelector(),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: Divider(height: 1, thickness: 0.5),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4, bottom: 12),
+                        child: Center(
                           child: Text(
-                            AppLocalizations.of(context)!.problemCount,
+                            _getRemainingTimeText(),
                             style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16,
-                              color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
+                              color: isDarkMode ? Colors.white70 : Colors.black54,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
                               letterSpacing: -0.5,
                             ),
                           ),
                         ),
-                        _buildMathProblemCountSelector(),
-                      ],
-                    ),
+                      ),
+                      _buildCustomTimePicker(),
+                    ],
                   ),
-                ],
+                ),
+                const SizedBox(height: 12),
 
-                if (_selectedMission == MissionType.shake)
-                  _buildSettingSection(
-                    title: AppLocalizations.of(context)!.shakeCount,
-                    child: _buildShakeCountSelector(),
-                  ),
-
-                if (_selectedMission == MissionType.numberOrder)
-                  _buildSettingSection(
-                    title: AppLocalizations.of(context)!.problemCount,
-                    child: _buildMathProblemCountSelector(),
-                  ),
-
-                if (_selectedMission == MissionType.hiddenButton)
-                  _buildSettingSection(
-                    title: AppLocalizations.of(context)!.difficulty,
-                    child: _buildMathDifficultySelector(),
-                  ),
-
-                if (_selectedMission == MissionType.tapSprint)
-                  _buildSettingSection(
-                    title: AppLocalizations.of(context)!.countLabel,
-                    child: _buildTapSprintCountSelector(),
-                  ),
-
-                if (_selectedMission == MissionType.leftRight)
-                  _buildSettingSection(
-                    title: AppLocalizations.of(context)!.problemCount,
-                    child: _buildLeftRightCountSelector(),
-                  ),
-
-                if (_selectedMission == MissionType.walk)
-                  _buildSettingSection(
-                    title: AppLocalizations.of(context)!.walkStepCount,
-                    child: _buildWalkStepCountSelector(),
-                  ),
-                
-                // 반복 및 스누즈 설정 통합
+                // 반복 및 요일 설정
                 _buildSettingSection(
-                  title: AppLocalizations.of(context)!.repeatDays,
+                  title: _getSelectedDaysSummary(),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: Checkbox(
+                      Text(
+                        AppLocalizations.of(context)!.repeatDaily, 
+                        style: TextStyle(
+                          fontSize: 12, 
+                          fontWeight: FontWeight.w600,
+                          color: isDarkMode ? Colors.white60 : Colors.black45,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Transform.scale(
+                        scale: 0.7,
+                        child: CupertinoSwitch(
                           value: _repeatDays.every((day) => day),
-                          activeColor: Colors.cyan,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                          onChanged: (bool? value) {
+                          activeColor: primaryColor,
+                          onChanged: (bool value) {
                             setState(() {
-                              final newValue = value ?? false;
                               for (int i = 0; i < _repeatDays.length; i++) {
-                                _repeatDays[i] = newValue;
+                                _repeatDays[i] = value;
                               }
                             });
                           },
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        AppLocalizations.of(context)!.repeatDaily, 
-                        style: TextStyle(
-                          fontSize: 14, 
-                          fontWeight: FontWeight.w700,
-                          color: isDarkMode ? Colors.white70 : Colors.black54,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
                     ],
                   ),
+                  child: _buildDaySelector(),
+                ),
+                const SizedBox(height: 12),
+
+                // 기상 미션 통합 섹션
+                _buildSettingSection(
+                  title: AppLocalizations.of(context)!.wakeUpMission,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildDaySelector(),
+                      _buildMissionSelector(),
+                      
+                      // 카메라 미션 이미지 슬롯
+                      if (_isCameraMission) ...[
+                        const SizedBox(height: 12),
+                        _buildCameraMissionImageSlots(),
+                      ],
+
+                      // 수학 미션 설정
+                      if (_selectedMission == MissionType.math) ...[
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, thickness: 0.5),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            AppLocalizations.of(context)!.difficulty,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: isDarkMode ? Colors.white70 : Colors.black87,
+                            ),
+                          ),
+                        ),
+                        _buildMathDifficultySelector(),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, thickness: 0.5),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            AppLocalizations.of(context)!.problemCount,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: isDarkMode ? Colors.white70 : Colors.black87,
+                            ),
+                          ),
+                        ),
+                        _buildMathProblemCountSelector(),
+                      ],
+
+                      // 흔들기 미션 설정
+                      if (_selectedMission == MissionType.shake) ...[
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, thickness: 0.5),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            AppLocalizations.of(context)!.shakeCount,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: isDarkMode ? Colors.white70 : Colors.black87,
+                            ),
+                          ),
+                        ),
+                        _buildShakeCountSelector(),
+                      ],
+
+                      // 숫자 순서 미션 설정
+                      if (_selectedMission == MissionType.numberOrder) ...[
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, thickness: 0.5),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            AppLocalizations.of(context)!.problemCount,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: isDarkMode ? Colors.white70 : Colors.black87,
+                            ),
+                          ),
+                        ),
+                        _buildMathProblemCountSelector(),
+                      ],
+
+                      // 숨은 버튼 찾기 미션 설정
+                      if (_selectedMission == MissionType.hiddenButton) ...[
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, thickness: 0.5),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            AppLocalizations.of(context)!.difficulty,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: isDarkMode ? Colors.white70 : Colors.black87,
+                            ),
+                          ),
+                        ),
+                        _buildMathDifficultySelector(),
+                      ],
+
+                      // 탭 스프린트 미션 설정
+                      if (_selectedMission == MissionType.tapSprint) ...[
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, thickness: 0.5),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            AppLocalizations.of(context)!.countLabel,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: isDarkMode ? Colors.white70 : Colors.black87,
+                            ),
+                          ),
+                        ),
+                        _buildTapSprintCountSelector(),
+                      ],
+
+                      // 좌우 미션 설정
+                      if (_selectedMission == MissionType.leftRight) ...[
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, thickness: 0.5),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            AppLocalizations.of(context)!.problemCount,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: isDarkMode ? Colors.white70 : Colors.black87,
+                            ),
+                          ),
+                        ),
+                        _buildLeftRightCountSelector(),
+                      ],
+
+                      // 걷기 미션 설정
+                      if (_selectedMission == MissionType.walk) ...[
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Divider(height: 1, thickness: 0.5),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text(
+                            AppLocalizations.of(context)!.walkStepCount,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: isDarkMode ? Colors.white70 : Colors.black87,
+                            ),
+                          ),
+                        ),
+                        _buildWalkStepCountSelector(),
+                      ],
                     ],
                   ),
                 ),
-
+                const SizedBox(height: 12),
+                
                 // 알람 소리 및 진동 통합 섹션
                 _buildSettingSection(
                   title: "${AppLocalizations.of(context)!.alarmSound} & ${AppLocalizations.of(context)!.vibration}",
@@ -2430,8 +2530,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                       // 소리 설정 행
                       Row(
                         children: [
-                          const Icon(Icons.music_note, size: 22, color: Colors.cyan),
-                          const SizedBox(width: 12),
+                          Icon(Icons.music_note, size: 20, color: isDarkMode ? Colors.white70 : Colors.black54),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: InkWell(
                               onTap: _isSoundEnabled ? _showRingtonePicker : null,
@@ -2443,14 +2543,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                       child: Text(
                                         _getPayloadTitle(_ringtonePath, isRingtone: true),
                                         style: TextStyle(
-                                          fontSize: 14, 
+                                          fontSize: 13, 
                                           fontWeight: FontWeight.w600,
                                           color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                                    const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
                                     const SizedBox(width: 4),
                                   ],
                                 ),
@@ -2458,33 +2558,33 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             ),
                           ),
                           Transform.scale(
-                            scale: 0.8,
+                            scale: 0.75,
                             child: Switch(
                               value: _isSoundEnabled,
-                              activeThumbColor: Colors.cyan,
+                              activeColor: primaryColor,
                               onChanged: (val) {
-                                setState(() => _isSoundEnabled = val);
-                              },
-                            ),
+                      setState(() => _isSoundEnabled = val);
+                    },
+                  ),
                           ),
                         ],
                       ),
                       if (_isSoundEnabled) ...[
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 4),
                         Row(
                           children: [
-                            const Icon(Icons.volume_down, size: 18, color: Colors.grey),
+                            const Icon(Icons.volume_down, size: 16, color: Colors.grey),
                             Expanded(
                               child: SliderTheme(
                                 data: SliderTheme.of(context).copyWith(
-                                  trackHeight: 6,
-                                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-                                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
+                                  trackHeight: 1.0,
+                                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
                                 ),
                                 child: Slider(
                                   value: _volume,
-                                  activeColor: Colors.cyan,
-                                  inactiveColor: Colors.cyan.withOpacity(0.1),
+                                  activeColor: primaryColor,
+                                  inactiveColor: primaryColor.withOpacity(0.1),
                                   onChanged: (val) {
                                     setState(() => _volume = val);
                                   },
@@ -2492,19 +2592,19 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                 ),
                               ),
                             ),
-                            const Icon(Icons.volume_up, size: 18, color: Colors.grey),
+                            const Icon(Icons.volume_up, size: 16, color: Colors.grey),
                           ],
                         ),
                       ],
                       const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8),
+                        padding: EdgeInsets.symmetric(vertical: 6),
                         child: Divider(height: 1, thickness: 0.5),
                       ),
                       // 진동 설정 행
                       Row(
                         children: [
-                          const Icon(Icons.vibration, size: 22, color: Colors.cyan),
-                          const SizedBox(width: 12),
+                          Icon(Icons.vibration, size: 20, color: isDarkMode ? Colors.white70 : Colors.black54),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: InkWell(
                               onTap: _isVibrationEnabled ? _showVibrationPicker : null,
@@ -2516,14 +2616,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                       child: Text(
                                         _getPayloadTitle(_vibrationPattern, isRingtone: false),
                                         style: TextStyle(
-                                          fontSize: 14, 
+                                          fontSize: 13, 
                                           fontWeight: FontWeight.w600,
                                           color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                                    const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
                                     const SizedBox(width: 4),
                                   ],
                                 ),
@@ -2531,10 +2631,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             ),
                           ),
                           Transform.scale(
-                            scale: 0.8,
+                            scale: 0.75,
                             child: Switch(
                               value: _isVibrationEnabled,
-                              activeThumbColor: Colors.cyan,
+                              activeColor: primaryColor,
                               onChanged: (val) {
                                 setState(() => _isVibrationEnabled = val);
                               },
@@ -2545,6 +2645,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 12),
 
                 // 레이블 및 배경화면
                 _buildSettingSection(
@@ -2582,7 +2683,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(color: Colors.cyan, width: 2),
+                            borderSide: BorderSide(color: isDarkMode ? Colors.white70 : Colors.black87, width: 1.5),
                           ),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                           isDense: true,
@@ -2599,7 +2700,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           child: Row(
                             children: [
-                              const Icon(Icons.wallpaper, size: 22, color: Colors.cyan),
+                              Icon(Icons.wallpaper, size: 22, color: isDarkMode ? Colors.white70 : Colors.black54),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
@@ -2656,7 +2757,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 6),
                           child: Row(
                             children: [
-                              const Icon(Icons.access_time_rounded, size: 22, color: Colors.cyan),
+                              Icon(Icons.access_time_rounded, size: 22, color: isDarkMode ? Colors.white70 : Colors.black54),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
@@ -2690,18 +2791,19 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 12),
 
-                const DetailedAdWidget(
+                const ListAdWidget(
                   margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
                 ),
                 const SizedBox(height: 24), // Bottom padding
               ],
             ),
           ),
-          ),
-          
-          // 하단 저장 버튼
-          SafeArea(
+        ),
+        
+        // 하단 저장 버튼
+        SafeArea(
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
@@ -2711,23 +2813,26 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                 child: ElevatedButton(
                   onPressed: _isSaving ? null : _saveAlarm,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.cyan[600],
-                    foregroundColor: Colors.white,
+                    backgroundColor: primaryColor,
+                    foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(18),
                     ),
                     elevation: 4,
-                    shadowColor: Colors.cyan.withOpacity(0.4),
+                    shadowColor: primaryColor.withOpacity(0.3),
                   ),
                   child: _isSaving
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 24,
                           height: 24,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+                          child: CircularProgressIndicator(
+                            color: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white, 
+                            strokeWidth: 2,
+                          ),
                         )
                       : Text(
                           AppLocalizations.of(context)!.save, 
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, letterSpacing: -0.5),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, letterSpacing: -0.5),
                         ),
                 ),
               ),
@@ -2748,17 +2853,17 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     if (hour > 12) hour -= 12;
     if (hour == 0) hour = 12;
     
-    const double itemExtent = 45.0;
+    const double itemExtent = 54.0;
     
     return SizedBox(
-      height: 150,
+      height: 180,
       child: Stack(
         alignment: Alignment.center,
         children: [
           // Unified Selection Overlay
           Center(
             child: Container(
-              width: 310, // Increased width slightly
+              width: 320, // Increased width slightly
               height: itemExtent,
               decoration: BoxDecoration(
                 color: Colors.grey.withOpacity(0.2),
@@ -2777,7 +2882,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   itemExtent: itemExtent,
                   selectionOverlay: const SizedBox(),
                   useMagnifier: true,
-                  magnification: 1.2,
+                  magnification: 1.3,
                   scrollController: _ampmController,
                   onSelectedItemChanged: (index) {
                     final newIsPm = index == 1;
@@ -2817,7 +2922,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   itemExtent: itemExtent,
                   selectionOverlay: const SizedBox(),
                   useMagnifier: true,
-                  magnification: 1.2,
+                  magnification: 1.3,
                   scrollController: _hourController,
                   onSelectedItemChanged: (index) {
                     int newHour = index + 1;
@@ -2864,13 +2969,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   itemExtent: itemExtent,
                   selectionOverlay: const SizedBox(),
                   useMagnifier: true,
-                  magnification: 1.2,
+                  magnification: 1.3,
                   scrollController: _minuteController,
                   onSelectedItemChanged: (index) {
-                    final oldMinute = _selectedTime.minute;
+                    // final oldMinute = _selectedTime.minute;
                     final newMinute = index;
                     int newHour = _selectedTime.hour;
 
+                    /* 연동 방지: 분이 00 또는 59를 넘어가도 시/오전/오후가 변하지 않도록 주석 처리
                     // Calculate delta to determine direction (shortest path)
                     final delta = newMinute - oldMinute;
                     
@@ -2896,6 +3002,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                       _hourController.animateToItem(displayHour - 1, duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
                       _ampmController.animateToItem(isPm ? 1 : 0, duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
                     }
+                    */
                     
                     setState(() {
                       _selectedTime = DateTime(
@@ -2923,6 +3030,31 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     );
   }
 
+  String _getSelectedDaysSummary() {
+    final l10n = AppLocalizations.of(context)!;
+    final List<String> selectedNames = [];
+    final days = [
+      l10n.dayMon,
+      l10n.dayTue,
+      l10n.dayWed,
+      l10n.dayThu,
+      l10n.dayFri,
+      l10n.daySat,
+      l10n.daySun,
+    ];
+    
+    for (int i = 0; i < 7; i++) {
+      if (_repeatDays[i]) {
+        selectedNames.add(days[i]);
+      }
+    }
+    
+    if (selectedNames.length == 7) return l10n.repeatDaily;
+    if (selectedNames.isEmpty) return AppLocalizations.of(context)!.none;
+    
+    return selectedNames.join(", ");
+  }
+
   Widget _buildDaySelector() {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
@@ -2946,37 +3078,35 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               _repeatDays[modelIndex] = !isSelected;
             });
           },
-          child: Container(
-            width: 40,
-            height: 40,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 160),
+            width: 38,
+            height: 38,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isSelected ? Colors.cyan : (isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[50]),
+              color: isSelected 
+                  ? primaryColor.withOpacity(isDarkMode ? 0.2 : 0.1)
+                  : (isDarkMode ? Colors.white.withOpacity(0.05) : Colors.grey[50]),
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: isSelected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[300]!),
-                width: 1.5,
+                color: isSelected 
+                    ? primaryColor
+                    : (isDarkMode ? Colors.white10 : Colors.grey[200]!),
+                width: 1.0,
               ),
-              boxShadow: isSelected ? [
-                BoxShadow(
-                  color: Colors.cyan.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                )
-              ] : null,
             ),
             child: Text(
               days[index],
               style: TextStyle(
                 color: isSelected 
-                    ? Colors.white 
+                    ? primaryColor
                     : (index == 0 
-                        ? Colors.redAccent.withOpacity(isDarkMode ? 0.7 : 0.9) // 일요일
+                        ? Colors.redAccent.withOpacity(isDarkMode ? 0.5 : 0.7) // 일요일 (미선택 시 은은하게)
                         : (index == 6 
-                            ? Colors.blueAccent.withOpacity(isDarkMode ? 0.7 : 0.9) // 토요일
+                            ? Colors.blueAccent.withOpacity(isDarkMode ? 0.5 : 0.7) // 토요일 (미선택 시 은은하게)
                             : (isDarkMode ? Colors.grey[400] : const Color(0xFF1D1D1F)))),
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w700,
-                fontSize: 14,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontSize: 13,
                 letterSpacing: -0.5,
               ),
             ),
@@ -3009,7 +3139,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       onTap: _showMissionPicker,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
           color: isDarkMode ? Colors.black26 : Colors.grey[50],
           borderRadius: BorderRadius.circular(12),
@@ -3025,35 +3155,35 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   Text(
                     AppLocalizations.of(context)!.mission,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       _getMissionTitle(_selectedMission),
                       style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.cyan[700],
+                        fontSize: 14,
+                        color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.3,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
+                  const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             if (!_isCameraMission)
               Container(
-                width: 36,
-                height: 36,
+                width: 28,
+                height: 28,
                 decoration: BoxDecoration(
-                  color: Colors.cyan.withOpacity(0.1),
+                  color: primaryColor.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -3062,13 +3192,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                           child: Image.asset(
                             'assets/icon/fortuni1_trans.webp',
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Icon(Icons.face, color: Colors.cyan, size: 18),
+                            errorBuilder: (context, error, stackTrace) => Icon(Icons.face, color: primaryColor, size: 16),
                           ),
                         )
                       : Icon(
                           _getMissionIcon(_selectedMission),
-                          color: Colors.cyan,
-                          size: 18,
+                          color: primaryColor,
+                          size: 16,
                         ),
                 ),
               ),
@@ -3085,9 +3215,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     Widget buildItem(MathDifficulty value, String label, String detail) {
       final selected = _mathDifficulty == value;
       final bg = selected
-          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          ? (isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05))
           : (isDarkMode ? Colors.black26 : Colors.grey[50]);
-      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+      final border = selected ? (isDarkMode ? Colors.white70 : Colors.black87) : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
 
       return Expanded(
         child: GestureDetector(
@@ -3096,7 +3226,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(14),
@@ -3106,9 +3236,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               child: Text(
                 "$label($detail)",
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w800,
-                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                  color: selected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white70 : Colors.black54),
                   letterSpacing: -0.5,
                 ),
               ),
@@ -3136,9 +3266,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     Widget buildItem(int value, String label) {
       final selected = _mathProblemCount == value;
       final bg = selected
-          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          ? (isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05))
           : (isDarkMode ? Colors.black26 : Colors.grey[50]);
-      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+      final border = selected ? (isDarkMode ? Colors.white70 : Colors.black87) : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
 
       return Expanded(
         child: GestureDetector(
@@ -3147,7 +3277,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(14),
@@ -3157,9 +3287,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               child: Text(
                 label,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w800,
-                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                  color: selected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white70 : Colors.black54),
                   letterSpacing: -0.2,
                 ),
               ),
@@ -3187,16 +3317,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     Widget buildItem(int value, String label) {
       final selected = _shakeCount == value;
       final bg = selected
-          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          ? (isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05))
           : (isDarkMode ? Colors.black26 : Colors.grey[50]);
-      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+      final border = selected ? (isDarkMode ? Colors.white70 : Colors.black87) : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
 
       return Expanded(
         child: GestureDetector(
           onTap: () => setState(() => _shakeCount = value),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(14),
@@ -3207,16 +3337,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               children: [
                 Icon(
                   Icons.vibration,
-                  size: 20,
-                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white70 : Colors.grey[600]),
+                  size: 18,
+                  color: selected ? (isDarkMode ? Colors.white : Colors.black) : (isDarkMode ? Colors.white70 : Colors.grey[600]),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                    color: selected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white70 : Colors.black54),
                     letterSpacing: -0.2,
                   ),
                 ),
@@ -3245,16 +3375,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     Widget buildItem(int value, String label) {
       final selected = _leftRightStreak == value;
       final bg = selected
-          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          ? (isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05))
           : (isDarkMode ? Colors.black26 : Colors.grey[50]);
-      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+      final border = selected ? (isDarkMode ? Colors.white70 : Colors.black87) : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
 
       return Expanded(
         child: GestureDetector(
           onTap: () => setState(() => _leftRightStreak = value),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(14),
@@ -3265,16 +3395,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               children: [
                 Icon(
                   Icons.compare_arrows,
-                  size: 20,
-                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white70 : Colors.grey[600]),
+                  size: 18,
+                  color: selected ? (isDarkMode ? Colors.white : Colors.black) : (isDarkMode ? Colors.white70 : Colors.grey[600]),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                    color: selected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white70 : Colors.black54),
                     letterSpacing: -0.2,
                   ),
                 ),
@@ -3303,16 +3433,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     Widget buildItem(int value, String label) {
       final selected = _tapSprintGoal == value;
       final bg = selected
-          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          ? (isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05))
           : (isDarkMode ? Colors.black26 : Colors.grey[50]);
-      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+      final border = selected ? (isDarkMode ? Colors.white70 : Colors.black87) : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
 
       return Expanded(
         child: GestureDetector(
           onTap: () => setState(() => _tapSprintGoal = value),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(14),
@@ -3323,16 +3453,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               children: [
                 Icon(
                   Icons.touch_app,
-                  size: 20,
-                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white70 : Colors.grey[600]),
+                  size: 18,
+                  color: selected ? (isDarkMode ? Colors.white : Colors.black) : (isDarkMode ? Colors.white70 : Colors.grey[600]),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                    color: selected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white70 : Colors.black54),
                     letterSpacing: -0.2,
                   ),
                 ),
@@ -3361,16 +3491,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     Widget buildItem(int value, String label) {
       final selected = _walkStepCount == value;
       final bg = selected
-          ? Colors.cyan.withOpacity(isDarkMode ? 0.25 : 0.14)
+          ? (isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05))
           : (isDarkMode ? Colors.black26 : Colors.grey[50]);
-      final border = selected ? Colors.cyan : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
+      final border = selected ? (isDarkMode ? Colors.white70 : Colors.black87) : (isDarkMode ? Colors.white10 : Colors.grey[200]!);
 
       return Expanded(
         child: GestureDetector(
           onTap: () => setState(() => _walkStepCount = value),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 160),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(14),
@@ -3381,16 +3511,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               children: [
                 Icon(
                   Icons.directions_walk,
-                  size: 20,
-                  color: selected ? Colors.cyan : (isDarkMode ? Colors.white70 : Colors.grey[600]),
+                  size: 18,
+                  color: selected ? (isDarkMode ? Colors.white : Colors.black) : (isDarkMode ? Colors.white70 : Colors.grey[600]),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: selected ? Colors.cyan : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                    color: selected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white70 : Colors.black54),
                     letterSpacing: -0.2,
                   ),
                 ),
@@ -3508,7 +3638,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.orangeAccent, Colors.deepOrange],
+              colors: [Colors.blue, Color(0xFF60A5FA)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3522,7 +3652,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.greenAccent, Colors.teal],
+              colors: [Colors.green, Color(0xFF4ADE80)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3536,7 +3666,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.lightBlueAccent, Colors.blueAccent],
+              colors: [Colors.amber, Color(0xFFFBBF24)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3550,7 +3680,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.purpleAccent, Colors.deepPurple],
+              colors: [Colors.purple, Color(0xFFA855F7)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3564,7 +3694,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.greenAccent, Colors.green],
+              colors: [Colors.teal, Color(0xFF2DD4BF)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3578,7 +3708,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.pinkAccent, Colors.deepPurpleAccent],
+              colors: [Colors.pink, Color(0xFFF472B6)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3590,14 +3720,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       case MissionType.fortuneCatch:
         missionIcon = Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.amber.withOpacity(0.3), width: 1),
+            border: Border.all(color: Colors.blueAccent.withOpacity(0.3), width: 1),
             shape: BoxShape.circle,
           ),
           child: ClipOval(
             child: Image.asset(
               'assets/icon/fortuni1_trans.webp',
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => const Icon(Icons.face, color: Colors.amber, size: 24),
+              errorBuilder: (context, error, stackTrace) => const Icon(Icons.face, color: Colors.blueAccent, size: 24),
             ),
           ),
         );
@@ -3607,7 +3737,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.cyanAccent, Colors.cyan],
+              colors: [Colors.indigo, Color(0xFF818CF8)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3621,7 +3751,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF7F7FD5), Color(0xFF86A8E7), Color(0xFF91EAE4)],
+              colors: [Colors.blueGrey, Color(0xFF94A3B8)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3635,7 +3765,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.pinkAccent, Colors.deepPurpleAccent],
+              colors: [Colors.cyan, Color(0xFF22D3EE)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3649,7 +3779,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           padding: const EdgeInsets.all(4),
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFFFFC371), Color(0xFFFF5F6D)],
+              colors: [Colors.deepPurple, Color(0xFF8B5CF6)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -3674,12 +3804,12 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected 
-              ? (isDarkMode ? Colors.cyan.withValues(alpha: 0.2) : Colors.cyan.withValues(alpha: 0.1))
+              ? (isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05))
               : (isDarkMode ? Colors.white.withValues(alpha: 0.05) : Colors.grey[100]),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? Colors.cyan : Colors.transparent,
-            width: 2,
+            color: isSelected ? (isDarkMode ? Colors.white70 : Colors.black87) : Colors.transparent,
+            width: 1.2,
           ),
         ),
         child: Row(
@@ -3728,7 +3858,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               ),
             ),
             if (isSelected)
-              const Icon(Icons.check_circle, color: Colors.cyan, size: 20),
+              Icon(Icons.check_circle, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), size: 20),
           ],
         ),
       ),
@@ -3942,26 +4072,29 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     final isPlaying = _playingPreviewPath == value;
 
     return ListTile(
+      dense: true,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       title: Text(title, style: TextStyle(
+        fontSize: 14,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        color: isSelected ? Colors.cyan : (isDarkMode ? Colors.white : Colors.black87),
+        color: isSelected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white : Colors.black87),
       )),
       trailing: isRingtone ? Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (isSelected) const Icon(Icons.check, color: Colors.cyan),
+          if (isSelected) Icon(Icons.check, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), size: 20),
           IconButton(
             icon: Icon(
               isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
-              color: isPlaying ? Colors.cyan : Colors.grey,
-              size: 28,
+              color: isPlaying ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : Colors.grey,
+              size: 24,
             ),
             onPressed: () {
               _playPreviewSound(value);
             },
           ),
         ],
-      ) : (isSelected ? const Icon(Icons.check, color: Colors.cyan) : null),
+      ) : (isSelected ? Icon(Icons.check, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), size: 20) : null),
       onTap: () {
         setModalState(() {
           // Update parent state as well
@@ -4228,7 +4361,12 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
             onPressed: () => Navigator.pop(context, true),
             child: Text(
               l10n.delete,
-              style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: isDark ? Colors.white : const Color(0xFF1D1D1F), 
+                fontWeight: FontWeight.w800,
+                fontSize: 14,
+                letterSpacing: -0.5,
+              ),
             ),
           ),
         ],
@@ -4286,7 +4424,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   }
 }
 
-class VideoThumbnailWidget extends StatefulWidget {
+class VideoThumbnailWidget extends ConsumerStatefulWidget {
   final String videoPath;
   final BoxFit fit;
   final bool autoplay;
@@ -4303,10 +4441,10 @@ class VideoThumbnailWidget extends StatefulWidget {
   });
 
   @override
-  State<VideoThumbnailWidget> createState() => _VideoThumbnailWidgetState();
+  ConsumerState<VideoThumbnailWidget> createState() => _VideoThumbnailWidgetState();
 }
 
-class _VideoThumbnailWidgetState extends State<VideoThumbnailWidget> {
+class _VideoThumbnailWidgetState extends ConsumerState<VideoThumbnailWidget> {
   VideoPlayerController? _controller;
   bool _isInitialized = false;
   Object? _error;
@@ -4494,6 +4632,7 @@ class _VideoThumbnailWidgetState extends State<VideoThumbnailWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = ref.watch(themeProvider).primaryColor;
     final l10n = AppLocalizations.of(context)!;
     if (_isInitialized && _controller != null) {
       return SizedBox.expand(

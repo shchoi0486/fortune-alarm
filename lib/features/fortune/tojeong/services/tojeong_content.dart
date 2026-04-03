@@ -147,7 +147,7 @@ class TojeongContent {
 
     final monthLabel = l10n.localeName == 'ko' 
         ? "$month${l10n.month}" 
-        : DateFormat.MMMM(l10n.localeName).format(DateTime(2026, month));
+        : DateFormat.M(l10n.localeName).format(DateTime(2026, month));
 
     return "$monthLabel: $finalSentence";
   }

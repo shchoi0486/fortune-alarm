@@ -1077,7 +1077,7 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
 
             const SizedBox(height: 24),
             // 결과 화면 네이티브 광고 추가 (수익화 강화)
-            const DetailedAdWidget(
+            const ListAdWidget(
               margin: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
             ),
             const SizedBox(height: 32),

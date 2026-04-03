@@ -25,23 +25,24 @@ class NotificationService {
   }
 
   Future<AppLocalizations> _getL10n() async {
-    String languageCode = 'ko';
+    // [수정] 기본값을 하드코딩된 'ko'가 아닌 시스템 언어로 설정
+    String languageCode = Platform.localeName.split('_')[0];
     try {
-      // settings 박스에서 언어 설정을 가져옴
+      // settings 박스에서 언어 설정을 가져옴 (alarm_settings_screen.dart와 동일한 로직)
       final settingsBox = await Hive.openBox('settings');
-      languageCode = settingsBox.get('language', defaultValue: Platform.localeName.split('_')[0]);
+      if (settingsBox.containsKey('language')) {
+        languageCode = settingsBox.get('language');
+      }
     } catch (_) {
-      // 에러 발생 시 시스템 로케일 사용
-      languageCode = Platform.localeName.split('_')[0];
+      // 에러 발생 시 위에서 설정한 시스템 로케일 유지
     }
     
-    // 지원하지 않는 언어일 경우 영어(en)로 폴백
-    Locale locale = Locale(languageCode);
-    if (!AppLocalizations.supportedLocales.contains(locale)) {
-      locale = const Locale('en');
+    // 지원하지 않는 언어일 경우 영어로 폴백
+    if (!['ko', 'en', 'ja', 'zh'].contains(languageCode)) {
+      languageCode = 'en';
     }
     
-    return await AppLocalizations.delegate.load(locale);
+    return await AppLocalizations.delegate.load(Locale(languageCode));
   }
 
   // 알림 그룹화를 위한 키
@@ -80,8 +81,14 @@ class NotificationService {
 
   Future<void> _configureLocalTimeZone() async {
     tz.initializeTimeZones();
-    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(timeZoneName));
+    try {
+      final String timeZoneName = await FlutterTimezone.getLocalTimezone().timeout(
+        const Duration(seconds: 2),
+      );
+      tz.setLocalLocation(tz.getLocation(timeZoneName));
+    } catch (_) {
+      tz.setLocalLocation(tz.local);
+    }
   }
 
   Future<void> cancelNotification(int id) async {
@@ -90,6 +97,46 @@ class NotificationService {
 
   Future<void> cancelAllNotifications() async {
     await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  // 일반 알림 표시
+  Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    final l10n = await _getL10n();
+    const String channelId = 'general_channel_v1';
+
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      channelId,
+      l10n.appTitle,
+      importance: Importance.max,
+      priority: Priority.max,
+      category: AndroidNotificationCategory.reminder,
+      visibility: NotificationVisibility.public,
+      autoCancel: true,
+      ongoing: false,
+      groupKey: _groupKey,
+    );
+
+    const DarwinNotificationDetails iosPlatformChannelSpecifics =
+        DarwinNotificationDetails(threadIdentifier: _groupKey);
+
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iosPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      id,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: payload,
+    );
   }
 
   // 영양제 알림 전용 (액션 버튼 포함)
@@ -324,10 +371,6 @@ class NotificationService {
       matchDateTimeComponents: DateTimeComponents.time,
       payload: 'mission_$missionId',
     );
-
-    // 스케줄링된 알림의 경우 Android 요약 알림을 즉시 발송하면 비어있는 그룹이 보일 수 있으므로 
-    // 여기서는 groupKey 설정만으로 충분하거나, 필요시 요약 알림도 함께 스케줄링해야 합니다.
-    // 대부분의 경우 groupKey만으로도 같은 채널 내에서 그룹화가 잘 작동합니다.
   }
 
   Future<void> cancelMissionNotification(String missionId) async {
@@ -416,6 +459,7 @@ class NotificationService {
       final parts2 = time2Str.split(':');
       final time2 = TimeOfDay(hour: int.parse(parts2[0]), minute: int.parse(parts2[1]));
 
+      // [중요] 여기서 _getL10n()을 호출하여 현재 설정된 언어로 텍스트를 가져옴
       final l10n = await _getL10n();
 
       await scheduleDailyFortuneNotification(

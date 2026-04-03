@@ -11,16 +11,19 @@ import '../../data/models/alarm_model.dart';
 import '../../core/constants/mission_type.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../providers/theme_provider.dart';
+
 enum CalendarViewMode { year, month, week, day }
 
-class CalendarScreen extends StatefulWidget {
+class CalendarScreen extends ConsumerStatefulWidget {
   const CalendarScreen({super.key});
 
   @override
-  State<CalendarScreen> createState() => _CalendarScreenState();
+  ConsumerState<CalendarScreen> createState() => _CalendarScreenState();
 }
 
-class _CalendarScreenState extends State<CalendarScreen> {
+class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   late final ValueNotifier<List<CalendarEvent>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -33,15 +36,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
   bool _isMemoMode = false;
   
   // 테마 및 UI 상태
-  Color _themeColor = const Color(0xFFE57373);
+  Color _themeColor = const Color(0xFFF97316); // 기본 테마를 선명한 오렌지색으로 변경
   CalendarViewMode _viewMode = CalendarViewMode.month;
   bool _isExpanded = false;
   bool _isViewSelectorOpen = false;
-  bool _isColorSelectorOpen = false;
-
+  
   Color _getAccentColor(bool isDark) {
     if (_themeColor == Colors.transparent) {
-      return const Color(0xFFE57373);
+      return const Color(0xFFF97316); // 오렌지색으로 변경
     }
     return _themeColor;
   }
@@ -57,35 +59,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
   PageController get _dayPageController => _dayController ??= PageController(initialPage: _getDayIndex(_focusedDay));
   final DateTime _kFirstDay = DateTime(2020, 1, 1);
 
-  // 세련된 파스텔 및 현대적인 색상 팔레트
-  final List<Color> _modernColors = [
-    Colors.transparent, // 배경 없음 (시스템 기본)
-    const Color(0xFFE57373), // Soft Red (기본 테마)
-    const Color(0xFFF06292), // Soft Pink
-    const Color(0xFFBA68C8), // Soft Purple
-    const Color(0xFF9575CD), // Soft Deep Purple
-    const Color(0xFF7986CB), // Soft Indigo
-    const Color(0xFF64B5F6), // Soft Blue
-    const Color(0xFF4FC3F7), // Soft Light Blue
-    const Color(0xFF4DD0E1), // Soft Cyan
-    const Color(0xFF4DB6AC), // Soft Teal
-    const Color(0xFF81C784), // Soft Green
-    const Color(0xFFAED581), // Soft Light Green
-    const Color(0xFFDCE775), // Soft Lime
-    const Color(0xFFFFF176), // Soft Yellow
-    const Color(0xFFFFD54F), // Soft Amber
-    const Color(0xFFFFB74D), // Soft Orange
-    const Color(0xFFFF8A65), // Soft Deep Orange
-    const Color(0xFFA1887F), // Soft Brown
-    const Color(0xFF90A4AE), // Soft Blue Grey
-  ];
-
   @override
   void initState() {
     super.initState();
     _yearPageController = PageController(initialPage: _focusedDay.year - 1900);
     // _weekPageController and _dayPageController are lazily initialized
-    _loadThemeColor();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier([]);
     
@@ -105,24 +83,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       _loadEvents(); // 캐시 삭제 후 다시 로드
     }
   }
-  
-  Future<void> _loadThemeColor() async {
-    final prefs = await SharedPreferences.getInstance();
-    final colorValue = prefs.getInt('calendar_theme_color');
-    if (colorValue != null) {
-      setState(() {
-        _themeColor = Color(colorValue);
-      });
-    }
-  }
-
-  Future<void> _saveThemeColor(Color color) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('calendar_theme_color', color.toARGB32());
-    setState(() {
-      _themeColor = color;
-    });
-  }
 
   @override
   void dispose() {
@@ -141,7 +101,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       case CalendarViewMode.week:
         return DateFormat.yM(locale).format(_focusedDay);
       case CalendarViewMode.day:
-        return DateFormat.yMMMd(locale).format(_focusedDay);
+        return DateFormat.yMd(locale).format(_focusedDay);
       default:
         return '';
     }
@@ -348,6 +308,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : Colors.black87;
     
+    // 전역 테마 색상 적용
+    _themeColor = ref.watch(themeProvider).primaryColor;
+    
     return Scaffold(
       body: Container(
         color: isDark ? const Color(0xFF121212) : Colors.white,
@@ -417,7 +380,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             AppLocalizations.of(context)!.today,
                             style: TextStyle(
                               fontSize: 11,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               color: _themeColor == Colors.transparent
                                   ? (isDark ? Colors.white70 : Colors.black87)
                                   : _themeColor,
@@ -428,24 +391,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                   ),
                   const Spacer(),
-                  // 테마 색상 선택
-                  IconButton(
-                    icon: Icon(
-                      _isColorSelectorOpen ? Icons.color_lens : Icons.color_lens_outlined, 
-                      color: _themeColor == Colors.transparent 
-                          ? (isDark ? Colors.white70 : Colors.black54) 
-                          : _themeColor
-                    ),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    onPressed: () {
-                      setState(() {
-                        _isColorSelectorOpen = !_isColorSelectorOpen;
-                        _isViewSelectorOpen = false;
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 8),
                   // 뷰 모드 전환 (항상 표시하여 위치 고정)
                   IconButton(
                     icon: Icon(
@@ -467,7 +412,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       } else {
                         setState(() {
                           _isViewSelectorOpen = !_isViewSelectorOpen;
-                          _isColorSelectorOpen = false;
                         });
                       }
                     },
@@ -487,7 +431,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       setState(() {
                         _isMemoMode = true;
                         _isViewSelectorOpen = false;
-                        _isColorSelectorOpen = false;
                       });
                     },
                   ),
@@ -514,11 +457,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             // 메뉴 선택 영역 (보기 모드 또는 색상 팔레트)
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              height: (_isViewSelectorOpen && !_isMemoMode) || _isColorSelectorOpen ? null : 0,
+              height: (_isViewSelectorOpen && !_isMemoMode) ? null : 0,
               child: Column(
                 children: [
                   if (_isViewSelectorOpen && !_isMemoMode) _buildViewSelector(isDark),
-                  if (_isColorSelectorOpen) _buildInlineColorPalette(isDark),
                 ],
               ),
             ),
@@ -535,7 +477,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddEventSheet(),
-        backgroundColor: _themeColor == Colors.transparent ? const Color(0xFFE57373) : _themeColor,
+        backgroundColor: _themeColor, // 전역 테마 색상 적용
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
@@ -637,67 +579,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInlineColorPalette(bool isDark) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-        border: Border(bottom: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[200]!)),
-        boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: _modernColors.map((color) => Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: GestureDetector(
-                onTap: () {
-                  _saveThemeColor(color);
-                  setState(() {
-                    // 색상 선택 후 닫지 않고 바로 반영됨을 보여줌 (선택적)
-                    // _isColorSelectorOpen = false; 
-                  });
-                },
-                child: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: color == Colors.transparent 
-                        ? (isDark ? Colors.grey[800] : Colors.grey[200]) 
-                        : color,
-                    shape: BoxShape.circle,
-                    border: _themeColor == color
-                        ? Border.all(color: isDark ? Colors.white : Colors.black87, width: 2)
-                        : null,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 2,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                child: _themeColor == color
-                    ? Icon(Icons.check, color: color == Colors.transparent ? (isDark ? Colors.white : Colors.black) : Colors.white, size: 20)
-                    : (color == Colors.transparent 
-                        ? Icon(Icons.format_color_reset, color: isDark ? Colors.white54 : Colors.black54, size: 18)
-                        : null),
-              ),
-            ),
-          )).toList(),
         ),
       ),
     );
@@ -1685,7 +1566,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
-                DateFormat.yMMMEd(AppLocalizations.of(context)?.localeName ?? 'ko').format(date),
+                DateFormat.yMEd(AppLocalizations.of(context)?.localeName ?? 'ko').format(date),
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,

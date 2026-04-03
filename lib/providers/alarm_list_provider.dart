@@ -29,7 +29,13 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
     try {
       final box = await Hive.openBox<AlarmModel>('alarms');
       final alarms = box.values.where((a) => !a.id.endsWith('_snooze')).toList();
-      alarms.sort((a, b) => a.time.compareTo(b.time));
+      alarms.sort((a, b) {
+        // 시간순 정렬 (시, 분만 비교)
+        if (a.time.hour != b.time.hour) {
+          return a.time.hour.compareTo(b.time.hour);
+        }
+        return a.time.minute.compareTo(b.time.minute);
+      });
       state = alarms;
     } catch (e) {
       debugPrint('Error loading alarms: $e');
@@ -48,7 +54,12 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
 
     // 2. State 업데이트
     state = [...state, alarm];
-    state.sort((a, b) => a.time.compareTo(b.time));
+    state.sort((a, b) {
+      if (a.time.hour != b.time.hour) {
+        return a.time.hour.compareTo(b.time.hour);
+      }
+      return a.time.minute.compareTo(b.time.minute);
+    });
     
     // 스케줄링은 화면 단에서 처리
   }
@@ -68,7 +79,12 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
       for (final a in state)
         if (a.id == alarm.id) alarm else a
     ];
-    state.sort((a, b) => a.time.compareTo(b.time));
+    state.sort((a, b) {
+      if (a.time.hour != b.time.hour) {
+        return a.time.hour.compareTo(b.time.hour);
+      }
+      return a.time.minute.compareTo(b.time.minute);
+    });
 
     // 스케줄링은 화면 단에서 처리
   }
@@ -117,6 +133,12 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
         newState.add(alarm);
       }
     }
+    newState.sort((a, b) {
+      if (a.time.hour != b.time.hour) {
+        return a.time.hour.compareTo(b.time.hour);
+      }
+      return a.time.minute.compareTo(b.time.minute);
+    });
     state = newState;
   }
 

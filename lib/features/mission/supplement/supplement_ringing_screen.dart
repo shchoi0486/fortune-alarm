@@ -6,11 +6,12 @@ import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'providers/supplement_provider.dart';
 import '../../../services/supplement_alarm_service.dart';
 import '../../../services/notification_service.dart';
+import '../../../services/ad_service.dart';
+import '../../../widgets/ad_widgets.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:vibration/vibration.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class SupplementRingingScreen extends ConsumerStatefulWidget {
   final int alarmId;
@@ -117,30 +118,9 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
   }
 
   Future<void> _stopAlarm() async {
-    try {
-      await _audioPlayer.stop();
-      await FlutterRingtonePlayer().stop();
-      Vibration.cancel();
-
-      // 영양제 알람은 '섭취 완료' 버튼을 누르거나 '나중에'를 선택할 때 stopAlarm이 호출됨.
-      // 하지만 영양제 알람 자체가 미션 알람의 일종이므로 여기서도 Hive 정리가 필요함.
-      // 특히 SupplementRingingScreen에서 '섭취하기'를 눌러 SupplementMissionScreen으로 이동하기 전에
-      // 현재 울리고 있는 알람 상태를 정리해줘야 함.
-      try {
-        final box = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
-        await box.delete('active_ringing_alarm_id');
-        await box.delete('active_ringing_set_at');
-        await box.delete('active_alarm_mission_base_id');
-        await box.delete('active_alarm_mission_started_at');
-        await box.delete('active_alarm_mission_background_path');
-        await box.flush();
-        debugPrint('[SupplementRinging] Hive state cleared successfully');
-      } catch (e) {
-        debugPrint('[SupplementRinging] Error clearing Hive state: $e');
-      }
-    } catch (e) {
-      debugPrint('[SupplementRinging] Error stopping alarm: $e');
-    }
+    await _audioPlayer.stop();
+    await FlutterRingtonePlayer().stop();
+    Vibration.cancel();
   }
 
   @override
@@ -264,7 +244,7 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
     final now = DateTime.now();
     final timeStr = DateFormat('hh:mm').format(now);
     final amPmStr = DateFormat('a').format(now);
-    final dateStr = DateFormat.yMMMMEEEEd(l10n.localeName).format(now);
+    final dateStr = DateFormat.yMEd(l10n.localeName).format(now);
 
     return Scaffold(
       body: Container(
@@ -358,6 +338,17 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
                 ),
               ),
               const Spacer(),
+              if (!AdService.isSubscriber)
+                ListAdWidget(
+                  height: 215,
+                  factoryId: 'dialogAd',
+                  margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                  backgroundColor: Colors.white.withOpacity(0.1),
+                  borderRadius: 16,
+                  showBorder: true,
+                  border: Border.all(color: Colors.white.withOpacity(0.2), width: 1.2),
+                  showShadow: false,
+                ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Column(

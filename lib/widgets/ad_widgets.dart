@@ -5,15 +5,33 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../services/ad_service.dart';
 
-class DetailedAdWidget extends StatefulWidget {
+class ListAdWidget extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
-  const DetailedAdWidget({super.key, this.margin});
+  final double? height;
+  final Color? backgroundColor;
+  final bool showBorder;
+  final bool showShadow;
+  final double borderRadius;
+  final Border? border;
+  final String factoryId;
+
+  const ListAdWidget({
+    super.key, 
+    this.margin, 
+    this.height,
+    this.backgroundColor,
+    this.showBorder = true,
+    this.showShadow = true,
+    this.borderRadius = 20,
+    this.border,
+    this.factoryId = 'listTile',
+  });
 
   @override
-  State<DetailedAdWidget> createState() => _DetailedAdWidgetState();
+  State<ListAdWidget> createState() => _ListAdWidgetState();
 }
 
-class _DetailedAdWidgetState extends State<DetailedAdWidget> {
+class _ListAdWidgetState extends State<ListAdWidget> {
   NativeAd? _nativeAd;
   bool _isLoaded = false;
   String _errorMessage = ''; // 에러 메시지 저장용
@@ -25,13 +43,17 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _loadAd();
     });
+  }
 
-    // 10초 타임아웃 처리는 _loadAd 내부에서 관리하도록 변경함
+  double get _effectiveHeight {
+    if (widget.height != null) return widget.height!;
+    return widget.factoryId == 'dialogAd' ? 215 : 80;
   }
 
   void _loadAd() async {
     final token = ++_loadToken;
     final oldAd = _nativeAd;
+    // [수정] oldAd는 아래에서 dispose하고, 일단 null로 초기화하여 UI에서 즉시 제거
     _nativeAd = null;
 
     if (!(Platform.isAndroid || Platform.isIOS)) return;
@@ -53,38 +75,42 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
     });
 
     if (oldAd != null) {
+      // [수정] 이전 광고 해제 시점 조절: 새 프레임 이후 안전하게 해제
       WidgetsBinding.instance.addPostFrameCallback((_) {
         oldAd.dispose();
       });
     }
 
-    final (preloadedAd, loadFuture) = AdService.getListAd();
-    if (preloadedAd != null) {
-      if (!mounted || token != _loadToken) {
-        preloadedAd.dispose();
-        return;
-      }
-      setState(() {
-        _nativeAd = preloadedAd;
-        _isLoaded = true;
-        _errorMessage = '';
-      });
-      return;
-    }
-
-    if (loadFuture != null) {
-      try {
-        await loadFuture.timeout(const Duration(milliseconds: 800));
-      } catch (_) {}
-      if (!mounted || token != _loadToken) return;
-      final (ad2, _) = AdService.getListAd();
-      if (ad2 != null) {
+    // 1. 사전 로드된 광고 확인 (기본 listTile인 경우에만)
+    if (widget.factoryId == 'listTile') {
+      final (preloadedAd, loadFuture) = AdService.getListAd();
+      if (preloadedAd != null) {
+        if (!mounted || token != _loadToken) {
+          preloadedAd.dispose();
+          return;
+        }
         setState(() {
-          _nativeAd = ad2;
+          _nativeAd = preloadedAd;
           _isLoaded = true;
           _errorMessage = '';
         });
         return;
+      }
+
+      if (loadFuture != null) {
+        try {
+          await loadFuture.timeout(const Duration(milliseconds: 800));
+        } catch (_) {}
+        if (!mounted || token != _loadToken) return;
+        final (ad2, _) = AdService.getListAd();
+        if (ad2 != null) {
+          setState(() {
+            _nativeAd = ad2;
+            _isLoaded = true;
+            _errorMessage = '';
+          });
+          return;
+        }
       }
     }
 
@@ -95,8 +121,16 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
   void _loadNewAd(int token) {
       _nativeAd = NativeAd(
         adUnitId: AdService.nativeAdAdvancedUnitId,
-        factoryId: 'listTile', // Android 네이티브 팩토리 ID
+        factoryId: widget.factoryId, // [수정] 위젯의 factoryId 사용
         request: const AdRequest(),
+        nativeAdOptions: NativeAdOptions(
+          mediaAspectRatio: MediaAspectRatio.landscape, // 영상/이미지 비율 설정
+          videoOptions: VideoOptions(
+            startMuted: true, // 소리 없이 자동 재생 시작
+            customControlsRequested: true, // [수정] 커스텀 컨트롤러 사용 요청 (기본 버튼 숨기기 위함)
+            clickToExpandRequested: false,
+          ),
+        ),
         listener: NativeAdListener(
           onAdLoaded: (ad) {
             debugPrint('Native Ad loaded successfully: ${ad.responseInfo}');
@@ -115,6 +149,7 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
             if (mounted && token == _loadToken) {
               setState(() {
                 _isLoaded = false;
+                _nativeAd = null; // [수정] 실패 시 명시적으로 null 처리
                 _errorMessage = 'Code: ${error.code}\n${error.message}'; // 에러 메시지 저장
               });
             }
@@ -126,49 +161,53 @@ class _DetailedAdWidgetState extends State<DetailedAdWidget> {
   @override
   void dispose() {
     _nativeAd?.dispose();
-    // AdService.preloadListAd()는 이제 getListAd()에서 자동으로 호출되므로 
-    // 여기서 중복 호출할 필요가 없거나, 필요 시에만 호출하도록 변경 가능
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (AdService.isSubscriber) return const SizedBox.shrink();
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    if (_isLoaded && _nativeAd != null) {
-      return Container(
-        height: 80, // 높이 약간 상향 (콘텐츠 여유 확보)
-        margin: widget.margin ?? EdgeInsets.zero,
-        decoration: BoxDecoration(
-          color: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
-          borderRadius: BorderRadius.circular(20), // 다른 카드와 통일
-          border: Border.all(
-            color: isDarkMode ? Colors.white.withOpacity(0.15) : Colors.black.withOpacity(0.1),
-            width: 1.2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: AdWidget(ad: _nativeAd!),
-        ),
-      );
-    }
-    
-    // 1. 로딩 실패 시 빈 공간 반환 (에러 메시지 숨김)
-    if (_errorMessage.isNotEmpty) {
+    // 1. 에러가 있거나, 로드되지 않았거나, 광고 객체가 없으면 무조건 숨김
+    // [수정] 빌드 전 null 체크를 더 엄격하게 수행하여 Render Error 원천 차단
+    final ad = _nativeAd;
+    if (_errorMessage.isNotEmpty || !_isLoaded || ad == null) {
       return const SizedBox.shrink();
     }
 
-    // 2. 로딩 중일 때 (스켈레톤 UI 표시로 체감 속도 향상)
-    // 사용자 요청: 광고 로드가 안 되면 숨겨야 함. 
-    return const SizedBox.shrink();
+    // 2. 정상 로드 시에만 표시
+    return Container(
+      height: _effectiveHeight,
+      margin: widget.margin ?? EdgeInsets.zero,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: widget.backgroundColor ?? (isDarkMode ? const Color(0xFF2C2C2E) : Colors.white),
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        border: widget.border ?? (widget.showBorder 
+            ? Border.all(
+                color: isDarkMode ? Colors.white.withOpacity(0.15) : Colors.black.withOpacity(0.1),
+                width: 1.2,
+              )
+            : null),
+        boxShadow: widget.showShadow 
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(isDarkMode ? 0.4 : 0.05),
+                  blurRadius: 15,
+                  offset: const Offset(0, 6),
+                ),
+              ]
+            : null,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        child: AdWidget(
+          key: ValueKey(ad.hashCode), 
+          ad: ad,
+        ),
+      ),
+    );
   }
 }
 
@@ -278,6 +317,7 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
           if (mounted) {
             setState(() {
               _isAdLoaded = false;
+              _nativeAd = null; // [수정] 실패 시 명시적으로 null 처리하여 렌더링 방지
               _adLoadError = '${l10n?.adLoadFailed ?? 'Ad failed to load'}: ${error.code}';
             });
           }
@@ -298,8 +338,10 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     // 1. 광고 로드 완료 및 표시 시점 도달 시 광고 표시 (전체 영역)
-    if (_showAd && _isAdLoaded && _nativeAd != null) {
+    // [수정] _nativeAd가 null이 아닌지 재확인하여 안전성 확보
+    if (_showAd && _isAdLoaded && _nativeAd != null && _adLoadError == null) {
       return Container(
         height: 200, // 고정 높이 부여
         margin: widget.margin ?? EdgeInsets.zero,
@@ -320,7 +362,11 @@ class _ExitDialogAdWidgetState extends State<ExitDialogAdWidget> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
-          child: AdWidget(ad: _nativeAd!),
+          // [수정] Key 추가: 광고 객체가 변경될 때 위젯을 새로 생성하여 내부 상태 충돌 방지
+          child: AdWidget(
+            key: ValueKey(_nativeAd!.hashCode),
+            ad: _nativeAd!
+          ),
         ),
       );
     }
