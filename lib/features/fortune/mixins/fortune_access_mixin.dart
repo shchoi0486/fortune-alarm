@@ -7,213 +7,24 @@ import 'package:fortune_alarm/services/cookie_service.dart';
 
 mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
   final CookieService _cookieService = CookieService();
-  RewardedAd? _rewardedAd;
-  bool _isRewardedAdLoading = false;
-  bool _isRewardedAdLoaded = false;
-  bool _lastRewardedAdHadTechnicalFailure = false;
-  bool _lastRewardedAdWasUserCancelled = false;
-
-  // 전면 광고 관련 필드 제거 (정책 준수)
-  final bool _isInterstitialAdLoaded = false;
-
-  bool _rewardEarned = false;
+  bool _isWaitingForAd = false;
   Completer<bool>? _adCompleter;
-
-  bool get lastRewardedAdHadTechnicalFailure => _lastRewardedAdHadTechnicalFailure;
+  VoidCallback? _onAccessGrantedCallback;
 
   @override
   void initState() {
     super.initState();
-    _loadRewardedAd();
+    // 초기 로딩 시 광고 프리로드 확인
+    AdService.preloadRewardedAd();
   }
 
   @override
   void dispose() {
-    _rewardedAd?.dispose();
     super.dispose();
   }
 
-  // 전면 광고 관련 메서드 제거 (정책 준수를 위해 사용하지 않음)
-
-  Future<void> _loadRewardedAd() async {
-    if (_isRewardedAdLoading || _isRewardedAdLoaded) return; 
-
-    _isRewardedAdLoading = true;
-
-    // 1. 먼저 AdService에서 사전 로드된 광고가 있는지 확인
-    try {
-      final preloadedAd = await AdService.getPreloadedRewardedAd();
-      
-      if (preloadedAd != null) {
-        debugPrint('Using preloaded RewardedAd from AdService');
-        _isRewardedAdLoading = false;
-        // 마운트 여부 확인 후 설정
-        if (mounted) {
-          _setupRewardedAd(preloadedAd);
-        } else {
-          preloadedAd.dispose();
-        }
-        return;
-      }
-    } catch (e) {
-      debugPrint('Error getting preloaded ad: $e');
-    }
-
-    // 2. 사전 로드된 광고가 없으면 새로 로드
-    RewardedAd.load(
-      adUnitId: AdService.rewardedAdUnitId,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
-          debugPrint('RewardedAd loaded successfully');
-          _isRewardedAdLoading = false;
-          if (mounted) {
-            _setupRewardedAd(ad);
-          } else {
-            ad.dispose();
-          }
-        },
-        onAdFailedToLoad: (error) {
-          _isRewardedAdLoading = false; 
-          _lastRewardedAdHadTechnicalFailure = true;
-          debugPrint('RewardedAd failed to load: $error');
-          if (mounted) {
-            if (_isWaitingForAd) {
-              _isWaitingForAd = false;
-              Navigator.of(context).pop(); // Close loading dialog
-              
-              _onAccessGrantedCallback = null;
-              
-              if (_adCompleter != null && !_adCompleter!.isCompleted) {
-                _adCompleter!.complete(false);
-              }
-              
-              // [사용자 요청] 광고 로드 실패 시 에러 스낵바를 띄우지 않고 
-              // 다이얼로그에서 '무료 패스' 로직(showFortuneAccessDialog)에 의해 처리되도록 함
-              /*
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(AppLocalizations.of(context)!.adLoadError),
-                  duration: const Duration(seconds: 3),
-                ),
-              );
-              */
-            }
-          }
-        },
-      ),
-    );
-  }
-
-  void _forceReloadRewardedAd() {
-    _rewardedAd?.dispose();
-    _rewardedAd = null;
-    _isRewardedAdLoaded = false;
-    _isRewardedAdLoading = false;
-    Future.microtask(() => _loadRewardedAd());
-  }
-
-  void _setupRewardedAd(RewardedAd ad) {
-    if (!mounted) {
-      ad.dispose();
-      return;
-    }
-
-    ad.fullScreenContentCallback = FullScreenContentCallback(
-      onAdDismissedFullScreenContent: (ad) {
-        debugPrint('RewardedAd dismissed');
-        ad.dispose();
-        if (mounted) {
-          setState(() {
-            _rewardedAd = null;
-            _isRewardedAdLoaded = false;
-          });
-        }
-        
-        if (_rewardEarned) {
-          _rewardEarned = false; 
-          _onAccessGrantedCallback?.call();
-          _onAccessGrantedCallback = null;
-          if (_adCompleter != null && !_adCompleter!.isCompleted) {
-            _adCompleter!.complete(true);
-          }
-        } else {
-          _lastRewardedAdWasUserCancelled = true;
-          _onAccessGrantedCallback = null;
-          if (_adCompleter != null && !_adCompleter!.isCompleted) {
-            _adCompleter!.complete(false);
-          }
-        }
-        
-        _loadRewardedAd(); 
-      },
-      onAdFailedToShowFullScreenContent: (ad, error) {
-        debugPrint('RewardedAd failed to show: $error');
-        _lastRewardedAdHadTechnicalFailure = true;
-        ad.dispose();
-        if (mounted) {
-          setState(() {
-            _rewardedAd = null;
-            _isRewardedAdLoaded = false;
-          });
-        }
-        _onAccessGrantedCallback = null;
-        if (_adCompleter != null && !_adCompleter!.isCompleted) {
-          _adCompleter!.complete(false);
-        }
-        if (mounted) {
-          // [사용자 요청] 광고 표시 실패 시에도 에러 메시지보다는 
-          // 조용히 넘어가거나(무료 처리 등) 하기 위해 스낵바 주석 처리
-          /*
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.adShowError),
-              duration: const Duration(seconds: 3),
-            ),
-          );
-          */
-        }
-        _loadRewardedAd();
-      },
-    );
-
-    setState(() {
-      _rewardedAd = ad;
-      _isRewardedAdLoaded = true;
-    });
-
-    if (_isWaitingForAd) {
-      _isWaitingForAd = false;
-      if (mounted) {
-        Navigator.of(context).pop(); // Close loading dialog
-        _showRewardedAdFromObject(ad); 
-      }
-    }
-  }
-
-  // Helper to show rewarded ad with correct callback
-  void _showRewardedAdFromObject(RewardedAd ad) {
-    _rewardEarned = false;
-    ad.show(onUserEarnedReward: (ad, reward) async {
-      _rewardEarned = true;
-      await _cookieService.addCookies(2);
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.earnCookies(2))),
-      );
-      _cookieService.useCookies(2).then((success) {
-         if (!success) debugPrint('Failed to deduct cookies after ad');
-      });
-    });
-  }
-
-  VoidCallback? _onAccessGrantedCallback;
-
-  bool _isWaitingForAd = false;
-
   Future<bool> showRewardedAd(VoidCallback onAccessGranted) async {
-    // 구독자는 보상형 광고를 시청할 필요가 없음 (이미 모든 권한이 있거나 프리미엄 혜택 대상)
-    // AdService.isSubscriber와 로컬 쿠키 서비스 상태를 모두 확인하여 더 정확하게 판단
+    // 1. 구독 상태 확인
     final hasPass = await _cookieService.hasActiveFortunePassSubscription().timeout(
       const Duration(milliseconds: 500),
       onTimeout: () => false,
@@ -221,57 +32,126 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
     final isSubscriber = AdService.isSubscriber || hasPass;
 
     if (isSubscriber) {
-      debugPrint('Skipping RewardedAd for subscriber');
+      debugPrint('FortuneAccessMixin: Skipping RewardedAd for subscriber');
       onAccessGranted();
       return true;
     }
 
+    if (_adCompleter != null && !_adCompleter!.isCompleted) {
+      return _adCompleter!.future;
+    }
+
     _adCompleter = Completer<bool>();
-    _lastRewardedAdHadTechnicalFailure = false;
-    _lastRewardedAdWasUserCancelled = false;
+    _onAccessGrantedCallback = onAccessGranted;
     
-    if (_rewardedAd != null && _isRewardedAdLoaded) {
-      _onAccessGrantedCallback = onAccessGranted;
-      _showRewardedAdFromObject(_rewardedAd!);
+    // 2. 이미 광고가 로드되어 있으면 바로 표시
+    if (AdService.isRewardedAdLoaded) {
+      _showAdDirectly();
     } else {
+      // 3. 광고가 없으면 로딩 다이얼로그 표시 후 대기
       _isWaitingForAd = true;
-      _onAccessGrantedCallback = onAccessGranted;
-      
-      // 다이얼로그를 먼저 띄우고 광고 로드를 시작하여 체감 속도 향상
       _showLoadingDialog();
       
-      // [사용자 요청] 2초 내로 광고가 안 뜨면 그냥 통과 (UX 개선)
-      Timer(const Duration(seconds: 2), () {
-        if (_isWaitingForAd && mounted) {
-          debugPrint('Ad loading timed out (2s), skipping ad for better UX.');
-          _isWaitingForAd = false;
-          // 로딩 다이얼로그 닫기
-          Navigator.of(context).pop();
-          
-          // 무료 통과 처리
-          if (_onAccessGrantedCallback != null) {
-            _onAccessGrantedCallback!();
-            _onAccessGrantedCallback = null;
-          }
-          
-          if (_adCompleter != null && !_adCompleter!.isCompleted) {
-            _adCompleter!.complete(true);
-          }
-          
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.freePassAfterTimeout),
-                duration: const Duration(seconds: 3),
-              ),
-            );
-        }
-      });
-      
-      // 마이크로태스크로 분리하여 다이얼로그 렌더링을 방해하지 않음
-      Future.microtask(() => _loadRewardedAd());
+      // AdService에서 광고를 가져와서 표시
+      _loadAndShowAd();
     }
     
     return _adCompleter!.future;
+  }
+
+  void _showAdDirectly() {
+    AdService.showRewardedAd(
+      onRewardEarned: () async {
+        await _cookieService.addCookies(2);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.earnCookies(2))),
+        );
+        _cookieService.useCookies(2).then((success) {
+           if (!success) debugPrint('Failed to deduct cookies after ad');
+        });
+        
+        _onAccessGrantedCallback?.call();
+        if (_adCompleter != null && !_adCompleter!.isCompleted) {
+          _adCompleter!.complete(true);
+        }
+      },
+      onAdClosed: () {
+        if (_adCompleter != null && !_adCompleter!.isCompleted) {
+          _adCompleter!.complete(false);
+        }
+      },
+    );
+  }
+
+  void _loadAndShowAd() {
+    Timer? timeoutTimer;
+    
+    // 타임아웃 설정 (AdService와 동기화하여 8초 정도로 설정)
+    timeoutTimer = Timer(const Duration(seconds: 8), () {
+      if (_isWaitingForAd && mounted) {
+        debugPrint('FortuneAccessMixin: Ad loading timed out (8s), giving free pass.');
+        _isWaitingForAd = false;
+        Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
+        
+        _onAccessGrantedCallback?.call();
+        if (_adCompleter != null && !_adCompleter!.isCompleted) {
+          _adCompleter!.complete(true);
+        }
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.freePassAfterTimeout),
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    });
+
+    AdService.showRewardedAd(
+      onRewardEarned: () async {
+        timeoutTimer?.cancel();
+        if (!_isWaitingForAd) return;
+        _isWaitingForAd = false;
+        
+        if (mounted) {
+          Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
+        }
+
+        await _cookieService.addCookies(2);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppLocalizations.of(context)!.earnCookies(2))),
+          );
+        }
+        _cookieService.useCookies(2).then((success) {
+           if (!success) debugPrint('Failed to deduct cookies after ad');
+        });
+        
+        _onAccessGrantedCallback?.call();
+        if (_adCompleter != null && !_adCompleter!.isCompleted) {
+          _adCompleter!.complete(true);
+        }
+      },
+      onAdClosed: () {
+        timeoutTimer?.cancel();
+        if (!_isWaitingForAd) return;
+        _isWaitingForAd = false;
+        
+        if (mounted) {
+          Navigator.of(context, rootNavigator: true).pop(); // Close loading dialog
+        }
+        
+        if (_adCompleter != null && !_adCompleter!.isCompleted) {
+          _adCompleter!.complete(false);
+        }
+      },
+      onAdLoadFailed: () {
+        timeoutTimer?.cancel();
+        // AdService.showRewardedAd 내부에서 onRewardEarned를 호출하므로 
+        // 여기서는 별도 처리를 하지 않아도 됨 (무료 패스 로직이 onRewardEarned로 흐름)
+      },
+    );
   }
 
   void _showLoadingDialog() {
@@ -279,7 +159,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
     var showRetry = false;
 
     Future<void> enableRetryUiLater() async {
-      await Future.delayed(const Duration(seconds: 8));
+      await Future.delayed(const Duration(seconds: 5));
       if (!_isWaitingForAd || !mounted) return;
       if (dialogSetState == null) return;
       dialogSetState!(() {
@@ -292,6 +172,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
     showDialog(
       context: context,
       barrierDismissible: false,
+      useRootNavigator: true,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) {
           dialogSetState = setState;
@@ -350,7 +231,8 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                _forceReloadRewardedAd();
+                                // 재시도 시 AdService 프리로드 강제 호출
+                                AdService.preloadRewardedAd();
                               },
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.amber,
@@ -363,9 +245,8 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                             ),
                             TextButton(
                               onPressed: () {
-                                _lastRewardedAdWasUserCancelled = true;
                                 _isWaitingForAd = false;
-                                Navigator.of(context).pop();
+                                Navigator.of(context, rootNavigator: true).pop();
 
                                 if (_adCompleter != null && !_adCompleter!.isCompleted) {
                                   _adCompleter!.complete(false);
@@ -385,9 +266,8 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                       else
                         TextButton(
                           onPressed: () {
-                            _lastRewardedAdWasUserCancelled = true;
                             _isWaitingForAd = false;
-                            Navigator.of(context).pop();
+                            Navigator.of(context, rootNavigator: true).pop();
 
                             if (_adCompleter != null && !_adCompleter!.isCompleted) {
                               _adCompleter!.complete(false);
@@ -462,6 +342,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
     final String? choice = await showDialog<String>(
       context: context,
       barrierDismissible: true,
+      useRootNavigator: true,
       builder: (context) {
         final isDarkMode = Theme.of(context).brightness == Brightness.dark;
         
@@ -575,6 +456,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                         if (!mounted) return;
                         showDialog(
                           context: context,
+                          useRootNavigator: true,
                           builder: (ctx) => AlertDialog(
                             backgroundColor: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -652,16 +534,11 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
       final ok = await showRewardedAd(internalOnAccessGranted);
       if (ok) return true;
       if (!mounted) return false;
-      if (!_lastRewardedAdHadTechnicalFailure) return false;
-
-      internalOnAccessGranted();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.adFailFreePass),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-      return true;
+      
+      // showRewardedAd가 false를 반환했다면 사용자가 취소했거나 로드에 실패한 것임.
+      // 이미 showRewardedAd 내부에서 타임아웃 시 무료 패스를 지급하므로 
+      // 여기서는 추가 처리가 필요 없음.
+      return false;
     } else if (choice == 'cookie' || choice == 'pass') {
       if (onDirectAccess != null) {
         onDirectAccess();

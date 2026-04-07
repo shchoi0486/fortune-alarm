@@ -1,10 +1,9 @@
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'dart:io';
-import 'package:permission_handler/permission_handler.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
 import 'package:fortune_alarm/providers/alarm_list_provider.dart';
@@ -12,9 +11,9 @@ import 'package:fortune_alarm/providers/theme_provider.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'add_alarm_screen.dart';
 import 'quick_alarm_sheet.dart';
+import 'first_alarm_step_screen.dart';
 import '../../data/models/alarm_model.dart';
 import '../../core/constants/mission_type.dart';
-import '../../widgets/ad_widgets.dart';
 
 class AlarmScreen extends ConsumerStatefulWidget {
   const AlarmScreen({super.key});
@@ -26,10 +25,12 @@ class AlarmScreen extends ConsumerStatefulWidget {
 class _AlarmScreenState extends ConsumerState<AlarmScreen> {
   Timer? _timer;
   bool _isFabMenuOpen = false;
+  bool _isFirstRunCompleted = true; // 기본값은 완료된 것으로 간주하여 깜빡임 방지
 
   @override
   void initState() {
     super.initState();
+    _loadFirstRunStatus();
     _checkPermissions();
     // 10초마다 화면 갱신 (남은 시간 텍스트 업데이트)
     _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
@@ -37,50 +38,18 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     });
   }
 
-  Future<void> _checkPermissions() async {
-    if (Platform.isAndroid) {
-      // 1. 알림 권한 (Android 13+)
-      if (await Permission.notification.isDenied) {
-        await Permission.notification.request();
-      }
-
-      // 2. 정확한 알람 스케줄링 권한 (Android 12+)
-      // 이 권한은 사용자에게 설정 화면으로 이동하도록 요청해야 할 수도 있습니다.
-      if (await Permission.scheduleExactAlarm.isDenied) {
-        // 바로 요청하거나, 설명 후 설정으로 유도
-        final status = await Permission.scheduleExactAlarm.request();
-        if (status.isDenied && mounted) {
-           ScaffoldMessenger.of(context).showSnackBar(
-             SnackBar(
-               content: Text(AppLocalizations.of(context)!.exactAlarmPermissionRequired),
-               action: SnackBarAction(
-                 label: AppLocalizations.of(context)!.settings,
-                 onPressed: () => openAppSettings(),
-               ),
-               duration: const Duration(seconds: 5),
-             ),
-           );
-        }
-      }
-      
-      // 3. 다른 앱 위에 그리기 권한 (선택 사항이지만 전체 화면 알림에 도움됨)
-      PermissionStatus systemAlertWindowStatus = await Permission.systemAlertWindow.status;
-      if (systemAlertWindowStatus.isDenied) {
-          systemAlertWindowStatus = await Permission.systemAlertWindow.request();
-          if (systemAlertWindowStatus.isPermanentlyDenied && mounted) {
-             ScaffoldMessenger.of(context).showSnackBar(
-               SnackBar(
-                 content: Text(AppLocalizations.of(context)!.overlayPermissionRequired),
-                 action: SnackBarAction(
-                   label: AppLocalizations.of(context)!.settings,
-                   onPressed: () => openAppSettings(),
-                 ),
-                 duration: const Duration(seconds: 5),
-               ),
-             );
-          }
-      }
+  Future<void> _loadFirstRunStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (mounted) {
+      setState(() {
+        _isFirstRunCompleted = prefs.getBool('first_run_completed') ?? false;
+      });
     }
+  }
+
+  Future<void> _checkPermissions() async {
+    // 앱 시작 시 강제적인 권한 요청은 main.dart에서 최소화함 (알림 권한만)
+    // 알람 설정 시 필요한 권한은 해당 시점에 가이드와 함께 요청하도록 변경
   }
 
   @override
@@ -106,26 +75,45 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Custom Header (Minimized Padding)
+                // Custom Header (Standardized)
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 8, 0),
+                  padding: const EdgeInsets.only(bottom: 4, left: 16),
                   child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      AppLocalizations.of(context)!.alarm,
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                    Flexible(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/icon/Fortune Icon_tran.png',
+                            width: 30,
+                            height: 30,
+                          ),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              AppLocalizations.of(context)!.appTitle,
+                              style: TextStyle(
+                                color: textColor,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                height: 1.0,
+                                leadingDistribution: TextLeadingDistribution.even,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     Row(
                       children: [
                         IconButton(
-                          icon: Icon(Icons.add_rounded, color: textColor),
-                          padding: EdgeInsets.zero,
+                          visualDensity: VisualDensity.compact,
+                          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 4),
                           constraints: const BoxConstraints(),
+                          icon: Icon(Icons.add_rounded, color: textColor, size: 28),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -133,11 +121,13 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                             );
                           },
                         ),
-                        const SizedBox(width: 8),
                         PopupMenuButton<String>(
-                          icon: Icon(Icons.more_vert, color: textColor),
-                          padding: EdgeInsets.zero,
+                          padding: const EdgeInsets.fromLTRB(2, 4, 0, 4),
                           constraints: const BoxConstraints(),
+                          offset: const Offset(0, -4),
+                          position: PopupMenuPosition.under,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          icon: Icon(Icons.more_vert, color: textColor, size: 28),
                           onSelected: (value) {
                             if (value == 'delete_all') {
                               ref.read(alarmListProvider.notifier).clearAllAlarms();
@@ -147,7 +137,14 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                             return [
                               PopupMenuItem<String>(
                                 value: 'delete_all',
-                                child: Text(AppLocalizations.of(context)!.deleteAllAlarms),
+                                height: 28,
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: Center(
+                                  child: Text(
+                                    AppLocalizations.of(context)!.deleteAllAlarms, 
+                                    style: const TextStyle(fontSize: 12)
+                                  ),
+                                ),
                               ),
                             ];
                           },
@@ -160,19 +157,65 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
               
               Expanded(
                 child: alarms.isEmpty
-                    ? Column(
-                        children: [
-                          const Spacer(),
-                          Center(
-                            child: Text(
-                              AppLocalizations.of(context)!.noAlarms,
-                              style: const TextStyle(color: Colors.grey),
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Spacer(flex: 2),
+                            Text(
+                              AppLocalizations.of(context)!.firstAlarmGuideTitle,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: textColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          const Spacer(),
-
-                          SizedBox(height: 80),
-                        ],
+                            const SizedBox(height: 12),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 40),
+                              child: Text(
+                                AppLocalizations.of(context)!.firstAlarmGuideDesc,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                  height: 1.5,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 32),
+                            ElevatedButton(
+                              onPressed: () {
+                                if (_isFirstRunCompleted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const AddAlarmScreen()),
+                                  );
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const FirstAlarmStepScreen()),
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: primaryColor,
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                elevation: 0,
+                              ),
+                              child: Text(
+                                _isFirstRunCompleted 
+                                    ? AppLocalizations.of(context)!.addAlarm 
+                                    : AppLocalizations.of(context)!.addFirstAlarm,
+                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            const Spacer(flex: 3),
+                          ],
+                        ),
                       )
                     : ListView.separated(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
@@ -183,39 +226,41 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                         },
                         itemBuilder: (context, index) {
                           if (index == 0) {
-                // 알람이 아예 없거나 다음 알람이 없을 때도 '예정된 알람 없음'을 표시
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Text(
-                    nextAlarmStr,
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                );
-              }
+                            // 알람이 아예 없거나 다음 알람이 없을 때도 '예정된 알람 없음'을 표시
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 6, bottom: 12),
+                              child: Text(
+                                nextAlarmStr,
+                                style: TextStyle(
+                                  color: textColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          }
 
                           final alarm = alarms[index - 1];
                           return Dismissible(
                             key: Key(alarm.id.toString()),
                             confirmDismiss: (direction) async {
-                              return await showDialog(    
+                              return await showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  final l10n = AppLocalizations.of(context)!;
                                   return AlertDialog(
-                                    title: Text(l10n.deleteAlarm),
-                                    content: Text(l10n.confirmDelete),
+                                    title: Text(AppLocalizations.of(context)!.confirm),
+                                    content: Text(AppLocalizations.of(context)!.deleteAlarmConfirm),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () => Navigator.of(context).pop(false),
-                                        child: Text(l10n.no, style: const TextStyle(color: Colors.grey)),
+                                        child: Text(AppLocalizations.of(context)!.cancel),
                                       ),
                                       TextButton(
                                         onPressed: () => Navigator.of(context).pop(true),
-                                        child: Text(l10n.yes, style: const TextStyle(color: Colors.red)),
+                                        child: Text(
+                                          AppLocalizations.of(context)!.delete,
+                                          style: const TextStyle(color: Colors.red),
+                                        ),
                                       ),
                                     ],
                                   );
@@ -223,7 +268,6 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                               );
                             },
                             onDismissed: (direction) {
-                              // 알람을 제거하기 전에 스케줄된 알람과 알림을 취소합니다.
                               AlarmSchedulerService.cancelAlarm(alarm); // 스케줄된 알람 취소
                               final stableId = AlarmSchedulerService.getStableId(alarm.id);
                               NotificationService().cancelNotification(stableId); // 알림 취소
@@ -270,6 +314,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
               _buildFabMenuItem(
                 label: AppLocalizations.of(context)!.quickAlarm,
                 icon: Icons.bolt_rounded,
+                iconColor: const Color(0xFFFFD60A), // 밝은 노란색
                 onTap: () {
                   setState(() => _isFabMenuOpen = false);
                   _showQuickAlarmSheet(context);
@@ -280,6 +325,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
               _buildFabMenuItem(
                 label: AppLocalizations.of(context)!.alarm,
                 icon: Icons.alarm_rounded,
+                imageAsset: 'assets/icon/Fortune Icon_tran.png',
                 onTap: () {
                   setState(() => _isFabMenuOpen = false);
                   Navigator.push(
@@ -308,7 +354,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
           child: Icon(
             _isFabMenuOpen ? Icons.close_rounded : Icons.add_rounded, 
             key: ValueKey(_isFabMenuOpen),
-            color: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+            color: Colors.white,
             size: 30
           ),
         ),
@@ -322,12 +368,14 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     required IconData icon,
     required VoidCallback onTap,
     required bool isDark,
+    Color? iconColor,
+    String? imageAsset,
   }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 140, // 퀵 알람 사이즈에 맞춘 고정 너비
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        width: 130, // 너비를 고정하여 두 버튼 크기를 동일하게 맞춤
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14), // 내부 패딩
         decoration: BoxDecoration(
           color: isDark ? const Color(0xFF2C2C2E) : Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -340,16 +388,30 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
           ],
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // 중앙 정렬로 통일감 부여
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Icon(icon, color: isDark ? Colors.white : Colors.black87, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : Colors.black87,
+            SizedBox(
+              width: 28,
+              child: Center(
+                child: imageAsset != null
+                    ? Image.asset(imageAsset, width: 22, height: 22)
+                    : Icon(icon,
+                        color: iconColor ?? (isDark ? Colors.white : Colors.black87),
+                        size: 22),
+              ),
+            ),
+            const SizedBox(width: 10), // 아이콘과 텍스트 사이 적절한 간격
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
@@ -367,6 +429,26 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     );
   }
 
+  bool _isQuickAlarm(String label, BuildContext context) {
+    if (label.isEmpty) return false;
+    
+    final l10n = AppLocalizations.of(context)!;
+    // 현재 언어의 퀵 알람 문자열과 비교
+    if (label == l10n.quickAlarm) return true;
+    
+    // 타 언어에서 생성된 퀵 알람 문자열들과도 비교 (하드코딩된 목록)
+    const quickAlarmLabels = [
+      'Quick',
+      '퀵 알람',
+      'Быстрый будильник',
+      'त्वरित अलार्म',
+      'Alarme rapide',
+      'Alarma rápida',
+    ];
+    
+    return quickAlarmLabels.any((l) => l.toLowerCase() == label.toLowerCase());
+  }
+
   Widget _buildAlarmCard(BuildContext context, WidgetRef ref, AlarmModel alarm) {
     final timeFormat = DateFormat('h:mm');
     final amPmFormat = DateFormat('a'); // AM/PM
@@ -376,12 +458,12 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     
     // 활성화 여부에 따른 배경색 및 테두리 설정
     final cardColor = alarm.isEnabled 
-        ? (isDark ? const Color(0xFF1C1C1E) : Colors.white) 
-        : (isDark ? const Color(0xFF121212) : const Color(0xFFF0F0F2));
+        ? (isDark ? const Color(0xFF2C2C2E) : Colors.white) 
+        : (isDark ? const Color(0xFF1F1F21) : const Color(0xFFF0F0F2));
     
     final borderColor = alarm.isEnabled
-        ? (isDark ? const Color(0xFF2C2C2E) : const Color(0xFFD1D1D6))
-        : (isDark ? const Color(0xFF1C1C1E) : const Color(0xFFE2E2E7));
+        ? (isDark ? primaryColor.withOpacity(0.5) : const Color(0xFFD1D1D6))
+        : (isDark ? const Color(0xFF2C2C2E) : const Color(0xFFE2E2E7));
     
     final primaryTextColor = isDark ? Colors.white : Colors.black;
     final secondaryTextColor = isDark ? Colors.white70 : Colors.black87;
@@ -428,7 +510,10 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                     child: Row(
                       children: [
                         if (alarm.repeatDays.any((d) => d))
-                          _buildDaysRow(alarm.repeatDays, isDark, primaryColor)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: _buildDaysRow(alarm.repeatDays, isDark, primaryColor),
+                          )
                         else
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -483,38 +568,43 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      if (alarm.label == AppLocalizations.of(context)!.quickAlarm)
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: primaryColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(6),
-                            border: Border.all(color: primaryColor.withOpacity(0.3), width: 0.5),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.bolt_rounded, color: primaryColor, size: 12),
-                              const SizedBox(width: 2),
-                              Text(
-                                'QUICK',
-                                style: TextStyle(
-                                  color: primaryColor,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
+                      if (_isQuickAlarm(alarm.label, context))
+                        Baseline(
+                          baseline: 29, // Adjust to align with time text baseline
+                          baselineType: TextBaseline.alphabetic,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 0.5),
+                            decoration: BoxDecoration(
+                              color: primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: primaryColor.withOpacity(0.3), width: 0.5),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.bolt_rounded, color: primaryColor, size: 9),
+                                const SizedBox(width: 1),
+                                Text(
+                                  AppLocalizations.of(context)!.quickAlarm.toUpperCase(),
+                                  style: TextStyle(
+                                    color: primaryColor,
+                                    fontSize: 8.5,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       const SizedBox(width: 4),
                       if (alarm.missionType != MissionType.none)
-                        Transform.translate(
-                          offset: const Offset(0, 4), // Adjust vertical position
+                        Baseline(
+                          baseline: 30, // Adjust to align with time text baseline
+                          baselineType: TextBaseline.alphabetic,
                           child: Icon(
                             _getMissionIcon(alarm.missionType),
                             color: alarm.isEnabled 
-                                ? (isDark ? Colors.white70 : Colors.black87) // 테마 색상 대신 기본 중립색 사용
+                                ? (isDark ? Colors.grey[300] : Colors.grey[700]) // 조금 더 진한 회색으로 조정
                                 : disabledTextColor.withOpacity(0.7),
                             size: 18,
                           ),
@@ -523,7 +613,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
                   ),
                   
                   // Label if exists
-                  if (alarm.label.isNotEmpty)
+                  if (alarm.label.isNotEmpty && !_isQuickAlarm(alarm.label, context))
                     Padding(
                       padding: const EdgeInsets.only(top: 2),
                       child: Text(
@@ -602,6 +692,10 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
     if (alarm.maxSnoozeCount == 0) return const SizedBox.shrink();
     
     final isInfinite = alarm.maxSnoozeCount == 999;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final snoozeColor = alarm.isEnabled 
+        ? (isDark ? Colors.grey[300] : Colors.grey[700]) 
+        : disabledTextColor;
     
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -609,13 +703,13 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         Icon(
           Icons.snooze,
           size: 14,
-          color: alarm.isEnabled ? secondaryTextColor : disabledTextColor,
+          color: snoozeColor,
         ),
         const SizedBox(width: 2),
         Text(
           isInfinite ? '∞' : '${alarm.maxSnoozeCount}',
           style: TextStyle(
-            color: alarm.isEnabled ? secondaryTextColor : disabledTextColor,
+            color: snoozeColor,
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),

@@ -5,11 +5,12 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'dart:io';
 import 'package:package_info_plus/package_info_plus.dart'; // [추가]
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../services/ad_service.dart';
 import '../../services/notification_service.dart';
-import '../../widgets/ad_widgets.dart';
 import 'notice_screen.dart';
 import 'faq_screen.dart';
 import 'support_screen.dart';
@@ -66,43 +67,74 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       child: Scaffold(
-        body: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            _buildSectionHeader(AppLocalizations.of(context)!.general, isFirst: true),
-          SwitchListTile(
-            title: Text(AppLocalizations.of(context)!.darkMode),
-            subtitle: Text(AppLocalizations.of(context)!.darkModeDescription),
-            activeColor: Colors.white,
-            activeTrackColor: primaryColor,
-            value: isDark,
-            onChanged: (value) {
-              ref.read(themeProvider.notifier).toggleTheme(value);
-            },
+        body: ListTileTheme(
+          data: const ListTileThemeData(
+            dense: true,
+            visualDensity: VisualDensity(horizontal: 0, vertical: -1),
           ),
-          ListTile(
-            title: Text(AppLocalizations.of(context)!.language),
-            subtitle: Text(_getLanguageName(context, currentLocale?.languageCode)),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () => _showLanguagePicker(context, ref),
-          ),
-          if (Platform.isAndroid)
-            _buildOptimizationTile(context),
-          ListTile(
-            title: Text(AppLocalizations.of(context)!.alarmSettings),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AlarmSettingsScreen()),
-              );
-            },
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Divider(thickness: 1),
-          ),
-          _buildSectionHeader(AppLocalizations.of(context)!.information, isFirst: false),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              _buildSectionHeader(AppLocalizations.of(context)!.general, isFirst: true),
+            SwitchListTile(
+              dense: true,
+              title: Text(AppLocalizations.of(context)!.darkMode),
+              subtitle: Text(AppLocalizations.of(context)!.darkModeDescription),
+              activeColor: primaryColor,
+              value: isDark,
+              onChanged: (value) {
+                ref.read(themeProvider.notifier).toggleTheme(value);
+              },
+            ),
+            ListTile(
+              title: Text(AppLocalizations.of(context)!.language),
+              subtitle: Text(_getLanguageName(context, currentLocale?.languageCode)),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () => _showLanguagePicker(context, ref),
+            ),
+            if (Platform.isAndroid)
+              _buildOptimizationTile(context),
+            ListTile(
+              title: Text(AppLocalizations.of(context)!.alarmSettings),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AlarmSettingsScreen()),
+                );
+              },
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Divider(thickness: 1),
+            ),
+            
+            _buildSectionHeader(AppLocalizations.of(context)!.supportSection, isFirst: false),
+            ListTile(
+              leading: const Icon(Icons.sentiment_satisfied_alt_outlined),
+              title: Text(AppLocalizations.of(context)!.rateApp),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () async {
+                final url = Uri.parse('https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm');
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url, mode: LaunchMode.externalApplication);
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share_outlined),
+              title: Text(AppLocalizations.of(context)!.shareWithFriends),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () {
+                Share.share(AppLocalizations.of(context)!.shareAppMessage);
+              },
+            ),
+
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Divider(thickness: 1),
+            ),
+            _buildSectionHeader(AppLocalizations.of(context)!.information, isFirst: false),
           ListTile(
             title: Text(AppLocalizations.of(context)!.notice),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -163,8 +195,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
                   onTap: () async {
                     await AdService.showPrivacyOptionsForm((error) {
                       if (error != null) {
+                        debugPrint('Privacy options form error: ${error.errorCode} - ${error.message}');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(error.message)),
+                          SnackBar(content: Text(AppLocalizations.of(context)!.adLoadError)),
                         );
                       }
                     });
@@ -190,7 +223,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
         ],
       ),
     ),
-  );
+  ),
+);
 }
 
   String _getLanguageName(BuildContext context, String? languageCode) {

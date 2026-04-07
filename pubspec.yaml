@@ -1,7 +1,7 @@
 name: fortune_alarm
-description: A new Flutter project for Fortune Alarm.
+description: Fortune Alarm - The ultimate alarm app with fortune and more.
 publish_to: 'none'
-version: 1.0.9+26
+version: 1.1.1+27
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -86,22 +86,25 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.4
 
 flutter_launcher_icons:
-  android: "launcher_icon"
+  android: true
   ios: true
-  image_path: "assets/icon/ZAlarm.png"
+  web:
+    generate: true
+    image_path: "assets/icon/Fortune Icon_tran.png"
+  image_path: "assets/icon/Fortune Icon_tran.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
-  adaptive_icon_background: "#FFFFFF" # 하얀색 배경으로 변경 (ZAlarm.png가 흰색 배경이므로)
-  adaptive_icon_foreground: "assets/icon/ZAlarm.png" 
-  adaptive_icon_foreground_inset: 1 
+  adaptive_icon_background: "#FFFFFF" 
+  adaptive_icon_foreground: "assets/icon/Fortune Icon_tran.png" 
+  adaptive_icon_foreground_inset: 16 
 
 flutter_native_splash:
   color: "#FFFFFF" 
-  background_image: "assets/images/splash/splash_bg.png"
-  image: "assets/icon/ZAlarm.png"
+  image: "assets/icon/FortuneAlarm-splash.png"
+  android_gravity: center
+  ios_content_mode: center
   android_12:
-    color: "#FFFFFF"
-    background_image: "assets/images/splash/splash_bg.png"
-    image: "assets/icon/ZAlarm.png"
+    image: "assets/icon/FortuneAlarm-splash.png"
+    icon_background_color: "#FFFFFF"
   fullscreen: true
 
 flutter:

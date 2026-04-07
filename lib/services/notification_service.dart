@@ -6,7 +6,18 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import '../data/models/alarm_model.dart';
+import '../data/models/math_difficulty.dart';
+import '../data/models/mission_model.dart';
+import '../data/models/daily_mission_log.dart';
+import '../core/constants/mission_type.dart';
+import '../core/constants/mission_category.dart';
+import '../features/mission/supplement/models/supplement_settings.dart';
+import '../features/mission/supplement/models/supplement_log.dart';
+import '../features/mission/water/models/water_settings.dart';
+import 'fortune_push_service.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -20,33 +31,87 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  bool _isHiveInitialized = false;
+
+  Future<void> _ensureHiveInitialized() async {
+    if (_isHiveInitialized) return;
+
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      await Hive.initFlutter(directory.path);
+      
+      // 어댑터 등록 (중복 등록 방지)
+      _registerAdapters();
+      
+      _isHiveInitialized = true;
+      debugPrint('[NotificationService] Hive initialized in background/service context.');
+    } catch (e) {
+      debugPrint('[NotificationService] Hive initialization error: $e');
+      // 이미 초기화된 경우에도 true로 설정
+      _isHiveInitialized = true;
+    }
+  }
+
+  void _registerAdapters() {
+    if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(MissionTypeAdapter());
+    if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(AlarmModelAdapter());
+    if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
+    if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(MissionModelAdapter());
+    if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(DailyMissionLogAdapter());
+    if (!Hive.isAdapterRegistered(5)) Hive.registerAdapter(MissionCategoryAdapter());
+    if (!Hive.isAdapterRegistered(7)) Hive.registerAdapter(WaterSettingsAdapter());
+    if (!Hive.isAdapterRegistered(8)) Hive.registerAdapter(SupplementLogAdapter());
+    if (!Hive.isAdapterRegistered(9)) Hive.registerAdapter(SupplementSettingsAdapter());
+  }
+
   Future<AppLocalizations> getL10n() async {
     return await _getL10n();
   }
 
   Future<AppLocalizations> _getL10n() async {
-    // [수정] 기본값을 하드코딩된 'ko'가 아닌 시스템 언어로 설정
+    // Hive 초기화 확인
+    await _ensureHiveInitialized();
+
+    // 1. 기본값: 시스템 언어
     String languageCode = Platform.localeName.split('_')[0];
+    debugPrint('[NotificationService] Default system locale: $languageCode');
+    
     try {
-      // settings 박스에서 언어 설정을 가져옴 (alarm_settings_screen.dart와 동일한 로직)
-      final settingsBox = await Hive.openBox('settings');
-      if (settingsBox.containsKey('language')) {
-        languageCode = settingsBox.get('language');
+      // settings 박스가 열려있는지 확인
+      Box settingsBox;
+      if (Hive.isBoxOpen('settings')) {
+        settingsBox = Hive.box('settings');
+      } else {
+        // [수정] 박스가 닫혀있으면 새로 엶 (백그라운드 대응)
+        settingsBox = await Hive.openBox('settings');
       }
-    } catch (_) {
-      // 에러 발생 시 위에서 설정한 시스템 로케일 유지
+      
+      if (settingsBox.containsKey('language')) {
+        final savedLanguage = settingsBox.get('language');
+        if (savedLanguage != null && savedLanguage.isNotEmpty) {
+          languageCode = savedLanguage;
+          debugPrint('[NotificationService] Found saved language in Hive: $languageCode');
+        }
+      } else {
+        debugPrint('[NotificationService] No "language" key found in Hive settings.');
+      }
+    } catch (e) {
+      debugPrint('[NotificationService] Error reading language from Hive: $e');
+      // 에러 발생 시 시스템 로케일 유지
     }
     
     // 지원하지 않는 언어일 경우 영어로 폴백
-    if (!['ko', 'en', 'ja', 'zh'].contains(languageCode)) {
+    if (!['ko', 'en', 'ja', 'zh', 'ru', 'hi', 'fr', 'es', 'de'].contains(languageCode)) {
+      debugPrint('[NotificationService] Unsupported language "$languageCode", falling back to "en"');
       languageCode = 'en';
     }
     
+    debugPrint('[NotificationService] Final languageCode for L10n: $languageCode');
     return await AppLocalizations.delegate.load(Locale(languageCode));
   }
 
   // 알림 그룹화를 위한 키
-  static const String _groupKey = 'com.snapalarm.NOTIFICATION_GROUP';
+  static const String _groupKey = 'com.fortunealarm.NOTIFICATION_GROUP';
   static const int _summaryId = 0; // Android 그룹 요약 알림용 ID
 
   Future<void> init(
@@ -430,52 +495,9 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.cancel(40002);
   }
 
-  // 기본 운세 알림 스케줄링 (앱 초기화 시 사용)
+  // 기본 운세 알림 스케줄링 (FortunePushService로 통합됨)
   Future<void> scheduleDefaultFortuneNotifications() async {
-    final box = await Hive.openBox('alarm_settings');
-    final bool isFirstRun = !box.containsKey('daily_fortune_enabled');
-    
-    if (isFirstRun) {
-      // 첫 실행 시 기본값 저장 및 스케줄링
-      await box.put('daily_fortune_enabled', true);
-      await box.put('daily_fortune_time1', '08:00');
-      await box.put('daily_fortune_time2', '13:30');
-    }
-
-    final enabled = box.get('daily_fortune_enabled', defaultValue: true);
-    if (enabled) {
-      final time1Str = box.get('daily_fortune_time1', defaultValue: '08:00');
-      var time2Str = box.get('daily_fortune_time2', defaultValue: '13:30');
-      
-      // 13:00인 경우 13:30으로 자동 업데이트 (사용자 요청 사항 반영)
-      if (time2Str == '13:00') {
-        time2Str = '13:30';
-        await box.put('daily_fortune_time2', time2Str);
-      }
-      
-      final parts1 = time1Str.split(':');
-      final time1 = TimeOfDay(hour: int.parse(parts1[0]), minute: int.parse(parts1[1]));
-      
-      final parts2 = time2Str.split(':');
-      final time2 = TimeOfDay(hour: int.parse(parts2[0]), minute: int.parse(parts2[1]));
-
-      // [중요] 여기서 _getL10n()을 호출하여 현재 설정된 언어로 텍스트를 가져옴
-      final l10n = await _getL10n();
-
-      await scheduleDailyFortuneNotification(
-        id: 40001,
-        time: time1,
-        title: l10n.morningFortuneTitle,
-        body: l10n.morningFortuneNotificationBody,
-      );
-      
-      await scheduleDailyFortuneNotification(
-        id: 40002,
-        time: time2,
-        title: l10n.afternoonFortuneTitle,
-        body: l10n.afternoonFortuneNotificationBody,
-      );
-    }
+    await FortunePushService.scheduleDailyPush();
   }
 
   // 포춘 패스 만료 알림 스케줄링

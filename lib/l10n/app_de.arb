@@ -222,7 +222,7 @@
   "deleteColor": "Farbe löschen",
   "deleteColorConfirm": "Sind Sie sicher, dass Sie diese Farbe aus der Liste löschen möchten?",
   "deleteMission": "Mission löschen",
-  "deleteMissionConfirm": "Sind Sie sicher, dass Sie diese Mission aus der Liste löschen möchten?",
+  "deleteMissionConfirm": "Sind Sie sicher, dass Sie diese Mission löschen möchten?",
   "randomBackgroundDesc": "Jedes Mal ein neuer Hintergrund, wenn der Wecker klingelt!",
   "backgroundDeleted": "Hintergrundbild gelöscht.",
   "pickFromDevice": "Vom Gerät auswählen",
@@ -462,6 +462,30 @@
   "bgWarmBeige": "Warmes Beige",
   "dateFormatMdyE": "d.M. (E)",
   "deleteAlarm": "Wecker löschen",
+  "firstAlarmGuideTitle": "Noch keine Wecker",
+  "firstAlarmGuideDesc": "Stellen Sie einen Glückswecker ein und\nstarten Sie einen erfrischenden Tag!",
+  "addAlarm": "Wecker hinzufügen",
+  "addFirstAlarm": "Ersten Wecker erstellen",
+  "deleteAlarmConfirm": "Diesen Wecker löschen?",
+  "welcomeMessage": "Freut mich!",
+  "whenToRing": "Wann soll ich dich wecken?",
+  "next": "Weiter",
+  "retryFortune": "Glück erneut versuchen",
+  "retryFortuneDesc": "Ergebnis gefällt nicht?\nWerbung ansehen, um es noch einmal zu versuchen!",
+  "tapToReveal": "Tippen, um das Glück zu enthüllen",
+  "redrawButton": "Neu ziehen",
+  "defaultFortuneGreeting": "Schau dir dein heutiges Glück an!",
+  "registerProfile": "Profil registrieren",
+  "todaysFortuneTitle": "Heutiges Glück",
+  "fortuneCheckSubtitle": "Wie wird dein Tag? Finde es jetzt heraus.",
+  "supportSection": "Support",
+  "rateApp": "App bewerten",
+  "shareWithFriends": "Mit Freunden teilen",
+  "shareAppMessage": "Probiere 'Fortune Alarm' aus! Wache jeden Morgen frisch mit deinem Tageshoroskop auf. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm",
+  "locationPermissionRequiredWeather": "Standortberechtigung ist erforderlich, um Wetterinformationen zu erhalten.",
+  "turnOnLocationService": "Bitte schalten Sie die Standortdienste ein",
+  "checkWeatherLocationRequired": "Standort für Wetter benötigt",
+  "themeColor": "Themenfarbe",
   "confirmDelete": "Möchten Sie wirklich löschen?",
   "yes": "Ja",
   "no": "Nein",
@@ -1252,11 +1276,29 @@
   "exactAlarmPermissionFail": "Wecker konnte nicht registriert werden. Die Berechtigung für exakten Wecker ist deaktiviert und muss eingestellt werden.",
   "batteryOptimizationPermissionFail": "Wecker konnte nicht registriert werden. Die Berechtigung zur Ausnahme von der Batterieoptimierung fehlt und muss eingestellt werden.",
   "overlayPermissionFail": "Wecker konnte nicht registriert werden. Die Berechtigung \"Über anderen Apps anzeigen\" fehlt und muss eingestellt werden.",
+  "batteryOptimizationName": "Akku-Optimierung",
+  "batteryOptimizationTitle": "Optimierungseinstellungen erforderlich\nfür präzise Alarme.",
+  "batteryOptimizationSubtitle": "Bitte als Ausnahme für die Akku-Optimierung festlegen,\ndamit die App im Hintergrund reibungslos läuft.",
+  "batteryOptimizationBottomDesc": "Wählen Sie 'Nicht eingeschränkt' oder 'Nicht optimieren'\nin den Einstellungen, um keinen Alarm zu verpassen.",
+  "understand": "Verstanden",
+  "overlayPermissionName": "Über anderen Apps anzeigen",
+  "overlayPermissionTitle": "Berechtigungshilfe",
   "unknownAlarmError": "Wecker konnte nicht registriert werden. Ein unbekannter Fehler ist aufgetreten.",
   "resetTooltip": "Zurücksetzen",
   "errorLoadingAlarm": "Weckerinformationen konnten nicht geladen werden.",
   "alarmNotFound": "Weckerinformationen nicht gefunden.",
   "repeatAlarmCount": "Schlummerwecker ({current}/{max})",
+  "snoozeRemainingCount": "Verbleibend ({current}/{max})",
+  "@snoozeRemainingCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "@repeatAlarmCount": {
     "placeholders": {
       "current": {
@@ -1639,6 +1681,8 @@
   "notice2Content": "Hier ist der Inhalt des Updates auf Version 1.0.0.\\n\\n1. Verbesserung der Benutzeroberfläche für Nahrungsergänzungsmittel-Missionen\\n2. Integration der Systemeinstellungen für genaue Wecker\\n3. Unterstützung des Dunkelmodus\\n4. Fehlerbehebungen und Stabilitätsverbesserungen\\n\\nErleben Sie jetzt die neueste Version!",
   "notice3Title": "Hinweis zur Überarbeitung der Nutzungsbedingungen",
   "notice3Content": "Die Nutzungsbedingungen wurden überarbeitet.\\n\\nWichtige Änderungen:\\n- Verschärfte Datenschutzrichtlinie\\n- Festgelegter Dienstnutzungsumfang\\n\\nDetails finden Sie auf der Seite Einstellungen > Bedingungen.",
+  "notice4Title": "Update auf Version 1.1.1",
+  "notice4Content": "Inhalt des Updates auf Version 1.1.1:\\n\\n1. Optimierte Benutzeroberfläche für Batterie-Guide\\n2. Optimiertes Textlayout für die englische Version\\n3. Erhöhte Stabilität des Werbesystems\\n4. Verbesserungen der Performance und Stabilität der App\\n\\nAktualisieren Sie jetzt für ein besseres Erlebnis!",
   "supportContentTitle": "Anfrageinhalt",
   "supportHint": "Bitte geben Sie den Inhalt ein.",
   "supportRecipient": "Empfänger (Kundensupport)",
@@ -2618,7 +2662,6 @@
   "locationPermissionDenied": "Standortberechtigung verweigert.",
   "locationPermissionPermanentlyDenied": "Standortberechtigung dauerhaft verweigert.",
   "deleteMissionTitle": "Mission löschen",
-  "deleteMissionConfirm": "Sind Sie sicher, dass Sie diese Mission löschen möchten?",
   "yesDelete": "Ja, löschen",
   "waterAlarmTitle": "Zeit, Wasser zu trinken! 💧",
   "waterAlarmBody": "Wie wäre es mit einem Glas kühlem Wasser für Ihre Gesundheit?",
@@ -2675,6 +2718,40 @@
     "placeholders": {
       "month": {
         "type": "int"
+      }
+    }
+  },
+  "addMinutes": "+ {minutes} Min.",
+  "alarmSaved": "Wecker gespeichert.",
+  "alarmScheduledBody": "Der Wecker klingelt um {time}.",
+  "alarmScheduledTitle": "Wecker gestellt",
+  "cheerUp": "Ich wünsche dir einen tollen und produktiven Tag!",
+  "goodDay": "Es wird ein wundervoller Tag!",
+  "luckyDay": "Ich wünsche dir einen Tag voller Glück!",
+  "pleaseSetTime": "Bitte stell die Zeit ein.",
+  "quickAlarm": "Schnellwecker",
+  "ringingAt": "Klingelt um {time}",
+  "setQuickAlarm": "Schnellwecker stellen",
+  "stayHappy": "Genieße jeden Moment heute!",
+  "youCanDoIt": "Heute kannst du alles schaffen!",
+  "@addMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@alarmScheduledBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@ringingAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
       }
     }
   }

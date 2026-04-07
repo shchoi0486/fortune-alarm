@@ -26,7 +26,7 @@ class PushMessages {
     {"title": "뜻밖의 행운이 당신을 기다립니다 🎊", "body": "어떤 행운일지 지금 바로 확인해보세요!"},
     {"title": "오늘은 긍정적인 생각만 하세요 🌟", "body": "좋은 생각이 좋은 운을 부릅니다. 운세를 확인하세요."},
     {"title": "오늘의 키워드는 '성장'입니다 🌱", "body": "어떤 부분에서 발전이 있을지 알아보세요."},
-    {"title": "잠깐! 오늘 중요한 일정이 있나요? ⏰", "body": "운세를 보고 일정을 계획해보세요."},
+    {"title": "잠깐! 오늘 중요한 일정이 있나요? 📆", "body": "운세를 보고 일정을 계획해보세요."},
     {"title": "오늘은 당신이 주인공인 날 👑", "body": "자신감을 가지고 하루를 시작하세요. 운세가 응원합니다."},
     {"title": "건강운이 좋은 날이에요 💪", "body": "활기찬 하루를 위한 운세 조언을 확인하세요."},
     {"title": "오늘의 애정운은 맑음 ☀️", "body": "사랑하는 사람과의 좋은 시간을 위한 운세 힌트!"},
@@ -55,6 +55,20 @@ class PushMessages {
     {"title": "오늘은 어떤 즐거운 일이 생길까요? 🎉", "body": "운세에서 오늘의 즐거움을 찾아보세요."},
     {"title": "운세가 당신의 성공을 응원합니다 🏆", "body": "오늘의 운세와 함께 목표를 향해 나아가세요."},
     {"title": "오늘의 운세, 지금 바로 확인해볼까요? 👀", "body": "아직 늦지 않았어요. 오늘의 운세를 확인하세요."},
+
+    // --- 추가: 하루 응원 및 동기부여 ---
+    {"title": "오늘 하루도 당신을 응원해요! 🌟", "body": "어제보다 더 빛나는 오늘이 되길 바랄게요."},
+    {"title": "잠깐, 기지개 한 번 켜볼까요? 🧘", "body": "가벼운 스트레칭으로 활기찬 하루를 시작하세요!"},
+    {"title": "당신은 생각보다 훨씬 멋진 사람이에요 ✨", "body": "자신감을 가지고 오늘을 즐겨보세요."},
+    {"title": "오늘도 수고할 당신을 위해 👏", "body": "작은 행복이 가득한 하루가 되기를 진심으로 응원합니다."},
+    {"title": "힘든 일이 있다면 잠시 쉬어가도 좋아요 ☕", "body": "오늘 하루, 당신의 속도대로 천천히 걸어보세요."},
+
+    // --- 추가: 미션 및 기능 유도 ---
+    {"title": "오늘 물 한 잔, 마셨나요? 💧", "body": "물 마시기 미션으로 건강한 습관을 만들어보세요!"},
+    {"title": "새로운 미션으로 아침을 깨워보세요 ⏰", "body": "다양한 미션을 설정하면 아침이 더 즐거워집니다."},
+    {"title": "오늘의 미션을 완료하고 보상을 챙기세요 🎁", "body": "미션을 수행하면 기분 좋은 성취감을 느낄 수 있어요."},
+    {"title": "포춘알람의 다양한 기능을 활용해보세요 🚀", "body": "당신에게 꼭 맞는 알람 설정으로 삶의 질을 높여보세요."},
+    {"title": "꾸준한 미션 수행이 변화의 시작입니다 🌱", "body": "오늘도 포춘알람과 함께 건강한 루틴을 이어가세요."},
   ];
 
   // 루틴 알림 랜덤 문구 리스트 (50개)
@@ -117,6 +131,30 @@ class PushMessages {
     {"title": "Curious about your luck today? ✨", "body": "Take a moment to see your daily fortune."},
     {"title": "Good things are coming your way 🎁", "body": "Check your fortune and claim your luck!"},
     {"title": "Your daily advice is ready 💌", "body": "See what the universe has planned for you today."},
+    {"title": "Financial luck is rising! 💰", "body": "Check where the good news is coming from."},
+    {"title": "A day for intuition 🎯", "body": "Listen to your gut and verify it with your fortune."},
+    {"title": "Small happiness, big joy 🌈", "body": "Find out what little pleasures await you today."},
+    {"title": "You're the star today 👑", "body": "Start your day with confidence. Fortune is on your side."},
+    {"title": "New opportunities are coming 🎁", "body": "Your daily fortune might have the hint you need."},
+    {"title": "Time for a refresh 🌿", "body": "Refresh your day with a quick look at your fortune."},
+    {"title": "What's your lucky color today? 🎨", "body": "Check your lucky items before you start the day."},
+    {"title": "A special message just for you 💌", "body": "Don't miss the advice your fortune has for you."},
+    {"title": "The goddess of luck is smiling 🍀", "body": "What kind of luck is waiting for you?"},
+    {"title": "Unexpected news might arrive 📩", "body": "Check your relationship luck for today."},
+
+    // --- Added: Support & Motivation ---
+    {"title": "Cheering for you today! 🌟", "body": "May your day be brighter than yesterday."},
+    {"title": "How about a quick stretch? 🧘", "body": "Start your day energized with light exercise!"},
+    {"title": "You are amazing! ✨", "body": "Go through the day with confidence and joy."},
+    {"title": "To you, who's doing great 👏", "body": "Wishing you a day full of small happiness."},
+    {"title": "It's okay to take a break ☕", "body": "Walk at your own pace today. You're doing fine."},
+
+    // --- Added: Missions & Features ---
+    {"title": "Did you drink water? 💧", "body": "Build a healthy habit with the water intake mission!"},
+    {"title": "Wake up with a new mission ⏰", "body": "Make your morning enjoyable with various missions."},
+    {"title": "Complete missions and get rewards 🎁", "body": "Feel a sense of accomplishment with each mission."},
+    {"title": "Explore the features of Fortune Alarm 🚀", "body": "Improve your quality of life with personalized alarm settings."},
+    {"title": "Consistency is key 🌱", "body": "Continue your healthy routine with Fortune Alarm."},
   ];
 
   static const List<Map<String, String>> jaFortuneMessages = [
@@ -125,6 +163,25 @@ class PushMessages {
     {"title": "今日の運勢が気になりませんか？ ✨", "body": "少し時間を作って、今日の運勢を見てみましょう。"},
     {"title": "良いことがあなたに向かっています 🎁", "body": "運勢をチェックして、幸運を手に入れましょう！"},
     {"title": "今日のアドバイスをお届けします 💌", "body": "今日を乗り切るための特別なヒントを見てみましょう。"},
+    {"title": "金運が上昇中ですよ！ 💰", "body": "どこから良いニュースが届くかチェックしてみましょう。"},
+    {"title": "直感を信じる日です 🎯", "body": "あなたの直感が当たっているか、運勢で確かめてみてください。"},
+    {"title": "小さな幸せが大きな喜びに 🌈", "body": "どんなささやかな楽しみがあるか確認してみましょう。"},
+    {"title": "今日はあなたが主役の日 👑", "body": "自信を持って一日を始めましょう。運勢が応援しています。"},
+    {"title": "新しいチャンスが訪れるかも 🎁", "body": "今日の運勢がヒントをくれるはずです。"},
+
+    // --- 追加: 応援とモチベーション ---
+    {"title": "今日という一日を応援しています！ 🌟", "body": "昨日より輝く一日になりますように。"},
+    {"title": "少しストレッチしてみませんか？ 🧘", "body": "軽い運動で活気ある一日を始めましょう！"},
+    {"title": "あなたは素晴らしい人です ✨", "body": "自信を持って今日を楽しんでください。"},
+    {"title": "頑張っているあなたへ 👏", "body": "小さな幸せに満ちた一日になりますように。"},
+    {"title": "時には休んでも大丈夫 ☕", "body": "あなたのペースで今日を歩んでください。"},
+
+    // --- 追加: ミッションと機能の案内 ---
+    {"title": "お水、飲みましたか？ 💧", "body": "水分補給ミッションで健康な習慣を作りましょう！"},
+    {"title": "新しいミッションで目覚めを ⏰", "body": "ミッションを変えて、朝をもっと楽しく。"},
+    {"title": "ミッション完了で達成感を 🎁", "body": "ミッションをこなして、清々しい一日を。"},
+    {"title": "Fortune アラームの活用 🚀", "body": "あなたにぴったりの設定で、生活の质を上げましょう。"},
+    {"title": "継続は力なり 🌱", "body": "Fortune アラームと一緒に、健康なルーティンを。"},
   ];
 
   static const List<Map<String, String>> zhFortuneMessages = [

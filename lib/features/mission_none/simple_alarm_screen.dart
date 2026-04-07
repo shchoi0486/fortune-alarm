@@ -13,6 +13,7 @@ import 'package:fortune_alarm/l10n/app_localizations.dart';
 
 import '../../providers/alarm_list_provider.dart';
 import '../../services/notification_service.dart';
+import '../../services/alarm_scheduler_service.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/ad_widgets.dart';
 import '../../data/models/alarm_model.dart';
@@ -183,7 +184,8 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
       await FlutterRingtonePlayer().stop();
       Vibration.cancel();
       if (widget.alarmId != null) {
-        await NotificationService().cancelNotification(widget.alarmId!.hashCode);
+        final int stableId = AlarmSchedulerService.getStableId(widget.alarmId!);
+        await NotificationService().cancelNotification(stableId);
       }
     } catch (e) {
       debugPrint('Error stopping alarm: $e');
@@ -319,7 +321,12 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
                         children: [
                           const Icon(Icons.close, color: Colors.white),
                           const SizedBox(width: 8),
-                          Text(AppLocalizations.of(context)!.dismissAlarm, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(AppLocalizations.of(context)!.dismissAlarm, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                            ),
+                          ),
                         ],
                       ),
                     ),

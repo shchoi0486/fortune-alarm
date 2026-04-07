@@ -31,17 +31,19 @@ final ValueNotifier<bool> _gridVideoPlaybackEnabled = ValueNotifier<bool>(true);
 
 class AddAlarmScreen extends ConsumerStatefulWidget {
   final AlarmModel? alarm;
+  final DateTime? initialTime;
 
-  const AddAlarmScreen({super.key, this.alarm});
+  const AddAlarmScreen({super.key, this.alarm, this.initialTime});
 
   @override
   ConsumerState<AddAlarmScreen> createState() => _AddAlarmScreenState();
 }
 
-class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
+class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBindingObserver {
   Color get primaryColor => ref.watch(themeProvider).primaryColor;
   bool get isDarkMode => Theme.of(context).brightness == Brightness.dark;
   bool _isSaving = false;
+  bool _isPendingSaveAfterPermission = false; // 권한 허용 후 자동 저장 대기 상태
   bool _didHydrateFromHive = false;
   late DateTime _selectedTime;
   late MissionType _selectedMission;
@@ -51,8 +53,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   List<String> _userBackgroundImages = []; // 사용자 업로드 배경 이미지 목록
   List<int> _userColors = []; // 사용자 추가 단색 배경 목록
   List<Map<String, dynamic>> _animalAssets = [
-    {'title': 'cat1', 'image': 'assets/images/animal/cat1.mp4', 'color': 0xFF000000},
     {'title': 'dog1', 'image': 'assets/images/animal/dog1.mp4', 'color': 0xFF000000},
+    {'title': 'cat1', 'image': 'assets/images/animal/cat1.mp4', 'color': 0xFF000000},
     {'title': 'dog2', 'image': 'assets/images/animal/dog2.mp4', 'color': 0xFF000000},
     {'title': 'dog3', 'image': 'assets/images/animal/dog3.mp4', 'color': 0xFF000000},
     {'title': 'dog4', 'image': 'assets/images/animal/dog4.mp4', 'color': 0xFF000000},
@@ -123,12 +125,16 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   late FixedExtentScrollController _hourController;
   late FixedExtentScrollController _minuteController;
   
+  int _currentStep = 0;
+  late PageController _pageController;
+  
   // Mission Category State
   // Field removed; category selection is driven by _selectedMission instead.
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this); // Observer 추가
     if (widget.alarm != null) {
       _selectedTime = widget.alarm!.time;
       _selectedMission = widget.alarm!.missionType;
@@ -165,7 +171,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       _tapSprintGoal = widget.alarm!.missionType == MissionType.tapSprint ? widget.alarm!.shakeCount : 20;
       _walkStepCount = widget.alarm!.walkStepCount;
     } else {
-      _selectedTime = DateTime.now().add(const Duration(minutes: 1));
+      _selectedTime = widget.initialTime ?? DateTime.now().add(const Duration(minutes: 1));
       _selectedMission = MissionType.none;
       _labelController = TextEditingController();
       _referenceImagePaths = [null, null, null];
@@ -176,7 +182,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       _ringtonePath = 'default';
       _vibrationPattern = 'default';
       _isGradualVolume = false;
-      _backgroundPath = 'assets/images/character/default.webp';
+      _backgroundPath = 'assets/images/animal/dog1.mp4';
       _snoozeInterval = 5; // Default 5 min
       _maxSnoozeCount = 3; // Default 3 times
       _lastSnoozeInterval = _snoozeInterval;
@@ -223,6 +229,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
         _ringtoneModalSetState?.call(() {});
       }
     });
+    
+    _pageController = PageController(initialPage: 0);
   }
 
   void _syncTimeControllersToSelectedTime() {
@@ -299,13 +307,31 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // Observer 제거
+    _previewTimer?.cancel();
+    _previewTimer = null;
+    
+    // 미리듣기 종료 (비동기 처리)
+    FlutterRingtonePlayer().stop();
+    _audioPlayer.stop();
+
     _timer?.cancel();
     _labelController.dispose();
     _audioPlayer.dispose();
     _ampmController.dispose();
     _hourController.dispose();
     _minuteController.dispose();
+    _pageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _isPendingSaveAfterPermission) {
+      // 권한 설정 화면에서 돌아왔을 때, 펜딩 중인 저장을 다시 시도
+      _isPendingSaveAfterPermission = false;
+      _saveAlarm();
+    }
   }
 
   /// 피커 컨트롤러의 현재 값을 _selectedTime 변수에 동기화합니다.
@@ -459,6 +485,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       final animalPaths = manifestMap.keys
           .where((key) => isInFolder(key, 'animal') && isValidAsset(key))
           .toList();
+
+      // dog1.mp4를 맨 앞으로
+      final dog1Index = animalPaths.indexWhere((p) => p.toLowerCase().endsWith('dog1.mp4'));
+      if (dog1Index != -1) {
+        final dog1Path = animalPaths.removeAt(dog1Index);
+        animalPaths.insert(0, dog1Path);
+      }
 
       final characterPaths = manifestMap.keys
           .where((key) => isInFolder(key, 'character') && isValidAsset(key))
@@ -1060,10 +1093,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
     final l10n = AppLocalizations.of(context)!;
     final Map<String, List<Map<String, dynamic>>> categories = {
-      l10n.categoryCharacter: _characterAssets,
       l10n.categoryAnimal: _animalAssets,
       l10n.categoryIllustration: _illustrationAssets,
       l10n.categoryLandscape: _landscapeAssets,
+      l10n.categoryCharacter: _characterAssets,
       l10n.categorySimple: [
         {'title': 'minimal_gray', 'image': 'color:0xFFF5F5F5', 'color': 0xFFF5F5F5},
         {'title': 'dark_mode', 'image': 'color:0xFF212121', 'color': 0xFF212121},
@@ -1073,10 +1106,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     };
 
     final tabKeys = [
-      l10n.categoryCharacter,
       l10n.categoryAnimal,
       l10n.categoryIllustration,
       l10n.categoryLandscape,
+      l10n.categoryCharacter,
       l10n.categorySimple
     ];
 
@@ -1133,7 +1166,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                 icon: Icons.shuffle_rounded,
                                 label: l10n.random,
                                 onTap: () {
-                                  _showBackgroundPreview('random_background', setSheetState);
+                                  final allPaths = [
+                                    'random_background',
+                                    ..._animalAssets.map((e) => e['image'] as String),
+                                    ..._illustrationAssets.map((e) => e['image'] as String),
+                                    ..._landscapeAssets.map((e) => e['image'] as String),
+                                    ..._characterAssets.map((e) => e['image'] as String),
+                                  ];
+                                  _showBackgroundPreview('random_background', allPaths, setSheetState);
                                 },
                               ),
                               const SizedBox(width: 12),
@@ -1143,7 +1183,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                 onTap: () async {
                                   await _pickBackground();
                                   if (_backgroundPath != null) {
-                                    _showBackgroundPreview(_backgroundPath!, setSheetState);
+                                    _showBackgroundPreview(_backgroundPath!, _userBackgroundImages, setSheetState);
                                   }
                                 },
                               ),
@@ -1226,6 +1266,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     // 기타: 기본 아이템
     final itemCount = isSimple ? (1 + userColorsCount + items.length) : items.length;
 
+    // 카루셀을 위한 전체 경로 목록 생성
+    final List<String> carouselPaths = [];
+    if (isSimple) {
+      carouselPaths.addAll(_userColors.map((c) => 'color:$c'));
+    }
+    carouselPaths.addAll(items.map((e) => e['image'] as String));
+
     return GridView.builder(
       controller: scrollController,
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
@@ -1292,7 +1339,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
           return GestureDetector(
             onTap: () {
-              _showBackgroundPreview(bgPath, setSheetState);
+              _showBackgroundPreview(bgPath, carouselPaths, setSheetState);
             },
             onLongPress: () async {
               // 삭제 확인 다이얼로그
@@ -1363,7 +1410,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
         return GestureDetector(
           onTap: () {
-            _showBackgroundPreview(item['image'] as String, setSheetState);
+            _showBackgroundPreview(item['image'] as String, carouselPaths, setSheetState);
           },
           child: Container(
             decoration: BoxDecoration(
@@ -1461,151 +1508,48 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   }
 
 
-  void _showBackgroundPreview(String bgPath, StateSetter? setSheetState) {
-    final l10n = AppLocalizations.of(context)!;
-    final now = DateTime.now();
-    final isRandom = bgPath == 'random_background';
-    final lower = bgPath.toLowerCase();
-    final isVideo = lower.endsWith('.mp4') || lower.endsWith('.webm');
+  void _showBackgroundPreview(String initialPath, List<String> paths, StateSetter? setSheetState) {
+    final isVideoInitial = initialPath.toLowerCase().endsWith('.mp4') || initialPath.toLowerCase().endsWith('.webm');
+    if (isVideoInitial) _gridVideoPlaybackEnabled.value = false;
 
-    if (isVideo) _gridVideoPlaybackEnabled.value = false;
+    int initialIndex = paths.indexOf(initialPath);
+    if (initialIndex == -1) {
+      paths = [initialPath];
+      initialIndex = 0;
+    }
+
+    const int infiniteMultiplier = 1000;
+    final int initialPage = (paths.length * (infiniteMultiplier ~/ 2)) + initialIndex;
+    final currentPathNotifier = ValueNotifier<String>(initialPath);
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      useSafeArea: true,
+      useSafeArea: false,
       backgroundColor: Colors.black,
       builder: (context) {
-        final safePadding = MediaQuery.of(context).padding;
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light,
-          child: VideoPreviewWidget(
-            bgPath: bgPath,
-            child: Stack(
-              children: [
-                // 상단 그라데이션 (상단바 가독성 확보)
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 160,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black54,
-                          Colors.transparent,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                
-                // 랜덤 배경일 때 안내 텍스트
-              if (isRandom)
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.shuffle_rounded, color: Colors.white54, size: 80),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.randomBackgroundDesc,
-                          style: const TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                
-              // 상단 닫기 버튼
-              Positioned(
-                top: safePadding.top + 8,
-                left: 20,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    shape: BoxShape.circle,
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-              ),
-              
-              // 시간 및 날짜 (알람 화면 스타일)
-              SizedBox(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: safePadding.top + 60),
-                    Text(
-                      DateFormat(l10n.dateFormatMdyE, Localizations.localeOf(context).toString()).format(now),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                        shadows: [Shadow(blurRadius: 10, color: Colors.black54)],
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      "${now.hour}:${now.minute.toString().padLeft(2, '0')}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 90,
-                        fontWeight: FontWeight.bold,
-                        shadows: [Shadow(blurRadius: 10, color: Colors.black54)],
-                      ),
-                    ),
-                    
-                    const Spacer(flex: 2),
-                    
-                    // 선택 완료 버튼
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(30, 16, 30, 24 + safePadding.bottom),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 60,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              _backgroundPath = bgPath;
-                            });
-                            // 미리보기 닫기
-                            Navigator.pop(context);
-                            // 배경 선택 시트 닫기
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor,
-                            foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            elevation: 8,
-                            shadowColor: primaryColor.withOpacity(0.3),
-                          ),
-                          child: Text(
-                            l10n.selectionComplete,
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        return _BackgroundPreviewGallery(
+          initialPath: initialPath,
+          paths: paths,
+          initialPage: initialPage,
+          currentPathNotifier: currentPathNotifier,
+          primaryColor: primaryColor,
+          onBackgroundSelected: (path) {
+            setState(() {
+              _backgroundPath = path;
+            });
+            if (setSheetState != null) {
+              setSheetState(() {});
+            }
+          },
         );
       },
-    ).whenComplete(() {
-      if (isVideo) _gridVideoPlaybackEnabled.value = true;
+    ).then((_) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      if (isVideoInitial) _gridVideoPlaybackEnabled.value = true;
+      currentPathNotifier.dispose();
     });
   }
 
@@ -2210,7 +2154,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   Widget _buildSettingSection({required String title, required Widget child, Widget? trailing}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
         color: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -2233,7 +2177,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   title,
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
-                    fontSize: 13,
+                    fontSize: 14,
                     color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                     letterSpacing: -0.5,
                   ),
@@ -2243,7 +2187,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
               if (trailing != null) trailing,
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 12),
           child,
         ],
       ),
@@ -2292,20 +2236,18 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   title: AppLocalizations.of(context)!.setTime,
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4, bottom: 12),
-                        child: Center(
-                          child: Text(
-                            _getRemainingTimeText(),
-                            style: TextStyle(
-                              color: isDarkMode ? Colors.white70 : Colors.black54,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: -0.5,
-                            ),
+                      Center(
+                        child: Text(
+                          _getRemainingTimeText(),
+                          style: TextStyle(
+                            color: isDarkMode ? Colors.white70 : Colors.black54,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.5,
                           ),
                         ),
                       ),
+                      const SizedBox(height: 12),
                       _buildCustomTimePicker(),
                     ],
                   ),
@@ -2321,7 +2263,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                       Text(
                         AppLocalizations.of(context)!.repeatDaily, 
                         style: TextStyle(
-                          fontSize: 12, 
+                          fontSize: 13, 
                           fontWeight: FontWeight.w600,
                           color: isDarkMode ? Colors.white60 : Colors.black45,
                           letterSpacing: -0.5,
@@ -2374,7 +2316,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             AppLocalizations.of(context)!.difficulty,
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: 15,
                               color: isDarkMode ? Colors.white70 : Colors.black87,
                             ),
                           ),
@@ -2390,7 +2332,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             AppLocalizations.of(context)!.problemCount,
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: 15,
                               color: isDarkMode ? Colors.white70 : Colors.black87,
                             ),
                           ),
@@ -2410,7 +2352,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             AppLocalizations.of(context)!.shakeCount,
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: 15,
                               color: isDarkMode ? Colors.white70 : Colors.black87,
                             ),
                           ),
@@ -2430,7 +2372,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             AppLocalizations.of(context)!.problemCount,
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: 15,
                               color: isDarkMode ? Colors.white70 : Colors.black87,
                             ),
                           ),
@@ -2450,7 +2392,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             AppLocalizations.of(context)!.difficulty,
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: 15,
                               color: isDarkMode ? Colors.white70 : Colors.black87,
                             ),
                           ),
@@ -2470,7 +2412,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             AppLocalizations.of(context)!.countLabel,
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: 15,
                               color: isDarkMode ? Colors.white70 : Colors.black87,
                             ),
                           ),
@@ -2490,7 +2432,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             AppLocalizations.of(context)!.problemCount,
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: 15,
                               color: isDarkMode ? Colors.white70 : Colors.black87,
                             ),
                           ),
@@ -2510,7 +2452,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             AppLocalizations.of(context)!.walkStepCount,
                             style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 14,
+                              fontSize: 15,
                               color: isDarkMode ? Colors.white70 : Colors.black87,
                             ),
                           ),
@@ -2543,7 +2485,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                       child: Text(
                                         _getPayloadTitle(_ringtonePath, isRingtone: true),
                                         style: TextStyle(
-                                          fontSize: 13, 
+                                          fontSize: 14, 
                                           fontWeight: FontWeight.w600,
                                           color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                                         ),
@@ -2587,8 +2529,21 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                   inactiveColor: primaryColor.withOpacity(0.1),
                                   onChanged: (val) {
                                     setState(() => _volume = val);
+                                    // 실시간 볼륨 반영
+                                    if (_playingPreviewPath != null) {
+                                      if (_playingPreviewPath == 'default') {
+                                        FlutterRingtonePlayer().playAlarm(volume: _volume, looping: true);
+                                      } else {
+                                        _audioPlayer.setVolume(_volume);
+                                      }
+                                    }
                                   },
-                                  onChangeEnd: (val) => _playPreviewSound(_ringtonePath),
+                                  onChangeEnd: (val) {
+                                    // 슬라이더 조작이 끝났을 때 재생 중이 아니면 미리듣기 시작
+                                    if (_playingPreviewPath == null) {
+                                      _playPreviewSound(_ringtonePath);
+                                    }
+                                  },
                                 ),
                               ),
                             ),
@@ -2616,7 +2571,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                       child: Text(
                                         _getPayloadTitle(_vibrationPattern, isRingtone: false),
                                         style: TextStyle(
-                                          fontSize: 13, 
+                                          fontSize: 14, 
                                           fontWeight: FontWeight.w600,
                                           color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                                         ),
@@ -2662,13 +2617,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                         decoration: InputDecoration(
                           labelText: AppLocalizations.of(context)!.alarmName,
                           labelStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
                           ),
                           hintText: AppLocalizations.of(context)!.enterAlarmName,
                           hintStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: 15,
                             color: isDarkMode ? Colors.white24 : Colors.grey[400],
                           ),
                           filled: true,
@@ -2685,7 +2640,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                             borderRadius: BorderRadius.circular(15),
                             borderSide: BorderSide(color: isDarkMode ? Colors.white70 : Colors.black87, width: 1.5),
                           ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                           isDense: true,
                         ),
                       ),
@@ -2706,7 +2661,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                 child: Text(
                                   AppLocalizations.of(context)!.selectAlarmBackground,
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.w700,
                                     color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                                   ),
@@ -2763,7 +2718,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                 child: Text(
                                   AppLocalizations.of(context)!.alarmSnooze,
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.w700,
                                     color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                                   ),
@@ -2776,7 +2731,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                                         : AppLocalizations.of(context)!.snoozeInfo(_snoozeInterval.toString(), _maxSnoozeCount.toString()))
                                     : AppLocalizations.of(context)!.none,
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                   color: isDarkMode ? Colors.white70 : Colors.black54,
                                   letterSpacing: -0.5,
@@ -3137,14 +3092,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     
     return InkWell(
       onTap: _showMissionPicker,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(15),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isDarkMode ? Colors.black26 : Colors.grey[50],
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: isDarkMode ? Colors.white10 : Colors.grey[200]!,
+            color: isDarkMode ? Colors.white10 : Colors.grey[300]!,
           ),
         ),
         child: Row(
@@ -3155,35 +3110,35 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                   Text(
                     AppLocalizations.of(context)!.mission,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       _getMissionTitle(_selectedMission),
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 15,
                         color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F),
                         fontWeight: FontWeight.w700,
-                        letterSpacing: -0.3,
+                        letterSpacing: -0.5,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
+                  const Icon(Icons.chevron_right, size: 20, color: Colors.grey),
                 ],
               ),
             ),
-            const SizedBox(width: 6),
+            const SizedBox(width: 8),
             if (!_isCameraMission)
               Container(
-                width: 28,
-                height: 28,
+                width: 34,
+                height: 34,
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.1),
+                  color: primaryColor.withOpacity(0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -3192,13 +3147,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
                           child: Image.asset(
                             'assets/icon/fortuni1_trans.webp',
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Icon(Icons.face, color: primaryColor, size: 16),
+                            errorBuilder: (context, error, stackTrace) => Icon(Icons.face, color: primaryColor, size: 20),
                           ),
                         )
                       : Icon(
                           _getMissionIcon(_selectedMission),
                           color: primaryColor,
-                          size: 16,
+                          size: 20,
                         ),
                 ),
               ),
@@ -3939,51 +3894,64 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     }
   }
 
-  void _playPreviewSound(String path) async {
-    // 이미 같은 소리가 재생 중이면 중지
-    if (_playingPreviewPath == path) {
-      await _audioPlayer.stop();
-      await FlutterRingtonePlayer().stop();
-      setState(() {
-        _playingPreviewPath = null;
-      });
-      _ringtoneModalSetState?.call(() {});
+  void _playPreviewSound(String path, {bool forcePlay = false}) async {
+    // 1. 이미 같은 소리가 재생 중이면 중지 (사용자가 다시 눌렀을 때) - 슬라이더에서 호출된 경우 무시
+    if (_playingPreviewPath == path && !forcePlay) {
+      _stopPreview();
       return;
     }
 
-    await _audioPlayer.stop();
-    await FlutterRingtonePlayer().stop();
+    // 2. 기존 재생 중인 소리 및 타이머 모두 정지 (같은 소리인 경우 forcePlay면 정지하지 않고 계속 진행 가능하지만, 
+    // 여기서는 일관성을 위해 일단 정지 후 다시 시작하거나 볼륨만 조절하는 식으로 처리 가능)
+    // 하지만 forcePlay인 경우 이미 볼륨 조절 로직이 onChanged에 있으므로, 
+    // 여기서는 아예 재생을 시작하는 용도로만 사용됨.
+    if (_playingPreviewPath != path) {
+      await _stopPreview();
+    }
     
     setState(() {
       _playingPreviewPath = path;
     });
     _ringtoneModalSetState?.call(() {});
     
-    if (path == 'default') {
-      FlutterRingtonePlayer().playAlarm(volume: _volume, looping: false);
-      // FlutterRingtonePlayer는 완료 이벤트를 제공하지 않으므로 타이머 사용 (기본 벨소리만)
-      _previewTimer?.cancel();
-      _previewTimer = Timer(const Duration(seconds: 5), () {
-        if (mounted && _playingPreviewPath == 'default') {
-          setState(() {
-            _playingPreviewPath = null;
-          });
-          _ringtoneModalSetState?.call(() {});
-        }
-      });
-    } else {
-      String ext = 'ogg';
-      try {
+    // 3. 소리 재생
+    try {
+      if (path == 'default') {
+        await FlutterRingtonePlayer().playAlarm(volume: _volume, looping: true);
+      } else {
+        String ext = 'ogg';
         await _audioPlayer.setSource(AssetSource('sounds/$path.$ext'));
         await _audioPlayer.setVolume(_volume);
+        await _audioPlayer.setReleaseMode(ReleaseMode.loop); // 루프 설정
         await _audioPlayer.resume();
-      } catch (e) {
-        debugPrint('Error playing preview: $e');
-        setState(() {
-          _playingPreviewPath = null;
-        });
-        _ringtoneModalSetState?.call(() {});
       }
+    } catch (e) {
+      debugPrint('Error playing preview: $e');
+      _stopPreview();
+      return;
+    }
+
+    // 4. 최대 20초 후 자동 정지 타이머 시작
+    _previewTimer?.cancel(); // 기존 타이머 취소
+    _previewTimer = Timer(const Duration(seconds: 20), () {
+      if (mounted && _playingPreviewPath == path) {
+        _stopPreview();
+      }
+    });
+  }
+
+  Future<void> _stopPreview() async {
+    _previewTimer?.cancel();
+    _previewTimer = null;
+    
+    await _audioPlayer.stop();
+    await FlutterRingtonePlayer().stop();
+    
+    if (mounted) {
+      setState(() {
+        _playingPreviewPath = null;
+      });
+      _ringtoneModalSetState?.call(() {});
     }
   }
 
@@ -4014,7 +3982,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
   }
 
   void _showRingtonePicker() async {
-    final selectedPath = await showModalBottomSheet<String>(
+    final result = await showModalBottomSheet<Map<String, dynamic>>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -4026,37 +3994,196 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       ),
     );
 
-    if (selectedPath != null && mounted) {
+    if (result != null && result['path'] != null && mounted) {
       setState(() {
-        _ringtonePath = selectedPath;
+        _ringtonePath = result['path'];
       });
     }
   }
 
   void _showVibrationPicker() {
     final l10n = AppLocalizations.of(context)!;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = ref.watch(themeProvider).primaryColor;
+    String tempVibrationPattern = _vibrationPattern;
+
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
-        return SafeArea(
-          child: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setModalState) {
-              return ListView(
-                shrinkWrap: true,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(l10n.selectVibration, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  ),
-                  _buildPickerItem(l10n.defaultVibration, 'default', false, setModalState),
-                  _buildPickerItem(l10n.shortVibration, 'short', false, setModalState),
-                  _buildPickerItem(l10n.longVibration, 'long', false, setModalState),
-                  _buildPickerItem(l10n.heartbeatVibration, 'heartbeat', false, setModalState),
-                  _buildPickerItem(l10n.sosVibration, 'sos', false, setModalState),
-                  _buildPickerItem(l10n.quickVibration, 'quick', false, setModalState),
-                ],
-              );
-            },
+        return Container(
+          decoration: BoxDecoration(
+            color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setModalState) {
+                final vibrations = [
+                  {'title': l10n.defaultVibration, 'value': 'default'},
+                  {'title': l10n.shortVibration, 'value': 'short'},
+                  {'title': l10n.longVibration, 'value': 'long'},
+                  {'title': l10n.heartbeatVibration, 'value': 'heartbeat'},
+                  {'title': l10n.sosVibration, 'value': 'sos'},
+                  {'title': l10n.quickVibration, 'value': 'quick'},
+                ];
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // 상단 핸들바 및 타이틀 영역
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            l10n.selectVibration,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                            ),
+                          ),
+                          // 닫기 버튼
+                          GestureDetector(
+                            onTap: () {
+                              Vibration.cancel();
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: isDarkMode ? Colors.black45 : Colors.grey[200],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.close,
+                                size: 20,
+                                color: isDarkMode ? Colors.white : Colors.black54,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // 진동 리스트
+                    Flexible(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        itemCount: vibrations.length,
+                        separatorBuilder: (context, index) => Divider(
+                          height: 1,
+                          indent: 20,
+                          endIndent: 20,
+                          color: isDarkMode ? Colors.white10 : Colors.grey[100],
+                        ),
+                        itemBuilder: (context, index) {
+                          final vib = vibrations[index];
+                          final value = vib['value']!;
+                          final title = vib['title']!;
+                          final isSelected = tempVibrationPattern == value;
+
+                          return Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                setModalState(() {
+                                  tempVibrationPattern = value;
+                                });
+                                _playPreviewVibration(value);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 11),
+                                child: Row(
+                                  children: [
+                                    // 진동 아이콘 (벨소리 화면의 재생 아이콘과 위치 동일)
+                                    GestureDetector(
+                                      onTap: () {
+                                        _playPreviewVibration(value);
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.transparent,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: isDarkMode ? Colors.white24 : Colors.grey[300]!,
+                                            width: 1.2,
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.vibration,
+                                          color: isDarkMode ? Colors.grey : Colors.grey[600],
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    
+                                    // 진동 이름
+                                    Expanded(
+                                      child: Text(
+                                        title,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                          color: isSelected ? primaryColor : (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)),
+                                        ),
+                                      ),
+                                    ),
+
+                                    // 선택 표시
+                                    if (isSelected)
+                                      Icon(Icons.check_circle, color: primaryColor, size: 24)
+                                    else
+                                      const SizedBox(width: 24),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    // 하단 선택 완료 버튼
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20, 10, 20, MediaQuery.of(context).padding.bottom + 10),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 56,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Vibration.cancel();
+                            setState(() {
+                              _vibrationPattern = tempVibrationPattern;
+                            });
+                            Navigator.pop(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: Text(
+                            l10n.selectionComplete,
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         );
       },
@@ -4065,77 +4192,39 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
     });
   }
 
-  Widget _buildPickerItem(String title, String value, bool isRingtone, StateSetter setModalState) {
-    final selectedValue = isRingtone ? _ringtonePath : _vibrationPattern;
-    final isSelected = selectedValue == value;
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final isPlaying = _playingPreviewPath == value;
-
-    return ListTile(
-      dense: true,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-      title: Text(title, style: TextStyle(
-        fontSize: 14,
-        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        color: isSelected ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : (isDarkMode ? Colors.white : Colors.black87),
-      )),
-      trailing: isRingtone ? Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (isSelected) Icon(Icons.check, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), size: 20),
-          IconButton(
-            icon: Icon(
-              isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill,
-              color: isPlaying ? (isDarkMode ? Colors.white : const Color(0xFF1D1D1F)) : Colors.grey,
-              size: 24,
-            ),
-            onPressed: () {
-              _playPreviewSound(value);
-            },
-          ),
-        ],
-      ) : (isSelected ? Icon(Icons.check, color: isDarkMode ? Colors.white : const Color(0xFF1D1D1F), size: 20) : null),
-      onTap: () {
-        setModalState(() {
-          // Update parent state as well
-          setState(() {
-            if (isRingtone) {
-              _ringtonePath = value;
-            } else {
-              _vibrationPattern = value;
-            }
-          });
-        });
-        
-        if (isRingtone) {
-          // 선택 시에도 재생되도록 유지 (단, 이미 재생 중이면 다시 재생하지 않음)
-          if (!isPlaying) {
-            _playPreviewSound(value);
-          }
-        } else {
-          _playPreviewVibration(value);
-        }
-      },
-    );
-  }
-
   Future<void> _saveAlarm() async {
     final l10n = AppLocalizations.of(context)!;
-    // 권한 확인 (알람 스케줄링)
+    // 권한 확인 (안드로이드 전용 순차적 권한 요청)
     if (Platform.isAndroid) {
+      // 1. 정확한 알람 권한 (가장 기본)
       if (await Permission.scheduleExactAlarm.isDenied) {
-        await _showPermissionDialog(l10n.permissionRequired, l10n.exactAlarmPermissionDesc);
-        if (await Permission.scheduleExactAlarm.isDenied) return;
+        _isPendingSaveAfterPermission = true;
+        await _showPermissionGuideDialog(
+          title: l10n.permissionRequired,
+          description: l10n.exactAlarmPermissionDesc,
+          icon: Icons.timer_outlined,
+          requestFunc: () => Permission.scheduleExactAlarm.request(),
+        );
+        // 설정으로 이동했을 경우 resumes 되었을 때 다시 호출되므로 여기서 종료
+        return;
       }
       
-      if (await Permission.ignoreBatteryOptimizations.isDenied) {
-        await _showPermissionDialog(l10n.permissionRequired, l10n.batteryOptimizationPermissionDesc);
-        if (await Permission.ignoreBatteryOptimizations.isDenied) return;
+      // 2. 다른 앱 위에 표시 권한 (전체화면 알람)
+      if (await Permission.systemAlertWindow.isDenied) {
+        if (!mounted) return;
+        _isPendingSaveAfterPermission = true;
+        await _showOverlayPermissionFullScreenGuide();
+        // 설정 화면으로 이동했으므로, resume 시점에 다시 체크하도록 return
+        return;
       }
 
-      if (await Permission.systemAlertWindow.isDenied) {
-        await _showPermissionDialog(l10n.permissionRequired, l10n.overlayPermissionDesc);
-        if (await Permission.systemAlertWindow.isDenied) return;
+      // 3. 배터리 최적화 제외 권한 (정확한 시간 보장)
+      if (await Permission.ignoreBatteryOptimizations.isDenied) {
+        if (!mounted) return;
+        _isPendingSaveAfterPermission = true;
+        await _showBatteryOptimizationFullScreenGuide();
+        // 설정 화면으로 이동했으므로, resume 시점에 다시 체크하도록 return
+        return;
       }
     }
 
@@ -4196,15 +4285,11 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           
           if (_repeatDays[weekdayIndex]) {
             // 해당 요일이 활성화됨
-            // 만약 '오늘'인데 이미 시간이 지났다면 스킵 (단, 1분 이내 과거는 오늘로 유지)
+            // 만약 '오늘'인데 이미 시간이 지났거나 현재 시간이라면(또는 1분 이내 과거라면) 다음 주 해당 요일로 넘김
+            // AlarmSchedulerService에서 과거 시간(특히 1분 이내)은 거부하므로 안전하게 처리
             if (dayOffset == 0 && checkDate.isBefore(now)) {
-              final diff = now.difference(checkDate);
-              if (diff.inMinutes >= 1) {
-                dayOffset++;
-                continue;
-              } else {
-                debugPrint('[AddAlarm] Repeating alarm time is within 1 minute grace period. Keeping today.');
-              }
+              dayOffset++;
+              continue;
             }
             // 찾음
             alarmTime = checkDate;
@@ -4214,14 +4299,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
           if (dayOffset > 8) break; // 안전장치
         }
       } else {
-        // 반복 없음: 과거면 내일로 (단, 1분 이내 과거는 오늘로 유지하여 즉시 울리게 함)
+        // 반복 없음: 현재 시간 포함 과거면 내일로
         if (alarmTime.isBefore(now)) {
-          final diff = now.difference(alarmTime);
-          if (diff.inMinutes >= 1) {
-            alarmTime = alarmTime.add(const Duration(days: 1));
-          } else {
-            debugPrint('[AddAlarm] Time is within 1 minute grace period. Keeping today.');
-          }
+          alarmTime = alarmTime.add(const Duration(days: 1));
+          debugPrint('[AddAlarm] Time is past or current. Moving to tomorrow: $alarmTime');
         }
       }
 
@@ -4276,13 +4357,18 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
 
           if (isExactAlarmDenied) {
             if (!mounted) return;
-            await _showPermissionDialog(l10n.permissionRequired, l10n.exactAlarmFailMessage);
+            await _showPermissionGuideDialog(
+              title: l10n.permissionRequired,
+              description: l10n.exactAlarmFailMessage,
+              icon: Icons.timer_outlined,
+              requestFunc: () => Permission.scheduleExactAlarm.request(),
+            );
           } else if (isIgnoreBatteryOptimizationsDenied) {
             if (!mounted) return;
-            await _showPermissionDialog(l10n.permissionRequired, l10n.batteryOptimFailMessage);
+            await _showBatteryOptimizationFullScreenGuide();
           } else if (isSystemAlertWindowDenied) {
             if (!mounted) return;
-            await _showPermissionDialog(l10n.permissionRequired, l10n.overlayFailMessage);
+            await _showOverlayPermissionFullScreenGuide();
           } else {
             // 모든 권한이 허용되었는데도 실패한 경우 (예외 상황)
             if (!mounted) return;
@@ -4318,10 +4404,15 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
       } else {
         final notifier = ref.read(alarmListProvider.notifier);
         await notifier.addAlarm(alarm);
+        
+        // 첫 알람 추가 성공 시 첫 실행 완료 플래그 저장
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('first_run_completed', true);
       }
 
       if (mounted) {
-        Navigator.pop(context);
+        await _stopPreview(); // 저장 시 미리듣기 종료
+        Navigator.pop(context, true);
       }
     } catch (e) {
       if (mounted) {
@@ -4400,23 +4491,560 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> {
      }
    }
 
-  Future<void> _showPermissionDialog(String title, String content) async {
-    return showDialog(
+  Future<void> _showBatteryOptimizationFullScreenGuide() async {
+    final l10n = AppLocalizations.of(context)!;
+    final primaryColor = ref.read(themeProvider).primaryColor;
+    await showGeneralDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.cancel),
+      barrierDismissible: false,
+      barrierColor: Colors.white,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+              child: Column(
+                children: [
+                  const Spacer(flex: 2),
+                  // Top Labels
+                  Text(
+                    "'${l10n.batteryOptimizationName}'",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.batteryOptimizationTitle,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  // Subtitle
+                  Text(
+                    l10n.batteryOptimizationSubtitle,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(0.7),
+                      fontSize: 16,
+                      height: 1.5,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  const Spacer(flex: 2),
+                  // Green Icon with Glow
+                  Container(
+                    width: 100,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF81D48A),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF81D48A).withOpacity(0.4),
+                          blurRadius: 20,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: const Icon(
+                      Icons.bolt_rounded,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                  const Spacer(flex: 2),
+                  // Bottom Info
+                  Text(
+                    l10n.batteryOptimizationBottomDesc,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(0.6),
+                      fontSize: 15,
+                      height: 1.5,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  const Spacer(flex: 3),
+                  // Confirm Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 64,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        await Permission.ignoreBatteryOptimizations.request();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: Text(
+                        l10n.understand,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              openAppSettings();
+        );
+      },
+    );
+  }
+
+  Future<void> _showOverlayPermissionFullScreenGuide() async {
+    final l10n = AppLocalizations.of(context)!;
+    final primaryColor = ref.read(themeProvider).primaryColor;
+    await showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.white,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                children: [
+                  const Spacer(flex: 2),
+                  // Title
+                  Text(
+                    l10n.overlayPermissionName,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  Text(
+                    l10n.overlayPermissionTitle,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Subtitle
+                  Text(
+                    l10n.overlayPermissionDesc,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(0.6),
+                      fontSize: 16,
+                      height: 1.4,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  const Spacer(flex: 3),
+                  // Guide Card
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF2F2F7),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Row(
+                      children: [
+                        // App Icon (Larger, no yellow box)
+                        Image.asset(
+                          'assets/icon/Fortune Icon_tran.png',
+                          width: 48,
+                          height: 48,
+                          errorBuilder: (context, error, stackTrace) => const Icon(Icons.alarm, color: Colors.black, size: 48),
+                        ),
+                        const SizedBox(width: 16),
+                        // App Name
+                        Expanded(
+                          child: Text(
+                            l10n.appTitle,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        // Toggle and Touch Icon
+                        Stack(
+                          clipBehavior: Clip.none,
+                          alignment: Alignment.centerRight,
+                          children: [
+                            Transform.scale(
+                              scale: 0.85,
+                              child: CupertinoSwitch(
+                                value: false,
+                                onChanged: null,
+                                trackColor: Colors.grey[300],
+                              ),
+                            ),
+                            Positioned(
+                              right: -8,
+                              bottom: -24,
+                              child: Icon(
+                                Icons.touch_app,
+                                color: Colors.black.withOpacity(0.8),
+                                size: 36,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(flex: 4),
+                  // Bottom Button (Understand only)
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        await Permission.systemAlertWindow.request();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Text(
+                        l10n.understand,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _showPermissionGuideDialog({
+    required String title,
+    required String description,
+    required IconData icon,
+    required Future<PermissionStatus> Function() requestFunc,
+  }) async {
+    final bool? result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  color: primaryColor.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: primaryColor,
+                  size: 36,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: isDarkMode ? Colors.white : Colors.black,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                description,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  height: 1.5,
+                  color: isDarkMode ? Colors.white70 : Colors.black54,
+                  letterSpacing: -0.2,
+                ),
+              ),
+              const SizedBox(height: 32),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.cancel,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.confirm,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (result == true) {
+      await requestFunc();
+    }
+  }
+}
+
+class _BackgroundPreviewGallery extends StatefulWidget {
+  final String initialPath;
+  final List<String> paths;
+  final int initialPage;
+  final ValueNotifier<String> currentPathNotifier;
+  final Color primaryColor;
+  final Function(String) onBackgroundSelected;
+
+  const _BackgroundPreviewGallery({
+    required this.initialPath,
+    required this.paths,
+    required this.initialPage,
+    required this.currentPathNotifier,
+    required this.primaryColor,
+    required this.onBackgroundSelected,
+  });
+
+  @override
+  State<_BackgroundPreviewGallery> createState() => _BackgroundPreviewGalleryState();
+}
+
+class _BackgroundPreviewGalleryState extends State<_BackgroundPreviewGallery> {
+  late PageController _pageController;
+  late ValueNotifier<int> _currentPageNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: widget.initialPage);
+    _currentPageNotifier = ValueNotifier<int>(widget.initialPage);
+    _pageController.addListener(_handlePageChange);
+  }
+
+  void _handlePageChange() {
+    if (!_pageController.hasClients) return;
+    final fractionalPage = _pageController.page ?? widget.initialPage.toDouble();
+    final roundedPage = fractionalPage.round();
+    if (roundedPage != _currentPageNotifier.value) {
+      _currentPageNotifier.value = roundedPage;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pageController.removeListener(_handlePageChange);
+    _pageController.dispose();
+    _currentPageNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final now = DateTime.now();
+    final safePadding = MediaQuery.of(context).padding;
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Stack(
+        children: [
+          PageView.builder(
+            controller: _pageController,
+            physics: const BouncingScrollPhysics(),
+            clipBehavior: Clip.antiAlias,
+            itemBuilder: (context, index) {
+              final path = widget.paths[index % widget.paths.length];
+              return ValueListenableBuilder<int>(
+                valueListenable: _currentPageNotifier,
+                builder: (context, currentPage, _) {
+                  return VideoPreviewWidget(
+                    key: ValueKey('preview_${index % widget.paths.length}_$path'),
+                    bgPath: path,
+                    play: index == currentPage,
+                    child: const SizedBox.expand(),
+                  );
+                },
+              );
             },
-            child: Text(AppLocalizations.of(context)!.openSettings),
+            onPageChanged: (index) {
+              final newPath = widget.paths[index % widget.paths.length];
+              widget.currentPathNotifier.value = newPath;
+            },
+          ),
+
+          // 상단 그라데이션 및 UI 요소들
+          Positioned(
+            top: 0, left: 0, right: 0, height: 160,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.black54, Colors.transparent],
+                ),
+              ),
+            ),
+          ),
+          
+          Positioned(
+            top: safePadding.top > 0 ? safePadding.top + 8 : 20,
+            left: 20,
+            child: Container(
+              decoration: const BoxDecoration(color: Colors.black26, shape: BoxShape.circle),
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+          ),
+          
+          ValueListenableBuilder<String>(
+            valueListenable: widget.currentPathNotifier,
+            builder: (context, currentPath, _) {
+              final isRandom = currentPath == 'random_background';
+              return SizedBox(
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: (safePadding.top > 0 ? safePadding.top : 20) + 60),
+                    Text(
+                      DateFormat(l10n.dateFormatMdyE, Localizations.localeOf(context).toString()).format(now),
+                      style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w600, shadows: [Shadow(blurRadius: 10, color: Colors.black54)]),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "${now.hour}:${now.minute.toString().padLeft(2, '0')}",
+                      style: const TextStyle(color: Colors.white, fontSize: 90, fontWeight: FontWeight.bold, shadows: [Shadow(blurRadius: 10, color: Colors.black54)]),
+                    ),
+                    if (isRandom) ...[
+                      const Spacer(flex: 1),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.shuffle_rounded, color: Colors.white54, size: 80),
+                          const SizedBox(height: 16),
+                          Text(l10n.randomBackgroundDesc, style: const TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
+                    const Spacer(flex: 2),
+                    
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(30, 16, 30, 24 + (safePadding.bottom > 0 ? safePadding.bottom : 20)),
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            widget.onBackgroundSelected(currentPath);
+                            Navigator.pop(context); // 미리보기 닫기
+                            Navigator.pop(context); // 배경 선택 시트 닫기
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: widget.primaryColor,
+                            foregroundColor: widget.primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            elevation: 8,
+                            shadowColor: widget.primaryColor.withOpacity(0.3),
+                          ),
+                          child: Text(l10n.selectionComplete, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -4695,26 +5323,46 @@ class _VideoThumbnailWidgetState extends ConsumerState<VideoThumbnailWidget> {
 class VideoPreviewWidget extends StatefulWidget {
   final String bgPath;
   final Widget child;
+  final bool play;
 
   const VideoPreviewWidget({
     super.key, 
     required this.bgPath,
     required this.child,
+    this.play = true,
   });
 
   @override
   State<VideoPreviewWidget> createState() => _VideoPreviewWidgetState();
 }
 
-class _VideoPreviewWidgetState extends State<VideoPreviewWidget> {
+class _VideoPreviewWidgetState extends State<VideoPreviewWidget> with AutomaticKeepAliveClientMixin {
   VideoPlayerController? _controller;
   Object? _error;
   bool _isLoading = false;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     super.initState();
+    // 항상 초기화는 시도하되, 재생 여부만 widget.play에 따름
     _initializeVideo();
+  }
+
+  @override
+  void didUpdateWidget(VideoPreviewWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.bgPath != oldWidget.bgPath) {
+      _initializeVideo();
+    } else if (widget.play != oldWidget.play) {
+      if (widget.play) {
+        _controller?.play();
+      } else {
+        _controller?.pause();
+      }
+    }
   }
 
   Future<void> _initializeVideo() async {
@@ -4725,7 +5373,10 @@ class _VideoPreviewWidgetState extends State<VideoPreviewWidget> {
 
       final old = _controller;
       _controller = null;
-      old?.dispose();
+      if (old != null) {
+        old.pause();
+        old.dispose();
+      }
 
       if (widget.bgPath.startsWith('assets/')) {
         _controller = VideoPlayerController.asset(widget.bgPath, videoPlayerOptions: videoOptions);
@@ -4738,10 +5389,16 @@ class _VideoPreviewWidgetState extends State<VideoPreviewWidget> {
         _isLoading = true;
         if (mounted) setState(() {});
 
-        await _controller!.initialize().timeout(const Duration(seconds: 20));
+        await _controller!.initialize().timeout(const Duration(seconds: 10));
         await _controller!.setVolume(0);
         _controller!.setLooping(true);
-        _controller!.play();
+        
+        if (widget.play) {
+          _controller!.play();
+        } else {
+          _controller!.pause();
+        }
+        
         _isLoading = false;
         if (mounted) setState(() {});
       } catch (e, st) {
@@ -4764,6 +5421,7 @@ class _VideoPreviewWidgetState extends State<VideoPreviewWidget> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // AutomaticKeepAliveClientMixin 요구 사항
     final path = widget.bgPath.toLowerCase();
     final isVideo = path.endsWith('.mp4') || path.endsWith('.webm');
 

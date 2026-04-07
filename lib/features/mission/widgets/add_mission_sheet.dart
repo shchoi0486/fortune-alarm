@@ -130,8 +130,8 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
         color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.08),
-          width: 0.8,
+          color: isDark ? Colors.white.withOpacity(0.15) : const Color(0xFFE2E8F0),
+          width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
@@ -274,6 +274,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: isDark ? Colors.grey[800]! : Colors.grey[200]!,
+                        width: isDark ? 1.0 : 0.5,
                       ),
                     ),
                     child: Column(
@@ -310,7 +311,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                   filteredRecommendedMissions.every((m) => _selectedRecommendedMissions.contains(m))
                                       ? l10n.deselectAll
                                       : l10n.selectAll,
-                                  style: const TextStyle(fontSize: 12, color: const Color(0xFFF97316)),
+                                  style: const TextStyle(fontSize: 12, color: Color(0xFFF97316)),
                                 ),
                               ),
                             ],
@@ -388,6 +389,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: isDark ? Colors.grey[800]! : Colors.grey[200]!,
+                        width: isDark ? 1.0 : 0.5,
                       ),
                     ),
                     child: Column(
@@ -540,7 +542,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                          child: Text(
                              l10n.add,
                              style: const TextStyle(
-                               color: const Color(0xFFF97316),
+                               color: Color(0xFFF97316),
                                fontWeight: FontWeight.bold,
                              ),
                          ),
@@ -709,6 +711,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
                                       color: isDark ? Colors.white10 : Colors.grey[300]!,
+                                      width: isDark ? 1.0 : 0.5,
                                     ),
                                   ),
                                   child: Text(
@@ -716,7 +719,7 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        color: const Color(0xFFF97316),
+                                        color: Color(0xFFF97316),
                                       ),
                                   ),
                                 ),

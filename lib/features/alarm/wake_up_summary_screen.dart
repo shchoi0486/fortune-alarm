@@ -5,11 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 
-import '../../main.dart';
 import '../../services/ad_service.dart';
 import '../../widgets/ad_widgets.dart';
 import '../../providers/bottom_nav_provider.dart';
-import '../../core/navigation/app_navigator.dart';
 
 class WakeUpSummaryScreen extends ConsumerStatefulWidget {
   const WakeUpSummaryScreen({super.key});
@@ -29,7 +27,13 @@ class _WakeUpSummaryScreenState extends ConsumerState<WakeUpSummaryScreen> {
     if (!mounted) return;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
     ref.read(bottomNavProvider.notifier).state = 0;
-    navigatorKey.currentState?.pushNamedAndRemoveUntil('/main', (route) => false);
+    
+    // [수정] navigatorKey 대신 Navigator.of(context) 사용 (더 안정적)
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/main', 
+      (route) => false, 
+      arguments: {'skipSplash': true},
+    );
   }
 
   String _getRandomGreeting(AppLocalizations l10n) {

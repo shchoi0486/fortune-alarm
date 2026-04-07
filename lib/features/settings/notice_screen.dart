@@ -19,6 +19,11 @@ class NoticeScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final notices = [
       Notice(
+        title: l10n.notice4Title,
+        date: '2026.04.07',
+        content: l10n.notice4Content,
+      ),
+      Notice(
         title: l10n.notice1Title,
         date: '2026.12.21',
         content: l10n.notice1Content,

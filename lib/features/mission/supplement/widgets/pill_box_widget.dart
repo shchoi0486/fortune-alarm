@@ -17,6 +17,7 @@ class PillBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     // 1줄에 최대 4개씩 배치
     int crossAxisCount = dailyGoal > 4 ? 4 : dailyGoal;
     if (crossAxisCount == 0) crossAxisCount = 1;
@@ -31,28 +32,32 @@ class PillBoxWidget extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFE0F7FA), // 약통 본체 색상 (하늘색 플라스틱 느낌)
+        color: isDark ? const Color(0xFF1A2A2E) : const Color(0xFFE0F7FA), // 약통 본체 색상 (하늘색 플라스틱 느낌)
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
           // 내부 입체감을 위한 하이라이트
-          const BoxShadow(
-            color: Colors.white,
+          BoxShadow(
+            color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
             blurRadius: 2,
-            offset: Offset(-2, -2),
+            offset: const Offset(-2, -2),
           ),
         ],
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFFE0F7FA),
-            Colors.cyan.shade100,
+            isDark ? const Color(0xFF1A2A2E) : const Color(0xFFE0F7FA),
+            isDark ? const Color(0xFF2D3E42) : Colors.cyan.shade100,
           ],
+        ),
+        border: Border.all(
+          color: isDark ? Colors.white.withOpacity(0.1) : Colors.transparent,
+          width: isDark ? 1.0 : 0.0,
         ),
       ),
       child: Column(
@@ -148,6 +153,7 @@ class _PillCompartmentState extends State<_PillCompartment> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final index = widget.index;
     final isTaken = widget.isTaken;
     
@@ -156,18 +162,18 @@ class _PillCompartmentState extends State<_PillCompartment> {
       width: 70,
       height: 70,
       decoration: BoxDecoration(
-        color: const Color(0xFFCFD8DC),
+        color: isDark ? const Color(0xFF2C3E50) : const Color(0xFFCFD8DC),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           // Deep shadow for 3D depth
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: isDark ? Colors.black.withOpacity(0.5) : Colors.black.withOpacity(0.3),
             offset: const Offset(4, 4),
             blurRadius: 6,
           ),
           // White highlight for plastic edge
           BoxShadow(
-            color: Colors.white.withOpacity(0.9),
+            color: isDark ? Colors.white.withOpacity(0.1) : Colors.white.withOpacity(0.9),
             offset: const Offset(-1, -1),
             blurRadius: 2,
           ),
@@ -175,11 +181,9 @@ class _PillCompartmentState extends State<_PillCompartment> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Colors.grey[300]!,
-            Colors.grey[400]!,
-            Colors.grey[500]!,
-          ],
+          colors: isDark 
+            ? [const Color(0xFF34495E), const Color(0xFF2C3E50), const Color(0xFF1A252F)]
+            : [Colors.grey[300]!, Colors.grey[400]!, Colors.grey[500]!],
           stops: const [0.0, 0.5, 1.0],
         ),
       ),
@@ -192,15 +196,17 @@ class _PillCompartmentState extends State<_PillCompartment> {
             width: 62,
             height: 62,
             decoration: BoxDecoration(
-              color: const Color(0xFFB0BEC5),
+              color: isDark ? const Color(0xFF1A252F) : const Color(0xFFB0BEC5),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.2) // Inner shadow
+                  color: isDark ? Colors.black.withOpacity(0.4) : Colors.black.withOpacity(0.2) // Inner shadow
                 ),
               ],
               gradient: RadialGradient(
-                colors: [Colors.grey[400]!, Colors.grey[600]!],
+                colors: isDark 
+                  ? [const Color(0xFF2C3E50), const Color(0xFF1A252F)]
+                  : [Colors.grey[400]!, Colors.grey[600]!],
                 radius: 0.8,
               ),
             ),
@@ -221,7 +227,7 @@ class _PillCompartmentState extends State<_PillCompartment> {
             child: Icon(
               Icons.check_circle, // Filled circle check
               size: 40,
-              color: Colors.green.withOpacity(0.9),
+              color: isDark ? Colors.greenAccent.withOpacity(0.8) : Colors.green.withOpacity(0.9),
             ),
           ),
 
@@ -236,23 +242,22 @@ class _PillCompartmentState extends State<_PillCompartment> {
             width: 70,
             height: 70,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.85), // More opaque
+              color: isDark ? Colors.white.withOpacity(0.15) : Colors.white.withOpacity(0.85), // More opaque
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Colors.white,
+                color: isDark ? Colors.white.withOpacity(0.2) : Colors.white,
                 width: 1,
               ),
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  Colors.white.withOpacity(0.95),
-                  Colors.white.withOpacity(0.7),
-                ],
+                colors: isDark 
+                  ? [Colors.white.withOpacity(0.25), Colors.white.withOpacity(0.05)]
+                  : [Colors.white.withOpacity(0.95), Colors.white.withOpacity(0.7)],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: isDark ? Colors.black.withOpacity(0.2) : Colors.black.withOpacity(0.1),
                   blurRadius: 2,
                   offset: const Offset(1, 1),
                 ),
@@ -266,7 +271,7 @@ class _PillCompartmentState extends State<_PillCompartment> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w900,
-                        color: Colors.grey.shade600,
+                        color: isDark ? Colors.white70 : Colors.grey.shade600,
                       ),
                     ),
             ),

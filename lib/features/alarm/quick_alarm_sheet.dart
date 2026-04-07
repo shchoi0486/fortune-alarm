@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/models/alarm_model.dart';
 import '../../providers/alarm_list_provider.dart';
 import '../../providers/theme_provider.dart';
@@ -9,7 +10,6 @@ import '../../l10n/app_localizations.dart';
 import '../../services/alarm_scheduler_service.dart';
 import '../../services/notification_service.dart';
 import 'ringtone_select_screen.dart';
-import 'dart:io';
 
 class QuickAlarmSheet extends ConsumerStatefulWidget {
   const QuickAlarmSheet({super.key});
@@ -79,8 +79,19 @@ class _QuickAlarmSheetState extends ConsumerState<QuickAlarmSheet> {
     // 1. 알람 추가
     await ref.read(alarmListProvider.notifier).addAlarm(alarm);
 
+    // 첫 알람 추가 성공 시 첫 실행 완료 플래그 저장
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('first_run_completed', true);
+
     // 2. 알람 스케줄링
-    await AlarmSchedulerService.scheduleAlarm(alarm);
+    final scheduled = await AlarmSchedulerService.scheduleAlarm(alarm);
+
+    if (!scheduled && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.alarmSaveError)),
+      );
+      return;
+    }
 
     // 3. 알림 생성
     final stableId = AlarmSchedulerService.getStableId(alarm.id);
@@ -325,13 +336,17 @@ class _QuickAlarmSheetState extends ConsumerState<QuickAlarmSheet> {
           color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
           borderRadius: BorderRadius.circular(12),
         ),
+        padding: const EdgeInsets.symmetric(horizontal: 4), // 내부 패딩 추가
         alignment: Alignment.center,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: isDark ? Colors.white : Colors.black87,
+        child: FittedBox( // 텍스트가 길어질 경우 크기 자동 조절
+          fit: BoxFit.scaleDown,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
           ),
         ),
       ),

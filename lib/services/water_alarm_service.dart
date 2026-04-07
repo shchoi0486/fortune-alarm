@@ -125,11 +125,11 @@ class WaterAlarmService {
     bool shouldRing = true;
     WaterSettings? settings;
 
+    final notificationService = NotificationService();
+    
     try {
-      await Hive.initFlutter();
-      if (!Hive.isAdapterRegistered(7)) {
-        Hive.registerAdapter(WaterSettingsAdapter());
-      }
+      // getL10n()을 호출하여 Hive 초기화 및 언어 설정 로드 보장
+      await notificationService.getL10n();
 
       final box = await Hive.openBox<WaterSettings>('water_settings');
       settings = box.get('settings');
@@ -142,7 +142,6 @@ class WaterAlarmService {
     }
 
     if (shouldRing) {
-      final notificationService = NotificationService();
       await notificationService.init(null);
       final l10n = await notificationService.getL10n();
       

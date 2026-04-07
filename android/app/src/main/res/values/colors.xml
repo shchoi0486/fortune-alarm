@@ -3,4 +3,5 @@
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="ad_headline_text">#000000</color>
     <color name="ad_body_text">#666666</color>
+    <color name="ad_background">#FFFFFF</color>
 </resources>

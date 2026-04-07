@@ -2007,6 +2007,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                       _type = CalendarEventType.event;
                     });
                     },
+                    icon: Icons.calendar_month_rounded,
                   ),
                   _buildTypeTab(
                     AppLocalizations.of(context)!.memo,
@@ -2018,6 +2019,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
                         _type = CalendarEventType.memo;
                       });
                     },
+                    icon: Icons.edit_document,
                   ),
                 ],
               ),
@@ -2531,7 +2533,11 @@ class _AddEventSheetState extends State<AddEventSheet> {
     );
   }
 
-  Widget _buildTypeTab(String label, bool isSelected, Color activeColor, bool isDark, VoidCallback onTap, {bool isSmall = false}) {
+  Widget _buildTypeTab(String label, bool isSelected, Color activeColor, bool isDark, VoidCallback onTap, {bool isSmall = false, IconData? icon}) {
+    final textColor = isSelected 
+        ? (activeColor.computeLuminance() > 0.5 ? Colors.black : Colors.white)
+        : (isDark ? Colors.grey[400] : Colors.grey[600]);
+        
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -2552,15 +2558,26 @@ class _AddEventSheetState extends State<AddEventSheet> {
                 : null,
           ),
           alignment: Alignment.center,
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isSelected 
-                  ? (activeColor.computeLuminance() > 0.5 ? Colors.black : Colors.white)
-                  : (isDark ? Colors.grey[400] : Colors.grey[600]),
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-              fontSize: isSmall ? 13 : 15,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (icon != null) ...[
+                Icon(
+                  icon,
+                  size: isSmall ? 16 : 18,
+                  color: textColor,
+                ),
+                const SizedBox(width: 8),
+              ],
+              Text(
+                label,
+                style: TextStyle(
+                  color: textColor,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  fontSize: isSmall ? 13 : 15,
+                ),
+              ),
+            ],
           ),
         ),
       ),

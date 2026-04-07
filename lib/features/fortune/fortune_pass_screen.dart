@@ -30,10 +30,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
   bool _hasActiveSubscription = false;
   String _selectedProductId = 'fortune_pass_monthly';
 
-  RewardedAd? _rewardedAd;
-  bool _isRewardedAdLoaded = false;
-  bool _isRewardedAdLoading = false;
-  bool _rewardEarned = false;
+  bool _isAdLoading = false;
 
   StreamSubscription<int>? _discountTimerSubscription;
   int _remainingDiscountSeconds = 0;
@@ -48,7 +45,7 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
     );
     _initCookieCount();
     _initPurchases();
-    _loadRewardedAd();
+    AdService.preloadRewardedAd();
     _initDiscountTimer();
   }
 
@@ -62,100 +59,28 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
     });
   }
 
-  Future<void> _loadRewardedAd() async {
-    if (_isRewardedAdLoading || _isRewardedAdLoaded) return;
+  void _showRewardedAd() async {
+    if (_isAdLoading) return;
     
-    setState(() => _isRewardedAdLoading = true);
-
-    // 1. Try to get preloaded ad from AdService
-    final preloadedAd = await AdService.getPreloadedRewardedAd();
+    setState(() => _isAdLoading = true);
     
-    if (preloadedAd != null) {
-      debugPrint('Using preloaded RewardedAd in FortunePassScreen');
-      if (!mounted) {
-        preloadedAd.dispose();
-        return;
-      }
-      _setupRewardedAd(preloadedAd);
-      return;
-    }
-
-    // 2. If not, load new one (fallback)
-    RewardedAd.load(
-      adUnitId: AdService.rewardedAdUnitId,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
-          debugPrint('RewardedAd loaded successfully in FortunePassScreen (Direct)');
-          if (!mounted) {
-            ad.dispose();
-            return;
-          }
-          _setupRewardedAd(ad);
-        },
-        onAdFailedToLoad: (error) {
-          debugPrint('RewardedAd failed to load: $error');
-          if (mounted) {
-            setState(() {
-              _isRewardedAdLoading = false;
-              _isRewardedAdLoaded = false;
-            });
-          }
-        },
-      ),
-    );
-  }
-
-  void _setupRewardedAd(RewardedAd ad) {
-    ad.fullScreenContentCallback = FullScreenContentCallback(
-      onAdDismissedFullScreenContent: (ad) {
-        ad.dispose();
-        if (mounted) {
-          setState(() {
-            _rewardedAd = null;
-            _isRewardedAdLoaded = false;
-            _isRewardedAdLoading = false;
-          });
-        }
-        if (_rewardEarned) {
-          _rewardEarned = false;
-          _onRewardCompleted();
-        }
-        _loadRewardedAd();
+    AdService.showRewardedAd(
+      onRewardEarned: () async {
+        await _onRewardCompleted();
+        if (mounted) setState(() => _isAdLoading = false);
       },
-      onAdFailedToShowFullScreenContent: (ad, error) {
-        ad.dispose();
+      onAdClosed: () {
+        if (mounted) setState(() => _isAdLoading = false);
+      },
+      onAdLoadFailed: () {
         if (mounted) {
-          setState(() {
-            _rewardedAd = null;
-            _isRewardedAdLoaded = false;
-            _isRewardedAdLoading = false;
-          });
+          setState(() => _isAdLoading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppLocalizations.of(context)!.adLoadError)),
+          );
         }
-        _loadRewardedAd();
       },
     );
-
-    setState(() {
-      _rewardedAd = ad;
-      _isRewardedAdLoaded = true;
-      _isRewardedAdLoading = false;
-    });
-  }
-
-  void _showRewardedAd() {
-    if (_rewardedAd == null || !_isRewardedAdLoaded) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.adLoadError)),
-      );
-      _loadRewardedAd();
-      return;
-    }
-
-    _rewardEarned = false;
-    _rewardedAd!.show(onUserEarnedReward: (ad, reward) {
-      _rewardEarned = true;
-    });
   }
 
   Future<void> _onRewardCompleted() async {
@@ -250,7 +175,6 @@ class _FortunePassScreenState extends State<FortunePassScreen> with SingleTicker
     _purchaseSubscription?.cancel();
     _cookieCountSubscription?.cancel();
     _discountTimerSubscription?.cancel();
-    _rewardedAd?.dispose();
     super.dispose();
   }
 

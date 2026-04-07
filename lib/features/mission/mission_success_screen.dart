@@ -19,8 +19,8 @@ class _MissionSuccessScreenState extends ConsumerState<MissionSuccessScreen> {
   void initState() {
     super.initState();
     // 화면 진입 시 기상 미션 자동 완료 처리
-    Future.microtask(() {
-      ref.read(missionProvider).completeWakeUpMission();
+    Future.microtask(() async {
+      await ref.read(missionProvider).completeWakeUpMission();
     });
   }
 

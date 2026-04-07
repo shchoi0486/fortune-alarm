@@ -13,6 +13,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_core/firebase_core.dart'; // Firebase Core 임포트
 import 'firebase_options.dart'; // Firebase Options 임포트
 import 'features/alarm/alarm_screen.dart';
+import 'features/alarm/first_alarm_step_screen.dart';
 import 'features/calendar/calendar_screen.dart';
 import 'services/notification_service.dart';
 import 'services/alarm_scheduler_service.dart';
@@ -35,8 +36,11 @@ import 'services/routine_alarm_service.dart';
 import 'features/alarm/alarm_ringing_screen.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
+import 'providers/alarm_list_provider.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'features/mission/supplement/supplement_mission_screen.dart';
 import 'features/mission/water/water_mission_screen.dart';
@@ -56,10 +60,11 @@ final container = ProviderContainer();
 
 // 백그라운드와 통신하기 위한 포트 이름
 const String kAlarmPortName = 'alarm_notification_port';
-const MethodChannel _foregroundChannel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+const MethodChannel _foregroundChannel = MethodChannel('com.seriessnap.fortune_alarm/foreground');
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   
   SharingService.init();
   debugPrint('App starting: Initializing services...');
@@ -115,15 +120,18 @@ void main() async {
       debugPrint('Firebase initialization failed or timed out: $e');
     }
 
-    // 6. 광고 서비스 초기화 (앱 실행 후 백그라운드에서 진행하도록 변경)
+    // 6. 광고 서비스 초기화 (구독 여부 확인 후 진행)
     final cookieService = CookieService();
-    AdService.init();
-    cookieService.hasActiveFortunePassSubscription().timeout(
-      const Duration(milliseconds: 500),
-      onTimeout: () => false,
-    ).then((isSub) {
+    try {
+      final isSub = await cookieService.hasActiveFortunePassSubscription().timeout(
+        const Duration(seconds: 1),
+        onTimeout: () => false,
+      );
       AdService.isSubscriber = isSub;
-    });
+    } catch (_) {
+      AdService.isSubscriber = false;
+    }
+    AdService.init();
 
   } catch (e) {
     debugPrint('Initialization warning (ignored for startup): $e');
@@ -136,11 +144,11 @@ void main() async {
   // await _requestPermissions();
 
   runApp(
-    UncontrolledProviderScope(
-      container: container,
-      child: const FortuneAlarmApp(),
-    ),
-  );
+      UncontrolledProviderScope(
+        container: container,
+        child: const FortuneAlarmApp(),
+      ),
+    );
 
   // 앱이 완전히 종료된 상태에서 알림(풀스크린 인텐트 포함)으로 실행된 경우 감지
   try {
@@ -442,7 +450,7 @@ Future<bool> _isDuplicateAlarmTap(String payload) async {
   final now = DateTime.now();
   if (_lastHandledAlarmTapKey == key &&
       _lastHandledAlarmTapAt != null &&
-      now.difference(_lastHandledAlarmTapAt!) < const Duration(seconds: 8)) {
+      now.difference(_lastHandledAlarmTapAt!) < const Duration(seconds: 15)) {
     return true;
   }
 
@@ -662,6 +670,7 @@ class FortuneAlarmApp extends ConsumerWidget {
     final locale = ref.watch(localeProvider);
     
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey, // Navigator Key 등록
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       title: 'Fortune Alarm', // 기본 타이틀 (로컬라이제이션 로딩 전)
@@ -717,9 +726,12 @@ class FortuneAlarmApp extends ConsumerWidget {
           unselectedItemColor: Colors.grey,
         ),
       ),
-      home: const SplashScreen(),
+      home: const MainScreen(),
       routes: {
-        '/main': (context) => const MainScreen(),
+        '/main': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          return MainScreen(skipSplash: args?['skipSplash'] ?? false);
+        },
         '/supplement': (context) => const SupplementMissionScreen(),
         '/water': (context) => const WaterMissionScreen(),
       },
@@ -727,191 +739,14 @@ class FortuneAlarmApp extends ConsumerWidget {
   }
 }
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _navigateToMain();
-  }
-
-  Future<bool> _tryRestoreAlarmOnSplash() async {
-    try {
-      if (Platform.isAndroid) {
-        final notificationService = NotificationService();
-        final androidPlugin = notificationService.flutterLocalNotificationsPlugin
-            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-        if (androidPlugin != null) {
-          final active = await androidPlugin.getActiveNotifications();
-          for (final n in active) {
-            final channelId = n.channelId;
-            if (channelId == null) continue;
-            if (!channelId.startsWith('alarm_channel_')) continue;
-            if (n.id == 0) continue;
-            _initialNotificationHandled = true;
-            await _onNotificationTap('loading_${n.id}');
-            return true;
-          }
-        }
-      }
-    } catch (_) {}
-
-    try {
-      final appStateBox = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
-      final payload = appStateBox.get('pending_alarm_payload');
-      final setAtStr = appStateBox.get('pending_alarm_set_at');
-
-      if (payload != null && setAtStr != null) {
-        final setAt = DateTime.tryParse(setAtStr.toString());
-        if (setAt != null) {
-          final diff = DateTime.now().difference(setAt);
-          if (diff <= const Duration(minutes: 30)) {
-            _initialNotificationHandled = true;
-            await _onNotificationTap(payload.toString());
-            await appStateBox.delete('pending_alarm_payload');
-            await appStateBox.delete('pending_alarm_set_at');
-            await appStateBox.flush();
-            return true;
-          }
-        }
-      }
-    } catch (_) {}
-
-    try {
-      final appStateBox = Hive.isBoxOpen('app_state') ? Hive.box('app_state') : await Hive.openBox('app_state');
-      final alarmId = appStateBox.get('active_ringing_alarm_id') as String?;
-      if (alarmId != null && alarmId.isNotEmpty) {
-        _initialNotificationHandled = true;
-        await _onNotificationTap(alarmId);
-        return true;
-      }
-    } catch (_) {}
-
-    return false;
-  }
-
-  void _navigateToMain() async {
-    debugPrint('[Main] SplashScreen: Checking for pending alarm...');
-
-    try {
-      final restored = await _tryRestoreAlarmOnSplash();
-      if (restored) {
-        await Future.delayed(const Duration(milliseconds: 1500));
-        if (!mounted) return;
-        Navigator.of(context).pushAndRemoveUntil(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => const MainScreen(),
-            transitionDuration: Duration.zero,
-            reverseTransitionDuration: Duration.zero,
-          ),
-          (route) => false,
-        );
-        return;
-      }
-    } catch (_) {}
-    
-    // 1. 펜딩 알람이 있는지 확인
-    bool hasPending = false;
-    try {
-      // app_state 박스가 이미 열려 있으면 그대로 사용 (닫고 다시 여는 과정에서 발생하는 프리징 방지)
-      final Box appStateBox = Hive.isBoxOpen('app_state') 
-          ? Hive.box('app_state') 
-          : await Hive.openBox('app_state');
-          
-      hasPending = appStateBox.containsKey('pending_alarm_payload');
-      
-      if (hasPending) {
-        debugPrint('[Main] SplashScreen: Pending alarm detected. Moving to MainScreen immediately.');
-        // 펜딩 알람이 있으면 최소 대기 후 바로 이동하여 MainScreen의 initState가 처리하도록 함
-        await Future.delayed(const Duration(milliseconds: 300));
-      } else {
-        // 일반적인 상황에서는 1.5초 대기
-        await Future.delayed(const Duration(milliseconds: 1500));
-      }
-    } catch (e) {
-      debugPrint('[Main] SplashScreen error checking pending: $e');
-      await Future.delayed(const Duration(milliseconds: 1000));
-    }
-
-    if (mounted) {
-      debugPrint('[Main] SplashScreen: Navigating to MainScreen...');
-      // MainScreen을 새로운 루트로 설정하여 이동 (이전 스택 모두 제거)
-      Navigator.of(context).pushAndRemoveUntil(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => MainScreen(isAlarmRestoreMode: hasPending),
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
-        ),
-        (route) => false,
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black, // 알람 복원 시 검은 배경을 위해 기본색 설정
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // 배경 이미지 (네이티브 스플래시와 동일하게 설정)
-          Image.asset(
-            'assets/images/splash/splash_bg.webp',
-            fit: BoxFit.cover,
-          ),
-          // 하단 텍스트
-          Positioned(
-            bottom: 80,
-            left: 0,
-            right: 0,
-            child: Column(
-              children: [
-                Text(
-                  "FORTUNE ALARM",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: 4.0,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withOpacity(0.5),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 15),
-                SizedBox(
-                  width: 60,
-                  height: 3,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(2),
-                    child: LinearProgressIndicator(
-                      backgroundColor: Colors.white.withOpacity(0.2),
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class MainScreen extends ConsumerStatefulWidget {
   final bool isAlarmRestoreMode;
-  const MainScreen({super.key, this.isAlarmRestoreMode = false});
+  final bool skipSplash;
+  const MainScreen({
+    super.key, 
+    this.isAlarmRestoreMode = false,
+    this.skipSplash = false,
+  });
 
   @override
   ConsumerState<MainScreen> createState() => _MainScreenState();
@@ -926,17 +761,15 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
     const SettingsScreen(),
   ];
 
-  bool _isStartupCheckDone = false;
+  late bool _isStartupCheckDone;
 
   @override
   void initState() {
     super.initState();
+    _isStartupCheckDone = widget.skipSplash;
+    
     WidgetsBinding.instance.addObserver(this); // Observer 등록
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge); // 초기 로드 시에도 강제 적용
-
-    // 앱 시작 시 주요 광고 사전 로드 (최적화)
-    AdService.preloadExitAd();
-    AdService.preloadListAd();
 
     // 알람 체크 로직 실행 (완료 전까지 스플래시 UI 유지)
     _runStartupCheckSequence();
@@ -960,19 +793,49 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
   }
 
   Future<void> _runStartupCheckSequence() async {
+    final startTime = DateTime.now();
     try {
       await _runStartupAlarmChecks().timeout(
         const Duration(seconds: 6),
         onTimeout: () {},
       );
     } catch (_) {}
+
+    // 알람 복원이 트리거되지 않은 경우만 최소 지연 시간(1.5초) 보장하여 자연스러운 전환 제공
+    if (!_initialNotificationHandled && !widget.skipSplash) {
+      final elapsed = DateTime.now().difference(startTime);
+      final remaining = const Duration(milliseconds: 1500) - elapsed;
+      if (remaining > Duration.zero) {
+        await Future.delayed(remaining);
+      }
+    }
+
     if (mounted) {
       setState(() {
         _isStartupCheckDone = true;
       });
-      // 초기화 완료 후 권한 체크 다이얼로그 표시 (필요한 경우)
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      
+      // 초기화 완료 후 다음 프레임에서 네이티브 스플래시 제거 및 권한 체크
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        
+        FlutterNativeSplash.remove();
         _checkAndShowPermissions();
+        
+        // [사용자 요청] 알람이 하나도 없는 경우 (첫 사용) 즉시 시간 선택 화면으로 이동
+        // 단, 이미 온보딩을 완료한 사용자는 이동하지 않음
+        final alarms = ref.read(alarmListProvider);
+        final prefs = await SharedPreferences.getInstance();
+        final isFirstRunCompleted = prefs.getBool('first_run_completed') ?? false;
+
+        if (alarms.isEmpty && !_initialNotificationHandled && !isFirstRunCompleted) {
+          // 첫 실행 시 온보딩 화면 표시
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(builder: (context) => const FirstAlarmStepScreen()),
+          );
+          // [수정] 한 번이라도 앱을 켰다면 다음 실행 시에는 온보딩을 보여주지 않도록 즉시 플래그 저장
+          await prefs.setBool('first_run_completed', true);
+        }
       });
     }
   }
@@ -1050,50 +913,12 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
   }
 
   Future<void> _checkAndShowPermissions() async {
-    // iOS는 알림 권한만 요청하고 종료 (최적화 시트 불필요)
-    if (!Platform.isAndroid) {
-      if (await Permission.notification.isDenied) {
-        await Permission.notification.request();
-      }
-      return;
-    }
-
-    // Android: 모든 권한을 최적화 시트에서 통합 관리
-    // 1. 주요 권한 상태 확인
-    final notificationStatus = await Permission.notification.status;
-    final batteryStatus = await Permission.ignoreBatteryOptimizations.status;
-    final systemAlertWindowStatus = await Permission.systemAlertWindow.status;
-    final locationStatus = await Permission.location.status;
+    // 앱 시작 시 강제적인 권한 요청 제거
+    // 사용자가 알람을 저장할 때 필요한 권한을 가이드와 함께 요청하도록 변경됨
     
-    // Android 12+ 정확한 알람 권한
-    PermissionStatus? exactStatus;
-    if (Platform.isAndroid) {
-       exactStatus = await Permission.scheduleExactAlarm.status;
-    }
-
-    bool needsOptimization = false;
-
-    // [수정] 위치 권한은 날씨용이므로 필수 최적화 대상에서 제외 (선택 사항)
-    if (!notificationStatus.isGranted) needsOptimization = true;
-    if (!batteryStatus.isGranted) needsOptimization = true;
-    if (!systemAlertWindowStatus.isGranted) needsOptimization = true;
-    if (exactStatus != null && !exactStatus.isGranted) needsOptimization = true;
-    
-    // 위치 권한이 없더라도 다른 필수 권한이 다 있으면 시트를 띄우지 않음
-    // (사용자가 설정에서 나중에 켤 수 있음)
-
-    if (needsOptimization && mounted) {
-      showDialog(
-        context: context,
-        barrierDismissible: false, // 사용자가 강제로 닫을 수 없게 함 (선택 사항)
-        builder: (context) => const OptimizationBottomSheet(),
-      ).then((_) {
-        // 설정 완료 후 날씨 정보 새로고침 (위치 권한 획득했을 수 있으므로)
-        if (mounted) {
-           ref.invalidate(weatherProvider);
-        }
-      });
-    }
+    // [사용자 요청] 위치 정보 권한 자동 요청 제거 (이미지 1011 피드백 반영)
+    // 날씨 정보를 위해 위치 권한이 필요하지만, 앱 시작 시점에 띄우지 않고 
+    // 사용자가 날씨 관련 기능을 처음 사용할 때나 설정에서 명시적으로 요청하도록 변경
   }
 
   Future<void> _checkNotificationLaunch() async {
@@ -1338,18 +1163,18 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                     scale: value,
                     child: Icon(
                       isSelected ? selectedIcon : icon,
-                      size: 22,
+                      size: 26, // 아이콘 크기 확대 (22 -> 26)
                       color: isSelected ? selectedColor : unselectedColor,
                     ),
                   );
                 },
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 2), // 간격 소폭 조정
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  fontSize: 12, // 글자 크기 확대 (10 -> 12)
+                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600, // 글자 두께 확대
                   color: isSelected ? selectedColor : unselectedColor,
                   letterSpacing: -0.5,
                 ),
@@ -1377,13 +1202,29 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
       // SplashScreen의 initState에 있는 네비게이션 로직 때문에 무한 루프가 발생할 수 있음.
       // 따라서 SplashScreen의 UI만 가져와서 보여줌.
       return Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.white,
         body: Stack(
-          fit: StackFit.expand,
           children: [
-            Image.asset(
-              'assets/images/splash/splash_bg.webp',
-              fit: BoxFit.cover,
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'assets/icon/Fortune Icon_tran.png',
+                    width: 120, // 텍스트 공간 확보를 위해 약간 줄임 (사용자 피드백 반영: 100은 너무 작고 140은 너무 큼)
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Fortune Alarm',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black,
+                      letterSpacing: -1.0,
+                    ),
+                  ),
+                ],
+              ),
             ),
             Positioned(
               bottom: 80,
@@ -1391,15 +1232,6 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
               right: 0,
               child: Column(
                 children: [
-                  const Text(
-                    "FORTUNE ALARM",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: 4.0,
-                    ),
-                  ),
                   const SizedBox(height: 15),
                   SizedBox(
                     width: 60,
@@ -1407,8 +1239,8 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(2),
                       child: LinearProgressIndicator(
-                        backgroundColor: Colors.white.withOpacity(0.2),
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                        backgroundColor: const Color(0xFFF97316).withOpacity(0.1),
+                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFF97316)),
                       ),
                     ),
                   ),

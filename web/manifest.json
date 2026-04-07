@@ -1,11 +1,11 @@
 {
-    "name": "포춘알람 (Fortune Alarm)",
-    "short_name": "포춘알람",
+    "name": "Fortune Alarm",
+    "short_name": "Fortune Alarm",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Fortune Alarm - 당신의 아침을 행운으로 채워주는 미션 알람 | Your lucky morning mission alarm",
+    "description": "포춘알람 - 당신의 아침을 행운으로 채워주는 미션 알람 | Your lucky morning mission alarm",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

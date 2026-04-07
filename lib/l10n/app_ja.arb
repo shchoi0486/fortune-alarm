@@ -222,7 +222,7 @@
   "deleteColor": "色を削除",
   "deleteColorConfirm": "この色をリストから削除してもよろしいですか？",
   "deleteMission": "ミッションを削除",
-  "deleteMissionConfirm": "このミッションをリストから削除してもよろしいですか？",
+  "deleteMissionConfirm": "このミッションを削除してもよろしいですか？",
   "randomBackgroundDesc": "アラーム가鳴るたびに新しい背景に！",
   "backgroundDeleted": "背景画像が削除されました。",
   "pickFromDevice": "デバイスから選択",
@@ -462,6 +462,30 @@
   "bgWarmBeige": "ウォームベージュ",
   "dateFormatMdyE": "M/d (E)",
   "deleteAlarm": "アラームを削除",
+  "firstAlarmGuideTitle": "アラームがまだありません",
+  "firstAlarmGuideDesc": "幸運のアラームを設定して\n爽やかな一日を始めましょう！",
+  "addAlarm": "アラーム追加",
+  "addFirstAlarm": "初めてのアラームを作成",
+  "deleteAlarmConfirm": "アラームを削除しますか？",
+  "welcomeMessage": "はじめまして！",
+  "whenToRing": "いつ起こしましょうか？",
+  "next": "次へ",
+  "retryFortune": "運勢をもう一度見る",
+  "retryFortuneDesc": "結果が気に入りませんか？\n広告を見て、もう一度確認できます！",
+  "tapToReveal": "タップして運勢を確認",
+  "redrawButton": "もう一度引く",
+  "defaultFortuneGreeting": "今日の運勢を確認してみましょう！",
+  "registerProfile": "プロフィール登録",
+  "todaysFortuneTitle": "今日の運勢",
+  "fortuneCheckSubtitle": "今日はどんな一日になるでしょうか？今すぐ確認してみてください。",
+  "supportSection": "サポート",
+  "rateApp": "アプリを評価する",
+  "shareWithFriends": "友達に共有する",
+  "shareAppMessage": "幸運のアラーム 'Fortune Alarm' を使ってみてください！毎朝, 運勢と一緒に爽やかに起きられます。 https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm",
+  "locationPermissionRequiredWeather": "天気情報を取得するには位置情報の権限が必要です。",
+  "turnOnLocationService": "位置情報サービスをオンにしてください",
+  "checkWeatherLocationRequired": "天気の確認に位置情報が必要",
+  "themeColor": "テーマカラー",
   "confirmDelete": "本当に削除しますか？",
   "yes": "はい",
   "no": "いいえ",
@@ -1252,11 +1276,29 @@
   "exactAlarmPermissionFail": "アラームの登録に失敗しました。正確なアラーム権限が無効になっているため、設定が必要です。",
   "batteryOptimizationPermissionFail": "アラームの登録に失敗しました。バッテリーの最適化例外権限がないため、設定が必要です。",
   "overlayPermissionFail": "アラームの登録に失敗しました。「他のアプリの上に表示」権限がないため、設定が必要です。",
+  "batteryOptimizationName": "バッテリー最適化",
+  "batteryOptimizationTitle": "正確なアラームのために\n設定が必要です。",
+  "batteryOptimizationSubtitle": "アプリがバックグラウンドでも円滑に実行されるよう\nバッテリー最適化の例外に設定してください。",
+  "batteryOptimizationBottomDesc": "設定で「制限なし」または「最適化しない」を\n選択すると、アラームの聞き逃しがなくなります。",
+  "understand": "了解しました",
+  "overlayPermissionName": "他のアプリの上に重ねて表示",
+  "overlayPermissionTitle": "権限の許可案内",
   "unknownAlarmError": "アラームの登録に失敗しました。不明なエラーが発生しました。",
   "resetTooltip": "初期化",
   "errorLoadingAlarm": "アラーム情報の読み込みに失敗しました。",
   "alarmNotFound": "アラーム情報が見つかりません。",
   "repeatAlarmCount": "繰り返しアラーム ({current}/{max})",
+  "snoozeRemainingCount": "残り回数 ({current}/{max})",
+  "@snoozeRemainingCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "@repeatAlarmCount": {
     "placeholders": {
       "current": {
@@ -1639,6 +1681,8 @@
   "notice2Content": "バージョン 1.0.0 のアップデート内容です。\\n\\n1. サプリメントミッションのUI改善\\n2. 正確なアラームのためのシステム設定の統合\\n3. ダークモードのサポート\\n4. バグ修正と安定性の向上\\n\\n今すぐ最新バージョンを体験してください！",
   "notice3Title": "利用規約改定のお知らせ",
   "notice3Content": "利用規約が改定されました。\\n\\n主な改定内容：\\n- プライバシーポリシーの強化\\n- サービス利用範囲の具体化\\n\\n詳細は [設定] > [規約] ページで確認できます。",
+  "notice4Title": "バージョン 1.1.1 アップデートのお知らせ",
+  "notice4Content": "バージョン 1.1.1 のアップデート内容です。\\n\\n1. バッテリー最適化ガイドのUI改善\\n2. 英語バージョンのテキストレイアウトの最適化\\n3. 広告システムの安定性の向上\\n4. アプリの安定性とパフォーマンスの向上\\n\\n最新バージョンにアップデートして、より快適にご利用ください！",
   "supportContentTitle": "お問い合わせ内容",
   "supportHint": "内容を入力してください。",
   "supportRecipient": "宛先 (カスタマーサポート)",
@@ -2618,7 +2662,6 @@
   "locationPermissionDenied": "位置情報の権限が拒否されました。",
   "locationPermissionPermanentlyDenied": "位置情報の権限が永久に拒否されました。",
   "deleteMissionTitle": "ミッションを削除",
-  "deleteMissionConfirm": "このミッションを削除してもよろしいですか？",
   "yesDelete": "はい、削除します",
   "waterAlarmTitle": "水を飲む時間です！ 💧",
   "waterAlarmBody": "健康のために冷たい水を一杯いかがですか？",
@@ -2675,6 +2718,40 @@
     "placeholders": {
       "month": {
         "type": "int"
+      }
+    }
+  },
+  "addMinutes": "+ {minutes}分",
+  "alarmSaved": "アラームが保存されました。",
+  "alarmScheduledBody": "{time}にアラームが鳴ります。",
+  "alarmScheduledTitle": "アラーム設定完了",
+  "cheerUp": "今日も一日頑張りましょう！",
+  "goodDay": "今日も良い一日になりますように！",
+  "luckyDay": "幸運が訪れる一日でありますように！",
+  "pleaseSetTime": "時間を設定してください。",
+  "quickAlarm": "クイックアラーム",
+  "ringingAt": "{time}に鳴ります",
+  "setQuickAlarm": "クイックアラーム設定",
+  "stayHappy": "今日も幸せな時間をお過ごしください！",
+  "youCanDoIt": "あなたなら今日何でもできます！",
+  "@addMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@alarmScheduledBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@ringingAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
       }
     }
   }

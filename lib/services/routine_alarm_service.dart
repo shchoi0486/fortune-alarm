@@ -75,7 +75,10 @@ class RoutineAlarmService {
     WidgetsFlutterBinding.ensureInitialized();
     debugPrint('[RoutineAlarm] Fired! ID: $id');
 
-    await Hive.initFlutter();
+    final notificationService = NotificationService();
+    
+    // getL10n()을 호출하여 Hive 초기화 및 언어 설정 로드 보장
+    await notificationService.getL10n();
     
     // 오늘 날짜 문자열
     final todayStr = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -85,16 +88,28 @@ class RoutineAlarmService {
     final lastRoutineCheckDate = box.get('last_routine_check_date', defaultValue: '');
     
     if (lastRoutineCheckDate != todayStr) {
-      final notificationService = NotificationService();
-            await notificationService.init(null);
-            
-            String langCode = 'ko';
-            try {
-              final settingsBox = await Hive.openBox('settings');
-              langCode = settingsBox.get('language', defaultValue: 'ko');
-            } catch (_) {}
+      await notificationService.init(null);
+      
+      // 2. 언어 설정 가져오기 (시스템 언어를 기본값으로)
+      String langCode = Platform.localeName.split('_')[0];
+      try {
+        final settingsBox = await Hive.openBox('settings');
+        final savedLang = settingsBox.get('language');
+        if (savedLang != null && savedLang.isNotEmpty) {
+          langCode = savedLang;
+          debugPrint('[RoutineAlarm] Found saved language in Hive: $langCode');
+        }
+      } catch (e) {
+        debugPrint('[RoutineAlarm] Error reading settings box: $e');
+      }
 
-            final msg = PushMessages.getRandomRoutineMessage(langCode);
+      // 지원하지 않는 언어일 경우 영어로 폴백
+      if (!['ko', 'en', 'ja', 'zh', 'ru', 'hi', 'fr', 'es', 'de'].contains(langCode)) {
+        langCode = 'en';
+      }
+      debugPrint('[RoutineAlarm] Final langCode for push: $langCode');
+
+      final msg = PushMessages.getRandomRoutineMessage(langCode);
             await notificationService.showRoutineNotification(
         id: id,
         title: msg['title']!,

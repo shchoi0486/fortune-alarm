@@ -281,8 +281,8 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   void _scheduleNextSpawn() {
     if (_isGameOver || !mounted) return;
     
-    // Random delay between spawns: 200ms to 800ms (Previously 400ms to 1200ms)
-    final delay = Duration(milliseconds: 200 + _random.nextInt(600));
+    // Random delay between spawns: 400ms to 1200ms
+    final delay = Duration(milliseconds: 400 + _random.nextInt(800));
     
     _spawnTimer = Timer(delay, () {
       if (!_isGameOver && mounted) {
@@ -359,8 +359,8 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
       isFake: spec.isFake,
       points: spec.points,
       spawnTime: DateTime.now(),
-      // Duration: 600ms to 1200ms (Previously 1000ms to 1600ms)
-      duration: Duration(milliseconds: 600 + _random.nextInt(600)),
+      // Duration: 1000ms to 2000ms
+      duration: Duration(milliseconds: 1000 + _random.nextInt(1000)),
     );
 
     setState(() {
@@ -535,88 +535,91 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                l10n.missionFortuneCatch,
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: isDarkMode ? Colors.white : Colors.black87,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  l10n.missionFortuneCatch,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: isDarkMode ? Colors.white : Colors.black87,
+                                  ),
                                 ),
                               ),
-                            ),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                '${l10n.fortuneCatchGoal} ${l10n.fortuneCatchGoalDetail(_catchCount, _minCatches)}',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: isDarkMode ? Colors.white70 : Colors.black54,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.timer_outlined,
-                                    size: 14,
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  '${l10n.fortuneCatchGoal} ${l10n.fortuneCatchGoalDetail(_catchCount, _minCatches)}',
+                                  style: TextStyle(
+                                    fontSize: 12,
                                     color: isDarkMode ? Colors.white70 : Colors.black54,
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    l10n.fortuneCatchTime(_elapsedSeconds),
-                                    style: TextStyle(
-                                      fontSize: 11,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.timer_outlined,
+                                      size: 14,
                                       color: isDarkMode ? Colors.white70 : Colors.black54,
                                     ),
-                                  ),
-                                  if (_bestTimeSeconds != null) ...[
-                                    const SizedBox(width: 8),
-                                    const Icon(Icons.emoji_events_outlined, size: 14, color: Colors.amber),
-                                    const SizedBox(width: 2),
+                                    const SizedBox(width: 4),
                                     Text(
-                                      l10n.fortuneCatchBest(_bestTimeSeconds!),
-                                      style: const TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold),
+                                      l10n.fortuneCatchTime(_elapsedSeconds),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: isDarkMode ? Colors.white70 : Colors.black54,
+                                      ),
                                     ),
+                                    if (_bestTimeSeconds != null) ...[
+                                      const SizedBox(width: 8),
+                                      const Icon(Icons.emoji_events_outlined, size: 14, color: Colors.amber),
+                                      const SizedBox(width: 2),
+                                      Text(
+                                        l10n.fortuneCatchBest(_bestTimeSeconds!),
+                                        style: const TextStyle(fontSize: 11, color: Colors.amber, fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ],
-                                ],
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.warning_amber_rounded,
-                                    size: 14,
-                                    color: Colors.redAccent.withOpacity(0.9),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    l10n.fortuneCatchAngryHint,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
+                              const SizedBox(height: 4),
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                alignment: Alignment.centerLeft,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.warning_amber_rounded,
+                                      size: 14,
                                       color: Colors.redAccent.withOpacity(0.9),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      l10n.fortuneCatchAngryHint,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.redAccent.withOpacity(0.9),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+                        const SizedBox(width: 12),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
@@ -626,13 +629,16 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
                               BoxShadow(color: Colors.amber.withOpacity(0.5), blurRadius: 8, offset: const Offset(0, 2))
                             ],
                           ),
-                          child: Text(
-                            l10n.fortuneCatchScore(_score),
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              shadows: [Shadow(color: Colors.black26, offset: Offset(0, 1), blurRadius: 2)],
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              l10n.fortuneCatchScore(_score),
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: [Shadow(color: Colors.black26, offset: Offset(0, 1), blurRadius: 2)],
+                              ),
                             ),
                           ),
                         ),
@@ -648,6 +654,7 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
                   child: ScaleTransition(
                     scale: _comboScale,
                     child: Container(
+                      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
                       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                       decoration: BoxDecoration(
                         color: Colors.redAccent,
@@ -661,13 +668,16 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
                           )
                         ],
                       ),
-                      child: Text(
-                        l10n.fortuneCatchCombo(_combo),
-                        style: const TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          fontStyle: FontStyle.italic,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          l10n.fortuneCatchCombo(_combo),
+                          style: const TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                     ),
@@ -994,7 +1004,7 @@ class MoleHole extends StatelessWidget {
                 child: TweenAnimationBuilder<double>(
                   key: ValueKey(character!.id),
                   tween: Tween(begin: 0.0, end: 1.0),
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 350),
                   curve: Curves.easeOutBack,
                   builder: (context, value, child) {
                     return Stack(

@@ -1138,6 +1138,79 @@ class AppLocalizationsZh extends AppLocalizations {
   String get deleteAlarm => '删除闹钟';
 
   @override
+  String get firstAlarmGuideTitle => '暂无闹钟';
+
+  @override
+  String get firstAlarmGuideDesc => '设置幸运闹钟\n开启清爽的一天！';
+
+  @override
+  String get addAlarm => '添加闹钟';
+
+  @override
+  String get addFirstAlarm => '创建第一个闹钟';
+
+  @override
+  String get deleteAlarmConfirm => '确定删除闹钟吗？';
+
+  @override
+  String get welcomeMessage => '很高兴见到你！';
+
+  @override
+  String get whenToRing => '什么时候叫醒你？';
+
+  @override
+  String get next => '下一步';
+
+  @override
+  String get retryFortune => '重新查看运势';
+
+  @override
+  String get retryFortuneDesc => '对结果不满意吗？\n观看广告后再试一次！';
+
+  @override
+  String get tapToReveal => '点击查看运势';
+
+  @override
+  String get redrawButton => '重新抽取';
+
+  @override
+  String get defaultFortuneGreeting => '查看你今天的运势！';
+
+  @override
+  String get registerProfile => '注册资料';
+
+  @override
+  String get todaysFortuneTitle => '今日运势';
+
+  @override
+  String get fortuneCheckSubtitle => '今天会是怎样的一天？现在就去看看吧。';
+
+  @override
+  String get supportSection => '支持';
+
+  @override
+  String get rateApp => '评价应用';
+
+  @override
+  String get shareWithFriends => '分享给朋友';
+
+  @override
+  String get shareAppMessage =>
+      '试试 \'Fortune Alarm\' 吧！每天早上都能伴随着运势清爽地醒来。 https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm';
+
+  @override
+  String get locationPermissionRequiredWeather => '获取天气信息需要位置权限。';
+
+  @override
+  String get turnOnLocationService => '请开启位置服务';
+
+  @override
+  String get checkWeatherLocationRequired => '查看天气需位置信息';
+
+  @override
+  String get themeColor => '主题颜色';
+
+  @override
   String get confirmDelete => '确认删除';
 
   @override
@@ -2863,6 +2936,27 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overlayPermissionFail => '闹钟设置失败。需要开启“在其他应用上层显示”权限。';
 
   @override
+  String get batteryOptimizationName => '电池优化';
+
+  @override
+  String get batteryOptimizationTitle => '为了确保闹钟准时响铃\n需要进行相关设置。';
+
+  @override
+  String get batteryOptimizationSubtitle => '请将应用设为电池优化白名单\n以确保应用在后台正常运行。';
+
+  @override
+  String get batteryOptimizationBottomDesc => '在设置中选择“无限制”或“不优化”\n闹钟将不会漏响。';
+
+  @override
+  String get understand => '知道了';
+
+  @override
+  String get overlayPermissionName => '在其他应用上显示';
+
+  @override
+  String get overlayPermissionTitle => '权限允许指南';
+
+  @override
   String get unknownAlarmError => '闹钟设置失败。发生未知错误。';
 
   @override
@@ -2877,6 +2971,11 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String repeatAlarmCount(int current, int max) {
     return '重复闹钟 ($current/$max)';
+  }
+
+  @override
+  String snoozeRemainingCount(int current, int max) {
+    return '剩余次数 ($current/$max)';
   }
 
   @override
@@ -3880,6 +3979,13 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get notice3Content =>
       '服务条款已修订。\n\n主要修订：\n- 加强隐私政策\n- 指定服务使用范围\n\n详情可在 设置 > 条款 页面查看。';
+
+  @override
+  String get notice4Title => '版本 1.1.1 更新新闻';
+
+  @override
+  String get notice4Content =>
+      '以下是版本 1.1.1 更新的内容。\n\n1. 电池优化引导界面改进\n2. 英文版本文本布局优化\n3. 增强广告系统稳定性\n4. 应用稳定性和性能改进\n\n请更新到最新版本，获得更好体验！';
 
   @override
   String get supportContentTitle => '咨询内容';

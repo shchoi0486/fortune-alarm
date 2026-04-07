@@ -1246,6 +1246,83 @@ class AppLocalizationsEs extends AppLocalizations {
   String get deleteAlarm => 'Eliminar Alarma';
 
   @override
+  String get firstAlarmGuideTitle => 'No hay alarmas todavía';
+
+  @override
+  String get firstAlarmGuideDesc =>
+      '¡Configura una alarma de la suerte y\ncomienza un día refrescante!';
+
+  @override
+  String get addAlarm => 'Añadir alarma';
+
+  @override
+  String get addFirstAlarm => 'Crear primera alarma';
+
+  @override
+  String get deleteAlarmConfirm => '¿Eliminar esta alarma?';
+
+  @override
+  String get welcomeMessage => '¡Encantado!';
+
+  @override
+  String get whenToRing => '¿Cuándo quieres que te despierte?';
+
+  @override
+  String get next => 'Siguiente';
+
+  @override
+  String get retryFortune => 'Reintentar suerte';
+
+  @override
+  String get retryFortuneDesc =>
+      '¿No te gusta el resultado?\n¡Mira un anuncio para intentarlo de nuevo!';
+
+  @override
+  String get tapToReveal => 'Toca para revelar la suerte';
+
+  @override
+  String get redrawButton => 'Volver a sacar';
+
+  @override
+  String get defaultFortuneGreeting => '¡Mira tu suerte para hoy!';
+
+  @override
+  String get registerProfile => 'Registrar perfil';
+
+  @override
+  String get todaysFortuneTitle => 'Suerte de hoy';
+
+  @override
+  String get fortuneCheckSubtitle => '¿Cómo será tu día? Compruébalo ahora.';
+
+  @override
+  String get supportSection => 'Soporte';
+
+  @override
+  String get rateApp => 'Calificar aplicación';
+
+  @override
+  String get shareWithFriends => 'Compartir con amigos';
+
+  @override
+  String get shareAppMessage =>
+      '¡Prueba \'Fortune Alarm\'! Despierta cada mañana con tu suerte del día. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm';
+
+  @override
+  String get locationPermissionRequiredWeather =>
+      'Se requiere permiso de ubicación para obtener información del clima.';
+
+  @override
+  String get turnOnLocationService =>
+      'Por favor, activa los servicios de ubicación';
+
+  @override
+  String get checkWeatherLocationRequired => 'Ubicación para el clima';
+
+  @override
+  String get themeColor => 'Color del tema';
+
+  @override
   String get confirmDelete => '¿Estás seguro de que deseas eliminarla?';
 
   @override
@@ -3137,6 +3214,30 @@ class AppLocalizationsEs extends AppLocalizations {
       'Error al registrar alarma. Falta el permiso \"Mostrar sobre otras apps\" y debe configurarse.';
 
   @override
+  String get batteryOptimizationName => 'Optimización de batería';
+
+  @override
+  String get batteryOptimizationTitle =>
+      'Se requieren ajustes de optimización\npara alarmas precisas.';
+
+  @override
+  String get batteryOptimizationSubtitle =>
+      'Establézcalo como una excepción de optimización de batería\npara que la aplicación funcione sin problemas en segundo plano.';
+
+  @override
+  String get batteryOptimizationBottomDesc =>
+      'Seleccionar \'Sin restricciones\' o \'No optimizar\'\nen los ajustes garantizará que no se pierda ninguna alarma.';
+
+  @override
+  String get understand => 'Entiendo';
+
+  @override
+  String get overlayPermissionName => 'Mostrar sobre otras aplicaciones';
+
+  @override
+  String get overlayPermissionTitle => 'Guía de permisos';
+
+  @override
   String get unknownAlarmError =>
       'Error al registrar alarma. Ocurrió un error desconocido.';
 
@@ -3152,6 +3253,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String repeatAlarmCount(int current, int max) {
     return 'Alarma de Posponer ($current/$max)';
+  }
+
+  @override
+  String snoozeRemainingCount(int current, int max) {
+    return 'Restante ($current/$max)';
   }
 
   @override
@@ -4272,6 +4378,13 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get notice3Content =>
       'Los Términos de Servicio han sido revisados.\\n\\nRevisiones clave:\\n- Política de Privacidad fortalecida\\n- Alcance de uso del servicio especificado\\n\\nLos detalles se pueden encontrar en la página Ajustes > Términos.';
+
+  @override
+  String get notice4Title => 'Actualización versión 1.1.1';
+
+  @override
+  String get notice4Content =>
+      'Contenido de la actualización 1.1.1 :\\n\\n1. Interfaz de optimización de batería mejorada\\n2. Diseño de texto inglés optimizado\\n3. Estabilidad del sistema publicitario reforzada\\n4. Mejoras de rendimiento y estabilidad de la app\\n\\n¡Actualiza ahora para una mejor experiencia!';
 
   @override
   String get supportContentTitle => 'Contenido de la Consulta';

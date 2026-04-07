@@ -698,18 +698,9 @@ class _FaceResultScreenState extends State<FaceResultScreen> with SingleTickerPr
     if (!mounted) return;
     if (granted) return;
 
-    if (!lastRewardedAdHadTechnicalFailure) return;
-
-    setState(() {
-      _isLocked = false;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n.adLoadFailFreeAccess),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    // showRewardedAd가 false를 반환했다면 사용자가 직접 닫은 경우임.
+    // 타임아웃이나 로드 실패 시에는 mixin 내부에서 이미 true를 반환하고
+    // 무료 패스를 지급하므로 여기서는 추가 처리가 필요 없음.
   }
 
   Future<void> _unlockWithCookies() async {

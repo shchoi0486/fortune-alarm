@@ -81,6 +81,7 @@ class _RingtoneSelectScreenState extends ConsumerState<RingtoneSelectScreen> wit
 
   @override
   void dispose() {
+    FlutterRingtonePlayer().stop();
     _tabController.dispose();
     _audioPlayer.dispose();
     super.dispose();
@@ -256,13 +257,13 @@ class _RingtoneSelectScreenState extends ConsumerState<RingtoneSelectScreen> wit
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = ref.watch(themeProvider).primaryColor;
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: BoxDecoration(
-          color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode ? const Color(0xFF1E1E1E) : Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Material(
+        color: Colors.transparent,
         child: Column(
           children: [
             // 상단 핸들바 및 타이틀 영역
@@ -315,19 +316,16 @@ class _RingtoneSelectScreenState extends ConsumerState<RingtoneSelectScreen> wit
                   ),
                 ),
               ),
-              child: Material(
-                color: Colors.transparent,
-                child: TabBar(
-                  controller: _tabController,
-                  labelColor: primaryColor,
-                  unselectedLabelColor: isDarkMode ? Colors.grey : Colors.black54,
-                  indicatorColor: primaryColor,
-                  indicatorWeight: 3,
-                  tabs: _ringtonesByCategory.keys.map((category) => Text(_getCategoryLabel(context, category))).toList(),
-                  labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  unselectedLabelStyle: const TextStyle(fontSize: 15),
-                  labelPadding: const EdgeInsets.symmetric(vertical: 8),
-                ),
+              child: TabBar(
+                controller: _tabController,
+                labelColor: primaryColor,
+                unselectedLabelColor: isDarkMode ? Colors.grey : Colors.black54,
+                indicatorColor: primaryColor,
+                indicatorWeight: 3,
+                tabs: _ringtonesByCategory.keys.map((category) => Text(_getCategoryLabel(context, category))).toList(),
+                labelStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                unselectedLabelStyle: const TextStyle(fontSize: 15),
+                labelPadding: const EdgeInsets.symmetric(vertical: 8),
               ),
             ),
 
@@ -438,32 +436,30 @@ class _RingtoneSelectScreenState extends ConsumerState<RingtoneSelectScreen> wit
           ),
           
           // 하단 선택 완료 버튼
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: () {
-                    _stopPreview();
-                    Navigator.pop(context, {
-                      'path': _selectedPath,
-                      'name': _getDisplayName(_selectedPath ?? 'default'),
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, 10, 20, MediaQuery.of(context).padding.bottom + 10),
+            child: SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  _stopPreview();
+                  Navigator.pop(context, {
+                    'path': _selectedPath,
+                    'name': _getDisplayName(_selectedPath ?? 'default'),
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: primaryColor.computeLuminance() > 0.5 ? Colors.black : Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Text(
-                    l10n.selectionComplete,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                ),
+                child: Text(
+                  l10n.selectionComplete,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

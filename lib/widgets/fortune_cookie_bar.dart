@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 import '../providers/theme_provider.dart';
 import '../providers/mission_provider.dart';
 import '../providers/weather_provider.dart';
@@ -24,74 +25,149 @@ class FortuneCookieBar extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Container(
-      padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 0),
+      padding: const EdgeInsets.only(left: 16, right: 0, top: 8, bottom: 4),
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Weather Widget (Replaces Title)
-          InkWell(
-            onTap: () {
-              ref.invalidate(weatherProvider);
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
-                enableDrag: true,
-                builder: (context) => const WeatherDetailSheet(),
-              );
-            },
-            child: weatherAsync.when(
-              data: (weather) => Row(
-                children: [
-                  Text(
-                    _getWeatherEmoji(weather.condition),
-                    style: const TextStyle(fontSize: 18, height: 1),
-                  ),
-                  const SizedBox(width: 4),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${weather.temperature.toInt()}°C',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: textColor,
+          Expanded(
+            child: InkWell(
+              onTap: () async {
+                // 1. 위치 서비스 확인
+                final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+                if (!serviceEnabled) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l10n.locationServiceDisabled)),
+                    );
+                  }
+                  return;
+                }
+
+                // 2. 위치 권한 확인 및 요청
+                var status = await Permission.location.status;
+                if (status.isDenied) {
+                  status = await Permission.location.request();
+                }
+
+                if (status.isGranted) {
+                  ref.invalidate(weatherProvider);
+                  if (context.mounted) {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      enableDrag: true,
+                      builder: (context) => const WeatherDetailSheet(),
+                    );
+                  }
+                } else if (status.isPermanentlyDenied) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(l10n.locationPermissionRequiredWeather),
+                        action: SnackBarAction(
+                          label: l10n.settings,
+                          onPressed: openAppSettings,
                         ),
                       ),
-                      Row(
-                        children: [
-                          Container(
-                            width: 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              color: _getDustColor(weather.fineDustStatusKey, primaryColor),
-                              shape: BoxShape.circle,
-                            ),
+                    );
+                  }
+                }
+              },
+              child: weatherAsync.when(
+                data: (weather) => Row(
+                  children: [
+                    Text(
+                      _getWeatherEmoji(weather.condition),
+                      style: const TextStyle(fontSize: 18, height: 1),
+                    ),
+                    const SizedBox(width: 4),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${weather.temperature.toInt()}°C',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: textColor,
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${l10n.labelFineDust} ${_getLocalizedAirQuality(context, weather.fineDustStatusKey)}',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                              color: textColor.withOpacity(0.7),
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: _getDustColor(weather.fineDustStatusKey, primaryColor),
+                                shape: BoxShape.circle,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(width: 4),
+                            Text(
+                              '${l10n.labelFineDust} ${_getLocalizedAirQuality(context, weather.fineDustStatusKey)}',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: textColor.withOpacity(0.7),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                loading: () => const Align(
+                  alignment: Alignment.centerLeft,
+                  child: SizedBox(
+                    width: 20, 
+                    height: 20, 
+                    child: CircularProgressIndicator(strokeWidth: 2)
                   ),
-                ],
+                ),
+                error: (err, stack) {
+                  // 권한 거부 시 메시지 유도
+                  final errorMsg = err.toString();
+                  final isPermissionError = errorMsg.contains('Permission') || 
+                                         errorMsg.contains('permission') ||
+                                         errorMsg.contains('권한');
+                  final isServiceDisabled = errorMsg.contains('Service') ||
+                                         errorMsg.contains('service') ||
+                                         errorMsg.contains('서비스');
+                  
+                  if (isPermissionError || isServiceDisabled) {
+                    return Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isServiceDisabled ? Icons.location_off_rounded : Icons.location_on_rounded, 
+                          size: 16, 
+                          color: primaryColor
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(
+                            isServiceDisabled ? l10n.turnOnLocationService : l10n.checkWeatherLocationRequired,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: textColor.withOpacity(0.8),
+                              fontWeight: FontWeight.w600,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  
+                  return Icon(Icons.error_outline, size: 24, color: primaryColor);
+                },
               ),
-              loading: () => const SizedBox(
-                width: 20, 
-                height: 20, 
-                child: CircularProgressIndicator(strokeWidth: 2)
-              ),
-              error: (err, stack) => Icon(Icons.error_outline, size: 24, color: primaryColor),
             ),
           ),
           
@@ -101,6 +177,9 @@ class FortuneCookieBar extends ConsumerWidget {
             children: [
               // Theme Palette
               IconButton(
+                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.all(4),
+                constraints: const BoxConstraints(),
                 icon: Icon(Icons.palette_outlined, color: primaryColor, size: 24),
                 onPressed: () => _showColorPicker(context, ref),
               ),
@@ -109,6 +188,9 @@ class FortuneCookieBar extends ConsumerWidget {
               Stack(
                 children: [
                   IconButton(
+                    visualDensity: VisualDensity.compact,
+                    padding: const EdgeInsets.all(4),
+                    constraints: const BoxConstraints(),
                     icon: Icon(Icons.notifications_outlined, color: iconColor, size: 24),
                     onPressed: () {
                       ref.read(hasNewNotificationProvider.notifier).state = false;
@@ -122,8 +204,8 @@ class FortuneCookieBar extends ConsumerWidget {
                   ),
                   if (hasNewNotification)
                     Positioned(
-                      right: 12,
-                      top: 12,
+                      right: 4,
+                      top: 4,
                       child: Container(
                         width: 8,
                         height: 8,
@@ -139,6 +221,9 @@ class FortuneCookieBar extends ConsumerWidget {
               
               // Account Settings
               IconButton(
+                visualDensity: VisualDensity.compact,
+                padding: const EdgeInsets.fromLTRB(4, 4, 0, 4),
+                constraints: const BoxConstraints(),
                 icon: Icon(Icons.settings_outlined, color: iconColor, size: 24),
                 onPressed: () {
                   Navigator.push(
@@ -155,22 +240,35 @@ class FortuneCookieBar extends ConsumerWidget {
   }
 
   void _showColorPicker(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final themeState = ref.read(themeProvider);
     final isDark = themeState.themeMode == ThemeMode.dark;
     
     final List<Color> colors = [
       const Color(0xFFF97316), // Orange (Default)
       const Color(0xFFFB923C), // Pastel Orange
+      const Color(0xFFF59E0B), // Amber
       const Color(0xFFEAB308), // Yellow
       const Color(0xFFFBBF24), // Pastel Yellow
+      const Color(0xFF84CC16), // Lime
+      const Color(0xFF22C55E), // Green
+      const Color(0xFF10B981), // Green (Emerald)
+      const Color(0xFF14B8A6), // Teal
+      const Color(0xFF06B6D4), // Cyan
+      const Color(0xFF0EA5E9), // Sky
+      const Color(0xFF3B82F6), // Blue
+      const Color(0xFF6366F1), // Indigo
+      const Color(0xFF8B5CF6), // Purple
+      const Color(0xFFA855F7), // Purple (Violet)
+      const Color(0xFFD946EF), // Fuchsia
+      const Color(0xFFEC4899), // Pink
+      const Color(0xFFF43F5E), // Rose
       const Color(0xFFEF4444), // Red
       const Color(0xFFF87171), // Pastel Red
-      const Color(0xFFEC4899), // Pink
-      const Color(0xFF8B5CF6), // Purple
-      const Color(0xFF10B981), // Green
-      const Color(0xFF34D399), // Pastel Green
-      const Color(0xFF3B82F6), // Blue
-      const Color(0xFF60A5FA), // Pastel Blue
+      const Color(0xFF64748B), // Blue Gray
+      const Color(0xFF94A3B8), // Slate
+      const Color(0xFF71717A), // Zinc
+      const Color(0xFF78716C), // Stone
     ];
 
     showModalBottomSheet(
@@ -181,27 +279,41 @@ class FortuneCookieBar extends ConsumerWidget {
       ),
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '테마 색상',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    l10n.themeColor,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                  Container(
+                    width: 32,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.white12 : Colors.black.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 32), // Balance for text
+                ],
               ),
               const SizedBox(height: 24),
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
+                  crossAxisCount: 6,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
                 ),
                 itemCount: colors.length,
                 itemBuilder: (context, index) {
@@ -214,8 +326,6 @@ class FortuneCookieBar extends ConsumerWidget {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      width: 44,
-                      height: 44,
                       decoration: BoxDecoration(
                         color: color,
                         shape: BoxShape.circle,
@@ -223,20 +333,20 @@ class FortuneCookieBar extends ConsumerWidget {
                           color: isSelected 
                               ? (isDark ? Colors.white : Colors.black) 
                               : Colors.transparent,
-                          width: 2,
+                          width: 2.5,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: color.withOpacity(0.2),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
+                            color: color.withOpacity(0.15),
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: isSelected
                           ? Icon(
                               Icons.check,
-                              size: 20,
+                              size: 16,
                               color: color.computeLuminance() > 0.5 ? Colors.black : Colors.white,
                             )
                           : null,
@@ -244,7 +354,6 @@ class FortuneCookieBar extends ConsumerWidget {
                   );
                 },
               ),
-              const SizedBox(height: 16),
             ],
           ),
         );

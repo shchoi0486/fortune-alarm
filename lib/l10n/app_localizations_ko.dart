@@ -1218,6 +1218,79 @@ class AppLocalizationsKo extends AppLocalizations {
   String get deleteAlarm => '알람 삭제';
 
   @override
+  String get firstAlarmGuideTitle => '아직 등록된 알람이 없어요';
+
+  @override
+  String get firstAlarmGuideDesc => '행운의 알람을 설정하고\n상쾌한 하루를 시작해보세요!';
+
+  @override
+  String get addAlarm => '알람 추가';
+
+  @override
+  String get addFirstAlarm => '첫 알람 만들기';
+
+  @override
+  String get deleteAlarmConfirm => '알람을 삭제하시겠습니까?';
+
+  @override
+  String get welcomeMessage => '반가워요!';
+
+  @override
+  String get whenToRing => '언제 깨워드릴까요?';
+
+  @override
+  String get next => '다음';
+
+  @override
+  String get retryFortune => '운세 다시 보기';
+
+  @override
+  String get retryFortuneDesc => '운세 결과가 마음에 안 드시나요?\n광고 시청 후 한 번 더 확인할 수 있어요!';
+
+  @override
+  String get tapToReveal => '터치해서 운세 확인';
+
+  @override
+  String get redrawButton => '다시 뽑기';
+
+  @override
+  String get defaultFortuneGreeting => '오늘의 운세를 확인해보세요!';
+
+  @override
+  String get registerProfile => '프로필 등록하기';
+
+  @override
+  String get todaysFortuneTitle => '오늘의 운세';
+
+  @override
+  String get fortuneCheckSubtitle => '오늘 하루는 어떨까요? 지금 바로 확인해보세요.';
+
+  @override
+  String get supportSection => '지원';
+
+  @override
+  String get rateApp => '앱 평가하기';
+
+  @override
+  String get shareWithFriends => '친구에게 공유하기';
+
+  @override
+  String get shareAppMessage =>
+      '행운의 알람 \'포춘알람\'을 사용해보세요! 매일 아침 운세와 함께 상쾌하게 일어날 수 있어요. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm';
+
+  @override
+  String get locationPermissionRequiredWeather => '날씨 정보를 가져오려면 위치 권한이 필요합니다.';
+
+  @override
+  String get turnOnLocationService => '위치 서비스를 켜주세요';
+
+  @override
+  String get checkWeatherLocationRequired => '날씨 확인을 위한 위치 정보 필요';
+
+  @override
+  String get themeColor => '테마 색상';
+
+  @override
   String get confirmDelete => '정말 삭제하시겠습니까?';
 
   @override
@@ -2132,21 +2205,21 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get feedbackDescription =>
-      '포춘 알람을 사용하시면서 느낀 불편한 점이나 제안하고 싶은 기능이 있다면 언제든 말씀해 주세요.\n여러분의 소중한 의견이 더 나은 서비스를 만듭니다.';
+      '포춘알람을 사용하시면서 느낀 불편한 점이나 제안하고 싶은 기능이 있다면 언제든 말씀해 주세요.\n여러분의 소중한 의견이 더 나은 서비스를 만듭니다.';
 
   @override
   String get reportCopyright => '저작권 침해 신고하기';
 
   @override
   String get copyrightDescription =>
-      '포춘 알람 내의 콘텐츠가 저작권을 침해한다고 판단되는 경우, 해당 내용을 이메일로 신고해 주시기 바랍니다.\n확인 후 즉시 조치를 취하도록 하겠습니다.';
+      '포춘알람 내의 콘텐츠가 저작권을 침해한다고 판단되는 경우, 해당 내용을 이메일로 신고해 주시기 바랍니다.\n확인 후 즉시 조치를 취하도록 하겠습니다.';
 
   @override
   String get termsOfService => '이용약관';
 
   @override
   String get privacyPolicy =>
-      '서비스 이용약관 및 개인정보 처리방침\n\n1. 총칙\n\n제1조 (목적)\n본 약관은 \'포춘 알람\'(이하 \'서비스\')이 제공하는 서비스의 이용조건 및 절차, 이용자와 개발자의 권리, 의무 및 책임사항 등 기타 필요한 사항을 규정함을 목적으로 합니다.\n\n제2조 (개인정보 처리방침)\n\n1. 개인정보 수집 항목 및 방법\n본 서비스는 회원가입 없이 이용 가능하며, 별도의 서버에 이용자의 개인정보를 저장하거나 수집하지 않습니다.\n단, 서비스 이용 과정에서 아래와 같은 정보가 생성되어 기기 내에 저장될 수 있습니다.\n- 알람 설정 정보, 미션 수행 기록, 포춘쿠키 획득 내역 등\n\n2. 기기 권한 사용 안내\n서비스 제공을 위해 다음의 권한을 최소한으로 사용합니다.\n- 알림 (필수): 알람 실행 및 포춘쿠키 알림을 위해 사용합니다.\n- 정확한 알람 및 배터리 최적화 제외 (필수): 절전 모드에서도 알람이 정시에 울리도록 보장하기 위해 사용합니다.\n- 다른 앱 위에 표시 (필수): 잠금 화면이나 다른 앱 사용 중에도 알람 화면을 띄우기 위해 사용합니다.\n- 카메라 (선택): \'사물 찍기\' 미션 수행 시에만 사용되며, 촬영된 이미지는 서버로 전송되지 않고 기기 내에서만 처리됩니다.\n\n3. 광고 서비스 및 데이터 처리\n본 서비스는 무료 제공을 위해 Google AdMob을 이용하여 광고를 송출합니다.\nGoogle은 광고 맞춤 설정을 위해 광고 식별자(ADID) 등 일부 비식별 정보를 수집할 수 있습니다.\n- Google 개인정보 처리방침: https://policies.google.com/privacy\n\n제3조 (데이터의 저장 및 삭제)\n본 서비스는 이용자의 기기에 데이터를 저장하는 로컬 방식의 앱입니다.\n앱을 삭제할 경우 기기에 저장된 모든 데이터(알람, 미션 기록 등)는 즉시 삭제되며 복구할 수 없습니다.\n\n제4조 (면책 조항)\n1. 본 서비스에서 제공하는 운세 정보는 재미를 위한 참고용이며, 그 정확성이나 신뢰성을 보증하지 않습니다.\n2. 기기의 설정 변경(알림 끄기, 배터리 최적화 등)이나 시스템 오류로 인해 알람이 울리지 않는 경우에 대해 개발자는 책임을 지지 않습니다.\n\n제5조 (문의처)\n서비스 이용 중 불편 사항이나 문의가 있으실 경우 아래 이메일로 연락 주시기 바랍니다.\n이메일: seriessnap.co@gmail.com';
+      '서비스 이용약관 및 개인정보 처리방침\n\n1. 총칙\n\n제1조 (목적)\n본 약관은 \'포춘알람\'(이하 \'서비스\')이 제공하는 서비스의 이용조건 및 절차, 이용자와 개발자의 권리, 의무 및 책임사항 등 기타 필요한 사항을 규정함을 목적으로 합니다.\n\n제2조 (개인정보 처리방침)\n\n1. 개인정보 수집 항목 및 방법\n본 서비스는 회원가입 없이 이용 가능하며, 별도의 서버에 이용자의 개인정보를 저장하거나 수집하지 않습니다.\n단, 서비스 이용 과정에서 아래와 같은 정보가 생성되어 기기 내에 저장될 수 있습니다.\n- 알람 설정 정보, 미션 수행 기록, 포춘쿠키 획득 내역 등\n\n2. 기기 권한 사용 안내\n서비스 제공을 위해 다음의 권한을 최소한으로 사용합니다.\n- 알림 (필수): 알람 실행 및 포춘쿠키 알림을 위해 사용합니다.\n- 정확한 알람 및 배터리 최적화 제외 (필수): 절전 모드에서도 알람이 정시에 울리도록 보장하기 위해 사용합니다.\n- 다른 앱 위에 표시 (필수): 잠금 화면이나 다른 앱 사용 중에도 알람 화면을 띄우기 위해 사용합니다.\n- 카메라 (선택): \'사물 찍기\' 미션 수행 시에만 사용되며, 촬영된 이미지는 서버로 전송되지 않고 기기 내에서만 처리됩니다.\n\n3. 광고 서비스 및 데이터 처리\n본 서비스는 무료 제공을 위해 Google AdMob을 이용하여 광고를 송출합니다.\nGoogle은 광고 맞춤 설정을 위해 광고 식별자(ADID) 등 일부 비식별 정보를 수집할 수 있습니다.\n- Google 개인정보 처리방침: https://policies.google.com/privacy\n\n제3조 (데이터의 저장 및 삭제)\n본 서비스는 이용자의 기기에 데이터를 저장하는 로컬 방식의 앱입니다.\n앱을 삭제할 경우 기기에 저장된 모든 데이터(알람, 미션 기록 등)는 즉시 삭제되며 복구할 수 없습니다.\n\n제4조 (면책 조항)\n1. 본 서비스에서 제공하는 운세 정보는 재미를 위한 참고용이며, 그 정확성이나 신뢰성을 보증하지 않습니다.\n2. 기기의 설정 변경(알림 끄기, 배터리 최적화 등)이나 시스템 오류로 인해 알람이 울리지 않는 경우에 대해 개발자는 책임을 지지 않습니다.\n\n제5조 (문의처)\n서비스 이용 중 불편 사항이나 문의가 있으실 경우 아래 이메일로 연락 주시기 바랍니다.\n이메일: seriessnap.co@gmail.com';
 
   @override
   String get alarmOptimization => '알람 울림 최적화';
@@ -3006,6 +3079,29 @@ class AppLocalizationsKo extends AppLocalizations {
       '알람 등록에 실패했습니다. 다른 앱 위에 표시 권한이 없어 설정이 필요합니다.';
 
   @override
+  String get batteryOptimizationName => '배터리 최적화';
+
+  @override
+  String get batteryOptimizationTitle => '정확한 알람을 위해\n설정이 필요합니다.';
+
+  @override
+  String get batteryOptimizationSubtitle =>
+      '앱이 백그라운드에서도 원활하게 실행되도록\n배터리 최적화 예외로 설정해주세요.';
+
+  @override
+  String get batteryOptimizationBottomDesc =>
+      '설정 창에서 \'제한 없음\' 또는 \'최적화 안 함\'을\n선택해주시면 알람이 누락되지 않습니다.';
+
+  @override
+  String get understand => '확인했습니다';
+
+  @override
+  String get overlayPermissionName => '다른 앱 위에 표시';
+
+  @override
+  String get overlayPermissionTitle => '권한 허용 안내';
+
+  @override
   String get unknownAlarmError => '알람 등록 실패. 알 수 없는 오류가 발생했습니다.';
 
   @override
@@ -3020,6 +3116,11 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String repeatAlarmCount(int current, int max) {
     return '알람 미루기 ($current/$max)';
+  }
+
+  @override
+  String snoozeRemainingCount(int current, int max) {
+    return '남은 횟수 ($current/$max)';
   }
 
   @override
@@ -4019,17 +4120,17 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get faqAnswer5 =>
-      '네, 포춘 알람은 기기 내부에 데이터를 저장하므로 앱 삭제 시 설정한 알람과 미션 기록이 모두 삭제됩니다. 주의해 주세요.';
+      '네, 포춘알람은 기기 내부에 데이터를 저장하므로 앱 삭제 시 설정한 알람과 미션 기록이 모두 삭제됩니다. 주의해 주세요.';
 
   @override
   String get noticeLabel => '공지';
 
   @override
-  String get notice1Title => '포춘 알람 정식 출시 안내';
+  String get notice1Title => '포춘알람 정식 출시 안내';
 
   @override
   String get notice1Content =>
-      '안녕하세요. 포춘 알람이 정식으로 출시되었습니다.\\n\\n매일 아침 알람과 함께 오늘의 운세를 확인하고 즐거운 하루를 시작해보세요!\\n앞으로 더욱 다양한 기능과 개선된 서비스로 찾아뵙겠습니다.\\n\\n감사합니다.';
+      '안녕하세요. 포춘알람이 정식으로 출시되었습니다.\\n\\n매일 아침 알람과 함께 오늘의 운세를 확인하고 즐거운 하루를 시작해보세요!\\n앞으로 더욱 다양한 기능과 개선된 서비스로 찾아뵙겠습니다.\\n\\n감사합니다.';
 
   @override
   String get notice2Title => '버전 1.0.0 업데이트 소식';
@@ -4044,6 +4145,13 @@ class AppLocalizationsKo extends AppLocalizations {
   @override
   String get notice3Content =>
       '서비스 이용 약관이 개정되었습니다.\\n\\n주요 개정 내용:\\n- 개인정보 처리방침 강화\\n- 서비스 이용 범위 구체화\\n\\n자세한 내용은 설정 > 약관 페이지에서 확인하실 수 있습니다.';
+
+  @override
+  String get notice4Title => '버전 1.1.1 업데이트 소식';
+
+  @override
+  String get notice4Content =>
+      '버전 1.1.1 업데이트 내용입니다.\\n\\n1. 배터리 최적화 안내 문구 UI 개선\\n2. 영문 버전 텍스트 레이아웃 최적화\\n3. 광고 시스템 안정성 강화\\n4. 앱 안정성 및 성능 개선\\n\\n최신 버전으로 더욱 쾌적하게 이용해 보세요!';
 
   @override
   String get supportContentTitle => '문의 내용';

@@ -1,4 +1,7 @@
+import 'dart:io';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
@@ -115,29 +118,41 @@ class DailyForecast {
 class WeatherService {
   static const String _cacheKey = 'cached_weather_data';
 
-  Future<WeatherModel> getCurrentWeather() async {
+  Future<WeatherModel> getCurrentWeather({bool requestPermission = true}) async {
     try {
-      // 1. 위치 가져오기 (LastKnown -> Current 순서로 시도하여 속도 개선)
-      final position = await determinePosition();
+      // 1. 언어 설정 가져오기
+      String languageCode = Platform.localeName.split('_')[0];
+      try {
+        final settingsBox = await Hive.openBox('settings');
+        if (settingsBox.containsKey('language')) {
+          languageCode = settingsBox.get('language');
+        }
+      } catch (_) {}
+
+      // 2. 위치 가져오기 (LastKnown -> Current 순서로 시도하여 속도 개선)
+      final position = await determinePosition(requestPermission: requestPermission);
       final lat = position.latitude;
       final lon = position.longitude;
 
-      // 2. API 호출 (병렬 처리하되, 실패 시 안전값 사용을 위해 개별 await 고려했으나 속도를 위해 Future.wait 유지하고 catchError 강화)
-      // hourly=temperature_2m,weather_code : 시간대별 예보
-      // daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max : 주간 예보
+      // 3. API 호출
       final weatherFuture = http.get(Uri.parse(
           'https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto'));
       
       final airQualityFuture = http.get(Uri.parse(
           'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=$lat&longitude=$lon&current=pm10,pm2_5'));
 
-      // 다국어 지원을 위해 로케일 정보 전달 (geocoding 패키지 버전에 따라 지원 여부 상이, 제거하고 시스템 로케일 사용)
-      final geocodingFuture = placemarkFromCoordinates(lat, lon).catchError((e) {
-        print('Geocoding error: $e');
-        return <Placemark>[];
-      });
+      // geocoding 언어 설정 적용 (setLocaleIdentifier 사용)
+      final geocodingFuture = () async {
+        try {
+          await setLocaleIdentifier(languageCode);
+          return await placemarkFromCoordinates(lat, lon);
+        } catch (e) {
+          debugPrint('Geocoding error: $e');
+          return <Placemark>[];
+        }
+      }();
 
-      // 3. 결과 대기 (타임아웃 10초)
+      // 4. 결과 대기 (타임아웃 10초)
       final results = await Future.wait([
         weatherFuture,
         airQualityFuture,
@@ -300,7 +315,7 @@ class WeatherService {
     return 'Cloudy';
   }
   
-  Future<Position> determinePosition() async {
+  Future<Position> determinePosition({bool requestPermission = true}) async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -313,6 +328,9 @@ class WeatherService {
 
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
+      if (!requestPermission) {
+        return Future.error('위치 권한이 거부되었습니다.');
+      }
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         return Future.error('위치 권한이 거부되었습니다.');

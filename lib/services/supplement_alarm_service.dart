@@ -132,13 +132,18 @@ class SupplementAlarmService {
     SupplementSettings? settings;
     Box<SupplementSettings>? box;
 
+    final notificationService = NotificationService();
+    debugPrint('[SupplementAlarm] Initializing NotificationService in background...');
     try {
-      // Hive 초기화 (백그라운드 격리된 Isolate이므로 초기화 필요)
-      await Hive.initFlutter();
-      
-      if (!Hive.isAdapterRegistered(9)) {
-        Hive.registerAdapter(SupplementSettingsAdapter());
-      }
+        await notificationService.init(null);
+        debugPrint('[SupplementAlarm] NotificationService init success.');
+    } catch (e) {
+        debugPrint('[SupplementAlarm] Notification init error: $e');
+    }
+
+    try {
+      // NotificationService.getL10n() 호출 시 내부적으로 Hive가 초기화됨
+      await notificationService.getL10n();
 
       if (Hive.isBoxOpen('supplement_settings')) {
         box = Hive.box<SupplementSettings>('supplement_settings');
@@ -165,15 +170,6 @@ class SupplementAlarmService {
     }
 
     // 1. 알림 표시
-    final notificationService = NotificationService();
-    debugPrint('[SupplementAlarm] Initializing NotificationService in background...');
-    try {
-        await notificationService.init(null);
-        debugPrint('[SupplementAlarm] NotificationService init success.');
-    } catch (e) {
-        debugPrint('[SupplementAlarm] Notification init error: $e');
-    }
-
     final l10n = await notificationService.getL10n();
     final String payload = 'supplement_$id';
 

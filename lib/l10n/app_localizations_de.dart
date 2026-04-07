@@ -1245,6 +1245,84 @@ class AppLocalizationsDe extends AppLocalizations {
   String get deleteAlarm => 'Wecker löschen';
 
   @override
+  String get firstAlarmGuideTitle => 'Noch keine Wecker';
+
+  @override
+  String get firstAlarmGuideDesc =>
+      'Stellen Sie einen Glückswecker ein und\nstarten Sie einen erfrischenden Tag!';
+
+  @override
+  String get addAlarm => 'Wecker hinzufügen';
+
+  @override
+  String get addFirstAlarm => 'Ersten Wecker erstellen';
+
+  @override
+  String get deleteAlarmConfirm => 'Diesen Wecker löschen?';
+
+  @override
+  String get welcomeMessage => 'Freut mich!';
+
+  @override
+  String get whenToRing => 'Wann soll ich dich wecken?';
+
+  @override
+  String get next => 'Weiter';
+
+  @override
+  String get retryFortune => 'Glück erneut versuchen';
+
+  @override
+  String get retryFortuneDesc =>
+      'Ergebnis gefällt nicht?\nWerbung ansehen, um es noch einmal zu versuchen!';
+
+  @override
+  String get tapToReveal => 'Tippen, um das Glück zu enthüllen';
+
+  @override
+  String get redrawButton => 'Neu ziehen';
+
+  @override
+  String get defaultFortuneGreeting => 'Schau dir dein heutiges Glück an!';
+
+  @override
+  String get registerProfile => 'Profil registrieren';
+
+  @override
+  String get todaysFortuneTitle => 'Heutiges Glück';
+
+  @override
+  String get fortuneCheckSubtitle =>
+      'Wie wird dein Tag? Finde es jetzt heraus.';
+
+  @override
+  String get supportSection => 'Support';
+
+  @override
+  String get rateApp => 'App bewerten';
+
+  @override
+  String get shareWithFriends => 'Mit Freunden teilen';
+
+  @override
+  String get shareAppMessage =>
+      'Probiere \'Fortune Alarm\' aus! Wache jeden Morgen frisch mit deinem Tageshoroskop auf. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm';
+
+  @override
+  String get locationPermissionRequiredWeather =>
+      'Standortberechtigung ist erforderlich, um Wetterinformationen zu erhalten.';
+
+  @override
+  String get turnOnLocationService =>
+      'Bitte schalten Sie die Standortdienste ein';
+
+  @override
+  String get checkWeatherLocationRequired => 'Standort für Wetter benötigt';
+
+  @override
+  String get themeColor => 'Themenfarbe';
+
+  @override
   String get confirmDelete => 'Möchten Sie wirklich löschen?';
 
   @override
@@ -3144,6 +3222,30 @@ class AppLocalizationsDe extends AppLocalizations {
       'Wecker konnte nicht registriert werden. Die Berechtigung \"Über anderen Apps anzeigen\" fehlt und muss eingestellt werden.';
 
   @override
+  String get batteryOptimizationName => 'Akku-Optimierung';
+
+  @override
+  String get batteryOptimizationTitle =>
+      'Optimierungseinstellungen erforderlich\nfür präzise Alarme.';
+
+  @override
+  String get batteryOptimizationSubtitle =>
+      'Bitte als Ausnahme für die Akku-Optimierung festlegen,\ndamit die App im Hintergrund reibungslos läuft.';
+
+  @override
+  String get batteryOptimizationBottomDesc =>
+      'Wählen Sie \'Nicht eingeschränkt\' oder \'Nicht optimieren\'\nin den Einstellungen, um keinen Alarm zu verpassen.';
+
+  @override
+  String get understand => 'Verstanden';
+
+  @override
+  String get overlayPermissionName => 'Über anderen Apps anzeigen';
+
+  @override
+  String get overlayPermissionTitle => 'Berechtigungshilfe';
+
+  @override
   String get unknownAlarmError =>
       'Wecker konnte nicht registriert werden. Ein unbekannter Fehler ist aufgetreten.';
 
@@ -3160,6 +3262,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String repeatAlarmCount(int current, int max) {
     return 'Schlummerwecker ($current/$max)';
+  }
+
+  @override
+  String snoozeRemainingCount(int current, int max) {
+    return 'Verbleibend ($current/$max)';
   }
 
   @override
@@ -4277,6 +4384,13 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get notice3Content =>
       'Die Nutzungsbedingungen wurden überarbeitet.\\n\\nWichtige Änderungen:\\n- Verschärfte Datenschutzrichtlinie\\n- Festgelegter Dienstnutzungsumfang\\n\\nDetails finden Sie auf der Seite Einstellungen > Bedingungen.';
+
+  @override
+  String get notice4Title => 'Update auf Version 1.1.1';
+
+  @override
+  String get notice4Content =>
+      'Inhalt des Updates auf Version 1.1.1:\\n\\n1. Optimierte Benutzeroberfläche für Batterie-Guide\\n2. Optimiertes Textlayout für die englische Version\\n3. Erhöhte Stabilität des Werbesystems\\n4. Verbesserungen der Performance und Stabilität der App\\n\\nAktualisieren Sie jetzt für ein besseres Erlebnis!';
 
   @override
   String get supportContentTitle => 'Anfrageinhalt';

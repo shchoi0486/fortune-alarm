@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../providers/theme_provider.dart';
-import '../../services/notification_service.dart';
 import '../../services/fortune_push_service.dart';
 
 class AlarmSettingsScreen extends ConsumerStatefulWidget {
@@ -309,8 +308,7 @@ class _AlarmSettingsScreenState extends ConsumerState<AlarmSettingsScreen> {
         });
         if (onChanged != null) onChanged(newValue);
       },
-      activeColor: Colors.white,
-      activeTrackColor: primaryColor,
+      activeColor: primaryColor,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     );
   }

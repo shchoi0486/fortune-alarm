@@ -76,10 +76,8 @@ class MissionTile extends ConsumerWidget {
          l10n.cupsCount(currentCups, goalCups),
          style: TextStyle(
            fontSize: 12,
-           color: isCompleted 
-              ? (isDark ? Colors.green[300]!.withOpacity(0.7) : Colors.green[700]!.withOpacity(0.7))
-              : primaryColor,
-          fontWeight: FontWeight.w500,
+           color: isDark ? Colors.white70 : Colors.black54,
+           fontWeight: FontWeight.w500,
          ),
        );
     } else if (isSupplementMission) {
@@ -91,9 +89,7 @@ class MissionTile extends ConsumerWidget {
          l10n.timesCount(current.toString()),
          style: TextStyle(
            fontSize: 12,
-           color: isCompleted 
-               ? (isDark ? Colors.green[300]!.withOpacity(0.7) : Colors.green[700]!.withOpacity(0.7))
-               : primaryColor,
+           color: isDark ? Colors.white70 : Colors.black54,
            fontWeight: FontWeight.w500,
          ),
        );
@@ -102,9 +98,7 @@ class MissionTile extends ConsumerWidget {
         isCompleted ? l10n.timesCount('1') : l10n.timesCount('0'),
         style: TextStyle(
           fontSize: 12,
-          color: isCompleted 
-              ? (isDark ? Colors.green[300]!.withOpacity(0.7) : Colors.green[700]!.withOpacity(0.7))
-              : (isDark ? Colors.redAccent.withOpacity(0.8) : Colors.redAccent),
+          color: isDark ? Colors.white70 : Colors.black54,
           fontWeight: FontWeight.w600,
         ),
       );
@@ -118,18 +112,16 @@ class MissionTile extends ConsumerWidget {
             : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isCompleted
-              ? (isDark ? Colors.white.withOpacity(0.05) : Colors.grey[200]!)
-              : (isDark ? Colors.white.withOpacity(0.2) : const Color(0xFFE2E8F0)),
-          width: isDark ? 1.2 : 0.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: isDark ? Colors.white.withOpacity(0.15) : const Color(0xFFCBD5E1),
+            width: isDark ? 1.0 : 0.5,
           ),
-        ],
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.02),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
       ),
       child: ListTile(
         onTap: onTap ?? (isSpecialMission ? null : onToggle), // 특수 미션은 탭으로 상세 화면 이동
@@ -160,9 +152,7 @@ class MissionTile extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: isCompleted ? FontWeight.w500 : FontWeight.w500,
-                  color: isCompleted 
-                      ? (isDark ? Colors.green[300] : Colors.green[800])
-                      : (isDark ? Colors.white : Colors.black87),
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
             ),
@@ -190,7 +180,7 @@ class MissionTile extends ConsumerWidget {
                     : (isSpecialMission 
                         ? (isDark ? Colors.grey[700]! : Colors.grey[200]!) 
                         : (isDark ? Colors.grey[600]! : Colors.grey[300]!)),
-                width: 1.5,
+                width: 0.8,
               ),
             ),
             child: isCompleted

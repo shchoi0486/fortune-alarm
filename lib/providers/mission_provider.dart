@@ -637,12 +637,22 @@ class MissionNotifier extends ChangeNotifier {
 
   // 기상 알람 성공 처리 (외부에서 호출)
   Future<void> completeWakeUpMission() async {
+    // 1. 날짜 변경 체크 및 초기화 대기
     await _checkDayChange();
     
-    // wakeup 미션 ID는 'wakeup'으로 고정
-    if (_todayLog != null && !_todayLog!.completedMissionIds.contains('wakeup')) {
-      await setMissionCompleted('wakeup', true);
+    // 2. 초기화 대기 (이미 setMissionCompleted 내부에 있지만, 여기서도 안전하게 체크)
+    if (_todayLog == null) {
+      debugPrint('completeWakeUpMission: _todayLog is null, waiting for init...');
+      int retry = 0;
+      while (_isLoading && retry < 30) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        retry++;
+      }
     }
+
+    // 3. wakeup 미션 ID는 'wakeup'으로 고정
+    // setMissionCompleted 내부에서 중복 체크 및 저장을 수행하므로 직접 호출
+    await setMissionCompleted('wakeup', true);
   }
 
   // 통계 데이터 계산

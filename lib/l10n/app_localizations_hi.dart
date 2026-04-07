@@ -1245,6 +1245,82 @@ class AppLocalizationsHi extends AppLocalizations {
   String get deleteAlarm => 'अलार्म हटाएं';
 
   @override
+  String get firstAlarmGuideTitle => 'अभी तक कोई अल람 नहीं';
+
+  @override
+  String get firstAlarmGuideDesc =>
+      'भाग्य अलार्म सेट करें और\nएक ताज़ा दिन की शुरुआत करें!';
+
+  @override
+  String get addAlarm => 'अलार्म जोड़ें';
+
+  @override
+  String get addFirstAlarm => 'पहला अल람 बनाएं';
+
+  @override
+  String get deleteAlarmConfirm => 'क्या आप इस अलार्म को हटा나 चाहते हैं?';
+
+  @override
+  String get welcomeMessage => 'आपसे मिलकर खुशी हुई!';
+
+  @override
+  String get whenToRing => 'मुझे आपको कब जगाना चाहिए?';
+
+  @override
+  String get next => 'अगला';
+
+  @override
+  String get retryFortune => 'फिर से भाग्य देखें';
+
+  @override
+  String get retryFortuneDesc =>
+      'परिणाम पसंद नहीं आया?\nएक बार और कोशिश करने के लिए विज्ञापन देखें!';
+
+  @override
+  String get tapToReveal => 'भाग्य जानने के लिए टैप करें';
+
+  @override
+  String get redrawButton => 'फिर से निकालें';
+
+  @override
+  String get defaultFortuneGreeting => 'आज का भाग्य देखें!';
+
+  @override
+  String get registerProfile => 'प्रोफ़ाइल रजिस्टर करें';
+
+  @override
+  String get todaysFortuneTitle => 'आज का भाग्य';
+
+  @override
+  String get fortuneCheckSubtitle => 'आपका दिन कैसा रहेगा? अभी देखें।';
+
+  @override
+  String get supportSection => 'सहायता';
+
+  @override
+  String get rateApp => 'ऐप को रेट करें';
+
+  @override
+  String get shareWithFriends => 'दोस्तों के साथ साझा करें';
+
+  @override
+  String get shareAppMessage =>
+      '\'Fortune Alarm\' को आजमाएं! हर सुबह अपने दैनिक भाग्य के साथ ताज़गी से उठें। https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm';
+
+  @override
+  String get locationPermissionRequiredWeather =>
+      'मौसम की जानकारी प्राप्त करने के लिए स्थान की अनुमति आवश्यक है।';
+
+  @override
+  String get turnOnLocationService => 'कृपया स्थान सेवाएँ चालू करें';
+
+  @override
+  String get checkWeatherLocationRequired => 'मौसम के लिए स्थान आवश्यक';
+
+  @override
+  String get themeColor => 'थीम रंग';
+
+  @override
   String get confirmDelete => 'क्या आप वाकई हटाना चाहते हैं?';
 
   @override
@@ -3132,6 +3208,30 @@ class AppLocalizationsHi extends AppLocalizations {
       'अलार्म पंजीकरण विफल। अन्य ऐप्स के ऊपर दिखाएं अनुमति आवश्यक है।';
 
   @override
+  String get batteryOptimizationName => 'बैटरी ऑप्टिमाइज़ेशन';
+
+  @override
+  String get batteryOptimizationTitle =>
+      'सटीक अलार्म के लिए\nऑप्टिमाइज़ेशन सेटिंग्स आवश्यक हैं।';
+
+  @override
+  String get batteryOptimizationSubtitle =>
+      'कृपया बैटरी ऑप्टिमाइज़ेशन अपवाद के रूप में सेट करें\nताकि ऐप बैकग्राउंड में सुचारू रूप से चल सके।';
+
+  @override
+  String get batteryOptimizationBottomDesc =>
+      'सेटिंग्स में \'Unrestricted\' या \'Don\'t optimize\'\nचुनने से अलार्म मिस नहीं होगा।';
+
+  @override
+  String get understand => 'समझ गया';
+
+  @override
+  String get overlayPermissionName => 'अन्य ऐप्स के ऊपर प्रदर्शित करें';
+
+  @override
+  String get overlayPermissionTitle => 'अनुमति मार्गदर्शिका';
+
+  @override
   String get unknownAlarmError =>
       'अलार्म रजिस्टर करने में विफल। एक अज्ञात त्रुटि हुई।';
 
@@ -3147,6 +3247,11 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String repeatAlarmCount(int current, int max) {
     return 'दोहराएँ अलार्म ($current/$max)';
+  }
+
+  @override
+  String snoozeRemainingCount(int current, int max) {
+    return 'शेष ($current/$max)';
   }
 
   @override
@@ -4256,6 +4361,13 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get notice3Content =>
       'सेवा की शर्तों को संशोधित किया गया है।\n\nप्रमुख संशोधन:\n- गोपनीयता नीति को मजबूत किया गया\n- सेवा उपयोग का दायरा निर्दिष्ट किया गया\n\nविवरण सेटिंग्स > शर्तें पृष्ठ पर पाए जा सकते हैं।';
+
+  @override
+  String get notice4Title => 'संस्करण 1.1.1 अपडेट समाचार';
+
+  @override
+  String get notice4Content =>
+      'संस्करण 1.1.1 अपडेट की सामग्री यहाँ है:\n\n1. बेहतर बैटरी अनुकूलन गाइड UI\n2. अंग्रेजी संस्करण के लिए बेहतर टेक्स्ट लेआउट\n3. विज्ञापन प्रणाली की स्थिरता में सुधार\n4. ऐप स्थिरता और प्रदर्शन में सुधार\n\nबेहतर अनुभव के लिए कृपया अभी अपडेट करें!';
 
   @override
   String get supportContentTitle => 'पूछताछ सामग्री';

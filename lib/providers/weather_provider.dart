@@ -13,5 +13,5 @@ final weatherProvider = FutureProvider<WeatherModel>((ref) async {
   });
   ref.onDispose(() => timer.cancel());
 
-  return service.getCurrentWeather();
+  return service.getCurrentWeather(requestPermission: false);
 });

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/theme_provider.dart';
 import '../../providers/mission_provider.dart';
-import '../../widgets/ad_widgets.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'widgets/mission_tile.dart';
 import 'widgets/add_mission_sheet.dart';
@@ -40,99 +39,103 @@ class MissionScreen extends ConsumerWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          Expanded(
-            child: CustomScrollView(
-              slivers: [
-            // 1. 헤더 (달성률)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          // 1. 헤더 (고정)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          AppLocalizations.of(context)!.dailyMission,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: const Text(
+                            "🎯",
+                            style: TextStyle(fontSize: 22, height: 1.0),
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: missionState.isGoalAchieved 
-                              ? Colors.green.withOpacity(0.1) 
-                              : primaryColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            missionState.isGoalAchieved 
-                                ? AppLocalizations.of(context)!.goalAchieved(missionState.completedCount)
-                                : AppLocalizations.of(context)!.missionProgress(missionState.completedCount),
-                            style: TextStyle(
-                              color: missionState.isGoalAchieved ? Colors.green : primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        const SizedBox(width: 12),
+                        Text(
+                          AppLocalizations.of(context)!.dailyMission,
+                          style: TextStyle(
+                            color: isDark ? Colors.white : Colors.black87,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            height: 1.0,
+                            leadingDistribution: TextLeadingDistribution.even,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    // 프로그레스 바 (폭을 나의 미션 기록 박스와 일치하도록 Padding 조정)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: LinearProgressIndicator(
-                          value: (missionState.completedCount / 5).clamp(0.0, 1.0),
-                          minHeight: 10,
-                          backgroundColor: Colors.grey.withOpacity(0.2),
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            missionState.isGoalAchieved ? Colors.green : primaryColor,
-                          ),
-                        ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: missionState.isGoalAchieved 
+                          ? Colors.green.withOpacity(0.1) 
+                          : primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-
-
-            SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(20, 4, 20, 0),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.amber.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.amber.withOpacity(0.3)),
-                ),
-                child: Row(
-                  children: [
-                    const Text('🥠', style: TextStyle(fontSize: 20)),
-                    const SizedBox(width: 10),
-                    Expanded(
                       child: Text(
-                        AppLocalizations.of(context)!.missionRewardInfo,
+                        missionState.isGoalAchieved 
+                            ? AppLocalizations.of(context)!.goalAchieved(missionState.completedCount)
+                            : AppLocalizations.of(context)!.missionProgress(missionState.completedCount),
                         style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.amber[900],
+                          color: isDark ? Colors.white70 : Colors.black87,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ],
                 ),
-              ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: (missionState.completedCount / 5).clamp(0.0, 1.0),
+                      minHeight: 8,
+                      backgroundColor: Colors.grey.withOpacity(0.2),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        missionState.isGoalAchieved ? Colors.green : primaryColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
+          ),
 
-            // 2. 해야 할 미션 (Pending)
-            if (pendingMissions.isNotEmpty) ...[
+          // 보상 안내 (심플하게)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+            child: Row(
+              children: [
+                const Text('🥠', style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    AppLocalizations.of(context)!.missionRewardInfo,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: isDark ? Colors.white54 : Colors.black54,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Expanded(
+            child: CustomScrollView(
+              slivers: [
+                // 2. 해야 할 미션 (Pending)
+                if (pendingMissions.isNotEmpty) ...[
               SliverPadding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 4, bottom: 8),
                         sliver: SliverToBoxAdapter(
@@ -151,15 +154,15 @@ class MissionScreen extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF97316).withOpacity(0.1),
+                          color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           '${pendingMissions.length}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFFF97316),
+                            color: isDark ? Colors.white70 : Colors.black54,
                           ),
                         ),
                       ),
@@ -246,14 +249,14 @@ class MissionScreen extends ConsumerWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.add, size: 16, color: const Color(0xFFF97316)),
+                              const Icon(Icons.add, size: 16, color: Color(0xFFF97316)),
                               const SizedBox(width: 4),
                               Text(
                                 AppLocalizations.of(context)!.addMission,
                                 style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
-                                  color: const Color(0xFFF97316),
+                                  color: Color(0xFFF97316),
                                 ),
                               ),
                             ],
@@ -301,7 +304,7 @@ class MissionScreen extends ConsumerWidget {
 
             // 3. 완료한 미션 (Completed)
             SliverPadding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 8),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 8), // 12 -> 8 축소
               sliver: SliverToBoxAdapter(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -314,19 +317,19 @@ class MissionScreen extends ConsumerWidget {
                         color: isDark ? Colors.white : Colors.black87,
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 4), // 8 -> 4 축소 (Header Standard)
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.1),
+                        color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         '${completedMissions.length}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green,
+                          color: isDark ? Colors.white70 : Colors.black54,
                         ),
                       ),
                     ),
@@ -345,8 +348,9 @@ class MissionScreen extends ConsumerWidget {
                       color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.05),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
-                      ),
+                      color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+                      width: isDark ? 1.0 : 0.5,
+                    ),
                     ),
                     child: Text(
                       AppLocalizations.of(context)!.noCompletedMissionsHint,
@@ -398,7 +402,7 @@ class MissionScreen extends ConsumerWidget {
             // 4. 구분선 및 하단 섹션 분리
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 0),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 8, bottom: 0), // 12 -> 8 축소
             child: Divider(
               thickness: 1,
               color: Theme.of(context).brightness == Brightness.dark 
@@ -420,9 +424,9 @@ class MissionScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: Theme.of(context).brightness == Brightness.dark 
-                        ? Colors.white.withOpacity(0.2) 
-                        : const Color(0xFFE2E8F0),
-                      width: 1.2,
+                        ? Colors.white.withOpacity(0.15) 
+                        : const Color(0xFFCBD5E1),
+                      width: Theme.of(context).brightness == Brightness.dark ? 1.0 : 0.5,
                     ),
                   ),
                   child: Column(

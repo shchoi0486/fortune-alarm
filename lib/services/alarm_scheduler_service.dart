@@ -72,15 +72,19 @@ Future<void> alarmCallback(int id) async {
   // 로컬라이징 초기화
   AppLocalizations? l10n;
   try {
-    String langCode = Platform.localeName.split('_')[0];
-    Locale locale = Locale(langCode);
-    if (!AppLocalizations.supportedLocales.contains(locale)) {
-      locale = const Locale('en');
-    }
-    l10n = await AppLocalizations.delegate.load(locale);
-    debugPrint('[AlarmScheduler] Localization loaded for: ${locale.languageCode}');
+    l10n = await notificationService.getL10n();
+    debugPrint('[AlarmScheduler] Localization loaded successfully.');
   } catch (e) {
     debugPrint('[AlarmScheduler] Localization load failed: $e');
+    // 기본 로케일로 폴백
+    try {
+      String langCode = Platform.localeName.split('_')[0];
+      Locale locale = Locale(langCode);
+      if (!AppLocalizations.supportedLocales.contains(locale)) {
+        locale = const Locale('en');
+      }
+      l10n = await AppLocalizations.delegate.load(locale);
+    } catch (_) {}
   }
 
   try {
@@ -91,7 +95,7 @@ Future<void> alarmCallback(int id) async {
     // 상세 정보 로딩 전이라도 일단 기본 알림을 띄웁니다.
     await notificationService.showAlarmNotification(
       id: id,
-      title: l10n?.appTitle ?? 'Snap Alarm',
+      title: l10n?.appTitle ?? 'Fortune Alarm',
       body: l10n?.notificationWakeUpBody ?? 'Time to wake up!', // 초기 메시지 통일
       payload: 'loading_$id', // 로딩 중임을 표시
       soundName: 'morning', // 기본 사운드 (안전장치)
@@ -112,10 +116,10 @@ Future<void> alarmCallback(int id) async {
     } else {
       await FlutterForegroundTask.startService(
         serviceId: 256,
-        notificationTitle: l10n?.appTitle ?? 'Snap Alarm',
+        notificationTitle: l10n?.appTitle ?? 'Fortune Alarm',
         notificationText: l10n?.notificationWakeUpBody ?? 'Time to wake up!',
         notificationIcon: NotificationIcon(
-          metaDataName: 'com.seriessnap.fortunealarm.notification_icon',
+          metaDataName: 'com.seriessnap.fortune_alarm.notification_icon',
         ),
         callback: startCallback,
       );
@@ -131,22 +135,7 @@ Future<void> alarmCallback(int id) async {
   // 3. Hive 및 데이터 로드
   Box<AlarmModel>? box;
   try {
-    final directory = await getApplicationDocumentsDirectory();
-    final path = directory.path;
-    debugPrint('[AlarmScheduler] Isolate Hive Path: $path');
-    
-    // Hive 초기화 (안전하게)
-    try {
-      if (!Hive.isBoxOpen('alarms')) {
-        await Hive.initFlutter(path);
-        if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(AlarmModelAdapter());
-        if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(MissionTypeAdapter());
-        if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
-      }
-    } catch (e) {
-      debugPrint('[AlarmScheduler] Hive Init Error: $e');
-    }
-
+    // [중요] NotificationService에서 이미 초기화되었으므로 바로 박스를 열 수 있음
     // 알람 데이터 검색
     AlarmModel? alarm;
     try {
@@ -250,12 +239,9 @@ Future<void> alarmCallback(int id) async {
         uiSendPort?.send(payload);
 
         // 설정된 알람 정보로 새 알림 생성 (실제 소리와 진동으로 업데이트)
-        final locale = Locale(Platform.localeName.split('_')[0]);
-        final l10n = await AppLocalizations.delegate.load(locale);
-
         await notificationService.showAlarmNotification(
           id: id,
-          title: l10n.appTitle,
+          title: l10n?.appTitle ?? 'Fortune Alarm',
           body: body,
           payload: payload,
           soundName: alarm.ringtonePath,
@@ -392,12 +378,7 @@ class AlarmSchedulerService {
     debugPrint('[AlarmScheduler] Scheduling Safety Alarm: $safetyId');
     
     // 로컬라이징 가져오기
-    String langCode = Platform.localeName.split('_')[0];
-    Locale locale = Locale(langCode);
-    if (!AppLocalizations.supportedLocales.contains(locale)) {
-      locale = const Locale('en');
-    }
-    final l10n = await AppLocalizations.delegate.load(locale);
+    final l10n = await NotificationService().getL10n();
 
     // 1분 뒤에 울리는 안전 알람 생성
     final safetyTime = DateTime.now().add(const Duration(minutes: 1));
@@ -519,17 +500,19 @@ class AlarmSchedulerService {
       // 1분 이내의 과거라면 즉시 울리도록 처리 (사용자가 방금 설정한 것으로 간주)
       DateTime scheduleTime = alarm.time;
       if (scheduleTime.isBefore(now)) {
-        // [중요] 재스케줄링(반복 알람 자동 생성) 중이거나, 현재 시간과 너무 가까운 과거(10초 이내)라면 
-        // 즉시 실행을 방지하여 무한 루프를 막습니다.
-        if (isRescheduling || now.difference(scheduleTime).inSeconds < 10) {
-          debugPrint('[AlarmScheduler] Alarm time is in the past ($scheduleTime). Skipping immediate fire to prevent loop.');
+        // [수정] 무한 루프 방지 로직 개선
+        // 1. 재스케줄링(반복 알람 자동 생성) 중일 때만 과거 시간 스케줄링을 엄격히 제한
+        // 2. 수동 저장(isRescheduling = false) 시에도 과거라면 즉시 실행을 막아 재실행 버그 방지
+        if (isRescheduling) {
+          debugPrint('[AlarmScheduler] Alarm time is in the past ($scheduleTime) during rescheduling. Skipping to prevent loop.');
           return false;
         }
 
         final diff = now.difference(scheduleTime);
         if (diff.inMinutes < 1) {
-          debugPrint('[AlarmScheduler] Alarm time is in the past but within 1 minute. Scheduling for immediate fire.');
-          scheduleTime = now.add(const Duration(milliseconds: 500)); // 즉시 실행을 위해 0.5초 뒤로 설정
+          debugPrint('[AlarmScheduler] Alarm time is in the past but within 1 minute. Skipping to prevent instant re-ring bug.');
+          // [Bug Fix] 1분 이내 과거라도 즉시 실행하지 않고 건너뜀 (알람을 껐을 때 1초 뒤 즉시 다시 울리는 치명적 버그 방지)
+          return false;
         } else {
           debugPrint('[AlarmScheduler] WARNING: Attempted to schedule alarm in the past (>1m)! Time: ${alarm.time}, Now: $now');
           return false;
@@ -572,12 +555,7 @@ class AlarmSchedulerService {
       } else if (Platform.isIOS) {
         try {
           // 로컬라이징 가져오기
-          String langCode = Platform.localeName.split('_')[0];
-          Locale locale = Locale(langCode);
-          if (!AppLocalizations.supportedLocales.contains(locale)) {
-            locale = const Locale('en');
-          }
-          final l10n = await AppLocalizations.delegate.load(locale);
+          final l10n = await NotificationService().getL10n();
 
           await NotificationService().scheduleAlarmNotification(
             id: alarmId,
@@ -634,12 +612,7 @@ class AlarmSchedulerService {
     final resolvedSnoozeTime = snoozeTime ?? DateTime.now().add(Duration(minutes: alarm.snoozeInterval));
     
     // 로컬라이징 가져오기
-    String langCode = Platform.localeName.split('_')[0];
-    Locale locale = Locale(langCode);
-    if (!AppLocalizations.supportedLocales.contains(locale)) {
-      locale = const Locale('en');
-    }
-    final l10n = await AppLocalizations.delegate.load(locale);
+    final l10n = await NotificationService().getL10n();
 
     // ID 처리: 원본 ID 추출 후 _snooze 붙임
     String originalId = alarm.id.replaceAll('_snooze', '');

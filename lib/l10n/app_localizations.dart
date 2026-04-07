@@ -101,13 +101,13 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
-    Locale('de'),
     Locale('en'),
+    Locale('ko'),
+    Locale('de'),
     Locale('es'),
     Locale('fr'),
     Locale('hi'),
     Locale('ja'),
-    Locale('ko'),
     Locale('ru'),
     Locale('zh')
   ];
@@ -2301,6 +2301,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete Alarm'**
   String get deleteAlarm;
+
+  /// No description provided for @firstAlarmGuideTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No alarms yet'**
+  String get firstAlarmGuideTitle;
+
+  /// No description provided for @firstAlarmGuideDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a fortune alarm and\nstart a refreshing day!'**
+  String get firstAlarmGuideDesc;
+
+  /// No description provided for @addAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Alarm'**
+  String get addAlarm;
+
+  /// No description provided for @addFirstAlarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Create First Alarm'**
+  String get addFirstAlarm;
+
+  /// No description provided for @deleteAlarmConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this alarm?'**
+  String get deleteAlarmConfirm;
+
+  /// No description provided for @welcomeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Nice to meet you!'**
+  String get welcomeMessage;
+
+  /// No description provided for @whenToRing.
+  ///
+  /// In en, this message translates to:
+  /// **'When should I wake you up?'**
+  String get whenToRing;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @retryFortune.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry Fortune'**
+  String get retryFortune;
+
+  /// No description provided for @retryFortuneDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t like the result?\nWatch an ad to try one more time!'**
+  String get retryFortuneDesc;
+
+  /// No description provided for @tapToReveal.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to reveal fortune'**
+  String get tapToReveal;
+
+  /// No description provided for @redrawButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Redraw'**
+  String get redrawButton;
+
+  /// No description provided for @defaultFortuneGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your fortune for today!'**
+  String get defaultFortuneGreeting;
+
+  /// No description provided for @registerProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Register Profile'**
+  String get registerProfile;
+
+  /// No description provided for @todaysFortuneTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s Fortune'**
+  String get todaysFortuneTitle;
+
+  /// No description provided for @fortuneCheckSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How will your day be? Check it out now.'**
+  String get fortuneCheckSubtitle;
+
+  /// No description provided for @supportSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get supportSection;
+
+  /// No description provided for @rateApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate App'**
+  String get rateApp;
+
+  /// No description provided for @shareWithFriends.
+  ///
+  /// In en, this message translates to:
+  /// **'Share with Friends'**
+  String get shareWithFriends;
+
+  /// No description provided for @shareAppMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Try \'Fortune Alarm\'! Wake up fresh with your daily fortune every morning. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm'**
+  String get shareAppMessage;
+
+  /// No description provided for @locationPermissionRequiredWeather.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission is required to get weather information.'**
+  String get locationPermissionRequiredWeather;
+
+  /// No description provided for @turnOnLocationService.
+  ///
+  /// In en, this message translates to:
+  /// **'Please turn on location services'**
+  String get turnOnLocationService;
+
+  /// No description provided for @checkWeatherLocationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Location required for weather'**
+  String get checkWeatherLocationRequired;
+
+  /// No description provided for @themeColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Color'**
+  String get themeColor;
 
   /// No description provided for @confirmDelete.
   ///
@@ -5548,6 +5692,48 @@ abstract class AppLocalizations {
   /// **'Failed to register alarm. \"Display over other apps\" permission is missing and needs to be set.'**
   String get overlayPermissionFail;
 
+  /// No description provided for @batteryOptimizationName.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery Optimization'**
+  String get batteryOptimizationName;
+
+  /// No description provided for @batteryOptimizationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimization settings required\nfor accurate alarms.'**
+  String get batteryOptimizationTitle;
+
+  /// No description provided for @batteryOptimizationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please set as a battery optimization exception\nso the app runs smoothly in the background.'**
+  String get batteryOptimizationSubtitle;
+
+  /// No description provided for @batteryOptimizationBottomDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Selecting \'Unrestricted\' or \'Don\'t optimize\'\nin the settings will ensure no missed alarms.'**
+  String get batteryOptimizationBottomDesc;
+
+  /// No description provided for @understand.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand'**
+  String get understand;
+
+  /// No description provided for @overlayPermissionName.
+  ///
+  /// In en, this message translates to:
+  /// **'Display over other apps'**
+  String get overlayPermissionName;
+
+  /// No description provided for @overlayPermissionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission Guide'**
+  String get overlayPermissionTitle;
+
   /// No description provided for @unknownAlarmError.
   ///
   /// In en, this message translates to:
@@ -5577,6 +5763,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Snooze Alarm ({current}/{max})'**
   String repeatAlarmCount(int current, int max);
+
+  /// No description provided for @snoozeRemainingCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining ({current}/{max})'**
+  String snoozeRemainingCount(int current, int max);
 
   /// No description provided for @turnOffAlarm.
   ///
@@ -7389,6 +7581,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.'**
   String get notice3Content;
+
+  /// No description provided for @notice4Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Version 1.1.1 Update News'**
+  String get notice4Title;
+
+  /// No description provided for @notice4Content.
+  ///
+  /// In en, this message translates to:
+  /// **'Update details for version 1.1.1.\\n\\n1. Improved battery optimization guide UI\\n2. Optimized English text layout\\n3. Enhanced ad system stability\\n4. App stability and performance improvements\\n\\nPlease update to the latest version for a better experience!'**
+  String get notice4Content;
 
   /// No description provided for @supportContentTitle.
   ///

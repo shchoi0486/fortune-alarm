@@ -5,15 +5,18 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
+import 'dart:math';
 
 import 'notification_service.dart';
 import '../core/constants/push_messages.dart';
 
 @pragma('vm:entry-point')
 class FortunePushService {
-  static const int _lunchId = 40003; // 기존 40001, 40002와 겹치지 않게
+  static const int _morningId = 40001;
+  static const int _afternoonId = 40002;
+  static const int _lunchId = 40003;
 
-  // 상황 기반 운세 푸시 알람 스케줄링 (매일 낮 12시 30분)
+  // 상황 기반 운세 푸시 알람 스케줄링
   static Future<void> scheduleDailyPush() async {
     if (Platform.isAndroid) {
       if (await Permission.scheduleExactAlarm.isDenied) {
@@ -25,8 +28,17 @@ class FortunePushService {
     final enabled = box.get('daily_fortune_enabled', defaultValue: true);
     
     if (enabled) {
-      // 낮 12시 30분 알림 1회만 등록
+      // 세 타임라인 스케줄링 (오전, 점심, 오후)
+      // 사용자 설정 시간이 있으면 가져오고 없으면 기본값 사용
+      final time1Str = box.get('daily_fortune_time1', defaultValue: '08:00');
+      final time2Str = box.get('daily_fortune_time2', defaultValue: '13:30');
+      
+      final parts1 = time1Str.split(':');
+      final parts2 = time2Str.split(':');
+      
+      await _scheduleOne(int.parse(parts1[0]), int.parse(parts1[1]), _morningId);
       await _scheduleOne(12, 30, _lunchId);
+      await _scheduleOne(int.parse(parts2[0]), int.parse(parts2[1]), _afternoonId);
     } else {
       await cancelAll();
     }
@@ -35,26 +47,31 @@ class FortunePushService {
   // 알람 취소
   static Future<void> cancelAll() async {
     if (Platform.isAndroid) {
+      await AndroidAlarmManager.cancel(_morningId);
+      await AndroidAlarmManager.cancel(_afternoonId);
       await AndroidAlarmManager.cancel(_lunchId);
-      // 기존 시간 기반 알람 취소
-      await AndroidAlarmManager.cancel(40001);
-      await AndroidAlarmManager.cancel(40002);
     } else if (Platform.isIOS) {
+      await NotificationService().cancelNotification(_morningId);
+      await NotificationService().cancelNotification(_afternoonId);
       await NotificationService().cancelNotification(_lunchId);
-      await NotificationService().cancelAllFortuneNotifications();
     }
     debugPrint('[FortunePush] Canceled all fortune push alarms.');
   }
 
   static Future<void> _scheduleOne(int hour, int minute, int id) async {
     final now = DateTime.now();
-    var scheduledTime = DateTime(now.year, now.month, now.day, hour, minute);
+    var baseTime = DateTime(now.year, now.month, now.day, hour, minute);
 
-    if (scheduledTime.isBefore(now)) {
-      scheduledTime = scheduledTime.add(const Duration(days: 1));
+    if (baseTime.isBefore(now)) {
+      baseTime = baseTime.add(const Duration(days: 1));
     }
 
-    debugPrint('[FortunePush] Scheduling at $scheduledTime (ID: $id)');
+    // 0~45분 사이의 랜덤 지터를 추가하여 기계적인 느낌을 줄임 (사용자 요청 반영)
+    final random = Random();
+    final jitter = random.nextInt(46); 
+    final scheduledTime = baseTime.add(Duration(minutes: jitter));
+
+    debugPrint('[FortunePush] Scheduling ID $id at $scheduledTime (Base: $hour:$minute, Jitter: +$jitter min)');
 
     if (Platform.isAndroid) {
       await AndroidAlarmManager.oneShotAt(
@@ -68,14 +85,22 @@ class FortunePushService {
         allowWhileIdle: true,
       );
     } else if (Platform.isIOS) {
-      final msg = PushMessages.getRandomFortuneMessage();
+      // iOS는 NotificationService를 통해 스케줄링 (단일 예약)
+      // 메시지는 예약 시점에 랜덤으로 하나 뽑음
+      String langCode = 'ko';
+      try {
+        final settingsBox = await Hive.openBox('settings');
+        langCode = settingsBox.get('language', defaultValue: 'ko');
+      } catch (_) {}
+      
+      final msg = PushMessages.getRandomFortuneMessage(langCode);
 
       await NotificationService().scheduleAlarmNotification(
         id: id,
         title: msg['title']!,
         body: msg['body']!,
         scheduledDate: scheduledTime,
-        payload: 'fortune_daily',
+        payload: 'fortune_daily_$id',
       );
     }
   }
@@ -85,7 +110,11 @@ class FortunePushService {
     WidgetsFlutterBinding.ensureInitialized();
     debugPrint('[FortunePush] Fired! ID: $id');
 
-    await Hive.initFlutter();
+    final notificationService = NotificationService();
+    
+    // getL10n()을 호출하여 Hive 초기화 및 언어 설정 로드 보장
+    // (L10n 객체 자체는 여기서 안 써도 되지만 초기화를 위해 호출)
+    await notificationService.getL10n();
     
     // 오늘 날짜 문자열
     final todayStr = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -95,14 +124,26 @@ class FortunePushService {
     final lastFortuneViewDate = box.get('last_fortune_view_date', defaultValue: '');
     
     if (lastFortuneViewDate != todayStr) {
-      final notificationService = NotificationService();
       await notificationService.init(null);
 
-      String langCode = 'ko';
+      // 2. 언어 설정 가져오기 (시스템 언어를 기본값으로)
+      String langCode = Platform.localeName.split('_')[0];
       try {
         final settingsBox = await Hive.openBox('settings');
-        langCode = settingsBox.get('language', defaultValue: 'ko');
-      } catch (_) {}
+        final savedLang = settingsBox.get('language');
+        if (savedLang != null && savedLang.isNotEmpty) {
+          langCode = savedLang;
+          debugPrint('[FortunePush] Found saved language in Hive: $langCode');
+        }
+      } catch (e) {
+        debugPrint('[FortunePush] Error reading settings box: $e');
+      }
+
+      // 지원하지 않는 언어일 경우 영어로 폴백
+      if (!['ko', 'en', 'ja', 'zh', 'ru', 'hi', 'fr', 'es', 'de'].contains(langCode)) {
+        langCode = 'en';
+      }
+      debugPrint('[FortunePush] Final langCode for push: $langCode');
 
       final msg = PushMessages.getRandomFortuneMessage(langCode);
 
@@ -114,18 +155,18 @@ class FortunePushService {
       const AndroidNotificationDetails androidPlatformChannelSpecifics =
           AndroidNotificationDetails(
         channelId,
-        'Fortune Alarms',
+        '포춘 알람',
         importance: Importance.max,
         priority: Priority.max,
         category: AndroidNotificationCategory.reminder,
         visibility: NotificationVisibility.public,
         fullScreenIntent: false,
         autoCancel: true,
-        groupKey: 'com.snapalarm.NOTIFICATION_GROUP',
+        groupKey: 'com.fortune_alarm.NOTIFICATION_GROUP',
       );
 
       const DarwinNotificationDetails iosPlatformChannelSpecifics =
-          DarwinNotificationDetails(threadIdentifier: 'com.snapalarm.NOTIFICATION_GROUP');
+          DarwinNotificationDetails(threadIdentifier: 'com.fortunealarm.NOTIFICATION_GROUP');
 
       const NotificationDetails platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
@@ -143,12 +184,25 @@ class FortunePushService {
       debugPrint('[FortunePush] Fortune already viewed today ($todayStr). Skipping push.');
     }
 
-    // 다음 날 같은 시간으로 재예약
-    final now = DateTime.now();
-    final nextTime = now.add(const Duration(days: 1));
+    // 다음 날 같은 시간으로 재예약 (랜덤 지터 포함)
+    final boxSettings = await Hive.openBox('alarm_settings');
+    String baseTimeStr = '12:30';
+    if (id == _morningId) baseTimeStr = boxSettings.get('daily_fortune_time1', defaultValue: '08:00');
+    else if (id == _afternoonId) baseTimeStr = boxSettings.get('daily_fortune_time2', defaultValue: '13:30');
     
+    final parts = baseTimeStr.split(':');
+    final hour = int.parse(parts[0]);
+    final minute = int.parse(parts[1]);
+    
+    final nextDay = DateTime.now().add(const Duration(days: 1));
+    var nextBaseTime = DateTime(nextDay.year, nextDay.month, nextDay.day, hour, minute);
+    
+    final random = Random();
+    final jitter = random.nextInt(46); 
+    final nextScheduledTime = nextBaseTime.add(Duration(minutes: jitter));
+
     await AndroidAlarmManager.oneShotAt(
-      nextTime,
+      nextScheduledTime,
       id,
       _fortunePushCallback,
       exact: true,
@@ -157,5 +211,6 @@ class FortunePushService {
       rescheduleOnReboot: true,
       allowWhileIdle: true,
     );
+    debugPrint('[FortunePush] Rescheduled ID $id for tomorrow at $nextScheduledTime');
   }
 }

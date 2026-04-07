@@ -100,6 +100,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
 
   void _showSnoozeDialog(String? payload) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     int? alarmId;
     if (payload != null && payload.startsWith('supplement_')) {
        alarmId = int.tryParse(payload.split('_').last);
@@ -112,9 +113,13 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
       isScrollControlled: true,
       builder: (context) => SafeArea(
         child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            border: Border.all(
+              color: isDark ? Colors.white.withOpacity(0.1) : Colors.transparent,
+              width: isDark ? 1.0 : 0.0,
+            ),
           ),
           padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
           child: Column(
@@ -122,10 +127,10 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
             children: [
               Text(
                 l10n.snoozeQuestion,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
+                  color: isDark ? Colors.white : const Color(0xFF1E293B),
                 ),
               ),
               const SizedBox(height: 24),
@@ -150,6 +155,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
   }
 
   Widget _snoozeOptionButton(BuildContext context, int minutes, int alarmId) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
     final label = minutes >= 60 ? '${minutes ~/ 60}${l10n.hoursShort}' : '$minutes${l10n.minutesShort}';
     return InkWell(
@@ -161,23 +167,29 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
         width: (MediaQuery.of(context).size.width - 72) / 3,
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFFF1F5F9),
+          color: isDark ? Colors.white.withOpacity(0.05) : const Color(0xFFF1F5F9),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
+          border: Border.all(
+            color: isDark ? Colors.white.withOpacity(0.1) : const Color(0xFFE2E8F0),
+            width: isDark ? 1.0 : 0.5,
+          ),
         ),
         child: Column(
           children: [
             Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF334155),
+                color: isDark ? Colors.white : const Color(0xFF334155),
               ),
             ),
             Text(
               l10n.after,
-              style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
+              style: TextStyle(
+                fontSize: 12, 
+                color: isDark ? Colors.white60 : const Color(0xFF64748B),
+              ),
             ),
           ],
         ),
@@ -196,6 +208,7 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final state = ref.watch(supplementProvider);
     final notifier = ref.read(supplementProvider.notifier);
 
@@ -215,19 +228,22 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
     });
 
     if (state.isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(
+        backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
+        body: const Center(child: CircularProgressIndicator()),
+      );
     }
 
     final currentCount = state.log.currentCount;
     final dailyGoal = state.settings.dailyGoal;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xFF121212) : Colors.white,
         body: Stack(
           fit: StackFit.expand,
           children: [
@@ -240,23 +256,16 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 16),
-                            child: GestureDetector(
-                              onTap: () => Navigator.pop(context),
-                              behavior: HitTestBehavior.opaque,
-                              child: const Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
-                              ),
-                            ),
+                        Positioned(
+                          left: 8,
+                          child: IconButton(
+                            icon: Icon(Icons.arrow_back_ios_new, size: 20, color: isDark ? Colors.white70 : const Color(0xFF64748B)),
+                            onPressed: () => Navigator.pop(context),
                           ),
                         ),
                         Text(
                           l10n.missionSupplement,
-                          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
+                          style: TextStyle(color: isDark ? Colors.white : Colors.black, fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ],
                     ),
@@ -273,14 +282,14 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                   const SizedBox(height: 10),
                                   Text(
                                     l10n.timesTaken(currentCount),
-                                    style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
                                     l10n.dailyGoalTimes(dailyGoal),
                                     style: TextStyle(
                                       fontSize: 16,
-                                      color: Colors.black87,
+                                      color: isDark ? Colors.white70 : Colors.black87,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -322,11 +331,11 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
                                         child: Container(
                                           padding: const EdgeInsets.all(12),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.05),
+                                            color: isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.05),
                                             shape: BoxShape.circle,
-                                            border: Border.all(color: Colors.black.withOpacity(0.03)),
+                                            border: Border.all(color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.03)),
                                           ),
-                                          child: Icon(Icons.medication, size: 36, color: Colors.black),
+                                          child: Icon(Icons.medication, size: 36, color: isDark ? Colors.white : Colors.black),
                                         ),
                                       ),
                                       const SizedBox(width: 30),
@@ -469,13 +478,18 @@ class _ControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey[100],
         shape: BoxShape.circle,
+        border: Border.all(
+          color: isDark ? Colors.white.withOpacity(0.1) : Colors.transparent,
+          width: isDark ? 1.0 : 0.0,
+        ),
       ),
       child: IconButton(
-        icon: Icon(icon, color: Colors.black87),
+        icon: Icon(icon, color: isDark ? Colors.white70 : Colors.black87),
         onPressed: onPressed,
       ),
     );
@@ -499,41 +513,27 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        height: 64,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF8FAFC),
-          borderRadius: BorderRadius.circular(16),
-        ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
         child: Row(
           children: [
-            Icon(icon, color: Colors.orange[700], size: 24),
-            const SizedBox(width: 16),
-            Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+            Icon(icon, size: 20, color: isDark ? Colors.white70 : const Color(0xFF64748B)),
+            const SizedBox(width: 12),
+            Text(title, style: TextStyle(fontSize: 16, color: isDark ? Colors.white : Colors.black)),
             const Spacer(),
             if (value != null)
               Text(
                 value!,
                 style: TextStyle(
-                  color: Colors.orange[700],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 14,
+                  color: isDark ? Colors.white60 : const Color(0xFF64748B),
                 ),
               ),
-            if (trailing != null) ...[
-              const SizedBox(width: 8),
-              trailing!,
-            ] else ...[
-              const SizedBox(width: 4),
-              const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-            ],
+            const SizedBox(width: 8),
+            trailing ?? Icon(Icons.arrow_forward_ios, size: 14, color: isDark ? Colors.white24 : Colors.grey[300]),
           ],
         ),
       ),

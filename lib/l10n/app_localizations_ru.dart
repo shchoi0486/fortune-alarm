@@ -1248,6 +1248,83 @@ class AppLocalizationsRu extends AppLocalizations {
   String get deleteAlarm => 'Удалить будильник';
 
   @override
+  String get firstAlarmGuideTitle => 'Будильников пока нет';
+
+  @override
+  String get firstAlarmGuideDesc =>
+      'Установите счастливый будильник и\nначните бодрый день!';
+
+  @override
+  String get addAlarm => 'Добавить будильник';
+
+  @override
+  String get addFirstAlarm => 'Создать первый будильник';
+
+  @override
+  String get deleteAlarmConfirm => 'Удалить этот будильник?';
+
+  @override
+  String get welcomeMessage => 'Приятно познакомиться!';
+
+  @override
+  String get whenToRing => 'Когда мне вас разбудить?';
+
+  @override
+  String get next => 'Далее';
+
+  @override
+  String get retryFortune => 'Попробовать еще раз';
+
+  @override
+  String get retryFortuneDesc =>
+      'Не нравится результат?\nПосмотрите рекламу, чтобы попробовать еще раз!';
+
+  @override
+  String get tapToReveal => 'Нажмите, чтобы узнать судьбу';
+
+  @override
+  String get redrawButton => 'Перетянуть';
+
+  @override
+  String get defaultFortuneGreeting => 'Узнайте свое предсказание на сегодня!';
+
+  @override
+  String get registerProfile => 'Зарегистрировать профиль';
+
+  @override
+  String get todaysFortuneTitle => 'Предсказание на сегодня';
+
+  @override
+  String get fortuneCheckSubtitle =>
+      'Каким будет ваш день? Узнайте прямо сейчас.';
+
+  @override
+  String get supportSection => 'Поддержка';
+
+  @override
+  String get rateApp => 'Оценить приложение';
+
+  @override
+  String get shareWithFriends => 'Поделиться с друзьями';
+
+  @override
+  String get shareAppMessage =>
+      'Попробуйте \'Fortune Alarm\'! Просыпайтесь каждое утро со своим прогнозом на день. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm';
+
+  @override
+  String get locationPermissionRequiredWeather =>
+      'Для получения информации о погоде требуется разрешение на доступ к местоположению.';
+
+  @override
+  String get turnOnLocationService => 'Пожалуйста, включите службы геолокации';
+
+  @override
+  String get checkWeatherLocationRequired => 'Местоположение для погоды';
+
+  @override
+  String get themeColor => 'Цвет темы';
+
+  @override
   String get confirmDelete => 'Вы уверены, что хотите удалить его?';
 
   @override
@@ -3106,6 +3183,30 @@ class AppLocalizationsRu extends AppLocalizations {
       'Не удалось зарегистрировать будильник. Разрешите показ поверх других приложений.';
 
   @override
+  String get batteryOptimizationName => 'Оптимизация батареи';
+
+  @override
+  String get batteryOptimizationTitle =>
+      'Требуются настройки оптимизации\nдля точной работы будильника.';
+
+  @override
+  String get batteryOptimizationSubtitle =>
+      'Пожалуйста, добавьте приложение в исключения оптимизации батареи\nдля корректной работы в фоновом режиме.';
+
+  @override
+  String get batteryOptimizationBottomDesc =>
+      'Выбор «Не ограничено» или «Не оптимизировать»\nв настройках гарантирует своевременный сигнал.';
+
+  @override
+  String get understand => 'Понятно';
+
+  @override
+  String get overlayPermissionName => 'Отображение поверх других приложений';
+
+  @override
+  String get overlayPermissionTitle => 'Руководство по разрешениям';
+
+  @override
   String get unknownAlarmError =>
       'Не удалось зарегистрировать будильник. Произошла неизвестная ошибка.';
 
@@ -3121,6 +3222,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String repeatAlarmCount(int current, int max) {
     return 'Повтор будильника ($current/$max)';
+  }
+
+  @override
+  String snoozeRemainingCount(int current, int max) {
+    return 'Осталось ($current/$max)';
   }
 
   @override
@@ -4236,6 +4342,13 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get notice3Content =>
       'Мы обновили условия использования.\\n\\nОсновные изменения:\\n- Улучшена политика конфиденциальности\\n- Уточнены правила использования сервисов\\n\\nПодробности в меню «Настройки > Условия».';
+
+  @override
+  String get notice4Title => 'Обновление версии 1.1.1';
+
+  @override
+  String get notice4Content =>
+      'Что нового в версии 1.1.1:\\n\\n1. Улучшен интерфейс руководства по оптимизации батареи\\n2. Оптимизирована верстка текста для английской версии\\n3. Повышена стабильность рекламной системы\\n4. Улучшена общая стабильность и производительность приложения\\n\\nПожалуйста, обновитесь до последней версии для более комфортной работы!';
 
   @override
   String get supportContentTitle => 'Текст запроса';

@@ -17,6 +17,7 @@ import '../../services/notification_service.dart';
 import '../../providers/alarm_list_provider.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../services/sharing_service.dart';
+import '../../services/ad_service.dart';
 import '../../core/utils/image_helper.dart';
 import '../../services/user_activity_service.dart';
 import 'mixins/fortune_access_mixin.dart';
@@ -60,16 +61,19 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   
   // Tarot State
   final List<int?> _selectedSlots = [null, null, null];
-  TarotCard? _loveResult;
   TarotCard? _wealthResult;
   TarotCard? _successResult;
+  TarotCard? _loveResult;
 
   // Animation State
   final List<GlobalKey> _gridKeys = List.generate(15, (index) => GlobalKey());
   final List<GlobalKey> _slotKeys = List.generate(3, (index) => GlobalKey());
   bool _isAnimating = false;
   bool _isChecking = false; // 결과 확인 중 상태
+  bool _isAdLoading = false; // 광고 로딩 중 상태 추가
+  int _retryCount = 0; // 재선택 횟수 추가
   int? _animatingCardIndex; // 현재 이동 중인 카드 인덱스
+  final Set<String> _revealedCards = {}; // 공개된 카드 카테고리 저장
 
   String? _ageGroup;
 
@@ -83,8 +87,85 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     _loadAlarm();
     _loadUserAgeGroup();
     _startInactivityTimer();
+    _loadPersistedState();
     // 미션 화면 진입 시 알람 소리를 직접 제어하지 않고 
     // AlarmRingingScreen에서 일시 정지된 상태로 진입함.
+  }
+
+  Future<void> _loadPersistedState() async {
+    // 특정 날짜 조회인 경우 저장하지 않음
+    if (widget.targetDate != null) {
+      final now = DateTime.now();
+      if (widget.targetDate!.year != now.year || 
+          widget.targetDate!.month != now.month || 
+          widget.targetDate!.day != now.day) {
+        return;
+      }
+    }
+
+    try {
+      final box = await Hive.openBox('fortune');
+      final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      final savedDate = box.get('tarotRevealedDate');
+      
+      if (savedDate == today) {
+        // 오늘 날짜면 저장된 재시도 횟수를 먼저 불러옴
+        final savedRetryCount = box.get('tarotRetryCount', defaultValue: 0);
+        setState(() {
+          _retryCount = savedRetryCount as int;
+        });
+
+        final savedSlots = box.get('selectedTarotSlots');
+        final savedCards = box.get('revealedTarotCards');
+        
+        if (savedSlots is List && savedSlots.length == 3) {
+          setState(() {
+            for (int i = 0; i < 3; i++) {
+              _selectedSlots[i] = savedSlots[i] as int?;
+            }
+            if (savedCards is List) {
+              _revealedCards.addAll(savedCards.cast<String>());
+            }
+            
+            // 결과 미리 생성
+            _wealthResult = TarotRepository.drawCard(category: "wealth", date: widget.targetDate, seedModifier: _retryCount);
+            _successResult = TarotRepository.drawCard(category: "success", date: widget.targetDate, seedModifier: _retryCount);
+            _loveResult = TarotRepository.drawCard(category: "love", date: widget.targetDate, seedModifier: _retryCount);
+            
+            _missionStep = 2; // 결과 화면으로 바로 이동
+          });
+        }
+      } else if (savedDate != null) {
+        // 오늘이 아닌 과거의 날짜 데이터가 있으면 재시도 횟수 초기화
+        await box.delete('tarotRetryCount');
+      }
+    } catch (e) {
+      debugPrint('Error loading persisted tarot state: $e');
+    }
+  }
+
+  Future<void> _savePersistedState() async {
+    // 특정 날짜 조회인 경우 저장하지 않음
+    if (widget.targetDate != null) {
+      final now = DateTime.now();
+      if (widget.targetDate!.year != now.year || 
+          widget.targetDate!.month != now.month || 
+          widget.targetDate!.day != now.day) {
+        return;
+      }
+    }
+
+    try {
+      final box = await Hive.openBox('fortune');
+      final today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      
+      await box.put('tarotRevealedDate', today);
+      await box.put('selectedTarotSlots', _selectedSlots);
+      await box.put('revealedTarotCards', _revealedCards.toList());
+      await box.put('tarotRetryCount', _retryCount); // retry count 저장
+    } catch (e) {
+      debugPrint('Error saving persisted tarot state: $e');
+    }
   }
 
   Future<void> _loadUserAgeGroup() async {
@@ -358,11 +439,12 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
       // await _playSfx('sounds/ui_success.ogg', volume: 0.5);
     } catch (_) {}
     setState(() {
-      _loveResult = TarotRepository.drawCard(category: "love", date: widget.targetDate);
-      _wealthResult = TarotRepository.drawCard(category: "wealth", date: widget.targetDate);
-      _successResult = TarotRepository.drawCard(category: "success", date: widget.targetDate);
+      _wealthResult = TarotRepository.drawCard(category: "wealth", date: widget.targetDate, seedModifier: _retryCount);
+      _successResult = TarotRepository.drawCard(category: "success", date: widget.targetDate, seedModifier: _retryCount);
+      _loveResult = TarotRepository.drawCard(category: "love", date: widget.targetDate, seedModifier: _retryCount);
       _missionStep = 2; // Go to result
     });
+    _savePersistedState(); // 선택 완료 상태 저장
     
     // 운세 확인 기록
     UserActivityService.recordFortuneView();
@@ -445,6 +527,77 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     }
   }
 
+  void _handleRetryFortune() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color(0xFF1E293B),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          l10n.retryFortune,
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        content: Text(
+          l10n.retryFortuneDesc,
+          style: const TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.cancel, style: const TextStyle(color: Colors.grey)),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFFD700),
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: Text(l10n.redrawButton, style: const TextStyle(fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      // 데이터 초기화 및 선택 화면으로 바로 이동 (사용자 요청: 재시도 시 광고 제거)
+      try {
+        final box = await Hive.openBox('fortune');
+        // tarotRevealedDate는 유지하여 재시작 시에도 오늘 날짜임을 알 수 있게 함
+        await box.delete('selectedTarotSlots');
+        await box.delete('revealedTarotCards');
+        // 재시도 횟수는 삭제하지 않고 증가시킨 값을 유지 (새로운 결과를 위해)
+      } catch (e) {
+        debugPrint('Error clearing tarot state: $e');
+      }
+
+      setState(() {
+        for (int i = 0; i < 3; i++) _selectedSlots[i] = null;
+        _revealedCards.clear();
+        _wealthResult = null;
+        _successResult = null;
+        _loveResult = null;
+        _missionStep = 1;
+        _isChecking = false;
+        _loadingProgress = 0.0;
+        _retryCount++; // 재선택 시 횟수 증가 (seedModifier로 사용됨)
+      });
+
+      // 증가된 retryCount 저장
+      try {
+        final box = await Hive.openBox('fortune');
+        await box.put('tarotRetryCount', _retryCount);
+      } catch (e) {
+        debugPrint('Error saving retry count: $e');
+      }
+
+      try {
+        HapticFeedback.mediumImpact();
+      } catch (_) {}
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -502,13 +655,39 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   }
   
   Widget _buildBody() {
+    Widget content;
     if (_missionStep == 1) {
-      return _buildSelectionScreen();
+      content = _buildSelectionScreen();
     } else if (_missionStep == 3) {
-      return _buildLoadingScreen();
+      content = _buildLoadingScreen();
     } else {
-      return _buildResultScreen();
+      content = _buildResultScreen();
     }
+
+    if (_isAdLoading) {
+      return Stack(
+        children: [
+          content,
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(color: Color(0xFFFFD700)),
+                  SizedBox(height: 16),
+                  Text(
+                    '광고를 불러오는 중...',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return content;
   }
 
   Widget _buildLoadingScreen() {
@@ -587,60 +766,18 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
       fit: StackFit.expand,
       children: [
         // 1. Rich Mystic Background
-        CustomPaint(
-          painter: MysticBackgroundPainter(),
-          size: Size.infinite,
-        ),
-        
-        /*
-        // New Year Fortune Button
-        Positioned(
-          top: 10,
-          right: 20,
-          child: SafeArea(
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const NewYearFortuneInputScreen()));
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0EA5E9).withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white54),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF0EA5E9).withOpacity(0.5),
-                      blurRadius: 8,
-                      spreadRadius: 2,
-                    )
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.auto_awesome, color: Colors.amber, size: 18),
-                    const SizedBox(width: 8),
-                    Text(
-                      AppLocalizations.of(context)!.fortuneNewYearButton,
-                      style: const TextStyle(
-                        color: Colors.white, 
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+        const RepaintBoundary(
+          child: CustomPaint(
+            painter: MysticBackgroundPainter(),
+            size: Size.infinite,
           ),
         ),
-        */
-
+        
         // 2. Content
         SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 80),
+              const SizedBox(height: 55),
               Text(
                 title,
                 textAlign: TextAlign.center,
@@ -654,29 +791,29 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
               ),
             ),
             
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             
-            // 3. Selection Slots (Love, Wealth, Success)
+            // 3. Selection Slots (Wealth, Success, Love)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildSlot(0, AppLocalizations.of(context)!.loveFortune),
+                  _buildSlot(0, AppLocalizations.of(context)!.wealthFortune),
                   const SizedBox(width: 15),
-                  _buildSlot(1, AppLocalizations.of(context)!.wealthFortune),
+                  _buildSlot(1, AppLocalizations.of(context)!.successFortune),
                   const SizedBox(width: 15),
-                  _buildSlot(2, AppLocalizations.of(context)!.successFortune),
+                  _buildSlot(2, AppLocalizations.of(context)!.loveFortune),
                 ],
               ),
             ),
             
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
             
             // 4. Card Grid
             Expanded(
               child: GridView.builder(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 5, // 5 columns
                   childAspectRatio: 2/3,
@@ -697,23 +834,27 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                      );
                   }
 
-                  Widget cardWidget = Container(
-                      key: _gridKeys[index],
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        boxShadow: [
-                           BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 4, offset: Offset(0, 2))
-                        ]
+                  Widget cardWidget = RepaintBoundary(
+                    child: Container(
+                        key: _gridKeys[index],
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          boxShadow: [
+                             BoxShadow(color: Colors.black.withOpacity(0.5), blurRadius: 4, offset: Offset(0, 2))
+                          ]
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: const CustomPaint(painter: CardBackPainter()),
+                        ),
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: CustomPaint(painter: CardBackPainter()),
-                      ),
-                    );
+                  );
 
-                  return GestureDetector(
-                    onTap: () => _handleCardTap(index),
-                    child: cardWidget,
+                  return RepaintBoundary(
+                    child: GestureDetector(
+                      onTap: () => _handleCardTap(index),
+                      child: cardWidget,
+                    ),
                   );
                 },
               ),
@@ -723,10 +864,10 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
             SafeArea(
               top: false,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
                 child: SizedBox(
                   width: double.infinity,
-                  height: 56,
+                  height: 54, 
                   child: ElevatedButton(
                     onPressed: (allSelected && !_isChecking) ? _checkResult : null,
                     style: ElevatedButton.styleFrom(
@@ -770,10 +911,29 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     return GestureDetector(
       key: _slotKeys[slotIndex],
       onTap: () => _handleSlotTap(slotIndex),
-      child: MysticDropZone(
-        isFilled: isFilled,
-        isHovering: false,
-        label: label,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          RepaintBoundary(
+            child: MysticDropZone(
+              isFilled: isFilled,
+              isHovering: false,
+              label: label,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(color: Colors.black, blurRadius: 4, offset: Offset(0, 1))
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -802,63 +962,106 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Text(
                   title,
                   style: const TextStyle(
                     color: Colors.white, 
-                    fontSize: 24, 
+                    fontSize: 22, 
                     fontWeight: FontWeight.bold,
                     shadows: [Shadow(color: Colors.black, blurRadius: 10)]
                   ),
                 ),
-                const SizedBox(height: 30),
-                _buildResultCard("love", AppLocalizations.of(context)!.loveFortune, const Color(0xFFE91E63), _loveResult!), // Deep Pink
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 _buildResultCard("wealth", AppLocalizations.of(context)!.wealthFortune, const Color(0xFFB45309), _wealthResult!), // Darker Amber/Gold
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 _buildResultCard("success", AppLocalizations.of(context)!.successFortune, const Color(0xFF2563EB), _successResult!), // Stronger Blue
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
+                _buildResultCard("love", AppLocalizations.of(context)!.loveFortune, const Color(0xFFE91E63), _loveResult!), // Deep Pink
+                const SizedBox(height: 20),
                 SafeArea(
                   top: false,
                   child: Column(
                     children: [
-                      // 공유 버튼
-                      SizedBox(
-                        width: double.infinity,
-                        height: 64,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final l10n = AppLocalizations.of(context)!;
-                            SharingService.showShareOptions(
-                              context: context,
-                              title: title,
-                              description: l10n.shareResultDescription,
-                              results: {
-                                l10n.loveFortune: _loveResult != null ? _getLocalizedTarotName(_loveResult!.id) : '',
-                                l10n.wealthFortune: _wealthResult != null ? _getLocalizedTarotName(_wealthResult!.id) : '',
-                                l10n.successFortune: _successResult != null ? _getLocalizedTarotName(_successResult!.id) : '',
-                              },
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFEE500),
-                            foregroundColor: Colors.black,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                                const Icon(Icons.share, size: 20),
-                                const SizedBox(width: 10),
-                                Text(
-                                  AppLocalizations.of(context)!.shareResultButton, 
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+                      // 공유 버튼 & 다시보기 버튼 (2열 배치)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SizedBox(
+                              height: 64,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  final l10n = AppLocalizations.of(context)!;
+                                  SharingService.showShareOptions(
+                                    context: context,
+                                    title: title,
+                                    description: l10n.shareResultDescription,
+                                    results: {
+                                      l10n.wealthFortune: _wealthResult != null ? _getLocalizedTarotName(_wealthResult!.id) : '',
+                                      l10n.successFortune: _successResult != null ? _getLocalizedTarotName(_successResult!.id) : '',
+                                      l10n.loveFortune: _loveResult != null ? _getLocalizedTarotName(_loveResult!.id) : '',
+                                    },
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFFEE500),
+                                  foregroundColor: Colors.black,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                 ),
-                              ],
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.share, size: 20),
+                                    const SizedBox(width: 8),
+                                    Flexible(
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          AppLocalizations.of(context)!.shareResultButton, 
+                                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: SizedBox(
+                              height: 64,
+                              child: ElevatedButton(
+                                onPressed: _handleRetryFortune,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF475569), // Slate 600
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.refresh, size: 20),
+                                    const SizedBox(width: 8),
+                                    Flexible(
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          AppLocalizations.of(context)!.retryFortune, 
+                                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 15),
                       SizedBox(
@@ -926,20 +1129,131 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
 
   Widget _buildResultCard(String category, String title, Color color, TarotCard card) {
     final l10n = AppLocalizations.of(context)!;
+    final isRevealed = _revealedCards.contains(category);
+    
+    return GestureDetector(
+      onTap: isRevealed ? null : () => _handleRevealCard(category),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 600),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          final rotate = Tween(begin: math.pi, end: 0.0).animate(animation);
+          return AnimatedBuilder(
+            animation: rotate,
+            child: child,
+            builder: (context, child) {
+              final isBack = rotate.value > math.pi / 2;
+              return Transform(
+                transform: Matrix4.rotationY(rotate.value),
+                alignment: Alignment.center,
+                child: isBack 
+                  ? Transform(
+                      transform: Matrix4.rotationY(math.pi),
+                      alignment: Alignment.center,
+                      child: _buildCardBack(title, color),
+                    )
+                  : child,
+              );
+            },
+          );
+        },
+        child: isRevealed 
+          ? _buildCardFront(category, title, color, card)
+          : _buildCardBack(title, color),
+      ),
+    );
+  }
+
+  Widget _buildCardBack(String title, Color color) {
+    return Container(
+      key: const ValueKey('back'),
+      width: double.infinity,
+      height: 180,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: color.withOpacity(0.3),
+          width: 1.5,
+        ),
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFF1C1C1E),
+            const Color(0xFF2C2C2E),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(Icons.auto_awesome_outlined, color: color, size: 40),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Icon(Icons.touch_app, color: Colors.white.withOpacity(0.4), size: 20),
+          const SizedBox(height: 4),
+          Text(
+            AppLocalizations.of(context)!.tapToReveal,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.5),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  void _handleRevealCard(String category) {
+    // 전면 광고 로드 및 표시
+    AdService.showInterstitialAd(
+      onAdDismissed: () {
+        if (mounted) {
+          setState(() {
+            _revealedCards.add(category);
+          });
+          _savePersistedState(); // 공개 상태 저장
+          try {
+            HapticFeedback.mediumImpact();
+          } catch (_) {}
+        }
+      },
+    );
+  }
+
+  Widget _buildCardFront(String category, String title, Color color, TarotCard card) {
+    final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).languageCode;
     
-    String keywords = "";
-    String description = "";
+    String keywords = card.getLocalizedKeywords(l10n);
+    String description = card.getLocalizedDesc(l10n);
     String meaning = "";
     String detail = "";
 
-    // 1. Get Keywords
-    keywords = card.getLocalizedKeywords(l10n);
-
-    // 2. Get Description
-    description = card.getLocalizedDesc(l10n);
-
-    // 3. Get Category-specific Meaning & Detail
     if (category == "love") {
       meaning = card.getLocalizedLoveMeaning(l10n, ageGroup: _ageGroup);
       detail = card.getLocalizedLoveDetail(l10n, ageGroup: _ageGroup);
@@ -952,8 +1266,9 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     }
     
     return Container(
+      key: const ValueKey('front'),
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -983,24 +1298,24 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                     fit: BoxFit.scaleDown,
                     child: Text(
                       title, 
-                      style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                   ),
                 ),
               ),
               const SizedBox(width: 8),
-              Text(_getLocalizedTarotName(card.id), style: const TextStyle(color: Colors.black45, fontSize: 14)),
+              Text(_getLocalizedTarotName(card.id), style: const TextStyle(color: Colors.black45, fontSize: 12)),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           Center(
             child: Container(
-              width: 150,
-              height: 260,
+              width: 90,
+              height: 155,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 10, spreadRadius: 2),
+                  BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 8, spreadRadius: 1),
                 ],
               ),
               child: ClipRRect(
@@ -1009,16 +1324,16 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           
           // 1. 핵심 키워드 (짧고 굵게)
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
             decoration: BoxDecoration(
               color: const Color(0xFFF1F5F9), // 밝은 슬레이트 배경으로 가독성 확보
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: color.withOpacity(0.1), width: 1.5),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: color.withOpacity(0.1), width: 1.2),
             ),
             child: Column(
               children: [
@@ -1027,70 +1342,70 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.black87, 
-                    fontSize: 16, 
+                    fontSize: 13, 
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 1.1
+                    letterSpacing: 1.0
                   ),
                 ),
               ],
             ),
           ),
           
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
           
           // 2. 상세 풀이 (카드 설명 -> 상세 해석 순서)
           Row(
             children: [
-              const Icon(Icons.menu_book, color: Colors.black87, size: 18),
-              const SizedBox(width: 8),
+              const Icon(Icons.menu_book, color: Colors.black87, size: 14),
+              const SizedBox(width: 6),
               Text(
                 AppLocalizations.of(context)!.fortuneDetailTitle,
-                style: const TextStyle(color: Colors.black87, fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(color: Colors.black87, fontSize: 13, fontWeight: FontWeight.bold),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 6),
           
           // 카드 설명 (먼저 배치)
           Container(
-            padding: const EdgeInsets.only(left: 12),
+            padding: const EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
               border: Border(left: BorderSide(color: Colors.black12, width: 2)),
             ),
             child: Text(
               description,
-              style: const TextStyle(color: Colors.black54, fontSize: 14, height: 1.5, fontStyle: FontStyle.italic),
+              style: const TextStyle(color: Colors.black54, fontSize: 12, height: 1.4, fontStyle: FontStyle.italic),
             ),
           ),
           
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           
           // 핵심 의미 (강조)
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: color.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
               border: Border(left: BorderSide(color: color, width: 4)),
             ),
             child: Text(
               meaning,
               style: TextStyle(
                 color: color, 
-                fontSize: 16, 
+                fontSize: 13, 
                 fontWeight: FontWeight.bold, 
-                height: 1.5,
+                height: 1.4,
               ),
             ),
           ),
           
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
           
           // 상세 내용
           Text(
             detail,
-            style: const TextStyle(color: Colors.black87, fontSize: 15, height: 1.6),
+            style: const TextStyle(color: Colors.black87, fontSize: 13, height: 1.5),
           ),
         ],
       ),
@@ -1099,6 +1414,8 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
 }
 
 class CardBackPainter extends CustomPainter {
+  const CardBackPainter();
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
@@ -1205,7 +1522,7 @@ class CardBackPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _MovingCardWidget extends StatefulWidget {
@@ -1292,27 +1609,29 @@ class _MovingCardWidgetState extends State<_MovingCardWidget> with SingleTickerP
               scale: _scaleAnimation.value,
               child: Transform.rotate(
                 angle: _rotationAnimation.value,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFFD700).withOpacity(0.6 * (1 - _controller.value * 0.5)),
-                        blurRadius: 20,
-                        spreadRadius: 3,
-                      ),
-                      // Motion trail effect (simplified)
-                      if (_controller.value > 0.2 && _controller.value < 0.8)
+                child: RepaintBoundary(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFFFD700).withOpacity(0.3),
-                          blurRadius: 30,
-                          offset: const Offset(0, 10),
+                          color: const Color(0xFFFFD700).withOpacity(0.6 * (1 - _controller.value * 0.5)),
+                          blurRadius: 20,
+                          spreadRadius: 3,
                         ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: CustomPaint(painter: CardBackPainter()),
+                        // Motion trail effect (simplified)
+                        if (_controller.value > 0.2 && _controller.value < 0.8)
+                          BoxShadow(
+                            color: const Color(0xFFFFD700).withOpacity(0.3),
+                            blurRadius: 30,
+                            offset: const Offset(0, 10),
+                          ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: CustomPaint(painter: CardBackPainter()),
+                    ),
                   ),
                 ),
               ),
@@ -1351,13 +1670,15 @@ class _SpinningMysticCircleState extends State<SpinningMysticCircle> with Single
 
   @override
   Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: _controller,
-      child: SizedBox(
-        width: 250,
-        height: 250,
-        child: CustomPaint(
-          painter: MysticCirclePainter(),
+    return RepaintBoundary(
+      child: RotationTransition(
+        turns: _controller,
+        child: SizedBox(
+          width: 250,
+          height: 250,
+          child: CustomPaint(
+            painter: MysticCirclePainter(),
+          ),
         ),
       ),
     );
@@ -1524,25 +1845,12 @@ class _MysticDropZoneState extends State<MysticDropZone> with SingleTickerProvid
                     child: CustomPaint(painter: CardBackPainter()),
                   ),
                 )
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add, 
-                      color: const Color(0xFFCBD5E1).withOpacity(0.6), 
-                      size: 24
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.label,
-                      style: TextStyle(
-                        color: const Color(0xFFCBD5E1).withOpacity(0.8), 
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+              : Center(
+                  child: Icon(
+                    Icons.add, 
+                    color: const Color(0xFFCBD5E1).withOpacity(0.6), 
+                    size: 32, // 조금 더 크게
+                  ),
                 ),
           
           // Magical Effect Overlay
@@ -1628,6 +1936,8 @@ class MysticBurstPainter extends CustomPainter {
 }
 
 class MysticBackgroundPainter extends CustomPainter {
+  const MysticBackgroundPainter();
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height * 0.45); // Center slightly above middle

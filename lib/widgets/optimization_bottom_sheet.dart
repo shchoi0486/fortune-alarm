@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -165,6 +166,7 @@ class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomShee
                     _buildSwitchTile(
                       context: context,
                       ref: ref,
+                      icon: Icons.notifications_active_rounded,
                       title: l10n.allowNotificationPermission,
                       subtitle: l10n.notificationPermissionDescription,
                       value: isNotificationGranted,
@@ -180,8 +182,9 @@ class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomShee
                     _buildSwitchTile(
                       context: context,
                       ref: ref,
-                      title: l10n.excludeBatteryOptimization,
-                      subtitle: l10n.batteryOptimizationDescription,
+                      icon: Icons.battery_saver_rounded,
+                      title: l10n.batteryOptimizationName,
+                      subtitle: l10n.batteryOptimizationSubtitle.replaceAll('\n', ' '),
                       value: isBatteryOptimized,
                       onChanged: (value) async {
                         if (value) {
@@ -199,6 +202,7 @@ class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomShee
                     _buildSwitchTile(
                       context: context,
                       ref: ref,
+                      icon: Icons.alarm_on_rounded,
                       title: l10n.allowExactAlarm,
                       subtitle: l10n.exactAlarmDescription,
                       value: isExactAlarmGranted,
@@ -209,8 +213,9 @@ class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomShee
                     _buildSwitchTile(
                       context: context,
                       ref: ref,
-                      title: l10n.drawOverOtherApps,
-                      subtitle: l10n.overlayDescription,
+                      icon: Icons.layers_rounded,
+                      title: l10n.overlayPermissionName,
+                      subtitle: l10n.overlayPermissionDesc.replaceAll('\n', ' '),
                       value: isSystemAlertGranted,
                       onChanged: (value) async {
                         if (value) {
@@ -224,6 +229,7 @@ class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomShee
                     _buildSwitchTile(
                       context: context,
                       ref: ref,
+                      icon: Icons.location_on_rounded,
                       title: l10n.locationPermissionTitle,
                       subtitle: l10n.locationPermissionDesc,
                       value: isLocationGranted,
@@ -277,33 +283,59 @@ class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomShee
   Widget _buildSwitchTile({
     required BuildContext context,
     required WidgetRef ref,
+    required IconData icon,
     required String title,
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
-    bool isOptional = false, // [추가]
+    bool isOptional = false,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = ref.watch(themeProvider).primaryColor;
     final l10n = AppLocalizations.of(context)!;
     
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF2C2C2E) : const Color(0xFFF8F9FA),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: value ? primaryColor.withOpacity(0.5) : Colors.transparent,
+          width: 1.5,
+        ),
+      ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: (value ? primaryColor : Colors.grey).withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 22,
+              color: value ? primaryColor : (isDark ? Colors.grey[400] : Colors.grey[500]),
+            ),
+          ),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? Colors.white : Colors.black87,
-                        letterSpacing: -0.3,
+                    Flexible(
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: isDark ? Colors.white : Colors.black87,
+                          letterSpacing: -0.5,
+                        ),
                       ),
                     ),
                     if (isOptional) ...[
@@ -312,13 +344,13 @@ class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomShee
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                         decoration: BoxDecoration(
                           color: isDark ? Colors.grey[800] : Colors.grey[200],
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           l10n.optional,
                           style: TextStyle(
                             fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
                             color: isDark ? Colors.grey[400] : Colors.grey[600],
                           ),
                         ),
@@ -326,15 +358,15 @@ class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomShee
                     ],
                   ],
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 12,
-                    height: 1.2,
+                    fontSize: 13,
+                    height: 1.4,
+                    fontWeight: FontWeight.w500,
                     color: isDark ? Colors.grey[400] : Colors.grey[600],
+                    letterSpacing: -0.2,
                   ),
                 ),
               ],
@@ -342,13 +374,12 @@ class _OptimizationBottomSheetState extends ConsumerState<OptimizationBottomShee
           ),
           const SizedBox(width: 8),
           Transform.scale(
-            scale: 0.85,
-            child: Switch(
+            scale: 0.9,
+            child: CupertinoSwitch(
               value: value,
               onChanged: onChanged,
-              activeThumbColor: Colors.white,
-              activeTrackColor: primaryColor,
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              activeColor: primaryColor,
+              trackColor: isDark ? Colors.grey[800] : Colors.grey[300],
             ),
           ),
         ],

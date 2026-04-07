@@ -9,14 +9,16 @@ class HolidayService {
   
   // 지원 국가 코드 매핑 (기기의 locale 정보를 바탕으로 ISO 3166-1 alpha-2 코드 반환)
   String _getCountryCode() {
-    final locale = Platform.localeName; // 예: 'ko_KR', 'en_US', 'zh_Hans_CN'
+    final locale = Platform.localeName; // 예: 'ko_KR', 'en_US', 'zh_Hans_CN', 'ca_ES_valencia'
     
-    // 1. 구분자(_, -)로 분리하여 마지막 부분이 국가 코드인지 확인
+    // 1. 구분자(_, -)로 분리하여 각 부분이 국가 코드(2글자)인지 확인
     final parts = locale.split(RegExp(r'[_-]'));
-    if (parts.length > 1) {
-      final potentialCountry = parts.last.toUpperCase();
-      if (potentialCountry.length == 2) {
-        return potentialCountry;
+    
+    // 뒤에서부터 확인하여 2글자로 된 국가 코드(region subtag)를 찾음
+    for (int i = parts.length - 1; i >= 0; i--) {
+      final part = parts[i].toUpperCase();
+      if (part.length == 2 && _isValidCountryCode(part)) {
+        return part;
       }
     }
     
@@ -35,6 +37,11 @@ class HolidayService {
       case 'en': return 'US';
       default: return 'US';
     }
+  }
+
+  // 간단한 국가 코드 유효성 검사 (숫자나 특수문자가 포함되지 않았는지)
+  bool _isValidCountryCode(String code) {
+    return RegExp(r'^[A-Z]{2}$').hasMatch(code);
   }
 
   Future<List<CalendarEvent>> getHolidays(int year, {String? appLocale}) async {
@@ -64,31 +71,42 @@ class HolidayService {
           final localName = item['localName'] ?? englishName;
           
           // 표시 언어 및 국가에 따라 제목 결정
-          String title = localName; // 기본적으로 현지 언어 사용 (프랑스는 프랑스어, 일본은 일본어 등)
+          String title = localName; 
           
           if (displayLocale == 'zh') {
             title = '$localName ($englishName)';
           } else if (displayLocale == 'en') {
             title = englishName;
+          } else if (displayLocale != 'ko' && displayLocale != _getLanguageFromCountry(countryCode)) {
+            // 사용자의 언어가 한국어가 아니고, 해당 국가의 언어도 아닐 경우 영어 병기
+            title = '$localName ($englishName)';
           }
 
-          // 한국어 표시일 때만 특수 명칭 매핑 (한국 기준)
-          if (displayLocale == 'ko' && countryCode == 'KR') {
-            if (item['name'].toString().contains('Alternative')) {
-              title = '대체공휴일';
-            } else if (item['name'].toString().contains('Lunar New Year')) {
-              if (item['name'].toString().endsWith("Day")) {
-                title = '설날';
-              } else {
-                title = '설날 연휴';
-              }
-            } else if (item['name'].toString().contains('Chuseok')) {
-              if (item['name'].toString().endsWith("Day")) {
-                title = '추석';
-              } else {
-                title = '추석 연휴';
-              }
+          // 특수 명칭 매핑 (한국 공휴일 기준 또는 공통 명칭)
+          final nameLower = item['name'].toString().toLowerCase();
+          if (nameLower.contains('alternative') || nameLower.contains('substitute')) {
+            title = _getHolidayTerm('substitute', displayLocale);
+          } else if (nameLower.contains('lunar new year')) {
+            if (nameLower.endsWith("day")) {
+              title = _getHolidayTerm('lunarNewYear', displayLocale);
+            } else {
+              title = _getHolidayTerm('lunarNewYearHoliday', displayLocale);
             }
+          } else if (nameLower.contains('chuseok') || nameLower.contains('thanksgiving')) {
+            // 한국의 추석 또는 일반적인 추수감사절 대응
+            if (countryCode == 'KR') {
+              if (nameLower.endsWith("day")) {
+                title = _getHolidayTerm('chuseok', displayLocale);
+              } else {
+                title = _getHolidayTerm('chuseokHoliday', displayLocale);
+              }
+            } else if (nameLower.contains('thanksgiving')) {
+              title = _getHolidayTerm('thanksgiving', displayLocale);
+            }
+          } else if (nameLower.contains('christmas')) {
+            title = _getHolidayTerm('christmas', displayLocale);
+          } else if (nameLower == "new year's day") {
+            title = _getHolidayTerm('newYear', displayLocale);
           }
 
           return CalendarEvent(
@@ -104,12 +122,7 @@ class HolidayService {
         // 한국 공휴일의 경우 대체공휴일 자동 계산 (표시 언어에 맞춰 제목 설정)
         if (countryCode == 'KR') {
           final List<CalendarEvent> extraHolidays = [];
-          String altTitle = 'Substitute Holiday';
-          if (displayLocale == 'ko') {
-            altTitle = '대체공휴일';
-          } else if (displayLocale == 'zh') {
-            altTitle = '替代放假日 (Substitute Holiday)';
-          }
+          String altTitle = _getHolidayTerm('substitute', displayLocale);
           
           for (var holiday in holidays) {
             final name = holiday.content; // API 원본 localName 기준 체크
@@ -185,5 +198,141 @@ class HolidayService {
         await prefs.remove(key);
       }
     }
+  }
+
+  // 국가 코드로부터 해당 국가의 기본 언어 코드를 반환
+  String _getLanguageFromCountry(String countryCode) {
+    switch (countryCode.toUpperCase()) {
+      case 'KR': return 'ko';
+      case 'JP': return 'ja';
+      case 'CN': return 'zh';
+      case 'TW': return 'zh';
+      case 'HK': return 'zh';
+      case 'DE': return 'de';
+      case 'FR': return 'fr';
+      case 'ES': return 'es';
+      case 'IT': return 'it';
+      case 'RU': return 'ru';
+      case 'IN': return 'hi';
+      case 'US': return 'en';
+      case 'GB': return 'en';
+      case 'AU': return 'en';
+      case 'CA': return 'en';
+      default: return 'en';
+    }
+  }
+
+  // 공통 공휴일 용어에 대한 로컬라이제이션 (API에서 제공하지 않거나 한국 특유의 경우)
+  String _getHolidayTerm(String key, String locale) {
+    switch (locale) {
+      case 'ko':
+        switch (key) {
+          case 'substitute': return '대체공휴일';
+          case 'lunarNewYear': return '설날';
+          case 'lunarNewYearHoliday': return '설날 연휴';
+          case 'chuseok': return '추석';
+          case 'chuseokHoliday': return '추석 연휴';
+          case 'thanksgiving': return '추수감사절';
+          case 'christmas': return '크리스마스';
+          case 'newYear': return '신정(새해)';
+        }
+        break;
+      case 'ja':
+        switch (key) {
+          case 'substitute': return '振替休日';
+          case 'lunarNewYear': return '旧正月';
+          case 'lunarNewYearHoliday': return '旧正月連휴';
+          case 'chuseok': return '秋夕';
+          case 'chuseokHoliday': return '秋夕連休';
+          case 'thanksgiving': return '感謝祭';
+          case 'christmas': return 'クリスマス';
+          case 'newYear': return '元日';
+        }
+        break;
+      case 'zh':
+        switch (key) {
+          case 'substitute': return '替代放假日';
+          case 'lunarNewYear': return '农历新年';
+          case 'lunarNewYearHoliday': return '农历新年假期';
+          case 'chuseok': return '中秋节';
+          case 'chuseokHoliday': return '中秋节假期';
+          case 'thanksgiving': return '感恩节';
+          case 'christmas': return '圣诞节';
+          case 'newYear': return '元旦';
+        }
+        break;
+      case 'ru':
+        switch (key) {
+          case 'substitute': return 'Перенос выходного';
+          case 'lunarNewYear': return 'Китайский Новый год';
+          case 'lunarNewYearHoliday': return 'Праз드ник Весны';
+          case 'chuseok': return 'Чусок';
+          case 'chuseokHoliday': return 'Праз드ник урожая';
+          case 'thanksgiving': return 'День благодарения';
+          case 'christmas': return 'Рождество';
+          case 'newYear': return 'Новый год';
+        }
+        break;
+      case 'de':
+        switch (key) {
+          case 'substitute': return 'Ersatzfeiertag';
+          case 'lunarNewYear': return 'Mondneujahr';
+          case 'lunarNewYearHoliday': return 'Mondneujahr Feiertag';
+          case 'chuseok': return 'Erntedankfest (Chuseok)';
+          case 'chuseokHoliday': return 'Chuseok Feiertag';
+          case 'thanksgiving': return 'Erntedankfest';
+          case 'christmas': return 'Weihnachten';
+          case 'newYear': return 'Neujahr';
+        }
+        break;
+      case 'fr':
+        switch (key) {
+          case 'substitute': return 'Jour de remplacement';
+          case 'lunarNewYear': return 'Nouvel An Lunaire';
+          case 'lunarNewYearHoliday': return 'Congé du Nouvel An Lunaire';
+          case 'chuseok': return 'Chuseok (Fête des récoltes)';
+          case 'chuseokHoliday': return 'Congé de Chuseok';
+          case 'thanksgiving': return 'Action de grâce';
+          case 'christmas': return 'Noël';
+          case 'newYear': return 'Jour de l\'An';
+        }
+        break;
+      case 'es':
+        switch (key) {
+          case 'substitute': return 'Día sustituto';
+          case 'lunarNewYear': return 'Año Nuevo Lunar';
+          case 'lunarNewYearHoliday': return 'Vacaciones de Año Nuevo Lunar';
+          case 'chuseok': return 'Chuseok (Festival de la Cosecha)';
+          case 'chuseokHoliday': return 'Vacaciones de Chuseok';
+          case 'thanksgiving': return 'Día de Acción de Gracias';
+          case 'christmas': return 'Navidad';
+          case 'newYear': return 'Año Nuevo';
+        }
+        break;
+      case 'hi':
+        switch (key) {
+          case 'substitute': return 'स्थानापन्न अवकाश';
+          case 'lunarNewYear': return 'चंद्र नव वर्ष';
+          case 'lunarNewYearHoliday': return 'चंद्र नव वर्ष की छुट्टी';
+          case 'chuseok': return 'चु석 (फसल उत्सव)';
+          case 'chuseokHoliday': return 'चु석 की छुट्टी';
+          case 'thanksgiving': return 'थैंक्सगिविंग';
+          case 'christmas': return 'क्रिसमस';
+          case 'newYear': return 'नया साल';
+        }
+        break;
+      default:
+        switch (key) {
+          case 'substitute': return 'Substitute Holiday';
+          case 'lunarNewYear': return 'Lunar New Year';
+          case 'lunarNewYearHoliday': return 'Lunar New Year Holiday';
+          case 'chuseok': return 'Chuseok';
+          case 'chuseokHoliday': return 'Chuseok Holiday';
+          case 'thanksgiving': return 'Thanksgiving';
+          case 'christmas': return 'Christmas';
+          case 'newYear': return 'New Year\'s Day';
+        }
+    }
+    return '';
   }
 }

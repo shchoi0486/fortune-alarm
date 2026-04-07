@@ -222,7 +222,7 @@
   "deleteColor": "Eliminar Color",
   "deleteColorConfirm": "¿Estás seguro de que deseas eliminar este color de la lista?",
   "deleteMission": "Eliminar misión",
-  "deleteMissionConfirm": "¿Estás seguro de que deseas eliminar esta misión de la lista?",
+  "deleteMissionConfirm": "¿Estás seguro de que quieres eliminar esta misión?",
   "randomBackgroundDesc": "¡Un nuevo fondo cada vez que suene la alarma!",
   "backgroundDeleted": "Imagen de fondo eliminada.",
   "pickFromDevice": "Elegir del dispositivo",
@@ -462,6 +462,30 @@
   "bgWarmBeige": "Beige Cálido",
   "dateFormatMdyE": "d/M (E)",
   "deleteAlarm": "Eliminar Alarma",
+  "firstAlarmGuideTitle": "No hay alarmas todavía",
+  "firstAlarmGuideDesc": "¡Configura una alarma de la suerte y\ncomienza un día refrescante!",
+  "addAlarm": "Añadir alarma",
+  "addFirstAlarm": "Crear primera alarma",
+  "deleteAlarmConfirm": "¿Eliminar esta alarma?",
+  "welcomeMessage": "¡Encantado!",
+  "whenToRing": "¿Cuándo quieres que te despierte?",
+  "next": "Siguiente",
+  "retryFortune": "Reintentar suerte",
+  "retryFortuneDesc": "¿No te gusta el resultado?\n¡Mira un anuncio para intentarlo de nuevo!",
+  "tapToReveal": "Toca para revelar la suerte",
+  "redrawButton": "Volver a sacar",
+  "defaultFortuneGreeting": "¡Mira tu suerte para hoy!",
+  "registerProfile": "Registrar perfil",
+  "todaysFortuneTitle": "Suerte de hoy",
+  "fortuneCheckSubtitle": "¿Cómo será tu día? Compruébalo ahora.",
+  "supportSection": "Soporte",
+  "rateApp": "Calificar aplicación",
+  "shareWithFriends": "Compartir con amigos",
+  "shareAppMessage": "¡Prueba 'Fortune Alarm'! Despierta cada mañana con tu suerte del día. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm",
+  "locationPermissionRequiredWeather": "Se requiere permiso de ubicación para obtener información del clima.",
+  "turnOnLocationService": "Por favor, activa los servicios de ubicación",
+  "checkWeatherLocationRequired": "Ubicación para el clima",
+  "themeColor": "Color del tema",
   "confirmDelete": "¿Estás seguro de que deseas eliminarla?",
   "yes": "Sí",
   "no": "No",
@@ -1252,11 +1276,29 @@
   "exactAlarmPermissionFail": "Error al registrar alarma. El permiso de alarma exacta está desactivado y debe configurarse.",
   "batteryOptimizationPermissionFail": "Error al registrar alarma. Falta el permiso de excepción de optimización de batería y debe configurarse.",
   "overlayPermissionFail": "Error al registrar alarma. Falta el permiso \"Mostrar sobre otras apps\" y debe configurarse.",
+  "batteryOptimizationName": "Optimización de batería",
+  "batteryOptimizationTitle": "Se requieren ajustes de optimización\npara alarmas precisas.",
+  "batteryOptimizationSubtitle": "Establézcalo como una excepción de optimización de batería\npara que la aplicación funcione sin problemas en segundo plano.",
+  "batteryOptimizationBottomDesc": "Seleccionar 'Sin restricciones' o 'No optimizar'\nen los ajustes garantizará que no se pierda ninguna alarma.",
+  "understand": "Entiendo",
+  "overlayPermissionName": "Mostrar sobre otras aplicaciones",
+  "overlayPermissionTitle": "Guía de permisos",
   "unknownAlarmError": "Error al registrar alarma. Ocurrió un error desconocido.",
   "resetTooltip": "Restablecer",
   "errorLoadingAlarm": "Error al cargar información de alarma.",
   "alarmNotFound": "Información de alarma no encontrada.",
   "repeatAlarmCount": "Alarma de Posponer ({current}/{max})",
+  "snoozeRemainingCount": "Restante ({current}/{max})",
+  "@snoozeRemainingCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "@repeatAlarmCount": {
     "placeholders": {
       "current": {
@@ -1639,6 +1681,8 @@
   "notice2Content": "Aquí está el contenido de la actualización versión 1.0.0.\\n\\n1. Mejora de UI de misión de suplementos\\n2. Integración de configuración del sistema para alarmas precisas\\n3. Soporte de modo oscuro\\n4. Corrección de errores y mejoras de estabilidad\\n\\n¡Experimenta la última versión ahora!",
   "notice3Title": "Aviso de Revisión de Términos de Servicio",
   "notice3Content": "Los Términos de Servicio han sido revisados.\\n\\nRevisiones clave:\\n- Política de Privacidad fortalecida\\n- Alcance de uso del servicio especificado\\n\\nLos detalles se pueden encontrar en la página Ajustes > Términos.",
+  "notice4Title": "Actualización versión 1.1.1",
+  "notice4Content": "Contenido de la actualización 1.1.1 :\\n\\n1. Interfaz de optimización de batería mejorada\\n2. Diseño de texto inglés optimizado\\n3. Estabilidad del sistema publicitario reforzada\\n4. Mejoras de rendimiento y estabilidad de la app\\n\\n¡Actualiza ahora para una mejor experiencia!",
   "supportContentTitle": "Contenido de la Consulta",
   "supportHint": "Por favor ingresa el contenido.",
   "supportRecipient": "Destinatario (Soporte al Cliente)",
@@ -2618,7 +2662,6 @@
   "locationPermissionDenied": "Permiso de ubicación denegado.",
   "locationPermissionPermanentlyDenied": "Permiso de ubicación denegado permanentemente.",
   "deleteMissionTitle": "Eliminar misión",
-  "deleteMissionConfirm": "¿Estás seguro de que quieres eliminar esta misión?",
   "yesDelete": "Sí, eliminar",
   "waterAlarmTitle": "¡Hora de beber agua! 💧",
   "waterAlarmBody": "¿Qué tal un vaso de agua fresca para tu salud?",
@@ -2675,6 +2718,40 @@
     "placeholders": {
       "month": {
         "type": "int"
+      }
+    }
+  },
+  "addMinutes": "+ {minutes}m",
+  "alarmSaved": "Alarma guardada.",
+  "alarmScheduledBody": "La alarma sonará a las {time}.",
+  "alarmScheduledTitle": "Alarma programada",
+  "cheerUp": "¡Que tengas un día excelente y productivo!",
+  "goodDay": "¡Va a ser un día maravilloso!",
+  "luckyDay": "¡Te deseo un día lleno de suerte!",
+  "pleaseSetTime": "Por favor, ajusta la hora.",
+  "quickAlarm": "Alarma rápida",
+  "ringingAt": "Suena a las {time}",
+  "setQuickAlarm": "Configurar alarma rápida",
+  "stayHappy": "¡Disfruta cada momento hoy!",
+  "youCanDoIt": "¡Hoy puedes con todo!",
+  "@addMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@alarmScheduledBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@ringingAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
       }
     }
   }

@@ -1,4 +1,4 @@
-# 🐥 초보자를 위한 Fortune Alarm 구조 가이드
+# Fortune Alarm (포춘 알람) Project Structure
 
 이 문서는 **Fortune Alarm** 어플의 전체적인 구조를 집 짓기에 비유하여 설명합니다.
 

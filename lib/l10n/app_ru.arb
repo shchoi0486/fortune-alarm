@@ -222,7 +222,7 @@
   "deleteColor": "Удалить цвет",
   "deleteColorConfirm": "Вы уверены, что хотите удалить этот цвет из списка?",
   "deleteMission": "Удалить миссию",
-  "deleteMissionConfirm": "Вы уверены, что хотите удалить эту миссию из списка?",
+  "deleteMissionConfirm": "Вы уверены, что хотите удалить эту миссию?",
   "randomBackgroundDesc": "Новый фон при каждом срабатывании будильника!",
   "backgroundDeleted": "Изображение удалено.",
   "pickFromDevice": "Выбрать из устройства",
@@ -462,6 +462,30 @@
   "bgWarmBeige": "Теплый бежевый",
   "dateFormatMdyE": "d/M (E)",
   "deleteAlarm": "Удалить будильник",
+  "firstAlarmGuideTitle": "Будильников пока нет",
+  "firstAlarmGuideDesc": "Установите счастливый будильник и\nначните бодрый день!",
+  "addAlarm": "Добавить будильник",
+  "addFirstAlarm": "Создать первый будильник",
+  "deleteAlarmConfirm": "Удалить этот будильник?",
+  "welcomeMessage": "Приятно познакомиться!",
+  "whenToRing": "Когда мне вас разбудить?",
+  "next": "Далее",
+  "retryFortune": "Попробовать еще раз",
+  "retryFortuneDesc": "Не нравится результат?\nПосмотрите рекламу, чтобы попробовать еще раз!",
+  "tapToReveal": "Нажмите, чтобы узнать судьбу",
+  "redrawButton": "Перетянуть",
+  "defaultFortuneGreeting": "Узнайте свое предсказание на сегодня!",
+  "registerProfile": "Зарегистрировать профиль",
+  "todaysFortuneTitle": "Предсказание на сегодня",
+  "fortuneCheckSubtitle": "Каким будет ваш день? Узнайте прямо сейчас.",
+  "supportSection": "Поддержка",
+  "rateApp": "Оценить приложение",
+  "shareWithFriends": "Поделиться с друзьями",
+  "shareAppMessage": "Попробуйте 'Fortune Alarm'! Просыпайтесь каждое утро со своим прогнозом на день. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm",
+  "locationPermissionRequiredWeather": "Для получения информации о погоде требуется разрешение на доступ к местоположению.",
+  "turnOnLocationService": "Пожалуйста, включите службы геолокации",
+  "checkWeatherLocationRequired": "Местоположение для погоды",
+  "themeColor": "Цвет темы",
   "confirmDelete": "Вы уверены, что хотите удалить его?",
   "yes": "Да",
   "no": "Нет",
@@ -1252,11 +1276,29 @@
   "exactAlarmPermissionFail": "Не удалось зарегистрировать будильник. Включите «точный будильник».",
   "batteryOptimizationPermissionFail": "Не удалось зарегистрировать будильник. Добавьте приложение в исключения оптимизации батареи.",
   "overlayPermissionFail": "Не удалось зарегистрировать будильник. Разрешите показ поверх других приложений.",
+  "batteryOptimizationName": "Оптимизация батареи",
+  "batteryOptimizationTitle": "Требуются настройки оптимизации\nдля точной работы будильника.",
+  "batteryOptimizationSubtitle": "Пожалуйста, добавьте приложение в исключения оптимизации батареи\nдля корректной работы в фоновом режиме.",
+  "batteryOptimizationBottomDesc": "Выбор «Не ограничено» или «Не оптимизировать»\nв настройках гарантирует своевременный сигнал.",
+  "understand": "Понятно",
+  "overlayPermissionName": "Отображение поверх других приложений",
+  "overlayPermissionTitle": "Руководство по разрешениям",
   "unknownAlarmError": "Не удалось зарегистрировать будильник. Произошла неизвестная ошибка.",
   "resetTooltip": "Сброс",
   "errorLoadingAlarm": "Не удалось загрузить данные будильника.",
   "alarmNotFound": "Будильник не найден.",
   "repeatAlarmCount": "Повтор будильника ({current}/{max})",
+  "snoozeRemainingCount": "Осталось ({current}/{max})",
+  "@snoozeRemainingCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "@repeatAlarmCount": {
     "placeholders": {
       "current": {
@@ -1639,6 +1681,8 @@
   "notice2Content": "Что нового в версии 1.0.0:\\n\\n1. Улучшен интерфейс миссии «Витамины»\\n2. Оптимизированы настройки точного времени\\n3. Добавлена поддержка темной темы\\n4. Исправлены ошибки и повышена стабильность\\n\\nОбновитесь до последней версии прямо сейчас!",
   "notice3Title": "Изменение Условий использования",
   "notice3Content": "Мы обновили условия использования.\\n\\nОсновные изменения:\\n- Улучшена политика конфиденциальности\\n- Уточнены правила использования сервисов\\n\\nПодробности в меню «Настройки > Условия».",
+  "notice4Title": "Обновление версии 1.1.1",
+  "notice4Content": "Что нового в версии 1.1.1:\\n\\n1. Улучшен интерфейс руководства по оптимизации батареи\\n2. Оптимизирована верстка текста для английской версии\\n3. Повышена стабильность рекламной системы\\n4. Улучшена общая стабильность и производительность приложения\\n\\nПожалуйста, обновитесь до последней версии для более комфортной работы!",
   "supportContentTitle": "Текст запроса",
   "supportHint": "Пожалуйста, опишите вашу проблему или предложение.",
   "supportRecipient": "Кому: Служба поддержки",
@@ -2618,7 +2662,6 @@
   "locationPermissionDenied": "Доступ к геолокации запрещен.",
   "locationPermissionPermanentlyDenied": "Доступ к геолокации запрещен навсегда.",
   "deleteMissionTitle": "Удалить миссию",
-  "deleteMissionConfirm": "Вы уверены, что хотите удалить эту миссию?",
   "yesDelete": "Да, удалить",
   "waterAlarmTitle": "Пора пить воду! 💧",
   "waterAlarmBody": "Как насчет стакана прохладной воды для вашего здоровья?",
@@ -2675,6 +2718,40 @@
     "placeholders": {
       "month": {
         "type": "int"
+      }
+    }
+  },
+  "addMinutes": "+ {minutes} мин.",
+  "alarmSaved": "Будильник сохранен.",
+  "alarmScheduledBody": "Будильник прозвенит в {time}.",
+  "alarmScheduledTitle": "Будильник установлен",
+  "cheerUp": "Желаю отличного и продуктивного дня!",
+  "goodDay": "Это будет чудесный день!",
+  "luckyDay": "Желаю дня, полного удачи!",
+  "pleaseSetTime": "Пожалуйста, установите время.",
+  "quickAlarm": "Быстрый будильник",
+  "ringingAt": "Прозвенит в {time}",
+  "setQuickAlarm": "Установить быстрый будильник",
+  "stayHappy": "Наслаждайтесь каждым моментом сегодня!",
+  "youCanDoIt": "Сегодня вы можете все!",
+  "@addMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@alarmScheduledBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@ringingAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
       }
     }
   }

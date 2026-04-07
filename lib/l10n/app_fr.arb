@@ -222,7 +222,7 @@
   "deleteColor": "Supprimer la couleur",
   "deleteColorConfirm": "Êtes-vous sûr de vouloir supprimer cette couleur de la liste ?",
   "deleteMission": "Supprimer la mission",
-  "deleteMissionConfirm": "Êtes-vous sûr de vouloir supprimer cette mission de la liste ?",
+  "deleteMissionConfirm": "Êtes-vous sûr de vouloir supprimer cette mission ?",
   "randomBackgroundDesc": "Un nouvel arrière-plan à chaque sonnerie d'alarme !",
   "backgroundDeleted": "Image d'arrière-plan supprimée.",
   "pickFromDevice": "Choisir depuis l'appareil",
@@ -462,6 +462,30 @@
   "bgWarmBeige": "Beige chaud",
   "dateFormatMdyE": "d/M (E)",
   "deleteAlarm": "Supprimer l'alarme",
+  "firstAlarmGuideTitle": "Pas d'alarme encore",
+  "firstAlarmGuideDesc": "Réglez une alarme de chance et\ncommencez une journée rafraîchissante !",
+  "addAlarm": "Ajouter une alarme",
+  "addFirstAlarm": "Créer la première alarme",
+  "deleteAlarmConfirm": "Supprimer cette alarme ?",
+  "welcomeMessage": "Enchanté !",
+  "whenToRing": "Quand dois-je vous réveiller ?",
+  "next": "Suivant",
+  "retryFortune": "Réessayer la fortune",
+  "retryFortuneDesc": "Vous n'aimez pas le résultat ?\nRegardez une publicité pour réessayer !",
+  "tapToReveal": "Appuyez pour révéler la fortune",
+  "redrawButton": "Re-tirer",
+  "defaultFortuneGreeting": "Consultez votre horoscope du jour !",
+  "registerProfile": "Créer un profil",
+  "todaysFortuneTitle": "Horoscope du jour",
+  "fortuneCheckSubtitle": "Comment sera votre journée ? Découvrez-le maintenant.",
+  "supportSection": "Support",
+  "rateApp": "Évaluer l'application",
+  "shareWithFriends": "Partager avec des amis",
+  "shareAppMessage": "Essayez 'Fortune Alarm' ! Réveillez-vous chaque matin avec votre horoscope du jour. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm",
+  "locationPermissionRequiredWeather": "L'autorisation de localisation est requise pour obtenir les informations météo.",
+  "turnOnLocationService": "Veuillez activer les services de localisation",
+  "checkWeatherLocationRequired": "Localisation pour la météo",
+  "themeColor": "Couleur du thème",
   "confirmDelete": "Êtes-vous sûr de vouloir supprimer ?",
   "yes": "Oui",
   "no": "Non",
@@ -1252,11 +1276,29 @@
   "exactAlarmPermissionFail": "Échec de l'enregistrement de l'alarme. La permission d'alarme exacte est désactivée et doit être définie.",
   "batteryOptimizationPermissionFail": "Échec de l'enregistrement de l'alarme. La permission d'exception d'optimisation de la batterie est manquante et doit être définie.",
   "overlayPermissionFail": "Échec de l'enregistrement de l'alarme. La permission \"Afficher sur d'autres applis\" est manquante et doit être définie.",
+  "batteryOptimizationName": "Optimisation de la batterie",
+  "batteryOptimizationTitle": "Paramètres d'optimisation requis\npour des alarmes précises.",
+  "batteryOptimizationSubtitle": "Veuillez définir comme exception d'optimisation de la batterie\npour que l'application fonctionne correctement en arrière-plan.",
+  "batteryOptimizationBottomDesc": "Sélectionner 'Non restreint' ou 'Ne pas optimiser'\ndans les paramètres garantira qu'aucune alarme ne soit manquée.",
+  "understand": "Je comprends",
+  "overlayPermissionName": "Afficher sur d'autres applications",
+  "overlayPermissionTitle": "Guide des permissions",
   "unknownAlarmError": "Échec de l'enregistrement de l'alarme. Une erreur inconnue est survenue.",
   "resetTooltip": "Réinitialiser",
   "errorLoadingAlarm": "Échec du chargement des informations d'alarme.",
   "alarmNotFound": "Informations d'alarme introuvables.",
   "repeatAlarmCount": "Alarme de répétition ({current}/{max})",
+  "snoozeRemainingCount": "Restant ({current}/{max})",
+  "@snoozeRemainingCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "@repeatAlarmCount": {
     "placeholders": {
       "current": {
@@ -1639,6 +1681,8 @@
   "notice2Content": "Voici le contenu de la mise à jour version 1.0.0.\\n\\n1. Amélioration de l'interface utilisateur de la mission complémentaire\\n2. Intégration des paramètres système pour des alarmes précises\\n3. Prise en charge du mode sombre\\n4. Corrections de bugs et améliorations de la stabilité\\n\\nDécouvrez la dernière version maintenant !",
   "notice3Title": "Avis de révision des conditions d'utilisation",
   "notice3Content": "Les conditions d'utilisation ont été révisées.\\n\\nRévisions clés :\\n- Politique de confidentialité renforcée\\n- Portée de l'utilisation du service spécifiée\\n\\nLes détails peuvent être trouvés sur la page Paramètres > Conditions.",
+  "notice4Title": "Mise à jour version 1.1.1",
+  "notice4Content": "Contenu de la mise à jour 1.1.1 :\\n\\n1. Interface d'optimisation de la batterie améliorée\\n2. Mise en page du texte anglais optimisée\\n3. Stabilité du système publicitaire renforcée\\n4. Améliorations de la performance et stabilité de l'app\\n\\nMettez à jour dès maintenant pour une meilleure expérience !",
   "supportContentTitle": "Contenu de la demande",
   "supportHint": "Veuillez entrer le contenu.",
   "supportRecipient": "Destinataire (Support Client)",
@@ -2618,7 +2662,6 @@
   "locationPermissionDenied": "Permission de localisation refusée.",
   "locationPermissionPermanentlyDenied": "Permission de localisation refusée de manière permanente.",
   "deleteMissionTitle": "Supprimer la mission",
-  "deleteMissionConfirm": "Êtes-vous sûr de vouloir supprimer cette mission ?",
   "yesDelete": "Oui, supprimer",
   "waterAlarmTitle": "C'est l'heure de boire de l'eau ! 💧",
   "waterAlarmBody": "Que diriez-vous d'un verre d'eau fraîche pour votre santé ?",
@@ -2675,6 +2718,40 @@
     "placeholders": {
       "month": {
         "type": "int"
+      }
+    }
+  },
+  "addMinutes": "+ {minutes}m",
+  "alarmSaved": "Alarme enregistrée.",
+  "alarmScheduledBody": "L'alarme sonnera à {time}.",
+  "alarmScheduledTitle": "Alarme programmée",
+  "cheerUp": "Passez une excellente journée productive !",
+  "goodDay": "Ce sera une journée merveilleuse !",
+  "luckyDay": "Je vous souhaite une journée pleine de chance !",
+  "pleaseSetTime": "Veuillez régler l'heure.",
+  "quickAlarm": "Alarme rapide",
+  "ringingAt": "Sonne à {time}",
+  "setQuickAlarm": "Régler l'alarme rapide",
+  "stayHappy": "Profitez de chaque instant aujourd'hui !",
+  "youCanDoIt": "Aujourd'hui, tout est possible !",
+  "@addMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@alarmScheduledBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@ringingAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
       }
     }
   }

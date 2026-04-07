@@ -222,7 +222,7 @@
   "deleteColor": "रंग हटाएं",
   "deleteColorConfirm": "क्या आप वाकई इस रंग को सूची से हटाना चाहते हैं?",
   "deleteMission": "मिशन हटाएं",
-  "deleteMissionConfirm": "क्या आप वाकई इस मिशन को सूची से हटाना चाहते हैं?",
+  "deleteMissionConfirm": "क्या आप वाकई इस मिशन को हटाना चाहते हैं?",
   "randomBackgroundDesc": "हर बार अलार्म बजने पर एक नई पृष्ठभूमि!",
   "backgroundDeleted": "पृष्ठभूमि छवि हटा दी गई।",
   "pickFromDevice": "डिवाइस से चुनें",
@@ -462,6 +462,30 @@
   "bgWarmBeige": "वार्म बेज",
   "dateFormatMdyE": "d/M (E)",
   "deleteAlarm": "अलार्म हटाएं",
+  "firstAlarmGuideTitle": "अभी तक कोई अल람 नहीं",
+  "firstAlarmGuideDesc": "भाग्य अलार्म सेट करें और\nएक ताज़ा दिन की शुरुआत करें!",
+  "addAlarm": "अलार्म जोड़ें",
+  "addFirstAlarm": "पहला अल람 बनाएं",
+  "deleteAlarmConfirm": "क्या आप इस अलार्म को हटा나 चाहते हैं?",
+  "welcomeMessage": "आपसे मिलकर खुशी हुई!",
+  "whenToRing": "मुझे आपको कब जगाना चाहिए?",
+  "next": "अगला",
+  "retryFortune": "फिर से भाग्य देखें",
+  "retryFortuneDesc": "परिणाम पसंद नहीं आया?\nएक बार और कोशिश करने के लिए विज्ञापन देखें!",
+  "tapToReveal": "भाग्य जानने के लिए टैप करें",
+  "redrawButton": "फिर से निकालें",
+  "defaultFortuneGreeting": "आज का भाग्य देखें!",
+  "registerProfile": "प्रोफ़ाइल रजिस्टर करें",
+  "todaysFortuneTitle": "आज का भाग्य",
+  "fortuneCheckSubtitle": "आपका दिन कैसा रहेगा? अभी देखें।",
+  "supportSection": "सहायता",
+  "rateApp": "ऐप को रेट करें",
+  "shareWithFriends": "दोस्तों के साथ साझा करें",
+  "shareAppMessage": "'Fortune Alarm' को आजमाएं! हर सुबह अपने दैनिक भाग्य के साथ ताज़गी से उठें। https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm",
+  "locationPermissionRequiredWeather": "मौसम की जानकारी प्राप्त करने के लिए स्थान की अनुमति आवश्यक है।",
+  "turnOnLocationService": "कृपया स्थान सेवाएँ चालू करें",
+  "checkWeatherLocationRequired": "मौसम के लिए स्थान आवश्यक",
+  "themeColor": "थीम रंग",
   "confirmDelete": "क्या आप वाकई हटाना चाहते हैं?",
   "yes": "हाँ",
   "no": "नहीं",
@@ -1252,11 +1276,29 @@
   "exactAlarmPermissionFail": "अलार्म पंजीकरण विफल। सटीक अलार्म अनुमति आवश्यक है।",
   "batteryOptimizationPermissionFail": "अलार्म पंजीकरण विफल। बैटरी ऑप्टिमाइज़ेशन अपवाद अनुमति आवश्यक है।",
   "overlayPermissionFail": "अलार्म पंजीकरण विफल। अन्य ऐप्स के ऊपर दिखाएं अनुमति आवश्यक है।",
+  "batteryOptimizationName": "बैटरी ऑप्टिमाइज़ेशन",
+  "batteryOptimizationTitle": "सटीक अलार्म के लिए\nऑप्टिमाइज़ेशन सेटिंग्स आवश्यक हैं।",
+  "batteryOptimizationSubtitle": "कृपया बैटरी ऑप्टिमाइज़ेशन अपवाद के रूप में सेट करें\nताकि ऐप बैकग्राउंड में सुचारू रूप से चल सके।",
+  "batteryOptimizationBottomDesc": "सेटिंग्स में 'Unrestricted' या 'Don't optimize'\nचुनने से अलार्म मिस नहीं होगा।",
+  "understand": "समझ गया",
+  "overlayPermissionName": "अन्य ऐप्स के ऊपर प्रदर्शित करें",
+  "overlayPermissionTitle": "अनुमति मार्गदर्शिका",
   "unknownAlarmError": "अलार्म रजिस्टर करने में विफल। एक अज्ञात त्रुटि हुई।",
   "resetTooltip": "रीसेट",
   "errorLoadingAlarm": "अलार्म जानकारी लोड करने में विफल।",
   "alarmNotFound": "अलार्म जानकारी नहीं मिली।",
   "repeatAlarmCount": "दोहराएँ अलार्म ({current}/{max})",
+  "snoozeRemainingCount": "शेष ({current}/{max})",
+  "@snoozeRemainingCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "@repeatAlarmCount": {
     "placeholders": {
       "current": {
@@ -1639,6 +1681,8 @@
   "notice2Content": "यहाँ संस्करण 1.0.0 अपडेट की सामग्री है।\n\n1. सप्लीमेंट मिशन UI सुधार\n2. सटीक अलार्म के लिए सिस्टम सेटिंग एकीकरण\n3. डार्क मोड समर्थन\n4. बग फिक्स और स्थिरता में सुधार\n\nअब नवीनतम संस्करण का अनुभव करें!",
   "notice3Title": "सेवा की शर्तें संशोधन सूचना",
   "notice3Content": "सेवा की शर्तों को संशोधित किया गया है।\n\nप्रमुख संशोधन:\n- गोपनीयता नीति को मजबूत किया गया\n- सेवा उपयोग का दायरा निर्दिष्ट किया गया\n\nविवरण सेटिंग्स > शर्तें पृष्ठ पर पाए जा सकते हैं।",
+  "notice4Title": "संस्करण 1.1.1 अपडेट समाचार",
+  "notice4Content": "संस्करण 1.1.1 अपडेट की सामग्री यहाँ है:\n\n1. बेहतर बैटरी अनुकूलन गाइड UI\n2. अंग्रेजी संस्करण के लिए बेहतर टेक्स्ट लेआउट\n3. विज्ञापन प्रणाली की स्थिरता में सुधार\n4. ऐप स्थिरता और प्रदर्शन में सुधार\n\nबेहतर अनुभव के लिए कृपया अभी अपडेट करें!",
   "supportContentTitle": "पूछताछ सामग्री",
   "supportHint": "कृपया सामग्री दर्ज करें।",
   "supportRecipient": "प्राप्तकर्ता (ग्राहक सहायता)",
@@ -2618,7 +2662,6 @@
   "locationPermissionDenied": "स्थान की अनुमति अस्वीकार कर दी गई।",
   "locationPermissionPermanentlyDenied": "स्थान की अनुमति स्थायी रूप से अस्वीकार कर दी गई।",
   "deleteMissionTitle": "मिशन हटाएं",
-  "deleteMissionConfirm": "क्या आप वाकई इस मिशन को हटाना चाहते हैं?",
   "yesDelete": "हाँ, हटाएँ",
   "waterAlarmTitle": "पानी पीने का समय! 💧",
   "waterAlarmBody": "आपकी सेहत के लिए एक गिलास ठंडा पानी कैसा रहेगा?",
@@ -2675,6 +2718,40 @@
     "placeholders": {
       "month": {
         "type": "int"
+      }
+    }
+  },
+  "addMinutes": "+ {minutes} मिनट",
+  "alarmSaved": "अलार्म सहेजा गया।",
+  "alarmScheduledBody": "अलार्म {time} बजे बजेगा।",
+  "alarmScheduledTitle": "अलार्म निर्धारित",
+  "cheerUp": "आपका दिन शानदार और उत्पादक हो!",
+  "goodDay": "यह एक अद्भुत दिन होने वाला है!",
+  "luckyDay": "आपका दिन भाग्य से भरा हो!",
+  "pleaseSetTime": "कृपया समय निर्धारित करें।",
+  "quickAlarm": "त्वरित अलार्म",
+  "ringingAt": "{time} बजे बजता है",
+  "setQuickAlarm": "त्वरित अलार्म सेट करें",
+  "stayHappy": "आज हर पल का आनंद लें!",
+  "youCanDoIt": "आज आप कुछ भी कर सकते हैं!",
+  "@addMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@alarmScheduledBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@ringingAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
       }
     }
   }

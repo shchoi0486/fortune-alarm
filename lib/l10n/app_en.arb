@@ -496,6 +496,30 @@
   "bgWarmBeige": "Warm Beige",
   "dateFormatMdyE": "M/d (E)",
   "deleteAlarm": "Delete Alarm",
+  "firstAlarmGuideTitle": "No alarms yet",
+  "firstAlarmGuideDesc": "Set a fortune alarm and\nstart a refreshing day!",
+  "addAlarm": "Add Alarm",
+  "addFirstAlarm": "Create First Alarm",
+  "deleteAlarmConfirm": "Delete this alarm?",
+  "welcomeMessage": "Nice to meet you!",
+  "whenToRing": "When should I wake you up?",
+  "next": "Next",
+  "retryFortune": "Retry Fortune",
+  "retryFortuneDesc": "Don't like the result?\nWatch an ad to try one more time!",
+  "tapToReveal": "Tap to reveal fortune",
+  "redrawButton": "Redraw",
+  "defaultFortuneGreeting": "Check your fortune for today!",
+  "registerProfile": "Register Profile",
+  "todaysFortuneTitle": "Today's Fortune",
+  "fortuneCheckSubtitle": "How will your day be? Check it out now.",
+  "supportSection": "Support",
+  "rateApp": "Rate App",
+  "shareWithFriends": "Share with Friends",
+  "shareAppMessage": "Try 'Fortune Alarm'! Wake up fresh with your daily fortune every morning. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm",
+  "locationPermissionRequiredWeather": "Location permission is required to get weather information.",
+  "turnOnLocationService": "Please turn on location services",
+  "checkWeatherLocationRequired": "Location required for weather",
+  "themeColor": "Theme Color",
   "confirmDelete": "Are you sure you want to delete?",
   "yes": "Yes",
   "no": "No",
@@ -1286,11 +1310,29 @@
   "exactAlarmPermissionFail": "Failed to register alarm. Exact alarm permission is disabled and needs to be set.",
   "batteryOptimizationPermissionFail": "Failed to register alarm. Battery optimization exception permission is missing and needs to be set.",
   "overlayPermissionFail": "Failed to register alarm. \"Display over other apps\" permission is missing and needs to be set.",
+  "batteryOptimizationName": "Battery Optimization",
+  "batteryOptimizationTitle": "Optimization settings required\nfor accurate alarms.",
+  "batteryOptimizationSubtitle": "Please set as a battery optimization exception\nso the app runs smoothly in the background.",
+  "batteryOptimizationBottomDesc": "Selecting 'Unrestricted' or 'Don't optimize'\nin the settings will ensure no missed alarms.",
+  "understand": "I understand",
+  "overlayPermissionName": "Display over other apps",
+  "overlayPermissionTitle": "Permission Guide",
   "unknownAlarmError": "Failed to register alarm. An unknown error occurred.",
   "resetTooltip": "Reset",
   "errorLoadingAlarm": "Failed to load alarm information.",
   "alarmNotFound": "Alarm information not found.",
   "repeatAlarmCount": "Snooze Alarm ({current}/{max})",
+  "snoozeRemainingCount": "Remaining ({current}/{max})",
+  "@snoozeRemainingCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "@repeatAlarmCount": {
     "placeholders": {
       "current": {
@@ -1673,6 +1715,8 @@
   "notice2Content": "Here is the content of the version 1.0.0 update.\\n\\n1. Supplement mission UI improvement\\n2. System setting integration for accurate alarms\\n3. Dark mode support\\n4. Bug fixes and stability improvements\\n\\nExperience the latest version now!",
   "notice3Title": "Terms of Service Revision Notice",
   "notice3Content": "The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.",
+  "notice4Title": "Version 1.1.1 Update News",
+  "notice4Content": "Update details for version 1.1.1.\\n\\n1. Improved battery optimization guide UI\\n2. Optimized English text layout\\n3. Enhanced ad system stability\\n4. App stability and performance improvements\\n\\nPlease update to the latest version for a better experience!",
   "supportContentTitle": "Inquiry Content",
   "supportHint": "Please enter the content.",
   "supportRecipient": "Recipient (Customer Support)",

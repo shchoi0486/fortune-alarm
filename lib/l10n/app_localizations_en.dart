@@ -1245,6 +1245,82 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteAlarm => 'Delete Alarm';
 
   @override
+  String get firstAlarmGuideTitle => 'No alarms yet';
+
+  @override
+  String get firstAlarmGuideDesc =>
+      'Set a fortune alarm and\nstart a refreshing day!';
+
+  @override
+  String get addAlarm => 'Add Alarm';
+
+  @override
+  String get addFirstAlarm => 'Create First Alarm';
+
+  @override
+  String get deleteAlarmConfirm => 'Delete this alarm?';
+
+  @override
+  String get welcomeMessage => 'Nice to meet you!';
+
+  @override
+  String get whenToRing => 'When should I wake you up?';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get retryFortune => 'Retry Fortune';
+
+  @override
+  String get retryFortuneDesc =>
+      'Don\'t like the result?\nWatch an ad to try one more time!';
+
+  @override
+  String get tapToReveal => 'Tap to reveal fortune';
+
+  @override
+  String get redrawButton => 'Redraw';
+
+  @override
+  String get defaultFortuneGreeting => 'Check your fortune for today!';
+
+  @override
+  String get registerProfile => 'Register Profile';
+
+  @override
+  String get todaysFortuneTitle => 'Today\'s Fortune';
+
+  @override
+  String get fortuneCheckSubtitle => 'How will your day be? Check it out now.';
+
+  @override
+  String get supportSection => 'Support';
+
+  @override
+  String get rateApp => 'Rate App';
+
+  @override
+  String get shareWithFriends => 'Share with Friends';
+
+  @override
+  String get shareAppMessage =>
+      'Try \'Fortune Alarm\'! Wake up fresh with your daily fortune every morning. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm';
+
+  @override
+  String get locationPermissionRequiredWeather =>
+      'Location permission is required to get weather information.';
+
+  @override
+  String get turnOnLocationService => 'Please turn on location services';
+
+  @override
+  String get checkWeatherLocationRequired => 'Location required for weather';
+
+  @override
+  String get themeColor => 'Theme Color';
+
+  @override
   String get confirmDelete => 'Are you sure you want to delete?';
 
   @override
@@ -3135,6 +3211,30 @@ class AppLocalizationsEn extends AppLocalizations {
       'Failed to register alarm. \"Display over other apps\" permission is missing and needs to be set.';
 
   @override
+  String get batteryOptimizationName => 'Battery Optimization';
+
+  @override
+  String get batteryOptimizationTitle =>
+      'Optimization settings required\nfor accurate alarms.';
+
+  @override
+  String get batteryOptimizationSubtitle =>
+      'Please set as a battery optimization exception\nso the app runs smoothly in the background.';
+
+  @override
+  String get batteryOptimizationBottomDesc =>
+      'Selecting \'Unrestricted\' or \'Don\'t optimize\'\nin the settings will ensure no missed alarms.';
+
+  @override
+  String get understand => 'I understand';
+
+  @override
+  String get overlayPermissionName => 'Display over other apps';
+
+  @override
+  String get overlayPermissionTitle => 'Permission Guide';
+
+  @override
   String get unknownAlarmError =>
       'Failed to register alarm. An unknown error occurred.';
 
@@ -3150,6 +3250,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String repeatAlarmCount(int current, int max) {
     return 'Snooze Alarm ($current/$max)';
+  }
+
+  @override
+  String snoozeRemainingCount(int current, int max) {
+    return 'Remaining ($current/$max)';
   }
 
   @override
@@ -4261,6 +4366,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notice3Content =>
       'The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.';
+
+  @override
+  String get notice4Title => 'Version 1.1.1 Update News';
+
+  @override
+  String get notice4Content =>
+      'Update details for version 1.1.1.\\n\\n1. Improved battery optimization guide UI\\n2. Optimized English text layout\\n3. Enhanced ad system stability\\n4. App stability and performance improvements\\n\\nPlease update to the latest version for a better experience!';
 
   @override
   String get supportContentTitle => 'Inquiry Content';

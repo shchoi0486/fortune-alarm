@@ -222,7 +222,7 @@
   "deleteColor": "删除颜色",
   "deleteColorConfirm": "确定要从列表中删除该颜色吗？",
   "deleteMission": "删除任务",
-  "deleteMissionConfirm": "确定要从列表中删除该任务吗？",
+  "deleteMissionConfirm": "您确定要删除这个任务吗？",
   "randomBackgroundDesc": "每次闹钟响起都会换一张新背景！",
   "backgroundDeleted": "背景已删除。",
   "pickFromDevice": "从设备选择",
@@ -462,6 +462,30 @@
   "bgWarmBeige": "暖米色",
   "dateFormatMdyE": "M/d (E)",
   "deleteAlarm": "删除闹钟",
+  "firstAlarmGuideTitle": "暂无闹钟",
+  "firstAlarmGuideDesc": "设置幸运闹钟\n开启清爽的一天！",
+  "addAlarm": "添加闹钟",
+  "addFirstAlarm": "创建第一个闹钟",
+  "deleteAlarmConfirm": "确定删除闹钟吗？",
+  "welcomeMessage": "很高兴见到你！",
+  "whenToRing": "什么时候叫醒你？",
+  "next": "下一步",
+  "retryFortune": "重新查看运势",
+  "retryFortuneDesc": "对结果不满意吗？\n观看广告后再试一次！",
+  "tapToReveal": "点击查看运势",
+  "redrawButton": "重新抽取",
+  "defaultFortuneGreeting": "查看你今天的运势！",
+  "registerProfile": "注册资料",
+  "todaysFortuneTitle": "今日运势",
+  "fortuneCheckSubtitle": "今天会是怎样的一天？现在就去看看吧。",
+  "supportSection": "支持",
+  "rateApp": "评价应用",
+  "shareWithFriends": "分享给朋友",
+  "shareAppMessage": "试试 'Fortune Alarm' 吧！每天早上都能伴随着运势清爽地醒来。 https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm",
+  "locationPermissionRequiredWeather": "获取天气信息需要位置权限。",
+  "turnOnLocationService": "请开启位置服务",
+  "checkWeatherLocationRequired": "查看天气需位置信息",
+  "themeColor": "主题颜色",
   "confirmDelete": "确认删除",
   "yes": "是",
   "no": "不",
@@ -1252,11 +1276,29 @@
   "exactAlarmPermissionFail": "闹钟设置失败。需要开启准确闹钟权限。",
   "batteryOptimizationPermissionFail": "闹钟设置失败。需要关闭电池优化。",
   "overlayPermissionFail": "闹钟设置失败。需要开启“在其他应用上层显示”权限。",
+  "batteryOptimizationName": "电池优化",
+  "batteryOptimizationTitle": "为了确保闹钟准时响铃\n需要进行相关设置。",
+  "batteryOptimizationSubtitle": "请将应用设为电池优化白名单\n以确保应用在后台正常运行。",
+  "batteryOptimizationBottomDesc": "在设置中选择“无限制”或“不优化”\n闹钟将不会漏响。",
+  "understand": "知道了",
+  "overlayPermissionName": "在其他应用上显示",
+  "overlayPermissionTitle": "权限允许指南",
   "unknownAlarmError": "闹钟设置失败。发生未知错误。",
   "resetTooltip": "重置",
   "errorLoadingAlarm": "无法加载闹钟信息。",
   "alarmNotFound": "未找到闹钟信息。",
   "repeatAlarmCount": "重复闹钟 ({current}/{max})",
+  "snoozeRemainingCount": "剩余次数 ({current}/{max})",
+  "@snoozeRemainingCount": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
   "@repeatAlarmCount": {
     "placeholders": {
       "current": {
@@ -1639,6 +1681,8 @@
   "notice2Content": "以下是版本 1.0.0 更新的内容。\n\n1. 营养品任务界面改进\n2. 精确闹钟的系统设置集成\n3. 深色模式支持\n4. 错误修复和稳定性改进\n\n立即体验最新版本！",
   "notice3Title": "服务条款修订通知",
   "notice3Content": "服务条款已修订。\n\n主要修订：\n- 加强隐私政策\n- 指定服务使用范围\n\n详情可在 设置 > 条款 页面查看。",
+  "notice4Title": "版本 1.1.1 更新新闻",
+  "notice4Content": "以下是版本 1.1.1 更新的内容。\n\n1. 电池优化引导界面改进\n2. 英文版本文本布局优化\n3. 增强广告系统稳定性\n4. 应用稳定性和性能改进\n\n请更新到最新版本，获得更好体验！",
   "supportContentTitle": "咨询内容",
   "supportHint": "请输入内容。",
   "supportRecipient": "收件人 (客户支持)",
@@ -2618,7 +2662,6 @@
   "locationPermissionDenied": "位置权限被拒绝。",
   "locationPermissionPermanentlyDenied": "位置权限被永久拒绝。",
   "deleteMissionTitle": "删除任务",
-  "deleteMissionConfirm": "您确定要删除这个任务吗？",
   "yesDelete": "是的，删除",
   "waterAlarmTitle": "该喝水了！ 💧",
   "waterAlarmBody": "为了您的健康，来一杯凉水怎么样？",
@@ -2675,6 +2718,40 @@
     "placeholders": {
       "month": {
         "type": "int"
+      }
+    }
+  },
+  "addMinutes": "+ {minutes}分钟",
+  "alarmSaved": "闹钟已保存。",
+  "alarmScheduledBody": "闹钟将在 {time} 响起。",
+  "alarmScheduledTitle": "闹钟已设定",
+  "cheerUp": "祝你今天过得愉快且充实！",
+  "goodDay": "今天会是美好的一天！",
+  "luckyDay": "祝你今天好运连连！",
+  "pleaseSetTime": "请设置时间。",
+  "quickAlarm": "快速闹钟",
+  "ringingAt": "将在 {time} 响起",
+  "setQuickAlarm": "设置快速闹钟",
+  "stayHappy": "享受今天的每一刻！",
+  "youCanDoIt": "今天你可以完成任何事情！",
+  "@addMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "@alarmScheduledBody": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "@ringingAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
       }
     }
   }

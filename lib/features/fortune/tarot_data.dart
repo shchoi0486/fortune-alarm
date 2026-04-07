@@ -731,18 +731,15 @@ const List<TarotCard> majorArcana = [
 class TarotRepository {
   static final Map<String, TarotCard> _lastDrawnCards = {};
 
-  static TarotCard drawCard({required String category, DateTime? date}) {
+  static TarotCard drawCard({required String category, DateTime? date, int seedModifier = 0}) {
     int index;
-    if (date != null) {
-      // 날짜와 카테고리를 조합하여 고유한 시드 생성 (일관된 결과 보장)
-      // category 문자열의 해시코드와 날짜 정보를 조합
-      final seed = date.year * 10000 + date.month * 100 + date.day + category.codeUnitAt(0);
-      final random = Random(seed);
-      index = random.nextInt(majorArcana.length);
-    } else {
-      // 랜덤으로 카드 한 장 뽑기
-      index = Random().nextInt(majorArcana.length);
-    }
+    final effectiveDate = date ?? DateTime.now();
+    
+    // 날짜와 카테고리를 조합하여 고유한 시드 생성 (일관된 결과 보장)
+    // category 문자열의 해시코드와 날짜 정보를 조합
+    final seed = effectiveDate.year * 10000 + effectiveDate.month * 100 + effectiveDate.day + category.codeUnitAt(0) + seedModifier;
+    final random = Random(seed);
+    index = random.nextInt(majorArcana.length);
     
     final card = majorArcana[index];
     _lastDrawnCards[category] = card;

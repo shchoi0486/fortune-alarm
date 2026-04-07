@@ -42,7 +42,6 @@ import 'package:fortune_alarm/widgets/ad_widgets.dart'; // 광고 위젯 임포�
 import 'package:fortune_alarm/services/ad_service.dart'; // 광고 서비스 임포트
 
 import '../../providers/bottom_nav_provider.dart';
-import '../../core/navigation/app_navigator.dart';
 import 'wake_up_summary_screen.dart';
 
 class AlarmRingingScreen extends ConsumerStatefulWidget {
@@ -96,7 +95,12 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
       );
     } else {
       // 광고를 보여줄 필요가 없거나 구독자인 경우 바로 메인으로 이동
-      navigatorKey.currentState?.pushNamedAndRemoveUntil('/main', (route) => false);
+      // [수정] navigatorKey 대신 Navigator.of(context) 사용 (더 안정적)
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        '/main', 
+        (route) => false, 
+        arguments: {'skipSplash': true},
+      );
     }
   }
 
@@ -687,7 +691,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
 
       // 1. 기존의 모든 스케줄(메인 + 스누즈)을 확실하게 취소하여 꼬인 상태 방지
       bool isRepeating = targetAlarm.repeatDays.any((d) => d);
-      await AlarmSchedulerService.cancelAlarm(targetAlarm, cancelMain: !isRepeating, cancelSnooze: true);
+      await AlarmSchedulerService.cancelAlarm(targetAlarm, cancelMain: true, cancelSnooze: true);
       // 현재 _alarm이 스누즈라면 그것도 시스템에서 확실히 취소
       if (isSnooze) {
          await AlarmSchedulerService.cancelAlarm(_alarm!, cancelMain: true, cancelSnooze: false);
@@ -697,7 +701,12 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
 
       // 2. 반복 알람 처리: '현재 시점'을 기준으로 확실한 미래의 시간으로 재예약
       if (targetAlarm.repeatDays.any((d) => d)) {
-        final nextTime = AlarmSchedulerService.calculateNextTime(targetAlarm.time, targetAlarm.repeatDays);
+        final referenceTime = DateTime.now().add(const Duration(minutes: 1));
+        final nextTime = AlarmSchedulerService.calculateNextTime(
+          targetAlarm.time,
+          targetAlarm.repeatDays,
+          referenceTime: referenceTime,
+        );
         
         // 모델 업데이트 (스누즈 카운트도 초기화)
         resultAlarm = targetAlarm.copyWith(
@@ -706,7 +715,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
         );
         
         // 시스템에 스케줄링 등록 (Hive 저장은 내부적으로 수행됨)
-        await AlarmSchedulerService.scheduleAlarm(resultAlarm, isRescheduling: true);
+        await AlarmSchedulerService.scheduleAlarm(resultAlarm);
         debugPrint('[AlarmRingingScreen] Repeating alarm manually rescheduled for: $nextTime');
       } else {
         // 일회성 알람: 비활성화 처리
@@ -722,6 +731,18 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
       } catch (e) {
         debugPrint('Error updating provider: $e');
         ref.invalidate(alarmListProvider);
+      }
+
+      // 4. 기상 미션 성공 처리 연동 (어떤 알람이든 해제 성공 시 오늘 미션 완료 처리)
+      try {
+        await ref.read(missionProvider).completeWakeUpMission();
+        
+        // 만약 영양제 미션이었다면 영양제 체크도 함께 완료
+        if (targetAlarm.missionType == MissionType.supplement) {
+          await ref.read(missionProvider).setMissionCompleted('supplement', true);
+        }
+      } catch (e) {
+        debugPrint('Error completing mission in _handleAlarmCompletion: $e');
       }
     } finally {
       _isHandlingCompletion = false;
@@ -1018,7 +1039,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                                   await AlarmSchedulerService.snoozeAlarm(alarm, snoozeTime: targetTime);
                                 },
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: _getContrastColor(),
+                                  foregroundColor: _getContrastColor() == Colors.white ? Colors.black : Colors.white,
                                   side: BorderSide(
                                     color: _getContrastColor().withOpacity(0.5),
                                     width: 1.2,
@@ -1027,7 +1048,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16), // 28 -> 16으로 변경
                                   ),
-                                  backgroundColor: _getContrastColor().withOpacity(_getContrastColor() == Colors.white ? 0.3 : 0.1),
+                                  backgroundColor: _getContrastColor(),
                                 ),
                                 child: (() {
                                   final bool isFirstSnooze = !_alarm!.id.endsWith('_snooze');
@@ -1036,27 +1057,22 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                                       ? maxCount
                                       : (_alarm!.remainingSnoozeCount > 0 ? _alarm!.remainingSnoozeCount : 0);
                                   final int minutes = _alarm!.snoozeInterval;
+                                  final textColor = _getContrastColor() == Colors.white ? Colors.black : Colors.white;
 
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        '$minutes분 더 자기',
-                                        style: TextStyle(
-                                          color: _getContrastColor(),
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                  final l10n = AppLocalizations.of(context)!;
+
+                                  return FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      maxCount == 999
+                                          ? l10n.snoozeMinutesUnlimited(minutes.toString())
+                                          : l10n.snoozeMinutesCount(minutes.toString(), currentRemaining, maxCount),
+                                      style: TextStyle(
+                                        color: textColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                      Text(
-                                        maxCount == 999 ? '무제한' : '$currentRemaining회 남음',
-                                        style: TextStyle(
-                                          color: _getContrastColor().withOpacity(0.7),
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   );
                                 })(),
                               ),
@@ -1091,8 +1107,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: _getContrastColor().withOpacity(_getContrastColor() == Colors.white ? 0.3 : 0.1),
-                                foregroundColor: _getContrastColor(),
+                                backgroundColor: _getContrastColor(),
+                                foregroundColor: _getContrastColor() == Colors.white ? Colors.black : Colors.white,
                                 padding: EdgeInsets.zero,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16), // 28 -> 16으로 변경
@@ -1103,16 +1119,19 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                                 ),
                                 elevation: 0,
                               ),
-                              child: Text(
-                                _alarm!.missionType == MissionType.none 
-                                    ? AppLocalizations.of(context)!.turnOffAlarm
-                                    : AppLocalizations.of(context)!.startMission, 
-                                style: TextStyle(
-                                  color: _getContrastColor(),
-                                  fontSize: 18, 
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.0,
-                                )
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  _alarm!.missionType == MissionType.none 
+                                      ? AppLocalizations.of(context)!.turnOffAlarm
+                                      : AppLocalizations.of(context)!.startMission, 
+                                  style: TextStyle(
+                                    color: _getContrastColor() == Colors.white ? Colors.black : Colors.white,
+                                    fontSize: 18, 
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.0,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -1275,21 +1294,10 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
       debugPrint('[AlarmRingingScreen] Mission Success! Completing alarm.');
       
       if (_alarm != null) {
-        // 미션 성공 시 재울림 방지 로직 실행
+        // 미션 성공 시 재울림 방지 로직 실행 (이제 내부에서 미션 완료 처리도 수행)
         await _handleAlarmCompletion();
         await _setMissionActive(false);
         
-        // 기상 미션 성공 처리 연동
-        try {
-          await ref.read(missionProvider).completeWakeUpMission();
-          
-          // 만약 영양제 미션이었다면 영양제 체크도 함께 완료
-          if (_alarm?.missionType == MissionType.supplement) {
-            await ref.read(missionProvider).setMissionCompleted('supplement', true);
-          }
-        } catch (e) {
-          debugPrint('Error completing wakeup mission: $e');
-        }
         if (context.mounted) {
           _closeToMain(showAdAfterClose: true);
         }

@@ -38,7 +38,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   // 테마 및 UI 상태
   Color _themeColor = const Color(0xFFF97316); // 기본 테마를 선명한 오렌지색으로 변경
   CalendarViewMode _viewMode = CalendarViewMode.month;
-  bool _isExpanded = false;
+  bool _isExpanded = true;
   bool _isViewSelectorOpen = false;
   
   Color _getAccentColor(bool isDark) {
@@ -98,10 +98,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     switch (_viewMode) {
       case CalendarViewMode.year:
         return DateFormat.y(locale).format(_focusedDay);
+      case CalendarViewMode.month:
+        return DateFormat.yMMMM(locale).format(_focusedDay);
       case CalendarViewMode.week:
-        return DateFormat.yM(locale).format(_focusedDay);
+        return DateFormat.yMMMM(locale).format(_focusedDay);
       case CalendarViewMode.day:
-        return DateFormat.yMd(locale).format(_focusedDay);
+        return DateFormat.yMMMMd(locale).format(_focusedDay);
       default:
         return '';
     }
@@ -303,6 +305,82 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   );
 }
 
+  Widget _buildTodayButton(bool isDark) {
+    return GestureDetector(
+      onTap: () {
+        final now = DateTime.now();
+        setState(() {
+          _focusedDay = now;
+          _selectedDay = now;
+          _selectedEvents.value = _getEventsForDay(now);
+          
+          if (_viewMode == CalendarViewMode.year) {
+            if (_yearPageController.hasClients) {
+              _yearPageController.animateToPage(
+                now.year - 1900,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          } else if (_viewMode == CalendarViewMode.week) {
+            if (_weekController != null && _weekController!.hasClients) {
+              _weekController!.animateToPage(
+                _getWeekIndex(now),
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          } else if (_viewMode == CalendarViewMode.day) {
+            if (_dayController != null && _dayController!.hasClients) {
+              _dayController!.animateToPage(
+                _getDayIndex(now),
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          }
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: _themeColor == Colors.transparent
+              ? (isDark ? Colors.grey[800] : Colors.grey[100])
+              : _themeColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: _themeColor == Colors.transparent
+                ? (isDark ? Colors.grey[700]! : Colors.grey[300]!)
+                : _themeColor.withOpacity(0.5),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.today_rounded,
+              size: 13,
+              color: _themeColor == Colors.transparent
+                  ? (isDark ? Colors.white70 : Colors.black87)
+                  : _themeColor,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              AppLocalizations.of(context)!.today,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: _themeColor == Colors.transparent
+                    ? (isDark ? Colors.white70 : Colors.black87)
+                    : _themeColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -314,82 +392,34 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     return Scaffold(
       body: Container(
         color: isDark ? const Color(0xFF121212) : Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
-            // Custom Header (Minimized Padding)
+            // Custom Header (Standardized)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 8, 0),
-              child: Row(
-                children: [
-                  Text(
-                    _isMemoMode ? AppLocalizations.of(context)!.notepad : AppLocalizations.of(context)!.calendar,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: () {
-                      final now = DateTime.now();
-                      setState(() {
-                        _focusedDay = now;
-                        _selectedDay = now;
-                        _selectedEvents.value = _getEventsForDay(now);
-                        
-                        if (_viewMode == CalendarViewMode.year) {
-                          if (_yearPageController.hasClients) {
-                            _yearPageController.jumpToPage(now.year - 1900);
-                          }
-                        } else if (_viewMode == CalendarViewMode.week) {
-                          if (_weekController != null && _weekController!.hasClients) {
-                            _weekController!.jumpToPage(_getWeekIndex(now));
-                          }
-                        } else if (_viewMode == CalendarViewMode.day) {
-                          if (_dayController != null && _dayController!.hasClients) {
-                            _dayController!.jumpToPage(_getDayIndex(now));
-                          }
-                        }
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: _themeColor == Colors.transparent
-                            ? (isDark ? Colors.grey[800] : Colors.grey[100])
-                            : _themeColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: _themeColor == Colors.transparent
-                              ? (isDark ? Colors.grey[700]! : Colors.grey[300]!)
-                              : _themeColor.withOpacity(0.5),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.today_rounded,
-                            size: 13,
-                            color: _themeColor == Colors.transparent
-                                ? (isDark ? Colors.white70 : Colors.black87)
-                                : _themeColor,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            AppLocalizations.of(context)!.today,
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              color: _themeColor == Colors.transparent
-                                  ? (isDark ? Colors.white70 : Colors.black87)
-                                  : _themeColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                padding: const EdgeInsets.only(bottom: 4), // 좌우 패딩 제거 (부모 컨테이너가 16px 마진을 가짐)
+                child: Row(
+                   crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+                     Padding(
+                       padding: const EdgeInsets.only(top: 2),
+                       child: Icon(
+                          _isMemoMode ? Icons.edit_document : Icons.calendar_month_rounded,
+                         size: 24,
+                         color: _themeColor == Colors.transparent ? textColor : _themeColor,
+                       ),
+                     ),
+                     const SizedBox(width: 12),
+                     Text(
+                        _isMemoMode ? AppLocalizations.of(context)!.notepad : AppLocalizations.of(context)!.calendar,
+                       style: TextStyle(
+                         fontSize: 22,
+                         fontWeight: FontWeight.bold,
+                         color: textColor,
+                         height: 1.0,
+                         leadingDistribution: TextLeadingDistribution.even,
+                       ),
+                     ),
                   const Spacer(),
                   // 뷰 모드 전환 (항상 표시하여 위치 고정)
                   IconButton(
@@ -401,8 +431,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           ? (_themeColor == Colors.transparent ? (isDark ? Colors.white : Colors.black) : _themeColor)
                           : (isDark ? Colors.white70 : Colors.black54),
                     ),
-                    padding: EdgeInsets.zero,
+                    padding: const EdgeInsets.all(4),
                     constraints: const BoxConstraints(),
+                    visualDensity: VisualDensity.compact,
                     onPressed: () {
                       if (_isMemoMode) {
                         setState(() {
@@ -416,7 +447,6 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       }
                     },
                   ),
-                  const SizedBox(width: 8),
                   // 모드 전환 (모양 고정)
                   IconButton(
                     icon: Icon(
@@ -425,8 +455,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           ? (_themeColor == Colors.transparent ? (isDark ? Colors.white : Colors.black) : _themeColor)
                           : (isDark ? Colors.white70 : Colors.black54),
                     ),
-                    padding: EdgeInsets.zero,
+                    padding: const EdgeInsets.all(4),
                     constraints: const BoxConstraints(),
+                    visualDensity: VisualDensity.compact,
                     onPressed: () {
                       setState(() {
                         _isMemoMode = true;
@@ -438,19 +469,98 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               ),
             ),
             
-            if (!_isMemoMode && _viewMode != CalendarViewMode.month)
+            if (!_isMemoMode)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    _getDateTitle(),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
+                padding: const EdgeInsets.symmetric(vertical: 4), // 좌우 패딩 제거
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      _getDateTitle(),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: textColor,
+                      ),
                     ),
-                  ),
+                    const SizedBox(width: 8),
+                    _buildTodayButton(isDark),
+                    const Spacer(),
+                    if (_viewMode == CalendarViewMode.month) ...[
+                      IconButton(
+                        icon: Icon(Icons.chevron_left_rounded, 
+                          color: _themeColor == Colors.transparent ? (isDark ? Colors.white70 : Colors.black54) : _themeColor),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () {
+                          final prevMonth = DateTime(_focusedDay.year, _focusedDay.month - 1, 1);
+                          setState(() {
+                            _focusedDay = prevMonth;
+                            _selectedDay = prevMonth;
+                            _selectedEvents.value = _getEventsForDay(prevMonth);
+                            
+                            // 뷰 모드에 따른 페이지 컨트롤러 동기화
+                            if (_viewMode == CalendarViewMode.year) {
+                              _yearPageController.animateToPage(
+                                prevMonth.year - 1900,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            } else if (_viewMode == CalendarViewMode.week) {
+                              _weekPageController.animateToPage(
+                                _getWeekIndex(prevMonth),
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            } else if (_viewMode == CalendarViewMode.day) {
+                              _dayPageController.animateToPage(
+                                _getDayIndex(prevMonth),
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 16),
+                      IconButton(
+                        icon: Icon(Icons.chevron_right_rounded, 
+                          color: _themeColor == Colors.transparent ? (isDark ? Colors.white70 : Colors.black54) : _themeColor),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () {
+                          final nextMonth = DateTime(_focusedDay.year, _focusedDay.month + 1, 1);
+                          setState(() {
+                            _focusedDay = nextMonth;
+                            _selectedDay = nextMonth;
+                            _selectedEvents.value = _getEventsForDay(nextMonth);
+                            
+                            // 뷰 모드에 따른 페이지 컨트롤러 동기화
+                            if (_viewMode == CalendarViewMode.year) {
+                              _yearPageController.animateToPage(
+                                nextMonth.year - 1900,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            } else if (_viewMode == CalendarViewMode.week) {
+                              _weekPageController.animateToPage(
+                                _getWeekIndex(nextMonth),
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            } else if (_viewMode == CalendarViewMode.day) {
+                              _dayPageController.animateToPage(
+                                _getDayIndex(nextMonth),
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            }
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 4),
+                    ],
+                  ],
                 ),
               ),
 
@@ -533,7 +643,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           // TableCalendar의 포맷도 동기화 (월간/주간 전환 시 애니메이션 효과 등을 위해)
           if (mode == CalendarViewMode.month) {
             _calendarFormat = CalendarFormat.month;
-            _isExpanded = false;
+            _isExpanded = true;
           } else if (mode == CalendarViewMode.week) {
              // 주간 뷰는 커스텀 뷰를 사용하므로 TableCalendar 포맷은 상관없으나, 
              // 상태 관리를 위해 업데이트하지 않음 (TableCalendar가 아예 안보일 것이므로)
@@ -609,94 +719,100 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           if (!_isExpanded) const SizedBox(height: 2),
           if (!_isExpanded)
             Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onHorizontalDragEnd: (details) {
-                  if (details.primaryVelocity! < 0) { // 왼쪽으로 드래그 (다음 달)
-                    final nextMonth = DateTime(_focusedDay.year, _focusedDay.month + 1, 1);
-                    final oldYear = _focusedDay.year;
-                    setState(() {
-                      _focusedDay = nextMonth;
-                      // 다음 달의 같은 날짜 혹은 마지막 날을 선택
-                      final lastDayNextMonth = DateTime(nextMonth.year, nextMonth.month + 1, 0).day;
-                      final currentDay = _selectedDay?.day ?? 1;
-                      final targetDay = currentDay > lastDayNextMonth ? lastDayNextMonth : currentDay;
-                      final newSelectedDay = DateTime(nextMonth.year, nextMonth.month, targetDay);
-                      _selectedDay = newSelectedDay;
-                      _selectedEvents.value = _getEventsForDay(newSelectedDay);
-                      
-                      if (oldYear != nextMonth.year) {
-                        _loadEvents();
-                      }
-                    });
-                  } else if (details.primaryVelocity! > 0) { // 오른쪽으로 드래그 (이전 달)
-                    final prevMonth = DateTime(_focusedDay.year, _focusedDay.month - 1, 1);
-                    final oldYear = _focusedDay.year;
-                    setState(() {
-                      _focusedDay = prevMonth;
-                      // 이전 달의 같은 날짜 혹은 마지막 날을 선택
-                      final lastDayPrevMonth = DateTime(prevMonth.year, prevMonth.month + 1, 0).day;
-                      final currentDay = _selectedDay?.day ?? 1;
-                      final targetDay = currentDay > lastDayPrevMonth ? lastDayPrevMonth : currentDay;
-                      final newSelectedDay = DateTime(prevMonth.year, prevMonth.month, targetDay);
-                      _selectedDay = newSelectedDay;
-                      _selectedEvents.value = _getEventsForDay(newSelectedDay);
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onHorizontalDragEnd: (details) {
+                    if (details.primaryVelocity! < 0) { // 왼쪽으로 드래그 (다음 달)
+                      final nextMonth = DateTime(_focusedDay.year, _focusedDay.month + 1, 1);
+                      final oldYear = _focusedDay.year;
+                      setState(() {
+                        _focusedDay = nextMonth;
+                        // 다음 달의 같은 날짜 혹은 마지막 날을 선택
+                        final lastDayNextMonth = DateTime(nextMonth.year, nextMonth.month + 1, 0).day;
+                        final currentDay = _selectedDay?.day ?? 1;
+                        final targetDay = currentDay > lastDayNextMonth ? lastDayNextMonth : currentDay;
+                        final newSelectedDay = DateTime(nextMonth.year, nextMonth.month, targetDay);
+                        _selectedDay = newSelectedDay;
+                        _selectedEvents.value = _getEventsForDay(newSelectedDay);
+                        
+                        if (oldYear != nextMonth.year) {
+                          _loadEvents();
+                        }
+                      });
+                    } else if (details.primaryVelocity! > 0) { // 오른쪽으로 드래그 (이전 달)
+                      final prevMonth = DateTime(_focusedDay.year, _focusedDay.month - 1, 1);
+                      final oldYear = _focusedDay.year;
+                      setState(() {
+                        _focusedDay = prevMonth;
+                        // 이전 달의 같은 날짜 혹은 마지막 날을 선택
+                        final lastDayPrevMonth = DateTime(prevMonth.year, prevMonth.month + 1, 0).day;
+                        final currentDay = _selectedDay?.day ?? 1;
+                        final targetDay = currentDay > lastDayPrevMonth ? lastDayPrevMonth : currentDay;
+                        final newSelectedDay = DateTime(prevMonth.year, prevMonth.month, targetDay);
+                        _selectedDay = newSelectedDay;
+                        _selectedEvents.value = _getEventsForDay(newSelectedDay);
 
-                      if (oldYear != prevMonth.year) {
-                        _loadEvents();
-                      }
-                    });
-                  }
-                },
-                child: ValueListenableBuilder<List<CalendarEvent>>(
-                  valueListenable: _selectedEvents,
-                  builder: (context, value, _) {
-                  if (value.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 12),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.keyboard_double_arrow_down_rounded,
-                            color: isDark ? Colors.white38 : Colors.black26,
-                            size: 28,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            AppLocalizations.of(context)!.calendarDragGuide,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: isDark ? Colors.white38 : Colors.black38,
+                        if (oldYear != prevMonth.year) {
+                          _loadEvents();
+                        }
+                      });
+                    }
+                  },
+                  child: ValueListenableBuilder<List<CalendarEvent>>(
+                    valueListenable: _selectedEvents,
+                    builder: (context, value, _) {
+                    if (value.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.keyboard_double_arrow_down_rounded,
+                              color: isDark ? Colors.white38 : Colors.black26,
+                              size: 28,
                             ),
-                          ),
-                          const SizedBox(height: 60),
-                          Text(
-                            AppLocalizations.of(context)!.noEvents,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: isDark ? Colors.white70 : Colors.black54,
+                            const SizedBox(height: 4),
+                            Text(
+                              AppLocalizations.of(context)!.calendarDragGuide,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isDark ? Colors.white38 : Colors.black38,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    itemCount: value.length,
-                    itemBuilder: (context, index) {
-                      final event = value[index];
-                      return _buildEventItem(event);
-                    },
-                  );
-                },
-              ),
+                            const SizedBox(height: 40),
+                            Text(
+                              AppLocalizations.of(context)!.noEvents,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: isDark ? Colors.white70 : Colors.black54,
+                              ),
+                            ),
+                            const SizedBox(height: 40),
+                          ],
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      itemCount: value.length,
+                      itemBuilder: (context, index) {
+                        final event = value[index];
+                        return _buildEventItem(event);
+                  },
+                );
+              },
             ),
           ),
-        ],
+        ),
       ),
-    );
-  }
+    ],
+  ),
+);
+}
 
 
 
@@ -750,14 +866,23 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     
     return PageView.builder(
       controller: _yearPageController,
-      onPageChanged: (index) {
-        final newYear = 1900 + index;
-        if (newYear != _focusedDay.year) {
-          setState(() {
-            _focusedDay = DateTime(newYear, _focusedDay.month, _focusedDay.day);
-          });
-        }
-      },
+        onPageChanged: (index) {
+          final newYear = 1900 + index;
+          if (newYear != _focusedDay.year) {
+            setState(() {
+              _focusedDay = DateTime(newYear, _focusedDay.month, _focusedDay.day);
+              // 연도 이동 시 선택된 날짜와 이벤트도 업데이트하여 일관성 유지
+              final lastDayOfTargetMonth = DateTime(newYear, _focusedDay.month + 1, 0).day;
+              final currentDay = _selectedDay?.day ?? 1;
+              final targetDay = currentDay > lastDayOfTargetMonth ? lastDayOfTargetMonth : currentDay;
+              final newSelectedDay = DateTime(newYear, _focusedDay.month, targetDay);
+              
+              _selectedDay = newSelectedDay;
+              _selectedEvents.value = _getEventsForDay(newSelectedDay);
+              _loadEvents();
+            });
+          }
+        },
       itemBuilder: (context, index) {
         final year = 1900 + index;
         
@@ -909,6 +1034,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         final newDate = _getDateFromWeekIndex(index);
         setState(() {
           _focusedDay = newDate;
+          // 주간 이동 시 선택된 날짜와 이벤트도 업데이트하여 일관성 유지
+          final lastDayOfTargetMonth = DateTime(newDate.year, newDate.month + 1, 0).day;
+          final currentDay = _selectedDay?.day ?? 1;
+          final targetDay = currentDay > lastDayOfTargetMonth ? lastDayOfTargetMonth : currentDay;
+          final newSelectedDay = DateTime(newDate.year, newDate.month, targetDay);
+          
+          _selectedDay = newSelectedDay;
+          _selectedEvents.value = _getEventsForDay(newSelectedDay);
         });
       },
       itemBuilder: (context, index) {
@@ -1043,6 +1176,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         final newDate = _getDateFromDayIndex(index);
         setState(() {
           _focusedDay = newDate;
+          // 일간 이동 시 선택된 날짜와 이벤트도 업데이트하여 일관성 유지
+          _selectedDay = newDate;
+          _selectedEvents.value = _getEventsForDay(newDate);
         });
       },
       itemBuilder: (context, index) {
@@ -1180,7 +1316,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     
     // 날짜 텍스트 스타일 결정
     Color textColor;
-    FontWeight fontWeight = FontWeight.normal;
+    FontWeight fontWeight = FontWeight.w600;
     BoxDecoration? dateDecoration;
 
     if (isOutside) {
@@ -1206,83 +1342,95 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         textColor = accentColor;
         fontWeight = FontWeight.bold;
         dateDecoration = BoxDecoration(
-          color: accentColor.withOpacity(0.2),
+          border: Border.all(color: accentColor, width: 1),
           shape: BoxShape.circle,
         );
       }
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[300]!, width: 0.5),
-          right: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[300]!, width: 0.5),
-        ),
-        color: isOutside ? (isDark ? Colors.black12 : Colors.grey[50]!) : null,
-      ),
-      padding: const EdgeInsets.all(2),
-      child: Column(
-        children: [
-          // 날짜 표시
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 20,
-                height: 20,
-                decoration: dateDecoration,
-                alignment: Alignment.center,
-                child: Text(
-                  '${day.day}',
-                  style: TextStyle(
-                    color: textColor,
-                    fontWeight: fontWeight,
-                    fontSize: 12,
+    return RepaintBoundary(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05),
+              width: 0.5,
+            ),
+            right: day.weekday == DateTime.saturday 
+                ? BorderSide.none 
+                : BorderSide(
+                    color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05),
+                    width: 0.5,
                   ),
-                ),
-              ),
-              // 스티커 표시 (확장 뷰에서는 우측 상단)
-              if (events.any((e) => e.sticker != null && e.sticker != '😐'))
-                Text(
-                  events.firstWhere((e) => e.sticker != null && e.sticker != '😐').sticker!,
-                  style: const TextStyle(fontSize: 16),
-                ),
-            ],
           ),
-          const SizedBox(height: 2),
-          // 일정 목록 (칩 형태)
-          Expanded(
-            child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
+          color: isOutside ? (isDark ? Colors.black12 : Colors.grey[50]!) : null,
+        ),
+        padding: const EdgeInsets.all(1), // 패딩 최소화
+        child: Column(
+          children: [
+            // 날짜 표시 (높이 최소화)
+            SizedBox(
+              height: 16,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 16,
+                    height: 16,
+                    decoration: dateDecoration,
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${day.day}',
+                      style: TextStyle(
+                        color: textColor,
+                        fontWeight: fontWeight,
+                        fontSize: 10, // 12 -> 10
+                      ),
+                    ),
+                  ),
+                  // 스티커 표시 (크기 축소)
+                  if (events.any((e) => e.sticker != null && e.sticker != '😐'))
+                    Padding(
+                      padding: const EdgeInsets.only(right: 1),
+                      child: Text(
+                        events.firstWhere((e) => e.sticker != null && e.sticker != '😐').sticker!,
+                        style: const TextStyle(fontSize: 12), // 16 -> 12
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 1),
+            // 일정 목록 (칩 형태 - 높이 및 마진 최적화)
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: events.map((event) {
+                mainAxisSize: MainAxisSize.min,
+                children: events.take(5).map((event) { // 4 -> 5개로 증가
                   final isHoliday = event.type == CalendarEventType.holiday;
                   return GestureDetector(
                     onTap: () => isHoliday ? null : _showAddEventSheet(event: event),
                     child: Opacity(
                       opacity: isOutside ? 0.5 : 1.0,
                       child: Container(
-                        margin: const EdgeInsets.only(bottom: 2),
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        margin: const EdgeInsets.only(bottom: 0.5), // 1.5 -> 0.5로 마진 최소화
+                        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 0.5), // 패딩 최소화
                         decoration: BoxDecoration(
                           color: isHoliday ? Colors.redAccent.withOpacity(0.1) : Color(event.titleColor),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(2),
                         ),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            isHoliday && event.title.length > 5 
-                                ? '${event.title.substring(0, 5)}...' 
-                                : event.title,
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: isHoliday ? Colors.redAccent : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.visible,
+                        child: Text(
+                          (() {
+                            final noSpaces = event.title.replaceAll(' ', '');
+                            return noSpaces; // 5글자 제한 해제하여 더 많이 보이게 함
+                          })(),
+                          style: TextStyle(
+                            fontSize: 9, // 10 -> 9
+                            color: isHoliday ? Colors.redAccent : Colors.white,
+                            fontWeight: FontWeight.bold,
+                            height: 1.0, // 텍스트 줄높이 최소화
                           ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis, // FittedBox 대신 ellipsis 사용
                         ),
                       ),
                     ),
@@ -1290,8 +1438,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 }).toList(),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -1300,8 +1448,17 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accentColor = _getAccentColor(isDark);
 
-    return TableCalendar<CalendarEvent>(
-      availableGestures: AvailableGestures.horizontalSwipe,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+        ),
+      ),
+      child: TableCalendar<CalendarEvent>(
+        sixWeekMonthsEnforced: false, // 5주까지만 보이도록 수정 (공간 활용 최적화)
+        pageAnimationCurve: Curves.easeInOutCubic, // 더 부드러운 애니메이션 곡선
+        pageAnimationDuration: const Duration(milliseconds: 400), // 조금 더 여유 있는 애니메이션 시간
+        availableGestures: AvailableGestures.horizontalSwipe,
       shouldFillViewport: isExpanded,
       locale: AppLocalizations.of(context)?.localeName ?? 'ko',
       firstDay: DateTime.utc(1900, 1, 1),
@@ -1313,33 +1470,20 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       startingDayOfWeek: StartingDayOfWeek.sunday,
       daysOfWeekHeight: 32.0, // 요일 헤더 높이 축소
       calendarStyle: CalendarStyle(
-        outsideDaysVisible: isExpanded, // 확장 상태일 때만 외부 날짜 표시 (전체 그리드 채우기 위해)
-        cellMargin: isExpanded ? EdgeInsets.zero : const EdgeInsets.all(4), // 확장 시 여백 제거하여 그리드 연결
+        outsideDaysVisible: true, // 항상 외부 날짜 표시 (그리드 일관성을 위해)
+        cellMargin: EdgeInsets.zero, // 모든 상태에서 여백 제거하여 그리드 연결
         
         // 기본 날짜 스타일 (빌더에서 처리하므로 기본값 유지)
         defaultTextStyle: const TextStyle(fontWeight: FontWeight.w500),
         
         // 선택된 날짜
-        selectedDecoration: BoxDecoration(
-          color: accentColor,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: accentColor.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
+        selectedDecoration: const BoxDecoration(
+          shape: BoxShape.rectangle, // 원형에서 사각형으로 변경 (그리드에 맞게)
         ),
         
         // 오늘 날짜
-        todayDecoration: BoxDecoration(
-          color: accentColor.withOpacity(0.2),
-          shape: BoxShape.circle,
-        ),
-        todayTextStyle: TextStyle(
-          color: accentColor, 
-          fontWeight: FontWeight.bold
+        todayDecoration: const BoxDecoration(
+          shape: BoxShape.rectangle,
         ),
         
         // 마커 스타일 (기본 마커 숨김)
@@ -1353,28 +1497,31 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
         // 선택된 날짜 커스텀
         selectedBuilder: (context, day, focusedDay) {
-          return Center(
+          return Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+                right: day.weekday == DateTime.saturday 
+                    ? BorderSide.none 
+                    : BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+              ),
+            ),
+            padding: const EdgeInsets.all(2),
+            alignment: Alignment.topLeft,
             child: Container(
-              width: 24, // 날짜 숫자만 감쌀 정도의 작은 사이즈
-              height: 24,
+              width: 18,
+              height: 18,
               decoration: BoxDecoration(
                 color: accentColor,
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: accentColor.withOpacity(0.3),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
               ),
               alignment: Alignment.center,
               child: Text(
                 '${day.day}',
                 style: const TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 11,
                 ),
               ),
             ),
@@ -1384,14 +1531,24 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           // 오늘 날짜 커스텀
           todayBuilder: (context, day, focusedDay) {
             final isSelected = isSameDay(_selectedDay, day);
-            if (isSelected) return null; // 선택된 상태면 selectedBuilder가 처리하도록 함
+            if (isSelected) return null;
 
-            return Center(
+            return Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+                  right: day.weekday == DateTime.saturday 
+                      ? BorderSide.none 
+                      : BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+                ),
+              ),
+              padding: const EdgeInsets.all(2),
+              alignment: Alignment.topLeft,
               child: Container(
-                width: 24,
-                height: 24,
+                width: 18,
+                height: 18,
                 decoration: BoxDecoration(
-                  color: accentColor.withOpacity(0.15),
+                  border: Border.all(color: accentColor, width: 1.5),
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
@@ -1399,8 +1556,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   '${day.day}',
                   style: TextStyle(
                     color: accentColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 11,
                   ),
                 ),
               ),
@@ -1418,15 +1575,25 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             } else {
               color = isDark ? Colors.white70 : Colors.black54;
             }
-            return Center(
-              child: Text(
-                text,
-                style: TextStyle(color: color, fontWeight: FontWeight.bold),
+            return Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+                  right: day.weekday == DateTime.saturday 
+                      ? BorderSide.none 
+                      : BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  text,
+                  style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
+                ),
               ),
             );
           },
           
-          // 기본 날짜 셀 커스텀 (토: 파랑, 일: 빨강, 공휴일: 빨강)
+          // 기본 날짜 셀 커스텀
           defaultBuilder: (context, day, focusedDay) {
             Color color = isDark ? Colors.white : Colors.black87;
             if (day.weekday == DateTime.sunday || _hasHoliday(day)) {
@@ -1434,15 +1601,29 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             } else if (day.weekday == DateTime.saturday) {
               color = Colors.blueAccent;
             }
-            return Center(
+            return Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+                  right: day.weekday == DateTime.saturday 
+                      ? BorderSide.none 
+                      : BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+                ),
+              ),
+              padding: const EdgeInsets.fromLTRB(4, 3, 0, 0),
+              alignment: Alignment.topLeft,
               child: Text(
                 '${day.day}',
-                style: TextStyle(color: color, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  color: color, 
+                  fontWeight: FontWeight.w600,
+                  fontSize: 11,
+                ),
               ),
             );
           },
           
-          // 외부 날짜 셀 커스텀 (흐리게 표시하되 공휴일 색상은 유지)
+          // 외부 날짜 셀 커스텀
           outsideBuilder: (context, day, focusedDay) {
             Color color = isDark ? Colors.white24 : Colors.black26;
             if (day.weekday == DateTime.sunday || _hasHoliday(day)) {
@@ -1450,10 +1631,24 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             } else if (day.weekday == DateTime.saturday) {
               color = Colors.blueAccent.withOpacity(isDark ? 0.3 : 0.4);
             }
-            return Center(
+            return Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+                  right: day.weekday == DateTime.saturday 
+                      ? BorderSide.none 
+                      : BorderSide(color: isDark ? Colors.white.withOpacity(0.08) : Colors.black.withOpacity(0.05), width: 0.5),
+                ),
+              ),
+              padding: const EdgeInsets.fromLTRB(4, 3, 0, 0),
+              alignment: Alignment.topLeft,
               child: Text(
                 '${day.day}',
-                style: TextStyle(color: color, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  color: color, 
+                  fontWeight: FontWeight.w600,
+                  fontSize: 11,
+                ),
               ),
             );
           },
@@ -1474,30 +1669,27 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               final hasSticker = moodEvent.sticker != null && moodEvent.sticker != '😐';
 
               return Stack(
-                alignment: Alignment.center,
                 children: [
-                  // 스티커를 중앙에 크게 표시 (투명도 적용)
+                  // 스티커를 우측 상단에 표시 (축소 뷰)
                   if (hasSticker)
-                     Center(
-                       child: Opacity(
-                         opacity: 0.55, // 날짜가 보이되 스티커가 더 잘 보이도록 투명도 조절
-                         child: Text(
-                          moodEvent.sticker!,
-                          style: const TextStyle(fontSize: 20), // 원 사이즈(24)보다 약간 작게 조절
-                        ),
-                       ),
-                     ),
+                    Positioned(
+                      top: 2,
+                      right: 2,
+                      child: Text(
+                        moodEvent.sticker!,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
                   // 이벤트 마커 (하단 배치)
                   Positioned(
                     bottom: 2,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: nonHolidayEvents.take(4).map((event) => _buildEventMarker(event)).toList(),
-                        ),
-                      ],
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: nonHolidayEvents.take(4).map((event) => _buildEventMarker(event)).toList(),
+                      ),
                     ),
                   ),
                 ],
@@ -1506,19 +1698,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             return null;
           },
         ),
-        headerStyle: HeaderStyle(
-          formatButtonVisible: false,
-          titleCentered: true,
-          titleTextStyle: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : Colors.black87,
-          ),
-          leftChevronIcon: Icon(Icons.chevron_left_rounded, color: accentColor),
-          rightChevronIcon: Icon(Icons.chevron_right_rounded, color: accentColor),
-          headerMargin: EdgeInsets.zero,
-          headerPadding: const EdgeInsets.symmetric(vertical: 0),
-        ),
+        headerVisible: false,
         onDaySelected: _onDaySelected,
         onFormatChanged: (format) {
           if (_calendarFormat != format) {
@@ -1530,13 +1710,26 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         },
         onPageChanged: (focusedDay) {
           final oldYear = _focusedDay.year;
-          _focusedDay = focusedDay;
-          if (oldYear != focusedDay.year) {
-            _loadEvents();
-          }
+          setState(() {
+            _focusedDay = focusedDay;
+            // 선택된 날짜도 해당 월의 동일한 날짜로 이동 (이벤트 목록 드래그와 일관성 유지)
+            final lastDayOfNewMonth = DateTime(focusedDay.year, focusedDay.month + 1, 0).day;
+            final currentDay = _selectedDay?.day ?? 1;
+            final targetDay = currentDay > lastDayOfNewMonth ? lastDayOfNewMonth : currentDay;
+            final newSelectedDay = DateTime(focusedDay.year, focusedDay.month, targetDay);
+            
+            _selectedDay = newSelectedDay;
+            _selectedEvents.value = _getEventsForDay(newSelectedDay);
+            
+            // 년도가 바뀌었을 경우에만 공휴일 등을 다시 로드
+            if (oldYear != focusedDay.year) {
+              _loadEvents();
+            }
+          });
         },
-      );
-    }
+      ),
+    );
+  }
 
   Widget _buildMemoList() {
     // 공휴일을 제외한 이벤트만 필터링하여 날짜별로 그룹화

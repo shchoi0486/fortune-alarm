@@ -51,6 +51,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
   @override
   Widget build(BuildContext context) {
     final themeState = ref.watch(themeProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = themeState.primaryColor;
     final state = ref.watch(supplementProvider);
     final notifier = ref.read(supplementProvider.notifier);
@@ -60,20 +61,20 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
     final nextAlarmStr = _getNextAlarmString(context, settings.reminderTimes, settings.isAlarmEnabled);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC),
+        backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8FAFC),
         appBar: AppBar(
-          systemOverlayStyle: SystemUiOverlayStyle.dark,
-          title: Text(l10n.supplementAlarmTitle, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          systemOverlayStyle: isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+          title: Text(l10n.supplementAlarmTitle, style: TextStyle(color: isDark ? Colors.white : Colors.black, fontWeight: FontWeight.bold)),
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+            icon: Icon(Icons.arrow_back_ios_new, color: isDark ? Colors.white : Colors.black),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -104,15 +105,19 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
                     ],
+                    border: Border.all(
+                      color: isDark ? Colors.white.withOpacity(0.1) : Colors.transparent,
+                      width: isDark ? 1.0 : 0.0,
+                    ),
                   ),
                   child: Column(
                     children: [
@@ -122,14 +127,16 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(l10n.snoozeTime, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              Text(l10n.snoozeTime, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black)),
                               const SizedBox(height: 4),
-                              Text(l10n.snoozeDescription, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                              Text(l10n.snoozeDescription, style: TextStyle(fontSize: 12, color: isDark ? Colors.white60 : Colors.grey)),
                             ],
                           ),
                           DropdownButton<int>(
                             value: settings.defaultSnoozeInterval,
                             underline: const SizedBox(),
+                            dropdownColor: isDark ? const Color(0xFF2C2C2C) : Colors.white,
+                            style: TextStyle(color: isDark ? Colors.white : Colors.black),
                             items: [5, 10, 20, 30, 60].map((int value) {
                               return DropdownMenuItem<int>(
                                 value: value,
@@ -144,15 +151,15 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                           ),
                         ],
                       ),
-                      const Divider(height: 32),
+                      Divider(height: 32, color: isDark ? Colors.white10 : Colors.grey[200]),
                       // 벨소리 설정
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: Text(l10n.alarmRingtone, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        subtitle: Text(_getRingtoneTitle(context, settings.ringtonePath ?? 'default'), style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                        trailing: const Icon(Icons.arrow_forward_ios, size: 14),
+                        title: Text(l10n.alarmRingtone, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black)),
+                        subtitle: Text(_getRingtoneTitle(context, settings.ringtonePath ?? 'default'), style: TextStyle(fontSize: 12, color: isDark ? Colors.white60 : Colors.grey)),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 14, color: isDark ? Colors.white60 : Colors.black),
                         onTap: () async {
-                          final selectedPath = await showModalBottomSheet<String>(
+                          final result = await showModalBottomSheet<Map<String, dynamic>>(
                             context: context,
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
@@ -160,12 +167,12 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                               initialRingtonePath: settings.ringtonePath ?? 'default',
                             ),
                           );
-                          if (selectedPath != null) {
-                            notifier.updateSettings(ringtonePath: selectedPath);
+                          if (result != null && result['path'] != null) {
+                            notifier.updateSettings(ringtonePath: result['path']);
                           }
                         },
                       ),
-                      const Divider(height: 32),
+                      Divider(height: 32, color: isDark ? Colors.white10 : Colors.grey[200]),
                       // 볼륨 설정
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +180,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(l10n.alarmVolume, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              Text(l10n.alarmVolume, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black)),
                               Text('${((_draggingVolume ?? settings.volume) * 100).toInt()}%', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: primaryColor)),
                             ],
                           ),
@@ -215,7 +222,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(l10n.alarmTimeList, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(l10n.alarmTimeList, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black)),
                       if (settings.reminderTimes.length < 5)
                         TextButton.icon(
                           onPressed: () => _showCustomTimePicker(context, ref, settings.reminderTimes),
@@ -234,16 +241,19 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 40),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey[200]!),
+                      border: Border.all(
+                        color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!,
+                        width: isDark ? 1.0 : 0.5,
+                      ),
                     ),
                     child: Center(
                       child: Column(
                         children: [
-                          Icon(Icons.notifications_off_outlined, size: 48, color: Colors.grey[300]),
+                          Icon(Icons.notifications_off_outlined, size: 48, color: isDark ? Colors.white24 : Colors.grey[300]),
                           const SizedBox(height: 12),
-                          Text(l10n.noAlarmTimesAdded, style: const TextStyle(color: Colors.grey)),
+                          Text(l10n.noAlarmTimesAdded, style: TextStyle(color: isDark ? Colors.white60 : Colors.grey)),
                         ],
                       ),
                     ),
@@ -349,6 +359,7 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
   }
 
   Widget _buildAlarmCard(BuildContext context, WidgetRef ref, String timeStr, int index, List<String> currentTimes) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = ref.watch(themeProvider).primaryColor;
     final l10n = AppLocalizations.of(context)!;
     final parts = timeStr.split(':');
@@ -388,16 +399,19 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.03),
+                color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.03),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
-            border: Border.all(color: Colors.grey.withOpacity(0.1)),
+            border: Border.all(
+              color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+              width: isDark ? 1.0 : 0.5,
+            ),
           ),
           child: Row(
             children: [
@@ -422,17 +436,17 @@ class _SupplementAlarmScreenState extends ConsumerState<SupplementAlarmScreen> {
                   const SizedBox(height: 2),
                   Text(
                     '${displayHour.toString().padLeft(2, '0')}:$displayMinute',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
                       letterSpacing: -1,
-                      color: Color(0xFF1E293B),
+                      color: isDark ? Colors.white : const Color(0xFF1E293B),
                     ),
                   ),
                 ],
               ),
               const Spacer(),
-              const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+              Icon(Icons.arrow_forward_ios, size: 14, color: isDark ? Colors.white60 : Colors.grey),
             ],
           ),
         ),

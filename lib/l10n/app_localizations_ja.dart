@@ -1182,6 +1182,79 @@ class AppLocalizationsJa extends AppLocalizations {
   String get deleteAlarm => 'アラームを削除';
 
   @override
+  String get firstAlarmGuideTitle => 'アラームがまだありません';
+
+  @override
+  String get firstAlarmGuideDesc => '幸運のアラームを設定して\n爽やかな一日を始めましょう！';
+
+  @override
+  String get addAlarm => 'アラーム追加';
+
+  @override
+  String get addFirstAlarm => '初めてのアラームを作成';
+
+  @override
+  String get deleteAlarmConfirm => 'アラームを削除しますか？';
+
+  @override
+  String get welcomeMessage => 'はじめまして！';
+
+  @override
+  String get whenToRing => 'いつ起こしましょうか？';
+
+  @override
+  String get next => '次へ';
+
+  @override
+  String get retryFortune => '運勢をもう一度見る';
+
+  @override
+  String get retryFortuneDesc => '結果が気に入りませんか？\n広告を見て、もう一度確認できます！';
+
+  @override
+  String get tapToReveal => 'タップして運勢を確認';
+
+  @override
+  String get redrawButton => 'もう一度引く';
+
+  @override
+  String get defaultFortuneGreeting => '今日の運勢を確認してみましょう！';
+
+  @override
+  String get registerProfile => 'プロフィール登録';
+
+  @override
+  String get todaysFortuneTitle => '今日の運勢';
+
+  @override
+  String get fortuneCheckSubtitle => '今日はどんな一日になるでしょうか？今すぐ確認してみてください。';
+
+  @override
+  String get supportSection => 'サポート';
+
+  @override
+  String get rateApp => 'アプリを評価する';
+
+  @override
+  String get shareWithFriends => '友達に共有する';
+
+  @override
+  String get shareAppMessage =>
+      '幸運のアラーム \'Fortune Alarm\' を使ってみてください！毎朝, 運勢と一緒に爽やかに起きられます。 https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm';
+
+  @override
+  String get locationPermissionRequiredWeather => '天気情報を取得するには位置情報の権限が必要です。';
+
+  @override
+  String get turnOnLocationService => '位置情報サービスをオンにしてください';
+
+  @override
+  String get checkWeatherLocationRequired => '天気の確認に位置情報が必要';
+
+  @override
+  String get themeColor => 'テーマカラー';
+
+  @override
   String get confirmDelete => '本当に削除しますか？';
 
   @override
@@ -2954,6 +3027,29 @@ class AppLocalizationsJa extends AppLocalizations {
       'アラームの登録に失敗しました。「他のアプリの上に表示」権限がないため、設定が必要です。';
 
   @override
+  String get batteryOptimizationName => 'バッテリー最適化';
+
+  @override
+  String get batteryOptimizationTitle => '正確なアラームのために\n設定が必要です。';
+
+  @override
+  String get batteryOptimizationSubtitle =>
+      'アプリがバックグラウンドでも円滑に実行されるよう\nバッテリー最適化の例外に設定してください。';
+
+  @override
+  String get batteryOptimizationBottomDesc =>
+      '設定で「制限なし」または「最適化しない」を\n選択すると、アラームの聞き逃しがなくなります。';
+
+  @override
+  String get understand => '了解しました';
+
+  @override
+  String get overlayPermissionName => '他のアプリの上に重ねて表示';
+
+  @override
+  String get overlayPermissionTitle => '権限の許可案内';
+
+  @override
   String get unknownAlarmError => 'アラームの登録に失敗しました。不明なエラーが発生しました。';
 
   @override
@@ -2968,6 +3064,11 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String repeatAlarmCount(int current, int max) {
     return '繰り返しアラーム ($current/$max)';
+  }
+
+  @override
+  String snoozeRemainingCount(int current, int max) {
+    return '残り回数 ($current/$max)';
   }
 
   @override
@@ -3983,6 +4084,13 @@ class AppLocalizationsJa extends AppLocalizations {
   @override
   String get notice3Content =>
       '利用規約が改定されました。\\n\\n主な改定内容：\\n- プライバシーポリシーの強化\\n- サービス利用範囲の具体化\\n\\n詳細は [設定] > [規約] ページで確認できます。';
+
+  @override
+  String get notice4Title => 'バージョン 1.1.1 アップデートのお知らせ';
+
+  @override
+  String get notice4Content =>
+      'バージョン 1.1.1 のアップデート内容です。\\n\\n1. バッテリー最適化ガイドのUI改善\\n2. 英語バージョンのテキストレイアウトの最適化\\n3. 広告システムの安定性の向上\\n4. アプリの安定性とパフォーマンスの向上\\n\\n最新バージョンにアップデートして、より快適にご利用ください！';
 
   @override
   String get supportContentTitle => 'お問い合わせ内容';
