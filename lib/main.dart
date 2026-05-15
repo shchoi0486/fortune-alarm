@@ -46,10 +46,8 @@ import 'features/mission/supplement/supplement_mission_screen.dart';
 import 'features/mission/water/water_mission_screen.dart';
 import 'widgets/fortune_cookie_bar.dart';
 import 'widgets/ad_widgets.dart'; // 광고 위젯 임포트
-import 'widgets/optimization_bottom_sheet.dart';
 import 'services/cookie_service.dart';
 import 'services/sharing_service.dart';
-import 'providers/weather_provider.dart';
 import 'providers/mission_provider.dart';
 import 'features/mission/supplement/models/supplement_settings.dart';
 import 'features/mission/supplement/models/supplement_log.dart';
@@ -203,8 +201,7 @@ Future<void> _requestPermissions() async {
     
     // 2. 정확한 알람 스케줄링 권한 (Android 12+)
     if (await Permission.scheduleExactAlarm.isDenied) {
-      // 이 권한은 보통 설정 화면으로 이동해야 함
-      // debugPrint('Schedule Exact Alarm permission is denied.');
+      await Permission.scheduleExactAlarm.request();
     }
     
     // 3. 다른 앱 위에 그리기 권한 (백그라운드 실행을 위해 중요)
@@ -216,6 +213,42 @@ Future<void> _requestPermissions() async {
     if (await Permission.ignoreBatteryOptimizations.isDenied) {
       await Permission.ignoreBatteryOptimizations.request();
     }
+
+    // [추가] 권한 상태 확인 후 문제 기록
+    await _checkAndLogPermissionIssues();
+  }
+}
+
+// [추가] 권한 문제 확인 및 기록
+Future<void> _checkAndLogPermissionIssues() async {
+  try {
+    final exactStatus = await Permission.scheduleExactAlarm.status;
+    final batteryStatus = await Permission.ignoreBatteryOptimizations.status;
+    
+    bool hasIssues = exactStatus.isDenied || batteryStatus.isDenied;
+    
+    if (hasIssues) {
+      final stateBox = await Hive.openBox('app_state');
+      await stateBox.put('permission_issue_detected', true);
+      await stateBox.put('permission_issue_time', DateTime.now().toIso8601String());
+      
+      String issues = '';
+      if (exactStatus.isDenied) issues += 'SCHEDULE_EXACT_ALARM ';
+      if (batteryStatus.isDenied) issues += 'IGNORE_BATTERY_OPTIMIZATIONS';
+      await stateBox.put('permission_error_types', issues);
+      await stateBox.flush();
+      
+      debugPrint('[Main] Permission issues detected: $issues');
+    } else {
+      // 문제가 해결되었으면 기록 삭제
+      final stateBox = await Hive.openBox('app_state');
+      await stateBox.delete('permission_issue_detected');
+      await stateBox.delete('permission_issue_time');
+      await stateBox.delete('permission_error_types');
+      await stateBox.flush();
+    }
+  } catch (e) {
+    debugPrint('[Main] Permission check error: $e');
   }
 }
 
@@ -706,6 +739,13 @@ class FortuneAlarmApp extends ConsumerWidget {
           foregroundColor: Colors.black,
           elevation: 0,
         ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+        ),
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -724,6 +764,13 @@ class FortuneAlarmApp extends ConsumerWidget {
           elevation: 0,
           selectedItemColor: primaryColor,
           unselectedItemColor: Colors.grey,
+        ),
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Color(0xFF1E1E1E),
+          surfaceTintColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
         ),
       ),
       home: const MainScreen(),

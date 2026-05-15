@@ -20,6 +20,12 @@ import 'package:path_provider/path_provider.dart';
 // 백그라운드 포트 이름 (main.dart와 동일해야 함)
 const String kAlarmPortName = 'alarm_notification_port';
 
+void _registerBackgroundAdapters() {
+  if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(AlarmModelAdapter());
+  if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(MissionTypeAdapter());
+  if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
+}
+
 @pragma('vm:entry-point')
 void startCallback() {
   // Foreground Task가 시작될 때 호출되는 콜백
@@ -135,6 +141,7 @@ Future<void> alarmCallback(int id) async {
   // 3. Hive 및 데이터 로드
   Box<AlarmModel>? box;
   try {
+    _registerBackgroundAdapters();
     // [중요] NotificationService에서 이미 초기화되었으므로 바로 박스를 열 수 있음
     // 알람 데이터 검색
     AlarmModel? alarm;
@@ -174,10 +181,8 @@ Future<void> alarmCallback(int id) async {
         await AlarmSchedulerService.scheduleAlarm(nextAlarm, isRescheduling: true);
         debugPrint('[AlarmScheduler] [Priority] Next alarm secured at $nextTime');
       } else {
-        // 일회성 알람인 경우 비활성화 처리
-        debugPrint('[AlarmScheduler] [Priority] One-time alarm. Disabling in DB.');
-        final updatedAlarm = alarm.copyWith(isEnabled: false);
-        await box?.put(updatedAlarm.id, updatedAlarm);
+        // 일회성 알람인 경우 UI에서 사용자가 해제할 때까지 활성화 상태 유지 (화면 팝업을 위해)
+        debugPrint('[AlarmScheduler] [Priority] One-time alarm. Keeping enabled until dismissed by user.');
       }
       // -------------------------------------------------------------------------
 
@@ -454,23 +459,22 @@ class AlarmSchedulerService {
         await cancelAlarm(alarm, cancelMain: true, cancelSnooze: true ); 
       }
 
+      bool hasPermissionIssues = false;
+      String permissionErrorMsg = '';
+
       if (Platform.isAndroid) {
-        // 정확한 알람 권한 확인 (Android 12+)
-        // USE_EXACT_ALARM 권한이 매니페스트에 있으면 기본적으로 granted 상태여야 함
+        // [수정] 권한 상태를 먼저 확인하고 결과를 저장
         var exactStatus = await Permission.scheduleExactAlarm.status;
         debugPrint('[AlarmScheduler] SCHEDULE_EXACT_ALARM status: $exactStatus');
         
         if (exactStatus.isDenied) {
           debugPrint('[AlarmScheduler] SCHEDULE_EXACT_ALARM permission denied. Requesting...');
-          // 사용자가 명시적으로 거부한 경우가 아니면 요청 시도
           exactStatus = await Permission.scheduleExactAlarm.request();
           
           if (exactStatus.isDenied) {
             debugPrint('[AlarmScheduler] CRITICAL: SCHEDULE_EXACT_ALARM permission still denied. Alarm might not ring exactly.');
-            // 여기서 false를 리턴하면 알람 저장이 아예 안 되므로, 
-            // USE_EXACT_ALARM을 믿고 진행하되 로그를 남김 (또는 UI에서 처리하도록 유도)
-            // 하지만 정확한 알람이 핵심 기능이므로 실패 처리하는 것이 안전할 수 있음.
-            // 여기서는 일단 진행하되, oneShotAt이 실패할 수 있음을 인지.
+            hasPermissionIssues = true;
+            permissionErrorMsg = 'SCHEDULE_EXACT_ALARM';
           }
         }
 
@@ -480,8 +484,29 @@ class AlarmSchedulerService {
         
         if (batteryStatus.isDenied) {
            debugPrint('[AlarmScheduler] Battery optimization is active. Requesting to ignore...');
-           // 사용자에게 시스템 설정으로 이동하도록 요청
            await Permission.ignoreBatteryOptimizations.request();
+           
+           // 요청 후에도 거부 상태면 문제 기록
+           final newBatteryStatus = await Permission.ignoreBatteryOptimizations.status;
+           if (newBatteryStatus.isDenied) {
+             debugPrint('[AlarmScheduler] WARNING: Battery optimization still active. Alarms may be delayed.');
+             hasPermissionIssues = true;
+             permissionErrorMsg = permissionErrorMsg.isEmpty ? 'IGNORE_BATTERY_OPTIMIZATIONS' : '$permissionErrorMsg, IGNORE_BATTERY_OPTIMIZATIONS';
+           }
+        }
+        
+        // [수정] 권한 문제가 있을 때 사용자에게 알람 정보에 저장
+        if (hasPermissionIssues) {
+          try {
+            final stateBox = await Hive.openBox('app_state');
+            await stateBox.put('permission_issue_detected', true);
+            await stateBox.put('permission_issue_time', DateTime.now().toIso8601String());
+            await stateBox.put('permission_error_types', permissionErrorMsg);
+            await stateBox.flush();
+            debugPrint('[AlarmScheduler] Permission issue flag saved for UI notification');
+          } catch (e) {
+            debugPrint('[AlarmScheduler] Failed to save permission issue flag: $e');
+          }
         }
       }
 
@@ -723,7 +748,7 @@ class AlarmSchedulerService {
     }
   }
 
-  // 다음 반복 시간 계산 헬퍼
+// 다음 반복 시간 계산 헬퍼
   static DateTime calculateNextTime(DateTime alarmTime, List<bool> repeatDays, {DateTime? referenceTime}) {
     final now = referenceTime ?? DateTime.now();
     // 기준 시간 (오늘 날짜 + 알람 시간)
@@ -735,7 +760,7 @@ class AlarmSchedulerService {
       final weekdayIndex = checkDate.weekday - 1;
       
       if (repeatDays[weekdayIndex]) {
-        // 현재 시간(referenceTime)보다 충분히 이후여야 함 (1분 이내의 미래면 건너뜀)
+        // 현재 시간(referenceTime)보다 충분히 이후여야 함 (1분 이내의 미래면 건너뛰)
         if (checkDate.isAfter(now.add(const Duration(minutes: 1)))) {
            return checkDate;
         }
@@ -744,5 +769,103 @@ class AlarmSchedulerService {
       if (dayOffset > 14) break; // 안전장치
     }
     return candidate.add(const Duration(days: 1)); // Fallback (내일)
+  }
+
+  // [추가] 알람 권한 상태 진단 메서드 - UI에서 호출 가능
+  static Future<Map<String, dynamic>> diagnoseAlarmPermissions() async {
+    Map<String, dynamic> result = {
+      'scheduleExactAlarm': 'unknown',
+      'ignoreBatteryOptimizations': 'unknown',
+      'hasIssues': false,
+      'issues': <String>[],
+    };
+
+    if (!Platform.isAndroid) {
+      result['message'] = 'iOS - permission check not applicable';
+      return result;
+    }
+
+    try {
+      // SCHEDULE_EXACT_ALARM 권한 확인
+      final exactStatus = await Permission.scheduleExactAlarm.status;
+      result['scheduleExactAlarm'] = exactStatus.name;
+      if (exactStatus.isDenied) {
+        result['hasIssues'] = true;
+        result['issues'].add('SCHEDULE_EXACT_ALARM denied');
+      }
+
+      // 배터리 최적화 권한 확인
+      final batteryStatus = await Permission.ignoreBatteryOptimizations.status;
+      result['ignoreBatteryOptimizations'] = batteryStatus.name;
+      if (batteryStatus.isDenied) {
+        result['hasIssues'] = true;
+        result['issues'].add('IGNORE_BATTERY_OPTIMIZATIONS denied');
+      }
+
+      // 저장된 문제 기록 확인
+      try {
+        final stateBox = await Hive.openBox('app_state');
+        final savedIssue = stateBox.get('permission_issue_detected', defaultValue: false);
+        final savedTime = stateBox.get('permission_issue_time');
+        if (savedIssue == true && savedTime != null) {
+          result['savedIssueDetectedAt'] = savedTime;
+          result['savedIssueTypes'] = stateBox.get('permission_error_types', defaultValue: '');
+        }
+      } catch (_) {}
+
+      debugPrint('[AlarmScheduler] Permission diagnosis: $result');
+    } catch (e) {
+      result['error'] = e.toString();
+      debugPrint('[AlarmScheduler] Permission diagnosis failed: $e');
+    }
+
+    return result;
+  }
+
+  // [추가] 권한 문제 해결 시도 - 설정 화면으로 안내하기 전 마지막 시도
+  static Future<bool> attemptPermissionRecovery() async {
+    if (!Platform.isAndroid) return true;
+
+    bool allRecovered = true;
+
+    try {
+      // 정각 알람 권한 재요청
+      var exactStatus = await Permission.scheduleExactAlarm.status;
+      if (exactStatus.isDenied) {
+        exactStatus = await Permission.scheduleExactAlarm.request();
+        if (exactStatus.isDenied) {
+          debugPrint('[AlarmScheduler] Could not recover SCHEDULE_EXACT_ALARM permission');
+          allRecovered = false;
+        }
+      }
+
+      // 배터리 최적화 권한 재요청
+      var batteryStatus = await Permission.ignoreBatteryOptimizations.status;
+      if (batteryStatus.isDenied) {
+        batteryStatus = await Permission.ignoreBatteryOptimizations.request();
+        if (batteryStatus.isDenied) {
+          debugPrint('[AlarmScheduler] Could not recover IGNORE_BATTERY_OPTIMIZATIONS permission');
+          allRecovered = false;
+        }
+      }
+
+      // 문제 기록 초기화
+      if (allRecovered) {
+        try {
+          final stateBox = await Hive.openBox('app_state');
+          await stateBox.delete('permission_issue_detected');
+          await stateBox.delete('permission_issue_time');
+          await stateBox.delete('permission_error_types');
+          await stateBox.flush();
+        } catch (_) {}
+      }
+
+      debugPrint('[AlarmScheduler] Permission recovery result: $allRecovered');
+    } catch (e) {
+      debugPrint('[AlarmScheduler] Permission recovery error: $e');
+      allRecovered = false;
+    }
+
+return allRecovered;
   }
 }

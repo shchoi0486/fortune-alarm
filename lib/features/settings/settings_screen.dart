@@ -11,11 +11,18 @@ import '../../providers/theme_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../services/ad_service.dart';
 import '../../services/notification_service.dart';
+import '../../services/routine_alarm_service.dart';
+import '../../services/supplement_alarm_service.dart';
+import '../../services/water_alarm_service.dart';
+import '../mission/supplement/models/supplement_settings.dart';
+import '../mission/water/models/water_settings.dart';
+import 'package:hive/hive.dart';
 import 'notice_screen.dart';
 import 'faq_screen.dart';
 import 'support_screen.dart';
 import 'alarm_settings_screen.dart';
 import 'policy_screen.dart';
+import '../../widgets/ad_banner_widget.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -134,6 +141,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Divider(thickness: 1),
             ),
+            
+            // 광고 배너 추가 (Information 섹션 위)
+            const AdBannerWidget(
+              useCardStyle: true,
+              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            ),
+            
             _buildSectionHeader(AppLocalizations.of(context)!.information, isFirst: false),
           ListTile(
             title: Text(AppLocalizations.of(context)!.notice),
@@ -219,7 +233,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
               ),
             ),
           ),
-          const SizedBox(height: 120),
+          const SizedBox(height: 100), // 120 -> 100 축소
         ],
       ),
     ),
@@ -258,27 +272,49 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
   void _showLanguagePicker(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final currentLocale = ref.read(localeProvider);
+    final themeState = ref.read(themeProvider);
+    final isDark = themeState.themeMode == ThemeMode.dark;
 
     showModalBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
-        return SafeArea(
+        return Container(
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).padding.bottom,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 12),
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.white24 : Colors.black12,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
                   l10n.language,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18, 
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black,
+                  ),
                 ),
               ),
-              const Divider(height: 1),
-              Expanded(
+              Divider(height: 1, color: isDark ? Colors.white10 : Colors.black12),
+              Flexible(
                 child: ListView(
+                  shrinkWrap: true,
                   children: [
                     _buildLanguageTile(context, ref, 'ko', l10n.languageKorean, currentLocale?.languageCode == 'ko'),
                     _buildLanguageTile(context, ref, 'en', l10n.languageEnglish, currentLocale?.languageCode == 'en'),
@@ -300,26 +336,62 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
   }
 
   Widget _buildLanguageTile(BuildContext context, WidgetRef ref, String code, String name, bool isSelected) {
-    final primaryColor = ref.watch(themeProvider).primaryColor;
+    final themeState = ref.watch(themeProvider);
+    final isDark = themeState.themeMode == ThemeMode.dark;
+    final primaryColor = themeState.primaryColor;
+    
     return ListTile(
-      title: Text(name),
-      trailing: isSelected ? Icon(Icons.check, color: primaryColor) : null,
+      title: Text(
+        name,
+        style: TextStyle(
+          color: isDark ? Colors.white : Colors.black,
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      trailing: isSelected ? Icon(Icons.check_circle_rounded, color: primaryColor) : null,
       onTap: () async {
-        await ref.read(localeProvider.notifier).setLocale(code);
-        // 알림 다시 스케줄링하여 언어 반영
-        await NotificationService().scheduleDefaultFortuneNotifications();
-        if (context.mounted) Navigator.pop(context);
-      },
+      await ref.read(localeProvider.notifier).setLocale(code);
+      
+      // 1. 운세 알림 재스케줄링
+      await NotificationService().scheduleDefaultFortuneNotifications();
+      
+      // 2. 루틴 알림 재스케줄링
+      await RoutineAlarmService.scheduleDailyReminders();
+      
+      // 3. 영양제 알림 재스케줄링
+      try {
+        final supplementBox = await Hive.openBox<SupplementSettings>('supplement_settings');
+        final supplementSettings = supplementBox.get('settings');
+        if (supplementSettings != null && supplementSettings.isAlarmEnabled) {
+          await SupplementAlarmService.scheduleAlarms(supplementSettings.reminderTimes);
+        }
+      } catch (e) {
+        debugPrint('[Settings] Supplement reschedule error: $e');
+      }
+      
+      // 4. 물 마시기 알림 재스케줄링
+      try {
+        final waterBox = await Hive.openBox<WaterSettings>('water_settings');
+        final waterSettings = waterBox.get('settings');
+        if (waterSettings != null && waterSettings.isAlarmEnabled) {
+          await WaterAlarmService.scheduleAlarms(waterSettings);
+        }
+      } catch (e) {
+        debugPrint('[Settings] Water reschedule error: $e');
+      }
+
+      if (context.mounted) Navigator.pop(context);
+    },
     );
   }
 
   Widget _buildSectionHeader(String title, {bool isFirst = false}) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(16, isFirst ? 12 : 24, 16, 8),
+      padding: EdgeInsets.fromLTRB(16, isFirst ? 8 : 16, 16, 4), // 12->8, 24->16, 8->4 축소
       child: Text(
         title,
         style: const TextStyle(
-          fontSize: 14,
+          fontSize: 13, // 14 -> 13 조정
           fontWeight: FontWeight.bold,
           color: Colors.grey,
         ),
@@ -450,6 +522,35 @@ class _OptimizationBottomSheetContentState extends ConsumerState<_OptimizationBo
     final isSystemAlertGranted = _statuses[Permission.systemAlertWindow]?.isGranted ?? false;
     final allGranted = isNotificationGranted && isBatteryOptimized && isExactAlarmGranted && isSystemAlertGranted;
 
+    // [추가] 저장된 권한 문제 확인
+    Widget? permissionWarningBanner;
+    if (!allGranted) {
+      permissionWarningBanner = Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.orange.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.orange),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 24),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                l10n.optimizationDescription,
+                style: TextStyle(
+                  color: isDark ? Colors.orange[200] : Colors.orange[800],
+                  fontSize: 13,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -460,6 +561,7 @@ class _OptimizationBottomSheetContentState extends ConsumerState<_OptimizationBo
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (permissionWarningBanner != null) permissionWarningBanner,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
