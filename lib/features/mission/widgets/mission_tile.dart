@@ -110,7 +110,7 @@ class MissionTile extends ConsumerWidget {
         color: isCompleted
             ? (isDark ? Colors.grey[900]!.withOpacity(0.5) : Colors.grey[50])
             : (isDark ? const Color(0xFF1E1E1E) : Colors.white),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
             color: isDark ? Colors.white.withOpacity(0.15) : const Color(0xFFCBD5E1),
             width: isDark ? 1.0 : 0.5,

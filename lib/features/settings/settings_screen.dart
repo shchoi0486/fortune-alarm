@@ -143,9 +143,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
             ),
             
             // 광고 배너 추가 (Information 섹션 위)
-            const AdBannerWidget(
-              useCardStyle: true,
-              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: AdBannerWidget(),
             ),
             
             _buildSectionHeader(AppLocalizations.of(context)!.information, isFirst: false),

@@ -578,10 +578,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get quickAlarm => 'Quick Alarm';
+  String get quickAlarm => 'Alarma rápida';
 
   @override
-  String get setQuickAlarm => 'Set Quick Alarm';
+  String get setQuickAlarm => 'Configurar alarma rápida';
 
   @override
   String addMinutes(String minutes) {
@@ -590,37 +590,37 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String ringingAt(String time) {
-    return 'Rings at $time';
+    return 'Suena a las $time';
   }
 
   @override
-  String get pleaseSetTime => 'Please set the time.';
+  String get pleaseSetTime => 'Por favor, ajusta la hora.';
 
   @override
-  String get alarmSaved => 'Alarm saved.';
+  String get alarmSaved => 'Alarma guardada.';
 
   @override
-  String get alarmScheduledTitle => 'Alarm Scheduled';
+  String get alarmScheduledTitle => 'Alarma programada';
 
   @override
   String alarmScheduledBody(String time) {
-    return 'Alarm will ring at $time.';
+    return 'La alarma sonará a las $time.';
   }
 
   @override
-  String get goodDay => 'It\'s going to be a wonderful day!';
+  String get goodDay => '¡Va a ser un día maravilloso!';
 
   @override
-  String get luckyDay => 'Wishing you a day full of luck!';
+  String get luckyDay => '¡Te deseo un día lleno de suerte!';
 
   @override
-  String get cheerUp => 'Have a great and productive day!';
+  String get cheerUp => '¡Que tengas un día excelente y productivo!';
 
   @override
-  String get stayHappy => 'Enjoy every moment today!';
+  String get stayHappy => '¡Disfruta cada momento hoy!';
 
   @override
-  String get youCanDoIt => 'You can do anything today!';
+  String get youCanDoIt => '¡Hoy puedes con todo!';
 
   @override
   String get noActiveAlarms => 'No hay alarmas activas';

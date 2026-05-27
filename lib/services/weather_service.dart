@@ -117,6 +117,10 @@ class DailyForecast {
 
 class WeatherService {
   static const String _cacheKey = 'cached_weather_data';
+  static const Map<String, String> _weatherHeaders = {
+    'User-Agent': 'SnapAlarm/1.0 (support@seriessnap.com)',
+    'Accept': 'application/json',
+  };
 
   Future<WeatherModel> getCurrentWeather({bool requestPermission = true}) async {
     try {
@@ -135,8 +139,12 @@ class WeatherService {
       final lon = position.longitude;
 
       // 3. API 호출
-      final weatherFuture = http.get(Uri.parse(
-          'https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto'));
+      final weatherFuture = http.get(
+        Uri.parse(
+          'https://api.open-meteo.com/v1/forecast?latitude=$lat&longitude=$lon&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto',
+        ),
+        headers: _weatherHeaders,
+      );
       
       final airQualityFuture = http.get(Uri.parse(
           'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=$lat&longitude=$lon&current=pm10,pm2_5'));
@@ -179,91 +187,38 @@ class WeatherService {
         if (locationName.isEmpty) locationName = p.name ?? 'locationUnknown';
       }
 
-      // 5. 날씨 데이터 파싱
-      if (weatherResponse.statusCode == 200) {
-        final weatherData = json.decode(weatherResponse.body);
-        final current = weatherData['current'];
-        final temp = current['temperature_2m'].toDouble();
-        final code = current['weather_code'];
-        
-        // 시간대별 예보 파싱 (현재 시간 이후 24시간)
-        List<HourlyForecast> hourlyList = [];
+      // 대기질은 실패해도 날씨는 보여줘야 함
+      int pm10 = 0;
+      int pm25 = 0;
+      if (airQualityResponse.statusCode == 200) {
         try {
-          final hourly = weatherData['hourly'];
-          final times = hourly['time'] as List;
-          final temps = hourly['temperature_2m'] as List;
-          final codes = hourly['weather_code'] as List;
-          
-          final now = DateTime.now();
-          for (int i = 0; i < times.length; i++) {
-            final t = DateTime.parse(times[i]);
-            if (t.isAfter(now) || t.isAtSameMomentAs(now)) {
-              if (hourlyList.length < 24) { // 24시간만 가져옴
-                hourlyList.add(HourlyForecast(
-                  time: t,
-                  temperature: (temps[i] as num).toDouble(),
-                  condition: _mapWeatherCode(codes[i]),
-                ));
-              }
-            }
-          }
-        } catch (e) {
-          print('Error parsing hourly forecast: $e');
-        }
-
-        // 주간 예보 파싱 (오늘 포함 7일)
-        List<DailyForecast> dailyList = [];
-        try {
-          final daily = weatherData['daily'];
-          final dates = daily['time'] as List;
-          final codes = daily['weather_code'] as List;
-          final maxTemps = daily['temperature_2m_max'] as List;
-          final minTemps = daily['temperature_2m_min'] as List;
-          final probs = daily['precipitation_probability_max'] as List;
-
-          for (int i = 0; i < dates.length; i++) {
-            if (dailyList.length < 7) {
-              dailyList.add(DailyForecast(
-                date: DateTime.parse(dates[i]),
-                maxTemp: (maxTemps[i] as num).toDouble(),
-                minTemp: (minTemps[i] as num).toDouble(),
-                condition: _mapWeatherCode(codes[i]),
-                precipitationProbability: (probs[i] as num).toInt(),
-              ));
-            }
-          }
-        } catch (e) {
-          print('Error parsing daily forecast: $e');
-        }
-
-        // 대기질은 실패해도 날씨는 보여줘야 함
-        int pm10 = 0;
-        int pm25 = 0;
-        if (airQualityResponse.statusCode == 200) {
-          try {
-            final airData = json.decode(airQualityResponse.body);
-            pm10 = airData['current']['pm10']?.toInt() ?? 0;
-            pm25 = airData['current']['pm2_5']?.toInt() ?? 0;
-          } catch (_) {}
-        }
-
-        final model = WeatherModel(
-          temperature: temp,
-          condition: _mapWeatherCode(code),
-          location: locationName,
-          fineDust: pm10,
-          ultraFineDust: pm25,
-          hourlyForecasts: hourlyList,
-          dailyForecasts: dailyList,
-        );
-
-        // 성공 시 캐시 저장
-        await _cacheWeatherData(model);
-
-        return model;
-      } else {
-        throw Exception('Failed to load weather data: ${weatherResponse.statusCode}');
+          final airData = json.decode(airQualityResponse.body);
+          pm10 = airData['current']['pm10']?.toInt() ?? 0;
+          pm25 = airData['current']['pm2_5']?.toInt() ?? 0;
+        } catch (_) {}
       }
+
+      WeatherModel model;
+      if (weatherResponse.statusCode == 200) {
+        final weatherData = json.decode(weatherResponse.body) as Map<String, dynamic>;
+        model = _parseOpenMeteoWeather(weatherData, locationName, pm10, pm25);
+      } else {
+        debugPrint('Open-Meteo forecast failed (${weatherResponse.statusCode}). Falling back to MET Norway.');
+        final fallbackResponse = await http.get(
+          Uri.parse('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=$lat&lon=$lon'),
+          headers: _weatherHeaders,
+        ).timeout(const Duration(seconds: 10));
+
+        if (fallbackResponse.statusCode != 200) {
+          throw Exception('Failed to load weather data: ${weatherResponse.statusCode}');
+        }
+
+        final fallbackData = json.decode(fallbackResponse.body) as Map<String, dynamic>;
+        model = _parseMetNoWeather(fallbackData, locationName, pm10, pm25);
+      }
+
+      await _cacheWeatherData(model);
+      return model;
     } catch (e) {
       print('Weather service error: $e');
       
@@ -298,6 +253,151 @@ class WeatherService {
     return null;
   }
 
+  WeatherModel _parseOpenMeteoWeather(
+    Map<String, dynamic> weatherData,
+    String locationName,
+    int pm10,
+    int pm25,
+  ) {
+    final current = weatherData['current'];
+    final temp = current['temperature_2m'].toDouble();
+    final code = current['weather_code'];
+
+    final hourlyList = <HourlyForecast>[];
+    try {
+      final hourly = weatherData['hourly'];
+      final times = hourly['time'] as List;
+      final temps = hourly['temperature_2m'] as List;
+      final codes = hourly['weather_code'] as List;
+
+      final now = DateTime.now();
+      for (int i = 0; i < times.length; i++) {
+        final t = DateTime.parse(times[i]);
+        if ((t.isAfter(now) || t.isAtSameMomentAs(now)) && hourlyList.length < 24) {
+          hourlyList.add(HourlyForecast(
+            time: t,
+            temperature: (temps[i] as num).toDouble(),
+            condition: _mapWeatherCode(codes[i]),
+          ));
+        }
+      }
+    } catch (e) {
+      debugPrint('Error parsing hourly forecast: $e');
+    }
+
+    final dailyList = <DailyForecast>[];
+    try {
+      final daily = weatherData['daily'];
+      final dates = daily['time'] as List;
+      final codes = daily['weather_code'] as List;
+      final maxTemps = daily['temperature_2m_max'] as List;
+      final minTemps = daily['temperature_2m_min'] as List;
+      final probs = daily['precipitation_probability_max'] as List;
+
+      for (int i = 0; i < dates.length && dailyList.length < 7; i++) {
+        dailyList.add(DailyForecast(
+          date: DateTime.parse(dates[i]),
+          maxTemp: (maxTemps[i] as num).toDouble(),
+          minTemp: (minTemps[i] as num).toDouble(),
+          condition: _mapWeatherCode(codes[i]),
+          precipitationProbability: (probs[i] as num?)?.toInt() ?? 0,
+        ));
+      }
+    } catch (e) {
+      debugPrint('Error parsing daily forecast: $e');
+    }
+
+    return WeatherModel(
+      temperature: temp,
+      condition: _mapWeatherCode(code),
+      location: locationName,
+      fineDust: pm10,
+      ultraFineDust: pm25,
+      hourlyForecasts: hourlyList,
+      dailyForecasts: dailyList,
+    );
+  }
+
+  WeatherModel _parseMetNoWeather(
+    Map<String, dynamic> weatherData,
+    String locationName,
+    int pm10,
+    int pm25,
+  ) {
+    final series = (weatherData['properties']?['timeseries'] as List?) ?? [];
+    if (series.isEmpty) {
+      throw Exception('Failed to load weather data: fallback source returned no timeseries');
+    }
+
+    final now = DateTime.now();
+    final hourlyList = <HourlyForecast>[];
+    final Map<String, List<Map<String, dynamic>>> groupedByDate = {};
+
+    Map<String, dynamic>? currentEntry;
+    for (final item in series.cast<Map<String, dynamic>>()) {
+      final time = DateTime.parse(item['time'] as String);
+      if (currentEntry == null && (time.isAfter(now) || time.isAtSameMomentAs(now))) {
+        currentEntry = item;
+      }
+      if ((time.isAfter(now) || time.isAtSameMomentAs(now)) && hourlyList.length < 24) {
+        final details = item['data']?['instant']?['details'] as Map<String, dynamic>? ?? {};
+        hourlyList.add(HourlyForecast(
+          time: time,
+          temperature: (details['air_temperature'] as num?)?.toDouble() ?? 0,
+          condition: _mapMetNoSymbol(item),
+        ));
+      }
+
+      final dateKey = '${time.year}-${time.month}-${time.day}';
+      groupedByDate.putIfAbsent(dateKey, () => []).add(item);
+    }
+
+    currentEntry ??= series.first as Map<String, dynamic>;
+    final currentDetails = currentEntry['data']?['instant']?['details'] as Map<String, dynamic>? ?? {};
+
+    final dailyList = <DailyForecast>[];
+    for (final entry in groupedByDate.entries.take(7)) {
+      final values = entry.value;
+      double maxTemp = -1000;
+      double minTemp = 1000;
+      String condition = 'Cloudy';
+      int precipitationProbability = 0;
+
+      for (final item in values) {
+        final details = item['data']?['instant']?['details'] as Map<String, dynamic>? ?? {};
+        final temp = (details['air_temperature'] as num?)?.toDouble() ?? 0;
+        if (temp > maxTemp) maxTemp = temp;
+        if (temp < minTemp) minTemp = temp;
+
+        final time = DateTime.parse(item['time'] as String);
+        if (time.hour >= 12 && time.hour <= 15) {
+          condition = _mapMetNoSymbol(item);
+          final nextHour = item['data']?['next_1_hours']?['details'] as Map<String, dynamic>?;
+          precipitationProbability =
+              (nextHour?['probability_of_precipitation'] as num?)?.toInt() ?? precipitationProbability;
+        }
+      }
+
+      dailyList.add(DailyForecast(
+        date: DateTime.parse('${entry.key.split('-')[0]}-${entry.key.split('-')[1].padLeft(2, '0')}-${entry.key.split('-')[2].padLeft(2, '0')}'),
+        maxTemp: maxTemp == -1000 ? 0 : maxTemp,
+        minTemp: minTemp == 1000 ? 0 : minTemp,
+        condition: condition,
+        precipitationProbability: precipitationProbability,
+      ));
+    }
+
+    return WeatherModel(
+      temperature: (currentDetails['air_temperature'] as num?)?.toDouble() ?? 0,
+      condition: _mapMetNoSymbol(currentEntry),
+      location: locationName,
+      fineDust: pm10,
+      ultraFineDust: pm25,
+      hourlyForecasts: hourlyList,
+      dailyForecasts: dailyList,
+    );
+  }
+
 
   String _mapWeatherCode(int code) {
     if (code == 0) return 'Sunny';
@@ -312,6 +412,25 @@ class WeatherService {
     if (code <= 82) return 'RainShowers';
     if (code <= 86) return 'SnowShowers';
     if (code <= 99) return 'Thunderstorm';
+    return 'Cloudy';
+  }
+
+  String _mapMetNoSymbol(Map<String, dynamic> item) {
+    final data = item['data'] as Map<String, dynamic>? ?? {};
+    final symbol =
+        data['next_1_hours']?['summary']?['symbol_code'] ??
+        data['next_6_hours']?['summary']?['symbol_code'] ??
+        data['next_12_hours']?['summary']?['symbol_code'] ??
+        'cloudy';
+
+    final value = symbol.toString();
+    if (value.contains('clearsky')) return 'Sunny';
+    if (value.contains('fair') || value.contains('partlycloudy')) return 'PartlyCloudy';
+    if (value.contains('cloudy')) return 'Cloudy';
+    if (value.contains('fog')) return 'Foggy';
+    if (value.contains('sleet') || value.contains('rain') || value.contains('showers')) return 'Rainy';
+    if (value.contains('snow')) return 'Snowy';
+    if (value.contains('thunder')) return 'Thunderstorm';
     return 'Cloudy';
   }
   

@@ -140,32 +140,56 @@ class FortuneCookieBar extends ConsumerWidget {
                                          errorMsg.contains('서비스');
                   
                   if (isPermissionError || isServiceDisabled) {
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          isServiceDisabled ? Icons.location_off_rounded : Icons.location_on_rounded, 
-                          size: 16, 
-                          color: primaryColor
-                        ),
-                        const SizedBox(width: 6),
-                        Flexible(
-                          child: Text(
-                            isServiceDisabled ? l10n.turnOnLocationService : l10n.checkWeatherLocationRequired,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: textColor.withOpacity(0.8),
-                              fontWeight: FontWeight.w600,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            isServiceDisabled ? Icons.location_off_rounded : Icons.location_on_rounded, 
+                            size: 16, 
+                            color: primaryColor
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              isServiceDisabled ? l10n.turnOnLocationService : l10n.checkWeatherLocationRequired,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: textColor.withOpacity(0.8),
+                                fontWeight: FontWeight.w600,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   }
                   
-                  return Icon(Icons.error_outline, size: 24, color: primaryColor);
+                  return Align(
+                     alignment: Alignment.centerLeft,
+                     child: Row(
+                       mainAxisSize: MainAxisSize.min,
+                       children: [
+                         Icon(Icons.error_outline, size: 16, color: primaryColor),
+                         const SizedBox(width: 6),
+                         Flexible(
+                           child: Text(
+                             errorMsg.replaceAll('Exception: ', ''),
+                             style: TextStyle(
+                               fontSize: 12,
+                               color: textColor.withOpacity(0.8),
+                               fontWeight: FontWeight.w600,
+                             ),
+                             overflow: TextOverflow.ellipsis,
+                             maxLines: 1,
+                           ),
+                         ),
+                       ],
+                     ),
+                   );
                 },
               ),
             ),
@@ -658,7 +682,7 @@ class WeatherDetailSheet extends ConsumerWidget {
                   error: (err, stack) => [
                     SliverFillRemaining(
                       hasScrollBody: false,
-                      child: _buildErrorState(context, l10n, isDarkMode, ref),
+                      child: _buildErrorState(context, l10n, isDarkMode, ref, err),
                     ),
                   ],
                 ),
@@ -801,7 +825,15 @@ class WeatherDetailSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, AppLocalizations l10n, bool isDarkMode, WidgetRef ref) {
+  Widget _buildErrorState(BuildContext context, AppLocalizations l10n, bool isDarkMode, WidgetRef ref, dynamic err) {
+    final errorMsg = err?.toString() ?? '';
+    final isPermissionError = errorMsg.contains('Permission') || 
+                              errorMsg.contains('permission') ||
+                              errorMsg.contains('권한') ||
+                              errorMsg.contains('Service') ||
+                              errorMsg.contains('service') ||
+                              errorMsg.contains('서비스');
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -820,24 +852,36 @@ class WeatherDetailSheet extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 40),
-            Icon(Icons.location_off_rounded, size: 64, color: Colors.grey[400]),
+            Icon(isPermissionError ? Icons.location_off_rounded : Icons.cloud_off_rounded, size: 64, color: Colors.grey[400]),
             const SizedBox(height: 24),
-            Text(l10n.locationPermissionTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(isPermissionError ? l10n.locationPermissionTitle : '날씨 정보를 불러올 수 없습니다', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
-            Text(l10n.locationPermissionDesc, textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(isPermissionError ? l10n.locationPermissionDesc : errorMsg.replaceAll('Exception: ', ''), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
             const SizedBox(height: 32),
             Row(
               children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () => openAppSettings(),
-                    child: Text(l10n.openSettings),
+                if (isPermissionError) ...[
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => openAppSettings(),
+                      child: Text(l10n.openSettings),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
+                  const SizedBox(width: 12),
+                ],
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () => ref.invalidate(weatherProvider),
+                    onPressed: () async {
+                      var status = await Permission.location.status;
+                      if (status.isDenied) {
+                        status = await Permission.location.request();
+                      }
+                      if (status.isGranted) {
+                        ref.invalidate(weatherProvider);
+                      } else if (status.isPermanentlyDenied) {
+                        openAppSettings();
+                      }
+                    },
                     child: Text(l10n.retry),
                   ),
                 ),

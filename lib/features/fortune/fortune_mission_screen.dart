@@ -17,7 +17,6 @@ import '../../services/notification_service.dart';
 import '../../providers/alarm_list_provider.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import '../../services/sharing_service.dart';
-import '../../services/ad_service.dart';
 import '../../core/utils/image_helper.dart';
 import '../../services/user_activity_service.dart';
 import 'mixins/fortune_access_mixin.dart';
@@ -70,7 +69,6 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   final List<GlobalKey> _slotKeys = List.generate(3, (index) => GlobalKey());
   bool _isAnimating = false;
   bool _isChecking = false; // 결과 확인 중 상태
-  bool _isAdLoading = false; // 광고 로딩 중 상태 추가
   int _retryCount = 0; // 재선택 횟수 추가
   int? _animatingCardIndex; // 현재 이동 중인 카드 인덱스
   final Set<String> _revealedCards = {}; // 공개된 카드 카테고리 저장
@@ -381,23 +379,15 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
     });
 
     _stopAlarm();
-    // ref.read(alarmListProvider.notifier).toggleAlarm(widget.alarmId!); // <--- AlarmRingingScreen에서 처리하도록 제거
     
-    await showFortuneAccessDialog(
-      _simulateAd,
-      onDirectAccess: _processResult,
-    );
+    // 광고 다이얼로그 제거, 바로 분석(로딩) 애니메이션 시작
+    _startLoadingAnalysis();
     
     if (mounted) {
       setState(() {
         _isChecking = false;
       });
     }
-  }
-
-  void _simulateAd() {
-    // Start full screen loading instead of dialog
-    _startLoadingAnalysis();
   }
 
   void _startLoadingAnalysis() {
@@ -664,29 +654,6 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
       content = _buildResultScreen();
     }
 
-    if (_isAdLoading) {
-      return Stack(
-        children: [
-          content,
-          Container(
-            color: Colors.black.withOpacity(0.5),
-            child: const Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(color: Color(0xFFFFD700)),
-                  SizedBox(height: 16),
-                  Text(
-                    '광고를 불러오는 중...',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    }
     return content;
   }
 
@@ -1229,14 +1196,24 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
 
 
   void _handleRevealCard(String category) {
-    // 전면 광고 로드 및 표시
-    AdService.showInterstitialAd(
-      onAdDismissed: () {
+    showFortuneAccessDialog(
+      () {
         if (mounted) {
           setState(() {
             _revealedCards.add(category);
           });
-          _savePersistedState(); // 공개 상태 저장
+          _savePersistedState();
+          try {
+            HapticFeedback.mediumImpact();
+          } catch (_) {}
+        }
+      },
+      onDirectAccess: () {
+        if (mounted) {
+          setState(() {
+            _revealedCards.add(category);
+          });
+          _savePersistedState();
           try {
             HapticFeedback.mediumImpact();
           } catch (_) {}

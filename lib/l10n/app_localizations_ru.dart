@@ -577,49 +577,49 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get quickAlarm => 'Quick Alarm';
+  String get quickAlarm => 'Быстрый будильник';
 
   @override
-  String get setQuickAlarm => 'Set Quick Alarm';
+  String get setQuickAlarm => 'Установить быстрый будильник';
 
   @override
   String addMinutes(String minutes) {
-    return '+ ${minutes}m';
+    return '+ $minutes мин.';
   }
 
   @override
   String ringingAt(String time) {
-    return 'Rings at $time';
+    return 'Прозвенит в $time';
   }
 
   @override
-  String get pleaseSetTime => 'Please set the time.';
+  String get pleaseSetTime => 'Пожалуйста, установите время.';
 
   @override
-  String get alarmSaved => 'Alarm saved.';
+  String get alarmSaved => 'Будильник сохранен.';
 
   @override
-  String get alarmScheduledTitle => 'Alarm Scheduled';
+  String get alarmScheduledTitle => 'Будильник установлен';
 
   @override
   String alarmScheduledBody(String time) {
-    return 'Alarm will ring at $time.';
+    return 'Будильник прозвенит в $time.';
   }
 
   @override
-  String get goodDay => 'It\'s going to be a wonderful day!';
+  String get goodDay => 'Это будет чудесный день!';
 
   @override
-  String get luckyDay => 'Wishing you a day full of luck!';
+  String get luckyDay => 'Желаю дня, полного удачи!';
 
   @override
-  String get cheerUp => 'Have a great and productive day!';
+  String get cheerUp => 'Желаю отличного и продуктивного дня!';
 
   @override
-  String get stayHappy => 'Enjoy every moment today!';
+  String get stayHappy => 'Наслаждайтесь каждым моментом сегодня!';
 
   @override
-  String get youCanDoIt => 'You can do anything today!';
+  String get youCanDoIt => 'Сегодня вы можете все!';
 
   @override
   String get noActiveAlarms => 'Нет активных будильников';

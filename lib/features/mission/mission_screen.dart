@@ -9,6 +9,7 @@ import 'water/water_mission_screen.dart';
 import 'supplement/supplement_mission_screen.dart';
 import 'water/providers/water_provider.dart';
 import 'supplement/providers/supplement_provider.dart';
+import '../../widgets/ad_banner_widget.dart';
 
 class MissionScreen extends ConsumerWidget {
   const MissionScreen({super.key});
@@ -77,7 +78,7 @@ class MissionScreen extends ConsumerWidget {
                         color: missionState.isGoalAchieved 
                           ? Colors.green.withOpacity(0.1) 
                           : primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
                         missionState.isGoalAchieved 
@@ -150,12 +151,12 @@ class MissionScreen extends ConsumerWidget {
                           color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 4), // 8 -> 4 축소
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
-                          borderRadius: BorderRadius.circular(10),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           '${pendingMissions.length}',
@@ -174,7 +175,7 @@ class MissionScreen extends ConsumerWidget {
                             context: context,
                             builder: (context) => AlertDialog(
                               backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                               title: Text(AppLocalizations.of(context)!.resetMissions, style: const TextStyle(fontWeight: FontWeight.bold)),
                               content: Text(AppLocalizations.of(context)!.resetMissionsConfirm),
                               actions: [
@@ -239,12 +240,12 @@ class MissionScreen extends ConsumerWidget {
                             ),
                           );
                         },
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(16),
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: const Color(0xFFF97316).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(15),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -346,7 +347,7 @@ class MissionScreen extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                       color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
                       width: isDark ? 1.0 : 0.5,
@@ -412,17 +413,26 @@ class MissionScreen extends ConsumerWidget {
           ),
         ),
 
-        // Native Ad - Removed and moved to bottom of MainScreen
+        // 배너 광고 (카드 스타일)
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: AdBannerWidget(
+              useCardStyle: true,
+              margin: EdgeInsets.zero,
+            ),
+          ),
+        ),
         
         // 6. 통계 패널 (나의 미션 기록)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E1E1E) : Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E1E1E) : Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
                       color: Theme.of(context).brightness == Brightness.dark 
                         ? Colors.white.withOpacity(0.15) 
                         : const Color(0xFFCBD5E1),

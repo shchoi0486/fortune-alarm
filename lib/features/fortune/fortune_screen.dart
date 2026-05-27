@@ -18,6 +18,7 @@ import 'package:intl/intl.dart';
 import 'package:fortune_alarm/services/cookie_service.dart';
 import '../../services/ad_service.dart';
 import '../../services/user_activity_service.dart';
+import '../../widgets/ad_banner_widget.dart';
 import 'mixins/fortune_access_mixin.dart';
 
 import '../mission_face/face_detection_mission_screen.dart';
@@ -369,11 +370,15 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                   // 메인 추천 카드 (오늘의 운세)
                   _buildFeaturedCard(isDarkMode),
                   
-                  const SizedBox(height: 8), // 12 -> 8 축소
+                  const SizedBox(height: 12),
 
-                  // Native Ad (Top) - Removed and moved to bottom of MainScreen
+                  // 배너 광고 (카드 스타일)
+                  const AdBannerWidget(
+                    useCardStyle: true,
+                    margin: EdgeInsets.symmetric(horizontal: 4),
+                  ),
                   
-                  const SizedBox(height: 8), // 12 -> 8 축소
+                  const SizedBox(height: 12),
                   
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -503,7 +508,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
       width: double.infinity,
       height: 85,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDarkMode ? Colors.white.withOpacity(0.1) : const Color(0xFFCBD5E1),
           width: isDarkMode ? 1.0 : 0.5,
@@ -634,7 +639,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
       key: const ValueKey('featured_front'),
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDarkMode ? Colors.white.withOpacity(0.12) : const Color(0xFFCBD5E1),
           width: isDarkMode ? 1.0 : 0.5,

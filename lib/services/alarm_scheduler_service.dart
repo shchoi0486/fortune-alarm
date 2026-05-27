@@ -341,9 +341,15 @@ class AlarmSchedulerService {
                final disabledAlarm = alarm.copyWith(isEnabled: false);
                await box.put(disabledAlarm.id, disabledAlarm);
              } else {
-                // 최근(30분 이내)에 놓친거라면 즉시 실행을 위해 스케줄링 시도
-                debugPrint('[AlarmScheduler] Found recently missed one-time alarm: ${alarm.id}. Retrying.');
-                await scheduleAlarm(alarm);
+                // 최근(30분 이내)에 놓친거라면 약간 미래 시각으로 보정 후 즉시 복구 예약
+                final recoveredAlarm = alarm.copyWith(
+                  time: now.add(const Duration(seconds: 3)),
+                );
+                debugPrint(
+                  '[AlarmScheduler] Found recently missed one-time alarm: ${alarm.id}. Recovering at ${recoveredAlarm.time}.',
+                );
+                await box.put(recoveredAlarm.id, recoveredAlarm);
+                await scheduleAlarm(recoveredAlarm);
              }
            }
         } else {

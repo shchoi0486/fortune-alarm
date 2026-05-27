@@ -161,13 +161,9 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
         
         // 만약 오늘 날짜로 설정했을 때도 과거라면
         if (targetTime.isBefore(now)) {
-          // 1분 이내의 과거라면 오늘로 유지 (즉시 실행)
-          final diff = now.difference(targetTime);
-          if (diff.inMinutes >= 1) {
-             targetTime = targetTime.add(const Duration(days: 1));
-          } else {
-             debugPrint('[AlarmListNotifier] Toggle time is within 1 minute grace period. Keeping today for immediate alarm.');
-          }
+          // 과거 시간이면 즉시 실행을 시도하지 않고 다음 유효 시각으로 이동시켜
+          // 토글 직후 예약 실패로 빠지는 케이스를 방지합니다.
+          targetTime = targetTime.add(const Duration(days: 1));
         }
         newTime = targetTime;
         debugPrint('[AlarmListNotifier] Updated past one-time alarm time to: $newTime');

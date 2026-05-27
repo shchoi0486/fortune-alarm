@@ -559,49 +559,49 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get quickAlarm => 'Quick Alarm';
+  String get quickAlarm => '快速闹钟';
 
   @override
-  String get setQuickAlarm => 'Set Quick Alarm';
+  String get setQuickAlarm => '设置快速闹钟';
 
   @override
   String addMinutes(String minutes) {
-    return '+ ${minutes}m';
+    return '+ $minutes分钟';
   }
 
   @override
   String ringingAt(String time) {
-    return 'Rings at $time';
+    return '将在 $time 响起';
   }
 
   @override
-  String get pleaseSetTime => 'Please set the time.';
+  String get pleaseSetTime => '请设置时间。';
 
   @override
-  String get alarmSaved => 'Alarm saved.';
+  String get alarmSaved => '闹钟已保存。';
 
   @override
-  String get alarmScheduledTitle => 'Alarm Scheduled';
+  String get alarmScheduledTitle => '闹钟已设定';
 
   @override
   String alarmScheduledBody(String time) {
-    return 'Alarm will ring at $time.';
+    return '闹钟将在 $time 响起。';
   }
 
   @override
-  String get goodDay => 'It\'s going to be a wonderful day!';
+  String get goodDay => '今天会是美好的一天！';
 
   @override
-  String get luckyDay => 'Wishing you a day full of luck!';
+  String get luckyDay => '祝你今天好运连连！';
 
   @override
-  String get cheerUp => 'Have a great and productive day!';
+  String get cheerUp => '祝你今天过得愉快且充实！';
 
   @override
-  String get stayHappy => 'Enjoy every moment today!';
+  String get stayHappy => '享受今天的每一刻！';
 
   @override
-  String get youCanDoIt => 'You can do anything today!';
+  String get youCanDoIt => '今天你可以完成任何事情！';
 
   @override
   String get noActiveAlarms => '没有正在响的闹钟';
