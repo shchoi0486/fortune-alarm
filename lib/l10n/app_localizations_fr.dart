@@ -60,6 +60,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get languageGerman => 'Allemand';
 
   @override
+  String get languageThai => 'Thaï';
+
+  @override
   String get alarm => 'Alarme';
 
   @override

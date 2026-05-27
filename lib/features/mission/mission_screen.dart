@@ -78,7 +78,7 @@ class MissionScreen extends ConsumerWidget {
                         color: missionState.isGoalAchieved 
                           ? Colors.green.withOpacity(0.1) 
                           : primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
                         missionState.isGoalAchieved 
@@ -175,7 +175,7 @@ class MissionScreen extends ConsumerWidget {
                             context: context,
                             builder: (context) => AlertDialog(
                               backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               title: Text(AppLocalizations.of(context)!.resetMissions, style: const TextStyle(fontWeight: FontWeight.bold)),
                               content: Text(AppLocalizations.of(context)!.resetMissionsConfirm),
                               actions: [
@@ -240,12 +240,12 @@ class MissionScreen extends ConsumerWidget {
                             ),
                           );
                         },
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: const Color(0xFFF97316).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -347,7 +347,7 @@ class MissionScreen extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.white.withOpacity(0.05) : Colors.grey.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                       color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05),
                       width: isDark ? 1.0 : 0.5,
@@ -431,7 +431,7 @@ class MissionScreen extends ConsumerWidget {
             child: Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E1E1E) : Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                       color: Theme.of(context).brightness == Brightness.dark 
                         ? Colors.white.withOpacity(0.15) 

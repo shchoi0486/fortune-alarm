@@ -118,7 +118,7 @@ class _AdBannerWidgetState extends State<AdBannerWidget> {
                 margin: widget.margin ?? const EdgeInsets.symmetric(horizontal: 4),
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isDarkMode ? Colors.white.withOpacity(0.12) : const Color(0xFFCBD5E1),
                     width: isDarkMode ? 1.0 : 0.5,

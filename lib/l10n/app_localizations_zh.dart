@@ -60,6 +60,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get languageGerman => '德语';
 
   @override
+  String get languageThai => '泰语';
+
+  @override
   String get alarm => '闹钟';
 
   @override

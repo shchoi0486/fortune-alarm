@@ -14,6 +14,7 @@ import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
 import 'app_localizations_ru.dart';
 import 'app_localizations_zh.dart';
+import 'app_localizations_th.dart';
 
 // ignore_for_file: type=lint
 
@@ -213,6 +214,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'German'**
   String get languageGerman;
+
+  /// No description provided for @languageThai.
+  ///
+  /// In en, this message translates to:
+  /// **'Thai'**
+  String get languageThai;
 
   /// No description provided for @alarm.
   ///
@@ -11419,7 +11426,8 @@ class _AppLocalizationsDelegate
         'ja',
         'ko',
         'ru',
-        'zh'
+        'zh',
+        'th'
       ].contains(locale.languageCode);
 
   @override
@@ -11447,6 +11455,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsRu();
     case 'zh':
       return AppLocalizationsZh();
+    case 'th':
+      return AppLocalizationsTh();
   }
 
   throw FlutterError(

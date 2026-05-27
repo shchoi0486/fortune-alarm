@@ -60,6 +60,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get languageGerman => 'ドイツ語';
 
   @override
+  String get languageThai => 'タイ語';
+
+  @override
   String get alarm => 'アラーム';
 
   @override

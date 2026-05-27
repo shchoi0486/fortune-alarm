@@ -262,6 +262,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
         return l10n.languageFrench;
       case 'de':
         return l10n.languageGerman;
+      case 'th':
+        return l10n.languageThai;
       default:
         // 시스템 언어인 경우 현재 적용된 언어 이름을 반환
         final locale = Localizations.localeOf(context);
@@ -325,6 +327,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with WidgetsBin
                     _buildLanguageTile(context, ref, 'es', l10n.languageSpanish, currentLocale?.languageCode == 'es'),
                     _buildLanguageTile(context, ref, 'fr', l10n.languageFrench, currentLocale?.languageCode == 'fr'),
                     _buildLanguageTile(context, ref, 'de', l10n.languageGerman, currentLocale?.languageCode == 'de'),
+                    _buildLanguageTile(context, ref, 'th', l10n.languageThai, currentLocale?.languageCode == 'th'),
                   ],
                 ),
               ),

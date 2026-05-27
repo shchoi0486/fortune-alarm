@@ -60,6 +60,9 @@ class AppLocalizationsKo extends AppLocalizations {
   String get languageGerman => '독일어';
 
   @override
+  String get languageThai => '태국어';
+
+  @override
   String get alarm => '알람';
 
   @override

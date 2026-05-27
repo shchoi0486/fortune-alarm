@@ -508,7 +508,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
       width: double.infinity,
       height: 85,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDarkMode ? Colors.white.withOpacity(0.1) : const Color(0xFFCBD5E1),
           width: isDarkMode ? 1.0 : 0.5,
@@ -569,7 +569,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
       decoration: BoxDecoration(
         color: isDarkMode ? const Color(0xFF2C2C2E) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: accentColor.withOpacity(0.3),
           width: isDarkMode ? 1.0 : 0.5,
@@ -639,7 +639,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
       key: const ValueKey('featured_front'),
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDarkMode ? Colors.white.withOpacity(0.12) : const Color(0xFFCBD5E1),
           width: isDarkMode ? 1.0 : 0.5,
@@ -935,7 +935,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
           return Container(
             decoration: BoxDecoration(
               color: isDarkMode ? const Color(0xFF1C1C1E) : Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isDarkMode ? Colors.white.withOpacity(0.12) : const Color(0xFFCBD5E1),
                 width: isDarkMode ? 1.0 : 0.5,
@@ -971,7 +971,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                     Navigator.push(context, MaterialPageRoute(builder: (context) => GenericFortuneScreen(title: item['title'] as String)));
                   }
                 },
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2), // 4에서 2로 축소
                   child: Column(
@@ -1118,7 +1118,7 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
                   height: 48,
                   decoration: BoxDecoration(
                     color: isDarkMode ? Colors.grey[800]!.withOpacity(0.5) : Colors.grey[50],
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
                     child: Text(emoji, style: const TextStyle(fontSize: 24)),
