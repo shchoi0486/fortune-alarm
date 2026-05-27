@@ -247,36 +247,8 @@ class SajuService {
   static String getYearlyFortune(BuildContext context, SajuProfile profile, Map<String, Ganji> saju, int targetYear) {
     final l10n = AppLocalizations.of(context)!;
     
-    // Check for 2024, 2025 and 2026 which have detailed localizations
-    if (targetYear == 2024) {
-      final dayMaster = saju['day']!.cheongan;
-      switch (dayMaster) {
-        case Cheongan.gap: return l10n.sajuFortune2024Gap;
-        case Cheongan.eul: return l10n.sajuFortune2024Eul;
-        case Cheongan.byeong: return l10n.sajuFortune2024Byeong;
-        case Cheongan.jeong: return l10n.sajuFortune2024Jeong;
-        case Cheongan.mu: return l10n.sajuFortune2024Mu;
-        case Cheongan.gi: return l10n.sajuFortune2024Gi;
-        case Cheongan.gyeong: return l10n.sajuFortune2024Gyeong;
-        case Cheongan.sin: return l10n.sajuFortune2024Sin;
-        case Cheongan.im: return l10n.sajuFortune2024Im;
-        case Cheongan.gye: return l10n.sajuFortune2024Gye;
-      }
-    } else if (targetYear == 2025) {
-      final dayMaster = saju['day']!.cheongan;
-      switch (dayMaster) {
-        case Cheongan.gap: return l10n.sajuFortune2025Gap;
-        case Cheongan.eul: return l10n.sajuFortune2025Eul;
-        case Cheongan.byeong: return l10n.sajuFortune2025Byeong;
-        case Cheongan.jeong: return l10n.sajuFortune2025Jeong;
-        case Cheongan.mu: return l10n.sajuFortune2025Mu;
-        case Cheongan.gi: return l10n.sajuFortune2025Gi;
-        case Cheongan.gyeong: return l10n.sajuFortune2025Gyeong;
-        case Cheongan.sin: return l10n.sajuFortune2025Sin;
-        case Cheongan.im: return l10n.sajuFortune2025Im;
-        case Cheongan.gye: return l10n.sajuFortune2025Gye;
-      }
-    } else if (targetYear == 2026) {
+    // Check for 2026 which have detailed localizations
+    if (targetYear == 2026) {
       final dayMaster = saju['day']!.cheongan;
       switch (dayMaster) {
         case Cheongan.gap: return l10n.sajuFortune2026Gap;
@@ -505,28 +477,11 @@ class SajuService {
     String fortune = "";
 
     String yearName = "";
-    if (targetYear == 2024) {
-      yearName = "갑진년 (청룡의 해)";
-    } else if (targetYear == 2025) {
-      yearName = "을사년 (청사의 해)";
-    } else if (targetYear == 2026) {
+    if (targetYear == 2026) {
       yearName = "병오년 (적마의 해)";
     }
 
-    if (targetYear == 2025) {
-      switch (dayMaster) {
-        case Cheongan.gap: return l10n.sajuFortune2025Gap;
-        case Cheongan.eul: return l10n.sajuFortune2025Eul;
-        case Cheongan.byeong: return l10n.sajuFortune2025Byeong;
-        case Cheongan.jeong: return l10n.sajuFortune2025Jeong;
-        case Cheongan.mu: return l10n.sajuFortune2025Mu;
-        case Cheongan.gi: return l10n.sajuFortune2025Gi;
-        case Cheongan.gyeong: return l10n.sajuFortune2025Gyeong;
-        case Cheongan.sin: return l10n.sajuFortune2025Sin;
-        case Cheongan.im: return l10n.sajuFortune2025Im;
-        case Cheongan.gye: return l10n.sajuFortune2025Gye;
-      }
-    } else if (targetYear == 2026) {
+    if (targetYear == 2026) {
        // 2026년 병오년 (붉은 말의 해) 상세 운세
        switch (dayMaster) {
         case Cheongan.gap: // 갑목 (甲)

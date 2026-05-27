@@ -13,8 +13,8 @@ import 'app_localizations_hi.dart';
 import 'app_localizations_ja.dart';
 import 'app_localizations_ko.dart';
 import 'app_localizations_ru.dart';
-import 'app_localizations_zh.dart';
 import 'app_localizations_th.dart';
+import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
 
@@ -110,6 +110,7 @@ abstract class AppLocalizations {
     Locale('ja'),
     Locale('ko'),
     Locale('ru'),
+    Locale('th'),
     Locale('zh')
   ];
 
@@ -214,12 +215,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'German'**
   String get languageGerman;
-
-  /// No description provided for @languageThai.
-  ///
-  /// In en, this message translates to:
-  /// **'Thai'**
-  String get languageThai;
 
   /// No description provided for @alarm.
   ///
@@ -3551,78 +3546,6 @@ abstract class AppLocalizations {
   /// **'Consider the advice of others, but trust your intuition for the final decision.'**
   String get adviceCareer2;
 
-  /// No description provided for @sajuFortune2024Gap.
-  ///
-  /// In en, this message translates to:
-  /// **'🌿 2024 Year of the Wood Dragon (Yang Wood): \'A Year of New Beginnings and Growth\'\n\n2024 brings the energy of \'Peers\' and \'Windfalls.\' Like a new tree in a lush forest, this is a time for self-discovery and planning for the future.\n\n💼 [Career & Business]\nYour confidence and drive will be at their peak. You\'ll find opportunities to succeed in large projects through collaboration. If you\'ve been considering a career change or starting a business, now is the time. Stay open to others\' ideas to avoid becoming overly stubborn.\n\n💰 [Wealth]\nExpect opportunities for significant financial gain or unexpected windfalls. While wealth flows in, expenses may also rise, so careful asset management is key. Long-term investments are highly recommended.\n\n❤️ [Love & Relationships]\nA great time to expand your social circle. Singles may find an attractive partner, and couples will see their bonds deepen. Be mindful of potential rivalries in your personal life.\n\n⚠️ [Cautions]\nPrioritize your physical health and manage stress. Avoid making impulsive decisions based on overconfidence.'**
-  String get sajuFortune2024Gap;
-
-  /// No description provided for @sajuFortune2024Eul.
-  ///
-  /// In en, this message translates to:
-  /// **'🌿 2024 Year of the Wood Dragon (Yin Wood): \'A Year of Growth through Collaboration\'\n\n2024 brings the energy of \'Competitors\' and \'Stable Wealth.\' Like ivy climbing a great tree, you will achieve more by working with others than by going it alone.\n\n💼 [Career & Business]\nNetworking is your greatest asset this year. You\'ll meet influential mentors who will help you gain recognition. Be prepared to share your success with those who helped you. This is a strong year for establishing your presence in competitive environments.\n\n💰 [Wealth]\nA stable and consistent income is expected. Your hard work will be rewarded, making it an ideal time for savings or real estate. Avoid lending money to friends or acquaintances to prevent future conflict.\n\n❤️ [Love & Relationships]\nYour social life will flourish, and your popularity will grow. While romance looks promising, honest communication is necessary to avoid misunderstandings. New connections will likely form through your existing social circles.\n\n⚠️ [Cautions]\nWatch out for stress-related headaches or nervous tension. Stay flexible in your interactions to avoid unnecessary friction with others.'**
-  String get sajuFortune2024Eul;
-
-  /// No description provided for @sajuFortune2024Byeong.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 2024 Year of the Wood Dragon (Yang Fire): \'A Year for Passion and Creative Wisdom\'\n\n2024 brings the energy of \'Intuition\' and \'Creativity.\' Like the sun breathing life into a forest, your original ideas and talents will shine brightly this year.\n\n💼 [Career & Business]\nYou will excel in specialized fields, especially those involving research, art, or technology. Your original approach will bring unique results. To succeed, focus on turning your many ideas into immediate action.\n\n💰 [Wealth]\nYour talents and ideas will be your primary source of income. Side projects or hobbies could turn into profitable ventures. Be sure to review all contracts and investment plans carefully to avoid potential losses.\n\n❤️ [Love & Relationships]\nYour charm and eloquence will be at their peak, making you a natural leader in social settings. You\'ll enjoy a vibrant romantic life with many memorable dates and events.\n\n⚠️ [Cautions]\nPay attention to your digestive and cardiovascular health. Stay active outdoors to help clear your mind if you feel overwhelmed by deep thoughts.'**
-  String get sajuFortune2024Byeong;
-
-  /// No description provided for @sajuFortune2024Jeong.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 2024 Year of the Wood Dragon (Yin Fire): \'A Year of Inner Strength and Stability\'\n\n2024 brings the energy of \'Academic Success\' and \'Expression.\' Like a lamp illuminating a forest, this is a perfect year to focus on self-development, studies, or obtaining new certifications.\n\n💼 [Career & Business]\nSupport from mentors or seniors will improve your work environment, opening doors for promotions or transfers. Your ability to persuade others will be strong. Be mindful of your words to avoid being misunderstood by colleagues.\n\n💰 [Wealth]\nLuck is on your side regarding contracts and legal documents. Expect gains from real estate or career-related certifications. Focus on stable asset management and avoid impulsive purchases.\n\n❤️ [Love & Relationships]\nYour warm and polite demeanor will earn you the trust of those around you. Couples will experience a stable and nurturing period, making it a good year to plan for the future, including marriage.\n\n⚠️ [Cautions]\nTake care of your vision and manage mental fatigue. A humble attitude will help you avoid resentment from others who may be envious of your success.'**
-  String get sajuFortune2024Jeong;
-
-  /// No description provided for @sajuFortune2024Mu.
-  ///
-  /// In en, this message translates to:
-  /// **'⛰️ 2024 Year of the Wood Dragon (Yang Earth): \'A Year of Responsibility and Growth\'\n\n2024 brings the energy of \'Authority\' and \'Peers.\' Like a great mountain standing firm in a forest, you will face new responsibilities that will ultimately lead to significant personal growth.\n\n💼 [Career & Business]\nYou\'ll be called upon to lead and handle challenging assignments. Competitive environments will provide the perfect stage to prove your skills. Persistence will be your greatest ally in achieving long-term success.\n\n💰 [Wealth]\nExpect some increase in your expenses this year. Focus on protecting your current assets rather than taking big risks. Be cautious with financial transactions involving friends or family, and plan your budget with a long-term view.\n\n❤️ [Love & Relationships]\nYour strong charisma will attract attention from others. However, be careful not to let stubbornness cause friction with your partner. This is a great year for deepening friendships and building strong bonds.\n\n⚠️ [Cautions]\nBeware of physical overwork, specifically digestive issues or muscle pain. Prioritize rest and stretching, and find a hobby to help relieve mental pressure.'**
-  String get sajuFortune2024Mu;
-
-  /// No description provided for @sajuFortune2024Gi.
-  ///
-  /// In en, this message translates to:
-  /// **'🌾 2024 Year of the Wood Dragon (Yin Earth): \'A Year of Achievement and Harmony\'\n\n2024 brings the energy of \'Stability\' and \'Sharing.\' Like a fertile field bearing fruit, this will be a rewarding year where your social status rises and you gain well-deserved recognition.\n\n💼 [Career & Business]\nYou will be recognized for your hard work and may step into a significant new role. This is an exceptionally lucky year for employment and promotions. By following your principles, you will achieve results beyond your expectations.\n\n💰 [Wealth]\nA stable income and steady accumulation of wealth are in the cards. You may receive rewards for your past performance or honor. Be mindful of spending too much on others, and keep a balanced budget.\n\n❤️ [Love & Relationships]\nMarriage luck is strong this year. Singles may find a reliable partner for a serious relationship. Clear communication will help you gain support and affection from those around you.\n\n⚠️ [Cautions]\nMaintain regular eating habits and take care of your digestive health. Avoid getting too involved in other people\'s problems at the expense of your own well-being.'**
-  String get sajuFortune2024Gi;
-
-  /// No description provided for @sajuFortune2024Gyeong.
-  ///
-  /// In en, this message translates to:
-  /// **'⚔️ 2024 Year of the Wood Dragon (Yang Metal): \'A Year of Innovation and Change\'\n\n2024 brings the energy of \'Windfalls\' and \'Intuition.\' Like a sharp sword clearing a path through a forest, you will break old patterns and embrace exciting new challenges.\n\n💼 [Career & Business]\nYour bold decisiveness and fresh ideas will lead to success in new ventures. You may find opportunities for travel or work abroad. Embrace change, but remember to coordinate with others to avoid unnecessary conflict within your team.\n\n💰 [Wealth]\nYour financial situation may see significant fluctuations. While there is potential for large profits, avoid speculative investments without a solid plan. Thorough analysis will be your best protection against losses.\n\n❤️ [Love & Relationships]\nYou\'ll have many opportunities to meet new people and expand your social life. Your curiosity in dating will be high, but try to maintain a serious and consistent attitude to build lasting connections.\n\n⚠️ [Cautions]\nPay attention to your respiratory and digestive health. Stay calm and avoid rushing into decisions to prevent accidents or mistakes caused by impatience.'**
-  String get sajuFortune2024Gyeong;
-
-  /// No description provided for @sajuFortune2024Sin.
-  ///
-  /// In en, this message translates to:
-  /// **'💎 2024 Year of the Wood Dragon (Yin Metal): \'A Year of Recognition and Honor\'\n\n2024 brings the energy of \'Stable Wealth\' and \'Academic Success.\' Like a jewel discovered in a forest, your value will be recognized, and you will receive just rewards for your efforts.\n\n💼 [Career & Business]\nYour meticulous nature and sincerity will earn you deep trust. You may be put in charge of important projects or enjoy a promotion. This is a stable period where your plans will likely go exactly as intended.\n\n💰 [Wealth]\nYour financial outlook is stable and positive. Expect consistent income and success in savings or smart financial planning. You may also receive support or an inheritance from family or mentors.\n\n❤️ [Love & Relationships]\nYour polite and dignified manner will be very attractive to others. Trust will deepen in your romantic relationships, making this a great year for marriage or long-term commitments.\n\n⚠️ [Cautions]\nTake care of your skin and respiratory health. Don\'t let perfectionism cause unnecessary stress; remember to take time for yourself and relax.'**
-  String get sajuFortune2024Sin;
-
-  /// No description provided for @sajuFortune2024Im.
-  ///
-  /// In en, this message translates to:
-  /// **'🌊 2024 Year of the Wood Dragon (Yang Water): \'A Year of Flexible Growth and Wisdom\'\n\n2024 brings the energy of \'Creativity\' and \'Authority.\' Like a vast sea nurturing a forest, your wisdom will help you solve difficult problems and expand your influence.\n\n💼 [Career & Business]\nYour creative problem-solving skills will be your greatest strength. You\'ll find breakthroughs in challenging situations and gain recognition for your abilities, especially in education, planning, or consulting. Manage your workload to avoid burnout.\n\n💰 [Wealth]\nThis is a good year to increase your income through your unique skills and talents. While wealth flows in, sudden expenses may arise, so it\'s wise to keep an emergency fund for peace of mind.\n\n❤️ [Love & Relationships]\nYour increased understanding and tolerance will help you maintain excellent relationships. Deep conversations will strengthen your romantic bonds. Singles are likely to find a partner who brings them a sense of comfort.\n\n⚠️ [Cautions]\nPay attention to your kidney and bladder health. Avoid taking on too many responsibilities at once, as overcommitting can affect your physical well-being.'**
-  String get sajuFortune2024Im;
-
-  /// No description provided for @sajuFortune2024Gye.
-  ///
-  /// In en, this message translates to:
-  /// **'💧 2024 Year of the Wood Dragon (Yin Water): \'A Year of Seizing New Opportunities\'\n\n2024 brings the energy of \'Innovation\' and \'Stability.\' Like a gentle rain reviving a forest, your voice will be heard, and you will find new opportunities to showcase your presence.\n\n💼 [Career & Business]\nYour communication skills and creative ideas will be highly effective, especially in marketing, PR, or the arts. Be mindful of how you handle authority to ensure your innovative ideas are well-received by your organization.\n\n💰 [Wealth]\nYour financial flow will be active this year. Quick thinking and wit will help you increase your income. Be careful with impulsive spending on luxury items, and focus on maintaining a balanced budget.\n\n❤️ [Love & Relationships]\nYour charm and conversational skills will make you very popular. In relationships, your honesty will be refreshing, but remember to choose your words carefully to avoid hurting those you care about.\n\n⚠️ [Cautions]\nWatch out for issues with blood circulation or urological health. Stay humble and avoid gossip to protect your reputation and maintain positive relationships.'**
-  String get sajuFortune2024Gye;
-
-  /// No description provided for @sajuFortune2025Gap.
-  ///
-  /// In en, this message translates to:
-  /// **'🌿 2025 Year of the Wood Snake (Yang Wood): \'Growth through New Opportunities and Competition\'\n\n2025 brings the energy of \'Competitors\' and \'Productivity.\' Like a great tree growing alongside ivy, you will find success through synergy, though you must also navigate a year of healthy competition.\n\n💼 [Career & Business]\nYour activity and desire to express your ideas will be strong. This is a great year to showcase your talents to the world, especially for freelancers, artists, or those in sales. Build alliances with colleagues to turn potential rivals into collaborators.\n\n💰 [Wealth]\nWhile your financial flow is active, you may see money going out as quickly as it comes in. Be cautious of investment advice from friends or colleagues. In the long run, investing in your own growth or business expansion will be more rewarding than simply saving.\n\n❤️ [Love & Relationships]\nYour social life will be vibrant, and you\'ll meet many new people. Your charm will be highly effective in social settings. If you\'re interested in someone, be proactive in expressing your feelings, as you may face competition.\n\n⚠️ [Cautions]\nAvoid letting a competitive spirit lead to unnecessary conflict. With the active energy of the year, prioritize your physical stamina and stay safe while traveling.'**
-  String get sajuFortune2025Gap;
-
-  /// No description provided for @sajuFortune2025Eul.
-  ///
-  /// In en, this message translates to:
-  /// **'🌿 2025 Year of the Wood Snake (Yin Wood): \'A Brilliant Leap Forward\'\n\n2025 brings the energy of \'Peers\' and \'Expression.\' Like flowers in full bloom under the sun, this will be a dynamic year where your unique personality and talents receive the recognition they deserve.\n\n💼 [Career & Business]\nYour creativity and artistic sense will be at their peak. You\'ll excel in roles that involve planning and presenting fresh ideas. This is a strong year for independence or leading new projects. Remember to coordinate with others to ensure your innovations are well-received.\n\n💰 [Wealth]\nExpect income generated from your wit and specialized skills. Side projects or creative activities may bring unexpected financial gains. Manage your budget carefully to avoid overspending on luxury items or entertainment.\n\n❤️ [Love & Relationships]\nYour charm will attract significant attention from others. While you\'ll enjoy a lively romantic life, be mindful of your stubbornness in relationships. Singles can look forward to a potentially life-changing meeting.\n\n⚠️ [Cautions]\nChoose your words carefully to avoid gossip or misunderstandings. Prioritize regular rest and sleep to manage your energy levels throughout the year.'**
-  String get sajuFortune2025Eul;
-
   /// No description provided for @sajuFortune2026Gap.
   ///
   /// In en, this message translates to:
@@ -3682,54 +3605,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'💧 2026 Byeongo Year Gye-Water General Fortune: \'Gaining Practical Interests while Strengthening Internal Foundations\'\n\n2026 is a year where the energy of \'Jeong-jae\' and \'Pyeon-jae\' enters for you. It\'s like sunshine shining after sweet rain, making the land full of life and abundance. You will achieve economic stability based on stable income and find small happinesses.\n\n💼 [Career & Business]\nYou handle assigned tasks perfectly with sincerity and meticulousness. Display excellent ability in finance, accounting, or management tasks. Recognition and rewards follow when you do your best in assigned work rather than excessive greed. You can grow step by step while building skills in a stable environment.\n\n💰 [Wealth]\nWealth luck is very good. Steady and stable income occurs, and you enjoy the joy of increasing assets through financial technology or savings. Small but definite profits gather to give great reward. Frugal spending habits shine this year.\n\n❤️ [Love & Relationships]\nYou give deep trust to partners with kindhearted and meticulous consideration. You grow a small but warm love while sharing daily lives. Relationships are also smooth and peaceful. You will play the role of a trusted advisor to people around you.\n\n⚠️ [Cautions]\nPay attention to eye diseases or urological system health. Also, sometimes practice looking at the world with a wide perspective as you may miss the big flow by paying attention to too detailed things.'**
   String get sajuFortune2026Gye;
-
-  /// No description provided for @sajuFortune2025Byeong.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 2025 Year of the Wood Snake (Yang Fire): \'Passion and Achievement\'\n\n2025 brings the energy of \'Academic Success\' and \'Peers.\' Like the sun meeting the warmth of the earth, this year you\'ll find strong support and the confidence to achieve your goals.\n\n💼 [Career & Business]\nSupport from mentors or reliable partners will help you reach new heights. This is a great year for academic pursuits or professional certifications. While collaboration will lead to success, be mindful that excessive competition doesn\'t strain your professional relationships.\n\n💰 [Wealth]\nSharing information with your network will lead to financial growth. Joint ventures or collaborative investments look promising. Avoid overspending for the sake of appearance or pride; focus on practical gains.\n\n❤️ [Love & Relationships]\nYour social circle will deepen, and you\'ll find comfort in friendships. In romantic relationships, a sense of familiarity and friendship will strengthen your bond. Balance your time between friends and your partner to maintain harmony.\n\n⚠️ [Cautions]\nPay attention to your heart and circulatory health. Stay calm and manage your emotions, as impulsive reactions could lead to unnecessary setbacks.'**
-  String get sajuFortune2025Byeong;
-
-  /// No description provided for @sajuFortune2025Jeong.
-  ///
-  /// In en, this message translates to:
-  /// **'🔥 2025 Year of the Wood Snake (Yin Fire): \'Opportunities in Times of Change\'\n\n2025 brings the energy of \'Intuition\' and \'Competitors.\' Like a candle that continues to shine despite the wind, you will wisely overcome challenges and turn them into opportunities for success.\n\n💼 [Career & Business]\nYour original ideas and sharp intuition will shine. You\'ll find success in niche markets or specialized fields where others haven\'t looked. Be mindful of competition within your organization, and protect your ideas while maintaining good relationships.\n\n💰 [Wealth]\nExpect some fluctuations in your finances this year. A conservative approach to asset management is recommended, as unexpected expenses could arise. However, your professional skills will provide a stable source of income. Avoid risky financial transactions.\n\n❤️ [Love & Relationships]\nYou may find yourself being more reflective or passive in your romantic life. Trust is essential; try to approach your relationships with an open heart. Taking time for yourself will help you maintain your inner balance.\n\n⚠️ [Cautions]\nWatch out for stress-related fatigue or sleep issues. Practice mindfulness or light exercise to stay positive and clear-headed throughout the year.'**
-  String get sajuFortune2025Jeong;
-
-  /// No description provided for @sajuFortune2025Mu.
-  ///
-  /// In en, this message translates to:
-  /// **'⛰️ 2025 Year of the Wood Snake (Yang Earth): \'Wisdom and Maturity\'\n\n2025 brings the energy of \'Honor\' and \'Intuition.\' Like a great mountain embracing the warmth of the earth, this will be a year for deepening your knowledge while maintaining your social standing.\n\n💼 [Career & Business]\nYou\'re likely to step into a role of responsibility or find opportunities for promotion. By valuing principles and working sincerely, you\'ll earn significant recognition. This is also an excellent year for research or specialized studies. Stay open to new ideas to avoid becoming stuck in old patterns.\n\n💰 [Wealth]\nA stable income is expected. Focus on saving and careful asset management. Luck is on your side regarding real estate or legal documents, making it a good time for long-term investments. Avoid being swayed by risky temptations.\n\n❤️ [Love & Relationships]\nYour dignified and reliable manner will earn you the trust of others. This is a perfect time for couples to build a deeper, more serious relationship. If you\'re considering marriage, this is a great year to make specific plans.\n\n⚠️ [Cautions]\nTake care of your digestive health and skin. Don\'t let overthinking lead to indecision; listen to trusted advice to help you move forward with confidence.'**
-  String get sajuFortune2025Mu;
-
-  /// No description provided for @sajuFortune2025Gi.
-  ///
-  /// In en, this message translates to:
-  /// **'🌾 2025 Year of the Wood Snake (Yin Earth): \'Achieving Goals through Persistence\'\n\n2025 brings the energy of \'Authority\' and \'Academic Success.\' Like sunshine after a rain, this year will bring the recognition and honor you\'ve worked so hard to achieve.\n\n💼 [Career & Business]\nYour workload and responsibilities may increase, but you\'ll prove your leadership skills by overcoming these challenges with patience. Support from mentors or seniors will help you navigate difficult situations, leading to a great sense of accomplishment.\n\n💰 [Wealth]\nCareful budget management is essential this year, as you may face unexpected taxes or public fees. However, your steady efforts will likely be rewarded with bonuses or incentives. Persistence is your key to financial success.\n\n❤️ [Love & Relationships]\nYour responsible nature will be very attractive to others. Shared challenges will strengthen the bond between couples as you support each other. Even with a busy schedule, make time for meaningful communication with your partner.\n\n⚠️ [Cautions]\nAvoid burnout by prioritizing your physical health. Maintain a regular routine of healthy meals and exercise, and keep a positive mindset to manage stress effectively.'**
-  String get sajuFortune2025Gi;
-
-  /// No description provided for @sajuFortune2025Gyeong.
-  ///
-  /// In en, this message translates to:
-  /// **'⚔️ 2025 Year of the Wood Snake (Yang Metal): \'Earning Honor and Practical Gains\'\n\n2025 brings the energy of \'Stable Wealth\' and \'Authority.\' Like raw metal being refined into a master sword, your hard work will be rewarded with both social status and financial gains.\n\n💼 [Career & Business]\nYour focus on results and strong drive will lead to significant achievements, especially in finance, management, or technology. You\'ll gain recognition for solving complex problems, though the increased responsibility may bring some pressure. Trust in your abilities and move forward boldly.\n\n💰 [Wealth]\nYour financial outlook is very positive. In addition to a stable income, you may see gains from side projects or smart investments. You\'ll have a keen eye for managing your assets efficiently. Avoid spending too much solely for the sake of your reputation.\n\n❤️ [Love & Relationships]\nYour sincere and reliable nature will be your greatest asset in relationships. You provide a sense of security for your partner with your responsible attitude. Try to add a touch of humor to your interactions to soften your professional image.\n\n⚠️ [Cautions]\nTake care of your respiratory health and joints. Don\'t let perfectionism cause unnecessary stress; remember to be kind to yourself as you strive for your goals.'**
-  String get sajuFortune2025Gyeong;
-
-  /// No description provided for @sajuFortune2025Sin.
-  ///
-  /// In en, this message translates to:
-  /// **'💎 2025 Year of the Wood Snake (Yin Metal): \'Wisdom and Success in Times of Change\'\n\n2025 brings the energy of \'Windfalls\' and \'Honor.\' Like a fine jewel under a spotlight, your value will be recognized, and you\'ll experience both a rise in social status and unexpected financial gains.\n\n💼 [Career & Business]\nYour business acumen will be sharp, and you\'ll excel at capturing new opportunities. Bold challenges are likely to bring significant rewards. Within your organization, your rational judgment will earn you the trust of others and potentially a promotion.\n\n💰 [Wealth]\nFinancial luck is on your side this year. You may see unexpected gains from investments or family support. While wealth flows in, maintain a planned budget to avoid overspending on luxury items.\n\n❤️ [Love & Relationships]\nYou\'ll be the center of attention in social settings with your attractive presence. This is a very strong year for romance, with many people drawn to your charm. Couples can look forward to a passionate and meaningful year together.\n\n⚠️ [Cautions]\nPay attention to your respiratory and skin health. Maintain a humble attitude to ensure your confidence isn\'t mistaken for arrogance by those around you.'**
-  String get sajuFortune2025Sin;
-
-  /// No description provided for @sajuFortune2025Im.
-  ///
-  /// In en, this message translates to:
-  /// **'🌊 2025 Year of the Wood Snake (Yang Water): \'Expanding Your Influence through Wisdom\'\n\n2025 brings the energy of \'Expression\' and \'Windfalls.\' Like a winding river nurturing a field, this will be a dynamic year for expanding your activities and achieving significant financial success through your unique talents.\n\n💼 [Career & Business]\nYour communication skills will be highly effective, especially in marketing, PR, or creative fields. This is the perfect time to commercialize your ideas and explore new markets. Stay professional in your interactions with authority to ensure your ideas are well-received.\n\n💰 [Wealth]\nYour financial situation will be active and promising. You\'ll find opportunities to earn money through your specialized skills and capture large financial gains. Remember to share your success with others to maintain your positive financial flow.\n\n❤️ [Love & Relationships]\nYour humor and charm will make you very popular. You\'ll enjoy a vibrant social life with many interesting dates. In relationships, variety and creativity will keep things exciting. Be mindful that your words are understood as intended to avoid simple misunderstandings.\n\n⚠️ [Cautions]\nTake care of your kidney and urological health. Prioritize rest and proper nutrition to maintain your energy levels as you expand your range of activities.'**
-  String get sajuFortune2025Im;
-
-  /// No description provided for @sajuFortune2025Gye.
-  ///
-  /// In en, this message translates to:
-  /// **'💧 2025 Year of the Wood Snake (Yin Water): \'A Year of Stability and Reward\'\n\n2025 brings the energy of \'Productivity\' and \'Stable Wealth.\' Like a gentle rain preparing the land for a rich harvest, your steady efforts will lead to lasting wealth and happiness.\n\n💼 [Career & Business]\nSincerity is your greatest strength this year. By fulfilling your responsibilities, you\'ll earn the deep trust of your colleagues. This is a great time to focus on your favorite projects and grow your expertise in a stable environment.\n\n💰 [Wealth]\nExpect a stable and comfortable financial year. You\'ll find satisfaction in steadily building your assets through careful planning. Abundance is the theme for your year; focus on safe investments and savings rather than taking risks.\n\n❤️ [Love & Relationships]\nYour warm-hearted and considerate nature will bring comfort to your partner. This is a year for nurturing your relationships with care and attention. Singles are likely to meet someone who shares their values and communicates well.\n\n⚠️ [Cautions]\nPay attention to your digestive health and maintain healthy eating habits. Find new ways to stay active and engaged to avoid becoming too comfortable or settled in your routine.'**
-  String get sajuFortune2025Gye;
 
   /// No description provided for @preparationForTomorrow.
   ///
@@ -11339,18 +11214,6 @@ abstract class AppLocalizations {
   /// **'7h 30m'**
   String get defaultSleepDuration;
 
-  /// No description provided for @year2024Name.
-  ///
-  /// In en, this message translates to:
-  /// **'Gap-Chin Year (Year of the Blue Dragon)'**
-  String get year2024Name;
-
-  /// No description provided for @year2025Name.
-  ///
-  /// In en, this message translates to:
-  /// **'Eul-Sa Year (Year of the Blue Snake)'**
-  String get year2025Name;
-
   /// No description provided for @year2026Name.
   ///
   /// In en, this message translates to:
@@ -11405,6 +11268,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Grab the 50% discount chance!'**
   String get timeSaleCatchChance;
+
+  /// No description provided for @languageThai.
+  ///
+  /// In en, this message translates to:
+  /// **'Thai'**
+  String get languageThai;
 }
 
 class _AppLocalizationsDelegate
@@ -11426,8 +11295,8 @@ class _AppLocalizationsDelegate
         'ja',
         'ko',
         'ru',
-        'zh',
-        'th'
+        'th',
+        'zh'
       ].contains(locale.languageCode);
 
   @override
@@ -11453,10 +11322,10 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsKo();
     case 'ru':
       return AppLocalizationsRu();
-    case 'zh':
-      return AppLocalizationsZh();
     case 'th':
       return AppLocalizationsTh();
+    case 'zh':
+      return AppLocalizationsZh();
   }
 
   throw FlutterError(

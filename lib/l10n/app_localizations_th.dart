@@ -1,17 +1,30 @@
-import 'app_localizations_en.dart';
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
 
 /// The translations for Thai (`th`).
-class AppLocalizationsTh extends AppLocalizationsEn {
+class AppLocalizationsTh extends AppLocalizations {
   AppLocalizationsTh([String locale = 'th']) : super(locale);
-
-  @override
-  String get languageThai => 'ไทย';
 
   @override
   String get appTitle => 'นาฬิกาปลุกดวงดี';
 
   @override
   String get morningGreeting => 'อรุณสวัสดิ์! เริ่มต้นวันโชคดีของคุณ';
+
+  @override
+  String get missionWakeUp => 'Alarm Mission';
+
+  @override
+  String get missionSupplement => 'Take Supplements';
+
+  @override
+  String get missionWater => 'Drink over 2L of Water';
+
+  @override
+  String get fortuneCookie => 'Fortune Cookie';
 
   @override
   String get settings => 'การตั้งค่า';
@@ -32,6 +45,15 @@ class AppLocalizationsTh extends AppLocalizationsEn {
   String get languageChinese => 'จีน';
 
   @override
+  String get languageRussian => 'Russian';
+
+  @override
+  String get languageHindi => 'Hindi';
+
+  @override
+  String get languageSpanish => 'Spanish';
+
+  @override
   String get languageFrench => 'ฝรั่งเศส';
 
   @override
@@ -48,4 +70,6478 @@ class AppLocalizationsTh extends AppLocalizationsEn {
 
   @override
   String get fortune => 'ดูดวง';
+
+  @override
+  String get congratulations => 'Congratulations!';
+
+  @override
+  String get allMissionsCompleted =>
+      'You have completed all 5 missions for today.';
+
+  @override
+  String get rewardReceived => 'You received 1 Fortune Cookie as a reward! 🥠';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get missionSuccess => 'Mission Success!';
+
+  @override
+  String get cheeringMessage1 => 'Have a great day today!';
+
+  @override
+  String get cheeringMessage2 => 'I\'m rooting for you today!';
+
+  @override
+  String get cheeringMessage3 => 'It\'s going to be a wonderful day.';
+
+  @override
+  String get todaysCheering => 'Today\'s Message';
+
+  @override
+  String get notificationWakeUpBody => 'Time to wake up!';
+
+  @override
+  String get notificationMissionBody =>
+      'Complete the mission and turn off the alarm!';
+
+  @override
+  String get notificationSafetyBody =>
+      'The alarm was forced to close! Please complete the mission.';
+
+  @override
+  String get notificationRingingBody => 'The alarm is ringing!';
+
+  @override
+  String get snoozePrefix => '[Snooze]';
+
+  @override
+  String get exactAlarmPermissionRequired =>
+      'The \"Exact Alarm\" permission is required to sound the alarm at the correct time.';
+
+  @override
+  String get overlayPermissionRequired =>
+      'The \"Display over other apps\" permission is required for full-screen notifications.';
+
+  @override
+  String get deleteAllAlarms => 'Delete All Alarms';
+
+  @override
+  String get noAlarms => 'No alarms registered.';
+
+  @override
+  String get lessThanAMinuteRemaining => 'Ringing in less than a minute';
+
+  @override
+  String hoursMinutesRemaining(String hours, String minutes) {
+    return 'Ringing in ${hours}h ${minutes}m';
+  }
+
+  @override
+  String minutesRemaining(String minutes) {
+    return 'Ringing in ${minutes}m';
+  }
+
+  @override
+  String get am => 'AM';
+
+  @override
+  String get pm => 'PM';
+
+  @override
+  String get dailyFortuneCookieReward => 'Daily Fortune Cookie Reward';
+
+  @override
+  String get missionRewardInfo =>
+      '1 cookie for 5 successful missions, 2 for 10!';
+
+  @override
+  String get dailyMission => 'Daily Mission';
+
+  @override
+  String goalAchieved(int completed) {
+    return '🎉 $completed/5 Goal Achieved!';
+  }
+
+  @override
+  String missionProgress(int completed) {
+    return '$completed/5 Achieved';
+  }
+
+  @override
+  String get myMissionRecord => 'My Mission Record';
+
+  @override
+  String get consecutiveSuccess => 'Consecutive';
+
+  @override
+  String get successRate30Days => 'Success Rate (30d)';
+
+  @override
+  String get totalSuccess => 'Total Success';
+
+  @override
+  String get inProgress => 'In Progress 🔥';
+
+  @override
+  String get resetMissions => 'Reset Missions';
+
+  @override
+  String get resetMissionsConfirm =>
+      'Do you want to reset all challenge lists?\n(Excluding basic system missions)';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get addMission => 'Add Mission';
+
+  @override
+  String get completedMissions => 'Completed Missions';
+
+  @override
+  String get noCompletedMissionsHint =>
+      'No completed missions yet. Reach today\'s mission goal.';
+
+  @override
+  String greeting(String userName) {
+    return 'Hello, $userName';
+  }
+
+  @override
+  String get welcomeFortune => 'Welcome to the mysterious world of fortune';
+
+  @override
+  String get luckyColor => 'Lucky Color';
+
+  @override
+  String get luckyItem => 'Lucky Item';
+
+  @override
+  String get luckyDirection => 'Lucky Direction';
+
+  @override
+  String get viewVariousFortunes => 'View Various Fortunes';
+
+  @override
+  String get todaysRecommendation => 'Today\'s Recommendation';
+
+  @override
+  String get checkTodaysFortune => 'Check Today\'s Fortune';
+
+  @override
+  String get todaysAdvice => 'Today\'s Advice';
+
+  @override
+  String get viewSpecificDateFortune => 'View Fortune for Specific Date';
+
+  @override
+  String get luckyNumberRecommendation => 'Lucky Number Recommendation';
+
+  @override
+  String get luckyNumber => 'Lucky Number';
+
+  @override
+  String get specificDateFortune => 'Specific Date Fortune';
+
+  @override
+  String get specialDayFortune => 'Special Day Fortune';
+
+  @override
+  String get newYearFortune => 'New Year Fortune';
+
+  @override
+  String get totalFortune2026 => '2026 Total Fortune';
+
+  @override
+  String get traditionalFortune => 'Traditional Fortune';
+
+  @override
+  String get traditionalSaju => 'Traditional Four Pillars Analysis';
+
+  @override
+  String get faceReading => 'Face Reading';
+
+  @override
+  String get missionFaceReading => 'Face Reading Mission';
+
+  @override
+  String get faceFate => 'Face Fate Destiny';
+
+  @override
+  String get compatibility => 'Compatibility';
+
+  @override
+  String get relationshipHarmony => 'Relationship Harmony';
+
+  @override
+  String get ohaengWood => 'Wood';
+
+  @override
+  String get ohaengFire => 'Fire';
+
+  @override
+  String get ohaengEarth => 'Earth';
+
+  @override
+  String get ohaengMetal => 'Metal';
+
+  @override
+  String get ohaengWater => 'Water';
+
+  @override
+  String get ohaengWoodSymbol => 'Wood';
+
+  @override
+  String get ohaengFireSymbol => 'Fire';
+
+  @override
+  String get ohaengEarthSymbol => 'Earth';
+
+  @override
+  String get ohaengMetalSymbol => 'Metal';
+
+  @override
+  String get ohaengWaterSymbol => 'Water';
+
+  @override
+  String get ohaengWoodExplanation =>
+      'With a strong energy of Wood (Tree), you are full of growth and motivation, possessing a compassionate and enterprising nature.';
+
+  @override
+  String get ohaengFireExplanation =>
+      'With a strong energy of Fire, you are passionate and polite, with a tendency to be active and fond of glamorous things.';
+
+  @override
+  String get ohaengEarthExplanation =>
+      'With a strong energy of Earth, you have trust and tolerance, possessing a grave and unchanging nature.';
+
+  @override
+  String get ohaengMetalExplanation =>
+      'With a strong energy of Metal, you have decisiveness and loyalty, possessing a cool-headed nature that values principles.';
+
+  @override
+  String get ohaengWaterExplanation =>
+      'With a strong energy of Water, you have wisdom and flexibility, possessing a clever and highly adaptable nature.';
+
+  @override
+  String get cheonganGap => 'Gap';
+
+  @override
+  String get cheonganEul => 'Eul';
+
+  @override
+  String get cheonganByeong => 'Byeong';
+
+  @override
+  String get cheonganJeong => 'Jeong';
+
+  @override
+  String get cheonganMu => 'Mu';
+
+  @override
+  String get cheonganGi => 'Gi';
+
+  @override
+  String get cheonganGyeong => 'Gyeong';
+
+  @override
+  String get cheonganSin => 'Sin';
+
+  @override
+  String get cheonganIm => 'Im';
+
+  @override
+  String get cheonganGye => 'Gye';
+
+  @override
+  String get jijiJa => 'Rat';
+
+  @override
+  String get jijiChuk => 'Ox';
+
+  @override
+  String get jijiIn => 'Tiger';
+
+  @override
+  String get jijiMyo => 'Rabbit';
+
+  @override
+  String get jijiJin => 'Dragon';
+
+  @override
+  String get jijiSa => 'Snake';
+
+  @override
+  String get jijiO => 'Horse';
+
+  @override
+  String get jijiMi => 'Goat';
+
+  @override
+  String get jijiSin => 'Monkey';
+
+  @override
+  String get jijiYu => 'Rooster';
+
+  @override
+  String get jijiSul => 'Dog';
+
+  @override
+  String get jijiHae => 'Pig';
+
+  @override
+  String get jijiAnimalRat => 'Rat';
+
+  @override
+  String get jijiAnimalOx => 'Ox';
+
+  @override
+  String get jijiAnimalTiger => 'Tiger';
+
+  @override
+  String get jijiAnimalRabbit => 'Rabbit';
+
+  @override
+  String get jijiAnimalDragon => 'Dragon';
+
+  @override
+  String get jijiAnimalSnake => 'Snake';
+
+  @override
+  String get jijiAnimalHorse => 'Horse';
+
+  @override
+  String get jijiAnimalSheep => 'Sheep';
+
+  @override
+  String get jijiAnimalMonkey => 'Monkey';
+
+  @override
+  String get jijiAnimalRooster => 'Rooster';
+
+  @override
+  String get jijiAnimalDog => 'Dog';
+
+  @override
+  String get jijiAnimalPig => 'Pig';
+
+  @override
+  String get assetDefaultBackground => 'Default Background';
+
+  @override
+  String get assetFortuneyFriends => 'Fortuney Friends';
+
+  @override
+  String get assetMongchuny => 'Mongchuny';
+
+  @override
+  String get assetPanchuny => 'Panchuny';
+
+  @override
+  String get assetTochuny => 'Tochuny';
+
+  @override
+  String get assetHochuny => 'Hochuny';
+
+  @override
+  String get assetBear => 'Bear';
+
+  @override
+  String get assetMoon => 'Moon';
+
+  @override
+  String get assetBridge => 'Bridge';
+
+  @override
+  String get assetRoad => 'Road';
+
+  @override
+  String get assetSky => 'Sky';
+
+  @override
+  String get assetMinimalGray => 'Minimal Gray';
+
+  @override
+  String get assetDarkMode => 'Dark Mode';
+
+  @override
+  String get assetSoftBlue => 'Soft Blue';
+
+  @override
+  String get assetWarmBeige => 'Warm Beige';
+
+  @override
+  String assetCat(int number) {
+    return 'Cat $number';
+  }
+
+  @override
+  String assetDog(int number) {
+    return 'Dog $number';
+  }
+
+  @override
+  String assetSea(int number) {
+    return 'Sea $number';
+  }
+
+  @override
+  String get categoryCharacter => 'Character';
+
+  @override
+  String get categoryAnimal => 'Animal';
+
+  @override
+  String get categoryIllustration => 'Illustration';
+
+  @override
+  String get categoryLandscape => 'Landscape';
+
+  @override
+  String get categorySimple => 'Simple';
+
+  @override
+  String get alarmBackground => 'Alarm Background';
+
+  @override
+  String get random => 'Random';
+
+  @override
+  String get gallery => 'Gallery';
+
+  @override
+  String get selectSolidColor => 'Select Solid Color';
+
+  @override
+  String get deleteColor => 'Delete Color';
+
+  @override
+  String get deleteColorConfirm =>
+      'Are you sure you want to delete this color from the list?';
+
+  @override
+  String get deleteMission => 'Delete Mission';
+
+  @override
+  String get deleteMissionConfirm =>
+      'Are you sure you want to delete this mission?';
+
+  @override
+  String get randomBackgroundDesc =>
+      'A new background every time the alarm rings!';
+
+  @override
+  String get backgroundDeleted => 'Background image deleted.';
+
+  @override
+  String get pickFromDevice => 'Pick from device';
+
+  @override
+  String get alarmSaveError =>
+      'Failed to save alarm. An unknown error occurred.';
+
+  @override
+  String errorOccurred(String error) {
+    return 'Error occurred: $error';
+  }
+
+  @override
+  String get openSettings => 'Open Settings';
+
+  @override
+  String get videoLoadFailed => 'Failed to load video\nTap to retry';
+
+  @override
+  String get itsTimeToWakeUp => 'Time to wake up!';
+
+  @override
+  String get dismissAlarm => 'Stop Alarm';
+
+  @override
+  String get slideToDismiss => 'Swipe to turn off';
+
+  @override
+  String snoozeInfo(String minutes, String count) {
+    return '${minutes}m x $count';
+  }
+
+  @override
+  String snoozeInfoUnlimited(String minutes) {
+    return '${minutes}m · Unlimited';
+  }
+
+  @override
+  String get quickAlarm => 'Quick Alarm';
+
+  @override
+  String get setQuickAlarm => 'Set Quick Alarm';
+
+  @override
+  String addMinutes(String minutes) {
+    return '+ ${minutes}m';
+  }
+
+  @override
+  String ringingAt(String time) {
+    return 'Rings at $time';
+  }
+
+  @override
+  String get pleaseSetTime => 'Please set the time.';
+
+  @override
+  String get alarmSaved => 'Alarm saved.';
+
+  @override
+  String get alarmScheduledTitle => 'Alarm Scheduled';
+
+  @override
+  String alarmScheduledBody(String time) {
+    return 'Alarm will ring at $time.';
+  }
+
+  @override
+  String get goodDay => 'It\'s going to be a wonderful day!';
+
+  @override
+  String get luckyDay => 'Wishing you a day full of luck!';
+
+  @override
+  String get cheerUp => 'Have a great and productive day!';
+
+  @override
+  String get stayHappy => 'Enjoy every moment today!';
+
+  @override
+  String get youCanDoIt => 'You can do anything today!';
+
+  @override
+  String get noActiveAlarms => 'No active alarms';
+
+  @override
+  String get wealth => 'Wealth';
+
+  @override
+  String get love => 'Relationship';
+
+  @override
+  String get career => 'Career';
+
+  @override
+  String get health => 'Health';
+
+  @override
+  String get faceAnalysisBasic => 'Basic Face Analysis';
+
+  @override
+  String get insufficientDataOverallImpression =>
+      'Limited data; interpreting based on overall impression.';
+
+  @override
+  String get noseStabilityWealthAccuracy =>
+      'A clearer nose contour would improve wealth fortune accuracy.';
+
+  @override
+  String get mouthClarityInterpersonalAccuracy =>
+      'A clearer mouth contour would refine relationship fortune accuracy.';
+
+  @override
+  String get improveAnalysisQualityAdvice =>
+      'Better lighting and facing the camera directly will improve analysis.';
+
+  @override
+  String get basicAnalysisDescription =>
+      'This result is a general interpretation due to limited facial contour data.\nFor more specific scores, please retry in a brighter environment while facing the camera directly.';
+
+  @override
+  String get defaultDailyFortune =>
+      'Start your day with a peaceful mind.\nA smile in the mirror will bring positive energy.\nA moment of calm may bring unexpected luck.';
+
+  @override
+  String dailyFortuneHeadline(String vibe, String topKey, String bottomKey) {
+    return '${vibe}Today, your $topKey luck is strongest, while your $bottomKey luck requires extra care.';
+  }
+
+  @override
+  String get faceShapeVLine => 'V-line';
+
+  @override
+  String get faceShapeSquare => 'Square';
+
+  @override
+  String get faceShapeBalanced => 'Balanced';
+
+  @override
+  String get faceShapeRound => 'Round';
+
+  @override
+  String get faceShapeLong => 'Long';
+
+  @override
+  String get faceShapeOval => 'Oval';
+
+  @override
+  String get titleWealthOriented => 'Wealth-attracting face';
+
+  @override
+  String get titleLoveStrong => 'Romantic & charming face';
+
+  @override
+  String get titleCareerNotable => 'Natural leader face';
+
+  @override
+  String get titleStableEnergy => 'Stable & grounded face';
+
+  @override
+  String get faceAnalysisComplete => 'Face analysis complete!';
+
+  @override
+  String get chooseUnlockMethod =>
+      'Choose a method below to unlock your hidden facial fortune.';
+
+  @override
+  String get watchAdForFreeResult => 'Watch ad for free';
+
+  @override
+  String get useTwoCookies => 'Use 2 Cookies';
+
+  @override
+  String get checkResult => 'View Results';
+
+  @override
+  String get aiAnalyzingFace => 'AI is analyzing your face...';
+
+  @override
+  String get faceRecognitionComplete => 'Recognition complete';
+
+  @override
+  String get extractingFeatures => 'Extracting features...';
+
+  @override
+  String get matchingFortuneData => 'Matching data...';
+
+  @override
+  String get adLoadFailedFreeUnlock =>
+      'Ad failed to load. Results unlocked for free!';
+
+  @override
+  String get insufficientCookies => 'Not Enough Cookies';
+
+  @override
+  String get insufficientCookiesDesc =>
+      'You don\'t have enough cookies.\nWatch an ad to check for free!';
+
+  @override
+  String get usingTwoCookiesToast => 'Using 2 Cookies to unlock results.';
+
+  @override
+  String get todaysFaceAnalysis => 'Today\'s Face Analysis';
+
+  @override
+  String totalScoreWithPoints(int score) {
+    return 'Total Score: $score pts';
+  }
+
+  @override
+  String get adLoadFailFreeAccess =>
+      'Ad failed to load. Results unlocked for free!';
+
+  @override
+  String get insufficientCookiesTitle => 'Not Enough Fortune Cookies';
+
+  @override
+  String get insufficientCookiesMessage =>
+      'You don\'t have enough fortune cookies.\nYou can earn more by completing missions or watching ads.';
+
+  @override
+  String get useCookiesSnackbar => 'Using 2 Cookies to check results.';
+
+  @override
+  String get faceAnalysisComplete_v2 => 'Face analysis is complete!';
+
+  @override
+  String get chooseMethodToViewResult =>
+      'Choose a method below to check your hidden facial fortune.';
+
+  @override
+  String get watchAdForFree => 'Watch ad for free';
+
+  @override
+  String get useTwoCookies_v2 => 'Use 2 Cookies';
+
+  @override
+  String get viewResult => 'View Results';
+
+  @override
+  String get aiAnalyzingFace_v2 => 'AI is analyzing your face...';
+
+  @override
+  String get faceRecognitionComplete_v2 => 'Recognition complete';
+
+  @override
+  String get extractingFeatures_v2 => 'Extracting features...';
+
+  @override
+  String get matchingFortuneData_v2 => 'Matching data...';
+
+  @override
+  String get wealthLuck => '💰 Wealth';
+
+  @override
+  String get loveLuck => '❤️ Love';
+
+  @override
+  String get careerLuck => '💼 Career';
+
+  @override
+  String get healthLuck => '💪 Health';
+
+  @override
+  String get tojeongMonthlyGood_0 =>
+      'A noble person from the east brings good news. Long-awaited plans will come to fruition.';
+
+  @override
+  String get tojeongMonthlyGood_1 =>
+      'Wealth flows in like a spring. Worries disappear as everything goes smoothly.';
+
+  @override
+  String get tojeongMonthlyGood_2 =>
+      'Efforts bear fruit and you receive congratulations. Promotion or great results are expected.';
+
+  @override
+  String get tojeongMonthlyGood_3 =>
+      'Morning sun rises after a dark night. Hardship ends and happiness arrives.';
+
+  @override
+  String get tojeongMonthlyGood_4 =>
+      'Unexpected windfall fills your pocket. Small investments lead to big profits.';
+
+  @override
+  String get tojeongMonthlyNeutral_0 =>
+      'A peaceful daily life continues. It passes without special events.';
+
+  @override
+  String get tojeongMonthlyNeutral_1 =>
+      'Contentment brings peace of mind. Enjoy small happiness.';
+
+  @override
+  String get tojeongMonthlyNeutral_2 =>
+      'Take a rest in your busy life. Pay attention to health management.';
+
+  @override
+  String get tojeongMonthlyNeutral_3 =>
+      'Maintain your current work rather than starting something new.';
+
+  @override
+  String get tojeongMonthlyNeutral_4 =>
+      'Communication is key. Be careful with words to avoid misunderstandings.';
+
+  @override
+  String get tojeongMonthlyCaution_0 =>
+      'Be cautious in everything. Better safe than sorry.';
+
+  @override
+  String get tojeongMonthlyCaution_1 =>
+      'Pay attention to health and avoid overexertion.';
+
+  @override
+  String get tojeongMonthlyCaution_2 =>
+      'Avoid gossip and stay out of others\' business.';
+
+  @override
+  String get tojeongMonthlyCaution_3 =>
+      'Excessive greed brings trouble. Live within your means.';
+
+  @override
+  String get tojeongMonthlyCaution_4 =>
+      'Avoid money transactions as you might be disappointed in people you trust.';
+
+  @override
+  String get tojeongMonthlySpecial_1_0 =>
+      'New year\'s clear energy is with you. Plans will start smoothly.';
+
+  @override
+  String get tojeongMonthlySpecial_1_1 =>
+      'A helper appears early this year. Value your relationships.';
+
+  @override
+  String get tojeongMonthlySpecial_1_2 =>
+      'A fresh start brings unexpected opportunities. Stay open-minded.';
+
+  @override
+  String get tojeongMonthlySpecial_1_3 =>
+      'Your focus and determination will lead to a significant breakthrough.';
+
+  @override
+  String get tojeongMonthlySpecial_1_4 =>
+      'Wisdom from the past will guide you through new challenges.';
+
+  @override
+  String get tojeongMonthlySpecial_2_0 =>
+      'Not yet the time. Build strength and wait for the opportunity.';
+
+  @override
+  String get tojeongMonthlySpecial_2_1 =>
+      'Old issues may resurface. Solve them head-on.';
+
+  @override
+  String get tojeongMonthlySpecial_2_2 =>
+      'Patience is your best ally this month. Observe and learn.';
+
+  @override
+  String get tojeongMonthlySpecial_2_3 =>
+      'Avoid hasty decisions. A better moment is approaching soon.';
+
+  @override
+  String get tojeongMonthlySpecial_2_4 =>
+      'Small steps today will lead to big gains in the future.';
+
+  @override
+  String get tojeongMonthlySpecial_3_0 =>
+      'Everything is reviving. Don\'t hesitate and take on challenges.';
+
+  @override
+  String get tojeongMonthlySpecial_3_1 =>
+      'New connections may begin. A positive mind brings good results.';
+
+  @override
+  String get tojeongMonthlySpecial_3_2 =>
+      'Growth is happening in unexpected areas. Embrace the change.';
+
+  @override
+  String get tojeongMonthlySpecial_3_3 =>
+      'Your energy is contagious. Lead with kindness and courage.';
+
+  @override
+  String get tojeongMonthlySpecial_3_4 =>
+      'Spring brings a wave of creativity. Express your ideas freely.';
+
+  @override
+  String get tojeongMonthlySpecial_4_0 =>
+      'Wealth luck rises with warmth. Efforts lead to financial rewards.';
+
+  @override
+  String get tojeongMonthlySpecial_4_1 =>
+      'Good results in contracts or exams. Review carefully.';
+
+  @override
+  String get tojeongMonthlySpecial_4_2 =>
+      'Stability in your career is highlighted. Keep up the good work.';
+
+  @override
+  String get tojeongMonthlySpecial_4_3 =>
+      'Financial planning now will yield great benefits later this year.';
+
+  @override
+  String get tojeongMonthlySpecial_4_4 =>
+      'A fruitful partnership may develop. Collaborate for success.';
+
+  @override
+  String get tojeongMonthlySpecial_5_0 =>
+      'Harmony at home brings stability and joy.';
+
+  @override
+  String get tojeongMonthlySpecial_5_1 =>
+      'Kindness to others returns as blessings.';
+
+  @override
+  String get tojeongMonthlySpecial_5_2 =>
+      'Peace and tranquility surround you. Cherish these moments.';
+
+  @override
+  String get tojeongMonthlySpecial_5_3 =>
+      'Family bonds are strengthened through open communication.';
+
+  @override
+  String get tojeongMonthlySpecial_5_4 =>
+      'Your inner light shines brightly. Inspire those around you.';
+
+  @override
+  String get tojeongMonthlySpecial_6_0 =>
+      'Efforts are recognized. Opportunities for promotion or honor.';
+
+  @override
+  String get tojeongMonthlySpecial_6_1 =>
+      'Strong active energy. Consider expansion or career change.';
+
+  @override
+  String get tojeongMonthlySpecial_6_2 =>
+      'Your leadership skills are in demand. Take charge with confidence.';
+
+  @override
+  String get tojeongMonthlySpecial_6_3 =>
+      'A major goal is within reach. Stay focused on the finish line.';
+
+  @override
+  String get tojeongMonthlySpecial_6_4 =>
+      'New professional horizons are opening. Be ready to explore.';
+
+  @override
+  String get tojeongMonthlySpecial_7_0 =>
+      'Passion leads to performance. Bold moves achieve goals.';
+
+  @override
+  String get tojeongMonthlySpecial_7_1 =>
+      'Meet a helper or find new opportunities while traveling.';
+
+  @override
+  String get tojeongMonthlySpecial_7_2 =>
+      'Adventure calls. A change of scenery will refresh your spirit.';
+
+  @override
+  String get tojeongMonthlySpecial_7_3 =>
+      'Your enthusiasm attracts positive outcomes. Dream big.';
+
+  @override
+  String get tojeongMonthlySpecial_7_4 =>
+      'Dynamic energy fuels your progress. Keep moving forward.';
+
+  @override
+  String get tojeongMonthlySpecial_8_0 =>
+      'Patience pays off. Luck starts to open up gradually.';
+
+  @override
+  String get tojeongMonthlySpecial_8_1 =>
+      'Old problems find solutions. Use your wisdom.';
+
+  @override
+  String get tojeongMonthlySpecial_8_2 =>
+      'Steadiness and persistence will overcome any obstacle.';
+
+  @override
+  String get tojeongMonthlySpecial_8_3 =>
+      'Reflection brings clarity. Understand your true path.';
+
+  @override
+  String get tojeongMonthlySpecial_8_4 =>
+      'Good news arrives from a distance. Be prepared for joy.';
+
+  @override
+  String get tojeongMonthlySpecial_9_0 =>
+      'Wealth and love are abundant like the harvest season.';
+
+  @override
+  String get tojeongMonthlySpecial_9_1 =>
+      'Better than expected results for your hard work.';
+
+  @override
+  String get tojeongMonthlySpecial_9_2 =>
+      'Gratitude attracts more abundance. Share your success.';
+
+  @override
+  String get tojeongMonthlySpecial_9_3 =>
+      'Emotional fulfillment is at its peak. Enjoy the love.';
+
+  @override
+  String get tojeongMonthlySpecial_9_4 =>
+      'Your efforts are bearing sweet fruit. Celebrate your wins.';
+
+  @override
+  String get tojeongMonthlySpecial_10_0 =>
+      'Honor rises and your name becomes known.';
+
+  @override
+  String get tojeongMonthlySpecial_10_1 =>
+      'Great results in intellectual activities. Focus on studies.';
+
+  @override
+  String get tojeongMonthlySpecial_10_2 =>
+      'Recognition for your expertise is coming. Speak your truth.';
+
+  @override
+  String get tojeongMonthlySpecial_10_3 =>
+      'Academic or professional success is highly likely this month.';
+
+  @override
+  String get tojeongMonthlySpecial_10_4 =>
+      'Your influence is growing. Use it for the greater good.';
+
+  @override
+  String get tojeongMonthlySpecial_11_0 =>
+      'Time for wisdom and reflection. Prepare for the future.';
+
+  @override
+  String get tojeongMonthlySpecial_11_1 =>
+      'Financial stability, but avoid risky investments.';
+
+  @override
+  String get tojeongMonthlySpecial_11_2 =>
+      'Inner peace is found through meditation and quiet time.';
+
+  @override
+  String get tojeongMonthlySpecial_11_3 =>
+      'Strategic thinking now will set you up for a great next year.';
+
+  @override
+  String get tojeongMonthlySpecial_11_4 =>
+      'Trust your intuition. It will guide you to safety and success.';
+
+  @override
+  String get tojeongMonthlySpecial_12_0 =>
+      'Unexpected luck at year-end. Look forward to good news.';
+
+  @override
+  String get tojeongMonthlySpecial_12_1 =>
+      'Rewards for long-term efforts. A successful conclusion.';
+
+  @override
+  String get tojeongMonthlySpecial_12_2 =>
+      'The year ends on a high note. Be proud of your journey.';
+
+  @override
+  String get tojeongMonthlySpecial_12_3 =>
+      'New doors are opening as old ones close. Welcome the future.';
+
+  @override
+  String get tojeongMonthlySpecial_12_4 =>
+      'Generosity brings its own rewards. Spread holiday cheer.';
+
+  @override
+  String get todaysFaceFortune => 'Today\'s Face Fortune';
+
+  @override
+  String get detailedAnalysis => 'Detailed Analysis';
+
+  @override
+  String get eyeInsight => '👁️ Eye (Insight)';
+
+  @override
+  String get noseWealth => '👃 Nose (Wealth)';
+
+  @override
+  String get mouthLateLuck => '👄 Mouth (Late Luck)';
+
+  @override
+  String get overallAnalysisTitle => 'Overall Analysis';
+
+  @override
+  String get shareResultTitle => 'Today\'s Face Result';
+
+  @override
+  String shareResultDesc(String title) {
+    return 'AI face analysis result.\n$title';
+  }
+
+  @override
+  String get shareResultTotalScore => 'Total Score';
+
+  @override
+  String get shareResultWealth => 'Wealth Luck';
+
+  @override
+  String get shareResultLove => 'Love Luck';
+
+  @override
+  String get shareResultCareer => 'Career Luck';
+
+  @override
+  String get shareResultHealth => 'Health Luck';
+
+  @override
+  String get shareResultText => 'Share Result';
+
+  @override
+  String get wakeUpComplete => 'Wake up complete!';
+
+  @override
+  String get collapseOptions => 'Collapse Options';
+
+  @override
+  String get expandOptions => 'More Options';
+
+  @override
+  String get snoozeAlarm => 'Snooze Alarm';
+
+  @override
+  String get interval => 'Interval';
+
+  @override
+  String get maxSnoozeCount => 'Max Snooze Count';
+
+  @override
+  String get unlimited => 'Unlimited';
+
+  @override
+  String get permissionRequired => 'Permission Required';
+
+  @override
+  String get exactAlarmFailMessage =>
+      'Failed to register alarm. Exact alarm permission is off and needs setting.';
+
+  @override
+  String get batteryOptimFailMessage =>
+      'Failed to register alarm. Battery optimization exception permission is missing.';
+
+  @override
+  String get overlayFailMessage =>
+      'Failed to register alarm. Display over other apps permission is missing.';
+
+  @override
+  String get loadingDelay => 'Loading delay';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get previewFail => 'Preview failed';
+
+  @override
+  String get bgDefault => 'Default Background';
+
+  @override
+  String get bgFortuneFriends => 'Fortune Friends';
+
+  @override
+  String get bgMongChuni => 'Mongchuni';
+
+  @override
+  String get bgPanChuni => 'Panchuni';
+
+  @override
+  String get bgToChuni => 'Tochuni';
+
+  @override
+  String get bgHoChuni => 'Hochuni';
+
+  @override
+  String get bgBear => 'Bear';
+
+  @override
+  String get bgMoon => 'Moon';
+
+  @override
+  String get bgSea => 'Sea';
+
+  @override
+  String get bgBridge => 'Bridge';
+
+  @override
+  String get bgRoad => 'Road';
+
+  @override
+  String get bgSky => 'Sky';
+
+  @override
+  String get bgMinimalGray => 'Minimal Gray';
+
+  @override
+  String get bgDarkMode => 'Dark Mode';
+
+  @override
+  String get bgSoftBlue => 'Soft Blue';
+
+  @override
+  String get bgWarmBeige => 'Warm Beige';
+
+  @override
+  String get dateFormatMdyE => 'M/d (E)';
+
+  @override
+  String get deleteAlarm => 'Delete Alarm';
+
+  @override
+  String get firstAlarmGuideTitle => 'No alarms yet';
+
+  @override
+  String get firstAlarmGuideDesc =>
+      'Set a fortune alarm and\nstart a refreshing day!';
+
+  @override
+  String get addAlarm => 'Add Alarm';
+
+  @override
+  String get addFirstAlarm => 'Create First Alarm';
+
+  @override
+  String get deleteAlarmConfirm => 'Delete this alarm?';
+
+  @override
+  String get welcomeMessage => 'Nice to meet you!';
+
+  @override
+  String get whenToRing => 'When should I wake you up?';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get retryFortune => 'Retry Fortune';
+
+  @override
+  String get retryFortuneDesc =>
+      'Don\'t like the result?\nWatch an ad to try one more time!';
+
+  @override
+  String get tapToReveal => 'Tap to reveal fortune';
+
+  @override
+  String get redrawButton => 'Redraw';
+
+  @override
+  String get defaultFortuneGreeting => 'Check your fortune for today!';
+
+  @override
+  String get registerProfile => 'Register Profile';
+
+  @override
+  String get todaysFortuneTitle => 'Today\'s Fortune';
+
+  @override
+  String get fortuneCheckSubtitle => 'How will your day be? Check it out now.';
+
+  @override
+  String get supportSection => 'Support';
+
+  @override
+  String get rateApp => 'Rate App';
+
+  @override
+  String get shareWithFriends => 'Share with Friends';
+
+  @override
+  String get shareAppMessage =>
+      'Try \'Fortune Alarm\'! Wake up fresh with your daily fortune every morning. https://play.google.com/store/apps/details?id=com.seriessnap.fortunealarm';
+
+  @override
+  String get locationPermissionRequiredWeather =>
+      'Location permission is required to get weather information.';
+
+  @override
+  String get turnOnLocationService => 'Please turn on location services';
+
+  @override
+  String get checkWeatherLocationRequired => 'Location required for weather';
+
+  @override
+  String get themeColor => 'Theme Color';
+
+  @override
+  String get confirmDelete => 'Are you sure you want to delete?';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get wealthLuckWithIcon => '💰 Wealth Luck';
+
+  @override
+  String get loveLuckWithIcon => '❤️ Love Luck';
+
+  @override
+  String get careerLuckWithIcon => '💼 Career Luck';
+
+  @override
+  String get healthLuckWithIcon => '💪 Health Luck';
+
+  @override
+  String get mouthFortune => '👄 Mouth (Maturity Luck)';
+
+  @override
+  String get comprehensiveAnalysis => 'Comprehensive Analysis';
+
+  @override
+  String get todaysFaceResult => 'Today\'s Face Analysis Result';
+
+  @override
+  String faceAnalysisShareDesc(String title) {
+    return 'This is the AI face analysis result.\n$title';
+  }
+
+  @override
+  String get shareResult => 'Share Result';
+
+  @override
+  String get faceVibeSmile0 =>
+      'Your bright smile spreads positive energy to everyone around you. ';
+
+  @override
+  String get faceVibeSmile1 =>
+      'That radiant smile shows you\'re full of vibrant energy today. ';
+
+  @override
+  String get faceVibeSmile2 =>
+      'Your gentle expression has a charming quality that attracts supportive people. ';
+
+  @override
+  String get faceVibeSmile3 =>
+      'A confident smile will be your greatest asset in overcoming any obstacles today. ';
+
+  @override
+  String get faceVibeSmile4 =>
+      'Your refreshing smile is clearing away stale energy, making room for good luck. ';
+
+  @override
+  String get faceVibeEye0 =>
+      'Your sparkling eyes show a strong will to take charge of your day. ';
+
+  @override
+  String get faceVibeEye1 =>
+      'Those sharp, focused eyes suggest keen judgment and intuition. ';
+
+  @override
+  String get faceVibeEye2 =>
+      'Your clear, deep gaze reflects a sincere heart ready for good news. ';
+
+  @override
+  String get faceVibeEye3 =>
+      'Your dignified look and steady gaze will command respect today. ';
+
+  @override
+  String get faceVibeEye4 =>
+      'The passion in your eyes inspires trust and confidence in those around you. ';
+
+  @override
+  String get faceVibeNeutral0 =>
+      'Your peaceful and stable expression brings a sense of inner calm. ';
+
+  @override
+  String get faceVibeNeutral1 =>
+      'A calm complexion reflects your prudent and wise energy. ';
+
+  @override
+  String get faceVibeNeutral2 =>
+      'Your balanced features suggest a smooth and steady day ahead. ';
+
+  @override
+  String get faceVibeNeutral3 =>
+      'Your serious demeanor is perfect for making important decisions today. ';
+
+  @override
+  String get faceVibeNeutral4 =>
+      'Your composed expression puts others at ease, favoring smooth cooperation. ';
+
+  @override
+  String get dailyFortuneWealth0 =>
+      'With a strong focus on your features, a little organization will help your finances grow.';
+
+  @override
+  String get dailyFortuneWealth1 =>
+      'Your wealth-related energy is high today. Take a moment to double-check your calculations for extra profit.';
+
+  @override
+  String get dailyFortuneWealth2 =>
+      'Your balanced features suggest that careful attention to detail will lead to unexpected gains.';
+
+  @override
+  String get dailyFortuneWealth3 =>
+      'Your complexion shows promising wealth luck. Small profits may appear in unexpected places.';
+
+  @override
+  String get dailyFortuneWealth4 =>
+      'Your sharp focus today favors smart financial moves. It\'s a great day for investment or purchase decisions.';
+
+  @override
+  String get dailyFortuneWealth5 =>
+      'You have a strong energy for attracting wealth. Try organizing your wallet or reviewing your accounts.';
+
+  @override
+  String get dailyFortuneWealth6 =>
+      'Your features suggest a steady accumulation of wealth. Sincere efforts are beginning to pay off.';
+
+  @override
+  String get dailyFortuneWealth7 =>
+      'Stable financial luck is on your side. Consistent saving will serve you better than big spending.';
+
+  @override
+  String get dailyFortuneWealth8 =>
+      'Your keen observation will help you spot financial opportunities. Keep your ears open.';
+
+  @override
+  String get dailyFortuneWealth9 =>
+      'A prosperous energy surrounds you. Generosity today will return to you as even greater abundance.';
+
+  @override
+  String get dailyFortuneLove0 =>
+      'Your gentle expression suggests that being the first to reach out will soften any relationship tension.';
+
+  @override
+  String get dailyFortuneLove1 =>
+      'A clear and honest look reduces misunderstandings. Sincerity is your best approach today.';
+
+  @override
+  String get dailyFortuneLove2 =>
+      'Your bright complexion attracts supportive energy. Small acts of kindness will lead to great connections.';
+
+  @override
+  String get dailyFortuneLove3 =>
+      'Your natural charm is especially noticeable today. Expect positive energy from new encounters.';
+
+  @override
+  String get dailyFortuneLove4 =>
+      'Clear relationship energy helps resolve old conflicts and brings harmony.';
+
+  @override
+  String get dailyFortuneLove5 =>
+      'Your approachable look opens hearts. Today, listening is your most powerful tool.';
+
+  @override
+  String get dailyFortuneLove6 =>
+      'You have a face that naturally draws help. Don\'t hesitate to seek advice instead of worrying alone.';
+
+  @override
+  String get dailyFortuneLove7 =>
+      'Your sincere gaze builds deep trust. Honoring your promises will lead to stronger bonds.';
+
+  @override
+  String get dailyFortuneLove8 =>
+      'Harmonious energy fills your home and workplace. It\'s a day for laughter and joy.';
+
+  @override
+  String get dailyFortuneLove9 =>
+      'The threads of connection are untangling beautifully. Express your gratitude to those you value.';
+
+  @override
+  String get dailyFortuneCareer0 =>
+      'Your sharp focus will turn priorities into peak performance today.';
+
+  @override
+  String get dailyFortuneCareer1 =>
+      'Your keen observation stands out. Keep decisions simple and execution steady.';
+
+  @override
+  String get dailyFortuneCareer2 =>
+      'Clear energy in your eyes gives you the power to see every task through to the end.';
+
+  @override
+  String get dailyFortuneCareer3 =>
+      'Your natural leadership is showing. Your opinions will carry significant weight today.';
+
+  @override
+  String get dailyFortuneCareer4 =>
+      'Your judgment is at its peak. Even complex problems will find clear solutions today.';
+
+  @override
+  String get dailyFortuneCareer5 =>
+      'Your efficient work style is being noticed. You\'re in a strong position for promotion or achievement.';
+
+  @override
+  String get dailyFortuneCareer6 =>
+      'You have the perfect energy for starting new projects. Move forward with total confidence.';
+
+  @override
+  String get dailyFortuneCareer7 =>
+      'Work efficiency is rising. It\'s a great day to tackle those postponed tasks.';
+
+  @override
+  String get dailyFortuneCareer8 =>
+      'Creative ideas are flowing. Make it a habit to jot them down for future luck.';
+
+  @override
+  String get dailyFortuneCareer9 =>
+      'Your persistence and patience will be rewarded today. Focus until the end for great results.';
+
+  @override
+  String get dailyFortuneHealth0 =>
+      'A stable complexion suggests a quick recovery if you maintain a steady rhythm.';
+
+  @override
+  String get dailyFortuneHealth1 =>
+      'Your facial vitality is strong. Keep a comfortable pace without overdoing it.';
+
+  @override
+  String get dailyFortuneHealth2 =>
+      'Clear energy in your eyes and skin means a short rest will greatly boost your mood and focus.';
+
+  @override
+  String get dailyFortuneHealth3 =>
+      'Your body\'s rhythm is in perfect harmony. Light exercise will make your energy even clearer.';
+
+  @override
+  String get dailyFortuneHealth4 =>
+      'You\'re full of vibrant energy. You can power through the day without feeling drained.';
+
+  @override
+  String get dailyFortuneHealth5 =>
+      'Physical and mental stability are highlighted. Meditation or deep breathing will boost your luck.';
+
+  @override
+  String get dailyFortuneHealth6 =>
+      'Your resilience is high today. You\'ll bounce back quickly from any minor fatigue.';
+
+  @override
+  String get dailyFortuneHealth7 =>
+      'Your healthy glow is noticeable. Expect compliments on your vibrant appearance today.';
+
+  @override
+  String get dailyFortuneHealth8 =>
+      'A balanced diet and proper rest will strengthen your foundation of luck. Take care of your body.';
+
+  @override
+  String get dailyFortuneHealth9 =>
+      'Fresh air and staying hydrated are your best medicines today. Enjoy your vitality.';
+
+  @override
+  String get dailyFortuneTipWealth0 =>
+      'Check your spending and subscriptions one more time today.';
+
+  @override
+  String get dailyFortuneTipWealth1 =>
+      'Avoid impulsive buys; sticking to what you truly need is a major win.';
+
+  @override
+  String get dailyFortuneTipWealth2 =>
+      'Keep a record of financial discussions to prevent any future misunderstandings.';
+
+  @override
+  String get dailyFortuneTipWealth3 =>
+      'Keep an eye out for small \'leaks\' in your budget.';
+
+  @override
+  String get dailyFortuneTipWealth4 =>
+      'Temptation to spend is high today. Wait 10 minutes before making any purchase.';
+
+  @override
+  String get dailyFortuneTipWealth5 =>
+      'Be cautious with large transactions today. Seek expert advice if needed.';
+
+  @override
+  String get dailyFortuneTipWealth6 =>
+      'Clear up any outstanding debts or money owed to you today.';
+
+  @override
+  String get dailyFortuneTipWealth7 =>
+      'Watch your wallet. There\'s a slight energy of loss or waste around you today.';
+
+  @override
+  String get dailyFortuneTipWealth8 =>
+      'Prioritize practical gains over spending money just for appearances.';
+
+  @override
+  String get dailyFortuneTipWealth9 =>
+      'Fair play is the way to keep your luck. Avoid looking for shortcuts or freebies.';
+
+  @override
+  String get dailyFortuneTipLove0 =>
+      'If you\'re feeling on edge, take a breath before you respond to others.';
+
+  @override
+  String get dailyFortuneTipLove1 =>
+      'A quick check-in is better than a long explanation if a misunderstanding arises.';
+
+  @override
+  String get dailyFortuneTipLove2 =>
+      'Simply being on time will build significant trust today.';
+
+  @override
+  String get dailyFortuneTipLove3 =>
+      'Get straight to the point to avoid unnecessary emotional drain.';
+
+  @override
+  String get dailyFortuneTipLove4 =>
+      'Stay mindful of your manners, even with those you\'re closest to.';
+
+  @override
+  String get dailyFortuneTipLove5 =>
+      'Try a compliment before a critique. It will open doors that were previously closed.';
+
+  @override
+  String get dailyFortuneTipLove6 =>
+      'Think before you speak. Confirm important details in writing to be safe.';
+
+  @override
+  String get dailyFortuneTipLove7 =>
+      'Staying out of other people\'s business is the best way to avoid rumors.';
+
+  @override
+  String get dailyFortuneTipLove8 =>
+      'Keep it rational. Calm conversation is the key to healthy relationships today.';
+
+  @override
+  String get dailyFortuneTipLove9 =>
+      'Double-check your schedule. Reliability is your most valuable asset today.';
+
+  @override
+  String get dailyFortuneTipCareer0 =>
+      'Focus on finishing one task completely rather than starting several new ones.';
+
+  @override
+  String get dailyFortuneTipCareer1 =>
+      'Progress is better than perfection. Aim for \'done\' rather than \'flawless\' today.';
+
+  @override
+  String get dailyFortuneTipCareer2 =>
+      'Clear your head by finishing that one thing you\'ve been putting off.';
+
+  @override
+  String get dailyFortuneTipCareer3 =>
+      'Focus on your own responsibilities to keep your stress levels low.';
+
+  @override
+  String get dailyFortuneTipCareer4 =>
+      'Small errors can snowball. Don\'t skip your final review today.';
+
+  @override
+  String get dailyFortuneTipCareer5 =>
+      'Respect different opinions to avoid friction with colleagues or bosses.';
+
+  @override
+  String get dailyFortuneTipCareer6 =>
+      'Concentration might waver. Try working in 50-minute blocks with 10-minute breaks.';
+
+  @override
+  String get dailyFortuneTipCareer7 =>
+      'Don\'t take on more than you can handle. Knowing your limits is a strength.';
+
+  @override
+  String get dailyFortuneTipCareer8 =>
+      'Keep your professional and personal lives separate today.';
+
+  @override
+  String get dailyFortuneTipCareer9 =>
+      'Double-check recipients and attachments before hitting \'send\'.';
+
+  @override
+  String get dailyFortuneTipHealth0 =>
+      'Prioritize sleep and avoid overeating or too much caffeine today.';
+
+  @override
+  String get dailyFortuneTipHealth1 =>
+      'Stretching your neck and shoulders will significantly reduce your fatigue.';
+
+  @override
+  String get dailyFortuneTipHealth2 =>
+      'A short walk will clear your head and refresh your energy levels.';
+
+  @override
+  String get dailyFortuneTipHealth3 =>
+      'A glass of water and a quick stretch will set a positive tone for your day.';
+
+  @override
+  String get dailyFortuneTipHealth4 =>
+      'Give your eyes a break. Try to limit your screen time today.';
+
+  @override
+  String get dailyFortuneTipHealth5 =>
+      'Warm up properly before any intense physical activity.';
+
+  @override
+  String get dailyFortuneTipHealth6 =>
+      'Bring a light layer. You might be more sensitive to temperature changes today.';
+
+  @override
+  String get dailyFortuneTipHealth7 =>
+      'Stick to light, healthy foods for the sake of your gut and skin.';
+
+  @override
+  String get dailyFortuneTipHealth8 =>
+      'Sleep is your best medicine. Try to get to bed a bit earlier tonight.';
+
+  @override
+  String get dailyFortuneTipHealth9 =>
+      'Listen to your favorite music or find a pleasant scent to keep stress at bay.';
+
+  @override
+  String get eyeAnalysisTypeSharp =>
+      'Your sharp, clear eyes reflect quick judgment and strong determination.';
+
+  @override
+  String get eyeAnalysisTypeDeep =>
+      'Your calm and deep gaze suggests a wise and thoughtful personality.';
+
+  @override
+  String get eyeAnalysisTypeBalanced =>
+      'Your eyes show a perfect balance of emotion and reason, projecting a sense of stability.';
+
+  @override
+  String get eyeExpressionBright =>
+      'Your bright eyes and warm smile create an inviting aura that naturally draws people to you.';
+
+  @override
+  String get eyeExpressionGentle =>
+      'A gentle smile within your calm gaze reflects a quiet but strong charisma.';
+
+  @override
+  String get eyeExpressionStrong =>
+      'Your intense, focused gaze symbolizes strong leadership and the drive to achieve your goals.';
+
+  @override
+  String get eyeExpressionSteady =>
+      'Your calm and serious demeanor inspires trust and respect.';
+
+  @override
+  String get eyePostureTilt =>
+      'A slightly tilted head can signal uncertainty; keeping your head held high and looking straight ahead will bring better focus and luck.';
+
+  @override
+  String get eyePostureStraight =>
+      'Looking straight ahead projects confidence and clears your path for success.';
+
+  @override
+  String get noseInsufficient =>
+      'Nose analysis is limited due to image clarity; providing a general interpretation.';
+
+  @override
+  String get noseWealthRich =>
+      'A strong and well-defined nose suggests great potential for accumulating and protecting wealth.';
+
+  @override
+  String get noseWealthPlanner =>
+      'A sharp, well-proportioned nose indicates a practical mind for managing and growing your finances.';
+
+  @override
+  String get noseWealthBalanced =>
+      'Your balanced features suggest a steady and stable flow of financial luck.';
+
+  @override
+  String get mouthExpressionBlessing =>
+      'Your upturned corners suggest a positive nature that naturally attracts good fortune and favor from others.';
+
+  @override
+  String get mouthExpressionReliable =>
+      'A firm, closed mouth reflects reliability and a preference for action over empty words.';
+
+  @override
+  String get mouthExpressionLucky =>
+      'A bright, open smile radiates positive energy, bringing luck to your relationships.';
+
+  @override
+  String get supplementAlarmTitle => 'Time to take your supplements! 💊';
+
+  @override
+  String get alarmVolume => 'Alarm Volume';
+
+  @override
+  String get alarmTimeList => 'Alarm Time List';
+
+  @override
+  String get noAlarmTimesAdded => 'No alarm times added.';
+
+  @override
+  String get alarmTimeDeleted => 'Alarm time deleted.';
+
+  @override
+  String get addAlarmTime => 'Add Alarm Time';
+
+  @override
+  String get editAlarmTime => 'Edit Alarm Time';
+
+  @override
+  String get defaultRingtone => 'Default Ringtone';
+
+  @override
+  String get takeSupplementsNow =>
+      'Please take your supplements and record it!';
+
+  @override
+  String get nextTime => 'Next Time';
+
+  @override
+  String get take => 'Take';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notificationTime => 'Notification Time';
+
+  @override
+  String get start => 'Start';
+
+  @override
+  String get end => 'End';
+
+  @override
+  String get notificationInterval => 'Notification Interval';
+
+  @override
+  String get waterDrankToday => 'Water Drank Today';
+
+  @override
+  String get goal => 'Goal';
+
+  @override
+  String get cup => 'Cup';
+
+  @override
+  String get waterIntakeRecord => 'Water Intake Record';
+
+  @override
+  String get remainingAmount => 'Remaining';
+
+  @override
+  String get ml => 'ml';
+
+  @override
+  String minutesFormat(String minutes) {
+    return '${minutes}m';
+  }
+
+  @override
+  String get drinkWater => 'Drink Water';
+
+  @override
+  String get supplement => 'Supplement';
+
+  @override
+  String get water => 'Water';
+
+  @override
+  String get morning => 'Morning';
+
+  @override
+  String get afternoon => 'Afternoon';
+
+  @override
+  String get evening => 'Evening';
+
+  @override
+  String get takeSupplement => 'Take Supplement';
+
+  @override
+  String get goalAchievedTitle => 'Goal Achieved!';
+
+  @override
+  String get waterIntake => 'Water Intake';
+
+  @override
+  String get remindTime => 'Remind Time';
+
+  @override
+  String get alarmRingtone => 'Alarm Ringtone';
+
+  @override
+  String get snoozeTime => 'Snooze Time';
+
+  @override
+  String get snoozeDescription => 'Default time when selecting \'Next Time\'';
+
+  @override
+  String get oneHour => '1 Hour';
+
+  @override
+  String get mouthExpressionOpen =>
+      'Your open expression suggests honesty, but be mindful of your words in sensitive situations.';
+
+  @override
+  String overallHeadlineSimple(String topKey, String bottomKey) {
+    return 'Today\'s focus is $topKey, and the point to be careful of is $bottomKey.';
+  }
+
+  @override
+  String get overallVibeWealthRich =>
+      'Your features radiate financial vitality, making this an excellent day to seize new opportunities.';
+
+  @override
+  String get overallVibeWealthSteady =>
+      'A calm and steady focus will help you manage your finances wisely and build lasting wealth.';
+
+  @override
+  String get overallVibeLoveCharisma =>
+      'Your bright smile naturally attracts positive people and helpful connections today.';
+
+  @override
+  String get overallVibeLoveTrust =>
+      'Your sincere and steady gaze builds deep trust, making it a perfect time for meaningful connections.';
+
+  @override
+  String get overallVibeCareerSmart =>
+      'Your sharp focus enhances your judgment, making it the perfect time for complex tasks or big decisions.';
+
+  @override
+  String get overallVibeCareerSteady =>
+      'Your steady energy supports persistence; staying focused on your goals will lead to great results.';
+
+  @override
+  String get overallVibeHealth =>
+      'Your clear complexion reflects a balanced internal rhythm, making it a great day for physical activities.';
+
+  @override
+  String get overallActionPrudent =>
+      'Your composed expression suggests wisdom. Today, let your actions speak louder than your words.';
+
+  @override
+  String get overallActionConfident =>
+      'A confident and open expression attracts positive results. Speak your mind with clarity and confidence.';
+
+  @override
+  String get adviceHealth0 =>
+      'A healthy routine is the foundation of good luck. Avoid overcommitting yourself today.';
+
+  @override
+  String get adviceHealth1 =>
+      'Pay attention to your body\'s needs. A short break now will lead to better results later.';
+
+  @override
+  String get adviceHealth2 =>
+      'Stay hydrated and get enough rest; simplicity is the key to refreshing your luck.';
+
+  @override
+  String get adviceWealth0 =>
+      'Be careful with your spending today. Double-check all expenses and contracts.';
+
+  @override
+  String get adviceWealth1 =>
+      'Cutting back on minor expenses today is the first step toward building significant wealth.';
+
+  @override
+  String get adviceWealth2 =>
+      'Waiting until tomorrow to make financial decisions may work in your favor.';
+
+  @override
+  String get adviceLove0 =>
+      'A kind word and a gentle expression can improve your luck in relationships.';
+
+  @override
+  String get adviceLove1 =>
+      'Being a good listener is the secret to winning over others today.';
+
+  @override
+  String get adviceLove2 =>
+      'Maintaining courtesy even with those close to you will preserve your positive energy.';
+
+  @override
+  String get adviceCareer0 =>
+      'Focus on one key goal today instead of trying to do everything at once.';
+
+  @override
+  String get adviceCareer1 =>
+      'Don\'t rush. Taking things one step at a time is the quickest way to success.';
+
+  @override
+  String get adviceCareer2 =>
+      'Consider the advice of others, but trust your intuition for the final decision.';
+
+  @override
+  String get sajuFortune2026Gap =>
+      '🌳 2026 Byeong-oh Year Gap-Wood General Fortune: \'Flame of Passion, Maximization of Activity\'\n\n2026 is a year where the energy of \'Sik-sin\' (Productivity) and \'Sang-gwan\' (Expression) is very strong for you, a Gap-Wood. It is a situation where wood meets fire and burns vigorously, a period where your talent and expression burst out into the world without hesitation. Your presence is revealed even if you stay still, and your range of activities expands dramatically.\n\n💼 [Career & Business]\nIt is a very good time to start new projects or a business. Your ideas are realized, and you will be passionately immersed in work. You can achieve great results in fields that express yourself, such as art, broadcasting, sales, and education. However, you need to be cautious and double-check everything as you may make mistakes if you only run forward.\n\n💰 [Wealth]\nWealth follows as much as you are active. Income from business or side jobs may increase. However, as much as you earn, a lot of money may go out for investment or consumption. Investment for the future is good, but impulsive spending should be guarded against.\n\n❤️ [Love & Relationships]\nAppeal to the opposite sex with an honest and active attitude. Romantic luck heats up, but excessive emotional expression may burden the partner. It is also a year where children\'s luck enters very strongly.\n\n⚠️ [Precautions]\nIt is a year of extreme energy consumption. \'Burnout\' may come, so physical strength management is essential. Be careful of rumors caused by slips of the tongue, and try not to insist only on your own arguments.';
+
+  @override
+  String get sajuFortune2026Eul =>
+      '🌸 2026 Byeong-oh Year Eul-Wood General Fortune: \'Brilliant Blooming, Full Flowering of Talent\'\n\n2026 is a year where \'Sang-gwan\' (Expression) is heavy for you, an Eul-Wood. It is a situation where flowers bloom under the hot sun, a period where your charm and talent reach their peak. You will be the protagonist who receives attention everywhere and taste brilliant achievements.\n\n💼 [Career & Business]\nUnconventional attempts that break existing frameworks succeed. You will stand out in design, fashion, beauty, and entertainment. You may receive promotion or scout offers at work, but be careful of friction with superiors. Your ability doubles in a free environment.\n\n💰 [Wealth]\nThe ability to create wealth becomes excellent. Your brand value rises and your worth increases. However, chasing glamour may lead to luxury or waste, so you must guard your wallet well.\n\n❤️ [Love & Relationships]\nPopularity with the opposite sex explodes. You will have a brilliant and passionate romance, but it may end shortly and intensely. Married people may have a lot to worry about regarding children.\n\n⚠️ [Precautions]\nEmotional ups and downs may become severe. If you cannot control your temper, hard-earned achievements may collapse. Have a law-abiding spirit to avoid legal issues or rumors.';
+
+  @override
+  String get sajuFortune2026Byeong =>
+      '☀️ 2026 Byeong-oh Year Byeong-Fire General Fortune: \'Two Suns, Intense Competition and Leap\'\n\n2026 is a year where \'Bi-gyeon\' (Friend) and \'Geob-jae\' (Competitor) are very strong for you, a Byeong-Fire. It is a situation where two suns appear in the sky, a period where pride and competitive spirit reach the sky. Subjectivity becomes strong, you hate any interference, and you push through your path with determination.\n\n💼 [Career & Business]\nIt is a luck to win and achieve in competitive places. You can increase the scale through partnership or collaboration, but conflicts may arise due to profit distribution issues. It is a good opportunity for freelancers or professionals to make their names widely known.\n\n💰 [Wealth]\nMoney comes in, but there are also large holes for it to go out. Money may go out due to siblings, friends, or colleagues. Guaranteeing or lending money is absolutely forbidden. It is better to invest in honor or growing power rather than saving money.\n\n❤️ [Love & Relationships]\nYou may meet a lover like a friend or develop from a friend to a lover. However, if you have a partner, be careful as a love triangle or competitor may appear.\n\n⚠️ [Precautions]\nDogmatic actions may cause resentment from those around you. \'Humility\' is the best tactic. Pay attention to cardiovascular disease or eye health.';
+
+  @override
+  String get sajuFortune2026Jeong =>
+      '🔥 2026 Byeong-oh Year Jeong-Fire General Fortune: \'Giant Flame, Expansion of Power\'\n\n2026 is a year of \'Geob-jae\' (Competitor) and \'Bi-gyeon\' (Friend) for you, a Jeong-Fire. Like a candle meeting a furnace, it is a period where your power becomes massive. You can achieve things that were impossible alone through help or cooperation from those around you.\n\n💼 [Career & Business]\nA strong driving force arises. You will have the wisdom to overwhelm competitors or turn them into your side. Opportunities to exercise leadership in team projects or organizational life will come. However, if you try to monopolize results, you may be betrayed, so a posture of sharing credit is necessary.\n\n💰 [Wealth]\nSpeculative tendencies become strong. You will pursue \'high risk, high return,\' and if lucky, you will touch a lot of money, but failure also has a large impact. Unexpected expenses may occur, so it is good to prepare an emergency fund.\n\n❤️ [Love & Relationships]\nThere is a high probability of meeting connections in social gatherings or group activities. Men should be careful as they may neglect their wives or girlfriends. Relationships with people around you become assets this year.\n\n⚠️ [Precautions]\nGreed leads to trouble. Refrain from unreasonable expansion or investment. Be careful of diseases caused by anger or stress.';
+
+  @override
+  String get sajuFortune2026Mu =>
+      '🌋 2026 Byeong-oh Year Mu-Earth General Fortune: \'Patience and Preparation Amidst Intense Heat\'\n\n2026 is a year where the energy of \'Pyeon-in\' (Intuition) and \'Jeong-in\' (Knowledge) is strong for you, a Mu-Earth. It is like condensed energy just before a volcano erupts. It is the optimal time to fill your inner self and grow skills through study, art, and obtaining certifications.\n\n💼 [Career & Business]\nMental labor such as planning, research, and strategy establishment shines rather than active work. Document luck is good, so there are results in contracts or permit-related tasks. However, if you only think and postpone execution, you may miss opportunities, so bold decisiveness is also needed.\n\n💰 [Wealth]\nReal estate document luck is very strong. It is an opportunity to increase assets through sale or contract. Cash flow may be somewhat frustrating, but investment from a long-term perspective is promising.\n\n❤️ [Love & Relationships]\nInterference from mothers or superiors may increase. In romance, you will value mental communion, and connections with older people may be made.\n\n⚠️ [Precautions]\nToo many thoughts can lead to depression or lethargy. Outdoor activities or sweating through exercise help improve luck. As the ground cracks due to too much heat, be careful of dry skin or stomach disorders.';
+
+  @override
+  String get sajuFortune2026Gi =>
+      '🌾 2026 Byeong-oh Year Gi-Earth General Fortune: \'Solid Foundation and Definite Support\'\n\n2026 is a year of \'Jeong-in\' (Knowledge) and \'Pyeon-in\' (Intuition) for you, a Gi-Earth. It is a situation where warm sunlight shines on the earth and ripens grains. It is a period of solidifying a stable foundation while receiving full support and love from superiors.\n\n💼 [Career & Business]\nYou will achieve the best results in everything related to study, such as promotion exams, certification exams, and degree attainment. At work, you will gain the trust of superiors and take on important positions. You will stand out in education, real estate, counseling, and welfare fields.\n\n💰 [Wealth]\nIt is a luck to hold documents. You may achieve the goal of owning a home or receive inheritance or gifts. Stable asset growth is possible, and it is a year where honor shines more than wealth.\n\n❤️ [Love & Relationships]\nIt is a year to be loved. You will receive dependable love from your lover or meet a partner with good conditions. Marriage luck also enters, and family life becomes harmonious.\n\n⚠️ [Precautions]\nIf you only try to receive, you may become lazy. A posture of sharing as much as you received is necessary. Discard dependency and grow self-reliance.';
+
+  @override
+  String get sajuFortune2026Gyeong =>
+      '⚔️ 2026 Byeong-oh Year Gyeong-Metal General Fortune: \'Birth of a Masterpiece Beyond Ordeal\'\n\n2026 is a year where \'Pyeon-gwan\' (Pressure) and \'Jeong-gwan\' (Authority) are very powerful for you, a Gyeong-Metal. It is a situation of melting raw ore in a furnace to make a masterpiece sword. There may be strong pressure and stress, but if you endure it, you will gain immense authority and honor.\n\n💼 [Career & Business]\nYou may take on positions with heavy responsibility or handle difficult projects. However, this is a process of testing you, and if successfully completed, your status rises instantly. It is an opportunity for promotion for those in public office, military, police, and legal fields.\n\n💰 [Wealth]\nIt is a luck of honor and titles rather than money. As status rises, wealth will naturally follow, but money going out for dignity maintenance or entertainment is also significant.\n\n❤️ [Love & Relationships]\nFor women, it is a luck where a charismatic and capable man appears. Men have strong children\'s luck. Relationships with work superiors or elders become important.\n\n⚠️ [Precautions]\nHealth management is the top priority. Be careful of diseases or accidents caused by overwork. Especially lungs and large intestines may weaken. Find ways to relieve stress.';
+
+  @override
+  String get sajuFortune2026Sin =>
+      '💎 2026 Byeong-oh Year Sin-Metal General Fortune: \'Shining Jewel, Peak of Honor\'\n\n2026 is a year of \'Jeong-gwan\' (Authority) and \'Pyeon-gwan\' (Pressure) for you, a Sin-Metal. Like a jewel shining under lights, it is a period where your value is revealed to the world and honor is elevated. You have deep connections with upright and stable workplaces or organizations.\n\n💼 [Career & Business]\nJob hunting, promotion, and transfer luck are very good. You may also receive scout offers by being recognized for your skills. If you follow principles and handle work correctly, you will receive respect from everyone.\n\n💰 [Wealth]\nStable salary or fixed income is guaranteed. If you protect honor rather than chasing wealth, wealth will naturally follow. You can benefit from your husband or workplace.\n\n❤️ [Love & Relationships]\nIt is the best marriage and dating luck for women. You can meet an upright and capable spouse. Men gain children or have joyful events due to children.\n\n⚠️ [Precautions]\nToo much heat can melt the jewel. Excessive work or stress may cause nervousness. You may appear inflexible due to strong principle-oriented tendencies, so be careful.';
+
+  @override
+  String get sajuFortune2026Im =>
+      '🌊 2026 Byeongo Year Im-Water General Fortune: \'A Dynamic Year of Expanding Activity Range\'\n\n2026 is a year where the energy of \'Pyeon-jae\' and \'Jeong-jae\' enters for you. It\'s like a huge sea circulating actively by receiving the sun\'s heat and moving towards the wide world. It will be a dynamic year where economic activities become vigorous and opportunities to touch large wealth come.\n\n💼 [Career & Business]\nBusiness acumen is maximized. A very good year to pioneer new markets or reap large profits from investments. Luck where activity range can expand beyond domestic to overseas. Bold decisions lead to great results, but detailed review is essential.\n\n💰 [Wealth]\nWealth luck reaches its peak. Unexpected windfalls or large-scale business profits are expected. If you ride the flow of money well, you can form large assets. However, management is important as money going out can be as large as money coming in.\n\n❤️ [Love & Relationships]\nSociability improves and many people of the opposite sex gather around with overflowing charm. A good time to enjoy active dating. In romantic relationships, you spend happy times enjoying fancy dates and trips. However, be careful as you may neglect partners due to a too busy schedule.\n\n⚠️ [Cautions]\nPay attention to kidney function or blood circulation. Also, wisdom to know how to be satisfied at an appropriate level is needed as excessive greed may lead to trouble.';
+
+  @override
+  String get sajuFortune2026Gye =>
+      '💧 2026 Byeongo Year Gye-Water General Fortune: \'Gaining Practical Interests while Strengthening Internal Foundations\'\n\n2026 is a year where the energy of \'Jeong-jae\' and \'Pyeon-jae\' enters for you. It\'s like sunshine shining after sweet rain, making the land full of life and abundance. You will achieve economic stability based on stable income and find small happinesses.\n\n💼 [Career & Business]\nYou handle assigned tasks perfectly with sincerity and meticulousness. Display excellent ability in finance, accounting, or management tasks. Recognition and rewards follow when you do your best in assigned work rather than excessive greed. You can grow step by step while building skills in a stable environment.\n\n💰 [Wealth]\nWealth luck is very good. Steady and stable income occurs, and you enjoy the joy of increasing assets through financial technology or savings. Small but definite profits gather to give great reward. Frugal spending habits shine this year.\n\n❤️ [Love & Relationships]\nYou give deep trust to partners with kindhearted and meticulous consideration. You grow a small but warm love while sharing daily lives. Relationships are also smooth and peaceful. You will play the role of a trusted advisor to people around you.\n\n⚠️ [Cautions]\nPay attention to eye diseases or urological system health. Also, sometimes practice looking at the world with a wide perspective as you may miss the big flow by paying attention to too detailed things.';
+
+  @override
+  String get preparationForTomorrow => 'Preparation for Tomorrow';
+
+  @override
+  String get howToMeetMoreLuck => 'How to meet more luck';
+
+  @override
+  String get enterName => 'Please enter your name';
+
+  @override
+  String fortuneDateConfirm(String date) {
+    return 'Would you like to check the fortune for $date?';
+  }
+
+  @override
+  String get colorPurple => 'Purple';
+
+  @override
+  String get colorBlue => 'Blue';
+
+  @override
+  String get colorYellow => 'Yellow';
+
+  @override
+  String get colorRed => 'Red';
+
+  @override
+  String get colorGreen => 'Green';
+
+  @override
+  String get colorPink => 'Pink';
+
+  @override
+  String get colorOrange => 'Orange';
+
+  @override
+  String get colorWhite => 'White';
+
+  @override
+  String get colorBlack => 'Black';
+
+  @override
+  String get itemPerfume => 'Perfume';
+
+  @override
+  String get itemHandkerchief => 'Handkerchief';
+
+  @override
+  String get itemRing => 'Ring';
+
+  @override
+  String get itemWatch => 'Watch';
+
+  @override
+  String get itemGlasses => 'Glasses';
+
+  @override
+  String get itemHat => 'Hat';
+
+  @override
+  String get itemBook => 'Book';
+
+  @override
+  String get itemEarphones => 'Earphones';
+
+  @override
+  String get itemMirror => 'Mirror';
+
+  @override
+  String get itemPen => 'Pen';
+
+  @override
+  String get itemCoin => 'Coin';
+
+  @override
+  String get itemKey => 'Key';
+
+  @override
+  String get dirEast => 'East';
+
+  @override
+  String get dirWest => 'West';
+
+  @override
+  String get dirSouth => 'South';
+
+  @override
+  String get dirNorth => 'North';
+
+  @override
+  String get dirNorthEast => 'North-East';
+
+  @override
+  String get dirSouthEast => 'South-East';
+
+  @override
+  String get dirNorthWest => 'North-West';
+
+  @override
+  String get dirSouthWest => 'South-West';
+
+  @override
+  String get general => 'General';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get darkModeDescription =>
+      'Enable dark mode for a more comfortable viewing experience.';
+
+  @override
+  String get alarmSettings => 'Alarm Settings';
+
+  @override
+  String get privacySettings => 'Privacy Settings';
+
+  @override
+  String get information => 'Information';
+
+  @override
+  String get notice => 'Notice';
+
+  @override
+  String get weatherConditionSunny => 'Sunny';
+
+  @override
+  String get weatherConditionPartlyCloudy => 'Partly Cloudy';
+
+  @override
+  String get weatherConditionCloudy => 'Cloudy';
+
+  @override
+  String get weatherConditionFoggy => 'Foggy';
+
+  @override
+  String get weatherConditionDrizzle => 'Drizzle';
+
+  @override
+  String get weatherConditionRainy => 'Rainy';
+
+  @override
+  String get weatherConditionFreezingRain => 'Freezing Rain';
+
+  @override
+  String get weatherConditionSnowy => 'Snowy';
+
+  @override
+  String get weatherConditionSnowGrains => 'Snow Grains';
+
+  @override
+  String get weatherConditionRainShowers => 'Rain Showers';
+
+  @override
+  String get weatherConditionSnowShowers => 'Snow Showers';
+
+  @override
+  String get weatherConditionThunderstorm => 'Thunderstorm';
+
+  @override
+  String get airQualityGood => 'Good';
+
+  @override
+  String get airQualityNormal => 'Normal';
+
+  @override
+  String get airQualityBad => 'Bad';
+
+  @override
+  String get airQualityVeryBad => 'Very Bad';
+
+  @override
+  String get locationUnknown => 'Unknown Location';
+
+  @override
+  String get locationError => 'Location Error';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get sendFeedback => 'Send Feedback';
+
+  @override
+  String get feedbackDescription =>
+      'Please share any feedback or suggestions regarding Fortune Alarm.\nYour input helps us improve.';
+
+  @override
+  String get reportCopyright => 'Report Copyright Infringement';
+
+  @override
+  String get copyrightDescription =>
+      'If you believe that the content in Fortune Alarm infringes on copyright, please report it via email.\nWe will take immediate action after confirmation.';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get privacyPolicy =>
+      'Terms of Service and Privacy Policy\n\n1. General Provisions\n\nArticle 1 (Purpose)\nThe purpose of these Terms is to define the conditions and procedures for using the service provided by \'Fortune Alarm\' (hereinafter referred to as the \'Service\'), as well as the rights, obligations, and responsibilities of users and the developer.\n\nArticle 2 (Privacy Policy)\n\n1. Items and Method of Personal Information Collection\nThis Service can be used without membership registration and does not store or collect users\' personal information on a separate server.\nHowever, the following information may be generated and stored on the device during the use of the Service:\n- Alarm settings, mission completion records, fortune cookie acquisition history, etc.\n\n2. Information on Device Permission Usage\nThe Service uses the following permissions to the minimum extent necessary to provide the Service:\n- Notifications (Required): Used for alarm execution and fortune cookie notifications.\n- Exact Alarm & Battery Optimization Exclusion (Required): Used to ensure alarms ring on time even in power-saving mode.\n- Display Over Other Apps (Required): Used to display the alarm screen on the lock screen or while using other apps.\n- Camera (Optional): Used only for \'Object Snap\' mission; captured images are processed only on the device and are not transmitted to a server.\n\n3. Advertising Services and Data Processing\nThis Service uses Google AdMob to deliver advertisements for free service provision.\nGoogle may collect some non-personally identifiable information, such as Advertising ID (ADID), for personalized ad settings.\n- Google Privacy Policy: https://policies.google.com/privacy\n\nArticle 3 (Data Storage and Deletion)\nThis Service is a local app that stores data on the user\'s device.\nIf you delete the app, all data stored on the device (alarms, mission records, etc.) will be immediately deleted and cannot be recovered.\n\nArticle 4 (Disclaimer)\n1. The fortune information provided by this Service is for entertainment purposes only, and its accuracy or reliability is not guaranteed.\n2. The developer is not responsible if the alarm does not ring due to device setting changes (turning off notifications, battery optimization, etc.) or system errors.\n\nArticle 5 (Contact Information)\nIf you have any inconveniences or inquiries while using the Service, please contact us at the email below.\nEmail: seriessnap.co@gmail.com';
+
+  @override
+  String get alarmOptimization => 'Alarm Optimization';
+
+  @override
+  String get allOptimizationsCompleted => 'All settings optimized.';
+
+  @override
+  String get optimizationNeeded =>
+      'Additional settings are required for accurate alarms.';
+
+  @override
+  String get optimizationDescription =>
+      'To ensure your alarms ring on time, please allow the following permissions in your system settings.';
+
+  @override
+  String get allowNotificationPermission => 'Allow Notifications';
+
+  @override
+  String get notificationPermissionDescription =>
+      'Enables notifications for alarms and fortune updates.';
+
+  @override
+  String get excludeBatteryOptimization => 'Exclude Battery Optimization';
+
+  @override
+  String get batteryOptimizationDescription =>
+      'Prevents the system from delaying alarms to save power.';
+
+  @override
+  String get allowExactAlarm => 'Allow Exact Alarms';
+
+  @override
+  String get exactAlarmDescription =>
+      'Ensures alarms trigger precisely at the scheduled time.';
+
+  @override
+  String get drawOverOtherApps => 'Display Over Other Apps';
+
+  @override
+  String get overlayDescription =>
+      'Displays the alarm screen even on the lock screen or while using other apps.';
+
+  @override
+  String get allSettingsCompleted => 'All settings updated.';
+
+  @override
+  String get allowAllItems => 'Please enable all permissions.';
+
+  @override
+  String get manualSettingsInfo =>
+      'You can manage these settings anytime in your Android system menu.';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get selectPhoto => 'Select Photo';
+
+  @override
+  String get selectAlarmBackground => 'Alarm Background';
+
+  @override
+  String get defaultLabel => 'Default';
+
+  @override
+  String get howToAdd => 'How to Add';
+
+  @override
+  String get addAssetInstructions =>
+      'Add images to the \'assets/images/\' folder and update \'pubspec.yaml\'.';
+
+  @override
+  String get ringingNow => 'Alarm Ringing';
+
+  @override
+  String get setTime => 'Set Time';
+
+  @override
+  String get repeatDays => 'Repeat Days';
+
+  @override
+  String get repeatDaily => 'Repeat Daily';
+
+  @override
+  String get snoozeSettings => 'Snooze Settings';
+
+  @override
+  String get wakeUpAlarm => 'Alarm Mission';
+
+  @override
+  String get daySun => 'S';
+
+  @override
+  String get dayMon => 'M';
+
+  @override
+  String get dayTue => 'T';
+
+  @override
+  String get dayWed => 'W';
+
+  @override
+  String get dayThu => 'T';
+
+  @override
+  String get dayFri => 'F';
+
+  @override
+  String get daySat => 'S';
+
+  @override
+  String get daySunFull => 'Sunday';
+
+  @override
+  String get dayMonFull => 'Monday';
+
+  @override
+  String get dayTueFull => 'Tuesday';
+
+  @override
+  String get dayWedFull => 'Wednesday';
+
+  @override
+  String get dayThuFull => 'Thursday';
+
+  @override
+  String get dayFriFull => 'Friday';
+
+  @override
+  String get daySatFull => 'Saturday';
+
+  @override
+  String get missionRewardEarned =>
+      'Great job! You\'ve completed 5 missions and earned a Fortune Cookie!';
+
+  @override
+  String missionRewardEarnedWithCount(int missions, int cookies) {
+    return 'Well done! You\'ve completed $missions missions and earned $cookies Fortune Cookie(s)!';
+  }
+
+  @override
+  String daysCount(int count) {
+    return '$count days';
+  }
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get member => 'Member';
+
+  @override
+  String get manageSajuInfo => 'Manage Birth Info';
+
+  @override
+  String get freeCharge => 'Free Refill';
+
+  @override
+  String get fortunePass => 'Fortune Pass';
+
+  @override
+  String get unlimitedNotSubscribed => 'Subscription inactive';
+
+  @override
+  String get unlimitedInUse => 'Subscription active';
+
+  @override
+  String get subscribe => 'Subscribe';
+
+  @override
+  String get manageSubscription => 'Manage Subscription';
+
+  @override
+  String get purchaseHistory => 'Purchase History';
+
+  @override
+  String get customerCenter => 'Support';
+
+  @override
+  String get noNewNotifications => 'No new notifications.';
+
+  @override
+  String get noPurchaseHistory => 'No purchase history.';
+
+  @override
+  String get none => 'None';
+
+  @override
+  String deleteConfirmMessage(String title) {
+    return 'Do you want to delete \"$title\"?';
+  }
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get notepad => 'Notepad';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yearView => 'Year';
+
+  @override
+  String get monthView => 'Month';
+
+  @override
+  String get weekView => 'Week';
+
+  @override
+  String get dayView => 'Day';
+
+  @override
+  String get noEvents => 'No events scheduled.';
+
+  @override
+  String get calendarDragGuide => 'Drag down to view detailed calendar.';
+
+  @override
+  String get noSavedMemos => 'No saved memos or events.';
+
+  @override
+  String get holiday => 'Holiday';
+
+  @override
+  String get photo => 'Photo';
+
+  @override
+  String get drawing => 'Drawing';
+
+  @override
+  String get drawingTitle => 'Drawing';
+
+  @override
+  String get pencil => 'Pencil';
+
+  @override
+  String get marker => 'Marker';
+
+  @override
+  String get eraser => 'Eraser';
+
+  @override
+  String adjustThickness(String label) {
+    return 'Adjust $label thickness';
+  }
+
+  @override
+  String get sticker => 'Sticker';
+
+  @override
+  String get event => 'Event';
+
+  @override
+  String get memo => 'Memo';
+
+  @override
+  String get routineExercise => 'Exercise';
+
+  @override
+  String get routineHiking => 'Hiking';
+
+  @override
+  String get routineCleaning => 'Cleaning';
+
+  @override
+  String get routineTravel => 'Travel';
+
+  @override
+  String get routineDate => 'Date';
+
+  @override
+  String get routineConcert => 'Concert';
+
+  @override
+  String get routineMovie => 'Movie';
+
+  @override
+  String get routineMeeting => 'Meeting';
+
+  @override
+  String get howIsYourMoodToday => 'How is your mood today?';
+
+  @override
+  String get complete => 'Complete';
+
+  @override
+  String get amWithIcon => '☀️ AM';
+
+  @override
+  String get pmWithIcon => '🌙 PM';
+
+  @override
+  String get photoPermissionDescription =>
+      'To add photos, you must allow photo access in settings.';
+
+  @override
+  String get goToSettings => 'Go to Settings';
+
+  @override
+  String get photoPermissionNeeded => 'Photo access permission is required.';
+
+  @override
+  String get fontSize => 'Font Size';
+
+  @override
+  String get fontFamily => 'Font';
+
+  @override
+  String get textColor => 'Text Color';
+
+  @override
+  String get textAlign => 'Alignment';
+
+  @override
+  String get alignLeft => 'Left';
+
+  @override
+  String get alignCenter => 'Center';
+
+  @override
+  String get alignRight => 'Right';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String get fontSettings => 'Font Settings';
+
+  @override
+  String get imageAddedFromKeyboard => 'Image added from keyboard.';
+
+  @override
+  String get cancelWriting => 'Cancel Writing';
+
+  @override
+  String get cancelWritingConfirm =>
+      'There is content being written. Do you want to cancel and exit?';
+
+  @override
+  String get continueWriting => 'Continue Writing';
+
+  @override
+  String get title => 'Title';
+
+  @override
+  String get content => 'Content';
+
+  @override
+  String get selectTime => 'Select Time';
+
+  @override
+  String get noTime => 'No Time';
+
+  @override
+  String minutesLater(String minutes) {
+    return '$minutes min later';
+  }
+
+  @override
+  String get countLabel => 'Count';
+
+  @override
+  String timesCount(String count) {
+    return 'Total $count times';
+  }
+
+  @override
+  String get wakeUpMission => 'Wake-up Mission';
+
+  @override
+  String get alarmSound => 'Alarm Sound';
+
+  @override
+  String get gradualVolume => 'Gradual Volume';
+
+  @override
+  String get vibration => 'Vibration';
+
+  @override
+  String get alarmNameAndBackground => 'Alarm Name & Background';
+
+  @override
+  String get customStyle => 'Custom Style';
+
+  @override
+  String get alarmName => 'Alarm Name';
+
+  @override
+  String get enterAlarmName => 'Please enter alarm name';
+
+  @override
+  String get routineSummary => 'Routine Summary';
+
+  @override
+  String get alarmOn => 'Alarm ON';
+
+  @override
+  String get alarmOff => 'Alarm OFF';
+
+  @override
+  String get contentHint => 'Add content';
+
+  @override
+  String get addEvent => 'Add Event';
+
+  @override
+  String get manageItem => 'Manage Item';
+
+  @override
+  String get manageItemDescription =>
+      'What would you like to do with this item?';
+
+  @override
+  String get noTitle => 'No Title';
+
+  @override
+  String get selectTitleColor => 'Select Title Color';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get missionNone => 'No Mission';
+
+  @override
+  String get missionSnap => 'Object Snap';
+
+  @override
+  String get missionMath => 'Math Problem';
+
+  @override
+  String get missionFortune => 'Fortune';
+
+  @override
+  String get missionShake => 'Shake';
+
+  @override
+  String get missionFortuneCatch => 'Fortune Catch';
+
+  @override
+  String get missionNoDescription => 'Alarm will ring without a mission.';
+
+  @override
+  String get missionCameraDescription =>
+      'Take a photo of the specified object to dismiss the alarm.';
+
+  @override
+  String get missionMathDescription =>
+      'Solve math problems to wake up your brain.';
+
+  @override
+  String get missionFortuneDescription =>
+      'Dismiss the alarm and check today\'s fortune.';
+
+  @override
+  String get missionShakeDescription =>
+      'You must shake your phone to turn off the alarm.';
+
+  @override
+  String get missionFortuneCatchDescription => 'Catch the moving Fortuni!';
+
+  @override
+  String get missionWalk => 'Walk';
+
+  @override
+  String get missionWalkDescription => 'Walk to turn off the alarm!';
+
+  @override
+  String get missionFaceDescription => 'Keep your face in the frame for 5s.';
+
+  @override
+  String get walkStepCount => 'Target Steps';
+
+  @override
+  String walkSteps(int count) {
+    return '$count steps';
+  }
+
+  @override
+  String get missionNumberOrder => 'Number Order';
+
+  @override
+  String get missionNumberOrderDescription =>
+      'Tap numbers from 1 to 9 in order.';
+
+  @override
+  String missionNumberOrderGuide(int nextNumber) {
+    return 'Next: $nextNumber';
+  }
+
+  @override
+  String get missionHiddenButton => 'Memory Tiles';
+
+  @override
+  String get missionHiddenButtonDescription =>
+      'Memorize the pattern of the tiles and tap them in order within 10 seconds.';
+
+  @override
+  String missionHiddenButtonDifficulty(int delta) {
+    return 'Δ$delta';
+  }
+
+  @override
+  String get missionTapSprint => 'Rapid Tap';
+
+  @override
+  String get missionTapSprintDescriptionShort =>
+      'Tap quickly to fill the meter.';
+
+  @override
+  String missionTapSprintDescription(int goalTaps) {
+    return 'Tap $goalTaps+ times to fill the meter.';
+  }
+
+  @override
+  String get missionTapSprintTapHere => 'Tap';
+
+  @override
+  String get missionTapSprintHint => 'The meter drains if you stop tapping!';
+
+  @override
+  String get missionLeftRight => 'Left / Right';
+
+  @override
+  String get missionLeftRightDescriptionShort =>
+      'Follow the prompt and pick left or right.';
+
+  @override
+  String missionLeftRightDescription(int targetStreak) {
+    return 'Get $targetStreak correct in a row.';
+  }
+
+  @override
+  String get missionLeftRightPromptLeft => 'Tap LEFT';
+
+  @override
+  String get missionLeftRightPromptRight => 'Tap RIGHT';
+
+  @override
+  String get left => 'Left';
+
+  @override
+  String get right => 'Right';
+
+  @override
+  String get missionHintInactivity => 'If you stop for 2 minutes, it resets.';
+
+  @override
+  String fortuneCatchScore(int score) {
+    return 'Score: $score';
+  }
+
+  @override
+  String get fortuneCatchGoal => 'Goal: 100';
+
+  @override
+  String fortuneCatchGoalDetail(int count, int min) {
+    return '(Catches: $count/$min)';
+  }
+
+  @override
+  String fortuneCatchTime(int seconds) {
+    return 'Time: ${seconds}s';
+  }
+
+  @override
+  String fortuneCatchBest(int seconds) {
+    return 'Best: ${seconds}s';
+  }
+
+  @override
+  String get fortuneCatchAngryHint =>
+      'Avoid the angry Fortuni to prevent penalties!';
+
+  @override
+  String get fortuneCatchInstruction =>
+      'Catch the happy Fortuni and avoid the angry ones!';
+
+  @override
+  String fortuneCatchPointMinus(int points) {
+    return '$points points deducted';
+  }
+
+  @override
+  String fortuneCatchPointPlus(int points) {
+    return '+$points points';
+  }
+
+  @override
+  String fortuneCatchCombo(int combo) {
+    return '$combo Combo!';
+  }
+
+  @override
+  String get difficulty => 'Difficulty';
+
+  @override
+  String get difficultyEasy => 'Easy';
+
+  @override
+  String get difficultyNormal => 'Normal';
+
+  @override
+  String get difficultyHard => 'Hard';
+
+  @override
+  String get problemCount => 'Number of Problems';
+
+  @override
+  String problemsCount(int count) {
+    return '$count Problems';
+  }
+
+  @override
+  String missionAnalyzing(int index, int total) {
+    return 'Mission $index/$total Analyzing...';
+  }
+
+  @override
+  String missionPointObject(int index, int total) {
+    return 'Mission $index/$total: Point at the object in the guide.';
+  }
+
+  @override
+  String get missionPointSink => 'Point at the sink.';
+
+  @override
+  String get missionPointRefrigerator => 'Point at the refrigerator.';
+
+  @override
+  String get missionPointScale => 'Point at the scale.';
+
+  @override
+  String get missionPointFace => 'Point at your face.';
+
+  @override
+  String get missionPointObjectGeneric => 'Point at the specified object.';
+
+  @override
+  String get missionRecognizeObject => 'Please recognize the object.';
+
+  @override
+  String get missionPerform => 'Please perform the mission.';
+
+  @override
+  String get initError => 'An error occurred during initialization.';
+
+  @override
+  String get analyzingNextTarget => 'Analyzing next target...';
+
+  @override
+  String get errorOccurredGeneric => 'Error occurred';
+
+  @override
+  String missionSuccessWithCount(int completed, int total) {
+    return '$completed/$total Success!';
+  }
+
+  @override
+  String missionMatchSuccess(int total) {
+    return '$total/$total Success! Matching success!';
+  }
+
+  @override
+  String get escape => 'Escape';
+
+  @override
+  String get pointObjectClearly =>
+      'Take a photo where the target is clearly visible';
+
+  @override
+  String get matchingSuccess => 'Matching Success!';
+
+  @override
+  String get missionComplete => 'Mission Complete!';
+
+  @override
+  String get allMissionsComplete => 'All Missions Complete!';
+
+  @override
+  String missionSnoozeMessage(String minutes) {
+    return 'Mission Success! But it will ring again in $minutes minutes according to settings.';
+  }
+
+  @override
+  String get showFace => 'Please show your face';
+
+  @override
+  String get keepWatching => 'Keep watching the screen';
+
+  @override
+  String get recognizingFaceForFortune =>
+      'Recognizing face for physiognomy analysis';
+
+  @override
+  String get dataNotStored => 'Data is not stored';
+
+  @override
+  String get solveProblem => 'Please solve the problem.';
+
+  @override
+  String get correctAnswer => 'Correct answer!';
+
+  @override
+  String get wrongAnswerRetry => 'Wrong. Please try again.';
+
+  @override
+  String get correct => 'Correct!';
+
+  @override
+  String get walkToDismiss => 'Please walk while holding your smartphone';
+
+  @override
+  String get shakeCount => 'Shake Count';
+
+  @override
+  String shakeTimes(int count) {
+    return '$count Shakes';
+  }
+
+  @override
+  String tapTimes(int count) {
+    return '$count Taps';
+  }
+
+  @override
+  String missionNumber(int number) {
+    return 'Mission $number';
+  }
+
+  @override
+  String get soundBirds => 'Bird Sounds';
+
+  @override
+  String get shakeCountLabel => 'Number of Shakes';
+
+  @override
+  String missionIndex(int index) {
+    return 'Mission $index';
+  }
+
+  @override
+  String get ringtoneSelect => 'Select Ringtone';
+
+  @override
+  String get vibrationSelect => 'Select Vibration Pattern';
+
+  @override
+  String get selectMissionTitle => 'Select an alarm mission';
+
+  @override
+  String get ringtoneCategoryStandard => 'Standard';
+
+  @override
+  String get ringtoneCategoryCalm => 'Calm';
+
+  @override
+  String get ringtoneCategoryUpbeat => 'Upbeat';
+
+  @override
+  String get ringtoneCategoryLoud => 'Loud';
+
+  @override
+  String get noRingtones => 'No ringtones found.';
+
+  @override
+  String get photoPermissionRequired => 'Photo access permission is required.';
+
+  @override
+  String get deleteImage => 'Delete Image';
+
+  @override
+  String get longPressToDelete => 'Long press to delete.';
+
+  @override
+  String get videoLoadFail => 'Failed to load video\nTap to retry';
+
+  @override
+  String get existingCapturedImages => 'Existing Captured Images';
+
+  @override
+  String deleteCount(int count) {
+    return 'Delete $count';
+  }
+
+  @override
+  String deleteSelectedImagesConfirm(int count) {
+    return 'Are you sure you want to delete $count images?\nThis action cannot be undone.';
+  }
+
+  @override
+  String get classicAlarm => 'Classic Alarm';
+
+  @override
+  String get digitalAlarm => 'Digital Alarm';
+
+  @override
+  String get birdsSound => 'Birds Chirping';
+
+  @override
+  String get wavesSound => 'Ocean Waves';
+
+  @override
+  String get cuckooClock => 'Cuckoo Clock';
+
+  @override
+  String get calmAlarm => 'Calm Alarm';
+
+  @override
+  String get doorKnock => 'Door Knock';
+
+  @override
+  String get earlySunrise => 'Early Sunrise';
+
+  @override
+  String get goodMorningSound => 'Good Morning';
+
+  @override
+  String get inAHurry => 'In a Hurry';
+
+  @override
+  String get lovingYou => 'Loving You';
+
+  @override
+  String get sirenSound => 'Siren';
+
+  @override
+  String get swingingSound => 'Swinging';
+
+  @override
+  String get telephoneBusy => 'Telephone Busy';
+
+  @override
+  String get shortVibration => 'Short Repeat';
+
+  @override
+  String get longVibration => 'Long Repeat';
+
+  @override
+  String get heartbeatVibration => 'Heartbeat';
+
+  @override
+  String get sosVibration => 'SOS';
+
+  @override
+  String get quickVibration => 'Quick Beat';
+
+  @override
+  String get exactAlarmPermissionDesc =>
+      'To ring the alarm at the exact time, \"Schedule & Reminders\" permission is required.';
+
+  @override
+  String get batteryOptimizationPermissionDesc =>
+      'Battery optimization must be disabled for the alarm to ring on time.';
+
+  @override
+  String get overlayPermissionDesc =>
+      'To display the mission screen when the alarm goes off, \"Display over other apps\" permission is required.';
+
+  @override
+  String get cameraMissionFirstImageError =>
+      'Please set at least the first mission image.';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get exactAlarmPermissionFail =>
+      'Failed to register alarm. Exact alarm permission is disabled and needs to be set.';
+
+  @override
+  String get batteryOptimizationPermissionFail =>
+      'Failed to register alarm. Battery optimization exception permission is missing and needs to be set.';
+
+  @override
+  String get overlayPermissionFail =>
+      'Failed to register alarm. \"Display over other apps\" permission is missing and needs to be set.';
+
+  @override
+  String get batteryOptimizationName => 'Battery Optimization';
+
+  @override
+  String get batteryOptimizationTitle =>
+      'Optimization settings required\nfor accurate alarms.';
+
+  @override
+  String get batteryOptimizationSubtitle =>
+      'Please set as a battery optimization exception\nso the app runs smoothly in the background.';
+
+  @override
+  String get batteryOptimizationBottomDesc =>
+      'Selecting \'Unrestricted\' or \'Don\'t optimize\'\nin the settings will ensure no missed alarms.';
+
+  @override
+  String get understand => 'I understand';
+
+  @override
+  String get overlayPermissionName => 'Display over other apps';
+
+  @override
+  String get overlayPermissionTitle => 'Permission Guide';
+
+  @override
+  String get unknownAlarmError =>
+      'Failed to register alarm. An unknown error occurred.';
+
+  @override
+  String get resetTooltip => 'Reset';
+
+  @override
+  String get errorLoadingAlarm => 'Failed to load alarm information.';
+
+  @override
+  String get alarmNotFound => 'Alarm information not found.';
+
+  @override
+  String repeatAlarmCount(int current, int max) {
+    return 'Snooze Alarm ($current/$max)';
+  }
+
+  @override
+  String snoozeRemainingCount(int current, int max) {
+    return 'Remaining ($current/$max)';
+  }
+
+  @override
+  String get turnOffAlarm => 'Turn Off Alarm';
+
+  @override
+  String get startMission => 'Start Mission';
+
+  @override
+  String get alarmSnooze => 'Snooze';
+
+  @override
+  String snoozeMinutesUnlimited(String minutes) {
+    return '${minutes}m (Unlimited)';
+  }
+
+  @override
+  String snoozeMinutesCount(String minutes, int current, int total) {
+    return '${minutes}m ($current/$total)';
+  }
+
+  @override
+  String get ringtone_fluttering_day => 'Fluttering Day';
+
+  @override
+  String get ringtone_cozy_day => 'Cozy Day';
+
+  @override
+  String get ringtone_sensible_day => 'Sensible Day';
+
+  @override
+  String get ringtone_play_with_me => 'Play with Me';
+
+  @override
+  String get ringtone_refreshing_day => 'Refreshing Day';
+
+  @override
+  String get ringtone_new_beginning => 'New Beginning';
+
+  @override
+  String get ringtone_self_love => 'Self Love';
+
+  @override
+  String get cherry_stained_finger => 'Cherry Stained Finger';
+
+  @override
+  String get dancing_in_the_stars => 'Dancing In The Stars';
+
+  @override
+  String get nice_day => 'Nice Day';
+
+  @override
+  String get fortuneTitle => 'Check Fortune';
+
+  @override
+  String get fortuneMessage =>
+      'Check your fortune results\nand get hidden gifts!';
+
+  @override
+  String get fortuneAdButton => 'Watch Ad and Check Results';
+
+  @override
+  String get fortuneLoadingMessage =>
+      'Experience a special Tarot reading from our fortune teller.';
+
+  @override
+  String fortuneAnalyzing(int progress) {
+    return 'Analyzing your selected Tarot card... $progress%';
+  }
+
+  @override
+  String get fortuneSelectTitle =>
+      'Think about today\'s energy\nand select 3 cards.';
+
+  @override
+  String fortuneSelectTitleDate(String month, int day) {
+    return 'Think about the energy of $month/$day\nand select 3 cards.';
+  }
+
+  @override
+  String get fortuneNewYearButton => 'View 2026 New Year Fortune';
+
+  @override
+  String get loveFortune => 'Love';
+
+  @override
+  String get wealthFortune => 'Wealth';
+
+  @override
+  String get successFortune => 'Success';
+
+  @override
+  String get fortuneResultTitle => 'Here is your fortune result for today.';
+
+  @override
+  String fortuneResultTitleDate(int year, String month, int day) {
+    return 'Fortune for $month/$day, $year';
+  }
+
+  @override
+  String get startDayButton => 'Start Your Day';
+
+  @override
+  String get tarotName0 => 'The Fool';
+
+  @override
+  String get tarotName1 => 'The Magician';
+
+  @override
+  String get tarotName2 => 'The High Priestess';
+
+  @override
+  String get tarotName3 => 'The Empress';
+
+  @override
+  String get tarotName4 => 'The Emperor';
+
+  @override
+  String get tarotName5 => 'The Hierophant';
+
+  @override
+  String get tarotName6 => 'The Lovers';
+
+  @override
+  String get tarotName7 => 'The Chariot';
+
+  @override
+  String get tarotName8 => 'Strength';
+
+  @override
+  String get tarotName9 => 'The Hermit';
+
+  @override
+  String get tarotName10 => 'Wheel of Fortune';
+
+  @override
+  String get tarotName11 => 'Justice';
+
+  @override
+  String get tarotName12 => 'The Hanged Man';
+
+  @override
+  String get tarotName13 => 'Death';
+
+  @override
+  String get tarotName14 => 'Temperance';
+
+  @override
+  String get tarotName15 => 'The Devil';
+
+  @override
+  String get tarotName16 => 'The Tower';
+
+  @override
+  String get tarotName17 => 'The Star';
+
+  @override
+  String get tarotName18 => 'The Moon';
+
+  @override
+  String get tarotName19 => 'The Sun';
+
+  @override
+  String get tarotName20 => 'Judgement';
+
+  @override
+  String get tarotName21 => 'The World';
+
+  @override
+  String get tarotKeywords0 =>
+      'New beginnings, adventure, innocence, freedom, recklessness';
+
+  @override
+  String get tarotDesc0 =>
+      'The Fool stands precariously at the edge of a cliff in colorful clothes, but his gaze is fixed on the distance, full of hope.';
+
+  @override
+  String get tarotLoveMeaning0 =>
+      'An unexpected new love may arrive, or a fateful encounter at first sight may occur.';
+
+  @override
+  String get tarotLoveDetail0 =>
+      'It\'s a time when you can start love with a pure heart like a child. Forget all past wounds or complex conditions and be faithful to the emotions of this moment. You may encounter a new connection in an unexpected place or have a heart-fluttering experience of falling in love at first sight.';
+
+  @override
+  String get tarotWealthMeaning0 =>
+      'New investments or business items may catch your eye. It\'s a time when profits follow when you work happily without being tied to money.';
+
+  @override
+  String get tarotWealthDetail0 =>
+      'A time when new financial opportunities are opening up. You can achieve unexpected results by investing in creative items that others haven\'t tried or by challenging new fields. However, avoid reckless spending and let profits naturally follow the process of enjoying your work.';
+
+  @override
+  String get tarotSuccessMeaning0 =>
+      'It\'s a good time to start a new project or change to a completely different field.';
+
+  @override
+  String get tarotSuccessDetail0 =>
+      'The most suitable time to start a new project or change to a completely different field. Take a bold first step with excitement rather than fear of failure. Your pure passion will positively influence those around you and open new paths.';
+
+  @override
+  String get tarotKeywords1 =>
+      'Creation, Will, Ability, Realization, Versatility';
+
+  @override
+  String get tarotDesc1 =>
+      'The magician is wearing a red robe, one hand pointing to the sky and the other to the ground, bringing heavenly power to the ground.';
+
+  @override
+  String get tarotLoveMeaning1 =>
+      'This is a time when your charm is at its peak and you become popular with the opposite sex.';
+
+  @override
+  String get tarotLoveDetail1 =>
+      'This is a perfect opportunity for your charm and talent to shine and capture someone\'s heart. If there\'s someone you like, don\'t hesitate and approach them actively. Your sense of humor and witty conversation will delight them, allowing you to take the lead in the relationship. Win your love with confidence.';
+
+  @override
+  String get tarotWealthMeaning1 =>
+      'It\'s the right time to generate revenue using your abilities and skills.';
+
+  @override
+  String get tarotWealthDetail1 =>
+      'It\'s a time when your knowledge, skills, and ideas turn into money. Don\'t just settle for your salary; try creating additional income through side jobs or second careers. Your creative planning and sales abilities will be outstanding, leading to higher-than-expected profits.';
+
+  @override
+  String get tarotSuccessMeaning1 =>
+      'Your work ability is excellently demonstrated and recognized by those around you.';
+
+  @override
+  String get tarotSuccessDetail1 =>
+      'You can stand out in your workplace or studies by fully demonstrating your abilities. No matter what problem arises, you can solve it with your own wit and cleverness, being recognized as a \'talented person\' by colleagues and superiors. Trust yourself and show your skills confidently.';
+
+  @override
+  String get tarotKeywords2 => 'Intuition, wisdom, mystery, secret, platonic';
+
+  @override
+  String get tarotDesc2 =>
+      'The High Priestess sits behind a mysterious veil, holding a scroll of wisdom and balancing to symbolize deep insight.';
+
+  @override
+  String get tarotLoveMeaning2 =>
+      'It means platonic love where spiritual communion is important.';
+
+  @override
+  String get tarotLoveDetail2 =>
+      'You\'ll be attracted to someone with spiritual depth and good conversation rather than just physical charm. Your intuition for reading others\' minds is developed, so you can understand each other\'s feelings without words. However, being too cautious can cause misunderstandings, so try expressing your feelings honestly sometimes.';
+
+  @override
+  String get tarotWealthMeaning2 =>
+      'Now is the time to protect your assets and watch the situation rather than actively investing.';
+
+  @override
+  String get tarotWealthDetail2 =>
+      'It\'s a time to analyze and study market conditions calmly rather than moving hastily for immediate profit. Since this is a time for sowing seeds and waiting, don\'t be impatient if you don\'t see immediate gains. It\'s better to consider investments from a long-term perspective like real estate or stocks.';
+
+  @override
+  String get tarotSuccessMeaning2 =>
+      'You can achieve good results in fields such as studies, research, and professional jobs.';
+
+  @override
+  String get tarotSuccessDetail2 =>
+      'Focus on strengthening your internal foundations and building skills rather than on flashy external results. You can achieve excellent outcomes in tasks requiring deep thinking like research, planning, or analysis. Your wise and cautious attitude will be the key to solving problems at decisive moments.';
+
+  @override
+  String get tarotKeywords3 => 'Abundance, motherhood, nature, beauty, fruit';
+
+  @override
+  String get tarotDesc3 =>
+      'The Empress, sitting comfortably in abundant nature, is a symbol of material and spiritual abundance.';
+
+  @override
+  String get tarotLoveMeaning3 =>
+      'It\'s a time when love overflows and the relationship becomes deeper.';
+
+  @override
+  String get tarotLoveDetail3 =>
+      'It\'s a period when your inclusive charm is maximized, making you appear very attractive to others. If you\'re in a relationship, you\'ll receive great love for your warm and caring nature, and marriage talks may arise. If you\'re single, grooming your appearance or changing your style will greatly help improve your love luck.';
+
+  @override
+  String get tarotWealthMeaning3 =>
+      'It\'s a very materially abundant and stable time.';
+
+  @override
+  String get tarotWealthDetail3 =>
+      'Your financial luck is blooming. Rewards follow as much as your effort, or even more, allowing you to enjoy economic leisure. You may achieve higher-than-expected profits in business or investments, or receive unexpected bonuses or gifts. Sharing this abundant energy with those around you will bring even greater fortune.';
+
+  @override
+  String get tarotSuccessMeaning3 =>
+      'Projects in progress grow smoothly and produce good results.';
+
+  @override
+  String get tarotSuccessDetail3 =>
+      'It\'s a time when the results of work appear visibly. Projects will finish successfully, leading to performance bonuses or promotion opportunities. Your talent will especially shine in fields requiring aesthetic sense or creativity. Working while enjoying the process will bring even better results.';
+
+  @override
+  String get tarotKeywords4 =>
+      'Authority, structure, stability, leadership, responsibility';
+
+  @override
+  String get tarotDesc4 =>
+      'The Emperor, sitting on a hard stone throne in armor, symbolizes firm dominance and order.';
+
+  @override
+  String get tarotLoveMeaning4 =>
+      'It means a stable relationship with a reliable and responsible partner.';
+
+  @override
+  String get tarotLoveDetail4 =>
+      'A relationship based on trust and stability continues rather than burning passion. Your partner will reliably protect and lead you. However, be careful not to be too controlling or stubborn. If you\'re single, you\'ll have opportunities to meet someone with ability and social status.';
+
+  @override
+  String get tarotWealthMeaning4 =>
+      'You can accumulate financial stability with systematic asset management.';
+
+  @override
+  String get tarotWealthDetail4 =>
+      'Setting principles and plans is important in financial management. Rather than speculation aiming for a windfall, it\'s better to build a foundation by investing in safe and certain assets like savings or real estate. Your realistic judgment and drive will be a great help in accumulating wealth.';
+
+  @override
+  String get tarotSuccessMeaning4 =>
+      'You are in a favorable position to be promoted at work or rise to a leadership role.';
+
+  @override
+  String get tarotSuccessDetail4 =>
+      'It\'s a time when your position within the organization becomes solid. You may be promoted to team leader or manager in recognition of your leadership, and you may be put in charge of important projects. You\'ll gain the trust of your superiors by handling tasks with rational and cool judgment without being swayed by emotions.';
+
+  @override
+  String get tarotKeywords5 => 'Tradition, teaching, belief, advice, mediation';
+
+  @override
+  String get tarotDesc5 =>
+      'The Hierophant is a spiritual teacher who values social norms and traditions and leads people with wise advice.';
+
+  @override
+  String get tarotLoveMeaning5 =>
+      'Serious and healthy meetings continue based on trust and respect.';
+
+  @override
+  String get tarotLoveDetail5 =>
+      'You\'ll want a serious relationship with marriage in mind rather than a casual encounter. You can meet a good connection in blind dates, arranged meetings, or healthy gatherings. If there\'s a conflict between partners, try seeking advice from elders or seniors around you. Their wise advice will be a great help in restoring the relationship.';
+
+  @override
+  String get tarotWealthMeaning5 =>
+      'Traditional and safe methods of financial technology are good.';
+
+  @override
+  String get tarotWealthDetail5 =>
+      'Stability should be the top priority rather than adventurous investment. It\'s good to use traditional financial products like bank savings or insurance. Seeking professional consulting or maintaining honest and transparent financial transactions is the way to protect your credit and assets.';
+
+  @override
+  String get tarotSuccessMeaning5 =>
+      'Contracts, alliances, and cooperative relationships will be signed smoothly.';
+
+  @override
+  String get tarotSuccessDetail5 =>
+      'It\'s wise to receive help from those around you rather than trying to solve the problem alone. You can find solutions surprisingly easily if you seek advice from superiors like bosses or mentors. Following company rules and procedures is the shortcut to getting good evaluations, and it\'s also a good time to sign important contracts.';
+
+  @override
+  String get tarotKeywords6 => 'Love, harmony, choice, union, partnership';
+
+  @override
+  String get tarotDesc6 =>
+      'Adam and Eve stand receiving a blessing from an angel under a warm sun.';
+
+  @override
+  String get tarotLoveMeaning6 =>
+      'This is one of the best times for love to bloom.';
+
+  @override
+  String get tarotLoveDetail6 =>
+      'A heart-fluttering romance awaits you. You\'ll rapidly get closer to someone you\'re attracted to, and you can feel a telepathic connection just by making eye contact. If you\'re preparing to confess, the success rate is very high, so take courage. However, you need the wisdom to choose where your heart truly belongs rather than being swept away by momentary temptation.';
+
+  @override
+  String get tarotWealthMeaning6 =>
+      'Your financial fortunes increase when you\'re together rather than alone.';
+
+  @override
+  String get tarotWealthDetail6 =>
+      'Promoting work with someone you get along with will create synergy and increase financial benefits. If you receive a partnership proposal, review it positively. It\'s a time when you can get useful investment information through communication with people around you. However, spending for pleasure may become excessive, so proper adjustment is necessary.';
+
+  @override
+  String get tarotSuccessMeaning6 => 'This is a time when teamwork shines.';
+
+  @override
+  String get tarotSuccessDetail6 =>
+      'You\'ll work joyfully with colleagues or business partners who fit you perfectly. You can achieve better results in team projects than in solo tasks, and smooth interpersonal relationships will be the key to success. If you choose work that you truly love and enjoy, you\'ll get results you won\'t regret.';
+
+  @override
+  String get tarotKeywords7 => 'Victory, will, forward, conquest, movement';
+
+  @override
+  String get tarotDesc7 =>
+      'A young king in a chariot rushes forward toward his goal with strong will and wins a victory.';
+
+  @override
+  String get tarotLoveMeaning7 =>
+      'It\'s a time when active romantic pursuits succeed.';
+
+  @override
+  String get tarotLoveDetail7 =>
+      'It\'s time to rush to win love. Don\'t hesitate and express your heart honestly and proudly; you can win even if there are competitors. If you\'re in a \'some\' stage, it\'s good to define the relationship clearly and lead. Dynamic dates or traveling together will deepen your affection.';
+
+  @override
+  String get tarotWealthMeaning7 =>
+      'It\'s time to move aggressively to achieve the target profit.';
+
+  @override
+  String get tarotWealthDetail7 =>
+      'Strong drive is needed to achieve financial goals. Don\'t hesitate and make bold decisions when the opportunity arises; this drive will bring you profit. It\'s advantageous to focus on projects that yield results in the short term, and your performance will increase as much as you work hard. Movement-related expenses may occur, but they will be investments for new opportunities.';
+
+  @override
+  String get tarotSuccessMeaning7 =>
+      'You are likely to win the competition and achieve your goals.';
+
+  @override
+  String get tarotSuccessDetail7 =>
+      'Clear goal achievement such as promotion, passing, or contract signing is predicted. The more intense the competition, the more your fighting spirit will burn, eventually leading to victory. Your image of breaking through obstacles directly will leave a deep impression on those around you, and you\'ll demonstrate excellent abilities in tasks with frequent business trips or movement.';
+
+  @override
+  String get tarotKeywords8 =>
+      'Patience, courage, inner strength, embrace, gentle but firm';
+
+  @override
+  String get tarotDesc8 =>
+      'A woman in white gently handles a lion\'s mouth, symbolizing spiritual strength and patience over physical power.';
+
+  @override
+  String get tarotLoveMeaning8 =>
+      'It\'s a time when you need the tolerance to accept and understand the other person as they are.';
+
+  @override
+  String get tarotLoveDetail8 =>
+      'Current love requires patience and wisdom. The relationship can develop to the next level when you accept and embrace the other person\'s shortcomings or complaints with a broad heart. A \'gentle but firm\' attitude leading the other person with a soft touch is needed, and if you stay by their side patiently, your sincerity will eventually open their heart.';
+
+  @override
+  String get tarotWealthMeaning8 =>
+      'Steady savings and healthy consumption habits are the secrets to collecting wealth.';
+
+  @override
+  String get tarotWealthDetail8 =>
+      'Your financial fortune is gradually rising. Don\'t be disappointed even if big money doesn\'t come in immediately; manage your assets faithfully, and it will return as a large sum later. In investing, it\'s advantageous to hold on firmly rather than being swayed by short-term fluctuations. Managing your impulsive desire to consume is the shortcut to becoming rich.';
+
+  @override
+  String get tarotSuccessMeaning8 =>
+      'Even if you encounter a difficult task or a picky boss, you can deal with it wisely.';
+
+  @override
+  String get tarotSuccessDetail8 =>
+      'You may be assigned a hard project or a picky task, but you have enough potential to solve it. Though you appear soft on the outside, you stand out by overcoming obstacles one by one with strong inner will. Your calm problem-solving ability will lead people around you to send deep trust your way.';
+
+  @override
+  String get tarotKeywords9 =>
+      'Reflection, solitude, exploration, wisdom, rest';
+
+  @override
+  String get tarotDesc9 =>
+      'An old man with a lamp on a dark snowy mountain listens to his inner voice and explores the truth.';
+
+  @override
+  String get tarotLoveMeaning9 =>
+      'It\'s a time when you need time for yourself or think deeply about love.';
+
+  @override
+  String get tarotLoveDetail9 =>
+      'Now is a time when you need time to look back on yourself rather than active dating. Instead of meeting just anyone to soothe loneliness, think deeply about what kind of love you truly want. Even if you have a partner, taking some distance and having your own time can actually help you realize the essence of the relationship.';
+
+  @override
+  String get tarotWealthMeaning9 =>
+      'Financial activities may be somewhat contracted.';
+
+  @override
+  String get tarotWealthDetail9 =>
+      'You should take a conservative attitude toward wealth. Rather than making new investments or starting businesses, it\'s important to check your current assets thoroughly and stop money from leaking. Instead, spending on study or skill acquisition to increase your value is a great investment that will lead to larger profits later.';
+
+  @override
+  String get tarotSuccessMeaning9 =>
+      'You achieve results in fields that deeply research professional knowledge or skills.';
+
+  @override
+  String get tarotSuccessDetail9 =>
+      'You can achieve excellent results in tasks that require deep focus alone, such as research, planning, or development. It\'s a period of silently building skills even if not recognized by others, and it\'s advantageous to focus on the essence of the work rather than workplace relationships. If there\'s an unsolved problem, find an experienced mentor for advice.';
+
+  @override
+  String get tarotKeywords10 =>
+      'Destiny, change, opportunity, cycle, turning point';
+
+  @override
+  String get tarotDesc10 =>
+      'A huge wheel of fortune turns, signaling the inevitable flow of destiny and the start of a new cycle.';
+
+  @override
+  String get tarotLoveMeaning10 => 'A fateful encounter awaits you.';
+
+  @override
+  String get tarotLoveDetail10 =>
+      'A fated love like a movie is coming your way. Dramatic events such as meeting someone in an unexpected place or a surprise reunion may occur, so keep your heart open. Singles might meet someone they fall for at first sight, while couples will find their relationship advancing to the next level. Don\'t miss this good flow.';
+
+  @override
+  String get tarotWealthMeaning10 => 'The flow of financial luck is improving.';
+
+  @override
+  String get tarotWealthDetail10 =>
+      'The goddess of luck is smiling upon you. Your financial fortune is on an upward curve, with unexpected income or investment returns. As money circulation becomes smooth, you need the boldness to seize the opportunity when it comes. However, since luck cycles, don\'t forget the wisdom to save for the future when things are going well.';
+
+  @override
+  String get tarotSuccessMeaning10 => 'The situation is turning in your favor.';
+
+  @override
+  String get tarotSuccessDetail10 =>
+      'A turning point has arrived where blocked matters start to flow smoothly. The tide is turning in your favor, so don\'t hesitate to seize new opportunities. Opportunities for change like promotion or career moves will be an upward current taking you to a higher place. Going with the flow will bring great results.';
+
+  @override
+  String get tarotKeywords11 =>
+      'Fairness, balance, responsibility, truth, cause and effect';
+
+  @override
+  String get tarotDesc11 =>
+      'A judge in a red robe holds a sword in his right hand and a scale in his left.';
+
+  @override
+  String get tarotLoveMeaning11 =>
+      'It\'s a relationship where reason precedes emotion.';
+
+  @override
+  String get tarotLoveDetail11 =>
+      'Now is a time for rational judgment rather than being swayed by emotions. Look back to see if your relationship is balanced, and if you\'re sacrificing too much or only receiving. If you\'re thinking about marriage, you might meticulously weigh your partner\'s conditions or background; honest and fair conversation will be the solution for relationship improvement.';
+
+  @override
+  String get tarotWealthMeaning11 =>
+      'Careful checking is needed in financial transactions or contracts.';
+
+  @override
+  String get tarotWealthDetail11 =>
+      'A situation may arise where you need to clarify right from wrong in financial matters. It\'s a good time to cleanly settle financial relationships, such as receiving borrowed money or repaying debts. When signing contracts, check carefully for any toxic clauses and handle everything according to principles rather than relying on luck or expedients.';
+
+  @override
+  String get tarotSuccessMeaning11 =>
+      'You receive a fair evaluation and legitimate compensation.';
+
+  @override
+  String get tarotSuccessDetail11 =>
+      'You will receive a fair and objective evaluation of your work performance. If you\'ve worked hard, legitimate rewards like promotions or bonuses will follow, and you can demonstrate your abilities in fields requiring accuracy like law or accounting. When making decisions, exclude emotions and judge based strictly on data and facts.';
+
+  @override
+  String get tarotKeywords12 =>
+      'Sacrifice, patience, new perspective, stagnation, enlightenment';
+
+  @override
+  String get tarotDesc12 =>
+      'A man hanging upside down from a tree looks at the world from a new perspective through voluntary hardship and gains enlightenment.';
+
+  @override
+  String get tarotLoveMeaning12 =>
+      'The relationship may stagnate or unrequited feelings may last for a long time.';
+
+  @override
+  String get tarotLoveDetail12 =>
+      'You may feel frustrated because the progress of love is stalled, but rushing won\'t solve anything now. Stop for a moment and look at the current situation from a different perspective, reflecting on whether you\'ve been forcing love only in your own way. The patience to think and care from the other person\'s position will eventually be the key to opening their heart.';
+
+  @override
+  String get tarotWealthMeaning12 =>
+      'Fund flow may be tied up or you may have to bear losses.';
+
+  @override
+  String get tarotWealthDetail12 =>
+      'You may feel completely blocked financially. Invested money may be tied up or expected income may be delayed, but the more you struggle, the more tangled it might get. It\'s better to empty your mind and observe for now. Use this period to check your consumption habits and re-establish your values regarding money.';
+
+  @override
+  String get tarotSuccessMeaning12 =>
+      'Work may not proceed as planned and may be delayed.';
+
+  @override
+  String get tarotSuccessDetail12 =>
+      'Projects might be suspended or work delayed, causing stress, but this is a temporary stop signal rather than a failure. Don\'t try to force progress; instead, step back and redraw the overall picture. Brilliant ideas can emerge when you break fixed ideas, and current trials will give you new enlightenment.';
+
+  @override
+  String get tarotKeywords13 =>
+      'Ending, change, rebirth, separation, new beginning';
+
+  @override
+  String get tarotDesc13 =>
+      'It symbolizes the complete termination of the old and a new beginning resulting from it, representing a painful but inevitable process of change.';
+
+  @override
+  String get tarotLoveMeaning13 =>
+      'It means the end of a relationship or a big change.';
+
+  @override
+  String get tarotLoveDetail13 =>
+      'The current relationship may have reached its limit. You need the courage to let it flow naturally rather than trying to hold on; separation is painful, but a better new beginning always waits at the end. Remember that a place for a new person is created only when you completely escape from past lingering feelings or wounds.';
+
+  @override
+  String get tarotWealthMeaning13 =>
+      'Difficult situations such as financial losses or investment failures may come.';
+
+  @override
+  String get tarotWealthDetail13 =>
+      'A big change is expected financially. You might experience losses in trusted investments or face difficulties with unexpected expenses, but this is a signal to change inefficient asset management methods. Organize your debts and completely cut off unnecessary spending to use this as a stepping stone for a healthier financial structure.';
+
+  @override
+  String get tarotSuccessMeaning13 =>
+      'Work in progress may be interrupted or failed.';
+
+  @override
+  String get tarotSuccessDetail13 =>
+      'A project you worked hard on might fall through, or you could experience major changes at work. While the sense of frustration will be great for now, this is a revelation of destiny to organize work that doesn\'t fit you and find a new path for greater success. If you discard old ways and start with a completely new mindset, a more wonderful next chapter will open.';
+
+  @override
+  String get tarotKeywords14 =>
+      'Balance, temperance, harmony, healing, moderation';
+
+  @override
+  String get tarotDesc14 =>
+      'Water is transferred between two cups, symbolizing perfect balance between reality and ideals and a harmonious flow.';
+
+  @override
+  String get tarotLoveMeaning14 =>
+      'It\'s a process of two different people meeting and achieving harmony.';
+
+  @override
+  String get tarotLoveDetail14 =>
+      'A subtle and lasting love suits this period better than burning passion. You\'ll build deep bonds by acknowledging and complementing each other\'s differences, and if there are conflicts, you need the wisdom to solve them through calm conversation. Your gentle and caring attitude will put your partner\'s mind at ease and create a stable relationship.';
+
+  @override
+  String get tarotWealthMeaning14 =>
+      'It\'s important to balance income and spending.';
+
+  @override
+  String get tarotWealthDetail14 =>
+      'Your financial stability follows a stable flow. Focus on efficiently allocating and managing current assets rather than aiming for a windfall, and a habit of appropriately adjusting spending as income increases is needed. If you invest, it\'s good to diversify for risk management, and steady management will eventually bring wealth.';
+
+  @override
+  String get tarotSuccessMeaning14 =>
+      'The ability to coordinate different opinions and lead harmony stands out.';
+
+  @override
+  String get tarotSuccessDetail14 =>
+      'You\'ll excellently perform as a mediator in team projects, resolving conflicts and increasing work efficiency. Your flexible thinking and adaptability will be recognized, and the wisdom to prevent burnout by balancing work and rest will stand out. Proceeding step-by-step while observing the overall flow leads to the best results.';
+
+  @override
+  String get tarotKeywords15 =>
+      'Temptation, bondage, obsession, materialism, addiction';
+
+  @override
+  String get tarotDesc15 =>
+      'It symbolizes desires and obsessions that bind oneself, and material temptations that one could escape if they chose, but fails to do so.';
+
+  @override
+  String get tarotLoveMeaning15 =>
+      'It means a relationship attracted to or obsessed with intense physical charm.';
+
+  @override
+  String get tarotLoveDetail15 =>
+      'It\'s a time when it\'s hard to make rational judgments because you\'re strongly fascinated by someone\'s charm. A hot romance that might keep you awake at night could start, but on the other hand, you need caution as you might suffer from excessive obsession and restraint. Coolly reflect on whether your feelings are true love or just simple desire or possessiveness.';
+
+  @override
+  String get tarotWealthMeaning15 =>
+      'Material greed becomes excessive, so you may invest excessively.';
+
+  @override
+  String get tarotWealthDetail15 =>
+      'A time with many financial temptations. There\'s a risk of putting money into dangerous places deceived by sweet words, or squandering assets through impulsive luxury purchases. Be wary of becoming a slave to money and losing trust, and focus on protecting what you have rather than new investments.';
+
+  @override
+  String get tarotSuccessMeaning15 =>
+      'You may try to use any means for success.';
+
+  @override
+  String get tarotSuccessDetail15 =>
+      'Greed for power or honor increases. There is a concern about falling into work addiction, such as setting unreasonable schedules for performance or neglecting health. You need an attitude of working honestly by returning to your original intentions rather than trying to gain without legitimate effort.';
+
+  @override
+  String get tarotKeywords16 =>
+      'Collapse, shock, sudden change, liberation, revelation of truth';
+
+  @override
+  String get tarotDesc16 =>
+      'Lightning strikes the tower, collapsing it and people are falling.';
+
+  @override
+  String get tarotLoveMeaning16 =>
+      'A big crisis or a sudden breakup may come to the relationship.';
+
+  @override
+  String get tarotLoveDetail16 =>
+      'An unexpected event like a bolt from the blue can occur on the love front. You might be disappointed in someone you trusted or face a conflict that shakes the relationship to its roots, but don\'t despair. This is a process of breaking unhealthy relationships or misunderstandings to face the truth, and an opportunity to build a firmer love will eventually come.';
+
+  @override
+  String get tarotWealthMeaning16 =>
+      'You should prepare for sudden financial losses or disasters.';
+
+  @override
+  String get tarotWealthDetail16 =>
+      'It\'s a very unstable time financially. You may hear shocking news such as big money leaving or an investment collapsing, so move your assets to a safe place and prepare. However, this collapse will be an opportunity to correct wrong economic concepts, and after hitting rock bottom, a chance to build a solid foundation will come.';
+
+  @override
+  String get tarotSuccessMeaning16 =>
+      'Projects may be interrupted or shocking changes at work may occur.';
+
+  @override
+  String get tarotSuccessDetail16 =>
+      'You may feel frustration as if the tower you\'ve worked hard to build is collapsing, but this is due to an inevitable flow of change rather than a lack of ability. Don\'t panic; grasp the situation coolly, discard old systems, and seek new paths. If you take this crisis as an opportunity to reorganize, you can leap to a much higher place.';
+
+  @override
+  String get tarotKeywords17 =>
+      'Hope, inspiration, healing, optimism, wish fulfillment';
+
+  @override
+  String get tarotDesc17 =>
+      'A woman is pouring water with two jars while keeping one foot on the ground, symbolizing peace after hardship and hope for the future.';
+
+  @override
+  String get tarotLoveMeaning17 =>
+      'It\'s a time when you meet someone close to your ideal type or your dream about love comes true.';
+
+  @override
+  String get tarotLoveDetail17 =>
+      'Like a star brightening the dark night, sparkling hope comes to your love life as well. You may meet your ideal type or make a beautiful promise for the future with your lover, and it\'s a time when your pure charm strongly appeals. Past painful memories will now be healed, and bright energy to dream of new love will arise.';
+
+  @override
+  String get tarotWealthMeaning17 =>
+      'The financial situation gradually improves.';
+
+  @override
+  String get tarotWealthDetail17 =>
+      'Your financial outlook starts to flow in a positive direction. Previous economic difficulties are resolved and a ray of light is seen, and an opportunity to increase side income through creative ideas may arise. Rather than immediate big gains, an eye for investing in places with high future value from a long-term perspective will lead you to financial stability.';
+
+  @override
+  String get tarotSuccessMeaning17 =>
+      'Creative inspiration springs up and you get an opportunity to spread your talent widely.';
+
+  @override
+  String get tarotSuccessDetail17 =>
+      'Your ideas shine and receive praise from those around you. You can stand out in marketing, PR, or artistic fields, and it\'s a very good time to start a project you\'ve always dreamed of. If you express yourself confidently, luck is in for you to gain popularity or honor, so seize the opportunity.';
+
+  @override
+  String get tarotKeywords18 =>
+      'Anxiety, illusion, ambiguity, intuition, unconscious';
+
+  @override
+  String get tarotDesc18 =>
+      'At night when the moon is up, a dog and a wolf howl and a crayfish crawls out of the water, symbolizing unseen truths and the subconscious.';
+
+  @override
+  String get tarotLoveMeaning18 =>
+      'It\'s frustrating because you don\'t know the other person\'s heart, and suspicion are easy to sprout.';
+
+  @override
+  String get tarotLoveDetail18 =>
+      'It\'s a time when you\'re anxious because you don\'t know the other person\'s inner thoughts, as if in a fog. Trivial misunderstandings can grow into suspicion and cause sleepless nights, so it\'s better to watch the situation calmly rather than hastily interrogating. Instead of clinging to uncertain relationships swept by emotions, prioritize finding your center through rational thinking.';
+
+  @override
+  String get tarotWealthMeaning18 =>
+      'Investment prospects are opaque and there is a risk of fraud.';
+
+  @override
+  String get tarotWealthDetail18 =>
+      'Your vision is blurred in terms of finance, so there is a high risk of being deceived by plausible investment information or sweet words. Since traps are hidden in unseen places, it\'s a time to be extremely careful, as if tapping a stone bridge before crossing. Rather than starting new things, protecting your assets through thorough realistic verification is the way.';
+
+  @override
+  String get tarotSuccessMeaning18 =>
+      'It\'s a confusing time because the direction of work may be ambiguous.';
+
+  @override
+  String get tarotSuccessDetail18 =>
+      'You may find yourself in a hopeless situation where you can\'t see ahead, and you should be careful with your words and actions as project direction may be shaken or you may be caught in workplace rumors. It\'s wise to wait until the situation becomes clear rather than moving hastily, and it\'s good to guard your position silently and focus on mental management.';
+
+  @override
+  String get tarotKeywords19 =>
+      'Success, Happiness, Vitality, Positivity, Blessing';
+
+  @override
+  String get tarotDesc19 =>
+      'Under the bright sun, a child is joyfully riding a white horse and waving a flag.';
+
+  @override
+  String get tarotLoveMeaning19 =>
+      'You will have a bright and happy relationship that is blessed.';
+
+  @override
+  String get tarotLoveDetail19 =>
+      'A perfectly happy and blessed love is with you. Past misunderstandings and conflicts will melt away, deepening your trust. It\'s the best time for singles to meet someone with bright energy, and you can expect joyous news like marriage or expansion. It\'s a wonderful fortune to enjoy love purely and passionately like a child.';
+
+  @override
+  String get tarotWealthMeaning19 => 'Your financial fortune is at its best.';
+
+  @override
+  String get tarotWealthDetail19 =>
+      'Bright days have arrived for your finances. Your money luck is extremely strong, with everything you do turning into profit. Business will flourish, investments look promising, and sharing this positive energy will bring even greater abundance. You can expect good news that asset values like real estate or stocks will rise significantly.';
+
+  @override
+  String get tarotSuccessMeaning19 =>
+      'Your abilities will be recognized and you will receive the spotlight.';
+
+  @override
+  String get tarotSuccessDetail19 =>
+      'The fanfare of success is sounding. Your long-term efforts will finally shine and be recognized by the world. You\'ll achieve visible results like passing exams or getting promoted, and your confident attitude will establish you as a natural leader. Now is the stage where you are the protagonist, so display your skills to the fullest and win success.';
+
+  @override
+  String get tarotKeywords20 => 'Resurrection, reward, news, decision, reunion';
+
+  @override
+  String get tarotDesc20 =>
+      'When an angel blows a trumpet in the sky, people in coffins wake up and cheer, symbolizing rewards for the past and rebirth to a new stage.';
+
+  @override
+  String get tarotLoveMeaning20 =>
+      'You may receive contact from an ex-lover or have an opportunity to reunite.';
+
+  @override
+  String get tarotLoveDetail20 =>
+      'Waiting news arrives. If you\'ve been waiting for contact from an ex-lover you couldn\'t forget or wishing for a reunion, it\'s very likely to come true, and stagnant \'some\' relationships will bear fruit by clearly developing into lovers. A new connection with someone you knew in the past might also occur, so listen to your heart and make a decision without regret.';
+
+  @override
+  String get tarotWealthMeaning20 =>
+      'You may get profits from previous investments, or get back money you lent.';
+
+  @override
+  String get tarotWealthDetail20 =>
+      'It\'s a time to receive rewards for past efforts. There\'s an unexpected windfall, such as forgotten stocks rising or receiving back money you didn\'t expect to get, and an opportunity to succeed by retrying ideas that failed before. Since the decision you make now will greatly influence your future wealth, careful yet bold determination is needed.';
+
+  @override
+  String get tarotSuccessMeaning20 =>
+      'Your efforts will be recognized and you will be promoted or rewarded.';
+
+  @override
+  String get tarotSuccessDetail20 =>
+      'Judgment day has come. A fair evaluation and rewards for the sweat you\'ve shed will be given, and happy news like promotion or passing will spread like a trumpet sound. A scout offer or career move opportunity to escape from a stagnant situation and fly again might come, so don\'t fear change and start a new chapter.';
+
+  @override
+  String get tarotKeywords21 =>
+      'Completion, integration, achievement, happy ending, perfection';
+
+  @override
+  String get tarotDesc21 =>
+      'A woman is dancing inside a laurel wreath, and the four elements are in their completed forms, symbolizing the best happy ending.';
+
+  @override
+  String get tarotLoveMeaning21 =>
+      'You will bear the fruit of love and enter marriage, or form an ideal family.';
+
+  @override
+  String get tarotLoveDetail21 =>
+      'It\'s a perfect time to put a period to a long relationship and move toward a new world called marriage. You\'ll enjoy the happiness of becoming one under blessings after confirming you are each other\'s best halves, and if you\'re single, you can meet a fateful partner who meets your ideal type. It\'s also a fortune where connections are made during overseas travel or in exotic environments.';
+
+  @override
+  String get tarotWealthMeaning21 =>
+      'You will achieve the target amount and enjoy economic freedom.';
+
+  @override
+  String get tarotWealthDetail21 =>
+      'You achieve the feat of 100% achieving your financial goals and have reached a stage where you can enjoy economic freedom. You can make big profits in global fields like overseas stocks or trade, and your investment portfolio will achieve perfect harmony to bring stable wealth. Now, enjoy the abundance and widen your perspective toward a broader world.';
+
+  @override
+  String get tarotSuccessMeaning21 =>
+      'You will successfully complete the project and gain the highest honor.';
+
+  @override
+  String get tarotSuccessDetail21 =>
+      'It\'s the time to hit the peak of your career. You will receive the highest praise by perfectly succeeding in the project you\'re in charge of, and you\'ll prepare to move toward a bigger world after achieving everything you aimed for. As it\'s a fortune where your activity stage can expand globally through studying abroad or overseas employment, use current success as a stepping stone to leap toward a grander dream.';
+
+  @override
+  String get supplementRecordPrompt =>
+      'Please take your supplements and record it!';
+
+  @override
+  String get snoozeQuestion => 'When should I remind you again?';
+
+  @override
+  String get hoursShort => 'h';
+
+  @override
+  String get minutesShort => 'm';
+
+  @override
+  String get after => 'after';
+
+  @override
+  String snoozeMessage(int minutes) {
+    return 'Alarm will ring again in $minutes minutes.';
+  }
+
+  @override
+  String timesTaken(int count) {
+    return '$count times taken';
+  }
+
+  @override
+  String dailyGoalTimes(int goal) {
+    return 'Goal: $goal times a day';
+  }
+
+  @override
+  String get didYouTakeSupplement => 'Did you take your supplements?';
+
+  @override
+  String get viewMissionRecords => 'View Mission Records';
+
+  @override
+  String get setTakingGoal => 'Set Intake Goal';
+
+  @override
+  String get times => 'times';
+
+  @override
+  String get dailyTakingGoal => 'Daily Intake Goal';
+
+  @override
+  String get howManyTimesADay =>
+      'How many times a day do you take supplements?';
+
+  @override
+  String get setGoalMl => 'Set Goal (ml)';
+
+  @override
+  String get sleepAnalysis => 'Sleep Analysis';
+
+  @override
+  String get todaysSleep => 'Today\'s Sleep';
+
+  @override
+  String get sleepDuration => 'Sleep Duration';
+
+  @override
+  String get wakeUpTime => 'Wake Up Time';
+
+  @override
+  String get weeklySleepPattern => 'Weekly Sleep Pattern';
+
+  @override
+  String get sleepAdvice =>
+      'You are maintaining a regular sleep habit. You went to bed 30 minutes earlier than yesterday!';
+
+  @override
+  String get stopwatch => 'Stopwatch';
+
+  @override
+  String get lap => 'Lap';
+
+  @override
+  String get stop => 'Stop';
+
+  @override
+  String lapLabel(int index) {
+    return 'Lap $index';
+  }
+
+  @override
+  String get monday => 'Mon';
+
+  @override
+  String get tuesday => 'Tue';
+
+  @override
+  String get wednesday => 'Wed';
+
+  @override
+  String get thursday => 'Thu';
+
+  @override
+  String get friday => 'Fri';
+
+  @override
+  String get saturday => 'Sat';
+
+  @override
+  String get sunday => 'Sun';
+
+  @override
+  String get policy => 'Terms and Privacy Policy';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get defaultAlarmBehavior => 'Default Alarm Behavior';
+
+  @override
+  String get defaultAlarmVolume => 'Default Alarm Volume';
+
+  @override
+  String get defaultAlarmVolumeDescription =>
+      'The default volume applied when creating a new alarm.';
+
+  @override
+  String get gradualVolumeDescription =>
+      'Sets the alarm sound to gradually increase.';
+
+  @override
+  String get defaultVibration => 'Default Vibration';
+
+  @override
+  String get defaultVibrationDescription =>
+      'Enables vibration by default when creating a new alarm.';
+
+  @override
+  String get defaultInterval => 'Default Interval';
+
+  @override
+  String get maxSnoozeCountLabel => 'Max Snooze Count';
+
+  @override
+  String get minutes => 'min';
+
+  @override
+  String cupsCount(int current, int goal) {
+    return '($current/$goal cups)';
+  }
+
+  @override
+  String timesCountProgress(int current, int goal) {
+    return '($current/$goal times)';
+  }
+
+  @override
+  String get missionGym => 'Go to Gym';
+
+  @override
+  String get missionWorkout => 'Home Workout';
+
+  @override
+  String get missionDiary => 'Write Diary';
+
+  @override
+  String get missionBedMaking => 'Make the Bed';
+
+  @override
+  String get missionStretching => 'Stretching';
+
+  @override
+  String get missionReading => 'Reading 10min';
+
+  @override
+  String get missionPlanning => 'Plan the Day';
+
+  @override
+  String get missionBreakfast => 'Eat Breakfast';
+
+  @override
+  String get missionMeditation => 'Meditation 5min';
+
+  @override
+  String get missionLearnWords => 'Learn 5 Words';
+
+  @override
+  String get missionVentilation => 'Ventilation';
+
+  @override
+  String get missionCleaning => 'Cleaning room';
+
+  @override
+  String get missionGratitudeDiary => 'Gratitude Diary';
+
+  @override
+  String get faqQuestion1 => 'Alarms are not ringing.';
+
+  @override
+  String get faqAnswer1 =>
+      'Alarms may be delayed or blocked due to the Android system\'s battery optimization feature. Please set all permissions to \'Allow\' in the Settings > Alarm Optimization menu.';
+
+  @override
+  String get faqQuestion2 => 'I want to change the mission.';
+
+  @override
+  String get faqAnswer2 =>
+      'You can change it to the mission you want (Math, Photo, Shake, etc.) in the mission selection menu after tapping the alarm you want to edit in the alarm list.';
+
+  @override
+  String get faqQuestion3 => 'How do I set Dark Mode?';
+
+  @override
+  String get faqAnswer3 =>
+      'You can change the screen theme through the Settings > General > Dark Mode toggle.';
+
+  @override
+  String get faqQuestion4 => 'How do I collect fortune cookies?';
+
+  @override
+  String get faqAnswer4 =>
+      'You can earn fortune cookies every time you dismiss an alarm in the morning or complete a mission. Check your daily fortune with the cookies you\'ve collected!';
+
+  @override
+  String get faqQuestion5 => 'Will my data disappear if I delete the app?';
+
+  @override
+  String get faqAnswer5 =>
+      'Yes, Fortune Alarm stores data inside the device, so deleting the app will delete all your set alarms and mission records. Please be careful.';
+
+  @override
+  String get noticeLabel => 'Notice';
+
+  @override
+  String get notice1Title => 'Fortune Alarm Official Launch';
+
+  @override
+  String get notice1Content =>
+      'Hello. Fortune Alarm has been officially launched.\\n\\nCheck your daily fortune with your alarm every morning and start a happy day!\\nWe will continue to provide more diverse features and improved services.\\n\\nThank you.';
+
+  @override
+  String get notice2Title => 'Version 1.0.0 Update News';
+
+  @override
+  String get notice2Content =>
+      'Here is the content of the version 1.0.0 update.\\n\\n1. Supplement mission UI improvement\\n2. System setting integration for accurate alarms\\n3. Dark mode support\\n4. Bug fixes and stability improvements\\n\\nExperience the latest version now!';
+
+  @override
+  String get notice3Title => 'Terms of Service Revision Notice';
+
+  @override
+  String get notice3Content =>
+      'The Terms of Service have been revised.\\n\\nKey revisions:\\n- Strengthened Privacy Policy\\n- Specified service usage scope\\n\\nDetails can be found on the Settings > Terms page.';
+
+  @override
+  String get notice4Title => 'Version 1.1.1 Update News';
+
+  @override
+  String get notice4Content =>
+      'Update details for version 1.1.1.\\n\\n1. Improved battery optimization guide UI\\n2. Optimized English text layout\\n3. Enhanced ad system stability\\n4. App stability and performance improvements\\n\\nPlease update to the latest version for a better experience!';
+
+  @override
+  String get supportContentTitle => 'Inquiry Content';
+
+  @override
+  String get supportHint => 'Please enter the content.';
+
+  @override
+  String get supportRecipient => 'Recipient (Customer Support)';
+
+  @override
+  String get emailCopied => 'Email address copied.';
+
+  @override
+  String get copyTooltip => 'Copy';
+
+  @override
+  String get supportWorkingDays =>
+      'We will try to respond within 24 hours on weekdays.';
+
+  @override
+  String get supportEmptyError => 'Please enter the content.';
+
+  @override
+  String get supportSubjectPrefix => 'Inquiry Title';
+
+  @override
+  String get supportContentPrefix => 'Inquiry Content';
+
+  @override
+  String get supportCopySuccessTitle => 'Inquiry Copied';
+
+  @override
+  String supportCopySuccessMessage(String email) {
+    return 'Inquiry content has been copied to clipboard.\\nWould you like to send an email to $email?';
+  }
+
+  @override
+  String get selectionComplete => 'Selection Complete';
+
+  @override
+  String get selectVibration => 'Select Vibration Pattern';
+
+  @override
+  String get cameraMissionSequentialImageError =>
+      'Please set mission images in order.';
+
+  @override
+  String get copyEmailAction => 'Copy Email Address';
+
+  @override
+  String get addMissionTitle => 'Add New Mission';
+
+  @override
+  String get recommendedMissionList => 'Recommended Missions';
+
+  @override
+  String get recommendedMissionDesc =>
+      'Recommended missions for a healthy day.';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get allMissions => 'All Missions';
+
+  @override
+  String categoryMissions(String category) {
+    return '$category Missions';
+  }
+
+  @override
+  String get deselectAll => 'Deselect All';
+
+  @override
+  String get selectAll => 'Select All';
+
+  @override
+  String get myCustomMissions => 'My Custom Missions';
+
+  @override
+  String get myCustomMissionsDesc => 'Add missions you\'ve created before.';
+
+  @override
+  String get createYourOwnMission => 'Create Your Own Mission';
+
+  @override
+  String get createYourOwnMissionDesc =>
+      'Create a mission if you don\'t find what you want.';
+
+  @override
+  String get missionNameHint => 'Enter mission name (e.g. Go to gym)';
+
+  @override
+  String get selectCategory => 'Select Category';
+
+  @override
+  String get getNotification => 'Get Notification';
+
+  @override
+  String get missionCategoryHealth => 'Health';
+
+  @override
+  String get missionCategoryStudy => 'Study';
+
+  @override
+  String get missionCategoryRoutine => 'Routine';
+
+  @override
+  String get missionCategoryHobby => 'Hobby';
+
+  @override
+  String get missionCategoryOther => 'Other';
+
+  @override
+  String get copyEmailSuccessMessage =>
+      'Email address copied. Please paste it in your email app.';
+
+  @override
+  String get supportSubmitButton => 'Copy Inquiry and Send';
+
+  @override
+  String get shakePhone => 'Please shake your phone!';
+
+  @override
+  String version(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get fortuneCheckButton => 'Check Fortune';
+
+  @override
+  String get fortuneSelectCards => 'Select 3 cards';
+
+  @override
+  String get fortuneDragCards => 'Drag and select 3 cards';
+
+  @override
+  String get fortuneDetailTitle => 'Detailed Interpretation';
+
+  @override
+  String get labelFineDust => 'Fine Dust';
+
+  @override
+  String get labelUltraFineDust => 'Ultra Fine Dust';
+
+  @override
+  String get weatherToday => 'Today\'s Weather';
+
+  @override
+  String get weatherUpdateMessage =>
+      'Updating weather information for current location.';
+
+  @override
+  String get weatherDisclaimer =>
+      'Observed data may vary depending on local conditions or reception status.';
+
+  @override
+  String get weatherSource => 'Weather data provided by trusted services';
+
+  @override
+  String get locationPermissionTitle => 'Allow Location Permission';
+
+  @override
+  String get locationPermissionDesc =>
+      'Required to display weather information.';
+
+  @override
+  String get hourlyForecast => 'Hourly Forecast';
+
+  @override
+  String get weeklyForecast => 'Weekly Forecast';
+
+  @override
+  String hourFormat(String hour) {
+    return '${hour}h';
+  }
+
+  @override
+  String get noNotifications => 'No new notifications.';
+
+  @override
+  String get adLoadFailed => 'Ad failed to load';
+
+  @override
+  String get adLoading => 'Loading ad...';
+
+  @override
+  String get removeAds => 'Remove Ads';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get exitQuestion => 'Do you want to exit?';
+
+  @override
+  String get exitApp => 'Exit';
+
+  @override
+  String get shareResultDescription =>
+      'This is your fortune result analyzed by Fortune Alarm.';
+
+  @override
+  String get shareResultButton => 'Share Result';
+
+  @override
+  String get unknownTime => 'Unknown Time';
+
+  @override
+  String get adLoadError =>
+      'Could not load the ad. Please try again in a moment.';
+
+  @override
+  String get adShowError =>
+      'Could not display the ad. Please try again in a moment.';
+
+  @override
+  String earnCookies(int count) {
+    return 'You\'ve earned $count fortune cookies! 🎉';
+  }
+
+  @override
+  String get freePassAfterTimeout =>
+      'Showing results for free without an ad! 🎉';
+
+  @override
+  String get adLoadDelay =>
+      'Loading is delayed.\nPlease try again in a moment.';
+
+  @override
+  String get fortuneAccessTitle => 'Check Fortune';
+
+  @override
+  String get fortuneAccessSubtitle =>
+      'Check your fortune results\nand get hidden gifts!';
+
+  @override
+  String get watchAdButtonText => 'Watch Ad for Free Results';
+
+  @override
+  String useCookiesButtonText(int count) {
+    return 'Use $count Fortune Cookies';
+  }
+
+  @override
+  String get adFailFreePass =>
+      'Could not load the ad, so we\'ll let you through for free this time.';
+
+  @override
+  String get luckyNumberTitle => 'My Lucky Numbers';
+
+  @override
+  String get luckyNumberSubtitle => 'AI-powered lucky numbers for your day';
+
+  @override
+  String get luckyNumberGenerateButton => 'Generate Lucky Numbers';
+
+  @override
+  String get luckyNumberGuideText =>
+      'Discover your own lucky numbers\nthrough Fortune Alarm\'s AI algorithm';
+
+  @override
+  String get luckyNumberAnalysisStep1 => 'Gathering fortune data...';
+
+  @override
+  String get luckyNumberAnalysisStep2 => 'Reviewing recent number patterns...';
+
+  @override
+  String get luckyNumberAnalysisStep3 => 'Evaluating number probabilities...';
+
+  @override
+  String get luckyNumberAnalysisStep4 => 'Studying geometric sequences...';
+
+  @override
+  String get luckyNumberAnalysisStep5 => 'Applying AI prediction weights...';
+
+  @override
+  String get luckyNumberAnalysisStep6 => 'Calculating optimal combinations...';
+
+  @override
+  String get luckyNumberAnalysisStep7 =>
+      'Analysis complete! Generating numbers...';
+
+  @override
+  String get luckyNumberAnalysisFinal => 'Processing final data...';
+
+  @override
+  String get luckyNumberAnalyzing => 'Analyzing energy...';
+
+  @override
+  String get luckyNumberGeometric => 'Geometric analysis...';
+
+  @override
+  String get luckyNumberPatterns => 'Pattern matching...';
+
+  @override
+  String get luckyNumberEnergy => 'Energy harmonization...';
+
+  @override
+  String get luckyNumberCompleted => 'Analysis completed!';
+
+  @override
+  String get luckyNumberShare => 'Share Results';
+
+  @override
+  String get luckyNumberRestart => 'Try Again';
+
+  @override
+  String get luckyNumberGenerating => 'Generating lucky numbers...';
+
+  @override
+  String get luckyNumberResultTitle => 'Lucky number generation complete';
+
+  @override
+  String get luckyNumberResultSubtitle => '6 numbers + bonus number';
+
+  @override
+  String get luckyNumberDisclaimer =>
+      '* This service is for entertainment purposes. Numbers provided are for reference generated by AI algorithms and do not guarantee a win.';
+
+  @override
+  String get luckyNumberShareTitle => 'Today\'s Lucky Numbers';
+
+  @override
+  String get luckyNumberShareDescription =>
+      'Lucky numbers analyzed by Fortune Alarm.';
+
+  @override
+  String luckyNumberSetLabel(String label) {
+    return 'Set $label';
+  }
+
+  @override
+  String get luckyNumberRegenerateButton => 'Regenerate numbers';
+
+  @override
+  String get luckyNumberFeatureAiTitle => 'AI Recommendation';
+
+  @override
+  String get luckyNumberFeatureAiDesc => 'Smart AI Algorithm';
+
+  @override
+  String get luckyNumberFeatureSmartTitle => 'Smart';
+
+  @override
+  String get luckyNumberFeatureSmartDesc => 'Personalized Recommendations';
+
+  @override
+  String get luckyNumberFeatureDataTitle => 'Data Analysis';
+
+  @override
+  String get luckyNumberFeatureDataDesc => 'Probability Analysis';
+
+  @override
+  String get fortunePassTitle => 'Fortune Pass Premium';
+
+  @override
+  String get fortunePassTabFree => 'Free Charge';
+
+  @override
+  String get fortunePassTabPremium => 'Fortune Pass';
+
+  @override
+  String get fortunePassFreeChargeTitle =>
+      'Watch an ad to charge fortune cookies for free!';
+
+  @override
+  String get fortunePassFreeChargeButton => 'Watch Ad & Charge (+1)';
+
+  @override
+  String get fortunePassActivePlan => 'Current Subscription Plan';
+
+  @override
+  String get fortunePassNoSubscription => 'No Subscription Found';
+
+  @override
+  String get fortunePassRestore => 'Restore';
+
+  @override
+  String get fortunePassMonth1Title => '1 Month Subscription';
+
+  @override
+  String get fortunePassMonth1Desc => 'Monthly Plan';
+
+  @override
+  String get fortunePassMonth6Title => '6 Month Subscription';
+
+  @override
+  String get fortunePassMonth6Desc => '180 Days Plan';
+
+  @override
+  String get fortunePassYear1Title => '12 Month Subscription';
+
+  @override
+  String get fortunePassYear1Desc => '1 Year Plan';
+
+  @override
+  String get fortunePassBestPlan => 'Popular';
+
+  @override
+  String fortunePassTimeSaleLabel(int percent) {
+    return '$percent% Time Sale!';
+  }
+
+  @override
+  String fortunePassOffLabel(int percent) {
+    return '$percent% OFF';
+  }
+
+  @override
+  String get fortunePassPerMonth => ' /mo';
+
+  @override
+  String fortunePassTotalPrice(String price, String unit) {
+    return 'Total $price / $unit';
+  }
+
+  @override
+  String get fortunePassUnitMonth => 'Month';
+
+  @override
+  String get fortunePassUnit6Months => '6 Months';
+
+  @override
+  String get fortunePassUnitYear => 'Year';
+
+  @override
+  String get fortunePassMyCookies => 'My Fortune Cookies';
+
+  @override
+  String get fortunePassCurrentStatus => 'Pass Status';
+
+  @override
+  String get fortunePassStatusPremium => 'Premium Pass Active';
+
+  @override
+  String get fortunePassStatusFree => 'Free User';
+
+  @override
+  String get fortunePassStoreErrorTitle => 'Unavailable';
+
+  @override
+  String get fortunePassStoreErrorContent =>
+      'Cannot retrieve product information from the store.\n\n[Checklist]\n1. Google Play / App Store Login\n2. Internet Connection\n3. Test Device Registration';
+
+  @override
+  String fortunePassSubscribeSale(int percent) {
+    return 'Subscribe with $percent% OFF';
+  }
+
+  @override
+  String get fortunePassSubscribeNow => 'Subscribe Now';
+
+  @override
+  String get fortunePassApplied => 'Fortune Pass subscription applied.';
+
+  @override
+  String get fortunePassApplyFailed =>
+      'Failed to apply subscription. Check your network.';
+
+  @override
+  String get fortunePassRestored => 'Purchases restored.';
+
+  @override
+  String get fortunePassRestoreFailed => 'Failed to restore purchases.';
+
+  @override
+  String get fortunePassTimeSaleTitle => 'Wait! A gift has arrived 🎁';
+
+  @override
+  String fortunePassTimeSalePriceOriginal(String price) {
+    return 'Original price ₩$price/year';
+  }
+
+  @override
+  String fortunePassTimeSalePriceDiscount(String price) {
+    return '₩$price/year';
+  }
+
+  @override
+  String get fortunePassTimeSaleBadge =>
+      '50% off if you subscribe within 3 minutes!';
+
+  @override
+  String get fortunePassTimeSaleButton => 'Get Discount and Start Pro';
+
+  @override
+  String get fortunePassTimeSaleCancel => 'Maybe next time';
+
+  @override
+  String get fortunePassTimeSaleStartMessage =>
+      '3-minute discount has started! Check the top banner.';
+
+  @override
+  String get fortunePassSubscribeButton => 'Subscribe Now';
+
+  @override
+  String get fortunePassSubscribeDiscountButton => 'Subscribe with 50% Off';
+
+  @override
+  String get fortunePassCookieBalance => 'Your Fortune Cookies';
+
+  @override
+  String fortunePassCookieCount(int count) {
+    return '$count';
+  }
+
+  @override
+  String get fortunePassActive => 'Pass Active';
+
+  @override
+  String fortunePassTotalFormat(String price, String unit) {
+    return 'Total ₩$price / $unit';
+  }
+
+  @override
+  String get fortunePassPopularPlan => 'Popular Plan';
+
+  @override
+  String get fortunePassPricePerMonth => ' /mo';
+
+  @override
+  String get fortunePassPaymentFailed => 'Payment request failed.';
+
+  @override
+  String get fortunePassSubscriptionFailed =>
+      'Failed to apply subscription. Please check your network.';
+
+  @override
+  String get fortunePassSubscriptionSuccess =>
+      'Fortune Pass subscription has been applied.';
+
+  @override
+  String get fortunePassCannotSubscribeTitle => 'Cannot Subscribe';
+
+  @override
+  String get fortunePassCannotSubscribeMessage =>
+      'Unable to retrieve product information from the store at this time.\n\n[Check List]\n1. Google Play / App Store login status\n2. Internet connection\n3. Test device registration status';
+
+  @override
+  String get year => 'Y';
+
+  @override
+  String get month => 'M';
+
+  @override
+  String get day => 'D';
+
+  @override
+  String get sajuProfileTitle => 'Edit Main Four Pillars of Destiny Profile';
+
+  @override
+  String get sajuNameLabel => 'Name';
+
+  @override
+  String get sajuNameHint => 'Please enter your name';
+
+  @override
+  String get sajuNameHelper => 'Up to 6 characters';
+
+  @override
+  String get sajuGenderLabel => 'Gender';
+
+  @override
+  String get sajuGenderMale => 'Male';
+
+  @override
+  String get sajuGenderFemale => 'Female';
+
+  @override
+  String get sajuBirthDateLabel => 'Birth Date';
+
+  @override
+  String get sajuBirthTimeLabel => 'Birth Time';
+
+  @override
+  String get sajuUnknownTime => 'Unknown Time';
+
+  @override
+  String get sajuEditComplete => 'Edit Complete';
+
+  @override
+  String get sajuSolar => 'Solar';
+
+  @override
+  String get sajuLunar => 'Lunar';
+
+  @override
+  String get sajuSelectBirthDate => 'Select Birth Date';
+
+  @override
+  String get sajuSelectBirthTime => 'Select Birth Time';
+
+  @override
+  String get compatibilityTitle => 'Check Compatibility';
+
+  @override
+  String get compatibilityInputHeader => 'Please enter information for both';
+
+  @override
+  String get compatibilityInputSubtitle =>
+      'We will analyze the exact compatibility based on Four Pillars of Destiny information.';
+
+  @override
+  String get compatibilityMyInfo => 'My Information';
+
+  @override
+  String get compatibilityInputMyNameGuide => 'Please enter your name.';
+
+  @override
+  String get compatibilityInputPartnerNameGuide =>
+      'Please enter partner\'s name.';
+
+  @override
+  String get compatibilityPartnerInfo => 'Partner\'s Information';
+
+  @override
+  String get compatibilityLoadSaved => 'Load Saved Info';
+
+  @override
+  String get compatibilityTitleBest => 'A match made in heaven! ❤️';
+
+  @override
+  String get compatibilityDescBest =>
+      'The best compatibility you could ask for. Don\'t let each other go!';
+
+  @override
+  String get compatibilityDescBest_Youth =>
+      'You two are the best partners for a fresh and passionate love. It\'s beautiful to see you supporting each other\'s dreams and growing together! You are a relationship that provides positive stimulation to each other by sharing concerns about studies or career. If you cherish and care for each other as you do now, you are a match made in heaven that can overcome any trial together.';
+
+  @override
+  String get compatibilityDescBest_Mature =>
+      'This is the best compatibility to be a strong support for each other during important stages of life. You can build a stable and deep love based on trust. You will feel each other\'s preciousness more strongly in the process of solving realistic problems together, and your values match so well that you couldn\'t find a better partner to plan your future with.';
+
+  @override
+  String get compatibilityDescBest_Senior =>
+      'You are the best match to be a warm comfort and a safe haven for each other as life companions. You can share a deep connection where hearts communicate even without words. It\'s a mature relationship where you can enjoy a relaxed life while taking care of each other\'s health and peace. Your way of respecting and embracing each other\'s life wisdom is a beautiful journey that serves as a model for those around you.';
+
+  @override
+  String get compatibilityTitleGreat => 'A very good relationship 💕';
+
+  @override
+  String get compatibilityDescGreat =>
+      'A great partner who is a huge support to each other.';
+
+  @override
+  String get compatibilityDescGreat_Youth =>
+      'You are a very good match that gives positive energy to each other. You can spend such happy and enjoyable times together that you won\'t even notice time passing. Although you may clash occasionally due to your unique personalities, you have a vibrant relationship where you can quickly reconcile through conversation and develop into an even deeper bond.';
+
+  @override
+  String get compatibilityDescGreat_Mature =>
+      'You are wonderful partners who can wisely navigate realistic problems together. It\'s a relationship where you create synergy by filling each other\'s deficiencies. As a mature couple who balances work, love, and home well while supporting each other\'s growth, you have a stable compatibility where synergy shines more as you stay together.';
+
+  @override
+  String get compatibilityDescGreat_Senior =>
+      'You are very good partners who can enjoy a relaxed life while taking care of each other\'s health and peace. Your mere presence is a great strength and comfort to each other. It\'s a relationship where you build deep emotional bonds by sharing small daily lives such as hobbies or walks. You are a warm and affectionate match that meticulously takes care of each other\'s health.';
+
+  @override
+  String get compatibilityTitleGood => 'A well-matched couple 😊';
+
+  @override
+  String get compatibilityDescGood =>
+      'There are some differences, but you can have a beautiful love while adjusting to each other.';
+
+  @override
+  String get compatibilityDescGood_Youth =>
+      'You are a couple with well-matched tastes and values. Although you might bicker occasionally, even those processes will be precious times to get to know each other more deeply. If you exercise the virtue of recognizing each other\'s differences as individuality and yielding a little, you have a good compatibility that can sufficiently continue a happy relationship.';
+
+  @override
+  String get compatibilityDescGood_Mature =>
+      'You are a couple who blends harmoniously while respecting each other\'s values. You can grow your love while maintaining a good balance between reality and ideals. Although conflicts may arise occasionally due to each other\'s stubbornness, you have a solid relationship where deep trust allows you to overcome them without major issues.';
+
+  @override
+  String get compatibilityDescGood_Senior =>
+      'You are a harmonious couple who embraces each other based on long experience and wisdom. You can enjoy peaceful happiness by sharing small daily routines. It\'s a relationship where you can stay comfortably like friends while respecting and considering each other\'s lifestyle habits. Just reliably staying by each other\'s side is a sufficiently satisfying bond.';
+
+  @override
+  String get compatibilityTitleEffort => 'Effort is needed 🧐';
+
+  @override
+  String get compatibilityDescEffort =>
+      'There are many differences. Understanding and consideration are key to the relationship.';
+
+  @override
+  String get compatibilityDescEffort_Youth =>
+      'Since you grew up in different environments, there are many things to adjust. You need to make an effort to understand each other\'s feelings first rather than just asserting your own arguments. Honestly expressing emotions and spending more time in conversation so that small misunderstandings don\'t grow will be a great help in maintaining the relationship.';
+
+  @override
+  String get compatibilityDescEffort_Mature =>
+      'Conflicts may arise because each person\'s perspective is distinct. Respecting each other\'s lifestyles and yielding a little is the key to maintaining the relationship. When conflicts arise due to realistic problems, it\'s a time when wisdom is needed to calmly organize each other\'s positions rather than reacting emotionally.';
+
+  @override
+  String get compatibilityDescEffort_Senior =>
+      'Discomfort may arise due to lifestyle habits that have been fixed for a long time. Recognizing each other\'s space and having a considerate mind is the shortcut to creating a comfortable relationship. Rather than insisting only on your own way, you need a warm heart that considers the other\'s comfort first. Try focusing on improving the quality of the time you spend together.';
+
+  @override
+  String get compatibilityTitleDifficult => 'Need to adjust a lot 😅';
+
+  @override
+  String get compatibilityDescDifficult =>
+      'Personality differences can be large. You need to deeply understand each other\'s differences.';
+
+  @override
+  String get compatibilityDescDifficult_Youth =>
+      'Differences in personality or lifestyle can feel significant. You need to learn how to recognize each other\'s differences through calm conversation rather than reacting emotionally. Patience to accept each other as they are rather than trying to change each other will be the key to the relationship.';
+
+  @override
+  String get compatibilityDescDifficult_Mature =>
+      'Concerns may deepen due to differences in values or realistic problems. Deep understanding and patience are required, and the will to recognize each other\'s differences is important. Rather than expecting too much from each other, try to have a heart of gratitude for small things. Changing the way you communicate can also be a good solution.';
+
+  @override
+  String get compatibilityDescDifficult_Senior =>
+      'Communication may be difficult because each other\'s stubbornness is strong. It\'s important to accept the other person as they are now rather than being tied to past experiences. A warm word rather than silence can be the start of improving the relationship. An attitude of maintaining minimum courtesy while respecting each other\'s independence is required.';
+
+  @override
+  String get compatibilityAdvice_Youth =>
+      'Spend more time sharing and supporting each other\'s dreams. Accumulating diverse experiences together, such as starting new hobbies or going on trips, will be a great vitality to the relationship. When talking, try to empathize first rather than criticize.';
+
+  @override
+  String get compatibilityAdvice_Mature =>
+      'It\'s important to secure time for just the two of you even in a busy daily life. Acknowledge each other\'s hard work and offer a warm word. You need an attitude of trying not to forget the excitement of the early days of dating by celebrating anniversaries or enjoying regular dates.';
+
+  @override
+  String get compatibilityAdvice_Senior =>
+      'Enjoy walks or light trips while taking care of health together. It\'s good to build emotional bonds by sharing each other\'s life wisdom. Focus on increasing the time you can rest comfortably together rather than excessive activities. Meticulously checking and caring for each other\'s health status is important.';
+
+  @override
+  String get compatibilityLuck_Youth =>
+      'Your energies are combined, creating a fortune where you can achieve great accomplishments in studies or career. A good energy flows where you become each other\'s lucky charm, and things you plan work out smoothly.';
+
+  @override
+  String get compatibilityLuck_Mature =>
+      'This is a compatibility where great luck follows when managing assets or planning for the future together. The synergy is very good, and there is a strong fortune for wealth and success where economic stability and social status can rise together.';
+
+  @override
+  String get compatibilityLuck_Senior =>
+      'It\'s a fortune where emotional stability and peace reside. You become each other\'s best health supplement, and the energy is full of blessings for a long and healthy life in a peaceful retirement. It\'s a virtuous bond that also has a positive impact on descendants.';
+
+  @override
+  String get tarotLoveMeaning0_Senior =>
+      'It\'s a time to find joy in small daily changes rather than new excitement.';
+
+  @override
+  String get tarotLoveDetail0_Senior =>
+      'Share your long-accumulated know-how and talents with those around you rather than grand plans. You will feel great reward and a deep bond in the process of helping or advising someone.';
+
+  @override
+  String get tarotLoveMeaning1_Senior =>
+      'Wise and calm conversation makes the relationship deeper.';
+
+  @override
+  String get tarotLoveDetail1_Senior =>
+      'Listening and empathizing with the other person is enough. If you share your heart slowly without rushing, you will be able to feel a deep bond that communicates even without words. Take time to cultivate your inner self.';
+
+  @override
+  String get tarotLoveMeaning2_Senior =>
+      'A tolerant heart makes people around you happy.';
+
+  @override
+  String get tarotLoveDetail2_Senior =>
+      'It\'s a time to take care of your surroundings with a warm, mother-like heart. A warm word to your spouse or family will come back as a great strength. Peace is full in the house, so enjoy daily life with a relaxed mind.';
+
+  @override
+  String get tarotLoveMeaning3_Senior =>
+      'A responsible attitude protects the harmony of the family.';
+
+  @override
+  String get tarotLoveDetail3_Senior =>
+      'It\'s a time to take the center and lead in the family. Sometimes you may need to be strict, but in the end, it must be based on deep love for the family. Your dedication and effort will give the family a sense of stability.';
+
+  @override
+  String get tarotLoveMeaning4_Senior =>
+      'Value tradition and courtesy and maintain a stable relationship.';
+
+  @override
+  String get tarotLoveDetail4_Senior =>
+      'Long-held values or rules give stability to the relationship. Listen to the advice of those around you, but don\'t lose your conviction. A polite and respectful attitude will give deep trust to the other person.';
+
+  @override
+  String get tarotLoveMeaning5_Senior =>
+      'It\'s a time when prudence is needed at the crossroads of choice.';
+
+  @override
+  String get tarotLoveDetail5_Senior =>
+      'Focus on your current precious relationships rather than surrounding temptations or new changes. When your heart is shaken, reflecting on your rich life experience helps. The right choice will eventually bring a peaceful future.';
+
+  @override
+  String get tarotLoveMeaning6_Senior =>
+      'Overcome difficulties with strong will and achieve harmony.';
+
+  @override
+  String get tarotLoveDetail6_Senior =>
+      'Even if conflict arises, don\'t give up and solve it through conversation. Your firm will and patience will eventually bear good fruit. A stronger bond will be created in the process of setting goals and working together.';
+
+  @override
+  String get tarotLoveMeaning7_Senior =>
+      'Make the relationship smooth with patience and benevolence.';
+
+  @override
+  String get tarotLoveDetail7_Senior =>
+      'It\'s a time when gentle persuasion and understanding are needed rather than forcing. Your mature attitude will move the other person\'s heart. Have the leisure to smile once more rather than getting angry.';
+
+  @override
+  String get tarotLoveMeaning8_Senior =>
+      'Discover your true self in solitude and gain wisdom.';
+
+  @override
+  String get tarotLoveDetail8_Senior =>
+      'It\'s also good to take a moment of your own and look back on the life you\'ve passed. The realization gained in the stillness will make future relationships richer. Don\'t rush and face yourself slowly.';
+
+  @override
+  String get tarotLoveMeaning9_Senior =>
+      'Leave yourself to the flow of fate and accept change.';
+
+  @override
+  String get tarotLoveDetail9_Senior =>
+      'Don\'t be flustered even if unexpected changes occur. This can be a process for a better future. If you accept change with a positive mind, new luck will find your relationship.';
+
+  @override
+  String get tarotLoveMeaning10_Senior =>
+      'A cool-headed judgment and just attitude build trust.';
+
+  @override
+  String get tarotLoveDetail10_Senior =>
+      'Look at the situation with an objective view rather than being biased by emotions. A fair and honest attitude will make you respected by those around you. Be clear about right and wrong, but don\'t forget warm consideration.';
+
+  @override
+  String get tarotLoveMeaning11_Senior =>
+      'Patience and sacrifice come back as greater love.';
+
+  @override
+  String get tarotLoveDetail11_Senior =>
+      'It\'s a time to silently keep your place and dedicate yourself rather than expecting immediate rewards. Your sincerity will eventually be delivered to the other person and give deep impression. If you endure difficult situations wisely, you will eventually see the light.';
+
+  @override
+  String get tarotLoveMeaning12_Senior =>
+      'Empty unnecessary things and prepare for a new start.';
+
+  @override
+  String get tarotLoveDetail12_Senior =>
+      'It\'s time to let go of past obsessions or old habits. New hope and energy will be filled in the emptied place. Don\'t fear change and take a step forward with courage.';
+
+  @override
+  String get tarotLoveMeaning13_Senior =>
+      'Maintain a peaceful relationship through moderation and harmony.';
+
+  @override
+  String get tarotLoveDetail13_Senior =>
+      'It\'s important to control your heart and keep balance so as not to overdo it. True peace comes when you acknowledge each other\'s differences and try to achieve harmony. Find happiness in simple daily life.';
+
+  @override
+  String get tarotLoveMeaning14_Senior =>
+      'It\'s a time when rational control is needed rather than instinctive desires.';
+
+  @override
+  String get tarotLoveDetail14_Senior =>
+      'Aim for a free and comfortable relationship rather than obsession or restraint. You should try to lift the dark shadow in your heart and move to a bright place. Loving yourself is the start of improving the relationship.';
+
+  @override
+  String get tarotLoveMeaning15_Senior =>
+      'Keep an unwavering center even in sudden changes.';
+
+  @override
+  String get tarotLoveDetail15_Senior =>
+      'Unexpected conflicts may arise, but this is rather an opportunity to reorganize the relationship. If you cope calmly without being flustered, you will be able to form a stronger bond.';
+
+  @override
+  String get tarotLoveMeaning16_Senior =>
+      'The starlight of hope brightly shines on your relationship.';
+
+  @override
+  String get tarotLoveDetail16_Senior =>
+      'It\'s a time when peace and rest come after a difficult period. Dream of a positive future and plan together. Your bright energy will be a great joy to those around you.';
+
+  @override
+  String get tarotLoveMeaning17_Senior =>
+      'Shake off anxiety and move forward believing in your intuition.';
+
+  @override
+  String get tarotLoveDetail17_Senior =>
+      'Think of trust in each other first rather than doubts in your heart. Like the clear sky after the fog lifts, the truth will be revealed over time. Wisdom to wait calmly without being hasty is needed.';
+
+  @override
+  String get tarotLoveMeaning18_Senior =>
+      'It\'s a time full of joy and blessings under the bright sun.';
+
+  @override
+  String get tarotLoveDetail18_Senior =>
+      'It\'s a time overflowing with active and positive energy. Spend a pleasant time with family or acquaintances and enjoy happiness. Your bright smile will melt all conflicts.';
+
+  @override
+  String get tarotLoveMeaning19_Senior =>
+      'See the fruit of your efforts and prepare for a new leap.';
+
+  @override
+  String get tarotLoveDetail19_Senior =>
+      'It\'s a time to feel rewarded as your hard work is recognized. Good news may be heard, so accept it with an open heart. It\'s time to organize the past and move toward new hope.';
+
+  @override
+  String get tarotLoveMeaning20_Senior =>
+      'Achieve completion and harmony and enjoy the best happiness.';
+
+  @override
+  String get tarotLoveDetail20_Senior =>
+      'It\'s a time full of peace and satisfaction gained at the end of a long journey. Enjoy daily happiness while achieving perfect harmony with nothing more to wish for. Your wisdom will be the light that brightens the surroundings.';
+
+  @override
+  String get tarotLoveMeaning21_Senior =>
+      'Enjoy the pleasure of daily life with a free and pure heart.';
+
+  @override
+  String get tarotLoveDetail21_Senior =>
+      'Try to get along with people around you with a free spirit that is not bound. New encounters or experiences will breathe vitality into your life. Have the leisure to look at the world with a light heart.';
+
+  @override
+  String get tarotWealthMeaning0_Senior =>
+      'A time for stable asset management and the wisdom of sharing.';
+
+  @override
+  String get tarotWealthDetail0_Senior =>
+      'Focus on protecting and managing your current assets rather than new investments. Sharing your economic wisdom or giving advice to family and those around you will be very rewarding.';
+
+  @override
+  String get tarotWealthMeaning1_Senior =>
+      'Revenue generation using knowledge and experience is expected.';
+
+  @override
+  String get tarotWealthDetail1_Senior =>
+      'Your specialized knowledge or skills accumulated over a long time can return as economic value. Wait calmly for opportunities without rushing, and you will bear good fruit.';
+
+  @override
+  String get tarotWealthMeaning2_Senior =>
+      'Enjoy the joy of sharing bountiful fruits with your family.';
+
+  @override
+  String get tarotWealthDetail2_Senior =>
+      'Wealth accumulates in the house and it\'s a time to find stability. Your generous heart will make your surroundings warm, and that blessing will return to you. Enjoy daily life with a relaxed mind.';
+
+  @override
+  String get tarotSuccessMeaning0_Senior =>
+      'A time when concluding with a graceful finish is more important than new challenges.';
+
+  @override
+  String get tarotSuccessDetail0_Senior =>
+      'Focus on organizing and concluding the achievements you\'ve built up. Your success lies in the sincerity and wisdom shown in the process rather than the result. Spread positive influence around you.';
+
+  @override
+  String get tarotSuccessMeaning1_Senior =>
+      'Inner peace and spiritual growth are true successes.';
+
+  @override
+  String get tarotSuccessDetail1_Senior =>
+      'Your inner peace is more important than social status or honor. Take time to cultivate your inner self through meditation or reading. Deep insight will make you shine even more.';
+
+  @override
+  String get tarotSuccessMeaning2_Senior =>
+      'Family harmony and health are the greatest achievements.';
+
+  @override
+  String get tarotSuccessDetail2_Senior =>
+      'Living harmoniously with family and maintaining health is a sufficiently successful life. Find happiness in small daily routines and have a grateful heart. Your existence itself is a great strength to your family.';
+
+  @override
+  String get tarotWealthMeaning3_Senior =>
+      'Responsible asset operation brings prosperity to the family.';
+
+  @override
+  String get tarotWealthDetail3_Senior =>
+      'Maintain household stability through stable income sources and planned consumption. Your economic wisdom will be a great lesson for your children.';
+
+  @override
+  String get tarotWealthMeaning4_Senior =>
+      'A time when traditional ways of saving and management are advantageous.';
+
+  @override
+  String get tarotWealthDetail4_Senior =>
+      'We recommend verified asset management methods rather than complex financial products. A cautious and conservative attitude is key to protecting your assets.';
+
+  @override
+  String get tarotWealthMeaning5_Senior =>
+      'Exercise life wisdom in choices related to wealth.';
+
+  @override
+  String get tarotWealthDetail5_Senior =>
+      'It\'s better to be satisfied with your current life and be substantial rather than being greedy. The right choice guarantees peace in old age.';
+
+  @override
+  String get tarotWealthMeaning6_Senior =>
+      'Difficult economic situations can also be overcome with patience.';
+
+  @override
+  String get tarotWealthDetail6_Senior =>
+      'There may be temporary cash flow pressure, but if you deal with it wisely, you can turn crisis into opportunity. Reduce unnecessary spending.';
+
+  @override
+  String get tarotWealthMeaning7_Senior =>
+      'A time when you gain greater abundance through giving.';
+
+  @override
+  String get tarotWealthDetail7_Senior =>
+      'If you accumulate virtue around you, wealth luck will follow from unexpected places. The joy of sharing will make your life even richer.';
+
+  @override
+  String get tarotWealthMeaning8_Senior =>
+      'Realize the true meaning of wealth in a simple life.';
+
+  @override
+  String get tarotWealthDetail8_Senior =>
+      'It\'s important to find leisure of mind rather than material abundance. A disciplined life will rather bring economic stability.';
+
+  @override
+  String get tarotWealthMeaning9_Senior =>
+      'The flow of wealth is changing, so deal with it flexibly.';
+
+  @override
+  String get tarotWealthDetail9_Senior =>
+      'Unexpected income or expenses may occur. If you adapt to change and manage your assets wisely, there will be no major problems.';
+
+  @override
+  String get tarotWealthMeaning10_Senior =>
+      'Fair and transparent property management increases trust.';
+
+  @override
+  String get tarotWealthDetail10_Senior =>
+      'It\'s important to follow principles in property issues such as inheritance or gift. An honest attitude prevents disputes and brings peace.';
+
+  @override
+  String get tarotWealthMeaning11_Senior =>
+      'A time when sacrifice for the future is more valuable than immediate gain.';
+
+  @override
+  String get tarotWealthDetail11_Senior =>
+      'Economic support for children or descendants will return as a great reward later. Be patient and maintain a long-term perspective.';
+
+  @override
+  String get tarotWealthMeaning12_Senior =>
+      'Let go of obsession with wealth and find peace of mind.';
+
+  @override
+  String get tarotWealthDetail12_Senior =>
+      'You will have a mysterious experience where you are filled by emptying. Let go of unnecessary possessiveness and face daily life with a light heart.';
+
+  @override
+  String get tarotWealthMeaning13_Senior =>
+      'Balanced consumption habits give economic freedom.';
+
+  @override
+  String get tarotWealthDetail13_Senior =>
+      'Seek harmony between income and expenditure and beware of excessive greed. A disciplined life will bring you continuous stability.';
+
+  @override
+  String get tarotWealthMeaning14_Senior =>
+      'Overcome material temptations and judge rationally.';
+
+  @override
+  String get tarotWealthDetail14_Senior =>
+      'You must be careful of sweet investment offers or excessive expansion. Trusting your rich experience and making cautious decisions is the way to protect your assets.';
+
+  @override
+  String get tarotWealthMeaning15_Senior =>
+      'Respond calmly to sudden economic changes.';
+
+  @override
+  String get tarotWealthDetail15_Senior =>
+      'In a crisis situation, the wisdom of returning to basics is needed. Don\'t be flustered and meticulously check your asset status to minimize damage.';
+
+  @override
+  String get tarotWealthMeaning16_Senior =>
+      'A bright star of wealth luck shines on your future.';
+
+  @override
+  String get tarotWealthDetail16_Senior =>
+      'It\'s a time when economic hardships are resolved and a stable flow begins. Design your future with a positive mind and enjoy peace.';
+
+  @override
+  String get tarotWealthMeaning17_Senior =>
+      'Don\'t be deceived by uncertain information and trust your intuition.';
+
+  @override
+  String get tarotWealthDetail17_Senior =>
+      'Patience is needed to wait until the fog related to wealth lifts and the truth is revealed. Take your time and watch rather than making a hasty decision.';
+
+  @override
+  String get tarotWealthMeaning18_Senior =>
+      'A time full of joy with bountiful wealth luck.';
+
+  @override
+  String get tarotWealthDetail18_Senior =>
+      'Sufficient rewards follow your efforts and economic leisure arises. Share happiness with those around you and spend a blessed time.';
+
+  @override
+  String get tarotWealthMeaning19_Senior =>
+      'Receive just rewards and make a new economic plan.';
+
+  @override
+  String get tarotWealthDetail19_Senior =>
+      'It\'s a time when your sincerity is recognized as economic achievement. Organize the past and take a new step for a stable future.';
+
+  @override
+  String get tarotWealthMeaning20_Senior =>
+      'Wealth luck is completed and you enjoy unparalleled abundance.';
+
+  @override
+  String get tarotWealthDetail20_Senior =>
+      'Economic stability reaches its peak and a peaceful retirement is guaranteed. It\'s the moment when your wise asset management shines.';
+
+  @override
+  String get tarotWealthMeaning21_Senior =>
+      'Enjoy free abundance without being bound by wealth.';
+
+  @override
+  String get tarotWealthDetail21_Senior =>
+      'It\'s a time to value the joy of life rather than material possession. If you enjoy the world with a relaxed mind, wealth will naturally follow.';
+
+  @override
+  String get tarotSuccessMeaning3_Senior =>
+      'A time when life experience shines and you receive respect.';
+
+  @override
+  String get tarotSuccessDetail3_Senior =>
+      'Your leadership and wisdom serve as a great model for those around you. You will taste true success when you lead with tolerance rather than authority.';
+
+  @override
+  String get tarotSuccessMeaning4_Senior =>
+      'Your life itself, having kept long-held convictions, is success.';
+
+  @override
+  String get tarotSuccessDetail4_Senior =>
+      'It\'s a time when unwavering values bear fruit. Your principled life will serve as a milestone presenting the right path to juniors.';
+
+  @override
+  String get tarotSuccessMeaning5_Senior =>
+      'Establishing the right values determines success in the second half of life.';
+
+  @override
+  String get tarotSuccessDetail5_Senior =>
+      'It\'s a time to make a wise choice between honor and profit. Decisions made based on your rich experience will guarantee a peaceful future.';
+
+  @override
+  String get tarotSuccessMeaning6_Senior =>
+      'Persistent effort finally brings victory.';
+
+  @override
+  String get tarotSuccessDetail6_Senior =>
+      'No obstacle can break your will. Your appearance of moving forward without giving up is already a huge success.';
+
+  @override
+  String get tarotSuccessMeaning7_Senior =>
+      'Inner strength appears as a soft charisma.';
+
+  @override
+  String get tarotSuccessDetail7_Senior =>
+      'It\'s a time when softness overcomes strength. When you embrace surroundings with patience and benevolence, your honor will be even higher.';
+
+  @override
+  String get tarotSuccessMeaning8_Senior =>
+      'Wisdom gained after solitary practice is the highest achievement.';
+
+  @override
+  String get tarotSuccessDetail8_Senior =>
+      'It\'s a time when you realize deep truths that others cannot see. Quiet reflection time will make you a more mature and deep human being.';
+
+  @override
+  String get tarotSuccessMeaning9_Senior =>
+      'Ride the wave of change and grab new opportunities.';
+
+  @override
+  String get tarotSuccessDetail9_Senior =>
+      'A new chapter of life is opening. If you accept change positively without fearing it, you will achieve unexpectedly great results.';
+
+  @override
+  String get tarotSuccessMeaning10_Senior =>
+      'A fair and just attitude makes your honor shine even more.';
+
+  @override
+  String get tarotSuccessDetail10_Senior =>
+      'Appearance following justice rather than private interest calls for respect from surroundings. Your honesty will eventually be the key to the greatest success.';
+
+  @override
+  String get tarotSuccessMeaning11_Senior =>
+      'A noble spirit that is not afraid of sacrifice wins.';
+
+  @override
+  String get tarotSuccessDetail11_Senior =>
+      'Even if it\'s hard for now, it\'s a time to endure for a noble goal. Your dedication will remain as a beautiful success in the memory of history and people in the future.';
+
+  @override
+  String get tarotSuccessMeaning12_Senior =>
+      'Let go of old standards of success and find new values.';
+
+  @override
+  String get tarotSuccessDetail12_Senior =>
+      'It\'s important to realize the preciousness of the present rather than obsessing over past glory. Peace gained by emptying is true success in life.';
+
+  @override
+  String get tarotSuccessMeaning13_Senior =>
+      'A time when the aesthetics of harmony and moderation are completed.';
+
+  @override
+  String get tarotSuccessDetail13_Senior =>
+      'A balanced life that does not lean to either side is the highest virtue. Your disciplined appearance will spread peace and stability to your surroundings.';
+
+  @override
+  String get tarotSuccessMeaning14_Senior =>
+      'Overcoming inner darkness and gaining freedom is success.';
+
+  @override
+  String get tarotSuccessDetail14_Senior =>
+      'Find your true self by escaping from the restraints that bound you. The moment you gain freedom of mind, you will be the most successful person in the world.';
+
+  @override
+  String get tarotSuccessMeaning15_Senior =>
+      'A time when boldness to turn crisis into opportunity is needed.';
+
+  @override
+  String get tarotSuccessDetail15_Senior =>
+      'Sudden change is a process of making you stronger. When you establish a new order by responding calmly, greater achievements will follow.';
+
+  @override
+  String get tarotSuccessMeaning16_Senior =>
+      'Dream of a hopeful future and gain new inspiration.';
+
+  @override
+  String get tarotSuccessDetail16_Senior =>
+      'Rest comes to a tired soul and new dreams arise. Your creative energy will brighten surroundings and bear happy fruits.';
+
+  @override
+  String get tarotSuccessMeaning17_Senior =>
+      'Trust your intuition and silently go your way.';
+
+  @override
+  String get tarotSuccessDetail17_Senior =>
+      'Listen to your inner voice even in confusing situations. Over time, your choice will be proven right.';
+
+  @override
+  String get tarotSuccessMeaning18_Senior =>
+      'Vibrant energy brings the highest achievement.';
+
+  @override
+  String get tarotSuccessDetail18_Senior =>
+      'A time when body and mind are healthy and vibrant. Sharing positive energy with surroundings and enjoying the joy of life is true success.';
+
+  @override
+  String get tarotSuccessMeaning19_Senior =>
+      'Respond to the call and perform a new social role.';
+
+  @override
+  String get tarotSuccessDetail19_Senior =>
+      'Places that need your experience and wisdom arise. You will feel greater reward and success when you contribute to society with a new sense of mission.';
+
+  @override
+  String get tarotSuccessMeaning20_Senior =>
+      'Complete the journey of life and achieve perfect harmony.';
+
+  @override
+  String get tarotSuccessDetail20_Senior =>
+      'A state of perfect satisfaction and peace with nothing more to achieve. Your life itself will become a work of art and give deep impression to surroundings.';
+
+  @override
+  String get tarotSuccessMeaning21_Senior =>
+      'A free life without being bound is the highest success.';
+
+  @override
+  String get tarotSuccessDetail21_Senior =>
+      'Enjoy your own happiness away from the world\'s standards. You, who live as if traveling the world with a light heart, are the true winner.';
+
+  @override
+  String get compatibilityResultButton => 'View Compatibility Result';
+
+  @override
+  String get compatibilityDeleteTooltip => 'Delete';
+
+  @override
+  String get compatibilityGenderMale => 'Male';
+
+  @override
+  String get compatibilityGenderFemale => 'Female';
+
+  @override
+  String get compatibilityInputTitle => 'Compatibility Information Input';
+
+  @override
+  String get tojeongInputTitle => 'Tojeong Yearly Oracle Information Input';
+
+  @override
+  String tojeongCheckFortune(int year) {
+    return 'Check your $year\nTojeong Yearly Oracle';
+  }
+
+  @override
+  String get tojeongInputGuide =>
+      'Please enter your birth date and time\nfor an accurate analysis.';
+
+  @override
+  String tojeongViewResult(int year) {
+    return 'View $year Tojeong Yearly Oracle';
+  }
+
+  @override
+  String get tojeongCheckButton => 'Check Tojeong Yearly Oracle';
+
+  @override
+  String get tojeongSaveAndCheck => 'Save and View Tojeong Yearly Oracle';
+
+  @override
+  String get tojeongYearSelect => 'Select Fortune Year';
+
+  @override
+  String tojeongResultTitle(int year) {
+    return '$year Tojeong Yearly Oracle';
+  }
+
+  @override
+  String tojeongUserFortune(String name, int year) {
+    return '$name\'s $year Fortune';
+  }
+
+  @override
+  String tojeongGua(String gua) {
+    return 'Gua: $gua';
+  }
+
+  @override
+  String get tojeongTotalLuck => 'Total Luck';
+
+  @override
+  String get tojeongProcess => 'Process';
+
+  @override
+  String get tojeongResult => 'Result';
+
+  @override
+  String get tojeongMonthlyLuck => 'Monthly Fortune';
+
+  @override
+  String get tojeongShareResult => 'Share Results';
+
+  @override
+  String tojeongShareTitle(int year) {
+    return '$year Tojeong Yearly Oracle Results';
+  }
+
+  @override
+  String tojeongShareDesc(String name, String desc) {
+    return '$name\'s Tojeong Yearly Oracle overall review.\n\n$desc...';
+  }
+
+  @override
+  String get tojeongShareTargetYear => 'Target Year';
+
+  @override
+  String get sajuDeleteTitle => 'Delete Four Pillars of Destiny Info';
+
+  @override
+  String sajuDeleteConfirm(String name) {
+    return 'Are you sure you want to delete $name\'s info?';
+  }
+
+  @override
+  String get sajuProfileSelect => 'Select Four Pillars of Destiny Info';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get modify => 'Modify';
+
+  @override
+  String fortuneUnderConstructionTitle(String title) {
+    return '$title\nService is under preparation.';
+  }
+
+  @override
+  String get fortuneUnderConstructionSubtitle =>
+      'We are working hard to provide you with\nmore accurate and useful fortune information!';
+
+  @override
+  String get goBack => 'Go Back';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get nameInputGuide => 'Please enter your name';
+
+  @override
+  String get sajuLunarSolar => 'Solar/Lunar';
+
+  @override
+  String sajuBirthDateDisplay(int year, int month, int day) {
+    return '$year.$month.$day';
+  }
+
+  @override
+  String get sajuSelectFortuneYear => 'Select Fortune Year';
+
+  @override
+  String sajuYearDisplay(int year) {
+    return '$year';
+  }
+
+  @override
+  String get sajuSelectProfile => 'Select Profile';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get newYearFortuneInputTitle => 'New Year Fortune Info';
+
+  @override
+  String newYearFortuneHeader(int year) {
+    return 'How will your $year\nfortune be?';
+  }
+
+  @override
+  String get newYearFortuneSubHeader =>
+      'Please enter your birth date and time\nfor accurate Four Pillars of Destiny analysis.';
+
+  @override
+  String newYearFortuneViewButton(int year) {
+    return 'View $year Fortune';
+  }
+
+  @override
+  String get newYearFortuneCheckButton => 'Check Fortune';
+
+  @override
+  String get newYearFortuneSaveAndCheckButton => 'Save and View Fortune';
+
+  @override
+  String newYearFortuneResultTitle(int year) {
+    return 'My $year New Year Fortune';
+  }
+
+  @override
+  String newYearFortuneShareTitle(int year) {
+    return 'My $year New Year Fortune Result';
+  }
+
+  @override
+  String newYearFortuneShareDesc(String name, String desc) {
+    return 'New Year fortune for $name.\n\n$desc...';
+  }
+
+  @override
+  String get sajuChartTitle => 'Four Pillars of Destiny Chart';
+
+  @override
+  String get sajuHour => 'Hour';
+
+  @override
+  String get sajuDay => 'Day';
+
+  @override
+  String get sajuMonth => 'Month';
+
+  @override
+  String get sajuYear => 'Year';
+
+  @override
+  String get ohaengAnalysisTitle => 'Five Elements Analysis';
+
+  @override
+  String dominantOhaeng(String name, String symbol) {
+    return 'Your Dominant Element: $name($symbol)';
+  }
+
+  @override
+  String get ohaengDisclaimer =>
+      '※ Five Elements (Wood, Fire, Earth, Metal, Water) are the basic energies of Four Pillars of Destiny. While balance is ideal, you can understand your tendencies through these elements.';
+
+  @override
+  String yearlyTotalLuck(int year) {
+    return '$year Total Luck';
+  }
+
+  @override
+  String get fortuneDisclaimer =>
+      'This fortune is for entertainment purposes. Your life depends on your own will.';
+
+  @override
+  String get compatibilityResultTitle => 'Compatibility Result';
+
+  @override
+  String get compatibilityScore => 'Compatibility Score';
+
+  @override
+  String compatibilityScoreDisplay(int score) {
+    return '$score';
+  }
+
+  @override
+  String get compatibilityShareTitle => 'Our Compatibility';
+
+  @override
+  String get compatibilityShareResult => 'Share Result';
+
+  @override
+  String get compatibilityRetryButton => 'Check with Someone Else';
+
+  @override
+  String get compatibilitySummary => 'Summary';
+
+  @override
+  String get compatibilitySectionLuck => 'Luck Synergy';
+
+  @override
+  String get compatibilitySectionAdvice => 'Relationship Advice';
+
+  @override
+  String get compatibilitySectionPositive => 'Positive Aspects';
+
+  @override
+  String get compatibilitySectionCaution => 'Things to Watch Out For';
+
+  @override
+  String get compatibilityLunarDisclaimer =>
+      '* Note: Lunar birth dates are currently analyzed based on Solar dates. Lunar conversion will be updated soon.';
+
+  @override
+  String get tojeongSaveAndCheckButton => 'Save and View Tojeong Yearly Oracle';
+
+  @override
+  String get tojeongSangsuKeyword1 =>
+      'a period requiring strong drive and leadership';
+
+  @override
+  String get tojeongSangsuKeyword2 =>
+      'a period full of active relationships and joy';
+
+  @override
+  String get tojeongSangsuKeyword3 =>
+      'a period where intelligence and passion shine';
+
+  @override
+  String get tojeongSangsuKeyword4 =>
+      'a period of rapid changes and new beginnings';
+
+  @override
+  String get tojeongSangsuKeyword5 =>
+      'a period requiring a flexible attitude and soft communication';
+
+  @override
+  String get tojeongSangsuKeyword6 =>
+      'a period to overcome difficulties with wisdom and patience';
+
+  @override
+  String get tojeongSangsuKeyword7 =>
+      'a period to seek stability and build inner strength';
+
+  @override
+  String get tojeongSangsuKeyword8 =>
+      'a period to build virtue with inclusivity and a warm heart';
+
+  @override
+  String get tojeongJungsuKeyword1 => 'you will encounter a helpful mentor';
+
+  @override
+  String get tojeongJungsuKeyword2 =>
+      'you will find success in contracts and agreements';
+
+  @override
+  String get tojeongJungsuKeyword3 =>
+      'you will face new and exciting challenges';
+
+  @override
+  String get tojeongJungsuKeyword4 =>
+      'professional success and honor await you';
+
+  @override
+  String get tojeongJungsuKeyword5 =>
+      'you should practice careful financial management';
+
+  @override
+  String get tojeongJungsuKeyword6 =>
+      'you should prioritize your health and well-being';
+
+  @override
+  String get tojeongHasuKeyword1 => 'you will achieve significant success.';
+
+  @override
+  String get tojeongHasuKeyword2 =>
+      'you will reap the rewards of your steady efforts.';
+
+  @override
+  String get tojeongHasuKeyword3 =>
+      'you will turn challenges into opportunities through patience.';
+
+  @override
+  String tojeongCoreMessage(String sangsu, String jungsu, String hasu) {
+    return 'This year\'s journey: $sangsu, followed by $jungsu, leading to $hasu.';
+  }
+
+  @override
+  String get tojeongSangsuDetail1 =>
+      'You are supported by both heaven and earth. This is a year where your strong determination will lead to great achievements. Like a dragon ascending to the sky, your energy is vibrant and powerful. You\'ll have many chances to lead and gain recognition. Just remember to stay humble and inclusive to avoid unnecessary friction.';
+
+  @override
+  String get tojeongSangsuDetail2 =>
+      'Like a stone creating ripples in a calm lake, this year will be full of social activity and joy. Your popularity will rise, but be mindful of your words to avoid gossip. You may meet a significant partner at a social gathering or event.';
+
+  @override
+  String get tojeongSangsuDetail3 =>
+      'Like the sun shining upon the world, your intellect and passion will be at their peak. You\'ll excel in academic or creative pursuits, earning a great reputation. Stay calm and focused to manage your energy effectively and avoid burnout.';
+
+  @override
+  String get tojeongSangsuDetail4 =>
+      'Expect rapid and exciting changes this year. Your enterprising energy makes it the perfect time to start new ventures. While you\'ll be busy with transitions, your persistence will be key to finishing what you start and achieving lasting results.';
+
+  @override
+  String get tojeongSangsuDetail5 =>
+      'Like a gentle spring breeze reviving the land, your flexible attitude will help you overcome any obstacles. This is a great year for business and building new connections. Stay decisive to ensure you capture the best opportunities as they arise.';
+
+  @override
+  String get tojeongSangsuDetail6 =>
+      'This year requires wisdom and patience, like navigating deep waters. While things may seem quiet, use this time to build your inner strength. Avoid risky investments and wait for the right moment to act; your patience will eventually be rewarded.';
+
+  @override
+  String get tojeongSangsuDetail7 =>
+      'You may face challenges that feel like crossing a great mountain, but a vast plain of opportunity awaits on the other side. Focus on inner stability and maintaining your current progress. Building trust and staying consistent will lead to great fruit in the long run.';
+
+  @override
+  String get tojeongSangsuDetail8 =>
+      'This is a time for sowing the seeds of your future success. By embracing others with a warm and patient heart, you will build a strong foundation of trust and respect. Your long-term investments and focus on family will bring lasting peace and prosperity.';
+
+  @override
+  String get tojeongJungsuDetail1 =>
+      'A helpful mentor will appear, bringing positive news and opportunities. Any previous obstacles will resolve, and your financial outlook will improve. Collaboration will be your key to success this year.';
+
+  @override
+  String get tojeongJungsuDetail2 =>
+      'You may experience joyful events within your family or home. This is a favorable time for legal documents, contracts, or sales. Maintain clear and kind communication to ensure all interactions remain positive.';
+
+  @override
+  String get tojeongJungsuDetail3 =>
+      'New horizons await you, potentially through travel or work in new locations. Embrace these changes with confidence; your willingness to explore new opportunities will lead to rewarding results.';
+
+  @override
+  String get tojeongJungsuDetail4 =>
+      'Your hard work will be recognized with honor or a promotion at work. This is an excellent time for exams or certifications. Showcase your abilities with confidence, and you\'ll achieve great success.';
+
+  @override
+  String get tojeongJungsuDetail5 =>
+      'Your financial potential is strong, but so is the temptation to spend. Practice thorough money management and avoid impulsive purchases. It\'s wise to keep your financial dealings professional and clear.';
+
+  @override
+  String get tojeongJungsuDetail6 =>
+      'Prioritize your physical and mental well-being this year. Avoid overworking and ensure you get plenty of rest. Taking proactive steps for your health now will prevent future issues and keep your energy high.';
+
+  @override
+  String get tojeongHasuDetail1 =>
+      'Ultimately, your efforts will lead to success and your goals will be achieved. You will be rewarded for your hard work and admired by those around you. Stay true to your original vision to ensure your success lasts.';
+
+  @override
+  String get tojeongHasuDetail2 =>
+      'You may face some challenges along the way, but your perseverance will lead you to your goal. The rewards of your hard work will be all the sweeter for the effort you put in. Success will bloom in its own time.';
+
+  @override
+  String get tojeongHasuDetail3 =>
+      'Unexpected obstacles may arise, but your resilience will turn these challenges into opportunities. By staying calm and focused, you\'ll find that misfortune can be turned into a blessing. Wisdom is your greatest ally this year.';
+
+  @override
+  String get tojeongGeneralWealthGood =>
+      'Wealth luck is good. Income may arise from unexpected places, or investments may yield good results. However, as much as money comes in, it can also go out, so focus on saving.';
+
+  @override
+  String get tojeongGeneralWealthBad =>
+      'The flow of wealth may not be smooth. You should reduce unnecessary spending and develop a habit of saving. Be cautious with financial transactions and consult experts for investments.';
+
+  @override
+  String get tojeongGeneralCareerGood =>
+      'Opportunities to gain recognition in your career or business will come. It\'s a good time for promotions, career changes, or starting a business. Better results can be achieved with good relationships.';
+
+  @override
+  String get tojeongGeneralCareerBad =>
+      'It\'s best to maintain the current state. Focus on your current tasks and build your skills rather than starting new ventures. You might feel stressed in relationships with colleagues or superiors, so keep your mind at ease.';
+
+  @override
+  String get tojeongGeneralLoveGood =>
+      'Love luck rises, so singles may meet a good partner and couples\' love will deepen. Laughter and harmony will fill the home. It\'s a good time for marriage talks.';
+
+  @override
+  String get tojeongGeneralLoveBad =>
+      'Arguments may arise due to trivial misunderstandings. Understanding and consideration for each other\'s positions are needed. Try to resolve problems through rational dialogue rather than emotional responses.';
+
+  @override
+  String get optional => 'Optional';
+
+  @override
+  String get sajuSolarHint =>
+      'Tojeong Yearly Oracle is most accurate when analyzed based on the lunar birthday.';
+
+  @override
+  String get yourFortune => 'Your Fortune';
+
+  @override
+  String get guaUpper => 'Upper';
+
+  @override
+  String get guaMiddle => 'Middle';
+
+  @override
+  String get guaLower => 'Lower';
+
+  @override
+  String get guaCode => 'Gua Code';
+
+  @override
+  String get viewAgain => 'Check Again';
+
+  @override
+  String get zodiacAries => 'Aries';
+
+  @override
+  String get zodiacTaurus => 'Taurus';
+
+  @override
+  String get zodiacGemini => 'Gemini';
+
+  @override
+  String get zodiacCancer => 'Cancer';
+
+  @override
+  String get zodiacLeo => 'Leo';
+
+  @override
+  String get zodiacVirgo => 'Virgo';
+
+  @override
+  String get zodiacLibra => 'Libra';
+
+  @override
+  String get zodiacScorpio => 'Scorpio';
+
+  @override
+  String get zodiacSagittarius => 'Sagittarius';
+
+  @override
+  String get zodiacCapricorn => 'Capricorn';
+
+  @override
+  String get zodiacAquarius => 'Aquarius';
+
+  @override
+  String get zodiacPisces => 'Pisces';
+
+  @override
+  String get elementFire => 'Fire';
+
+  @override
+  String get elementEarth => 'Earth';
+
+  @override
+  String get elementAir => 'Air';
+
+  @override
+  String get elementWater => 'Water';
+
+  @override
+  String get compatibilityCategoryZodiac => 'Zodiac Compatibility';
+
+  @override
+  String get compatibilityCategoryInner => 'Inner Compatibility';
+
+  @override
+  String get compatibilityCategoryConstellation =>
+      'Constellation Compatibility';
+
+  @override
+  String get compatibilitySummarySamhap => 'Best Zodiac Match (Samhap)';
+
+  @override
+  String compatibilityDescSamhap(String animal1, String animal2) {
+    return 'The $animal1 and $animal2 are a perfect match, complementing each other\'s weaknesses. This relationship creates great synergy when together.';
+  }
+
+  @override
+  String get compatibilitySummaryYukhap => 'Great Zodiac Match (Yukhap)';
+
+  @override
+  String compatibilityDescYukhap(String animal1, String animal2) {
+    return 'The $animal1 and $animal2 have a strong mutual attraction. It\'s easy to feel a connection from the very beginning.';
+  }
+
+  @override
+  String get compatibilitySummaryChung =>
+      'Relationship Requiring Effort (Chung)';
+
+  @override
+  String compatibilityDescChung(String animal1, String animal2) {
+    return 'The $animal1 and $animal2 have different temperaments and may clash. Respecting each other\'s differences and showing consideration is necessary.';
+  }
+
+  @override
+  String get compatibilitySummaryWonjin =>
+      'Relationship Requiring Understanding (Wonjin)';
+
+  @override
+  String get compatibilityDescWonjin =>
+      'This is a relationship where you might occasionally feel resentment or sadness without a clear reason. Frequent communication is recommended to reduce misunderstandings.';
+
+  @override
+  String get compatibilitySummaryDefaultZodiac => 'Average Zodiac Match';
+
+  @override
+  String compatibilityDescDefaultZodiac(String animal1, String animal2) {
+    return 'The $animal1 and $animal2 have a smooth relationship without major conflicts.';
+  }
+
+  @override
+  String get compatibilitySummaryCheonganHap => 'Destined Soulmates';
+
+  @override
+  String get compatibilityDescCheonganHap =>
+      'Your personalities and values are perfectly aligned. You are soulmates who understand each other even without words.';
+
+  @override
+  String get compatibilitySummarySangsaeng => 'Supportive Partnership';
+
+  @override
+  String get compatibilityDescSangsaeng =>
+      'A positive relationship where you naturally support each other and help one another grow.';
+
+  @override
+  String get compatibilitySummarySanggeuk => 'Dynamic Balance Required';
+
+  @override
+  String get compatibilityDescSanggeuk =>
+      'While there may be personality differences, you have the unique potential to complement each other\'s strengths and weaknesses.';
+
+  @override
+  String get compatibilitySummaryDefaultInner => 'Natural Friends';
+
+  @override
+  String get compatibilityDescDefaultInner =>
+      'A relationship built on similar tendencies and shared interests, making your time together easy and comfortable.';
+
+  @override
+  String get compatibilitySummarySameElement => 'Meeting of Similar Minds';
+
+  @override
+  String compatibilityDescSameElement(String element) {
+    return 'Sharing the \'$element\' tendency means your values and ways of acting are very much in sync.';
+  }
+
+  @override
+  String get compatibilitySummaryCompatibleElement => 'Harmonious Balance';
+
+  @override
+  String get compatibilityDescCompatibleElement =>
+      'A beautiful relationship where your different charms blend together in perfect harmony.';
+
+  @override
+  String get compatibilitySummaryIncompatibleElement =>
+      'Fascinating Differences';
+
+  @override
+  String get compatibilityDescIncompatibleElement =>
+      'Your different temperaments may feel unfamiliar at first, but they offer endless opportunities for growth and discovery together.';
+
+  @override
+  String get compatibilitySummaryDefaultConstellation => 'Average Harmony';
+
+  @override
+  String get compatibilityDescDefaultConstellation =>
+      'A relationship that matches reasonably well based on zodiac signs.';
+
+  @override
+  String get routineMorningTitle => 'Fresh Morning! ☀️';
+
+  @override
+  String get routineMorningBody => 'Did you forget your routine missions?';
+
+  @override
+  String get routineEveningTitle => 'Good job today! ✨';
+
+  @override
+  String get routineEveningBody =>
+      'Did you complete all your missions? Finish your routine.';
+
+  @override
+  String get routineCheckTitle => 'Check today\'s missions! 🚀';
+
+  @override
+  String get routineCheckBody => 'Follow your routine and have a great day.';
+
+  @override
+  String get supplementNotificationTitle => 'Supplement Reminder';
+
+  @override
+  String get waterNotificationTitle => 'Water Reminder';
+
+  @override
+  String get routineNotificationTitle => 'Daily Routine Reminder';
+
+  @override
+  String get todaysFortuneNotificationTitle => 'Today\'s Fortune';
+
+  @override
+  String get afternoonFortuneNotificationBody =>
+      'How about your afternoon fortune? Check it now!';
+
+  @override
+  String get morningFortuneNotificationBody =>
+      'Check your fortune and start your day with energy!';
+
+  @override
+  String get fortunePassExpiryTitle => 'Fortune Pass Expiring Today';
+
+  @override
+  String get fortunePassExpiryBody =>
+      'Your membership expires today. Renew to keep enjoying benefits!';
+
+  @override
+  String get takeNow => 'Take Now';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get turnOffAlarmAction => 'Turn Off Alarm';
+
+  @override
+  String get todaysFortuneNotification => 'Today\'s Fortune Notification';
+
+  @override
+  String get enableNotification => 'Enable Notification';
+
+  @override
+  String get fortuneNotificationDescription =>
+      'Get your daily fortune at the scheduled time.';
+
+  @override
+  String get morningNotificationTime => 'Morning Notification Time';
+
+  @override
+  String get afternoonNotificationTime => 'Afternoon Notification Time';
+
+  @override
+  String get morningFortuneTitle => 'Today\'s Fortune (Morning)';
+
+  @override
+  String get afternoonFortuneTitle => 'Today\'s Fortune (Afternoon)';
+
+  @override
+  String get type => 'Type';
+
+  @override
+  String get supplementChannelDesc =>
+      'Channel for supplement intake notifications.';
+
+  @override
+  String get waterChannelDesc =>
+      'Channel for water drinking habit notifications.';
+
+  @override
+  String get waterSummaryTitle => 'Water Drinking Notification';
+
+  @override
+  String get dailyRoutineChannelDesc =>
+      'Channel for daily mission and habit building notifications.';
+
+  @override
+  String get dailyRoutineSummaryTitle => 'Daily Routine Notification';
+
+  @override
+  String get missionChannelName => 'Mission Notification';
+
+  @override
+  String get missionChannelDesc =>
+      'Channel for general mission performance notifications.';
+
+  @override
+  String get fortuneChannelName => 'Fortune Notification';
+
+  @override
+  String get fortuneChannelDesc =>
+      'Channel for daily fortune check notifications.';
+
+  @override
+  String get subscriptionChannelName => 'Subscription Notification';
+
+  @override
+  String get subscriptionChannelDesc =>
+      'Channel for Fortune Pass expiration and subscription notifications.';
+
+  @override
+  String get alarmChannelName => 'Alarm';
+
+  @override
+  String get alarmChannelDesc =>
+      'Channel for wake-up and mission performance alarms.';
+
+  @override
+  String get shareViaKakao => 'Share via KakaoTalk';
+
+  @override
+  String get shareViaSNS => 'Share via other SNS (Instagram, Twitter, etc.)';
+
+  @override
+  String get checkDetailResult => 'Check Detailed Result';
+
+  @override
+  String get viewMyFortuneResult => 'View My Fortune Result';
+
+  @override
+  String get takeSupplementNow => 'Please take your supplements!';
+
+  @override
+  String get takeNowQuestion => 'Would you like to take it now?';
+
+  @override
+  String get eatNow => 'Eat now';
+
+  @override
+  String get eatLater => 'Eat later';
+
+  @override
+  String snoozeMessageGeneric(int minutes) {
+    return 'I will remind you again in $minutes minutes.';
+  }
+
+  @override
+  String get hours => 'hours';
+
+  @override
+  String get cheeringMessage4 => 'Vibrant morning, happy start!';
+
+  @override
+  String get cheeringMessage5 => 'Have a smiling day.';
+
+  @override
+  String get cheeringMessage6 => 'Cheer up today!';
+
+  @override
+  String get cheeringMessage7 => 'You will shine enough today.';
+
+  @override
+  String get cheeringMessage8 => 'I have a feeling something good will happen!';
+
+  @override
+  String get cheeringMessage9 => 'Great job today. A vigorous start!';
+
+  @override
+  String get cheeringMessage10 => 'Happiness is always by your side.';
+
+  @override
+  String get cheeringMessage11 => 'I\'m rooting for your dreams today.';
+
+  @override
+  String get cheeringMessage12 => 'Refreshing morning, pleasant day!';
+
+  @override
+  String get cheeringMessage13 => 'Be victorious today!';
+
+  @override
+  String get cheeringMessage14 => 'You are precious just by being you.';
+
+  @override
+  String get cheeringMessage15 => 'Have a day full of pleasant things.';
+
+  @override
+  String get cheeringMessage16 => 'I hope your day sparkles today!';
+
+  @override
+  String get cheeringMessage17 => 'Your smile brightens the world.';
+
+  @override
+  String get cheeringMessage18 => 'Be yourself today!';
+
+  @override
+  String get cheeringMessage19 => 'Start today with a fluttering heart.';
+
+  @override
+  String get cheeringMessage20 => 'A wonderful day awaits you.';
+
+  @override
+  String get cheeringMessage21 => 'With the power of positivity today!';
+
+  @override
+  String get cheeringMessage22 => 'I\'m rooting for your path.';
+
+  @override
+  String get cheeringMessage23 => 'Make today your best!';
+
+  @override
+  String get cheeringMessage24 => 'May luck be with you!';
+
+  @override
+  String get cheeringMessage25 => 'Have a warm day today.';
+
+  @override
+  String get cheeringMessage26 => 'You can do it!';
+
+  @override
+  String get cheeringMessage27 => 'Start today with gratitude.';
+
+  @override
+  String get cheeringMessage28 => 'Your value is infinite.';
+
+  @override
+  String get cheeringMessage29 => 'May your day bloom with smiles.';
+
+  @override
+  String get cheeringMessage30 => 'Have a good time with good people!';
+
+  @override
+  String get cheeringMessage31 => 'One step closer to your dreams today!';
+
+  @override
+  String get cheeringMessage32 => 'You are the coolest person today.';
+
+  @override
+  String get cheeringMessage33 => 'A miraculous day will come.';
+
+  @override
+  String get cheeringMessage34 => 'Enjoy your day at leisure today.';
+
+  @override
+  String get cheeringMessage35 => 'Your efforts will not betray you.';
+
+  @override
+  String get cheeringMessage36 => 'Have a healthy day today.';
+
+  @override
+  String get cheeringMessage37 => 'You were born to be loved!';
+
+  @override
+  String get cheeringMessage38 => 'Be courageous today!';
+
+  @override
+  String get cheeringMessage39 => 'A bright future awaits you.';
+
+  @override
+  String get cheeringMessage40 => 'Have a day full of passion!';
+
+  @override
+  String get cheeringMessage41 => 'I hope your mind is at peace.';
+
+  @override
+  String get cheeringMessage42 => 'Find small happiness today.';
+
+  @override
+  String get cheeringMessage43 => 'You\'re already doing well enough.';
+
+  @override
+  String get cheeringMessage44 => 'Start today hopefully.';
+
+  @override
+  String get cheeringMessage45 =>
+      'Your kindness is a great strength to someone.';
+
+  @override
+  String get cheeringMessage46 => 'Have a productive day today.';
+
+  @override
+  String get cheeringMessage47 => 'You have the power to change the world.';
+
+  @override
+  String get cheeringMessage48 => 'Clear day today!';
+
+  @override
+  String get cheeringMessage49 => 'Exude your charm to your heart\'s content.';
+
+  @override
+  String get cheeringMessage50 => 'Fill your day with happiness today!';
+
+  @override
+  String get locationServiceDisabled => 'Location services are disabled.';
+
+  @override
+  String get locationPermissionDenied => 'Location permission denied.';
+
+  @override
+  String get locationPermissionPermanentlyDenied =>
+      'Location permission permanently denied.';
+
+  @override
+  String get deleteMissionTitle => 'Delete Mission';
+
+  @override
+  String get yesDelete => 'Yes, delete it';
+
+  @override
+  String get waterAlarmTitle => 'Time to drink water! 💧';
+
+  @override
+  String get waterAlarmBody =>
+      'How about a glass of cool water for your health?';
+
+  @override
+  String get supplementAlarmBody =>
+      'Don\'t forget to take your supplements for today.';
+
+  @override
+  String get waterHabitChannelDesc =>
+      'Notification channel for water drinking habit.';
+
+  @override
+  String get pleaseSolveMath => 'Please solve the problem.';
+
+  @override
+  String detectedLabel(String labels) {
+    return '[Detected: $labels]';
+  }
+
+  @override
+  String get defaultSleepDuration => '7h 30m';
+
+  @override
+  String get year2026Name => 'Byeong-O Year (Year of the Red Horse)';
+
+  @override
+  String supportEmailSubject(String appTitle, String title) {
+    return '[$appTitle Inquiry] $title';
+  }
+
+  @override
+  String get summary => 'Summary';
+
+  @override
+  String get monthlySummary => 'Monthly Summary';
+
+  @override
+  String monthlySuccessRate(
+      int month, String percentage, int success, int total) {
+    return '$month Monthly Success Rate: $percentage% ($success/$total)';
+  }
+
+  @override
+  String noMonthlyRecord(int month) {
+    return 'No records for $month';
+  }
+
+  @override
+  String get missionRecord => 'Mission Record';
+
+  @override
+  String get supplementRecord => 'Supplement Record';
+
+  @override
+  String get timeSaleCatchChance => 'Grab the 50% discount chance!';
+
+  @override
+  String get languageThai => 'ไทย';
 }
