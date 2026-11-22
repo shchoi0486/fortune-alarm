@@ -1421,10 +1421,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                         ),
                       ],
                     ),
-                    if (!AdService.isSubscriber) ...[
-                      const SizedBox(height: 20),
-                      const ExitDialogAdWidget(),
-                    ],
+                    // [P1-2] 앱 종료 다이얼로그 네이티브 광고 제거 (아침/종료 흐름 방해 금지)
                   ],
                 ),
               ),
