@@ -30,9 +30,12 @@ class FortunePushService {
 
   // 상황 기반 운세 푸시 알람 스케줄링
   static Future<void> scheduleDailyPush() async {
+    // [P0-3] 앱 시작 시 자동으로 권한 창을 띄우지 않는다.
+    // 예약 자체는 권한 상태와 무관하게 시도하고, 권한이 없으면 조용히 실패한다.
     if (Platform.isAndroid) {
-      if (await Permission.scheduleExactAlarm.isDenied) {
-        await Permission.scheduleExactAlarm.request();
+      final exactStatus = await Permission.scheduleExactAlarm.status;
+      if (!exactStatus.isGranted) {
+        debugPrint('[FortunePush] SCHEDULE_EXACT_ALARM not granted ($exactStatus). Scheduling anyway.');
       }
     }
 

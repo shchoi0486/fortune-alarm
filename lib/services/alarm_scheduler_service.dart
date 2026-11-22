@@ -127,14 +127,16 @@ Future<void> alarmCallback(int id) async {
       );
     }
     debugPrint('[AlarmScheduler] Foreground Service Started.');
-    
-    // 서비스가 시작된 후 앱 실행 시도 (전체 화면 알람을 위해)
-    // 백그라운드 아이솔레이트는 앱이 실행되면 종료되므로 재시도 루프가
-    // 무의미해질 수 있다. 호출 후 완료를 기다리지 않고 반환한다.
-    unawaited(_launchAppWithRetry());
   } catch (e) {
     debugPrint('[AlarmScheduler] Foreground Service Start Failed: $e');
   }
+
+  // [P0-1] 서비스 시작 성공/실패와 무관하게 앱 전면 호출은 항상 시도한다.
+  // 예전에는 startService 가 예외를 던지면 이 줄까지 건너뛰어
+  // "알람이 조용히 끝나는" 경로가 있었다.
+  // 백그라운드 아이솔레이트는 앱이 실행되면 종료되므로 재시도 루프가
+  // 무의미해질 수 있다. 호출 후 완료를 기다리지 않고 반환한다.
+  unawaited(_launchAppWithRetry());
 
   // 3. Hive 및 데이터 로드
   Box<AlarmModel>? box;
@@ -564,16 +566,12 @@ class AlarmSchedulerService {
       String permissionErrorMsg = '';
 
       if (Platform.isAndroid) {
-        // [수정] 권한 상태를 먼저 확인하고 결과를 저장.
-        // 주의: 백그라운드 재스케줄(isRescheduling) 중에는 request()가 no-op이므로
-        // 상태를 기록만 하고 요청은 포그라운드 저장 시에만 수행한다.
-        var exactStatus = await Permission.scheduleExactAlarm.status;
+        // 권한 상태를 먼저 확인하고 결과를 저장한다.
+        // [P0-3] 스케줄링 경로에서는 시스템 권한 창을 자동으로 띄우지 않는다.
+        // (앱 시작·재예약·토글 때마다 창이 뜨던 원인)
+        // 실제 요청은 사용자가 알람을 저장하는 순간(add_alarm_screen)에만 한다.
+        final exactStatus = await Permission.scheduleExactAlarm.status;
         debugPrint('[AlarmScheduler] SCHEDULE_EXACT_ALARM status: $exactStatus');
-
-        if (exactStatus.isDenied && !isRescheduling) {
-          debugPrint('[AlarmScheduler] SCHEDULE_EXACT_ALARM permission denied. Requesting...');
-          exactStatus = await Permission.scheduleExactAlarm.request();
-        }
 
         if (exactStatus.isDenied ||
             exactStatus.isPermanentlyDenied ||
@@ -585,13 +583,9 @@ class AlarmSchedulerService {
 
         // [추가] 알림 권한 확인 (Android 13+): 거부되면 FSI 알림·알림음이 동작하지 않아
         // "홈만 뜨고 무음 종료" 증상으로 이어진다.
-        var notifStatus = await Permission.notification.status;
+        // [P0-3] 알림 권한도 상태만 확인한다 (자동 request 제거).
+        final notifStatus = await Permission.notification.status;
         debugPrint('[AlarmScheduler] POST_NOTIFICATIONS status: $notifStatus');
-
-        if (notifStatus.isDenied && !isRescheduling) {
-          debugPrint('[AlarmScheduler] Notifications denied. Requesting...');
-          notifStatus = await Permission.notification.request();
-        }
 
         if (notifStatus.isDenied ||
             notifStatus.isPermanentlyDenied ||
@@ -604,20 +598,17 @@ class AlarmSchedulerService {
         }
 
         // 배터리 최적화 제외 권한 확인 (절전 모드에서 알람 보장)
+        // [P0-3] 여기서도 request 하지 않고 상태만 기록한다. 안내는 저장 후
+        // 스낵바/설정 화면에서 사용자가 직접 선택하도록 남긴다.
         final batteryStatus = await Permission.ignoreBatteryOptimizations.status;
         debugPrint('[AlarmScheduler] ignoreBatteryOptimizations status: $batteryStatus');
-        
-        if (batteryStatus.isDenied && !isRescheduling) {
-           debugPrint('[AlarmScheduler] Battery optimization is active. Requesting to ignore...');
-           await Permission.ignoreBatteryOptimizations.request();
-           
-           // 요청 후에도 거부 상태면 문제 기록
-           final newBatteryStatus = await Permission.ignoreBatteryOptimizations.status;
-           if (newBatteryStatus.isDenied) {
-             debugPrint('[AlarmScheduler] WARNING: Battery optimization still active. Alarms may be delayed.');
-             hasPermissionIssues = true;
-             permissionErrorMsg = permissionErrorMsg.isEmpty ? 'IGNORE_BATTERY_OPTIMIZATIONS' : '$permissionErrorMsg, IGNORE_BATTERY_OPTIMIZATIONS';
-           }
+
+        if (batteryStatus.isDenied) {
+          debugPrint('[AlarmScheduler] WARNING: Battery optimization active. Alarms may be delayed.');
+          hasPermissionIssues = true;
+          permissionErrorMsg = permissionErrorMsg.isEmpty
+              ? 'IGNORE_BATTERY_OPTIMIZATIONS'
+              : '$permissionErrorMsg, IGNORE_BATTERY_OPTIMIZATIONS';
         }
         
         // [수정] 권한 문제가 있을 때 사용자에게 알람 정보에 저장

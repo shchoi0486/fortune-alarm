@@ -14,9 +14,11 @@ class RoutineAlarmService {
 
   // 데일리 루틴 알람 스케줄링 (상황 기반: 매일 저녁 8시 30분)
   static Future<void> scheduleDailyReminders() async {
+    // [P0-3] 앱 시작 시 자동으로 권한 창을 띄우지 않는다. 상태 기록만 남긴다.
     if (Platform.isAndroid) {
-      if (await Permission.scheduleExactAlarm.isDenied) {
-        await Permission.scheduleExactAlarm.request();
+      final exactStatus = await Permission.scheduleExactAlarm.status;
+      if (!exactStatus.isGranted) {
+        debugPrint('[RoutineAlarm] SCHEDULE_EXACT_ALARM not granted ($exactStatus). Scheduling anyway.');
       }
     }
 
