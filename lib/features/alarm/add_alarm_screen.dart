@@ -4233,49 +4233,17 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
     setState(() => _isSaving = true);
 
     final l10n = AppLocalizations.of(context)!;
-    // 권한 확인 (안드로이드 전용 순차적 권한 요청)
-    if (Platform.isAndroid) {
-      // 1. 정확한 알람 권한 (가장 기본)
-      if (await Permission.scheduleExactAlarm.isDenied) {
-        if (!mounted) return;
-        final requested = await _showPermissionGuideDialog(
-          title: l10n.permissionRequired,
-          description: l10n.exactAlarmPermissionDesc,
-          icon: Icons.timer_outlined,
-          requestFunc: () => Permission.scheduleExactAlarm.request(),
-        );
-        // 실제로 설정 화면으로 이동했을 때만 resume 에서 재시도한다.
-        _isPendingSaveAfterPermission = requested;
-        if (mounted) setState(() => _isSaving = false);
-        return;
-      }
-
-      // 2. 다른 앱 위에 표시 권한 (전체화면 알람)
-      if (await Permission.systemAlertWindow.isDenied) {
-        if (!mounted) return;
-        await _showOverlayPermissionFullScreenGuide();
-        // 닫는 방법이 권한 요청뿐이므로 항상 재시도 대상이다.
-        _isPendingSaveAfterPermission = true;
-        if (mounted) setState(() => _isSaving = false);
-        return;
-      }
-
-      // 3. 배터리 최적화 제외 권한 (정확한 시간 보장)
-      if (await Permission.ignoreBatteryOptimizations.isDenied) {
-        if (!mounted) return;
-        await _showBatteryOptimizationFullScreenGuide();
-        _isPendingSaveAfterPermission = true;
-        if (mounted) setState(() => _isSaving = false);
-        return;
-      }
+    // [P0-2] 첫 알람 저장을 권한 관문 4개로 막지 않는다.
+    // - 저장 전에 묻는 것은 알람이 울리는 데 꼭 필요한 "알림"과 "정확한 알람" 둘뿐이고,
+    // - 거절해도 저장을 중단하지 않는다 (조용한 실패는 저장 후 스낵바 안내로 막는다).
+    // - "다른 앱 위에 표시"·배터리 최적화는 저장 후 비차단 안내에서만 언급한다.
+    if (Platform.isAndroid && await Permission.scheduleExactAlarm.isDenied) {
+      // 저장을 누른 시점에 한 번만 요청하고, 결과와 상관없이 저장은 계속한다.
+      await Permission.scheduleExactAlarm.request();
     }
 
     if (await Permission.notification.isDenied) {
       await Permission.notification.request();
-      if (await Permission.notification.isDenied) {
-        if (mounted) setState(() => _isSaving = false);
-        return;
-      }
     }
 
     // 미션 선택 시 이미지 확인 (카메라 미션인 경우에만)
@@ -4450,13 +4418,20 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
               title: l10n.permissionRequired,
               description: l10n.exactAlarmFailMessage,
               icon: Icons.timer_outlined,
-              requestFunc: () => Permission.scheduleExactAlarm.request(),
+              requestFunc: () {
+                // 사용자가 안내를 수락한 경우에만 복귀 시 자동 재시도 플래그를 건다.
+                // (취소했는데 플래그가 남아 앱 복귀마다 창이 다시 뜨는 문제 방지)
+                _isPendingSaveAfterPermission = true;
+                return Permission.scheduleExactAlarm.request();
+              },
             );
           } else if (isIgnoreBatteryOptimizationsDenied) {
             if (!mounted) return;
+            _isPendingSaveAfterPermission = true;
             await _showBatteryOptimizationFullScreenGuide();
           } else if (isSystemAlertWindowDenied) {
             if (!mounted) return;
+            _isPendingSaveAfterPermission = true;
             await _showOverlayPermissionFullScreenGuide();
           } else {
             // 모든 권한이 허용되었는데도 실패한 경우 (예외 상황)
@@ -4510,6 +4485,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
       if (!mounted) return;
       await _stopPreview(); // 저장 시 미리듣기 종료
       if (!mounted) return;
+      // 저장은 이미 끝났으니, 부족한 보조 권한은 비차단 스낵바로 안내한다.
+      _showPostSavePermissionHints(l10n);
       Navigator.pop(context, true);
     } catch (e) {
       if (mounted) {
@@ -4522,6 +4499,48 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
         setState(() => _isSaving = false);
       }
     }
+  }
+
+  /// 저장 성공 후 부족한 보조 권한을 비차단 스낵바로 안내한다.
+  /// (저장을 막지 않으면서, 알람이 말없이 실패하지 않도록 설정 경로를 알려준다)
+  void _showPostSavePermissionHints(AppLocalizations l10n) {
+    if (!Platform.isAndroid || !mounted) return;
+
+    // 화면이 pop된 뒤에도 스낵바가 보이도록, 전역 ScaffoldMessenger를
+    // await 이전에 잡아둔다. (이 화면이 사라져도 messenger는 살아 있음)
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    if (messenger == null) return;
+
+    Future<void> checkAndHint() async {
+      String? message;
+      try {
+        if (await Permission.notification.isDenied) {
+          message = l10n.notificationPermissionDescription;
+        } else if (await Permission.scheduleExactAlarm.isDenied) {
+          message = l10n.exactAlarmPermissionDesc;
+        } else if (await Permission.systemAlertWindow.isDenied) {
+          message = l10n.overlayPermissionDesc;
+        } else if (await Permission.ignoreBatteryOptimizations.isDenied) {
+          message = l10n.batteryOptimizationSubtitle.replaceAll('\n', ' ');
+        }
+      } catch (e) {
+        debugPrint('[AddAlarmScreen] Permission hint check failed: $e');
+      }
+
+      if (message == null) return;
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          duration: const Duration(seconds: 6),
+          action: SnackBarAction(
+            label: l10n.openSettings,
+            onPressed: () => openAppSettings(),
+          ),
+        ),
+      );
+    }
+
+    checkAndHint();
   }
 
   Future<void> _confirmDelete() async {

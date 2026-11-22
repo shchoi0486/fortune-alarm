@@ -39,9 +39,6 @@ import '../../widgets/video_background_widget.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
-import 'package:fortune_alarm/widgets/ad_widgets.dart'; // 광고 위젯 임포트
-import 'package:fortune_alarm/services/ad_service.dart'; // 광고 서비스 임포트
-
 import '../../providers/bottom_nav_provider.dart';
 import 'wake_up_summary_screen.dart';
 
@@ -82,8 +79,10 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     // 메인 화면으로 이동 시 알람 탭(0번)으로 설정
     ref.read(bottomNavProvider.notifier).state = 0;
 
-    if (showAdAfterClose && !AdService.isSubscriber) {
-      // 광고를 보여줘야 하는 경우 (기상 완료 화면으로 이동)
+    // [P1-1] 알람을 끄면 구독 여부와 상관없이 기상 완료 화면(오늘의 운세 요약)으로 이동한다.
+    // 예전에는 비구독자만 이 화면(광고)으로 보내고 구독자는 바로 메인으로 보냈다.
+    if (showAdAfterClose) {
+      // 알람 해제 후에는 광고 대신 기상 완료(오늘의 운세 요약) 화면으로 이동
       // 현재 알람 정보 등을 넘길 수 있다면 좋지만, 최소한의 정보로 이동
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
@@ -95,7 +94,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
         ),
       );
     } else {
-      // 광고를 보여줄 필요가 없거나 구독자인 경우 바로 메인으로 이동
+      // 미션 없이 바로 종료한 경우 등: 바로 메인으로 이동
       // [수정] navigatorKey 대신 Navigator.of(context) 사용 (더 안정적)
       Navigator.of(context).pushNamedAndRemoveUntil(
         '/main', 
@@ -1040,17 +1039,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                               ),
                             ),
                           const Spacer(),
-                          if (!AdService.isSubscriber)
-                            ListAdWidget(
-                              height: 215,
-                              factoryId: 'dialogAd', // [수정] 영상/이미지가 꽉 차는 레이아웃 사용
-                              margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                              backgroundColor: _getContrastColor().withOpacity(_getContrastColor() == Colors.white ? 0.3 : 0.1),
-                              borderRadius: 16,
-                              showBorder: true,
-                              border: Border.all(color: _getContrastColor().withOpacity(0.5), width: 1.2),
-                              showShadow: false,
-                            ),
+                          // [P1-2] 아침 울림 화면 네이티브 광고 제거 (알람 해제까지 방해 금지)
                           ],
                         ),
                       );
@@ -1060,23 +1049,13 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
               if (_snoozeTargetTime == null)
                 const Spacer(), // 중간 공간을 모두 차지하여 아래 요소들을 바닥으로 밀어냄
 
-              // Bottom Group: Snooze Button + Mission Button + Ad
+              // Bottom Group: Snooze Button + Mission Button
               Padding(
                 padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (!AdService.isSubscriber && _snoozeTargetTime == null)
-                      ListAdWidget(
-                        height: 215,
-                        factoryId: 'dialogAd', // [수정] 영상/이미지가 꽉 차는 레이아웃 사용
-                        margin: const EdgeInsets.only(bottom: 16),
-                        backgroundColor: _getContrastColor().withOpacity(_getContrastColor() == Colors.white ? 0.3 : 0.1),
-                        borderRadius: 16,
-                        showBorder: true,
-                        border: Border.all(color: _getContrastColor().withOpacity(0.5), width: 1.2),
-                        showShadow: false,
-                      ),
+                    // [P1-2] 미루기/미션 버튼 위 네이티브 광고 제거
 
                     // 버튼 레이아웃 (미루기 + 미션 시작) - 광고 아래로 이동
                     Row(
