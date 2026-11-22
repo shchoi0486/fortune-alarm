@@ -321,23 +321,59 @@ Future<void> alarmCallback(int id) async {
   }
 }
 
-/// 앱 실행 시도 (실패 시 재시도 로직 포함)
+/// 앱 전면 호출 진행 중 여부 (콜백 안에서 두 번 호출되므로 재시도 루프 중복 방지)
+bool _launchingApp = false;
+
+/// 앱 실행 시도 (Android 10+ 백그라운드 액티비티 시작 제한 대응)
+///
+/// `FlutterForegroundTask.launchApp()` 은 Android 10+ 의 백그라운드 액티비티
+/// 시작(BAL) 제한에 걸려도 예외를 던지지 않고 그냥 아무 일도 하지 않는다.
+/// 예전 구현은 "예외가 없으면 성공"으로 보고 1회 만에 끝나서, 화면이 뜨지 않아도
+/// 재시도가 없었다. 이제는 호출 후 실제 전면 여부(isAppOnForeground)를 확인하고,
+/// 전면이 될 때까지 제한된 횟수(최대 4회, 합계 약 2.5초)로만 다시 시도한다.
+/// 끝까지 막히면 풀스크린 인텐트 알림(showAlarmNotification)이 마지막 경로가 된다.
 @pragma('vm:entry-point')
 Future<void> _launchAppWithRetry() async {
-  int retries = 0;
-  bool success = false;
-  
-  while (!success && retries < 5) {
-    try {
-      debugPrint('[AlarmScheduler] Attempting to launch app via FlutterForegroundTask.launchApp() (Retry: $retries)...');
-      FlutterForegroundTask.launchApp();
-      success = true;
-      debugPrint('[AlarmScheduler] launchApp() call sent successfully.');
-    } catch (e) {
-      retries++;
-      debugPrint('[AlarmScheduler] launchApp() failed: $e. Retrying in 500ms...');
-      await Future.delayed(const Duration(milliseconds: 500));
+  if (_launchingApp) return;
+  _launchingApp = true;
+
+  const int maxAttempts = 4;
+  try {
+    for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        FlutterForegroundTask.launchApp();
+      } catch (e) {
+        debugPrint('[AlarmScheduler] launchApp() threw: $e (attempt $attempt)');
+      }
+
+      // 액티비티 전환이 반영될 시간을 준 뒤 실제 전면 상태를 확인한다.
+      await Future.delayed(Duration(milliseconds: 250 * attempt));
+
+      bool isForeground = false;
+      try {
+        isForeground = await FlutterForegroundTask.isAppOnForeground;
+      } catch (e) {
+        debugPrint('[AlarmScheduler] isAppOnForeground check failed: $e');
+      }
+
+      if (isForeground) {
+        debugPrint('[AlarmScheduler] App is on foreground (attempt $attempt). Stop launching.');
+        return;
+      }
+
+      // 화면이 꺼져 있으면 백그라운드 시작 제한이 더 강하게 걸린다.
+      // 다음 시도 전에 기기 화면을 먼저 깨운다.
+      try {
+        FlutterForegroundTask.wakeUpScreen();
+      } catch (e) {
+        debugPrint('[AlarmScheduler] wakeUpScreen() failed: $e');
+      }
     }
+
+    debugPrint('[AlarmScheduler] launchApp was blocked by the OS after $maxAttempts attempts. '
+        'Falling back to the full-screen alarm notification.');
+  } finally {
+    _launchingApp = false;
   }
 }
 
@@ -391,28 +427,23 @@ class AlarmSchedulerService {
              await box.put(nextAlarm.id, nextAlarm);
              await scheduleAlarm(nextAlarm);
            } else {
-             // [수정] 5분 -> 30분으로 조정 (사용자 피드백 반영)
-             // 너무 긴 시간(예: 60분)은 이미 기상 시간이 한참 지나 의미가 없을 수 있으므로 30분으로 타협합니다.
-             // 재부팅이나 시스템 업데이트 등 불가피한 지연 상황에서도 최소한의 신뢰성을 보장합니다.
-             if (now.difference(alarm.time).inMinutes > 30) {
-               debugPrint('[AlarmScheduler] Found stale one-time alarm: ${alarm.id}. Disabling.');
-               final disabledAlarm = alarm.copyWith(isEnabled: false);
-               await box.put(disabledAlarm.id, disabledAlarm);
-               // OS에 남아있는 스케줄/노티도 함께 제거해야 유령 울림이 없다.
-               try {
-                 await cancelAlarm(alarm, cancelMain: true, cancelSnooze: true);
-               } catch (_) {}
-             } else {
-                // 최근(30분 이내)에 놓친거라면 약간 미래 시각으로 보정 후 즉시 복구 예약
-                final recoveredAlarm = alarm.copyWith(
-                  time: now.add(const Duration(seconds: 3)),
-                );
-                debugPrint(
-                  '[AlarmScheduler] Found recently missed one-time alarm: ${alarm.id}. Recovering at ${recoveredAlarm.time}.',
-                );
-                await box.put(recoveredAlarm.id, recoveredAlarm);
-                await scheduleAlarm(recoveredAlarm);
+             // [수정] 지난 1회성 알람은 복구 예약하지 않는다.
+             // 예전에는 30분 이내에 놓친 알람을 now + 3초로 다시 예약해서,
+             // 앱을 열자마자(또는 재부팅 직후) 이미 지난 알람이 강제로 울렸다.
+             // 이제는 지나간 1회성 알람을 조용히 끄고 OS 스케줄·알림을 정리한다.
+             if (await _isAlarmInProgress(alarm.id)) {
+               // 지금 울리고 있는 중이라면 그대로 둔다.
+               // (울림 화면이 알람을 끄고 정리하는 주체다. 여기서 끄면 소리와 화면이 사라진다)
+               debugPrint('[AlarmScheduler] Keep one-time alarm ${alarm.id}: it is ringing right now.');
+               continue;
              }
+             debugPrint('[AlarmScheduler] Found stale one-time alarm: ${alarm.id}. Disabling (no auto-recover).');
+             final disabledAlarm = alarm.copyWith(isEnabled: false);
+             await box.put(disabledAlarm.id, disabledAlarm);
+             // OS에 남아있는 스케줄/노티도 함께 제거해야 유령 울림이 없다.
+             try {
+               await cancelAlarm(alarm, cancelMain: true, cancelSnooze: true);
+             } catch (_) {}
            }
         } else {
           // 2. 미래의 알람이면, 시스템 AlarmManager에 다시 등록 (덮어쓰기)
@@ -429,6 +460,54 @@ class AlarmSchedulerService {
     } catch (e) {
       debugPrint('[AlarmScheduler] Error during rescheduleExistingAlarms: $e');
     }
+  }
+
+  /// 지금 울리고 있는(또는 방금 울려서 화면 복원을 기다리는) 알람인지 확인한다.
+  ///
+  /// 이 상태에서 알람을 끄거나 알림을 지우면, 정작 울려야 할 알람이 조용히 사라진다.
+  /// (울림 화면이 직접 정리하는 것이 정상 경로다)
+  static Future<bool> _isAlarmInProgress(String alarmId) async {
+    try {
+      final stateBox = Hive.isBoxOpen('app_state')
+          ? Hive.box('app_state')
+          : await Hive.openBox('app_state');
+      final String baseId = alarmId.replaceAll('_snooze', '').replaceAll('_safety', '');
+
+      final ringingId = stateBox.get('active_ringing_alarm_id') as String?;
+      final ringingAtStr = stateBox.get('active_ringing_set_at') as String?;
+      if (ringingId != null && ringingId.isNotEmpty) {
+        final ringingBase = ringingId.replaceAll('_snooze', '').replaceAll('_safety', '');
+        if (ringingBase == baseId) {
+          final ringingAt = ringingAtStr != null ? DateTime.tryParse(ringingAtStr) : null;
+          // main.dart 의 울림 화면 복원 창(6시간)과 같은 기준을 쓴다.
+          if (ringingAt == null ||
+              DateTime.now().difference(ringingAt) <= const Duration(hours: 6)) {
+            return true;
+          }
+        }
+      }
+
+      final pendingPayload = stateBox.get('pending_alarm_payload');
+      final pendingAtStr = stateBox.get('pending_alarm_set_at') as String?;
+      if (pendingPayload != null && pendingPayload.toString().isNotEmpty) {
+        final pendingBase = pendingPayload
+            .toString()
+            .replaceFirst('loading_', '')
+            .replaceAll('_snooze', '')
+            .replaceAll('_safety', '');
+        if (pendingBase == baseId) {
+          final pendingAt = pendingAtStr != null ? DateTime.tryParse(pendingAtStr) : null;
+          // 펜딩 플래그는 앱이 처리하면 지워지므로 짧은 구간만 본다.
+          if (pendingAt == null ||
+              DateTime.now().difference(pendingAt) <= const Duration(minutes: 5)) {
+            return true;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('[AlarmScheduler] Could not check alarm progress state: $e');
+    }
+    return false;
   }
 
   /// `TimeChangeBroadcastReceiver` 가 읽는 현재 UTC offset(millis) 을 기록한다.
