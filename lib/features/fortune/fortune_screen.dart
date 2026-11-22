@@ -16,7 +16,6 @@ import 'tojeong/tojeong_input_screen.dart';
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:fortune_alarm/services/cookie_service.dart';
-import '../../services/ad_service.dart';
 import '../../services/user_activity_service.dart';
 import '../../widgets/ad_banner_widget.dart';
 import 'mixins/fortune_access_mixin.dart';
@@ -33,7 +32,6 @@ class FortuneScreen extends ConsumerStatefulWidget {
 class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAccessMixin {
   Box? _fortuneBox;
   final Set<String> _revealedChips = {}; // 공개된 칩 카테고리 저장
-  bool _isAdShowing = false; // 광고 표시 중 중복 클릭 방지
   Color get primaryColor => ref.watch(themeProvider).primaryColor;
   // _cookieService is also in mixin but private there, so we keep this one for local usage
   final CookieService _localCookieService = CookieService();
@@ -413,31 +411,20 @@ class _FortuneScreenState extends ConsumerState<FortuneScreen> with FortuneAcces
 }
 
   void _handleRevealChip(String category) {
-    if (_isAdShowing) return;
-    
+    if (!mounted || _revealedChips.contains(category)) return;
+
     setState(() {
-      _isAdShowing = true;
+      _revealedChips.add(category);
+      // 공개 상태 저장 (앱을 다시 열어도 같은 칩이 열려 있도록)
+      if (_fortuneBox != null) {
+        _fortuneBox!.put('revealedChips', _revealedChips.toList());
+        _fortuneBox!.put('revealedDate', DateFormat('yyyy-MM-dd').format(DateTime.now()));
+      }
     });
 
-    // 전면 광고 로드 및 표시
-    AdService.showInterstitialAd(
-      onAdDismissed: () {
-        if (mounted) {
-          setState(() {
-            _isAdShowing = false;
-            _revealedChips.add(category);
-            // 공개 상태 저장
-            if (_fortuneBox != null) {
-              _fortuneBox!.put('revealedChips', _revealedChips.toList());
-              _fortuneBox!.put('revealedDate', DateFormat('yyyy-MM-dd').format(DateTime.now()));
-            }
-          });
-          try {
-            HapticFeedback.mediumImpact();
-          } catch (_) {}
-        }
-      },
-    );
+    try {
+      HapticFeedback.mediumImpact();
+    } catch (_) {}
   }
 
   // 퀵 행운 칩 (색상, 아이템, 방향)
