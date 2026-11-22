@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/models/alarm_model.dart';
@@ -90,6 +93,20 @@ class _QuickAlarmSheetState extends ConsumerState<QuickAlarmSheet> {
       backgroundPath: 'assets/images/animal/dog1.mp4',
     );
 
+    // 저장 전 권한 확인 (일반 알람 저장 화면과 같은 정책)
+    // - 저장을 누른 시점에 묻는 것은 알람이 울리는 데 꼭 필요한 "정확한 알람"과 "알림" 둘뿐이다.
+    // - 거절해도 저장을 중단하지 않는다. 부족한 권한은 저장 후 스낵바로 안내한다.
+    // - "다른 앱 위에 표시"·배터리 최적화는 저장 후 안내에서만 언급한다.
+    if (Platform.isAndroid && await Permission.scheduleExactAlarm.isDenied) {
+      await Permission.scheduleExactAlarm.request();
+    }
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
+
+    // 권한 창을 띄우는 동안 시트가 닫혔을 수 있다.
+    if (!mounted) return;
+
     // 1. 알람 추가
     await ref.read(alarmListProvider.notifier).addAlarm(alarm);
 
@@ -124,11 +141,54 @@ class _QuickAlarmSheetState extends ConsumerState<QuickAlarmSheet> {
     );
 
     if (mounted) {
+      // 시트를 pop한 뒤에도 스낵바가 보이도록 전역 messenger를 미리 잡아둔다.
+      final messenger = ScaffoldMessenger.maybeOf(context);
       Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger?.showSnackBar(
         SnackBar(content: Text(l10n.alarmSaved)),
       );
+      // 저장은 끝났으니, 빠진 보조 권한은 비차단 안내로만 알려준다.
+      if (messenger != null) {
+        _showPostSavePermissionHints(l10n, messenger);
+      }
     }
+  }
+
+  /// 저장 성공 후 부족한 보조 권한을 비차단 스낵바로 안내한다.
+  /// 퀵 알람 시트는 저장 직후 닫히므로, 호출한 쪽에서 넘겨준 messenger로 띄운다.
+  void _showPostSavePermissionHints(AppLocalizations l10n, ScaffoldMessengerState messenger) {
+    if (!Platform.isAndroid) return;
+
+    Future<void> checkAndHint() async {
+      String? message;
+      try {
+        if (await Permission.notification.isDenied) {
+          message = l10n.notificationPermissionDescription;
+        } else if (await Permission.scheduleExactAlarm.isDenied) {
+          message = l10n.exactAlarmPermissionDesc;
+        } else if (await Permission.systemAlertWindow.isDenied) {
+          message = l10n.overlayPermissionDesc;
+        } else if (await Permission.ignoreBatteryOptimizations.isDenied) {
+          message = l10n.batteryOptimizationSubtitle.replaceAll('\n', ' ');
+        }
+      } catch (e) {
+        debugPrint('[QuickAlarmSheet] Permission hint check failed: $e');
+      }
+
+      if (message == null) return;
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          duration: const Duration(seconds: 6),
+          action: SnackBarAction(
+            label: l10n.openSettings,
+            onPressed: () => openAppSettings(),
+          ),
+        ),
+      );
+    }
+
+    checkAndHint();
   }
 
   @override
