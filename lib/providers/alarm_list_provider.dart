@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -9,12 +11,32 @@ final alarmListProvider = StateNotifierProvider<AlarmListNotifier, List<AlarmMod
 });
 
 class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
+  StreamSubscription<BoxEvent>? _boxSubscription;
+
+  /// 연속 토글을 직렬화하기 위한 체인.
+  /// 이전에는 in-flight 가드가 없어 두 번의 빠른 탭이 같은 stale isEnabled 를 보고
+  /// 모두 `true` 를 만들어, 최종 상태가 뒤집히고 OS 에는 알람이 하나만 남았다.
+  Future<void> _toggleQueue = Future<void>.value();
+
   AlarmListNotifier() : super([]) {
     _loadAlarms();
   }
 
+  @override
+  void dispose() {
+    _boxSubscription?.cancel();
+    super.dispose();
+  }
+
   Future<void> deleteAlarm(AlarmModel alarm) async {
     try {
+      // OS 스케줄/노티를 먼저 취소해야 유령 울림이 남지 않는다.
+      try {
+        await AlarmSchedulerService.cancelAlarm(alarm, cancelMain: true, cancelSnooze: true);
+      } catch (_) {}
+      try {
+        await AlarmSchedulerService.cancelSafetyAlarm(alarm.id);
+      } catch (_) {}
       final box = await Hive.openBox<AlarmModel>('alarms');
       await box.delete(alarm.id);
       await box.flush();
@@ -28,18 +50,51 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
   Future<void> _loadAlarms() async {
     try {
       final box = await Hive.openBox<AlarmModel>('alarms');
-      final alarms = box.values.where((a) => !a.id.endsWith('_snooze')).toList();
-      alarms.sort((a, b) {
-        // 시간순 정렬 (시, 분만 비교)
-        if (a.time.hour != b.time.hour) {
-          return a.time.hour.compareTo(b.time.hour);
-        }
-        return a.time.minute.compareTo(b.time.minute);
-      });
-      state = alarms;
+      _readIntoState(box);
+
+      // 알람의 time/isEnabled 는 백그라운드 아이솔레이트와 알람 완료 처리에서
+      // 박스 밖에서 갱신된다. 그 결과 state 는 영구히 낡아
+      // "다음 알람" 카운트다운과 반복 알람 표시 시간이 틀어진다.
+      _boxSubscription ??= box.watch().listen((_) => _readIntoState(box));
     } catch (e) {
       debugPrint('Error loading alarms: $e');
     }
+  }
+
+  /// 박스의 현재 내용을 (안전하게) state 에 반영한다.
+  void _readIntoState(Box<AlarmModel> box) {
+    if (!mounted) return;
+    try {
+      final alarms = box.values
+          .where((a) => !a.id.endsWith('_snooze') && !a.id.endsWith('_safety'))
+          .toList();
+      alarms.sort((a, b) {
+        // 시간순 정렬 (시, 분만 비교, 동점 시 ID)
+        if (a.time.hour != b.time.hour) {
+          return a.time.hour.compareTo(b.time.hour);
+        }
+        if (a.time.minute != b.time.minute) {
+          return a.time.minute.compareTo(b.time.minute);
+        }
+        return a.id.compareTo(b.id);
+      });
+      state = alarms;
+    } catch (e) {
+      debugPrint('Error reading alarms from box: $e');
+    }
+  }
+
+  /// 시간순 정렬 (시/분 동점 시 ID로 tiebreak — Dismissible 키 안정성)
+  void _sortState() {
+    state = [...state]..sort((a, b) {
+      if (a.time.hour != b.time.hour) {
+        return a.time.hour.compareTo(b.time.hour);
+      }
+      if (a.time.minute != b.time.minute) {
+        return a.time.minute.compareTo(b.time.minute);
+      }
+      return a.id.compareTo(b.id);
+    });
   }
 
   Future<void> addAlarm(AlarmModel alarm) async {
@@ -52,14 +107,9 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
       debugPrint('Error saving alarm to Hive: $e');
     }
 
-    // 2. State 업데이트
-    state = [...state, alarm];
-    state.sort((a, b) {
-      if (a.time.hour != b.time.hour) {
-        return a.time.hour.compareTo(b.time.hour);
-      }
-      return a.time.minute.compareTo(b.time.minute);
-    });
+    // 2. State 업데이트 (같은 ID가 있으면 교체 — 연타 중복 생성 방지)
+    state = [...state.where((a) => a.id != alarm.id), alarm];
+    _sortState();
     
     // 스케줄링은 화면 단에서 처리
   }
@@ -79,12 +129,7 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
       for (final a in state)
         if (a.id == alarm.id) alarm else a
     ];
-    state.sort((a, b) {
-      if (a.time.hour != b.time.hour) {
-        return a.time.hour.compareTo(b.time.hour);
-      }
-      return a.time.minute.compareTo(b.time.minute);
-    });
+    _sortState();
 
     // 스케줄링은 화면 단에서 처리
   }
@@ -124,7 +169,30 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
     }
   }
 
-  Future<void> toggleAlarm(String id) async {
+  /// 알람 활성/비활성 토글.
+  ///
+  /// [_toggle] 은 `scheduleAlarm` 을 await 하는 동안 OS 권한 요청
+  /// (배터리 최적화 해제 등)을 띄울 수 있어 수백 ms~수 초가 걸린다.
+  /// 그동안 `state` 가 갱신되지 않으므로, 요청을 직렬화하고
+  /// 먼저 [_readIntoState] 로 최신 상태를 읽은 뒤 그 값 기준으로 토글한다.
+  Future<void> toggleAlarm(String id) {
+    final result = _toggleQueue.then((_) => _toggleAlarm(id));
+    _toggleQueue = result.then<void>((_) {}, onError: (Object _, StackTrace __) {});
+    return result;
+  }
+
+  Future<void> _toggleAlarm(String id) async {
+    if (!mounted) return;
+
+    // 대기 중 다른 곳에서 박스가 갱신되었을 수 있으므로 최신 값으로 동기화한다.
+    final box = Hive.isBoxOpen('alarms') ? Hive.box<AlarmModel>('alarms') : null;
+    if (box != null) {
+      _readIntoState(box);
+    }
+
+    final target = state.where((a) => a.id == id).firstOrNull;
+    if (target == null) return;
+
     final newState = <AlarmModel>[];
     for (final alarm in state) {
       if (alarm.id == id) {
@@ -133,13 +201,9 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
         newState.add(alarm);
       }
     }
-    newState.sort((a, b) {
-      if (a.time.hour != b.time.hour) {
-        return a.time.hour.compareTo(b.time.hour);
-      }
-      return a.time.minute.compareTo(b.time.minute);
-    });
+    if (!mounted) return;
     state = newState;
+    _sortState();
   }
 
   Future<AlarmModel> _toggle(AlarmModel alarm) async {
@@ -170,30 +234,41 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
       }
     }
 
-    final newAlarm = AlarmModel(
+    // 반복 알람을 켜는데 저장된 시간이 과거라면 다음 회차로 갱신
+    // (안 그러면 스케줄러 과거 가드에 걸려 켜진 채 등록 실패 = 유령 알람)
+    if (!alarm.isEnabled && alarm.repeatDays.any((d) => d)) {
+      final now = DateTime.now();
+      if (alarm.time.isBefore(now)) {
+        newTime = AlarmSchedulerService.calculateNextTime(alarm.time, alarm.repeatDays);
+        debugPrint('[AlarmListNotifier] Updated stale repeating alarm time to: $newTime');
+      }
+    }
+
+    final newAlarm = alarm.copyWith(
       id: alarm.id,
       time: newTime,
       isEnabled: !alarm.isEnabled,
-      missionType: alarm.missionType,
-      label: alarm.label,
-      referenceImagePaths: alarm.referenceImagePaths,
-      repeatDays: alarm.repeatDays,
-      isVibrationEnabled: alarm.isVibrationEnabled,
-      isSoundEnabled: alarm.isSoundEnabled,
-      volume: alarm.volume,
-      ringtonePath: alarm.ringtonePath,
-      vibrationPattern: alarm.vibrationPattern,
-      isGradualVolume: alarm.isGradualVolume,
-      backgroundPath: alarm.backgroundPath,
-      snoozeInterval: alarm.snoozeInterval,
-      maxSnoozeCount: alarm.maxSnoozeCount,
     );
     
     if (newAlarm.isEnabled) {
+      bool scheduled = false;
       try {
-        await AlarmSchedulerService.scheduleAlarm(newAlarm);
+        scheduled = await AlarmSchedulerService.scheduleAlarm(newAlarm);
       } catch (e) {
          debugPrint('Error scheduling alarm: $e');
+      }
+      if (!scheduled) {
+        // 등록 실패했는데 켜진 채로 두면 유령 알람이 된다. 다시 끈 상태로 저장.
+        debugPrint('[AlarmListNotifier] Schedule failed on toggle-on. Keeping disabled.');
+        final disabledAlarm = newAlarm.copyWith(isEnabled: false);
+        try {
+          final box = await Hive.openBox<AlarmModel>('alarms');
+          await box.put(disabledAlarm.id, disabledAlarm);
+          await box.flush();
+        } catch (e) {
+          debugPrint('Error persisting toggle-off to Hive: $e');
+        }
+        return disabledAlarm;
       }
     } else {
       try {
@@ -214,21 +289,36 @@ class AlarmListNotifier extends StateNotifier<List<AlarmModel>> {
     return newAlarm;
   }
   
-  void removeAlarm(String id) {
+  Future<void> removeAlarm(String id) async {
      final alarm = state.firstWhere((element) => element.id == id, orElse: () => AlarmModel(id: '', time: DateTime.now()));
      if(alarm.id.isNotEmpty) {
-       AlarmSchedulerService.cancelAlarm(alarm);
-       // Hive 삭제
-       Hive.box<AlarmModel>('alarms').delete(id);
+       try {
+         await AlarmSchedulerService.cancelAlarm(alarm);
+       } catch (_) {}
+       try {
+         final box = await Hive.openBox<AlarmModel>('alarms');
+         await box.delete(id);
+         await box.flush();
+       } catch (_) {}
      }
      state = state.where((alarm) => alarm.id != id).toList();
   }
 
-  void clearAllAlarms() {
-    for (final alarm in state) {
-      AlarmSchedulerService.cancelAlarm(alarm);
-    }
-    Hive.box<AlarmModel>('alarms').clear();
+  Future<void> clearAllAlarms() async {
+    // state는 _snooze/_safety를 필터링하므로 Hive 전체를 순회해야 고아가 남지 않는다.
+    try {
+      final box = await Hive.openBox<AlarmModel>('alarms');
+      for (final alarm in box.values.toList()) {
+        try {
+          await AlarmSchedulerService.cancelAlarm(alarm);
+        } catch (_) {}
+        try {
+          await AlarmSchedulerService.cancelSafetyAlarm(alarm.id);
+        } catch (_) {}
+      }
+      await box.clear();
+      await box.flush();
+    } catch (_) {}
     state = [];
   }
 }

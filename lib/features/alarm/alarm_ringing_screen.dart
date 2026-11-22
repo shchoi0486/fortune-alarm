@@ -25,6 +25,7 @@ import '../mission_shake/shake_mission_screen.dart';
 import '../mission_none/simple_alarm_screen.dart';
 import '../mission_camera/mission_camera_screen.dart';
 import '../mission/supplement/supplement_mission_screen.dart';
+import '../mission/supplement/providers/supplement_provider.dart';
 import '../mission_fortune_catch/fortune_catch_mission_screen.dart';
 import '../mission_number_order/number_order_mission_screen.dart';
 import '../mission_hidden_button/hidden_button_mission_screen.dart';
@@ -108,8 +109,9 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // 알람 울릴 때는 전체 화면 (바 숨김)
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    // 울림 화면에서도 네비게이션 바(최근앱 버튼 등)를 표시한다.
+    // 앱 강제종료 후 복구 경로가 확보되어 바를 숨길 필요가 없어짐.
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     _markActiveRinging();
     
@@ -147,6 +149,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
   Future<void> _ensureForegroundServiceRunning() async {
     try {
       if (!await FlutterForegroundTask.isRunningService) {
+        if (!mounted) return;
         final l10n = AppLocalizations.of(context)!;
         await FlutterForegroundTask.startService(
           serviceId: 256,
@@ -222,6 +225,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
           SnackBar(content: Text(AppLocalizations.of(context)!.errorLoadingAlarm)),
         );
         Future.delayed(const Duration(seconds: 2), () {
+          // 2초 사이에 화면이 닫히면 context/ref 가 무효해진다.
+          if (!mounted) return;
           _closeToMain();
         });
       }
@@ -411,7 +416,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     if (state == AppLifecycleState.resumed) {
       final route = ModalRoute.of(context);
       if (route?.isCurrent ?? true) {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
       }
     }
   }
@@ -424,24 +429,39 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     _volumeEnforcementTimer?.cancel();
     _timeTimer?.cancel();
     _missionTimeoutTimer?.cancel();
-    
-    if (!_isMissionCompleted) {
-      debugPrint('[AlarmRingingScreen] WARNING: UI disposed without mission completion!');
-    } else {
-      if (_alarm != null) {
-        AlarmSchedulerService.cancelSafetyAlarm(_alarm!.id);
-      }
+
+    // 미션 완료 여부와 관계없이 오디오는 항상 정지 (리소스 누수/중복 재생 방지).
+    // 단, Hive/알림 정리는 _handleAlarmCompletion에서 await로 이미 수행되므로
+    // 여기서는 fire-and-forget으로 한 번 더 보장만 한다.
+    try {
+      _audioPlayer.stop();
+      FlutterRingtonePlayer().stop();
+      Vibration.cancel();
+    } catch (_) {}
+
+    if (_isMissionCompleted) {
+      // 완료된 경우 안전알람/노티/플래그 잔재를 확실히 제거
+      try {
+        if (_alarm != null) {
+          AlarmSchedulerService.cancelSafetyAlarm(_alarm!.id);
+        } else {
+          AlarmSchedulerService.cancelSafetyAlarm(widget.alarmId);
+        }
+      } catch (_) {}
+      // _stopAlarm은 idempotent하므로 중복 호출해도 안전
       _stopAlarm();
+    } else {
+      debugPrint('[AlarmRingingScreen] WARNING: UI disposed without mission completion!');
     }
 
     _audioPlayer.dispose();
-    // [수정] dispose 시에도 명시적으로 시스템 UI 복원 (최근 앱 버튼 등 다시 표시)
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    // 시스템 UI는 앱 표준(edgeToEdge) 유지 — 네비게이션 바 계속 표시
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 
   Future<void> _playAlarm() async {
-    if (_alarm == null || _isMissionStarted || _snoozeTargetTime != null || !mounted) return;
+    if (_alarm == null || _isMissionStarted || _isMissionCompleted || _isHandlingCompletion || _snoozeTargetTime != null || !mounted) return;
 
     debugPrint('[AlarmRingingScreen] _playAlarm called. sound: ${_alarm!.isSoundEnabled}, volume: ${_alarm!.volume}');
 
@@ -597,9 +617,15 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
       _volumeTimer?.cancel();
       _volumeEnforcementTimer?.cancel();
       
-      _audioPlayer.stop();
-      FlutterRingtonePlayer().stop();
-      Vibration.cancel();
+      try {
+        await _audioPlayer.stop();
+      } catch (_) {}
+      try {
+        FlutterRingtonePlayer().stop();
+      } catch (_) {}
+      try {
+        Vibration.cancel();
+      } catch (_) {}
 
       try {
         final box = await Hive.openBox('app_state');
@@ -611,8 +637,24 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
         await box.flush();
       } catch (_) {}
 
-      final stableId = AlarmSchedulerService.getStableId(widget.alarmId);
-      await NotificationService().cancelNotification(stableId);
+      // 미션 성공 후 재울림의 가장 흔한 원인은 잔류 노티다.
+      // widget ID뿐 아니라 base/snooze/safety ID의 노티를 모두 취소한다.
+      try {
+        final baseId = widget.alarmId.replaceAll('_snooze', '').replaceAll('_safety', '');
+        final idsToCancel = <String>{
+          widget.alarmId,
+          baseId,
+          '${baseId}_snooze',
+          '${baseId}_safety',
+        };
+        for (final id in idsToCancel) {
+          try {
+            await NotificationService().cancelNotification(
+              AlarmSchedulerService.getStableId(id),
+            );
+          } catch (_) {}
+        }
+      } catch (_) {}
 
       if (await FlutterForegroundTask.isRunningService) {
         debugPrint('[AlarmRingingScreen] Stopping Foreground Service...');
@@ -626,6 +668,11 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
   Future<void> _pauseAlarmRingingForMission() async {
     try {
       _volumeTimer?.cancel();
+      // 미션 동안에는 알림음 강제 상한 타이머도 멈춘다.
+      // (미션 화면으로 전환된 뒤에도 매초 미디어 스트림을 알람 볼륨으로 밀어올리면
+      //  배터리 낭비 + 미션 중 볼륨이 계속 최대치로 유지된다)
+      _volumeEnforcementTimer?.cancel();
+      _volumeEnforcementTimer = null;
       await _audioPlayer.stop();
       await FlutterRingtonePlayer().stop();
       Vibration.cancel();
@@ -670,58 +717,73 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     try {
       _isMissionCompleted = true;
       await _clearPendingAlarmFlag();
+      await _setMissionActive(false);
       await _stopAlarm(); // 소리, 진동, 서비스, 알림 중지
 
-      // 현재 알람이 스누즈 알람인지 확인하고 원본 알람 객체를 가져옴
+      // 단일 소유권 설계: 반복 알람의 다음 회차 예약은 백그라운드 콜백이 전담한다.
+      // UI 완료 처리는 현재 울림 잔재(스누즈/안전/노티/플래그)만 정리하고,
+      // Hive 최신 상태를 그대로 신뢰한다 (stale _alarm 시간으로 재계산 금지).
       final bool isSnooze = _alarm!.id.endsWith('_snooze');
       final String originalId = isSnooze ? _alarm!.id.replaceAll('_snooze', '') : _alarm!.id;
+      final alarmsBox = await Hive.openBox<AlarmModel>('alarms');
       
-      AlarmModel targetAlarm = _alarm!;
-      
+      // 스누즈 껍데기 정리 (OS 스케줄 + Hive)
       if (isSnooze) {
-        final box = await Hive.openBox<AlarmModel>('alarms');
-        final mainAlarm = box.get(originalId);
-        if (mainAlarm != null) {
-          targetAlarm = mainAlarm;
-          debugPrint('[AlarmRingingScreen] Loaded main alarm $originalId for completion processing.');
-          // 스누즈 알람 객체는 DB에서 삭제
-          await box.delete(_alarm!.id);
-        }
+        try {
+          await AlarmSchedulerService.cancelAlarm(_alarm!, cancelMain: true, cancelSnooze: false);
+        } catch (_) {}
+        try {
+          await alarmsBox.delete(_alarm!.id);
+          await alarmsBox.flush();
+        } catch (_) {}
       }
 
-      // 1. 기존의 모든 스케줄(메인 + 스누즈)을 확실하게 취소하여 꼬인 상태 방지
-      bool isRepeating = targetAlarm.repeatDays.any((d) => d);
-      await AlarmSchedulerService.cancelAlarm(targetAlarm, cancelMain: true, cancelSnooze: true);
-      // 현재 _alarm이 스누즈라면 그것도 시스템에서 확실히 취소
-      if (isSnooze) {
-         await AlarmSchedulerService.cancelAlarm(_alarm!, cancelMain: true, cancelSnooze: false);
-      }
+      // 원본 최신 상태 로드 (백그라운드 선예약이 이미 다음 회차로 갱신했을 수 있음)
+      AlarmModel? fresh;
+      try {
+        fresh = alarmsBox.get(originalId);
+      } catch (_) {}
+      final AlarmModel baseAlarm = fresh ?? _alarm!;
+      final bool isRepeating = baseAlarm.repeatDays.any((d) => d);
+
+      // 스누즈/안전 잔재 정리. 반복 알람의 메인 스케줄은 절대 취소하지 않는다
+      // (다음 회차 소유권은 백그라운드 선예약에 있음).
+      try {
+        await AlarmSchedulerService.cancelAlarm(baseAlarm, cancelMain: false, cancelSnooze: true);
+      } catch (_) {}
+      try {
+        await AlarmSchedulerService.cancelSafetyAlarm(originalId);
+      } catch (_) {}
 
       AlarmModel resultAlarm;
 
-      // 2. 반복 알람 처리: '현재 시점'을 기준으로 확실한 미래의 시간으로 재예약
-      if (targetAlarm.repeatDays.any((d) => d)) {
-        final referenceTime = DateTime.now().add(const Duration(minutes: 1));
-        final nextTime = AlarmSchedulerService.calculateNextTime(
-          targetAlarm.time,
-          targetAlarm.repeatDays,
-          referenceTime: referenceTime,
+      if (isRepeating) {
+        // Hive 시간을 그대로 신뢰한다. 선예약이 실패한 경우(시간이 과거)에만 복구 계산한다.
+        DateTime resolvedTime = baseAlarm.time;
+        if (resolvedTime.isBefore(DateTime.now())) {
+          resolvedTime = AlarmSchedulerService.calculateNextTime(
+            baseAlarm.time,
+            baseAlarm.repeatDays,
+            referenceTime: DateTime.now(),
+          );
+        }
+        resultAlarm = baseAlarm.copyWith(
+          time: resolvedTime,
+          remainingSnoozeCount: baseAlarm.maxSnoozeCount,
         );
-        
-        // 모델 업데이트 (스누즈 카운트도 초기화)
-        resultAlarm = targetAlarm.copyWith(
-          time: nextTime,
-          remainingSnoozeCount: targetAlarm.maxSnoozeCount,
-        );
-        
-        // 시스템에 스케줄링 등록 (Hive 저장은 내부적으로 수행됨)
-        await AlarmSchedulerService.scheduleAlarm(resultAlarm);
-        debugPrint('[AlarmRingingScreen] Repeating alarm manually rescheduled for: $nextTime');
+        await alarmsBox.put(resultAlarm.id, resultAlarm);
+        await alarmsBox.flush();
+        // 덮어쓰기 등록으로 선예약을 확인/복구한다 (취소 스킵 → 발화 알림에 영향 없음).
+        await AlarmSchedulerService.scheduleAlarm(resultAlarm, isRescheduling: true);
+        debugPrint('[AlarmRingingScreen] Repeating alarm confirmed at: $resolvedTime');
       } else {
-        // 일회성 알람: 비활성화 처리
-        resultAlarm = targetAlarm.copyWith(isEnabled: false);
-        final box = await Hive.openBox<AlarmModel>('alarms');
-        await box.put(resultAlarm.id, resultAlarm);
+        // 일회성 알람: 비활성화 + 메인 스케줄 취소
+        resultAlarm = baseAlarm.copyWith(isEnabled: false);
+        await alarmsBox.put(resultAlarm.id, resultAlarm);
+        await alarmsBox.flush();
+        try {
+          await AlarmSchedulerService.cancelAlarm(resultAlarm, cancelMain: true, cancelSnooze: true);
+        } catch (_) {}
       }
 
       // 3. UI 갱신을 위해 Provider 업데이트
@@ -736,14 +798,22 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
       // 4. 기상 미션 성공 처리 연동 (어떤 알람이든 해제 성공 시 오늘 미션 완료 처리)
       try {
         await ref.read(missionProvider).completeWakeUpMission();
-        
-        // 만약 영양제 미션이었다면 영양제 체크도 함께 완료
-        if (targetAlarm.missionType == MissionType.supplement) {
-          await ref.read(missionProvider).setMissionCompleted('supplement', true);
+
+        // 보충제 미션은 '하루 목표 복용 횟수 달성'으로만 완료된다.
+        // 알람을 끄는 것만으로 완료 처리하면, 이후 영양제 화면에서
+        // currentCount < dailyGoal 를 보고 미션이 다시 미완료로 뒤집히면서
+        // 사용자에게 "완료 → 미완료" 플립플롭이 보인다.
+        if (resultAlarm.missionType == MissionType.supplement) {
+          // 보충제 provider가 목표 달성 여부를 동기화한다. 여기서는 중복 완료하지 않는다.
+          ref.invalidate(supplementProvider);
         }
       } catch (e) {
         debugPrint('Error completing mission in _handleAlarmCompletion: $e');
       }
+    } catch (e) {
+      // _stopAlarm() 이후 예외가 나도 사용자를 멈춘 화면에 두지 않는다.
+      // (이전에는 이 catch 가 없어서 소리만 꺼진 채 화면이 멈추는 좀비 상태가 됐다)
+      debugPrint('[AlarmRingingScreen] _handleAlarmCompletion failed: $e');
     } finally {
       _isHandlingCompletion = false;
     }
@@ -764,21 +834,43 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
     return Colors.white;
   }
 
+  /// 알람이 울리는 중에는 어떤 경로로도 화면이 닫히면 안 된다.
+  ///
+  /// `main.dart` 는 이 화면을 `pushAndRemoveUntil(..., (route) => false)` 로 띄워서
+  /// 유일한 라우트로 만든다. `canPop: false` 만 두면 `Navigator.maybePop()` 이 실패하고
+  /// Flutter 가 `SystemNavigator.pop()` 으로 폴백해 Activity 를 종료시킨다.
+  /// 그러면 dispose() 가 오디오/진동을 멈추면서 "뒤로가기를 눌렀더니 알람이 꺼졌다"가 된다.
+  Widget _buildUndismissable(Widget child) {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        // 알람을 끄려면 미션 완료/스누즈/알람 끄기 버튼을 써야 한다.
+        debugPrint('[AlarmRinging] System back ignored while alarm is ringing.');
+      },
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
-        body: SizedBox.shrink(), // 인디케이터 제거: 검은 화면만 유지
+      return _buildUndismissable(
+        const Scaffold(
+          backgroundColor: Colors.black,
+          body: SizedBox.shrink(), // 인디케이터 제거: 검은 화면만 유지
+        ),
       );
     }
 
     if (_alarm == null) {
       // _loadAlarm에서 이미 처리하지만, 만약을 위한 안전장치
-      return Scaffold(
-        backgroundColor: Colors.red,
-        body: Center(
-          child: Text(AppLocalizations.of(context)!.alarmNotFound, style: const TextStyle(color: Colors.white, fontSize: 18)),
+      return _buildUndismissable(
+        Scaffold(
+          backgroundColor: Colors.red,
+          body: Center(
+            child: Text(AppLocalizations.of(context)!.alarmNotFound, style: const TextStyle(color: Colors.white, fontSize: 18)),
+          ),
         ),
       );
     }
@@ -826,9 +918,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
       backgroundWidget = Container(decoration: bgDecoration);
     }
 
-    return PopScope(
-      canPop: false,
-      child: Scaffold(
+    return _buildUndismissable(
+      Scaffold(
         body: Stack(
           children: [
             Positioned.fill(child: backgroundWidget),
@@ -914,13 +1005,13 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
                             }
                             final maxCount = alarm.maxSnoozeCount;
                             final remainingAfterTap = _snoozeRemainingAfterTap!;
+                            // 버튼(탭 전)과 같은 '남은 횟수' 기준으로 표시한다.
+                            // 이전에는 maxCount - remainingAfterTap 을 표시해
+                            // 탭 직후 카운터가 1 줄어든 것처럼 보이는 불일치가 있었다.
                             final clampedRemaining = remainingAfterTap < 0
                                 ? 0
                                 : (remainingAfterTap > maxCount ? maxCount : remainingAfterTap);
-                            var currentCount = maxCount - clampedRemaining;
-                            if (currentCount < 1) currentCount = 1;
-                            if (currentCount > maxCount) currentCount = maxCount;
-                            return l10n.snoozeMinutesCount(alarm.snoozeInterval.toString(), currentCount, maxCount);
+                            return l10n.snoozeMinutesCount(alarm.snoozeInterval.toString(), clampedRemaining, maxCount);
                           })();
 
                     return Expanded(
@@ -1212,7 +1303,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
         );
         break;
       case MissionType.supplement:
-        nextScreen = const SupplementMissionScreen();
+        nextScreen = SupplementMissionScreen(alarmId: widget.alarmId);
         break;
       default:
         nextScreen = SimpleAlarmScreen(alarmId: widget.alarmId);
@@ -1227,13 +1318,20 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
 
     try {
       final String originalId = widget.alarmId.replaceAll('_snooze', '');
-      final String snoozeId = '${originalId}_snooze';
       final box = await Hive.openBox<AlarmModel>('alarms');
-      final snoozeAlarm = box.get(snoozeId);
-      if (snoozeAlarm != null) {
+      // base 기준으로 취소해야 스누즈 OS + Hive 행이 함께 정리된다.
+      // (스누즈 entry로 cancel하면 OS만 취소되고 Hive 행이 고아로 남음)
+      final baseAlarm = box.get(originalId);
+      if (baseAlarm != null) {
         debugPrint('[AlarmRingingScreen] Cancelling auto-snooze for mission duration.');
-        await AlarmSchedulerService.cancelAlarm(snoozeAlarm);
+        await AlarmSchedulerService.cancelAlarm(baseAlarm, cancelMain: false, cancelSnooze: true);
       }
+      // 벨트 앤 서스펜더: 스누즈 행 잔재 직접 삭제
+      try {
+        final String snoozeId = '${originalId}_snooze';
+        if (box.containsKey(snoozeId)) await box.delete(snoozeId);
+        await box.flush();
+      } catch (_) {}
     } catch (e) {
       debugPrint('Error cancelling snooze for mission: $e');
     }
@@ -1267,9 +1365,11 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
           await alarmBox.put(originalId, updatedAlarm);
           
           // 현재 로컬 객체도 업데이트
-          setState(() {
-            _alarm = updatedAlarm;
-          });
+          if (mounted) {
+            setState(() {
+              _alarm = updatedAlarm;
+            });
+          }
           
           // 2. 이미 예약된 다음 스누즈가 있다면 취소 (새로 예약은 아래에서 수행)
           final String snoozeId = '${originalId}_snooze';
@@ -1284,6 +1384,8 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
 
       // 소리/진동 다시 시작
       await _ensureForegroundServiceRunning();
+      // 미션 중에 멈췄던 볼륨 상한 타이머를 재개한다.
+      _startVolumeEnforcement();
       _playAlarm();
       
       // 다시 스누즈 예약 (활동 없을 때를 대비)
@@ -1307,6 +1409,7 @@ class _AlarmRingingScreenState extends ConsumerState<AlarmRingingScreen> with Wi
       // 뒤로가기 등으로 미션을 완료하지 않고 돌아온 경우 알람 다시 재생
       if (mounted) {
         await _ensureForegroundServiceRunning();
+        _startVolumeEnforcement();
         _playAlarm();
         _scheduleNextSnoozeIfNeeded();
       }

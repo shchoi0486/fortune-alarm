@@ -1,344 +1,336 @@
 import 'dart:math';
 
+/// 푸시 메시지 풀 (하루 2회: 오전 응원 + 저녁 마무리 응원).
+/// 오전 풀은 하루를 응원하는 메시지, 저녁 풀은 하루를 마무리하는 응원 메시지.
+/// 운세 확인 유도·미션/기능 홍보 문구는 넣지 않는다 (과다 푸시 방지 정책).
 class PushMessages {
   static final _random = Random();
 
-  // 운세 알림 랜덤 문구 리스트 (50개)
-  static const List<Map<String, String>> fortuneMessages = [
-    {"title": "오늘은 재물운이 강한 날이에요 💰", "body": "지금 운세를 확인하고 행운을 잡아보세요!"},
-    {"title": "뜻밖의 연락이 올 수 있어요 📩", "body": "오늘의 인연운을 확인해보시겠어요?"},
-    {"title": "오전보다 오후 운이 좋아요 🌤", "body": "오후를 준비하는 마음으로 운세를 확인해보세요."},
-    {"title": "오늘은 말 한마디가 중요해요 🗣", "body": "대화하기 전에 오늘의 운세를 참고해보세요."},
-    {"title": "지금 운세를 보면 하루가 편해져요 ✨", "body": "미리 보는 오늘의 흐름, 지금 확인하세요."},
-    {"title": "오늘 하루, 당신을 위한 특별한 조언 💌", "body": "운세가 알려주는 힌트를 놓치지 마세요."},
-    {"title": "행운의 여신이 미소 짓고 있어요 🍀", "body": "어떤 행운이 기다리고 있을까요?"},
-    {"title": "오늘은 직감에 귀 기울여보세요 🎯", "body": "당신의 촉이 맞는지 운세로 확인해보세요."},
-    {"title": "새로운 기회가 찾아올지도 몰라요 🎁", "body": "오늘의 운세가 힌트를 줄 거예요."},
-    {"title": "오늘의 행운의 색깔은 무엇일까요? 🎨", "body": "행운의 아이템을 확인하고 하루를 시작하세요."},
-    {"title": "기분 좋은 일이 생길 것 같은 예감 😊", "body": "운세를 보면 예감이 확신으로 바뀔 거예요."},
-    {"title": "오늘은 작은 행복이 큰 기쁨으로 🌈", "body": "어떤 소소한 즐거움이 있을지 확인해보세요."},
-    {"title": "주의해야 할 점을 미리 알아볼까요? 🚦", "body": "운세를 통해 오늘 하루를 더 안전하게 보내세요."},
-    {"title": "오늘 당신의 매력이 빛나는 날 ✨", "body": "운세에서 당신의 매력 포인트를 찾아보세요."},
-    {"title": "금전운이 솟아오르는 중! 📈", "body": "어디서 좋은 소식이 올지 확인해보세요."},
-    {"title": "오늘은 휴식과 여유가 필요한 날 ☕", "body": "운세가 추천하는 재충전 방법을 알아보세요."},
-    {"title": "인간관계에서 좋은 소식이 있어요 🤝", "body": "오늘 만날 귀인은 누구일까요?"},
-    {"title": "오늘 하루, 에너지가 넘쳐요 ⚡", "body": "이 에너지를 어디에 쓰면 좋을지 운세로 확인하세요."},
-    {"title": "뜻밖의 행운이 당신을 기다립니다 🎊", "body": "어떤 행운일지 지금 바로 확인해보세요!"},
-    {"title": "오늘은 긍정적인 생각만 하세요 🌟", "body": "좋은 생각이 좋은 운을 부릅니다. 운세를 확인하세요."},
-    {"title": "오늘의 키워드는 '성장'입니다 🌱", "body": "어떤 부분에서 발전이 있을지 알아보세요."},
-    {"title": "잠깐! 오늘 중요한 일정이 있나요? 📆", "body": "운세를 보고 일정을 계획해보세요."},
-    {"title": "오늘은 당신이 주인공인 날 👑", "body": "자신감을 가지고 하루를 시작하세요. 운세가 응원합니다."},
-    {"title": "건강운이 좋은 날이에요 💪", "body": "활기찬 하루를 위한 운세 조언을 확인하세요."},
-    {"title": "오늘의 애정운은 맑음 ☀️", "body": "사랑하는 사람과의 좋은 시간을 위한 운세 힌트!"},
-    {"title": "마음의 평화가 찾아오는 하루 🕊️", "body": "운세를 보며 차분하게 하루를 정리해보세요."},
-    {"title": "오늘은 새로운 도전을 하기에 좋은 날 🚀", "body": "운세가 당신의 도전을 지지합니다."},
-    {"title": "행운의 숫자가 궁금하신가요? 🔢", "body": "오늘 당신을 도와줄 숫자를 확인해보세요."},
-    {"title": "오늘은 주변 사람들에게 감사하는 날 🙏", "body": "운세가 전하는 따뜻한 메시지를 확인하세요."},
-    {"title": "뜻밖의 선물이 기다리고 있을지도? 🎀", "body": "오늘의 운세에서 힌트를 찾아보세요."},
-    {"title": "오늘의 운세가 당신을 부르고 있어요 📣", "body": "아직 운세를 확인하지 않으셨네요. 지금 확인해보세요!"},
-    {"title": "점심시간, 운세 보기 딱 좋은 시간 🍱", "body": "식사 후 가볍게 운세를 즐겨보세요."},
-    {"title": "오늘 남은 시간의 운세는 어떨까요? ⏳", "body": "오후의 운세 흐름을 미리 파악해보세요."},
-    {"title": "운세를 보면 스트레스가 풀릴지도 몰라요 💆", "body": "잠시 쉬어가며 오늘의 운세를 확인하세요."},
-    {"title": "오늘은 어떤 별자리가 가장 운이 좋을까요? 🌌", "body": "당신의 별자리 운세를 확인해보세요."},
-    {"title": "오늘의 운세, 확인 안 하시면 후회할지도 몰라요 😉", "body": "지금 바로 확인하고 행운을 챙기세요."},
-    {"title": "운세가 알려주는 오늘의 주의사항 ⚠️", "body": "미리 알아두면 도움이 될 운세 팁을 확인하세요."},
-    {"title": "오늘은 어떤 음식이 행운을 가져다줄까요? 🍲", "body": "운세에서 행운의 음식을 찾아보세요."},
-    {"title": "운세를 보면 기분 좋은 하루가 시작됩니다 🎶", "body": "오늘의 운세와 함께 즐거운 하루를 만드세요."},
-    {"title": "오늘은 당신의 노력이 결실을 맺는 날 🍎", "body": "운세가 전하는 희망찬 메시지를 확인하세요."},
-    {"title": "운세가 당신의 고민을 덜어줄 거예요 🎈", "body": "오늘의 운세에서 해답의 실마리를 찾아보세요."},
-    {"title": "오늘은 어떤 인연이 당신을 기다릴까요? 🌸", "body": "운세로 만남의 행운을 점쳐보세요."},
-    {"title": "운세와 함께하는 즐거운 오후 시간 ☕", "body": "따뜻한 차 한 잔과 함께 운세를 확인해보세요."},
-    {"title": "오늘의 운세 점수는 몇 점일까요? 💯", "body": "당신의 오늘 운세 점수를 확인해보세요."},
-    {"title": "운세가 전하는 오늘의 명언 📜", "body": "마음에 새길 운세 한 줄을 확인하세요."},
-    {"title": "오늘은 새로운 아이디어가 떠오르는 날 💡", "body": "운세가 영감을 더해줄 거예요."},
-    {"title": "운세를 보며 오늘 하루를 리프레시하세요 🌿", "body": "지친 일상에 활력을 불어넣어 줄 운세!"},
-    {"title": "오늘은 어떤 즐거운 일이 생길까요? 🎉", "body": "운세에서 오늘의 즐거움을 찾아보세요."},
-    {"title": "운세가 당신의 성공을 응원합니다 🏆", "body": "오늘의 운세와 함께 목표를 향해 나아가세요."},
-    {"title": "오늘의 운세, 지금 바로 확인해볼까요? 👀", "body": "아직 늦지 않았어요. 오늘의 운세를 확인하세요."},
-
-    // --- 추가: 하루 응원 및 동기부여 ---
-    {"title": "오늘 하루도 당신을 응원해요! 🌟", "body": "어제보다 더 빛나는 오늘이 되길 바랄게요."},
-    {"title": "잠깐, 기지개 한 번 켜볼까요? 🧘", "body": "가벼운 스트레칭으로 활기찬 하루를 시작하세요!"},
+  // 오전 푸시: 하루를 응원하는 메시지
+  static const List<Map<String, String>> morningMessages = [
+    {"title": "좋은 아침이에요 ☀️", "body": "오늘 하루도 가볍게 시작해보세요."},
+    {"title": "오늘도 당신을 응원해요 🌟", "body": "어제보다 조금 더 빛나는 하루가 되길 바랄게요."},
+    {"title": "기지개 한 번 켜볼까요 🧘", "body": "가벼운 스트레칭으로 활기차게 시작하세요."},
     {"title": "당신은 생각보다 훨씬 멋진 사람이에요 ✨", "body": "자신감을 가지고 오늘을 즐겨보세요."},
-    {"title": "오늘도 수고할 당신을 위해 👏", "body": "작은 행복이 가득한 하루가 되기를 진심으로 응원합니다."},
-    {"title": "힘든 일이 있다면 잠시 쉬어가도 좋아요 ☕", "body": "오늘 하루, 당신의 속도대로 천천히 걸어보세요."},
-
-    // --- 추가: 미션 및 기능 유도 ---
-    {"title": "오늘 물 한 잔, 마셨나요? 💧", "body": "물 마시기 미션으로 건강한 습관을 만들어보세요!"},
-    {"title": "새로운 미션으로 아침을 깨워보세요 ⏰", "body": "다양한 미션을 설정하면 아침이 더 즐거워집니다."},
-    {"title": "오늘의 미션을 완료하고 보상을 챙기세요 🎁", "body": "미션을 수행하면 기분 좋은 성취감을 느낄 수 있어요."},
-    {"title": "포춘알람의 다양한 기능을 활용해보세요 🚀", "body": "당신에게 꼭 맞는 알람 설정으로 삶의 질을 높여보세요."},
-    {"title": "꾸준한 미션 수행이 변화의 시작입니다 🌱", "body": "오늘도 포춘알람과 함께 건강한 루틴을 이어가세요."},
+    {"title": "오늘의 첫걸음을 응원합니다 👣", "body": "천천히 가도 괜찮아요. 당신의 속도대로."},
+    {"title": "깊게 숨 한 번 쉬어보세요 🌿", "body": "차분한 마음이 좋은 하루를 만듭니다."},
+    {"title": "새로운 하루, 새로운 가능성 🚀", "body": "오늘은 어떤 좋은 일이 생길까요?"},
+    {"title": "오늘 할 일 딱 하나만 정해보세요 📝", "body": "하나씩 해내면 충분해요."},
+    {"title": "물 한 잔으로 개운하게 💧", "body": "몸도 마음도 깨워보세요."},
+    {"title": "햇살처럼 따뜻한 하루 되세요 ☀️", "body": "당신 주변에도 온기가 가득하길."},
+    {"title": "오늘도 파이팅이에요 💪", "body": "당신의 노력이 빛을 발할 거예요."},
+    {"title": "거울 속 당신에게 미소 지어보세요 😊", "body": "미소가 행운을 부른대요."},
+    {"title": "오늘은 어제보다 1%만 더 잘해보세요 🌱", "body": "작은 진전도 충분히 멋져요."},
+    {"title": "따뜻한 아침 식사로 에너지 충전 🍳", "body": "든든하게 하루를 시작해보세요."},
+    {"title": "오늘 만날 사람들을 기대해보세요 🤝", "body": "좋은 인연이 기다리고 있을 거예요."},
+    {"title": "작은 감사로 시작하는 아침 🙏", "body": "감사한 마음 하나가 하루를 바꿔요."},
+    {"title": "오늘은 도전하기 좋은 날 🎯", "body": "망설였던 그 일, 오늘 시작해보세요."},
+    {"title": "당신의 오늘이 어제보다 행복하길 🍀", "body": "진심으로 응원합니다."},
+    {"title": "오늘도 멋지게 해낼 거예요 👍", "body": "저는 당신을 믿어요."},
+    {"title": "바쁜 아침에도 여유 한 스푼 ☕", "body": "따뜻한 음료와 함께 숨 고르기."},
+    {"title": "좋아하는 음악과 함께 시작하는 아침 🎶", "body": "기분 좋은 리듬으로 하루를 열어보세요."},
+    {"title": "창밖 날씨처럼 맑은 하루 되세요 🌤", "body": "기분 좋은 시작으로 하루를 열어보세요."},
+    {"title": "오늘의 행운은 당신 편이에요 🍀", "body": "자신 있게 하루를 맞이하세요."},
+    {"title": "오늘도 수고할 당신을 위해 👏", "body": "작은 행복이 가득한 하루가 되기를 응원합니다."},
   ];
 
-  // 루틴 알림 랜덤 문구 리스트 (50개)
-  static const List<Map<String, String>> routineMessages = [
-    {"title": "어제 루틴을 완료 못했어요 😢", "body": "오늘은 성공해볼까요? 지금 바로 시작해보세요!"},
-    {"title": "오늘의 루틴, 아직 잊지 않으셨죠? 🤔", "body": "조금만 시간을 내서 루틴을 완료해보세요."},
-    {"title": "루틴 하나가 당신의 내일을 바꿉니다 🌱", "body": "오늘도 멋지게 루틴을 해내볼까요?"},
-    {"title": "오늘 하루 수고 많으셨어요! 👏", "body": "마무리로 루틴 체크 어떠세요?"},
-    {"title": "루틴을 완료하면 기분이 좋아질 거예요 😌", "body": "작은 성취감을 느껴보세요."},
-    {"title": "당신의 꾸준함이 빛을 발할 거예요 ✨", "body": "오늘도 루틴을 이어가세요."},
-    {"title": "루틴 체크, 지금 1분이면 충분해요 ⏱️", "body": "더 미루기 전에 지금 바로 해볼까요?"},
-    {"title": "오늘 루틴을 달성하면 완벽한 하루! 💯", "body": "마지막 퍼즐을 맞춰주세요."},
-    {"title": "루틴은 나를 사랑하는 방법입니다 💖", "body": "오늘도 나를 위해 루틴을 실천하세요."},
-    {"title": "조금 귀찮더라도 해내면 뿌듯할 거예요 💪", "body": "당신의 의지력을 보여주세요!"},
-    {"title": "오늘의 루틴 달성률은 100%가 될 수 있어요 🚀", "body": "지금 바로 체크해보세요."},
-    {"title": "루틴을 꾸준히 하는 당신, 정말 멋져요 👍", "body": "오늘도 잊지 말고 루틴을 완료하세요."},
-    {"title": "하루를 마무리하는 가장 좋은 방법 🌙", "body": "루틴을 완료하고 편안하게 쉬세요."},
-    {"title": "루틴 체크하고 꿀잠 주무세요 😴", "body": "오늘 할 일을 다 마치면 잠도 더 잘 올 거예요."},
-    {"title": "당신의 성장 기록, 오늘도 업데이트할까요? 📈", "body": "루틴 완료로 하루를 기록하세요."},
-    {"title": "루틴을 완료하고 나에게 칭찬 한마디 🗣️", "body": "오늘도 해냈어! 멋지다 나 자신!"},
-    {"title": "루틴은 습관을 만들고 습관은 인생을 만듭니다 🛤️", "body": "오늘도 좋은 습관을 이어가세요."},
-    {"title": "오늘도 잊지 않고 찾아온 루틴 알리미 🔔", "body": "당신의 루틴 성공을 응원합니다."},
-    {"title": "루틴 완료하고 상쾌한 내일을 맞이하세요 🌅", "body": "미루지 않고 오늘 해내는 것이 중요해요."},
-    {"title": "당신의 루틴, 오늘도 순항 중인가요? ⛵", "body": "루틴을 확인하고 방향을 잡아보세요."},
-    {"title": "루틴 체크 잊으신 건 아니죠? 😉", "body": "아직 시간이 있어요. 지금 바로 해보세요."},
-    {"title": "오늘의 작은 실천이 내일의 큰 기쁨으로 🎁", "body": "루틴을 완료하고 성취감을 맛보세요."},
-    {"title": "루틴을 완료하면 마음이 한결 가벼워질 거예요 🎈", "body": "오늘의 숙제를 끝내보세요."},
-    {"title": "당신의 루틴 파트너가 응원합니다 📣", "body": "오늘도 파이팅! 루틴을 완료하세요."},
-    {"title": "루틴 체크, 지금이 딱 좋은 타이밍! 🎯", "body": "생각났을 때 바로 하는 게 최고죠."},
-    {"title": "오늘 루틴을 완료하면 어떤 보상을 줄까요? 🍩", "body": "작은 보상과 함께 루틴을 즐겨보세요."},
-    {"title": "루틴은 당신을 배신하지 않아요 🤝", "body": "꾸준함의 힘을 믿고 오늘도 실천하세요."},
-    {"title": "오늘 하루의 끝자락, 루틴으로 마무리해요 🌆", "body": "차분하게 하루를 정리하는 시간."},
-    {"title": "루틴 완료 버튼을 누를 때의 쾌감! 🖱️", "body": "지금 바로 그 쾌감을 느껴보세요."},
-    {"title": "당신의 완벽한 하루를 위한 마지막 미션 🧩", "body": "루틴 체크하고 완벽하게 하루를 끝내세요."},
-    {"title": "루틴을 완료하고 나면 푹 쉴 수 있어요 🛋️", "body": "조금만 더 힘내서 루틴을 마쳐보세요."},
-    {"title": "오늘 루틴을 건너뛰면 내일 두 배로 힘들어요 😭", "body": "오늘 할 일은 오늘 끝내자고요!"},
-    {"title": "루틴은 나를 발전시키는 마법의 주문 🪄", "body": "오늘도 스스로에게 마법을 걸어보세요."},
-    {"title": "당신의 루틴, 오늘 밤엔 꼭 확인하세요 🌃", "body": "하루가 지나가기 전에 루틴을 완료하세요."},
-    {"title": "루틴 체크하고 뿌듯한 마음으로 잠자리에 들어요 🛌", "body": "오늘도 수고한 나를 위한 작은 선물."},
-    {"title": "루틴을 완료하면 내일의 시작이 달라집니다 🌞", "body": "가벼운 마음으로 내일을 맞이하세요."},
-    {"title": "당신의 루틴 기록이 쌓여가고 있어요 📚", "body": "오늘도 한 페이지를 멋지게 채워보세요."},
-    {"title": "루틴은 작은 성공의 반복입니다 🔄", "body": "오늘도 작은 성공을 경험하세요."},
-    {"title": "루틴 체크, 혼자가 아니에요. 함께 해요! 👭", "body": "많은 사람들이 지금 루틴을 완료하고 있어요."},
-    {"title": "오늘 루틴을 완료하면 행운이 찾아올지도? 🍀", "body": "기분 좋은 상상과 함께 루틴을 실천하세요."},
-    {"title": "루틴은 당신의 건강한 삶을 위한 투자 🏦", "body": "오늘도 나를 위한 투자를 잊지 마세요."},
-    {"title": "당신의 루틴, 오늘 하루의 화룡점정 🐉", "body": "마지막까지 멋지게 장식해보세요."},
-    {"title": "루틴 체크하고 홀가분해지세요 🌬️", "body": "머릿속에 맴도는 할 일을 끝내버리세요."},
-    {"title": "루틴을 완료하면 자신감이 쑥쑥! 📈", "body": "스스로에 대한 믿음을 키워가세요."},
-    {"title": "당신의 루틴은 소중하니까요 💎", "body": "오늘도 잊지 말고 루틴을 챙겨주세요."},
-    {"title": "루틴 체크, 미루다 보면 눈덩이처럼 커져요 ⛄", "body": "지금 당장 해결해버리세요!"},
-    {"title": "루틴을 완료하고 여유로운 저녁 시간을 보내세요 🍷", "body": "할 일을 마친 후의 휴식은 꿀맛이죠."},
-    {"title": "당신의 루틴, 오늘도 성공 예감! 🎯", "body": "자신 있게 루틴 완료 버튼을 눌러보세요."},
-    {"title": "루틴 체크하고 나면 기분이 상쾌해질 거예요 🍃", "body": "마음의 먼지를 털어내는 시간."},
-    {"title": "오늘도 루틴을 완료한 당신에게 박수를 보냅니다 👏👏", "body": "정말 잘하셨어요! 내일도 화이팅!"},
+  // 저녁 푸시: 하루를 마무리하는 응원 메시지
+  static const List<Map<String, String>> eveningMessages = [
+    {"title": "오늘 하루 수고 많으셨어요 👏", "body": "이제 편안히 쉬어도 괜찮아요."},
+    {"title": "오늘도 잘 버텨낸 당신, 정말 대단해요 🌟", "body": "스스로를 칭찬해주세요."},
+    {"title": "하루를 마무리하는 따뜻한 시간 🌙", "body": "오늘 있었던 좋은 일을 하나 떠올려보세요."},
+    {"title": "애쓴 당신에게 박수를 보냅니다 👏👏", "body": "내일은 더 가벼운 하루가 될 거예요."},
+    {"title": "오늘 못다 한 일은 내일의 당신에게 맡기세요 📦", "body": "지금은 쉬는 게 더 중요해요."},
+    {"title": "따뜻한 저녁 식사 하셨나요? 🍲", "body": "든든하게 드시고 힘내세요."},
+    {"title": "오늘의 수고로움은 내일의 양분이 됩니다 🌱", "body": "잘하고 있어요, 정말로."},
+    {"title": "편안한 밤 되세요 😴", "body": "좋은 꿈 꾸시길 바랄게요."},
+    {"title": "오늘 웃었던 순간을 기억하세요 😊", "body": "그 기억이 내일의 힘이 돼요."},
+    {"title": "완벽하지 않아도 괜찮아요 💛", "body": "오늘의 당신도 충분히 잘했어요."},
+    {"title": "하루의 끝, 고생한 어깨를 토닥여주세요 💆", "body": "스스로에게 고생했다고 말해주세요."},
+    {"title": "조용한 밤, 마음도 쉬어갑니다 🌃", "body": "걱정은 잠시 내려놓으세요."},
+    {"title": "오늘도 한 걸음 나아갔어요 👣", "body": "그걸로 충분합니다."},
+    {"title": "내일은 오늘보다 조금 더 쉬운 하루이길 🌠", "body": "응원합니다."},
+    {"title": "따뜻한 차 한 잔의 여유 🍵", "body": "하루를 차분히 정리하는 시간."},
+    {"title": "당신 덕분에 오늘이 특별했어요 ✨", "body": "내일도 잘 부탁해요."},
+    {"title": "스마트폰은 잠시 내려놓고 📵", "body": "눈과 마음에 휴식을 주세요."},
+    {"title": "오늘 배운 게 있다면 그걸로 성공 🎓", "body": "작은 배움이 쌓여 큰 힘이 돼요."},
+    {"title": "가족·친구에게 안부 한마디 어때요? 💌", "body": "따뜻한 말이 서로를 살립니다."},
+    {"title": "내일 입을 옷을 미리 준비하는 여유 👔", "body": "아침이 한결 가벼워져요."},
+    {"title": "오늘 흘린 땀을 기억합니다 💧", "body": "노력은 절대 배신하지 않아요."},
+    {"title": "별빛처럼 빛나는 당신 🌌", "body": "오늘도 빛나셨어요."},
+    {"title": "깊은 잠이 보약이에요 🛌", "body": "일찍 주무시고 내일을 맞이하세요."},
+    {"title": "오늘도 고생한 나에게 “수고했어” 🗣️", "body": "큰 소리로 말해보세요. 진짜 힘이 돼요."},
   ];
 
-  static const List<Map<String, String>> enFortuneMessages = [
-    {"title": "Today's fortune is calling you 🌟", "body": "Check your daily fortune and find out what awaits!"},
-    {"title": "A lucky day ahead! 🍀", "body": "Don't miss out on today's fortune. Check it now."},
-    {"title": "Curious about your luck today? ✨", "body": "Take a moment to see your daily fortune."},
-    {"title": "Good things are coming your way 🎁", "body": "Check your fortune and claim your luck!"},
-    {"title": "Your daily advice is ready 💌", "body": "See what the universe has planned for you today."},
-    {"title": "Financial luck is rising! 💰", "body": "Check where the good news is coming from."},
-    {"title": "A day for intuition 🎯", "body": "Listen to your gut and verify it with your fortune."},
-    {"title": "Small happiness, big joy 🌈", "body": "Find out what little pleasures await you today."},
-    {"title": "You're the star today 👑", "body": "Start your day with confidence. Fortune is on your side."},
-    {"title": "New opportunities are coming 🎁", "body": "Your daily fortune might have the hint you need."},
-    {"title": "Time for a refresh 🌿", "body": "Refresh your day with a quick look at your fortune."},
-    {"title": "What's your lucky color today? 🎨", "body": "Check your lucky items before you start the day."},
-    {"title": "A special message just for you 💌", "body": "Don't miss the advice your fortune has for you."},
-    {"title": "The goddess of luck is smiling 🍀", "body": "What kind of luck is waiting for you?"},
-    {"title": "Unexpected news might arrive 📩", "body": "Check your relationship luck for today."},
-
-    // --- Added: Support & Motivation ---
-    {"title": "Cheering for you today! 🌟", "body": "May your day be brighter than yesterday."},
-    {"title": "How about a quick stretch? 🧘", "body": "Start your day energized with light exercise!"},
-    {"title": "You are amazing! ✨", "body": "Go through the day with confidence and joy."},
-    {"title": "To you, who's doing great 👏", "body": "Wishing you a day full of small happiness."},
-    {"title": "It's okay to take a break ☕", "body": "Walk at your own pace today. You're doing fine."},
-
-    // --- Added: Missions & Features ---
-    {"title": "Did you drink water? 💧", "body": "Build a healthy habit with the water intake mission!"},
-    {"title": "Wake up with a new mission ⏰", "body": "Make your morning enjoyable with various missions."},
-    {"title": "Complete missions and get rewards 🎁", "body": "Feel a sense of accomplishment with each mission."},
-    {"title": "Explore the features of Fortune Alarm 🚀", "body": "Improve your quality of life with personalized alarm settings."},
-    {"title": "Consistency is key 🌱", "body": "Continue your healthy routine with Fortune Alarm."},
+  static const List<Map<String, String>> enMorningMessages = [
+    {"title": "Good morning ☀️", "body": "Let's start the day light and easy."},
+    {"title": "Cheering for you today 🌟", "body": "May today shine a little brighter than yesterday."},
+    {"title": "How about a quick stretch? 🧘", "body": "Wake up your body with light movement."},
+    {"title": "You are more amazing than you think ✨", "body": "Enjoy today with confidence."},
+    {"title": "Take it one step at a time 👣", "body": "Your own pace is perfectly fine."},
+    {"title": "One deep breath 🌿", "body": "A calm mind makes a good day."},
+    {"title": "Today is full of new possibilities 🚀", "body": "Something good might happen."},
+    {"title": "Just pick one thing for today 📝", "body": "One at a time is enough."},
+    {"title": "Start with a glass of water 💧", "body": "Wake up your body and mind."},
+    {"title": "Have a warm and sunny day ☀️", "body": "Good vibes are on your side."},
+    {"title": "You've got this 💪", "body": "Your efforts will shine today."},
+    {"title": "Smile at yourself in the mirror 😊", "body": "A smile brings good luck."},
   ];
 
-  static const List<Map<String, String>> jaFortuneMessages = [
-    {"title": "今日の運勢があなたを待っています 🌟", "body": "運勢をチェックして、今日一日のヒントを見つけましょう！"},
-    {"title": "幸運な一日が待っています！ 🍀", "body": "今日の運勢を見逃さないで。今すぐチェックしましょう。"},
-    {"title": "今日の運勢が気になりませんか？ ✨", "body": "少し時間を作って、今日の運勢を見てみましょう。"},
-    {"title": "良いことがあなたに向かっています 🎁", "body": "運勢をチェックして、幸運を手に入れましょう！"},
-    {"title": "今日のアドバイスをお届けします 💌", "body": "今日を乗り切るための特別なヒントを見てみましょう。"},
-    {"title": "金運が上昇中ですよ！ 💰", "body": "どこから良いニュースが届くかチェックしてみましょう。"},
-    {"title": "直感を信じる日です 🎯", "body": "あなたの直感が当たっているか、運勢で確かめてみてください。"},
-    {"title": "小さな幸せが大きな喜びに 🌈", "body": "どんなささやかな楽しみがあるか確認してみましょう。"},
-    {"title": "今日はあなたが主役の日 👑", "body": "自信を持って一日を始めましょう。運勢が応援しています。"},
-    {"title": "新しいチャンスが訪れるかも 🎁", "body": "今日の運勢がヒントをくれるはずです。"},
-
-    // --- 追加: 応援とモチベーション ---
-    {"title": "今日という一日を応援しています！ 🌟", "body": "昨日より輝く一日になりますように。"},
-    {"title": "少しストレッチしてみませんか？ 🧘", "body": "軽い運動で活気ある一日を始めましょう！"},
-    {"title": "あなたは素晴らしい人です ✨", "body": "自信を持って今日を楽しんでください。"},
-    {"title": "頑張っているあなたへ 👏", "body": "小さな幸せに満ちた一日になりますように。"},
-    {"title": "時には休んでも大丈夫 ☕", "body": "あなたのペースで今日を歩んでください。"},
-
-    // --- 追加: ミッションと機能の案内 ---
-    {"title": "お水、飲みましたか？ 💧", "body": "水分補給ミッションで健康な習慣を作りましょう！"},
-    {"title": "新しいミッションで目覚めを ⏰", "body": "ミッションを変えて、朝をもっと楽しく。"},
-    {"title": "ミッション完了で達成感を 🎁", "body": "ミッションをこなして、清々しい一日を。"},
-    {"title": "Fortune アラームの活用 🚀", "body": "あなたにぴったりの設定で、生活の质を上げましょう。"},
-    {"title": "継続は力なり 🌱", "body": "Fortune アラームと一緒に、健康なルーティンを。"},
+  static const List<Map<String, String>> enEveningMessages = [
+    {"title": "Great job today 👏", "body": "Now it's okay to rest."},
+    {"title": "You made it through today 🌟", "body": "Give yourself some praise."},
+    {"title": "Time to wind down 🌙", "body": "Recall one good thing from today."},
+    {"title": "Leave the rest for tomorrow 📦", "body": "Rest matters more right now."},
+    {"title": "You don't have to be perfect 💛", "body": "You did well enough today."},
+    {"title": "Sleep well 😴", "body": "Sweet dreams to you."},
+    {"title": "One step forward today 👣", "body": "That is more than enough."},
+    {"title": "May tomorrow be a little easier 🌠", "body": "Cheering for you."},
+    {"title": "A cup of warm tea 🍵", "body": "Time to calmly close the day."},
+    {"title": "Put the phone down for a while 📵", "body": "Give your eyes and mind a break."},
+    {"title": "Your efforts never betray you 💧", "body": "Remember today's hard work."},
+    {"title": "Tell yourself 'well done' 🗣️", "body": "Say it out loud — it really helps."},
   ];
 
-  static const List<Map<String, String>> zhFortuneMessages = [
-    {"title": "今日运势已更新 🌟", "body": "快来看看今天有什么好运在等着您！"},
-    {"title": "好运正在路上！ 🍀", "body": "不要错过今天的运势，现在就来查看吧。"},
-    {"title": "好奇今天的运气吗？ ✨", "body": "花点时间看看您的每日专属运势。"},
-    {"title": "幸运即将降临 🎁", "body": "查看运势，抓住属于您的好运！"},
-    {"title": "您的每日建议已准备好 💌", "body": "快来看看今天有什么特别的指引吧。"},
+  static const List<Map<String, String>> jaMorningMessages = [
+    {"title": "おはようございます ☀️", "body": "今日も軽やかに始めましょう。"},
+    {"title": "今日のあなたを応援しています 🌟", "body": "昨日より少し輝く一日になりますように。"},
+    {"title": "軽くストレッチしませんか 🧘", "body": "体を目覚めさせて元気にスタート。"},
+    {"title": "あなたは思っている以上に素敵です ✨", "body": "自信を持って今日を楽しんでください。"},
+    {"title": "一歩ずつで大丈夫 👣", "body": "あなたのペースで進みましょう。"},
+    {"title": "深呼吸ひとつ 🌿", "body": "穏やかな心が良い一日を作ります。"},
+    {"title": "新しい一日、新しい可能性 🚀", "body": "今日はどんな良いことがあるでしょう。"},
+    {"title": "今日やることを一つだけ決めましょう 📝", "body": "一つずつで十分です。"},
+    {"title": "お水一杯でスッキリ 💧", "body": "体も心も目覚めさせましょう。"},
+    {"title": "温かく晴れやかな一日を ☀️", "body": "良い流れがあなたと共にありますように。"},
+    {"title": "あなたならできる 💪", "body": "今日の努力がきっと光ります。"},
+    {"title": "鏡の自分に微笑んでみましょう 😊", "body": "笑顔が幸運を呼びます。"},
   ];
 
-  static const List<Map<String, String>> esFortuneMessages = [
-    {"title": "¡Tu horóscopo de hoy te espera! 🌟", "body": "¡Revisa tu suerte diaria y descubre qué te espera!"},
-    {"title": "¡Te espera un día lleno de suerte! 🍀", "body": "No te pierdas la fortuna de hoy. Revísala ahora."},
-    {"title": "¿Curioso sobre tu suerte hoy? ✨", "body": "Tómate un momento para leer tu fortuna diaria."},
-    {"title": "Cosas buenas vienen en camino 🎁", "body": "¡Revisa tu fortuna y reclama tu suerte!"},
-    {"title": "Tu consejo diario está listo 💌", "body": "Descubre qué te deparan los astros hoy."},
+  static const List<Map<String, String>> jaEveningMessages = [
+    {"title": "今日もお疲れさまでした 👏", "body": "もうゆっくり休んで大丈夫です。"},
+    {"title": "今日を乗り切ったあなたは立派です 🌟", "body": "自分を褒めてあげてください。"},
+    {"title": "一日を締めくくる時間 🌙", "body": "今日の良かったことを一つ思い出してみましょう。"},
+    {"title": "残りは明日に任せましょう 📦", "body": "今は休むことが一番大切です。"},
+    {"title": "完璧じゃなくて大丈夫 💛", "body": "今日のあなたも十分よく頑張りました。"},
+    {"title": "おやすみなさい 😴", "body": "良い夢を見られますように。"},
+    {"title": "今日も一歩前進 👣", "body": "それだけで十分です。"},
+    {"title": "明日が今日より少し優しい日でありますように 🌠", "body": "応援しています。"},
+    {"title": "温かいお茶でひと息 🍵", "body": "静かに一日を整理する時間。"},
+    {"title": "スマホを少し置いてみましょう 📵", "body": "目と心に休息を。"},
+    {"title": "努力は裏切りません 💧", "body": "今日の頑張りを覚えています。"},
+    {"title": "「お疲れさま」と声に出してみましょう 🗣️", "body": "本当に力になりますよ。"},
   ];
 
-  static const List<Map<String, String>> frFortuneMessages = [
-    {"title": "Votre horoscope du jour vous attend ! 🌟", "body": "Vérifiez votre chance quotidienne et découvrez ce qui vous attend !"},
-    {"title": "Une journée chanceuse s'annonce ! 🍀", "body": "Ne manquez pas la fortune d'aujourd'hui. Vérifiez-la maintenant."},
-    {"title": "Curieux de votre chance aujourd'hui ? ✨", "body": "Prenez un moment pour lire votre horoscope."},
-    {"title": "De bonnes choses arrivent 🎁", "body": "Vérifiez votre fortune et saisissez votre chance !"},
-    {"title": "Votre conseil quotidien est prêt 💌", "body": "Découvrez ce que les astres vous réservent aujourd'hui."},
+  static const List<Map<String, String>> zhMorningMessages = [
+    {"title": "早上好 ☀️", "body": "轻松开启今天吧。"},
+    {"title": "为今天的你加油 🌟", "body": "愿今天比昨天更加闪亮。"},
+    {"title": "伸个懒腰吧 🧘", "body": "用轻微的运动唤醒身体。"},
+    {"title": "你比想象中更出色 ✨", "body": "自信地享受今天吧。"},
+    {"title": "一步一步来 👣", "body": "按自己的节奏就好。"},
+    {"title": "深呼吸一次 🌿", "body": "平静的心带来美好的一天。"},
+    {"title": "新的一天，新的可能 🚀", "body": "今天会有好事发生吗？"},
+    {"title": "今天只定一个小目标 📝", "body": "一件一件来就足够了。"},
+    {"title": "喝杯水，清爽一下 💧", "body": "唤醒身体和心情。"},
+    {"title": "愿你有温暖晴朗的一天 ☀️", "body": "好运与你同在。"},
   ];
 
-  static const List<Map<String, String>> deFortuneMessages = [
-    {"title": "Dein heutiges Horoskop wartet auf dich! 🌟", "body": "Überprüfe dein tägliches Glück und finde heraus, was dich erwartet!"},
-    {"title": "Ein glücklicher Tag liegt vor dir! 🍀", "body": "Verpasse nicht das heutige Glück. Sieh gleich nach."},
-    {"title": "Neugierig auf dein Glück heute? ✨", "body": "Nimm dir einen Moment Zeit für dein tägliches Horoskop."},
-    {"title": "Gute Dinge kommen auf dich zu 🎁", "body": "Überprüfe dein Glück und nutze deine Chancen!"},
-    {"title": "Dein täglicher Rat ist bereit 💌", "body": "Finde heraus, was die Sterne heute für dich bereithalten."},
+  static const List<Map<String, String>> zhEveningMessages = [
+    {"title": "今天辛苦了 👏", "body": "现在可以好好休息了。"},
+    {"title": "坚持到今天的你很了不起 🌟", "body": "给自己一些夸奖吧。"},
+    {"title": "一天结束的时间 🌙", "body": "回想一件今天的好事吧。"},
+    {"title": "剩下的交给明天 📦", "body": "现在休息最重要。"},
+    {"title": "不完美也没关系 💛", "body": "今天的你已经足够好了。"},
+    {"title": "晚安 😴", "body": "祝你有个好梦。"},
+    {"title": "今天也前进了一步 👣", "body": "这样就足够了。"},
+    {"title": "愿明天比今天更轻松一点 🌠", "body": "为你加油。"},
+    {"title": "喝杯热茶，歇一歇 🍵", "body": "静静整理今天的时间。"},
+    {"title": "对自己说声“辛苦了” 🗣️", "body": "大声说出来，真的很有力量。"},
   ];
 
-  static const List<Map<String, String>> ruFortuneMessages = [
-    {"title": "Ваш гороскоп на сегодня уже ждет вас! 🌟", "body": "Проверьте свою удачу и узнайте, что вас ждет!"},
-    {"title": "Впереди удачный день! 🍀", "body": "Не упустите свой шанс. Проверьте гороскоп сейчас."},
-    {"title": "Интересно, как вам повезет сегодня? ✨", "body": "Уделите минутку, чтобы прочитать свой прогноз."},
-    {"title": "К вам идут хорошие события 🎁", "body": "Проверьте свою удачу и заберите её!"},
-    {"title": "Ваш совет на день уже готов 💌", "body": "Посмотрите, что звезды приготовили для вас сегодня."},
+  static const List<Map<String, String>> thMorningMessages = [
+    {"title": "อรุณสวัสดิ์ ☀️", "body": "เริ่มต้นวันนี้อย่างเบาสบายกัน"},
+    {"title": "เป็นกำลังใจให้คุณวันนี้ 🌟", "body": "ขอให้วันนี้สดใสกว่าเมื่อวาน"},
+    {"title": "ยืดเส้นสักหน่อยไหม 🧘", "body": "ปลุกร่างกายด้วยการขยับเบาๆ"},
+    {"title": "คุณยอดเยี่ยมกว่าที่คิด ✨", "body": "ใช้วันนี้อย่างมั่นใจ"},
+    {"title": "ทีละก้าวก็พอ 👣", "body": "ไปในจังหวะของคุณเองได้เลย"},
+    {"title": "หายใจลึกๆ สักครั้ง 🌿", "body": "ใจที่สงบสร้างวันที่ดี"},
+    {"title": "วันใหม่ ความเป็นไปได้ใหม่ๆ 🚀", "body": "วันนี้จะมีเรื่องดีอะไรนะ"},
+    {"title": "ตั้งเป้าหมายแค่อย่างเดียววันนี้ 📝", "body": "ทีละอย่างก็เพียงพอแล้ว"},
+    {"title": "ดื่มน้ำสักแก้วให้สดชื่น 💧", "body": "ปลุกร่างกายและจิตใจ"},
+    {"title": "ขอให้เป็นวันที่อบอุ่นสดใส ☀️", "body": "โชคดีอยู่ข้างคุณ"},
   ];
 
-  static const List<Map<String, String>> hiFortuneMessages = [
-    {"title": "आज का राशिफल आपका इंतजार कर रहा है 🌟", "body": "अपना दैनिक भाग्य देखें और पता करें कि आपका क्या इंतजार कर रहा है!"},
-    {"title": "एक भाग्यशाली दिन आगे है! 🍀", "body": "आज के भाग्य को याद मत करो। इसे अभी जांचें।"},
-    {"title": "आज अपने भाग्य के बारे में उत्सुक हैं? ✨", "body": "अपना दैनिक भाग्य देखने के लिए एक क्षण निकालें।"},
-    {"title": "अच्छी चीजें आपके रास्ते में आ रही हैं 🎁", "body": "अपना भाग्य जांचें और अपना भाग्य मांगें!"},
-    {"title": "आपकी दैनिक सलाह तैयार है 💌", "body": "देखें कि सितारों ने आज आपके लिए क्या योजना बनाई है।"},
+  static const List<Map<String, String>> thEveningMessages = [
+    {"title": "วันนี้เหนื่อยหน่อยนะ 👏", "body": "ตอนนี้พักได้แล้ว"},
+    {"title": "คุณที่ผ่านวันนี้มาได้เก่งมาก 🌟", "body": "ชื่นชมตัวเองหน่อย"},
+    {"title": "ได้เวลาปิดท้ายวัน 🌙", "body": "นึกถึงเรื่องดีๆ สักเรื่องของวันนี้"},
+    {"title": "ที่เหลือไว้พรุ่งนี้ 📦", "body": "ตอนนี้การพักสำคัญที่สุด"},
+    {"title": "ไม่สมบูรณ์แบบก็ไม่เป็นไร 💛", "body": "วันนี้คุณทำดีพอแล้ว"},
+    {"title": "ราตรีสวัสดิ์ 😴", "body": "ฝันดีนะ"},
+    {"title": "วันนี้ก็ก้าวไปข้างหน้าหนึ่งก้าว 👣", "body": "แค่นั้นก็เพียงพอแล้ว"},
+    {"title": "ขอให้พรุ่งนี้เบากว่าวันนี้ 🌠", "body": "เป็นกำลังใจให้"},
+    {"title": "ชาร้อนสักถ้วย 🍵", "body": "เวลาทบทวนวันอย่างสงบ"},
+    {"title": "บอกตัวเองว่า “เหนื่อยหน่อยนะ” 🗣️", "body": "พูดออกมาดังๆ มีพลังจริงๆ"},
   ];
 
-  static const List<Map<String, String>> enRoutineMessages = [
-    {"title": "Don't forget your routine today! 🌱", "body": "Take a small step towards your goals."},
-    {"title": "Have you checked your missions? 🚀", "body": "Complete your daily routine and feel accomplished."},
-    {"title": "A perfect day starts with a routine 💯", "body": "Let's finish what you started today."},
-    {"title": "Time for your daily check-in ⏰", "body": "Keep up the good work and complete your routine."},
-    {"title": "Wrap up your day with your routine 🌙", "body": "Finish your tasks and enjoy a peaceful evening."},
+  static const List<Map<String, String>> esMorningMessages = [
+    {"title": "¡Buenos días! ☀️", "body": "Empecemos el día con calma."},
+    {"title": "¡Te animo hoy! 🌟", "body": "Que hoy brille más que ayer."},
+    {"title": "¿Estiramos un poco? 🧘", "body": "Despierta tu cuerpo con movimiento suave."},
+    {"title": "Eres más increíble de lo que crees ✨", "body": "Disfruta el día con confianza."},
+    {"title": "Paso a paso 👣", "body": "A tu propio ritmo está bien."},
+    {"title": "Respira profundo 🌿", "body": "Una mente tranquila crea un buen día."},
+    {"title": "Un nuevo día, nuevas posibilidades 🚀", "body": "Algo bueno puede pasar hoy."},
+    {"title": "Sonríete en el espejo 😊", "body": "Una sonrisa atrae la buena suerte."},
   ];
 
-  static const List<Map<String, String>> jaRoutineMessages = [
-    {"title": "今日のルーティンはお済みですか？ 🌱", "body": "目標に向けて小さな一歩を踏み出しましょう。"},
-    {"title": "今日のタスクはチェックしましたか？ 🚀", "body": "毎日のルーティンを完了して達成感を味わいましょう。"},
-    {"title": "完璧な一日はルーティンから 💯", "body": "今日決めたことを最後までやり遂げましょう。"},
-    {"title": "毎日のチェックインの時間です ⏰", "body": "あともう少し！ルーティンを完了させましょう。"},
-    {"title": "ルーティンを終わらせて一日を締めくくる 🌙", "body": "タスクを終えて、穏やかな夜を楽しみましょう。"},
+  static const List<Map<String, String>> esEveningMessages = [
+    {"title": "¡Buen trabajo hoy! 👏", "body": "Ahora puedes descansar."},
+    {"title": "Lo lograste hoy 🌟", "body": "Date un reconocimiento."},
+    {"title": "Hora de cerrar el día 🌙", "body": "Recuerda algo bueno de hoy."},
+    {"title": "Lo demás puede esperar a mañana 📦", "body": "Descansar es lo más importante."},
+    {"title": "No tienes que ser perfecto 💛", "body": "Hoy lo hiciste bien."},
+    {"title": "¡Buenas noches! 😴", "body": "Dulces sueños."},
+    {"title": "Hoy avanzaste un paso 👣", "body": "Eso es más que suficiente."},
+    {"title": "Dite 'bien hecho' 🗣️", "body": "Dilo en voz alta, de verdad ayuda."},
   ];
 
-  static const List<Map<String, String>> zhRoutineMessages = [
-    {"title": "今天也别忘了完成日常哦！ 🌱", "body": "朝着您的目标迈出一小步。"},
-    {"title": "今天的任务完成了吗？ 🚀", "body": "完成您的日常任务，感受满满的成就感。"},
-    {"title": "完美的一天从日常开始 💯", "body": "让我们完成今天定下的小目标吧。"},
-    {"title": "每日打卡时间 ⏰", "body": "坚持就是胜利，快来完成您的日常。"},
-    {"title": "用日常结束您的一天 🌙", "body": "完成今天的任务，享受宁静的夜晚。"},
+  static const List<Map<String, String>> frMorningMessages = [
+    {"title": "Bonjour ! ☀️", "body": "Commençons la journée en douceur."},
+    {"title": "Je te soutiens aujourd'hui 🌟", "body": "Que ce jour brille plus qu'hier."},
+    {"title": "Et si on s'étirait un peu ? 🧘", "body": "Réveille ton corps en douceur."},
+    {"title": "Tu es plus formidable que tu ne le crois ✨", "body": "Profite de ta journée avec confiance."},
+    {"title": "Un pas à la fois 👣", "body": "Ton rythme est parfait."},
+    {"title": "Respire profondément 🌿", "body": "Un esprit calme fait une belle journée."},
+    {"title": "Un nouveau jour, de nouvelles possibilités 🚀", "body": "Quelque chose de bien peut arriver."},
+    {"title": "Souris-toi dans le miroir 😊", "body": "Un sourire attire la chance."},
   ];
 
-  static const List<Map<String, String>> esRoutineMessages = [
-    {"title": "¡No olvides completar tu rutina hoy! 🌱", "body": "Da un pequeño paso hacia tus metas."},
-    {"title": "¿Ya completaste tus tareas de hoy? 🚀", "body": "Completa tu rutina diaria y siéntete realizado."},
-    {"title": "Un día perfecto comienza con una rutina 💯", "body": "Terminemos lo que empezaste hoy."},
-    {"title": "Hora de tu registro diario ⏰", "body": "Sigue así y termina tus tareas del día."},
-    {"title": "Termina tu día con tu rutina 🌙", "body": "Termina tus tareas y disfruta de una noche tranquila."},
+  static const List<Map<String, String>> frEveningMessages = [
+    {"title": "Beau travail aujourd'hui ! 👏", "body": "Maintenant tu peux te reposer."},
+    {"title": "Tu as tenu bon aujourd'hui 🌟", "body": "Félicite-toi."},
+    {"title": "L'heure de clore la journée 🌙", "body": "Repense à un bon moment d'aujourd'hui."},
+    {"title": "Le reste peut attendre demain 📦", "body": "Se reposer est le plus important."},
+    {"title": "Pas besoin d'être parfait 💛", "body": "Tu as bien fait aujourd'hui."},
+    {"title": "Bonne nuit ! 😴", "body": "Fais de beaux rêves."},
+    {"title": "Aujourd'hui tu as avancé d'un pas 👣", "body": "C'est déjà beaucoup."},
+    {"title": "Dis-toi « bravo » 🗣️", "body": "Dis-le à voix haute, ça aide vraiment."},
   ];
 
-  static const List<Map<String, String>> frRoutineMessages = [
-    {"title": "N'oubliez pas votre routine aujourd'hui ! 🌱", "body": "Faites un petit pas vers vos objectifs."},
-    {"title": "Avez-vous accompli vos tâches ? 🚀", "body": "Complétez votre routine quotidienne et soyez fier de vous."},
-    {"title": "Une journée parfaite commence par une routine 💯", "body": "Finissons ce que vous avez commencé aujourd'hui."},
-    {"title": "C'est l'heure de votre bilan quotidien ⏰", "body": "Continuez votre bon travail et complétez votre routine."},
-    {"title": "Terminez votre journée avec votre routine 🌙", "body": "Terminez vos tâches et profitez d'une soirée paisible."},
+  static const List<Map<String, String>> deMorningMessages = [
+    {"title": "Guten Morgen! ☀️", "body": "Starten wir entspannt in den Tag."},
+    {"title": "Ich drücke dir heute die Daumen 🌟", "body": "Möge heute heller strahlen als gestern."},
+    {"title": "Wie wäre es mit etwas Dehnen? 🧘", "body": "Wecke deinen Körper sanft auf."},
+    {"title": "Du bist großartiger, als du denkst ✨", "body": "Genieße den Tag mit Zuversicht."},
+    {"title": "Schritt für Schritt 👣", "body": "Dein Tempo ist genau richtig."},
+    {"title": "Atme einmal tief durch 🌿", "body": "Ein ruhiger Geist macht einen guten Tag."},
+    {"title": "Ein neuer Tag, neue Möglichkeiten 🚀", "body": "Heute kann etwas Gutes passieren."},
+    {"title": "Lächle dich im Spiegel an 😊", "body": "Ein Lächeln zieht Glück an."},
   ];
 
-  static const List<Map<String, String>> deRoutineMessages = [
-    {"title": "Vergiss deine Routine heute nicht! 🌱", "body": "Mache einen kleinen Schritt in Richtung deiner Ziele."},
-    {"title": "Hast du deine heutigen Aufgaben erledigt? 🚀", "body": "Schließe deine tägliche Routine ab und fühle dich erfüllt."},
-    {"title": "Ein perfekter Tag beginnt mit einer Routine 💯", "body": "Lass uns beenden, was du heute begonnen hast."},
-    {"title": "Zeit für dein tägliches Check-in ⏰", "body": "Mach weiter so und schließe deine Routine ab."},
-    {"title": "Beende deinen Tag mit deiner Routine 🌙", "body": "Beende deine Aufgaben und genieße einen friedlichen Abend."},
+  static const List<Map<String, String>> deEveningMessages = [
+    {"title": "Gut gemacht heute! 👏", "body": "Jetzt darfst du dich ausruhen."},
+    {"title": "Du hast den Tag gemeistert 🌟", "body": "Lobe dich selbst."},
+    {"title": "Zeit, den Tag abzuschließen 🌙", "body": "Erinnere dich an etwas Schönes von heute."},
+    {"title": "Der Rest kann bis morgen warten 📦", "body": "Ausruhen ist jetzt am wichtigsten."},
+    {"title": "Du musst nicht perfekt sein 💛", "body": "Du warst heute gut genug."},
+    {"title": "Gute Nacht! 😴", "body": "Träum was Schönes."},
+    {"title": "Heute bist du einen Schritt weiter 👣", "body": "Das ist mehr als genug."},
+    {"title": "Sag dir „gut gemacht“ 🗣️", "body": "Sag es laut, es hilft wirklich."},
   ];
 
-  static const List<Map<String, String>> ruRoutineMessages = [
-    {"title": "Не забудьте выполнить свои задачи на сегодня! 🌱", "body": "Сделайте небольшой шаг к своим целям."},
-    {"title": "Вы уже выполнили свои задания? 🚀", "body": "Завершите свою ежедневную рутину и почувствуйте удовлетворение."},
-    {"title": "Идеальный день начинается с рутины 💯", "body": "Давайте закончим то, что вы запланировали на сегодня."},
-    {"title": "Время для вашей ежедневной проверки ⏰", "body": "Продолжайте в том же духе и завершите свою рутину."},
-    {"title": "Завершите свой день рутиной 🌙", "body": "Закончите свои задачи и наслаждайтесь спокойным вечером."},
+  static const List<Map<String, String>> ruMorningMessages = [
+    {"title": "Доброе утро! ☀️", "body": "Начнём день легко и спокойно."},
+    {"title": "Болею за тебя сегодня 🌟", "body": "Пусть сегодня сияет ярче, чем вчера."},
+    {"title": "Как насчёт лёгкой разминки? 🧘", "body": "Разбуди тело мягким движением."},
+    {"title": "Ты круче, чем думаешь ✨", "body": "Наслаждайся днём с уверенностью."},
+    {"title": "Шаг за шагом 👣", "body": "Твой собственный темп — это нормально."},
+    {"title": "Глубоко вдохни 🌿", "body": "Спокойный ум делает день хорошим."},
+    {"title": "Новый день — новые возможности 🚀", "body": "Сегодня может случиться что-то хорошее."},
+    {"title": "Улыбнись себе в зеркале 😊", "body": "Улыбка притягивает удачу."},
   ];
 
-  static const List<Map<String, String>> hiRoutineMessages = [
-    {"title": "आज के अपने रूटीन को पूरा करना न भूलें! 🌱", "body": "अपने लक्ष्यों की दिशा में एक छोटा कदम उठाएं।"},
-    {"title": "क्या आपने अपने मिशन पूरे कर लिए हैं? 🚀", "body": "अपनी दैनिक दिनचर्या पूरी करें और उपलब्धि महसूस करें।"},
-    {"title": "एक सही दिन की शुरुआत दिनचर्या से होती है 💯", "body": "आइए वह समाप्त करें जो आपने आज शुरू किया था।"},
-    {"title": "आपके दैनिक चेक-इन का समय ⏰", "body": "अच्छा काम जारी रखें और अपनी दिनचर्या पूरी करें।"},
-    {"title": "अपनी दिनचर्या के साथ अपने दिन का समापन करें 🌙", "body": "अपने कार्यों को समाप्त करें और शांतिपूर्ण शाम का आनंद लें।"},
+  static const List<Map<String, String>> ruEveningMessages = [
+    {"title": "Отличная работа сегодня! 👏", "body": "Теперь можно отдохнуть."},
+    {"title": "Ты справился с сегодняшним днём 🌟", "body": "Похвали себя."},
+    {"title": "Время завершить день 🌙", "body": "Вспомни что-то хорошее из сегодняшнего дня."},
+    {"title": "Остальное подождёт до завтра 📦", "body": "Сейчас важнее всего отдых."},
+    {"title": "Не обязательно быть идеальным 💛", "body": "Сегодня ты был достаточно хорош."},
+    {"title": "Спокойной ночи! 😴", "body": "Приятных снов."},
+    {"title": "Сегодня ты сделал шаг вперёд 👣", "body": "Этого более чем достаточно."},
+    {"title": "Скажи себе «молодец» 🗣️", "body": "Скажи вслух — это действительно помогает."},
   ];
 
-  static Map<String, String> getRandomFortuneMessage([String languageCode = 'ko']) {
+  static const List<Map<String, String>> hiMorningMessages = [
+    {"title": "सुप्रभात! ☀️", "body": "आइए दिन की शुरुआत आराम से करें।"},
+    {"title": "आज आपके साथ हूँ 🌟", "body": "आज का दिन कल से ज्यादा चमके।"},
+    {"title": "थोड़ा स्ट्रेच करें? 🧘", "body": "हल्की हलचल से शरीर को जगाएं।"},
+    {"title": "आप सोच से कहीं ज्यादा शानदार हैं ✨", "body": "आत्मविश्वास के साथ दिन का आनंद लें।"},
+    {"title": "एक-एक कदम 👣", "body": "अपनी गति से चलना बिल्कुल ठीक है।"},
+    {"title": "एक गहरी सांस लें 🌿", "body": "शांत मन अच्छा दिन बनाता है।"},
+    {"title": "नया दिन, नई संभावनाएं 🚀", "body": "आज कुछ अच्छा हो सकता है।"},
+    {"title": "आईने में खुद को देखकर मुस्कुराएं 😊", "body": "मुस्कान सौभाग्य लाती है।"},
+  ];
+
+  static const List<Map<String, String>> hiEveningMessages = [
+    {"title": "आज बहुत अच्छा किया! 👏", "body": "अब आप आराम कर सकते हैं।"},
+    {"title": "आपने आज का दिन पूरा कर लिया 🌟", "body": "खुद की तारीफ करें।"},
+    {"title": "दिन समाप्त करने का समय 🌙", "body": "आज की कोई अच्छी बात याद करें।"},
+    {"title": "बाकी काम कल के लिए 📦", "body": "अभी आराम सबसे जरूरी है।"},
+    {"title": "पूर्ण होना जरूरी नहीं 💛", "body": "आज आप काफी अच्छे थे।"},
+    {"title": "शुभ रात्रि! 😴", "body": "मीठे सपने आएं।"},
+    {"title": "आज आप एक कदम आगे बढ़े 👣", "body": "इतना ही काफी है।"},
+    {"title": "खुद से कहें “शाबाश” 🗣️", "body": "जोर से कहें — सच में असर होता है।"},
+  ];
+
+  static Map<String, String> getRandomMorningMessage([String languageCode = 'ko']) {
     switch (languageCode) {
       case 'ko':
-        return fortuneMessages[_random.nextInt(fortuneMessages.length)];
+        return morningMessages[_random.nextInt(morningMessages.length)];
       case 'ja':
-        return jaFortuneMessages[_random.nextInt(jaFortuneMessages.length)];
+        return jaMorningMessages[_random.nextInt(jaMorningMessages.length)];
       case 'zh':
-        return zhFortuneMessages[_random.nextInt(zhFortuneMessages.length)];
+        return zhMorningMessages[_random.nextInt(zhMorningMessages.length)];
+      case 'th':
+        return thMorningMessages[_random.nextInt(thMorningMessages.length)];
       case 'es':
-        return esFortuneMessages[_random.nextInt(esFortuneMessages.length)];
+        return esMorningMessages[_random.nextInt(esMorningMessages.length)];
       case 'fr':
-        return frFortuneMessages[_random.nextInt(frFortuneMessages.length)];
+        return frMorningMessages[_random.nextInt(frMorningMessages.length)];
       case 'de':
-        return deFortuneMessages[_random.nextInt(deFortuneMessages.length)];
+        return deMorningMessages[_random.nextInt(deMorningMessages.length)];
       case 'ru':
-        return ruFortuneMessages[_random.nextInt(ruFortuneMessages.length)];
+        return ruMorningMessages[_random.nextInt(ruMorningMessages.length)];
       case 'hi':
-        return hiFortuneMessages[_random.nextInt(hiFortuneMessages.length)];
+        return hiMorningMessages[_random.nextInt(hiMorningMessages.length)];
       default:
-        return enFortuneMessages[_random.nextInt(enFortuneMessages.length)];
+        return enMorningMessages[_random.nextInt(enMorningMessages.length)];
     }
   }
 
-  static Map<String, String> getRandomRoutineMessage([String languageCode = 'ko']) {
+  static Map<String, String> getRandomEveningMessage([String languageCode = 'ko']) {
     switch (languageCode) {
       case 'ko':
-        return routineMessages[_random.nextInt(routineMessages.length)];
+        return eveningMessages[_random.nextInt(eveningMessages.length)];
       case 'ja':
-        return jaRoutineMessages[_random.nextInt(jaRoutineMessages.length)];
+        return jaEveningMessages[_random.nextInt(jaEveningMessages.length)];
       case 'zh':
-        return zhRoutineMessages[_random.nextInt(zhRoutineMessages.length)];
+        return zhEveningMessages[_random.nextInt(zhEveningMessages.length)];
+      case 'th':
+        return thEveningMessages[_random.nextInt(thEveningMessages.length)];
       case 'es':
-        return esRoutineMessages[_random.nextInt(esRoutineMessages.length)];
+        return esEveningMessages[_random.nextInt(esEveningMessages.length)];
       case 'fr':
-        return frRoutineMessages[_random.nextInt(frRoutineMessages.length)];
+        return frEveningMessages[_random.nextInt(frEveningMessages.length)];
       case 'de':
-        return deRoutineMessages[_random.nextInt(deRoutineMessages.length)];
+        return deEveningMessages[_random.nextInt(deEveningMessages.length)];
       case 'ru':
-        return ruRoutineMessages[_random.nextInt(ruRoutineMessages.length)];
+        return ruEveningMessages[_random.nextInt(ruEveningMessages.length)];
       case 'hi':
-        return hiRoutineMessages[_random.nextInt(hiRoutineMessages.length)];
+        return hiEveningMessages[_random.nextInt(hiEveningMessages.length)];
       default:
-        return enRoutineMessages[_random.nextInt(enRoutineMessages.length)];
+        return enEveningMessages[_random.nextInt(enEveningMessages.length)];
     }
   }
 }

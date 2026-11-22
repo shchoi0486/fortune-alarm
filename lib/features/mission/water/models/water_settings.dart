@@ -30,4 +30,22 @@ class WaterSettings extends HiveObject {
     this.endTime = "22:00",
     this.intervalMinutes = 60,
   });
+
+  WaterSettings copyWith({
+    int? dailyGoal,
+    int? cupSize,
+    bool? isAlarmEnabled,
+    String? startTime,
+    String? endTime,
+    int? intervalMinutes,
+  }) {
+    return WaterSettings(
+      dailyGoal: dailyGoal ?? this.dailyGoal,
+      cupSize: cupSize ?? this.cupSize,
+      isAlarmEnabled: isAlarmEnabled ?? this.isAlarmEnabled,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      intervalMinutes: intervalMinutes ?? this.intervalMinutes,
+    );
+  }
 }

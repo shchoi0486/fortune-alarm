@@ -15,8 +15,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:fortune_alarm/providers/theme_provider.dart';
 import '../../core/constants/mission_type.dart';
@@ -344,10 +346,12 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
     }
     
     final isPm = _ampmController.selectedItem == 1;
-    int hour = _hourController.selectedItem + 1; // 1-12
+    // looping 피커는 경계를 넘으면 selectedItem이 음수/범위 초과가 되므로
+    // 반드시 모듈로 정규화해야 한다 (raw=-10 → 50, raw=12 → 0).
+    int hour = (_hourController.selectedItem % 12) + 1; // 1-12
     if (isPm && hour < 12) hour += 12;
     if (!isPm && hour == 12) hour = 0;
-    final minute = _minuteController.selectedItem;
+    final minute = _minuteController.selectedItem % 60;
 
     final now = DateTime.now();
     _selectedTime = DateTime(now.year, now.month, now.day, hour, minute);
@@ -658,27 +662,46 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
     }
   }
 
-  Future<void> _pickImage(int index, ImageSource source) async {
-    // 권한 확인
-    if (source == ImageSource.gallery) {
-      PermissionStatus status;
-      if (Platform.isAndroid) {
-        status = await Permission.photos.request();
-        if (status.isDenied || status.isPermanentlyDenied) {
-          status = await Permission.storage.request();
-        }
-      } else {
-        status = await Permission.photos.request();
+  /// 갤러리 접근 가능 여부 확인.
+  /// Android 13(API 33)+는 시스템 사진 선택 도구를 사용하므로 권한 요청 없이 true.
+  /// 구버전과 iOS는 기존 방식대로 런타임 권한을 요청한다.
+  Future<bool> _ensureGalleryAccess() async {
+    if (Platform.isAndroid) {
+      try {
+        final sdkInt = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
+        if (sdkInt >= 33) return true;
+      } catch (_) {}
+      PermissionStatus status = await Permission.photos.request();
+      if (status.isDenied || status.isPermanentlyDenied) {
+        status = await Permission.storage.request();
       }
-
       if (!status.isGranted && !status.isLimited) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(AppLocalizations.of(context)!.photoPermissionRequired)),
           );
         }
-        return;
+        return false;
       }
+      return true;
+    }
+    final status = await Permission.photos.request();
+    if (!status.isGranted && !status.isLimited) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.photoPermissionRequired)),
+        );
+      }
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _pickImage(int index, ImageSource source) async {
+    // 권한 확인 (Android 13+는 시스템 사진 선택 도구를 사용하므로
+    // 갤러리 접근 권한이 필요 없음 — Play 사진/동영상 권한 정책 준수)
+    if (source == ImageSource.gallery) {
+      if (!await _ensureGalleryAccess()) return;
     }
 
     final XFile? image = await _picker.pickImage(source: source);
@@ -1027,6 +1050,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
     final previousPlaybackEnabled = _gridVideoPlaybackEnabled.value;
     _gridVideoPlaybackEnabled.value = false;
     try {
+      // 구버전 Android에서는 갤러리 접근 권한이 필요하다 (33+는 선택 도구 사용)
+      if (!await _ensureGalleryAccess()) return;
       final XFile? image = await _picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 1440,
@@ -1895,8 +1920,11 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
                           
                           // 저장
                           await _saveUserColors();
-                          
-                          if (mounted) Navigator.pop(context);
+
+                          // itemBuilder 의 context 이므로 State.mounted 가 아니라
+                          // context.mounted 로 확인해야 한다.
+                          if (!context.mounted) return;
+                          Navigator.pop(context);
                         },
                         child: Column(
                           children: [
@@ -2116,14 +2144,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
       for (int i = 0; i < 7; i++) {
         final checkIndex = (currentWeekdayIndex + startOffset + i) % 7;
         if (_repeatDays[checkIndex]) {
+          // Duration(days:) 덧셈은 DST 전환일 벽시계 시간을 ±1시간 밀게 한다.
           targetTime = DateTime(
             now.year,
             now.month,
-            now.day,
+            now.day + startOffset + i,
             _selectedTime.hour,
             _selectedTime.minute,
-            0, 0,
-          ).add(Duration(days: startOffset + i));
+          );
           break;
         }
       }
@@ -2880,7 +2908,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
                   magnification: 1.3,
                   scrollController: _hourController,
                   onSelectedItemChanged: (index) {
-                    int newHour = index + 1;
+                    // looping 휠은 selectedItem이 0~11을 벗어날 수 있어 모듈로 필수
+                    // (raw 그대로 쓰면 DateTime이 정규화되며 ±시간 오차 발생)
+                    int newHour = (index % 12) + 1;
                     final isPm = _selectedTime.hour >= 12;
                     
                     if (isPm) {
@@ -2928,7 +2958,8 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
                   scrollController: _minuteController,
                   onSelectedItemChanged: (index) {
                     // final oldMinute = _selectedTime.minute;
-                    final newMinute = index;
+                    // looping 휠 raw 인덱스 정규화 (raw=-10 → 50, 그렇지 않으면 분이 음수가 돼 -1시간 오차)
+                    final newMinute = index % 60;
                     int newHour = _selectedTime.hour;
 
                     /* 연동 방지: 분이 00 또는 59를 넘어가도 시/오전/오후가 변하지 않도록 주석 처리
@@ -4193,46 +4224,60 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
   }
 
   Future<void> _saveAlarm() async {
+    // 연타/중복 호출 가드 (ms ID 충돌로 같은 알람이 2개 생기는 것 방지)
+    // 반드시 첫 await 이전에 true로 만들어야 한다.
+    // 이전 구현은 권한 요청 구간(플랫폼 채널 왕복 수회, 수백 ms)이 끝난 뒤에야
+    // _isSaving을 true로 바꿔서, 그 구간 동안 버튼이 살아있었고
+    // 연타하면 서로 다른 Uuid().v4() 를 가진 알람이 2개 생성·예약되었다.
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
+
     final l10n = AppLocalizations.of(context)!;
     // 권한 확인 (안드로이드 전용 순차적 권한 요청)
     if (Platform.isAndroid) {
       // 1. 정확한 알람 권한 (가장 기본)
       if (await Permission.scheduleExactAlarm.isDenied) {
-        _isPendingSaveAfterPermission = true;
-        await _showPermissionGuideDialog(
+        if (!mounted) return;
+        final requested = await _showPermissionGuideDialog(
           title: l10n.permissionRequired,
           description: l10n.exactAlarmPermissionDesc,
           icon: Icons.timer_outlined,
           requestFunc: () => Permission.scheduleExactAlarm.request(),
         );
-        // 설정으로 이동했을 경우 resumes 되었을 때 다시 호출되므로 여기서 종료
+        // 실제로 설정 화면으로 이동했을 때만 resume 에서 재시도한다.
+        _isPendingSaveAfterPermission = requested;
+        if (mounted) setState(() => _isSaving = false);
         return;
       }
-      
+
       // 2. 다른 앱 위에 표시 권한 (전체화면 알람)
       if (await Permission.systemAlertWindow.isDenied) {
         if (!mounted) return;
-        _isPendingSaveAfterPermission = true;
         await _showOverlayPermissionFullScreenGuide();
-        // 설정 화면으로 이동했으므로, resume 시점에 다시 체크하도록 return
+        // 닫는 방법이 권한 요청뿐이므로 항상 재시도 대상이다.
+        _isPendingSaveAfterPermission = true;
+        if (mounted) setState(() => _isSaving = false);
         return;
       }
 
       // 3. 배터리 최적화 제외 권한 (정확한 시간 보장)
       if (await Permission.ignoreBatteryOptimizations.isDenied) {
         if (!mounted) return;
-        _isPendingSaveAfterPermission = true;
         await _showBatteryOptimizationFullScreenGuide();
-        // 설정 화면으로 이동했으므로, resume 시점에 다시 체크하도록 return
+        _isPendingSaveAfterPermission = true;
+        if (mounted) setState(() => _isSaving = false);
         return;
       }
     }
 
     if (await Permission.notification.isDenied) {
       await Permission.notification.request();
-      if (await Permission.notification.isDenied) return;
+      if (await Permission.notification.isDenied) {
+        if (mounted) setState(() => _isSaving = false);
+        return;
+      }
     }
-    
+
     // 미션 선택 시 이미지 확인 (카메라 미션인 경우에만)
     final isCameraMission = _selectedMission == MissionType.cameraSink ||
         _selectedMission == MissionType.cameraRefrigerator ||
@@ -4243,23 +4288,25 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
     if (isCameraMission) {
        // 첫 번째 이미지는 필수
        if (_referenceImagePaths[0] == null) {
-          if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.cameraMissionFirstImageError)),
-          );
-          return;
+           if (!mounted) return;
+           ScaffoldMessenger.of(context).showSnackBar(
+             SnackBar(content: Text(l10n.cameraMissionFirstImageError)),
+           );
+           setState(() => _isSaving = false);
+           return;
        }
        // 중간에 빈 이미지가 있으면 안됨 (순서대로 채워야 함)
        if (_referenceImagePaths[0] != null && _referenceImagePaths[2] != null && _referenceImagePaths[1] == null) {
-          if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.cameraMissionSequentialImageError)),
-          );
-          return;
+           if (!mounted) return;
+           ScaffoldMessenger.of(context).showSnackBar(
+             SnackBar(content: Text(l10n.cameraMissionSequentialImageError)),
+           );
+           setState(() => _isSaving = false);
+           return;
        }
     }
 
-    setState(() => _isSaving = true);
+    if (!mounted) return;
 
     try {
       _updateSelectedTimeFromControllers();
@@ -4279,7 +4326,14 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
         // 반복 요일이 있는 경우: 가장 가까운 활성화된 요일 찾기
         int dayOffset = 0;
         while (true) {
-          final checkDate = alarmTime.add(Duration(days: dayOffset));
+          // Duration(days:) 덧셈은 DST 전환일 벽시계 시간을 ±1시간 밀게 한다.
+          final checkDate = DateTime(
+            now.year,
+            now.month,
+            now.day + dayOffset,
+            _selectedTime.hour,
+            _selectedTime.minute,
+          );
           // checkDate.weekday: 1(Mon)..7(Sun) -> index: 0..6
           final weekdayIndex = checkDate.weekday - 1;
           
@@ -4299,8 +4353,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
           if (dayOffset > 8) break; // 안전장치
         }
       } else {
-        // 반복 없음: 현재 시간 포함 과거면 내일로
-        if (alarmTime.isBefore(now)) {
+        // 반복 없음: 과거면 내일로. 단, 90초 이내의 과거는 사용자가 '지금'을
+        // 의도한 것이므로 내일이 아니라 2분 뒤로 (스케줄러 과거 가드와 정합).
+        final pastSeconds = now.difference(alarmTime).inSeconds;
+        if (pastSeconds > 0 && pastSeconds <= 90) {
+          alarmTime = now.add(const Duration(minutes: 2));
+          debugPrint('[AddAlarm] Near-past one-time. Firing in 2 minutes: $alarmTime');
+        } else if (alarmTime.isBefore(now)) {
           alarmTime = alarmTime.add(const Duration(days: 1));
           debugPrint('[AddAlarm] Time is past or current. Moving to tomorrow: $alarmTime');
         }
@@ -4313,10 +4372,38 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
         finalShakeCount = _tapSprintGoal;
       }
 
+      // 편집 시 비활성 미션의 파라미터는 기존값을 유지한다.
+      // (shake/leftRight/tapSprint가 shakeCount 한 컬럼을 공유하므로,
+      //  다른 미션으로 저장할 때마다 상대 값이 초기화되던 문제 방지)
+      final prevAlarm = widget.alarm;
+      int savedShakeCount = finalShakeCount;
+      int savedWalkStepCount = _walkStepCount;
+      int savedMathProblemCount = _mathProblemCount;
+      MathDifficulty savedMathDifficulty = _mathDifficulty;
+      if (prevAlarm != null) {
+        final usesShakeColumn = _selectedMission == MissionType.shake ||
+            _selectedMission == MissionType.leftRight ||
+            _selectedMission == MissionType.tapSprint;
+        if (!usesShakeColumn) savedShakeCount = prevAlarm.shakeCount;
+        if (_selectedMission != MissionType.walk) {
+          savedWalkStepCount = prevAlarm.walkStepCount;
+        }
+        if (_selectedMission != MissionType.math &&
+            _selectedMission != MissionType.numberOrder) {
+          savedMathProblemCount = prevAlarm.mathProblemCount;
+        }
+        if (_selectedMission != MissionType.math &&
+            _selectedMission != MissionType.hiddenButton) {
+          savedMathDifficulty = prevAlarm.mathDifficulty;
+        }
+      }
+
       final alarm = AlarmModel(
-        id: widget.alarm?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+        id: prevAlarm?.id ?? const Uuid().v4(),
         time: alarmTime,
-        isEnabled: true,
+        // 꺼 둔 알람을 편집했다고 자동으로 켜지지 않아야 한다.
+        // 이 화면에는 활성/비활성 토글이 없으므로 기존 상태를 그대로 유지한다.
+        isEnabled: prevAlarm?.isEnabled ?? true,
         missionType: _selectedMission,
         label: _labelController.text,
         referenceImagePaths: _referenceImagePaths.whereType<String>().toList(),
@@ -4330,10 +4417,12 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
         backgroundPath: _backgroundPath,
         snoozeInterval: _snoozeInterval,
         maxSnoozeCount: _maxSnoozeCount,
-        mathDifficulty: _mathDifficulty,
-        mathProblemCount: _mathProblemCount,
-        shakeCount: finalShakeCount,
-        walkStepCount: _walkStepCount,
+        mathDifficulty: savedMathDifficulty,
+        mathProblemCount: savedMathProblemCount,
+        shakeCount: savedShakeCount,
+        walkStepCount: savedWalkStepCount,
+        // 편집 시 기존 진행 상태 유지 (매번 0으로 리셋되면 스누즈 카운트 꼬임)
+        remainingSnoozeCount: prevAlarm?.remainingSnoozeCount ?? _maxSnoozeCount,
       );
       
       debugPrint('[AddAlarmScreen] Created alarm model: ID=${alarm.id}, Ringtone=${alarm.ringtonePath}');
@@ -4385,6 +4474,7 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
           }
         } else {
           // Android가 아닌 다른 플랫폼에서 실패한 경우
+          if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
                 content: Text(AppLocalizations.of(context)!.alarmSaveError),
@@ -4396,6 +4486,13 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
             ),
           );
         }
+      }
+
+      if (!scheduled) {
+        // 등록 실패 시 저장/닫기를 하면 켜진 유령 알람이 된다. 여기서 중단.
+        // (scheduleAlarm은 검증 후에만 기존 스케줄을 건드리므로 이전 설정은 유지됨)
+        if (mounted) setState(() => _isSaving = false);
+        return;
       }
 
       if (widget.alarm != null) {
@@ -4410,10 +4507,10 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
         await prefs.setBool('first_run_completed', true);
       }
 
-      if (mounted) {
-        await _stopPreview(); // 저장 시 미리듣기 종료
-        Navigator.pop(context, true);
-      }
+      if (!mounted) return;
+      await _stopPreview(); // 저장 시 미리듣기 종료
+      if (!mounted) return;
+      Navigator.pop(context, true);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -4491,7 +4588,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
      }
    }
 
-  Future<void> _showBatteryOptimizationFullScreenGuide() async {
+  /// 배터리 최적화 제외 안내 (풀스크린).
+  /// 닫을 수 있는 방법이 "권한 요청 버튼"뿐이라 항상 시스템 설정으로 이동하므로 true 를 반환한다.
+  Future<bool> _showBatteryOptimizationFullScreenGuide() async {
     final l10n = AppLocalizations.of(context)!;
     final primaryColor = ref.read(themeProvider).primaryColor;
     await showGeneralDialog(
@@ -4610,9 +4709,12 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
         );
       },
     );
+    return true;
   }
 
-  Future<void> _showOverlayPermissionFullScreenGuide() async {
+  /// 다른 앱 위에 표시 권한 안내 (풀스크린).
+  /// 닫을 수 있는 방법이 "권한 요청 버튼"뿐이라 항상 시스템 설정으로 이동하므로 true 를 반환한다.
+  Future<bool> _showOverlayPermissionFullScreenGuide() async {
     final l10n = AppLocalizations.of(context)!;
     final primaryColor = ref.read(themeProvider).primaryColor;
     await showGeneralDialog(
@@ -4754,9 +4856,15 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
         );
       },
     );
+    return true;
   }
 
-  Future<void> _showPermissionGuideDialog({
+  /// 권한 안내 다이얼로그를 띄우고, 실제로 권한 요청을 트리거했는지 반환한다.
+  ///
+  /// 취소하면 아무 것도 하지 않는다. 호출부에서 [_isPendingSaveAfterPermission] 을
+  /// 이 반환값으로 설정해야 한다. (이전 구현은 취소해도 플래그가 true로 남아
+  /// 다음 resume 에서 사용자가 저장 버튼을 누르지 않았는데도 저장이 실행되었다)
+  Future<bool> _showPermissionGuideDialog({
     required String title,
     required String description,
     required IconData icon,
@@ -4873,7 +4981,9 @@ class _AddAlarmScreenState extends ConsumerState<AddAlarmScreen> with WidgetsBin
 
     if (result == true) {
       await requestFunc();
+      return true;
     }
+    return false;
   }
 }
 

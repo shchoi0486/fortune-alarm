@@ -16,6 +16,18 @@ class FortunePushService {
   static const int _afternoonId = 40002;
   static const int _lunchId = 40003;
 
+  /// `"HH:mm"` 문자열을 (hour, minute) 로 파싱한다. 형식이 잘못되었으면 null.
+  static (int, int)? _parseHhMm(Object? value) {
+    if (value is! String) return null;
+    final parts = value.split(':');
+    if (parts.length < 2) return null;
+    final hour = int.tryParse(parts[0].trim());
+    final minute = int.tryParse(parts[1].trim());
+    if (hour == null || minute == null) return null;
+    if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
+    return (hour, minute);
+  }
+
   // 상황 기반 운세 푸시 알람 스케줄링
   static Future<void> scheduleDailyPush() async {
     if (Platform.isAndroid) {
@@ -28,17 +40,27 @@ class FortunePushService {
     final enabled = box.get('daily_fortune_enabled', defaultValue: true);
     
     if (enabled) {
-      // 세 타임라인 스케줄링 (오전, 점심, 오후)
-      // 사용자 설정 시간이 있으면 가져오고 없으면 기본값 사용
+      // [푸시 빈도 축소] 하루 1회 오전만 발송 (과다 푸시 방지).
+      // 사용자 설정 시간이 있으면 가져오고 없으면 기본값(08:00) 사용.
       final time1Str = box.get('daily_fortune_time1', defaultValue: '08:00');
-      final time2Str = box.get('daily_fortune_time2', defaultValue: '13:30');
-      
-      final parts1 = time1Str.split(':');
-      final parts2 = time2Str.split(':');
-      
-      await _scheduleOne(int.parse(parts1[0]), int.parse(parts1[1]), _morningId);
-      await _scheduleOne(12, 30, _lunchId);
-      await _scheduleOne(int.parse(parts2[0]), int.parse(parts2[1]), _afternoonId);
+
+      // 저장된 값이 손상되었을 수 있으므로 방어적으로 파싱한다.
+      // (이전 구현은 예외가 밖으로 전파되어 호출부 초기화 블록 전체를 중단시켰다)
+      final time1 = _parseHhMm(time1Str);
+      if (time1 == null) {
+        debugPrint('[FortunePush] Invalid daily_fortune_time1: $time1Str. Using 08:00.');
+      }
+
+      await _scheduleOne(time1?.$1 ?? 8, time1?.$2 ?? 0, _morningId);
+
+      // 기존 버전에서 예약된 점심/오후 푸시가 남아있으면 정리
+      if (Platform.isAndroid) {
+        await AndroidAlarmManager.cancel(_lunchId);
+        await AndroidAlarmManager.cancel(_afternoonId);
+      } else if (Platform.isIOS) {
+        await NotificationService().cancelNotification(_lunchId);
+        await NotificationService().cancelNotification(_afternoonId);
+      }
     } else {
       await cancelAll();
     }
@@ -93,7 +115,7 @@ class FortunePushService {
         langCode = settingsBox.get('language', defaultValue: 'ko');
       } catch (_) {}
       
-      final msg = PushMessages.getRandomFortuneMessage(langCode);
+      final msg = PushMessages.getRandomMorningMessage(langCode);
 
       await NotificationService().scheduleAlarmNotification(
         id: id,
@@ -101,6 +123,8 @@ class FortunePushService {
         body: msg['body']!,
         scheduledDate: scheduledTime,
         payload: 'fortune_daily_$id',
+        // iOS 는 재예약 콜백이 AndroidAlarmManager 전용이라 OS 반복에 의존해야 한다.
+        repeatDaily: true,
       );
     }
   }
@@ -113,8 +137,7 @@ class FortunePushService {
     final notificationService = NotificationService();
     
     // getL10n()을 호출하여 Hive 초기화 및 언어 설정 로드 보장
-    // (L10n 객체 자체는 여기서 안 써도 되지만 초기화를 위해 호출)
-    await notificationService.getL10n();
+    final l10n = await notificationService.getL10n();
     
     // 오늘 날짜 문자열
     final todayStr = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -140,35 +163,35 @@ class FortunePushService {
       }
 
       // 지원하지 않는 언어일 경우 영어로 폴백
-      if (!['ko', 'en', 'ja', 'zh', 'ru', 'hi', 'fr', 'es', 'de'].contains(langCode)) {
+      if (!['ko', 'en', 'ja', 'zh', 'th', 'ru', 'hi', 'fr', 'es', 'de'].contains(langCode)) {
         langCode = 'en';
       }
       debugPrint('[FortunePush] Final langCode for push: $langCode');
 
-      final msg = PushMessages.getRandomFortuneMessage(langCode);
+      final msg = PushMessages.getRandomMorningMessage(langCode);
 
       // 기존 notification_service의 show 함수를 직접 호출하거나, schedule 대신 show를 사용해야 함
       // NotificationService에 showFortuneNotification이 없으므로 새로 만들어야 할 수도 있음.
       // 일단 일반적인 방식으로 호출하기 위해 notificationService.flutterLocalNotificationsPlugin.show를 사용
       
       const String channelId = 'fortune_channel_v1';
-      const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      final AndroidNotificationDetails androidPlatformChannelSpecifics =
           AndroidNotificationDetails(
         channelId,
-        '포춘 알람',
+        l10n.fortuneChannelName,
         importance: Importance.max,
         priority: Priority.max,
         category: AndroidNotificationCategory.reminder,
         visibility: NotificationVisibility.public,
         fullScreenIntent: false,
         autoCancel: true,
-        groupKey: 'com.fortune_alarm.NOTIFICATION_GROUP',
+        groupKey: 'com.fortunealarm.NOTIFICATION_GROUP',
       );
 
       const DarwinNotificationDetails iosPlatformChannelSpecifics =
           DarwinNotificationDetails(threadIdentifier: 'com.fortunealarm.NOTIFICATION_GROUP');
 
-      const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      final NotificationDetails platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iosPlatformChannelSpecifics,
       );
@@ -184,16 +207,15 @@ class FortunePushService {
       debugPrint('[FortunePush] Fortune already viewed today ($todayStr). Skipping push.');
     }
 
-    // 다음 날 같은 시간으로 재예약 (랜덤 지터 포함)
+    // 다음 날 같은 시간으로 재예약 (랜덤 지터 포함) — 오전 1회만 유지
     final boxSettings = await Hive.openBox('alarm_settings');
-    String baseTimeStr = '12:30';
-    if (id == _morningId) baseTimeStr = boxSettings.get('daily_fortune_time1', defaultValue: '08:00');
-    else if (id == _afternoonId) baseTimeStr = boxSettings.get('daily_fortune_time2', defaultValue: '13:30');
-    
-    final parts = baseTimeStr.split(':');
-    final hour = int.parse(parts[0]);
-    final minute = int.parse(parts[1]);
-    
+    final String baseTimeStr =
+        boxSettings.get('daily_fortune_time1', defaultValue: '08:00');
+
+    final parsedBase = _parseHhMm(baseTimeStr);
+    final hour = parsedBase?.$1 ?? 8;
+    final minute = parsedBase?.$2 ?? 0;
+
     final nextDay = DateTime.now().add(const Duration(days: 1));
     var nextBaseTime = DateTime(nextDay.year, nextDay.month, nextDay.day, hour, minute);
     

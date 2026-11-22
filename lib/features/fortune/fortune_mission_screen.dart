@@ -37,6 +37,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   Timer? _inactivityTimer;
   AlarmModel? _alarm;
   bool _isLoading = true;
+  bool _isSuccess = false;
 
   Future<AlarmModel?> _applyResolvedRandomBackground(AlarmModel? alarm) async {
     if (alarm == null) return null;
@@ -243,7 +244,7 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () {
-      if (mounted) {
+      if (mounted && !_isSuccess) {
         debugPrint('[FortuneMissionScreen] Inactivity timeout - returning to ringing screen');
         Navigator.of(context).pop('timeout');
       }
@@ -359,15 +360,26 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   }
 
   Future<void> _playSfx(String assetPath, {double volume = 0.5, Duration? maxDuration}) async {
+    final player = AudioPlayer();
     try {
-      final player = AudioPlayer();
       await player.play(AssetSource(assetPath), volume: volume);
       if (maxDuration != null) {
-        Future.delayed(maxDuration, () => player.stop());
+        await Future.delayed(maxDuration);
+        try {
+          await player.stop();
+        } catch (_) {}
+      } else {
+        await player.onPlayerComplete.first.timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {},
+        );
       }
-      player.onPlayerComplete.listen((_) => player.dispose());
     } catch (e) {
       debugPrint('Error playing SFX: $assetPath - $e');
+    } finally {
+      try {
+        await player.dispose();
+      } catch (_) {}
     }
   }
 
@@ -441,6 +453,9 @@ class _FortuneMissionScreenState extends ConsumerState<FortuneMissionScreen> wit
   }
 
   void _handleClose() {
+    _isSuccess = true;
+    _inactivityTimer?.cancel();
+    _loadingTimer?.cancel();
     if (mounted) {
       Navigator.pop(context, true);
     }

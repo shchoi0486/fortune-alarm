@@ -14,10 +14,14 @@
         android:paddingBottom="8dp"
         android:gravity="center_vertical">
 
-        <!-- Media View (Image/Video) - 왼쪽 배치 -->
+        <!-- Media View (Image/Video) - 왼쪽 배치.
+             너비는 반드시 120dp 이상이어야 한다.
+             Google 정책: 120x120보다 작은 미디어 슬롯은
+             장차 수익화(demonetized) 대상에서 제외된다.
+             (로그 경고: "Partial screen native media view size seems to be too small") -->
         <com.google.android.gms.ads.nativead.MediaView
             android:id="@+id/ad_media"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="12dp"
             android:visibility="gone" />

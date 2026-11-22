@@ -5,6 +5,7 @@ import 'package:fortune_alarm/l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
@@ -13,6 +14,24 @@ import 'dart:ui' as ui;
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import '../models/calendar_event.dart';
 import 'drawing_screen.dart';
+
+/// 사용자가 고른 이미지/그리기/붙여넣기 파일을 앱 문서 디렉터리로 복사한다.
+///
+/// 시스템 이미지 피커나 OS가 관리하는 임시 디렉터리에 있던 파일은
+/// Android 캐시 정리 시 조용히 사라지는데, 경로는 이벤트에 영구 저장되므로
+/// 며칠 뒤 메모를 열면 이미지가 통째로 사라져 보인다.
+Future<String> _persistImageToAppDocuments(File source, String prefix) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final memoDir = Directory('${directory.path}/memo_images');
+  if (!await memoDir.exists()) {
+    await memoDir.create(recursive: true);
+  }
+
+  final extension = source.path.split('.').last;
+  final targetPath = '${memoDir.path}/$prefix${DateTime.now().millisecondsSinceEpoch}.$extension';
+  final saved = await source.copy(targetPath);
+  return saved.path;
+}
 
 class MemoBlock {
   final TextEditingController? controller;
@@ -536,7 +555,8 @@ class _AddEventSheetState extends State<AddEventSheet> {
                                   scrollController: hourController,
                                   onSelectedItemChanged: (index) {
                                     setModalState(() {
-                                      displayHour = index + 1;
+                                      // looping 휠 raw 인덱스 정규화 (1~12 표시 유지)
+                                      displayHour = (index % 12) + 1;
                                     });
                                   },
                                   children: List.generate(12, (index) => Center(
@@ -560,7 +580,8 @@ class _AddEventSheetState extends State<AddEventSheet> {
                                 scrollController: minuteController,
                                 onSelectedItemChanged: (index) {
                                   setModalState(() {
-                                    currentMinute = index;
+                                    // looping 휠 raw 인덱스 정규화 (raw=-10 → 50)
+                                    currentMinute = index % 60;
                                   });
                                 },
                                 children: List.generate(60, (index) => Center(
@@ -676,24 +697,39 @@ class _AddEventSheetState extends State<AddEventSheet> {
   }
 
   Future<void> _pickImage() async {
-    // 권한 확인
-    PermissionStatus status;
+    // Android 13(API 33)+는 시스템 사진 선택 도구를 사용하므로 권한 요청 생략
+    // (Play 사진/동영상 권한 정책 준수)
     if (Platform.isAndroid) {
-      status = await Permission.photos.request();
-      if (status.isPermanentlyDenied || status.isDenied) {
-        status = await Permission.storage.request();
+      bool skipRequest = false;
+      try {
+        skipRequest = (await DeviceInfoPlugin().androidInfo).version.sdkInt >= 33;
+      } catch (_) {}
+      if (!skipRequest) {
+        PermissionStatus status = await Permission.photos.request();
+        if (status.isPermanentlyDenied || status.isDenied) {
+          status = await Permission.storage.request();
+        }
+        if (!status.isGranted && !status.isLimited) return;
       }
     } else {
-      status = await Permission.photos.request();
+      final status = await Permission.photos.request();
+      if (!status.isGranted && !status.isLimited) return;
     }
 
-    if (status.isGranted || status.isLimited) {
+    // 여기까지 왔다면 권한 통과 — 시스템 사진 선택 도구 실행
+    {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
+        String persistedPath = image.path;
+        try {
+          persistedPath = await _persistImageToAppDocuments(File(image.path), 'picked_');
+        } catch (e) {
+          debugPrint('[AddEventSheet] Failed to persist picked image: $e');
+        }
         setState(() {
           _type = CalendarEventType.memo;
-          
+
           // 현재 포커스된 블록 찾기
           int focusedBlockIndex = _memoBlocks.indexWhere((b) => b.focusNode?.hasFocus ?? false);
           if (focusedBlockIndex == -1) focusedBlockIndex = _memoBlocks.length - 1;
@@ -702,7 +738,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
           MemoBlock? nextFocusedBlock;
           
           if (currentBlock.isImage || currentBlock.isSticker) {
-            final newImage = MemoBlock.image(image.path);
+            final newImage = MemoBlock.image(persistedPath);
             _memoBlocks.insert(focusedBlockIndex + 1, newImage);
             
             // 다음 블록이 없거나 텍스트 블록이 아니면 빈 텍스트 블록 추가
@@ -721,11 +757,11 @@ class _AddEventSheetState extends State<AddEventSheet> {
               final textAfter = controller.text.substring(selection.baseOffset);
               
               controller.text = textBefore;
-              _memoBlocks.insert(focusedBlockIndex + 1, MemoBlock.image(image.path));
+              _memoBlocks.insert(focusedBlockIndex + 1, MemoBlock.image(persistedPath));
               nextFocusedBlock = MemoBlock.text(textAfter);
               _memoBlocks.insert(focusedBlockIndex + 2, nextFocusedBlock);
             } else {
-              _memoBlocks.insert(focusedBlockIndex + 1, MemoBlock.image(image.path));
+              _memoBlocks.insert(focusedBlockIndex + 1, MemoBlock.image(persistedPath));
               
               // 다음 블록이 없거나 텍스트 블록이 아니면 빈 텍스트 블록 추가
               if (focusedBlockIndex + 2 >= _memoBlocks.length || (_memoBlocks[focusedBlockIndex + 2].isImage || _memoBlocks[focusedBlockIndex + 2].isSticker)) {
@@ -742,37 +778,6 @@ class _AddEventSheetState extends State<AddEventSheet> {
             nextFocusedBlock?.focusNode?.requestFocus();
           });
                 });
-      }
-    } else if (status.isPermanentlyDenied) {
-      // 영구적으로 거부된 경우 설정으로 이동 안내
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(AppLocalizations.of(context)!.permissionRequired),
-            content: Text(AppLocalizations.of(context)!.photoPermissionDescription),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(AppLocalizations.of(context)!.cancel),
-              ),
-              TextButton(
-                onPressed: () {
-                  openAppSettings();
-                  Navigator.pop(context);
-                },
-                child: Text(AppLocalizations.of(context)!.goToSettings),
-              ),
-            ],
-          ),
-        );
-      }
-    } else {
-      // 일반 거부
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.photoPermissionNeeded)),
-        );
       }
     }
   }
@@ -1170,8 +1175,9 @@ class _AddEventSheetState extends State<AddEventSheet> {
         final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
         final buffer = byteData!.buffer.asUint8List();
 
-        final tempDir = await getTemporaryDirectory();
-        final filePath = '${tempDir.path}/drawing_${DateTime.now().millisecondsSinceEpoch}.png';
+        final tempDir = await getApplicationDocumentsDirectory();
+        final filePath = '${tempDir.path}/memo_images/drawing_${DateTime.now().millisecondsSinceEpoch}.png';
+        await Directory('${tempDir.path}/memo_images').create(recursive: true);
         final file = File(filePath);
         await file.writeAsBytes(buffer);
 
@@ -1246,9 +1252,14 @@ class _AddEventSheetState extends State<AddEventSheet> {
   Future<void> _handleContentInsertion(KeyboardInsertedContent content) async {
     if (content.data != null) {
       try {
-        final Directory tempDir = await getTemporaryDirectory();
-        final String extension = content.mimeType.split('/').last;
-        final String filePath = '${tempDir.path}/keyboard_content_${DateTime.now().millisecondsSinceEpoch}.$extension';
+        final directory = await getApplicationDocumentsDirectory();
+        final String safeMime = content.mimeType.split('/').last
+            .toLowerCase()
+            .replaceAll(RegExp(r'[^a-z0-9]'), '');
+        final String extension = safeMime.isEmpty ? 'bin' : safeMime;
+        final Directory memoDir = Directory('${directory.path}/memo_images');
+        await memoDir.create(recursive: true);
+        final String filePath = '${memoDir.path}/keyboard_content_${DateTime.now().millisecondsSinceEpoch}.$extension';
         final File file = File(filePath);
         await file.writeAsBytes(content.data!);
         
@@ -1394,7 +1405,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop || _canPopNow) return;
         final shouldPop = await _showExitConfirmation();
-        if (shouldPop && mounted) {
+        if (shouldPop && context.mounted) {
           setState(() => _canPopNow = true);
           Navigator.pop(context);
         }
@@ -1419,7 +1430,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
             icon: Icon(Icons.arrow_back, color: textColor),
             onPressed: () async {
               if (await _showExitConfirmation()) {
-                if (mounted) {
+                if (context.mounted) {
                   setState(() => _canPopNow = true);
                   Navigator.pop(context);
                 }
@@ -1923,7 +1934,7 @@ class _AddEventSheetState extends State<AddEventSheet> {
       onPopInvokedWithResult: (didPop, result) async {
         if (didPop || _canPopNow) return;
         final shouldPop = await _showExitConfirmation();
-        if (shouldPop && mounted) {
+        if (shouldPop && context.mounted) {
           setState(() => _canPopNow = true);
           Navigator.pop(context);
         }
@@ -2630,10 +2641,16 @@ class _AddEventSheetState extends State<AddEventSheet> {
       title = AppLocalizations.of(context)!.noTitle;
     }
 
+    // 편집일 때는 반드시 기존 이벤트의 날짜를 유지한다.
+    // 이전 구현은 항상 widget.selectedDate 로 날짜를 새로 만들었는데,
+    // 편집 진입점 중 주간 뷰 칩 / 메모 모드 / 이전-다음 달 칩에서는
+    // selectedDate 가 방문 중인 날짜와 달라서, 제목만 고치고 저장해도
+    // 이벤트가 조용히 다른 날짜로 옮겨지고 알림도 그 날짜로 재스케줄되었다.
+    final baseDate = widget.event?.date ?? widget.selectedDate;
     final date = DateTime(
-      widget.selectedDate.year,
-      widget.selectedDate.month,
-      widget.selectedDate.day,
+      baseDate.year,
+      baseDate.month,
+      baseDate.day,
       _selectedTime.hour,
       _selectedTime.minute,
     );
@@ -2674,6 +2691,10 @@ class _AddEventSheetState extends State<AddEventSheet> {
       fontFamily: _fontFamily,
       fontColor: _contentTextColor.toARGB32(),
       textAlign: _textAlign.index,
+      // 완료 체크 상태는 편집 화면에서 다루지 않으므로 기존 값을 보존한다.
+      // (이전 구현은 새 CalendarEvent 를 만들어 완료된 루틴을 편집하면
+      //  취소선/체크가 초기화되었다)
+      isCompleted: widget.event?.isCompleted ?? false,
     );
 
     widget.onSave(event, _isTimeManuallySet);
@@ -2681,7 +2702,9 @@ class _AddEventSheetState extends State<AddEventSheet> {
       _isSaving = true;
       _canPopNow = true;
     });
-    Navigator.pop(context);
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   void _showColorPicker(BuildContext context) {

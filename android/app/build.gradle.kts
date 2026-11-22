@@ -54,12 +54,12 @@ android {
         implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
         implementation("androidx.activity:activity-ktx:1.9.3")
         coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
-        // AppLovin Mediation Adapter
-        implementation("com.google.ads.mediation:applovin:13.1.0.0")
-        // Unity Ads Mediation Adapter
-        implementation("com.google.ads.mediation:unity:4.12.5.0")
-        // Unity Ads SDK (Explicitly added to resolve R8 classpath issues)
-        implementation("com.unity3d.ads:unity-ads:4.12.5")
+        // AppLovin Mediation Adapter (2026-06: 최신 안정)
+        implementation("com.google.ads.mediation:applovin:13.6.3.0")
+        // Unity Ads Mediation Adapter (구 API 마이그레이션 버전 — 지원 중단 Window API/방향제한 대응)
+        implementation("com.google.ads.mediation:unity:4.19.0.0")
+        // Unity Ads SDK (어댑터 기대 버전과 일치 — R8 classpath 이슈 방지용 명시)
+        implementation("com.unity3d.ads:unity-ads:4.19.0")
     }
 
     buildTypes {
@@ -71,6 +71,10 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
+
+            // [Play 권장조치 대응] R8 난독화 + 최적화 리소스 축소 활성화
+            isMinifyEnabled = true
+            isShrinkResources = true
             
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

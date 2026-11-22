@@ -46,8 +46,11 @@ class _FirstAlarmStepScreenState extends ConsumerState<FirstAlarmStepScreen> {
 
   void _updateTime() {
     final isPm = _ampmController.selectedItem == 1;
-    int hour = _hourController.selectedItem + 1;
-    final minute = _minuteController.selectedItem;
+    // looping 피커는 경계를 넘으면 selectedItem이 음수/범위 초과가 되므로
+    // 반드시 모듈로 정규화해야 한다 (예: 00->59 방향으로 50까지 가면 raw=-10).
+    // Dart의 %는 0 이상을 보장하므로 (-10 % 60 == 50) 그대로 쓰면 된다.
+    int hour = (_hourController.selectedItem % 12) + 1;
+    final minute = _minuteController.selectedItem % 60;
 
     if (isPm && hour < 12) hour += 12;
     if (!isPm && hour == 12) hour = 0;
@@ -262,6 +265,7 @@ class _FirstAlarmStepScreenState extends ConsumerState<FirstAlarmStepScreen> {
                       if (result == true && mounted) {
                         final prefs = await SharedPreferences.getInstance();
                         await prefs.setBool('first_run_completed', true);
+                        if (!context.mounted) return;
                         Navigator.pop(context);
                       }
                     },

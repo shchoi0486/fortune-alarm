@@ -15,7 +15,8 @@ import '../../../services/supplement_alarm_service.dart';
 
 class SupplementMissionScreen extends ConsumerStatefulWidget {
   final bool useSafeAreaTop;
-  const SupplementMissionScreen({super.key, this.useSafeAreaTop = true});
+  final String? alarmId;
+  const SupplementMissionScreen({super.key, this.useSafeAreaTop = true, this.alarmId});
 
   @override
   ConsumerState<SupplementMissionScreen> createState() => _SupplementMissionScreenState();
@@ -200,10 +201,13 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
   void _snooze(int minutes, int id) {
      final l10n = AppLocalizations.of(context)!;
      final time = DateTime.now().add(Duration(minutes: minutes));
-     final snoozeId = id + 50000;
+     // 스누즈 자체에서 다시 스누즈하면 id+50000 이 110000+ 가 되어
+     // cancelAll() 이 정리하는 범위(10000-10049, 60000-60049)를 벗어나 '취소 불가 알람'이 된다.
+     // 60000 이상이면 이미 스누즈 알람이므로 같은 id 로 재예약한다.
+     final snoozeId = id >= 60000 ? id : id + 50000;
      SupplementAlarmService.scheduleOneTime(time, snoozeId);
      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.snoozeMessage(minutes))));
-  }
+   }
 
   @override
   Widget build(BuildContext context) {
@@ -412,7 +416,10 @@ class _SupplementMissionScreenState extends ConsumerState<SupplementMissionScree
             child: MissionSuccessOverlay(
               onFinish: () {
                 if (mounted) {
-                  Navigator.pop(context);
+                  // 알람에서 실행된 경우 미션 성공(true)을 반환해야
+                  // AlarmRingingScreen이 알람을 종료한다.
+                  // 일반 미션탭에서 실행된 경우 alarmId가 null이므로 그냥 닫는다.
+                  Navigator.pop(context, widget.alarmId != null ? true : null);
                 }
               },
             ),

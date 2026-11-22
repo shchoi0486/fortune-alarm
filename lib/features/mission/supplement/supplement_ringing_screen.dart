@@ -27,6 +27,8 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
   late Animation<double> _pulseAnimation;
   Timer? _timeTimer;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  int _audioGeneration = 0;
+  bool _stopped = false;
 
   @override
   void initState() {
@@ -45,10 +47,11 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
       if (mounted) setState(() {});
     });
 
-    // 알람 소리 재생
+    // 알람 소리 재생 (세대 토큰: 500ms 대기 중 정지되면 재생하지 않음)
+    final int generation = ++_audioGeneration;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       debugPrint('[SupplementRingingScreen] Starting alarm sequence');
-      
+
       // 1. 먼저 시스템 알림을 취소하여 알림 소리를 중단합니다.
       // 알림이 소리를 재생 중일 때 이를 취소하면 오디오 세션이 정리됩니다.
       await NotificationService().cancelNotification(widget.alarmId);
@@ -56,56 +59,56 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
 
       // 2. 시스템 오디오 세션이 완전히 정리될 때까지 잠시 대기
       await Future.delayed(const Duration(milliseconds: 500));
-      
+
       // 3. 앱 자체 오디오 플레이어로 루핑 재생 시작
-      if (mounted) {
+      if (mounted && generation == _audioGeneration && !_stopped) {
         _playAlarm();
       }
     });
   }
 
   Future<void> _playAlarm() async {
+    if (_stopped) return;
     final settings = ref.read(supplementProvider).settings;
     debugPrint('[SupplementRingingScreen] Playing alarm. Path: ${settings.ringtonePath}, Vol: ${settings.volume}');
-    
-    if (settings.ringtonePath == null) {
-      debugPrint('[SupplementRingingScreen] Ringtone path is null, skipping sound');
-      return;
-    }
 
+    // 무음 설정이어도 진동은 울린다 (기존에는 소리 return 시 진동도 안 울림)
     try {
-      if (settings.ringtonePath == 'default') {
-        await FlutterRingtonePlayer().playAlarm(
-          looping: true,
-          volume: settings.volume,
-          asAlarm: true,
-        );
-      } else {
-        await _audioPlayer.setAudioContext(AudioContext(
-          android: AudioContextAndroid(
-            isSpeakerphoneOn: true,
-            stayAwake: true,
-            contentType: AndroidContentType.sonification,
-            usageType: AndroidUsageType.alarm,
-            audioFocus: AndroidAudioFocus.gain,
-          ),
-          iOS: AudioContextIOS(
-            category: AVAudioSessionCategory.playback,
-            options: {
-              AVAudioSessionOptions.duckOthers,
-              AVAudioSessionOptions.mixWithOthers,
-              AVAudioSessionOptions.defaultToSpeaker,
-            },
-          ),
-        ));
+      final path = settings.ringtonePath;
+      if (path != null) {
+        if (path == 'default') {
+          await FlutterRingtonePlayer().playAlarm(
+            looping: true,
+            volume: settings.volume,
+            asAlarm: true,
+          );
+        } else {
+          await _audioPlayer.setAudioContext(AudioContext(
+            android: AudioContextAndroid(
+              isSpeakerphoneOn: true,
+              stayAwake: true,
+              contentType: AndroidContentType.sonification,
+              usageType: AndroidUsageType.alarm,
+              audioFocus: AndroidAudioFocus.gain,
+            ),
+            iOS: AudioContextIOS(
+              category: AVAudioSessionCategory.playback,
+              options: {
+                AVAudioSessionOptions.duckOthers,
+                AVAudioSessionOptions.mixWithOthers,
+                AVAudioSessionOptions.defaultToSpeaker,
+              },
+            ),
+          ));
 
-        await _audioPlayer.stop();
-        await _audioPlayer.setReleaseMode(ReleaseMode.loop);
-        await _audioPlayer.setVolume(settings.volume);
-        
-        final assetPath = 'sounds/${settings.ringtonePath}.ogg';
-        debugPrint('[SupplementRingingScreen] AudioPlayer playing asset: $assetPath');
-        await _audioPlayer.play(AssetSource(assetPath));
+          await _audioPlayer.stop();
+          await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+          await _audioPlayer.setVolume(settings.volume);
+
+          final assetPath = 'sounds/$path.ogg';
+          debugPrint('[SupplementRingingScreen] AudioPlayer playing asset: $assetPath');
+          await _audioPlayer.play(AssetSource(assetPath));
+        }
       }
 
       if (await Vibration.hasVibrator() == true) {
@@ -118,17 +121,37 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
   }
 
   Future<void> _stopAlarm() async {
-    await _audioPlayer.stop();
-    await FlutterRingtonePlayer().stop();
-    Vibration.cancel();
+    _stopped = true;
+    _audioGeneration++;
+    try {
+      await _audioPlayer.stop();
+    } catch (_) {}
+    try {
+      await FlutterRingtonePlayer().stop();
+    } catch (_) {}
+    try {
+      Vibration.cancel();
+    } catch (_) {}
   }
 
   @override
   void dispose() {
-    _stopAlarm();
-    _audioPlayer.dispose();
-    _controller.dispose();
     _timeTimer?.cancel();
+    // _stopAlarm()은 _audioPlayer를 사용하므로 dispose()보다 먼저 정리한다.
+    _stopped = true;
+    _audioGeneration++;
+    try {
+      Vibration.cancel();
+    } catch (_) {}
+    try {
+      FlutterRingtonePlayer().stop();
+    } catch (_) {}
+    try {
+      _controller.dispose();
+    } catch (_) {}
+    try {
+      _audioPlayer.dispose();
+    } catch (_) {}
     super.dispose();
   }
 
@@ -187,12 +210,12 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
     final label = minutes >= 60 ? '${minutes ~/ 60}${l10n.hoursShort}' : '$minutes${l10n.minutesShort}';
     return InkWell(
       onTap: () async {
+        final l10n = AppLocalizations.of(context)!;
         await _stopAlarm();
-        _snooze(minutes);
-        if (mounted) {
-          // 모든 화면을 닫고 메인으로 돌아감
-          Navigator.of(context).popUntil((route) => route.isFirst);
-        }
+        if (!mounted) return;
+        _snooze(minutes, l10n);
+        // 모든 화면을 닫고 메인으로 돌아감
+        Navigator.of(context).popUntil((route) => route.isFirst);
       },
       child: Container(
         width: (MediaQuery.of(context).size.width - 72) / 3,
@@ -222,20 +245,23 @@ class _SupplementRingingScreenState extends ConsumerState<SupplementRingingScree
     );
   }
 
-  void _snooze(int minutes) {
-    final l10n = AppLocalizations.of(ref.context)!;
+  void _snooze(int minutes, AppLocalizations l10n) {
     final time = DateTime.now().add(Duration(minutes: minutes));
-    // 스누즈용 ID 생성 (기존 ID + 50000)
-    final snoozeId = widget.alarmId + 50000;
+    // 스누즈용 ID 생성 (기존 ID + 50000). 이미 스누즈된 울림(60000대)에서
+    // 또 미루면 ID가 무한 증가해 취소 범위를 벗어나므로 같은 ID를 재사용한다.
+    final snoozeId = widget.alarmId >= 60000 ? widget.alarmId : widget.alarmId + 50000;
     SupplementAlarmService.scheduleOneTime(time, snoozeId);
-    
-    ScaffoldMessenger.of(ref.context).showSnackBar(
-      SnackBar(
-        content: Text(l10n.snoozeMessageGeneric(minutes)),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
+
+    // popUntil 이후에는 context가 무효가 되므로 스낵바를 먼저 표시한다.
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.snoozeMessageGeneric(minutes)),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+    }
   }
 
   @override

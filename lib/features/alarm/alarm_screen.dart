@@ -763,7 +763,7 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
       DateTime alarmTime;
 
       if (alarm.repeatDays.any((d) => d)) {
-        // 반복 알람 로직
+        // 반복 알람 로직 (스케줄러와 동일한 +1분 가드: 1분 이내 미래는 발화 불가)
         alarmTime = DateTime(
           now.year,
           now.month,
@@ -774,8 +774,9 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
 
         int currentWeekdayIndex = now.weekday - 1; // Mon=0
         int startOffset = 0;
-        
-        if (DateTime(now.year, now.month, now.day, alarm.time.hour, alarm.time.minute).isBefore(now)) {
+
+        if (!DateTime(now.year, now.month, now.day, alarm.time.hour, alarm.time.minute)
+            .isAfter(now.add(const Duration(minutes: 1)))) {
            startOffset = 1;
         }
 
@@ -783,13 +784,15 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
         for (int i = 0; i < 7; i++) {
           final checkIndex = (currentWeekdayIndex + startOffset + i) % 7;
           if (alarm.repeatDays[checkIndex]) {
+            // Duration(days:) 덧셈은 DST 전환일 벽시계 시간을 ±1시간 밀게 한다.
+            // 항상 연월일 생성자로 다시 정규화한다.
             alarmTime = DateTime(
               now.year,
               now.month,
-              now.day,
+              now.day + startOffset + i,
               alarm.time.hour,
               alarm.time.minute,
-            ).add(Duration(days: startOffset + i));
+            );
             found = true;
             break;
           }
@@ -800,6 +803,11 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
               // 1분 이내의 과거 시간은 허용 (AddAlarmScreen에서 1분 이내 과거는 오늘로 저장하므로)
               if (alarm.time.isBefore(now.subtract(const Duration(minutes: 1)))) {
                 // 이미 지난 알람은 제외
+                continue;
+              }
+              // 0~60초 과거의 일회성 알람은 스케줄러가 예약하지 않으므로 죽은 알람이다.
+              // 이전에는 이 경우 "1분 미만 남음"이 영구 표시되었다.
+              if (alarm.time.isBefore(now)) {
                 continue;
               }
               alarmTime = alarm.time;
@@ -818,9 +826,11 @@ class _AlarmScreenState extends ConsumerState<AlarmScreen> {
           if (difference.isNegative || (difference.inHours == 0 && difference.inMinutes == 0)) {
              return AppLocalizations.of(context)!.lessThanAMinuteRemaining;
           }
-          
-          final hours = difference.inHours;
-          final minutes = difference.inMinutes % 60;
+
+          // 올림 표시 (59분 59초 → 59분이 아니라 60분... 실제로는 시간 단위 올림)
+          final totalMinutesCeil = (difference.inSeconds + 59) ~/ 60;
+          final hours = totalMinutesCeil ~/ 60;
+          final minutes = totalMinutesCeil % 60;
 
           if (hours > 0) return AppLocalizations.of(context)!.hoursMinutesRemaining(hours.toString(), minutes.toString());
           return AppLocalizations.of(context)!.minutesRemaining(minutes.toString());

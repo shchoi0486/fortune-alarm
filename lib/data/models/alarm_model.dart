@@ -84,6 +84,7 @@ class AlarmModel extends HiveObject {
     bool? isEnabled,
     MissionType? missionType,
     String? label,
+    String? referenceImagePath,
     List<String>? referenceImagePaths,
     List<bool>? repeatDays,
     bool? isVibrationEnabled,
@@ -108,8 +109,11 @@ class AlarmModel extends HiveObject {
       isEnabled: isEnabled ?? this.isEnabled,
       missionType: missionType ?? this.missionType,
       label: label ?? this.label,
-      referenceImagePaths: referenceImagePaths ?? this.referenceImagePaths,
-      repeatDays: repeatDays ?? this.repeatDays,
+      // 리스트 공유 방지: 호출자 변이와 무관하게 독립 복사본을 유지한다.
+      referenceImagePaths: referenceImagePaths != null
+          ? List<String>.from(referenceImagePaths)
+          : (this.referenceImagePaths != null ? List<String>.from(this.referenceImagePaths!) : null),
+      repeatDays: repeatDays != null ? List<bool>.from(repeatDays) : List<bool>.from(this.repeatDays),
       isVibrationEnabled: isVibrationEnabled ?? this.isVibrationEnabled,
       isSoundEnabled: isSoundEnabled ?? this.isSoundEnabled,
       volume: volume ?? this.volume,
@@ -125,6 +129,8 @@ class AlarmModel extends HiveObject {
       mathProblemCount: mathProblemCount ?? this.mathProblemCount,
       shakeCount: shakeCount ?? this.shakeCount,
       walkStepCount: walkStepCount ?? this.walkStepCount,
-    );
+      // 이 필드는 생성자 파라미터가 아니라 생성 후 대입되는 필드다.
+      // 여기서 누락하면 모든 copyWith 가 값을 null 로 지운 뒤 write() 로 다시 기록한다.
+    )..referenceImagePath = referenceImagePath ?? this.referenceImagePath;
   }
 }

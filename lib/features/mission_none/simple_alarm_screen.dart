@@ -204,9 +204,15 @@ class _SimpleAlarmScreenState extends ConsumerState<SimpleAlarmScreen> {
     await _stopAlarm();
 
     if (widget.alarmId != null) {
-      ref.read(alarmListProvider.notifier).toggleAlarm(widget.alarmId!);
+      // toggle은 반복 알람까지 꺼버리므로 사용 금지. 완료(일회성 비활성화/스누즈 취소)로
+      // 종료하고 결과만 상위에 전달한다. 실제 재예약은 ringing이 단일 처리한다.
+      try {
+        await ref.read(alarmListProvider.notifier).completeAlarm(widget.alarmId!);
+      } catch (_) {}
+      if (!mounted) return;
       Navigator.pop(context, true);
     } else {
+      if (!mounted) return;
       Navigator.pop(context);
     }
   }

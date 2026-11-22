@@ -77,6 +77,10 @@ class AdService {
   static NativeAd? _preloadedExitAd;
   static Completer<void>? _exitAdLoadCompleter;
 
+  // 네이티브 광고 풀 크기.
+  // DAU 가 매우 적어서(일 5~6명) 광고를 많이 미리 적재해도 쓸 곳이 없다.
+  // 오히려 요청만 늘려 AdMob 일치율(match rate) 통계를 끌어내린다.
+  // 실패한 요청은 비용이 없으므로 수익에는 영향이 없지만, 지표는 나빠진다.
   static const int _listAdPoolSize = 3;
   static final List<NativeAd> _preloadedListAds = <NativeAd>[];
   static final List<DateTime> _preloadedListAdTimes = <DateTime>[];
@@ -569,9 +573,12 @@ class AdService {
   /// 리스트용 광고 사전 로드
   static void preloadListAd({Brightness? brightness}) async {
     if (!_isInitialized) await initializationFuture;
-    if (_preloadedListAds.length + _listAdLoadingCount >= _listAdPoolSize) return;
 
     final now = DateTime.now();
+    // 오래된 광고(1시간 이상 경과)는 먼저 제거한다.
+    // 기존 구현은 풀 크기 검사를 먼저 해서, 풀이 가득 찬 상태에서는
+    // 만료된 광고를 정리하지 않고 즉시 반환해 버렸다. 그 결과 오래된
+    // 광고가 계속 쌓여 실제 사용 가능한 신선한 광고가 부족해졌다.
     for (int i = _preloadedListAdTimes.length - 1; i >= 0; i--) {
       if (now.difference(_preloadedListAdTimes[i]).inHours >= 1) {
         final ad = _preloadedListAds.removeAt(i);
@@ -621,16 +628,28 @@ class AdService {
           debugPrint('Preloaded List Ad failed: $error');
           ad.dispose();
           _listAdLoadingCount = (_listAdLoadingCount - 1).clamp(0, 999999);
-          for (final waiter in _listAdWaiters) {
-            if (!waiter.isCompleted) {
-              waiter.completeError(error);
+
+          // 대기 중인 요청에 실패를 전파한다.
+          // 단, 동시에 다른 로드가 진행 중이거나 이미 광고가 남아 있다면
+          // 그 결과를 기다릴 수 있으므로 즉시 실패시키지 않는다.
+          // (기존 구현은 실패 1건으로 대기 중인 모든 요청을 실패시켜,
+          //  실제로는 곧 로드될 광고까지 화면에서 숨겨 버렸다)
+          final stillLoadingOrHasAds =
+              _preloadedListAds.isNotEmpty || _listAdLoadingCount > 0;
+          if (!stillLoadingOrHasAds) {
+            for (final waiter in _listAdWaiters) {
+              if (!waiter.isCompleted) {
+                waiter.completeError(error);
+              }
             }
+            _listAdWaiters.clear();
           }
-          _listAdWaiters.clear();
           if (!completer.isCompleted) {
              completer.completeError(error);
           }
-          // 실패 시 30초 후 재시도
+          // 실패 시 30초 후 재시도.
+          // DAU 가 적어 광고 요청 자체가 빈번하지 않으므로, 짧은 간격으로
+          // 재시도하면 실패한 요청만 쌓여 일치율 지표만 나빠진다.
           Future.delayed(const Duration(seconds: 30), () => preloadListAd(brightness: brightness));
         },
       ),

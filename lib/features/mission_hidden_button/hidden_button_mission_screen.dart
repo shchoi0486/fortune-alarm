@@ -146,7 +146,7 @@ class _HiddenButtonMissionScreenState extends ConsumerState<HiddenButtonMissionS
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () {
-      if (mounted) Navigator.of(context).pop('timeout');
+      if (mounted && !_isSuccess) Navigator.of(context).pop('timeout');
     });
   }
 
@@ -383,6 +383,7 @@ class _HiddenButtonMissionScreenState extends ConsumerState<HiddenButtonMissionS
       
       if (_inputIndex + 1 >= _sequence.length) {
         _inputTimer?.cancel();
+        _inactivityTimer?.cancel();
         _playSuccessFeedback(); // 성공 피드백 호출
         setState(() {
           _isSuccess = true;

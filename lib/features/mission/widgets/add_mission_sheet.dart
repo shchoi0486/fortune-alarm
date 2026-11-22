@@ -60,7 +60,9 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
         _categoryIcons[_selectedCategory]!,
         _selectedCategory,
         isCustom: true, // 직접 입력은 커스텀 미션
-        alarmTime: _isAlarmEnabled ? '${_alarmTime.hour}:${_alarmTime.minute}' : null,
+        alarmTime: _isAlarmEnabled
+            ? '${_alarmTime.hour.toString().padLeft(2, '0')}:${_alarmTime.minute.toString().padLeft(2, '0')}'
+            : null,
         isAlarmEnabled: _isAlarmEnabled,
       );
       count++;
@@ -526,14 +528,22 @@ class _AddMissionSheetState extends ConsumerState<AddMissionSheet> {
                              category,
                            );
                            
-                           // 2. 추가된 미션을 선택 목록에 자동 추가하기 위해 새로 로드된 customMissions에서 찾음
-                           final newCustomMissions = ref.read(missionProvider).customMissions;
-                           final addedMission = newCustomMissions.firstWhere((m) => m.title == title);
-                           
-                           setState(() {
-                             _selectedCustomMissions.add(addedMission);
-                             _titleController.clear();
-                           });
+                            // 2. 추가된 미션을 선택 목록에 자동 추가하기 위해 새로 로드된 customMissions에서 찾음
+                            final newCustomMissions = ref.read(missionProvider).customMissions;
+                            // 제목만으로 찾으면 같은 제목의 다른 카테고리 미션과 엉킬 수 있다.
+                            final addedMission = newCustomMissions
+                                .where((m) => m.title == title && m.category == category)
+                                .firstOrNull;
+                            if (addedMission == null) {
+                              debugPrint('[AddMissionSheet] Custom mission not found after add: $title');
+                              return;
+                            }
+
+                            if (!mounted) return;
+                            setState(() {
+                              _selectedCustomMissions.add(addedMission);
+                              _titleController.clear();
+                            });
                          },
                          style: TextButton.styleFrom(
                            visualDensity: VisualDensity.compact,

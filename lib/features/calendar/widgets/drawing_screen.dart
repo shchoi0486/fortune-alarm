@@ -155,6 +155,11 @@ class _DrawingScreenState extends State<DrawingScreen> {
                         _redoStack.clear();
                       });
                     },
+                    onPanCancel: () {
+                      setState(() {
+                        _currentPoints = [];
+                      });
+                    },
                     onPanUpdate: (details) {
                       setState(() {
                         _currentPoints.add(details.localPosition);

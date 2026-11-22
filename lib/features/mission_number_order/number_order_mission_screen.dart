@@ -83,7 +83,10 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
     WidgetsBinding.instance.removeObserver(this);
     _inactivityTimer?.cancel();
     _sfxStopTimer?.cancel();
-    _sfxPlayer.dispose();
+    _sfxStopTimer = null;
+    try {
+      _sfxPlayer.dispose();
+    } catch (_) {}
     super.dispose();
   }
 
@@ -96,7 +99,9 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
 
       if (maxDuration != null) {
         _sfxStopTimer = Timer(maxDuration, () {
-          _sfxPlayer.stop();
+          try {
+            _sfxPlayer.stop();
+          } catch (_) {}
         });
       }
     } catch (_) {}
@@ -155,7 +160,7 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
     }
     
     await _vibrateWrong();
-    _playSfx('sounds/alarm_sound.ogg', volume: 0.16, maxDuration: const Duration(milliseconds: 200));
+    _playSfx('sounds/ui_click.ogg', volume: 0.1, maxDuration: const Duration(milliseconds: 200));
     
     if (!mounted) return;
     setState(() {
@@ -194,7 +199,7 @@ class _NumberOrderMissionScreenState extends ConsumerState<NumberOrderMissionScr
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () {
-      if (mounted) Navigator.of(context).pop('timeout');
+      if (mounted && !_isSuccess) Navigator.of(context).pop('timeout');
     });
   }
 

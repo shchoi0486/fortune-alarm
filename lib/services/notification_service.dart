@@ -14,6 +14,7 @@ import '../data/models/mission_model.dart';
 import '../data/models/daily_mission_log.dart';
 import '../core/constants/mission_type.dart';
 import '../core/constants/mission_category.dart';
+import '../core/constants/sound_resources.dart';
 import '../features/mission/supplement/models/supplement_settings.dart';
 import '../features/mission/supplement/models/supplement_log.dart';
 import '../features/mission/water/models/water_settings.dart';
@@ -53,8 +54,11 @@ class NotificationService {
   }
 
   void _registerAdapters() {
-    if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(MissionTypeAdapter());
-    if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(AlarmModelAdapter());
+    // typeId는 각 모델의 @HiveType(typeId:) 값과 반드시 일치해야 한다.
+    // 0=AlarmModel, 1=MissionType (앞선 두 줄이 뒤바뀌면 백그라운드 아이솔레이트에서
+    // 'alarms' 박스를 읽지 못해 알람이 울리지 않는다).
+    if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(AlarmModelAdapter());
+    if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(MissionTypeAdapter());
     if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(MathDifficultyAdapter());
     if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(MissionModelAdapter());
     if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(DailyMissionLogAdapter());
@@ -100,8 +104,10 @@ class NotificationService {
       // 에러 발생 시 시스템 로케일 유지
     }
     
-    // 지원하지 않는 언어일 경우 영어로 폴백
-    if (!['ko', 'en', 'ja', 'zh', 'ru', 'hi', 'fr', 'es', 'de'].contains(languageCode)) {
+    // 지원하지 않는 언어일 경우 영어로 폴백.
+    // AppLocalizations.supportedLocales 의 전체 목록과 일치시켜야 한다.
+    // (이전에는 `th` 가 빠져 있어, 태국어 기기에서는 알림이 항상 영어로 나왔다)
+    if (!['ko', 'en', 'ja', 'zh', 'ru', 'hi', 'fr', 'es', 'de', 'th'].contains(languageCode)) {
       debugPrint('[NotificationService] Unsupported language "$languageCode", falling back to "en"');
       languageCode = 'en';
     }
@@ -280,8 +286,9 @@ class NotificationService {
         AndroidNotificationDetails(
       channelId,
       channelName,
-      importance: Importance.max,
-      priority: Priority.max,
+      // 요약 알림이 별도 행을 차지하기보다 그룹 아래에 묶이도록 중요도를 낮춘다.
+      importance: Importance.low,
+      priority: Priority.low,
       groupKey: _groupKey,
       setAsGroupSummary: true,
       autoCancel: true,
@@ -290,9 +297,10 @@ class NotificationService {
     final NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
 
+    // title/body 없이 show 하면 빈 Importance.max 행이 계속 보인다.
     await flutterLocalNotificationsPlugin.show(
       _summaryId,
-      '',
+      channelName,
       '',
       platformChannelSpecifics,
     );
@@ -493,6 +501,7 @@ class NotificationService {
   Future<void> cancelAllFortuneNotifications() async {
     await flutterLocalNotificationsPlugin.cancel(40001);
     await flutterLocalNotificationsPlugin.cancel(40002);
+    await flutterLocalNotificationsPlugin.cancel(40003);
   }
 
   // 기본 운세 알림 스케줄링 (FortunePushService로 통합됨)
@@ -578,14 +587,13 @@ class NotificationService {
     String? payload,
     String? soundName,
     bool isVibrationEnabled = true,
+    bool repeatDaily = false,
   }) async {
-    final normalizedSoundName =
-        (soundName == null || soundName.isEmpty || soundName == 'default')
-            ? null
-            : soundName;
-    
-    final String channelId =
-        'alarm_channel_${normalizedSoundName ?? 'default'}_v1';
+    // "Standard/morning" 같은 경로에서 raw 리소스 이름을 해석한다.
+    // 해석에 실패하면 사운드를 지정하지 않아 시스템 기본 알림음으로라도 울리게 한다.
+    // (잘못된 이름으로 채널을 만들면 사운드가 고정되어 영구히 무음이 된다.)
+    final rawSoundName = resolveRawSoundName(soundName);
+    final String channelId = buildAlarmChannelId(soundName);
 
     final l10n = await _getL10n();
 
@@ -598,9 +606,7 @@ class NotificationService {
       fullScreenIntent: true,
       audioAttributesUsage: AudioAttributesUsage.alarm,
       playSound: true,
-      sound: normalizedSoundName != null
-          ? RawResourceAndroidNotificationSound(normalizedSoundName)
-          : null,
+      sound: rawSoundName != null ? RawResourceAndroidNotificationSound(rawSoundName) : null,
       enableVibration: isVibrationEnabled,
       autoCancel: false,
       ongoing: true,
@@ -612,7 +618,10 @@ class NotificationService {
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
-      sound: normalizedSoundName != null ? '$normalizedSoundName.caf' : null,
+      // iOS 는 번들된 사운드 파일 이름이 필요하지만 이 앱에는 .caf 가 없다.
+      // 잘못된 이름을 주면 예약 알림 자체가 실패하므로 사운드 지정 없이 relies on
+      // 기본 알림음으로 처리한다. (알람 사운드는 앱 내 AudioPlayer 가 담당)
+      sound: null,
       threadIdentifier: _groupKey,
       interruptionLevel: InterruptionLevel.critical, // 알람이므로 크리티컬 레벨 시도
     );
@@ -629,7 +638,13 @@ class NotificationService {
       tz.TZDateTime.from(scheduledDate, tz.local),
       platformChannelSpecifics,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
+      // repeatDaily = false : 단발 알람(알람/스누즈/안전). iOS 는 APNs 제한으로
+      //   최대 64건까지만 예약되므로 OS 반복에 의존하지 않는다.
+      // repeatDaily = true : 매일 같은 시각에 발송하는 알림(운세 푸시, 저녁 루틴).
+      //   이 알림들의 재예약 콜백은 AndroidAlarmManager 로만 구현되어 있어
+      //   iOS 에서는 이 값이 false 면 딱 한 번 울리고 다시는 반복되지 않는다.
+      matchDateTimeComponents:
+          repeatDaily ? DateTimeComponents.time : null,
       payload: payload,
     );
   }
@@ -649,10 +664,11 @@ class NotificationService {
     required String title,
     required String body,
     String? payload,
-    String? soundName, // 'morning', 'birds', 'waves' etc.
+    String? soundName, // "Standard/morning" 또는 "morning" 형태 모두 허용
     String? vibrationPattern, // 'short', 'long', 'heartbeat'
     bool isGradualVolume = false,
     bool isVibrationEnabled = true,
+    bool isSoundEnabled = true,
   }) async {
     // 진동 패턴 설정
     Int64List vibration;
@@ -666,12 +682,13 @@ class NotificationService {
        vibration = Int64List.fromList([0, 1000, 1000, 1000, 1000, 1000]);
     }
 
-    final normalizedSoundName =
-        (soundName == null || soundName.isEmpty || soundName == 'default')
-            ? null
-            : soundName;
+    // "Standard/morning" 같은 경로에서 raw 리소스 이름을 해석한다.
+    // 해석 실패 시 사운드를 지정하지 않는다. 잘못된 이름으로 채널을 만들면
+    // 채널 사운드가 고정되어 이후에도 무음으로 남는다.
+    // 사운드를 끈 사용자는 채널 사운드가 고정된다는 제약을 고려해 전용 무음 채널을 쓴다.
+    final rawSoundName = isSoundEnabled ? resolveRawSoundName(soundName) : null;
     final String channelId =
-        'alarm_channel_${normalizedSoundName ?? 'default'}_v1';
+        isSoundEnabled ? buildAlarmChannelId(soundName) : buildSilentAlarmChannelId();
 
     final l10n = await _getL10n();
 
@@ -688,10 +705,8 @@ class NotificationService {
       icon: '@mipmap/launcher_icon',
       largeIcon: const DrawableResourceAndroidBitmap('@mipmap/launcher_icon'),
       audioAttributesUsage: AudioAttributesUsage.alarm,
-      playSound: true,
-      sound: normalizedSoundName != null
-          ? RawResourceAndroidNotificationSound(normalizedSoundName)
-          : null,
+      playSound: isSoundEnabled,
+      sound: rawSoundName != null ? RawResourceAndroidNotificationSound(rawSoundName) : null,
       enableVibration: isVibrationEnabled,
       vibrationPattern: isVibrationEnabled ? vibration : null,
       autoCancel: false, // 알람은 사용자가 끌 때까지 유지

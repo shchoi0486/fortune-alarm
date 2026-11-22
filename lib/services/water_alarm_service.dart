@@ -153,16 +153,14 @@ class WaterAlarmService {
       );
     }
 
-    // 다음 날 같은 시간으로 재예약
-    final now = DateTime.now();
-    final nextTime = now.add(const Duration(days: 1));
-    // 정확한 시간을 위해 현재 시각 기준이 아니라, 원래 예약되었던 시각 + 1일이 좋지만 
-    // 여기서는 간단하게 24시간 후로 예약 (oneShotAt 사용 중이므로)
-    // 실제로는 scheduleAlarms를 다시 호출하거나 개별 id를 유지하는 게 좋음.
-    // 여기서는 단순히 이 ID의 알람을 내일 같은 시간에 다시 한 번 예약함.
-    
-    // 콜백에서 id를 통해 원래 시간을 유추하기 어려우므로, 
-    // 그냥 24시간 뒤로 예약함. (오차 발생 가능성 있으나 수용 범위)
-    await scheduleOneTime(nextTime, id);
+    // 다음 날 같은 시간으로 재예약.
+    // 사용자가 알람을 끄거나 settings 가 사라진 경우(shouldRing == false)에는
+    // 재예약하지 않는다. 이전 구현은 무조건 재예약해서, 알람이 잠든 상태로
+    // 영원히 다시 울릴 수 있는 '불멸 알람'이 됐다.
+    if (shouldRing) {
+      final now = DateTime.now();
+      final nextTime = now.add(const Duration(days: 1));
+      await scheduleOneTime(nextTime, id);
+    }
   }
 }

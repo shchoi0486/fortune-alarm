@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'dart:isolate';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
@@ -16,6 +18,7 @@ import 'fortune_push_service.dart';
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // 백그라운드 포트 이름 (main.dart와 동일해야 함)
 const String kAlarmPortName = 'alarm_notification_port';
@@ -96,20 +99,13 @@ Future<void> alarmCallback(int id) async {
   try {
     await notificationService.init(null, isBackground: true);
     debugPrint('[AlarmScheduler] NotificationService Initialized Early.');
-    
-    // [핵심] 무엇이든 간에 일단 알람을 울려서 깨운다. (Fail-safe)
-    // 상세 정보 로딩 전이라도 일단 기본 알림을 띄웁니다.
-    await notificationService.showAlarmNotification(
-      id: id,
-      title: l10n?.appTitle ?? 'Fortune Alarm',
-      body: l10n?.notificationWakeUpBody ?? 'Time to wake up!', // 초기 메시지 통일
-      payload: 'loading_$id', // 로딩 중임을 표시
-      soundName: 'morning', // 기본 사운드 (안전장치)
-      isVibrationEnabled: true,
-    );
-    debugPrint('[AlarmScheduler] IMMEDIATE ALARM FIRED (Fail-safe).');
+    // [리팩터] "무엇이든 간에 일단 기본 알림을 띄우는" Fail-safe를 제거했다.
+    // 이전 구현은 기본 채널(사운드 미지정)로 먼저 띄운 뒤 곧바로 사용자 벨소리 채널로
+    // 교체했는데, Android 는 같은 id + 다른 channelId 조합을 받으면 알림을 지우고
+    // 재생성하므로 사운드가 0:00 부터 다시 틀어지고 isGradualVolume 이 깨졌다.
+    // 실패 시의 Fail-safe 는 아래 바깥 catch 에서 처리한다.
   } catch (e) {
-    debugPrint('[AlarmScheduler] CRITICAL: Failed to fire immediate alarm: $e');
+    debugPrint('[AlarmScheduler] CRITICAL: Failed to init notification service: $e');
   }
 
   // 날짜/시간 포맷팅 초기화
@@ -125,7 +121,7 @@ Future<void> alarmCallback(int id) async {
         notificationTitle: l10n?.appTitle ?? 'Fortune Alarm',
         notificationText: l10n?.notificationWakeUpBody ?? 'Time to wake up!',
         notificationIcon: NotificationIcon(
-          metaDataName: 'com.seriessnap.fortune_alarm.notification_icon',
+          metaDataName: 'com.seriessnap.fortunealarm.notification_icon',
         ),
         callback: startCallback,
       );
@@ -133,7 +129,9 @@ Future<void> alarmCallback(int id) async {
     debugPrint('[AlarmScheduler] Foreground Service Started.');
     
     // 서비스가 시작된 후 앱 실행 시도 (전체 화면 알람을 위해)
-    _launchAppWithRetry();
+    // 백그라운드 아이솔레이트는 앱이 실행되면 종료되므로 재시도 루프가
+    // 무의미해질 수 있다. 호출 후 완료를 기다리지 않고 반환한다.
+    unawaited(_launchAppWithRetry());
   } catch (e) {
     debugPrint('[AlarmScheduler] Foreground Service Start Failed: $e');
   }
@@ -161,6 +159,19 @@ Future<void> alarmCallback(int id) async {
     if (alarm != null && alarm.isEnabled) {
       debugPrint('[AlarmScheduler] Found Alarm: ${alarm.id}.');
 
+      final now = DateTime.now();
+
+      // [핵심 수정] 미션 완료 후 뒤늦게 도착한 중복 콜백이 즉시 재울림을 유발함.
+      // 반복 알람은 콜백 시점에 이미 다음날로 갱신되어 있으므로,
+      // 알람 시간이 미래(2분 초과)라면 이번 콜백은 절대 울리면 안 된다.
+      if (alarm.time.isAfter(now.add(const Duration(minutes: 2)))) {
+        debugPrint('[AlarmScheduler] Alarm time ${alarm.time} is in the future (now: $now). Stale duplicate callback. Cancelling fail-safe and returning.');
+        try {
+          await notificationService.cancelNotification(id);
+        } catch (_) {}
+        return;
+      }
+
       // -------------------------------------------------------------------------
       // [CRITICAL FIX] 다음 알람 예약 로직을 최우선으로 이동 (선 예약, 후 실행)
       // 앱이 소리 재생 중 강제 종료되더라도 다음 알람은 이미 시스템에 등록되어 있어야 합니다.
@@ -187,7 +198,6 @@ Future<void> alarmCallback(int id) async {
       // -------------------------------------------------------------------------
 
       // 시간 검증 (너무 늦게 울린 경우)
-      final now = DateTime.now();
       final difference = now.difference(alarm.time);
       if (difference.inMinutes > 90) {
         debugPrint('[AlarmScheduler] Too late (>90m). Cancelling notification.');
@@ -213,12 +223,29 @@ Future<void> alarmCallback(int id) async {
         final startedAtStr = stateBox.get('active_alarm_mission_started_at') as String?;
         if (activeBaseId != null && startedAtStr != null) {
           final startedAt = DateTime.tryParse(startedAtStr);
-          if (startedAt != null && DateTime.now().difference(startedAt) < const Duration(minutes: 2)) {
-             final baseId = alarm.id.replaceAll('_snooze', '');
+          if (startedAt != null && DateTime.now().difference(startedAt) < const Duration(minutes: 5)) {
+             final baseId = alarm.id.replaceAll('_snooze', '').replaceAll('_safety', '');
              suppressRinging = baseId == activeBaseId;
           } else {
              await stateBox.delete('active_alarm_mission_base_id');
              await stateBox.delete('active_alarm_mission_started_at');
+          }
+        }
+        // [추가] 이미 울리고 있는 동일 알람의 중복 콜백 억제.
+        // 미션 시작 전이라도 ringing 화면이 떠 있으면 두 번째 콜백은 무시한다.
+        if (!suppressRinging) {
+          final ringingId = stateBox.get('active_ringing_alarm_id') as String?;
+          final ringingAtStr = stateBox.get('active_ringing_set_at') as String?;
+          if (ringingId != null && ringingAtStr != null) {
+            final ringingAt = DateTime.tryParse(ringingAtStr);
+            if (ringingAt != null && DateTime.now().difference(ringingAt) < const Duration(minutes: 5)) {
+              final baseId = alarm.id.replaceAll('_snooze', '').replaceAll('_safety', '');
+              final ringingBase = ringingId.replaceAll('_snooze', '').replaceAll('_safety', '');
+              if (baseId == ringingBase) {
+                debugPrint('[AlarmScheduler] Duplicate callback for already-ringing alarm. Suppressing.');
+                suppressRinging = true;
+              }
+            }
           }
         }
       } catch (e) {
@@ -234,7 +261,7 @@ Future<void> alarmCallback(int id) async {
           debugPrint('[AlarmScheduler] Pending alarm flag stored and flushed for payload: $payload');
           
           // 페이로드 저장 후 다시 한 번 앱 실행 시도
-          _launchAppWithRetry();
+          unawaited(_launchAppWithRetry());
         } catch (e) {
           debugPrint('[AlarmScheduler] Failed to store pending alarm flag: $e');
         }
@@ -253,6 +280,7 @@ Future<void> alarmCallback(int id) async {
           vibrationPattern: alarm.vibrationPattern,
           isGradualVolume: alarm.isGradualVolume,
           isVibrationEnabled: alarm.isVibrationEnabled,
+          isSoundEnabled: alarm.isSoundEnabled,
         );
         debugPrint('[AlarmScheduler] Notification CREATED with real data (Sound: ${alarm.ringtonePath}, Vibration: ${alarm.isVibrationEnabled}).');
       } else {
@@ -261,12 +289,30 @@ Future<void> alarmCallback(int id) async {
       }
       
     } else {
-      debugPrint('[AlarmScheduler] Alarm not found or disabled. Keeping fallback notification.');
+      // 알람이 없거나 꺼진 상태면 남은 알림이 없도록 정리한다.
+      // (유지하면 좀비 노티가 되어 재시작 복원 경로를 유발함)
+      debugPrint('[AlarmScheduler] Alarm not found or disabled. Cancelling notification.');
+      try {
+        await notificationService.cancelNotification(id);
+      } catch (_) {}
     }
 
   } catch (e, stackTrace) {
     debugPrint('[AlarmScheduler] FATAL in alarmCallback: $e');
     debugPrint(stackTrace.toString());
+    // 알람 로드/표시에 실패했다. 최소한 기본 알림이라도 띄워 사용자가 못 듣게 되는 것을 막는다.
+    try {
+      await notificationService.showAlarmNotification(
+        id: id,
+        title: l10n?.appTitle ?? 'Fortune Alarm',
+        body: l10n?.notificationWakeUpBody ?? 'Time to wake up!',
+        payload: 'failed_$id',
+        soundName: null, // 기본 채널의 시스템 알림음
+        isVibrationEnabled: true,
+      );
+    } catch (e2) {
+      debugPrint('[AlarmScheduler] CRITICAL: Fail-safe notification also failed: $e2');
+    }
   } finally {
     if (box != null && box.isOpen) await box.close();
   debugPrint('[AlarmScheduler] --- Alarm Callback End ---');
@@ -320,7 +366,17 @@ class AlarmSchedulerService {
       final box = await Hive.openBox<AlarmModel>('alarms');
       final now = DateTime.now();
 
-      for (final alarm in box.values) {
+      for (final alarm in box.values.toList()) {
+        // 스누즈/안전알람 같은 임시 항목은 부팅 복구 대상이 아니다.
+        if (alarm.id.endsWith('_snooze') || alarm.id.endsWith('_safety')) {
+          // 과거의 임시 항목은 정리만 한다.
+          if (alarm.time.isBefore(now)) {
+            try {
+              await box.delete(alarm.id);
+            } catch (_) {}
+          }
+          continue;
+        }
         if (!alarm.isEnabled) continue;
 
         // 1. 이미 지난 알람인지 확인
@@ -340,6 +396,10 @@ class AlarmSchedulerService {
                debugPrint('[AlarmScheduler] Found stale one-time alarm: ${alarm.id}. Disabling.');
                final disabledAlarm = alarm.copyWith(isEnabled: false);
                await box.put(disabledAlarm.id, disabledAlarm);
+               // OS에 남아있는 스케줄/노티도 함께 제거해야 유령 울림이 없다.
+               try {
+                 await cancelAlarm(alarm, cancelMain: true, cancelSnooze: true);
+               } catch (_) {}
              } else {
                 // 최근(30분 이내)에 놓친거라면 약간 미래 시각으로 보정 후 즉시 복구 예약
                 final recoveredAlarm = alarm.copyWith(
@@ -366,6 +426,40 @@ class AlarmSchedulerService {
 
     } catch (e) {
       debugPrint('[AlarmScheduler] Error during rescheduleExistingAlarms: $e');
+    }
+  }
+
+  /// `TimeChangeBroadcastReceiver` 가 읽는 현재 UTC offset(millis) 을 기록한다.
+  ///
+  /// AndroidAlarmManager 는 절대 epoch millis 로 예약하므로, 타임존/DST 변경 후
+  /// "사용자가 입력한当地 시각" 을 유지하려면 예약 당시의 offset 을 알아야 한다.
+  /// 실패해도 예약 자체는 정상 동작하므로 예외를 삼킨다.
+  static Future<void> _persistCurrentUtcOffset() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(
+        'com.seriessnap.fortunealarm.utc_offset_millis',
+        DateTime.now().timeZoneOffset.inMilliseconds,
+      );
+    } catch (e) {
+      debugPrint('[AlarmScheduler] Failed to persist UTC offset: $e');
+    }
+  }
+
+  /// `AlarmManager.canScheduleExactAlarms()` 결과 (Android 12 미만은 항상 true).
+  ///
+  /// `android_alarm_manager_plus` 는 권한이 없어도 예약을 조용히 건너뛰고 true 를
+  /// 반환하므로, Dart 쪽에서 직접 확인해야 유령 알람을 막을 수 있다.
+  /// 채널 호출 자체가 실패하면(플러그인/엔진 문제) 확인 불가이므로 낙관적으로 true.
+  static Future<bool> canScheduleExactAlarms() async {
+    if (!Platform.isAndroid) return true;
+    try {
+      const channel = MethodChannel('com.seriessnap.fortunealarm/foreground');
+      final bool? result = await channel.invokeMethod<bool>('canScheduleExactAlarms');
+      return result ?? true;
+    } catch (e) {
+      debugPrint('[AlarmScheduler] canScheduleExactAlarms check failed: $e');
+      return true;
     }
   }
 
@@ -398,6 +492,11 @@ class AlarmSchedulerService {
       time: safetyTime,
       label: l10n.notificationSafetyBody,
       isEnabled: true,
+      // 반드시 반복 요일을 비워야 한다.
+      // copyWith 가 repeatDays 를 넘기지 않아 상속되면, 반복 알람에서 파생된 안전 알람이
+      // 그 요일 세트를 물려받아 alarmCallback 의 재예약 블록에서 매 요일 다시 등록된다.
+      // 게다가 UI 는 _safety 를 필터링하므로 사용자가 볼 수도 지울 수도 없다.
+      repeatDays: const [false, false, false, false, false, false, false],
     );
 
     // Hive에 임시 저장
@@ -458,37 +557,57 @@ class AlarmSchedulerService {
       debugPrint('[AlarmScheduler] ID: ${alarm.id}');
       debugPrint('[AlarmScheduler] Time: ${alarm.time}');
       
-      // 1. 기존 알람 취소 (중복 예약 방지)
-      // 스누즈도 취소함 (메인 알람 예약 시 스누즈를 건드릴 필요가 없음)
-      // [수정] 재스케줄링 중에는 취소를 건너뜀 (소리 끊김 방지, AlarmManager는 ID가 같으면 자동 덮어쓰기 함)
-      if (!isRescheduling) {
-        await cancelAlarm(alarm, cancelMain: true, cancelSnooze: true ); 
-      }
+      // 순서 보장: 시간 검증 → 취소 → 저장 → OS 등록.
+      // 검증 전에 취소/저장을 하면 실패 시 기존 스케줄이 날아가고 고아 Hive 행이 남는다.
 
       bool hasPermissionIssues = false;
       String permissionErrorMsg = '';
 
       if (Platform.isAndroid) {
-        // [수정] 권한 상태를 먼저 확인하고 결과를 저장
+        // [수정] 권한 상태를 먼저 확인하고 결과를 저장.
+        // 주의: 백그라운드 재스케줄(isRescheduling) 중에는 request()가 no-op이므로
+        // 상태를 기록만 하고 요청은 포그라운드 저장 시에만 수행한다.
         var exactStatus = await Permission.scheduleExactAlarm.status;
         debugPrint('[AlarmScheduler] SCHEDULE_EXACT_ALARM status: $exactStatus');
-        
-        if (exactStatus.isDenied) {
+
+        if (exactStatus.isDenied && !isRescheduling) {
           debugPrint('[AlarmScheduler] SCHEDULE_EXACT_ALARM permission denied. Requesting...');
           exactStatus = await Permission.scheduleExactAlarm.request();
-          
-          if (exactStatus.isDenied) {
-            debugPrint('[AlarmScheduler] CRITICAL: SCHEDULE_EXACT_ALARM permission still denied. Alarm might not ring exactly.');
-            hasPermissionIssues = true;
-            permissionErrorMsg = 'SCHEDULE_EXACT_ALARM';
-          }
+        }
+
+        if (exactStatus.isDenied ||
+            exactStatus.isPermanentlyDenied ||
+            exactStatus.isRestricted) {
+          debugPrint('[AlarmScheduler] CRITICAL: SCHEDULE_EXACT_ALARM not granted ($exactStatus). Alarm might not ring exactly.');
+          hasPermissionIssues = true;
+          permissionErrorMsg = 'SCHEDULE_EXACT_ALARM';
+        }
+
+        // [추가] 알림 권한 확인 (Android 13+): 거부되면 FSI 알림·알림음이 동작하지 않아
+        // "홈만 뜨고 무음 종료" 증상으로 이어진다.
+        var notifStatus = await Permission.notification.status;
+        debugPrint('[AlarmScheduler] POST_NOTIFICATIONS status: $notifStatus');
+
+        if (notifStatus.isDenied && !isRescheduling) {
+          debugPrint('[AlarmScheduler] Notifications denied. Requesting...');
+          notifStatus = await Permission.notification.request();
+        }
+
+        if (notifStatus.isDenied ||
+            notifStatus.isPermanentlyDenied ||
+            notifStatus.isRestricted) {
+          debugPrint('[AlarmScheduler] WARNING: Notifications not granted ($notifStatus). Alarm UI/sound may be silent.');
+          hasPermissionIssues = true;
+          permissionErrorMsg = permissionErrorMsg.isEmpty
+              ? 'POST_NOTIFICATIONS'
+              : '$permissionErrorMsg, POST_NOTIFICATIONS';
         }
 
         // 배터리 최적화 제외 권한 확인 (절전 모드에서 알람 보장)
         final batteryStatus = await Permission.ignoreBatteryOptimizations.status;
         debugPrint('[AlarmScheduler] ignoreBatteryOptimizations status: $batteryStatus');
         
-        if (batteryStatus.isDenied) {
+        if (batteryStatus.isDenied && !isRescheduling) {
            debugPrint('[AlarmScheduler] Battery optimization is active. Requesting to ignore...');
            await Permission.ignoreBatteryOptimizations.request();
            
@@ -517,18 +636,13 @@ class AlarmSchedulerService {
       }
 
       final int alarmId = getStableId(alarm.id);
-
-      // Hive에 알람 저장
-      var box = await Hive.openBox<AlarmModel>('alarms');
-      await box.put(alarm.id, alarm);
-      await box.flush();
-
       debugPrint('[AlarmScheduler] StableID: $alarmId');
 
-      // 현재 시간보다 과거인지 확인 (안전장치)
+      // 순서 보장: 시간 검증 → OS 등록 → Hive 저장 → (실패 시 기존 스케줄 복원).
+      // 검증/등록 전에 취소·저장을 하면 실패 시 기존 스케줄이 날아가고
+      // 켜져 있지만 OS에 없는 유령 알람이 남는다.
       final now = DateTime.now();
-      
-      // 1분 이내의 과거라면 즉시 울리도록 처리 (사용자가 방금 설정한 것으로 간주)
+
       DateTime scheduleTime = alarm.time;
       if (scheduleTime.isBefore(now)) {
         // [수정] 무한 루프 방지 로직 개선
@@ -557,11 +671,31 @@ class AlarmSchedulerService {
           scheduleTime.minute,
           scheduleTime.second
         );
-        
+
         // 만약 보정 후 현재보다 과거가 되면(아주 근소한 차이), 1초 뒤로 설정
         if (scheduleTime.isBefore(now)) {
           scheduleTime = now.add(const Duration(seconds: 1));
         }
+      }
+
+      // 검증 통과 후 기존 Hive 값을 백업 (실패 시 복원용)
+      var box = await Hive.openBox<AlarmModel>('alarms');
+      final AlarmModel? previousAlarm = box.get(alarm.id);
+
+      // 정확한 알람 예약 가능 여부를 먼저 확인한다.
+      // Android 12+ 에서는 사용자가 설정 > 알람 및 알림 > "알람 및 알림" 권한을 해지할 수 있는데,
+      // 그 상태에서 android_alarm_manager_plus 는 예약을 조용히 건너뛰고 정상(true)을 반환한다.
+      // (알람이 "저장됨"으로 표시되지만 절대 울리지 않는 유령 알람이 된다)
+      if (Platform.isAndroid && !(await canScheduleExactAlarms())) {
+        debugPrint('[AlarmScheduler] canScheduleExactAlarms()==false. '
+            '알람을 예약하지 않고 실패로 반환한다. (설정 > 알람 및 알림 > 정확한 알람 필요)');
+        return false;
+      }
+
+      // 1. 기존 OS 스케줄 취소 (중복 예약 방지)
+      // 재스케줄링 중에는 건너뜀 (소리 끊김 방지, AlarmManager는 ID가 같으면 자동 덮어쓰기)
+      if (!isRescheduling) {
+        await cancelAlarm(alarm, cancelMain: true, cancelSnooze: true);
       }
 
       debugPrint('[AlarmScheduler] Calling scheduling service...');
@@ -583,6 +717,12 @@ class AlarmSchedulerService {
           rescheduleOnReboot: true,
           allowWhileIdle: true,
         );
+
+        if (result) {
+          // TimeChangeBroadcastReceiver 가 예약 시각을 UTC offset 차이만큼 이동시키도록
+          // 현재 offset 을 기록한다. (기록이 없으면 리시버가 delta=0 으로 보고 아무것도 안 한다)
+          await _persistCurrentUtcOffset();
+        }
       } else if (Platform.isIOS) {
         try {
           // 로컬라이징 가져오기
@@ -605,9 +745,37 @@ class AlarmSchedulerService {
       }
 
       if (result) {
+        // OS 등록 성공 후에만 Hive에 저장 (유령 알람 방지)
+        await box.put(alarm.id, alarm);
+        await box.flush();
         debugPrint('[AlarmScheduler] SUCCESSFULLY scheduled at: $scheduleTime');
       } else {
-        debugPrint('[AlarmScheduler] FAILED to schedule alarm.');
+        debugPrint('[AlarmScheduler] FAILED to schedule alarm. Restoring previous state.');
+        // 실패 시: 새로 저장하지 않고, 취소해버린 기존 OS 스케줄 복원 시도
+        try {
+          if (previousAlarm != null && previousAlarm.isEnabled) {
+            final int prevId = getStableId(previousAlarm.id);
+            if (Platform.isAndroid) {
+              await AndroidAlarmManager.oneShotAt(
+                previousAlarm.time,
+                prevId,
+                alarmCallback,
+                exact: true,
+                wakeup: true,
+                alarmClock: true,
+                rescheduleOnReboot: true,
+                allowWhileIdle: true,
+              );
+            }
+            await box.put(previousAlarm.id, previousAlarm);
+            await box.flush();
+          } else if (previousAlarm == null) {
+            // 신규 알람이었고 실패했다면 잔재 제거
+            try {
+              await box.delete(alarm.id);
+            } catch (_) {}
+          }
+        } catch (_) {}
       }
       debugPrint('[AlarmScheduler] --- Scheduling End ---');
       return result;
@@ -677,18 +845,20 @@ class AlarmSchedulerService {
     }
 
     // 알림도 함께 취소 (현재 울리고 있는 알림이 있을 수 있으므로)
+    // cancelMain: false 는 "OS 스케줄은 유지하고 알림만 정리" 하는 호출자가 있으므로
+    // (예: 반복 알람은 메인 스케줄을 절대 취소하지 않는다) 이 분기 안으로 옮긴다.
     final notificationService = NotificationService();
-    await notificationService.cancelNotification(alarmId);
-    
+    if (cancelMain) {
+      await notificationService.cancelNotification(alarmId);
+    }
+
     // 스누즈 알람 취소 여부 확인
     if (cancelSnooze && !alarm.id.endsWith('_snooze')) {
       final String snoozeId = '${alarm.id}_snooze';
       final int snoozeStableId = getStableId(snoozeId);
-      
+
       if (Platform.isAndroid) {
         await AndroidAlarmManager.cancel(snoozeStableId);
-      } else if (Platform.isIOS) {
-        await notificationService.cancelNotification(snoozeStableId);
       }
       await notificationService.cancelNotification(snoozeStableId);
       
@@ -703,33 +873,58 @@ class AlarmSchedulerService {
         debugPrint('[AlarmScheduler] Error deleting snooze from Hive: $e');
       }
     }
+
+    // 안전알람(_safety)도 함께 정리. cancelSafetyAlarm은 cancelAlarm을 호출하지
+    // 않으므로 순환 호출이 없다.
+    if (!alarm.id.endsWith('_safety')) {
+      final String baseForSafety = alarm.id.replaceAll('_snooze', '');
+      try {
+        await cancelSafetyAlarm(baseForSafety);
+      } catch (_) {}
+    }
     
     debugPrint('Alarm schedule and notification canceled: ${alarm.id} (StableID: $alarmId, cancelMain: $cancelMain, cancelSnooze: $cancelSnooze)');
 
     // [Bug Fix] 알람 취소 시 펜딩 플래그도 함께 삭제하여 앱 재시작 시 재울림 방지
-    try {
-      final stateBox = await Hive.openBox('app_state');
-      final pendingPayload = stateBox.get('pending_alarm_payload');
-      
-      if (pendingPayload != null) {
-        final String p = pendingPayload.toString();
-        // payload가 현재 취소하는 알람 ID와 관련이 있는지 확인
-        // 예: payload="123", alarm.id="123" 또는 "123_snooze"
-        // loading_ 접두사 처리
-        final String cleanPayload = p.replaceFirst('loading_', '');
-        
-        if (cleanPayload == alarm.id || 
-            alarm.id.startsWith(cleanPayload) || 
-            cleanPayload.startsWith(alarm.id.replaceAll('_snooze', ''))) {
-          
-          debugPrint('[AlarmScheduler] Clearing pending flag for canceled alarm: $alarm.id (Payload: $p)');
-          await stateBox.delete('pending_alarm_payload');
-          await stateBox.delete('pending_alarm_set_at');
-          await stateBox.flush();
+    // 단, 스누즈 알람(_snooze) 은 재스케줄 과정에서 일상적으로 cancelAlarm 이
+    // 호출되므로(scheduleAlarm 내부) 여기서 플래그를 지우면 안 된다.
+    // 스누즈 중 앱이 죽었을 때 다음 실행에서 복원할 근거가 사라진다.
+    if (!alarm.id.endsWith('_snooze')) {
+      try {
+        final stateBox = await Hive.openBox('app_state');
+        final pendingPayload = stateBox.get('pending_alarm_payload');
+
+        if (pendingPayload != null) {
+          final String p = pendingPayload.toString();
+          // payload가 현재 취소하는 알람 ID와 관련이 있는지 확인
+          // 예: payload="123", alarm.id="123" 또는 "123_snooze"
+          // loading_ 접두사 처리. startsWith 양방향 매칭은 "12"가 "123"을 지우는
+          // 오폭이 있으므로 정확히 base ID 기준으로만 비교한다.
+          final String cleanPayload = p.replaceFirst('loading_', '');
+          final String baseId = alarm.id.replaceAll('_snooze', '').replaceAll('_safety', '');
+          final String cleanBase = cleanPayload.replaceAll('_snooze', '').replaceAll('_safety', '');
+
+          bool matches = false;
+          if (cleanPayload == alarm.id) {
+            matches = true;
+          } else if (cleanPayload.startsWith('loading_')) {
+            // loading_<stableId> 형태는 숫자 비교로만 처리
+            final int? sid = int.tryParse(cleanPayload.replaceFirst('loading_', ''));
+            if (sid != null && sid == alarmId) matches = true;
+          } else if (cleanBase.isNotEmpty && cleanBase == baseId) {
+            matches = true;
+          }
+
+          if (matches) {
+            debugPrint('[AlarmScheduler] Clearing pending flag for canceled alarm: $alarm.id (Payload: $p)');
+            await stateBox.delete('pending_alarm_payload');
+            await stateBox.delete('pending_alarm_set_at');
+            await stateBox.flush();
+          }
         }
+      } catch (e) {
+        debugPrint('[AlarmScheduler] Error clearing pending flag in cancelAlarm: $e');
       }
-    } catch (e) {
-      debugPrint('[AlarmScheduler] Error clearing pending flag in cancelAlarm: $e');
     }
   }
 
@@ -757,14 +952,25 @@ class AlarmSchedulerService {
 // 다음 반복 시간 계산 헬퍼
   static DateTime calculateNextTime(DateTime alarmTime, List<bool> repeatDays, {DateTime? referenceTime}) {
     final now = referenceTime ?? DateTime.now();
+    // repeatDays 길이가 7이 아니면 인덱싱이 RangeError 를 던져
+    // alarmCallback 이 조용히 죽어 반복 알람이 끊긴다.
+    if (repeatDays.length != 7) {
+      debugPrint('[AlarmScheduler] calculateNextTime: repeatDays length ${repeatDays.length}, expected 7. Returning tomorrow.');
+      return DateTime(now.year, now.month, now.day, alarmTime.hour, alarmTime.minute)
+          .add(const Duration(days: 1));
+    }
+    // 기준 시간 (오늘 날짜 + 알람 시간)
     // 기준 시간 (오늘 날짜 + 알람 시간)
     DateTime candidate = DateTime(now.year, now.month, now.day, alarmTime.hour, alarmTime.minute);
     
     int dayOffset = 0;
     while (true) {
-      final checkDate = candidate.add(Duration(days: dayOffset));
+      // Duration(days:) 덧셈은 DST 전환일 벽시계 시간을 ±1시간 밀게 한다.
+      // 항상 연월일 생성자로 다시 정규화한다.
+      final checkDate = DateTime(now.year, now.month, now.day + dayOffset, alarmTime.hour, alarmTime.minute);
       final weekdayIndex = checkDate.weekday - 1;
-      
+
+      if (weekdayIndex < 0 || weekdayIndex >= repeatDays.length) break;
       if (repeatDays[weekdayIndex]) {
         // 현재 시간(referenceTime)보다 충분히 이후여야 함 (1분 이내의 미래면 건너뛰)
         if (checkDate.isAfter(now.add(const Duration(minutes: 1)))) {

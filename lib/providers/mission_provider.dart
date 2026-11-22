@@ -41,6 +41,12 @@ class MissionNotifier extends ChangeNotifier {
   // 동시 처리 방지용 락 (따닥 방지)
   bool _isProcessingCompletion = false;
 
+  // 미션 완료 처리를 순차 실행하기 위한 체인.
+  // 이전 구현은 bool 락이라서 락이 걸린 동안(Hive put + Firebase 트랜잭션으로 수백 ms~수 초)
+  // 들어온 완료 요청을 그냥 return 해 버렸다. 그 결과 물 미션이 "8/8컵인데 미션 미완료",
+  // 기상 미션이 조용히 실패하는 등 진행도가 유실되었다. 이제는 요청을 큐에 이어붙인다.
+  Future<void> _completionQueue = Future<void>.value();
+
   void consumeRewardDialogEvent() {
     _showRewardDialog = false;
     _lastRewardMissions = null;
@@ -112,10 +118,36 @@ class MissionNotifier extends ChangeNotifier {
       }
       notifyListeners();
     }
+
+    // 오래된 로그는 정리한다. 이전에는 mission_logs가 무제한으로 커졌다.
+    try {
+      final logBox = await Hive.openBox<DailyMissionLog>('mission_logs');
+      final cutoff = DateTime.now().subtract(const Duration(days: 45));
+      final stale = <dynamic>[];
+      for (final key in logBox.keys) {
+        final date = DateTime.tryParse(key.toString());
+        if (date != null && date.isBefore(cutoff)) {
+          stale.add(key);
+        }
+      }
+      if (stale.isNotEmpty) {
+        await logBox.deleteAll(stale);
+        debugPrint('[MissionProvider] Pruned ${stale.length} old mission logs.');
+      }
+    } catch (_) {}
   }
 
   // 미션 상태 변경 (완료/미완료)
-  Future<void> setMissionCompleted(String missionId, bool completed) async {
+  Future<void> setMissionCompleted(String missionId, bool completed) {
+    final result = _completionQueue.then(
+      (_) => _applyMissionCompletion(missionId, completed),
+    );
+    // 개별 요청이 실패하더라도 큐가 끊기지 않도록 에러를 흡수한다.
+    _completionQueue = result.then<void>((_) {}, onError: (Object _, StackTrace __) {});
+    return result;
+  }
+
+  Future<void> _applyMissionCompletion(String missionId, bool completed) async {
     // 날짜 변경 체크
     await _checkDayChange();
 
@@ -394,38 +426,42 @@ class MissionNotifier extends ChangeNotifier {
         );
         await box.put(m.id, updated);
       } else if (m.id == 'wakeup' || m.title == '기상 알람 미션 성공' || m.title == '기상 알람 미션') {
+        // 알림 설정은 보존한다. (이전 구현은 uuid 키를 가진 'wakeup' 성격 미션을
+        // 그대로 두고 'wakeup' 키로 하나 더 put 하여 중복을 만들고 알림 설정을 지웠다)
         final updated = MissionModel(
           id: 'wakeup',
           title: '기상 알람 미션',
           icon: '⏰',
           category: m.category,
           isSystemMission: true,
+          alarmTime: m.alarmTime,
+          isAlarmEnabled: m.isAlarmEnabled,
         );
         await box.put('wakeup', updated);
+        if (m.id != 'wakeup') {
+          await box.delete(m.id);
+        }
       }
     }
 
-    // 2. 초기 3개 미션 외의 시스템 미션 제거 (사용자 요청: 초기에는 3개만 표시)
-    // 기존에 자동으로 추가되었던 '헬스장 가기' 등의 미션을 제거합니다.
-    final keysToDelete = <String>[];
-    for (var m in box.values) {
-      // 시스템 미션이면서, 기본 미션 목록에 있고, 초기 3개 미션이 아닌 경우 삭제
-      final isDefaultMission = defaultMissions.any((dm) => dm.id == m.id);
-      if (m.isSystemMission && isDefaultMission && !initialMissionIds.contains(m.id)) {
-        keysToDelete.add(m.id);
-      }
-    }
-    if (keysToDelete.isNotEmpty) {
-      await box.deleteAll(keysToDelete);
-    }
-
+    // 2. 초기 3개 외의 기본 미션은 여기서 삭제하지 않는다.
+    //    isSystemMission 플래그는 "사용자가 추천 미션 목록에서 직접 추가한 경우"에도
+    //    true 로 저장되므로(mission_provider.addMission) 이 조건으로 삭제하면
+    //    사용자가 추가한 미션이 앱 재시작마다 사라진다. (알림 예약까지 함께 유실)
+    //    "초기에는 3개만 표시"라는 요구는 아래 4번의 최초 실행 시 추가 로직이 담당한다.
     final existingIds = box.keys.toSet();
     final existingTitles = box.values.map((m) => m.title).toSet();
 
-    // 3. '영양제 챙겨 먹기' 미션이 없는 경우 추가 (마이그레이션)
+    // 3. '영양제 챙겨 먹기', '물 2L' 미션이 없는 경우 추가 (마이그레이션)
+    //    물 마시기/영양제 동기화(water_provider/supplement_provider)가 이 id 를 기본 대상으로
+    //    삼으므로, 두 미션은 항상 존재해야 한다.
     if (!existingIds.contains('supplement')) {
       final supplement = defaultMissions.firstWhere((m) => m.id == 'supplement');
       await box.put('supplement', supplement);
+    }
+    if (!existingIds.contains('water_2l')) {
+      final water = defaultMissions.firstWhere((m) => m.id == 'water_2l');
+      await box.put('water_2l', water);
     }
 
     // 4. 초기 미션 추가 (최초 실행 시에만)
@@ -484,12 +520,38 @@ class MissionNotifier extends ChangeNotifier {
   }
 
   // 미션 추가 (커스텀 미션 포함)
+  // 동시 호출(onAdd 반복)이 box.values 를 서로 읽는 경합을 막기 위해 직렬화한다.
+  Future<void> _addQueue = Future<void>.value();
   Future<void> addMission(String title, String icon, MissionCategory category, {
-    bool isCustom = false, 
+    bool isCustom = false,
+    String? id,
+    String? alarmTime,
+    bool isAlarmEnabled = false,
+  }) {
+    final result = _addQueue.then((_) => _addMission(title, icon, category,
+        isCustom: isCustom, id: id, alarmTime: alarmTime, isAlarmEnabled: isAlarmEnabled));
+    _addQueue = result.then<void>((_) {}, onError: (Object _, StackTrace __) {});
+    return result;
+  }
+
+  Future<void> _addMission(String title, String icon, MissionCategory category, {
+    bool isCustom = false,
     String? id,
     String? alarmTime,
     bool isAlarmEnabled = false,
   }) async {
+    final box = await Hive.openBox<MissionModel>('missions');
+
+    // 같은 제목+카테고리의 커스텀(id 미지정) 미션이 이미 있으면 중복 생성하지 않고 갱신한다.
+    // 이전 구현은 매번 새 UUID 를 발급해 같은 미션이 계속 쌓이고,
+    // 5개 미션 보상을 같은 종류로 채우는 일이 가능했다.
+    if (id == null && isCustom) {
+      final existing = box.values.where((m) => m.title == title && m.category == category).firstOrNull;
+      if (existing != null) {
+        id = existing.id;
+      }
+    }
+
     final newMission = MissionModel(
       id: id ?? const Uuid().v4(),
       title: title,
@@ -500,21 +562,23 @@ class MissionNotifier extends ChangeNotifier {
       isAlarmEnabled: isAlarmEnabled,
     );
 
-    final box = await Hive.openBox<MissionModel>('missions');
     await box.put(newMission.id, newMission);
-    
+
     _missions = box.values.toList();
 
     // 알림 스케줄링
     if (isAlarmEnabled && alarmTime != null) {
       final parts = alarmTime.split(':');
-      final time = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-      await NotificationService().scheduleMissionNotification(
-        missionId: newMission.id,
-        title: title,
-        body: '미션을 수행할 시간입니다!',
-        time: time,
-      );
+      final hour = int.tryParse(parts.isNotEmpty ? parts[0].trim() : '');
+      final minute = int.tryParse(parts.length > 1 ? parts[1].trim() : '');
+      if (hour != null && minute != null) {
+        await NotificationService().scheduleMissionNotification(
+          missionId: newMission.id,
+          title: title,
+          body: '미션을 수행할 시간입니다!',
+          time: TimeOfDay(hour: hour, minute: minute),
+        );
+      }
     }
 
     // 사용자가 직접 만든 미션인 경우 히스토리에 저장 (중복 체크)
@@ -522,7 +586,6 @@ class MissionNotifier extends ChangeNotifier {
       final customBox = await Hive.openBox<MissionModel>('custom_missions');
       final exists = customBox.values.any((m) => m.title == title);
       if (!exists) {
-        // ID는 새로 생성하거나 기존꺼 사용. 히스토리용이라 별도 저장.
         await customBox.put(newMission.id, newMission);
         _customMissions = customBox.values.toList();
       }
@@ -540,13 +603,16 @@ class MissionNotifier extends ChangeNotifier {
     // 알림 스케줄링 업데이트
     if (mission.isAlarmEnabled && mission.alarmTime != null) {
       final parts = mission.alarmTime!.split(':');
-      final time = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-      await NotificationService().scheduleMissionNotification(
-        missionId: mission.id,
-        title: mission.title,
-        body: '미션을 수행할 시간입니다!',
-        time: time,
-      );
+      final hour = int.tryParse(parts.isNotEmpty ? parts[0].trim() : '');
+      final minute = int.tryParse(parts.length > 1 ? parts[1].trim() : '');
+      if (hour != null && minute != null) {
+        await NotificationService().scheduleMissionNotification(
+          missionId: mission.id,
+          title: mission.title,
+          body: '미션을 수행할 시간입니다!',
+          time: TimeOfDay(hour: hour, minute: minute),
+        );
+      }
     } else {
       await NotificationService().cancelMissionNotification(mission.id);
     }
@@ -554,26 +620,60 @@ class MissionNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  // 미션 삭제 (System 미션 제외)
+  // 삭제 불가 핵심 미션
+  static const Set<String> _coreMissionIds = {'wakeup', 'water_2l', 'supplement'};
+
+  // 미션 삭제 (핵심 알람 미션은 삭제 불가)
   Future<void> deleteMission(String id) async {
     final box = await Hive.openBox<MissionModel>('missions');
     final mission = box.get(id);
-    // 기상 알람 미션은 삭제 불가, 그 외(시스템 미션 포함)는 삭제 가능
-    if (mission != null && mission.id != 'wakeup') {
+    // 기상/물/영양제 미션은 물·보충제 동기화 및 UI의 기본 대상이므로 삭제 불가,
+    // 그 외(시스템 미션 포함)는 삭제 가능
+    if (mission != null && !_coreMissionIds.contains(id)) {
       await box.delete(id);
-      
+
       // 알림 취소
       await NotificationService().cancelMissionNotification(id);
+
+      // 오늘 로그에서도 id를 제거한다.
+      // 남겨두면 같은 추천 미션을 다시 추가했을 때(같은 id로 되살아남)
+      // 아무것도 하지 않고 "완료한 미션"으로 표시되고 진행도가凭空 증가한다.
+      await _removeFromTodayLog(id);
 
       _missions = box.values.toList();
       notifyListeners();
     }
   }
 
+  /// 오늘 로그의 completedMissionIds 에서 id 를 제거하고 영속화한다.
+  Future<void> _removeFromTodayLog(String missionId) async {
+    final log = _todayLog;
+    if (log == null || !log.completedMissionIds.contains(missionId)) return;
+    final newLog = log.copyWith(
+      completedMissionIds: List<String>.from(log.completedMissionIds)..remove(missionId),
+    );
+    final logBox = await Hive.openBox<DailyMissionLog>('mission_logs');
+    await logBox.put(newLog.dateKey, newLog);
+    _todayLog = newLog;
+  }
+
   // 모든 미션 초기화 및 기본 미션 설정
   Future<void> resetAllMissions() async {
     // 1. 미션 목록 초기화 및 기본 미션 추가
     final box = await Hive.openBox<MissionModel>('missions');
+
+    // 알림 예약을 먼저 취소한다.
+    // box.clear() 만 하면 예약된 일일 알림이 OS 에 그대로 남아 매일 울리고,
+    // 사용자가 그 알림을 탭하면 삭제된 미션 id 가 로그에 다시 삽입된다.
+    final notificationService = NotificationService();
+    final idsToCancel = box.keys
+        .map((k) => k.toString())
+        .where((id) => id != 'wakeup')
+        .toList();
+    for (final id in idsToCancel) {
+      await notificationService.cancelMissionNotification(id);
+    }
+
     await box.clear();
     
     // 기본 미션 리스트
@@ -627,7 +727,8 @@ class MissionNotifier extends ChangeNotifier {
   Future<void> toggleMission(String missionId) async {
     if (_todayLog == null) return;
 
-    final mission = _missions.firstWhere((m) => m.id == missionId);
+    final mission = _missions.where((m) => m.id == missionId).firstOrNull;
+    if (mission == null) return;
     // 특수 미션은 토글로 완료 처리 불가 (상세 화면에서만 가능)
     if (mission.id == 'wakeup' || mission.id == 'water_2l' || mission.id == 'supplement') return;
 

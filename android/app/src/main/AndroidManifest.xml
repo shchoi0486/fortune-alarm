@@ -17,10 +17,9 @@
     
     <!-- 진동 권한 추가 -->
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <!-- 이미지/갤러리 접근 권한 -->
+    <!-- 이미지/갤러리 접근: Android 13+는 시스템 사진 선택 도구 사용 (광범위 권한 불필요).
+         구버전(API 32 이하) 대응으로 READ_EXTERNAL_STORAGE만 유지. -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <!-- 알람 필수 권한 (부팅 감지, 화면 깨우기, 정확한 알람, 전체화면 알림) -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -49,8 +48,8 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:resizeableActivity="true"
-        android:allowBackup="true"
-        android:fullBackupContent="true"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
         android:enableOnBackInvokedCallback="false">
         
         <activity
@@ -135,6 +134,19 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <!-- [추가] 앱이 업데이트(재설치) 되었을 때 기존 알람 복구 -->
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- [추가] 타임존/시스템 시간 변경 시 예약된 알람 재계산
+             AndroidAlarmManager 는 절대 epoch millis 로 등록하므로, 이 브로드캐스트가
+             없으면 해외 이동이나 DST 전환 후 잘못된当地 시각에 울린다. -->
+        <receiver
+            android:name="com.seriessnap.fortunealarm.TimeChangeBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
             </intent-filter>
         </receiver>
 

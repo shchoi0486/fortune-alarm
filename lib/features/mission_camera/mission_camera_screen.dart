@@ -171,7 +171,7 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () {
-      if (mounted && !_isDisposed) {
+      if (mounted && !_isDisposed && !_isSuccess) {
         debugPrint('[MissionCameraScreen] Inactivity timeout - returning to ringing screen');
         Navigator.of(context).pop('timeout');
       }
@@ -484,6 +484,8 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
         _debugLabelText = l10n.missionMatchSuccess(totalMissions);
         _currentSimilarity = 1.0;
       });
+      _inactivityTimer?.cancel();
+      _timeTimer?.cancel();
       try {
         HapticFeedback.heavyImpact();
         _playSfx('ui_success.ogg');
@@ -495,12 +497,19 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
   }
 
   Future<void> _playSfx(String assetPath) async {
+    final player = AudioPlayer();
     try {
-      final player = AudioPlayer();
       await player.play(AssetSource('sounds/$assetPath'));
-      player.onPlayerComplete.listen((_) => player.dispose());
+      await player.onPlayerComplete.first.timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {},
+      );
     } catch (e) {
       debugPrint('Error playing SFX: $e');
+    } finally {
+      try {
+        await player.dispose();
+      } catch (_) {}
     }
   }
 
@@ -758,28 +767,29 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                              if (controller != null && controller.value.isStreamingImages) {
                                await controller.stopImageStream();
                              }
-                           } catch (e) {
-                             debugPrint('Error pausing camera stream: $e');
-                           }
+                            } catch (e) {
+                              debugPrint('Error pausing camera stream: $e');
+                            }
 
-                           if (!mounted) return;
+                            if (!context.mounted) return;
 
-                           // 대체 미션: 터치 연타 100회
-                           final result = await Navigator.of(context).push(
-                             MaterialPageRoute(
-                               builder: (_) => TapSprintMissionScreen(
-                                 alarmId: widget.alarmId,
-                                 goalTaps: 100,
-                               ),
-                             ),
-                           );
+                            // 대체 미션: 터치 연타 100회
+                            if (!context.mounted) return;
+                            final result = await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => TapSprintMissionScreen(
+                                  alarmId: widget.alarmId,
+                                  goalTaps: 100,
+                                ),
+                              ),
+                            );
 
-                           if (!mounted) return;
+                            if (!context.mounted) return;
 
-                           // 미션 성공 또는 타임아웃 시 현재 화면도 종료하여 알람 끄기
-                           if (result == true || result == 'timeout') {
-                             Navigator.of(context).pop(result);
-                           }
+                            // 미션 성공 또는 타임아웃 시 현재 화면도 종료하여 알람 끄기
+                            if (result == true || result == 'timeout') {
+                              Navigator.of(context).pop(result);
+                            }
                            // 만약 뒤로가기로 돌아왔다면 카메라는 다시 활성화되어야 함 (현재 구조상 자동 재개 여부는 provider 상태에 따름)
                            // 필요 시 여기서 재초기화 로직을 호출할 수 있음.
                         }
@@ -982,9 +992,9 @@ class _MissionCameraScreenState extends ConsumerState<MissionCameraScreen> with 
                             debugPrint('Error stopping camera stream on success: $e');
                           }
 
-                          if (!mounted) return;
+                          if (!context.mounted) return;
 
-                          if (mounted) {
+                          if (context.mounted) {
                             if (widget.alarmId != null) {
                               Navigator.of(context).pop(true);
                             } else {

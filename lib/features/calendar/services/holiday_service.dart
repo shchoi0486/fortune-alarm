@@ -1,42 +1,61 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/calendar_event.dart';
 
 class HolidayService {
   static const String _holidayCachePrefix = 'cached_holidays_v2_';
-  
+
+  /// ISO 639-1 언어 코드 → 해당 언어의 대표 국가 코드.
+  ///
+  /// region subtag 가 없는 로케일(예: "ko", "ja")에서는 언어 코드 자체가 2글자여서
+  /// 국가 코드로 오인되기 쉬우므로, 먼저 이 목록으로 해석한다.
+  static const Map<String, String> _languageToCountry = {
+    'ko': 'KR',
+    'ja': 'JP',
+    'zh': 'CN',
+    'ru': 'RU',
+    'hi': 'IN',
+    'de': 'DE',
+    'fr': 'FR',
+    'es': 'ES',
+    'it': 'IT',
+    'th': 'TH',
+    'vi': 'VN',
+    'id': 'ID',
+    'pt': 'BR',
+  };
+
+  /// 이 목록에 없는 2글자 코드만 region subtag 로 간주한다.
+  /// (그렇지 않으면 "ko" → "KO" 로 API 에 나가고 404 가 되어 공휴일이 전부 사라진다)
+  static const Set<String> _knownLanguageCodes = {
+    'ko', 'ja', 'zh', 'ru', 'hi', 'de', 'fr', 'es', 'it', 'th', 'vi', 'id',
+    'pt', 'en', 'ar', 'nl', 'pl', 'tr', 'sv', 'da', 'fi', 'no', 'cs', 'el',
+    'he', 'hu', 'ro', 'uk', 'bn', 'ms', 'ta', 'ur',
+  };
+
   // 지원 국가 코드 매핑 (기기의 locale 정보를 바탕으로 ISO 3166-1 alpha-2 코드 반환)
   String _getCountryCode() {
     final locale = Platform.localeName; // 예: 'ko_KR', 'en_US', 'zh_Hans_CN', 'ca_ES_valencia'
-    
+
     // 1. 구분자(_, -)로 분리하여 각 부분이 국가 코드(2글자)인지 확인
     final parts = locale.split(RegExp(r'[_-]'));
-    
-    // 뒤에서부터 확인하여 2글자로 된 국가 코드(region subtag)를 찾음
+
+    // 뒤에서부터 확인하여 2글자로 된 국가 코드(region subtag)를 찾음.
+    // 단, 언어 코드와 겹치는 값은 제외한다.
     for (int i = parts.length - 1; i >= 0; i--) {
       final part = parts[i].toUpperCase();
-      if (part.length == 2 && _isValidCountryCode(part)) {
-        return part;
-      }
+      if (part.length != 2) continue;
+      if (!_isValidCountryCode(part)) continue;
+      if (i == 0 && _knownLanguageCodes.contains(part.toLowerCase())) continue;
+      return part;
     }
-    
+
     // 2. 국가 코드를 명시적으로 알 수 없는 경우 언어 코드를 기준으로 기본 국가 매핑
     final langCode = parts.first.toLowerCase();
-    switch (langCode) {
-      case 'ko': return 'KR';
-      case 'ja': return 'JP';
-      case 'zh': return 'CN';
-      case 'ru': return 'RU';
-      case 'hi': return 'IN';
-      case 'de': return 'DE';
-      case 'fr': return 'FR';
-      case 'es': return 'ES';
-      case 'it': return 'IT';
-      case 'en': return 'US';
-      default: return 'US';
-    }
+    return _languageToCountry[langCode] ?? 'US';
   }
 
   // 간단한 국가 코드 유효성 검사 (숫자나 특수문자가 포함되지 않았는지)
@@ -54,15 +73,24 @@ class HolidayService {
     final prefs = await SharedPreferences.getInstance();
     final cachedData = prefs.getString(cacheKey);
     if (cachedData != null) {
-      final List<dynamic> jsonList = jsonDecode(cachedData);
-      return jsonList.map((json) => CalendarEvent.fromJson(json)).toList();
+      // 캐시 디코딩은 네트워크 경로와 별개로 보호한다.
+      // (캐시가 잘린 상태로 남으면 try/catch 밖에서 예외가 터져
+      //  _loadEvents 전체가 죽고 캘린더가 영구히 비어 버린다)
+      try {
+        final List<dynamic> jsonList = jsonDecode(cachedData);
+        return jsonList.map((json) => CalendarEvent.fromJson(json)).toList();
+      } catch (e) {
+        debugPrint('[HolidayService] Corrupted cache for $cacheKey: $e');
+        await prefs.remove(cacheKey);
+      }
     }
 
     // 2. API 호출 (Nager.Date API - 무료 및 오픈 소스)
     try {
-      final response = await http.get(
-        Uri.parse('https://date.nager.at/api/v3/PublicHolidays/$year/$countryCode')
-      );
+      final response = await http
+          .get(Uri.parse('https://date.nager.at/api/v3/PublicHolidays/$year/$countryCode'))
+          // 타임아웃이 없으면 캡티브 포털/약한 네트워크에서 캘린더 탭이 통째로 멈춘다
+          .timeout(const Duration(seconds: 8));
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);

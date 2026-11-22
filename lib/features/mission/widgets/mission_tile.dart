@@ -67,8 +67,8 @@ class MissionTile extends ConsumerWidget {
        final waterState = ref.watch(waterProvider);
        final current = waterState.log.currentIntake;
        final goal = waterState.settings.dailyGoal;
-       final cupSize = waterState.settings.cupSize;
-       
+       final cupSize = waterState.settings.cupSize > 0 ? waterState.settings.cupSize : 1;
+
        final currentCups = (current / cupSize).floor();
        final goalCups = (goal / cupSize).ceil();
 
@@ -193,9 +193,8 @@ class MissionTile extends ConsumerWidget {
       ),
     );
 
-    // 기상 알람 미션이거나 삭제 기능이 없으면 스와이프 기능 제외
-    // (영양제, 물 마시기 등 다른 시스템 미션은 삭제 가능해야 함)
-    if (isWakeUpMission || onDelete == null) {
+    // 핵심 미션(기상/물/영양제)은 동기화 대상이므로 삭제 불가, 그 외는 스와이프 삭제 가능
+    if (isSpecialMission || onDelete == null) {
       return content;
     }
 

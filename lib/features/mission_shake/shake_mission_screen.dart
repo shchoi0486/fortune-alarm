@@ -79,7 +79,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () {
-      if (mounted) {
+      if (mounted && !_isSuccess) {
         debugPrint('[ShakeMissionScreen] Inactivity timeout - returning to ringing screen');
         Navigator.of(context).pop('timeout');
       }
@@ -119,6 +119,7 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
 
   void _startShakeDetection() {
     _accelerometerSubscription = userAccelerometerEventStream().listen((UserAccelerometerEvent event) {
+      if (_isSuccess || _isHandlingSuccess) return;
       // Calculate magnitude of acceleration
       double acceleration = sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
 
@@ -215,15 +216,26 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
   }
 
   Future<void> _playSfx(String assetPath, {double volume = 0.5, Duration? maxDuration}) async {
+    final player = AudioPlayer();
     try {
-      final player = AudioPlayer();
       await player.play(AssetSource(assetPath), volume: volume);
       if (maxDuration != null) {
-        Future.delayed(maxDuration, () => player.stop());
+        await Future.delayed(maxDuration);
+        try {
+          await player.stop();
+        } catch (_) {}
+      } else {
+        await player.onPlayerComplete.first.timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {},
+        );
       }
-      player.onPlayerComplete.listen((_) => player.dispose());
     } catch (e) {
       debugPrint('Error playing SFX: $assetPath - $e');
+    } finally {
+      try {
+        await player.dispose();
+      } catch (_) {}
     }
   }
 
@@ -235,11 +247,17 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
     // 미션 성공 시 모든 타이머 중지
     _inactivityTimer?.cancel();
     _volumeTimer?.cancel();
+    // 센서도 즉시 중단 (성공 오버레이 표시 중 타이머가 재시작되는 경쟁 방지)
+    try {
+      await _accelerometerSubscription?.cancel();
+    } catch (_) {}
+    _accelerometerSubscription = null;
 
     // 흔들기 미션은 단일 성공이므로 바로 성공 애니메이션
     final random = Random();
+    if (!mounted) return;
     _lastMessage = PositiveMessages.getMessage(context);
-    
+
     try {
       HapticFeedback.heavyImpact();
       if (await Vibration.hasVibrator() == true) {
@@ -271,9 +289,26 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
     WidgetsBinding.instance.removeObserver(this);
     _volumeTimer?.cancel();
     _inactivityTimer?.cancel();
-    _audioPlayer.dispose();
-    _accelerometerSubscription?.cancel();
-    _stopAlarm();
+    try {
+      _accelerometerSubscription?.cancel();
+    } catch (_) {}
+    _accelerometerSubscription = null;
+    try {
+      Vibration.cancel();
+    } catch (_) {}
+    try {
+      FlutterRingtonePlayer().stop();
+    } catch (_) {}
+    // _stopAlarm()은 _audioPlayer를 사용하므로 dispose()보다 먼저 호출하면
+    // use-after-dispose 경쟁이 생긴다. 여기서는 알림 취소만 직접 수행한다.
+    try {
+      if (widget.alarmId != null) {
+        NotificationService().cancelNotification(AlarmSchedulerService.getStableId(widget.alarmId!));
+      }
+    } catch (_) {}
+    try {
+      _audioPlayer.dispose();
+    } catch (_) {}
     super.dispose();
   }
 
@@ -319,7 +354,9 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
 
     double progress = _currentShakeCount / _targetShakeCount;
 
-    return Listener(
+    return PopScope(
+      canPop: false,
+      child: Listener(
       onPointerDown: (_) => _resetInactivityTimer(),
       child: Scaffold(
         backgroundColor: Colors.black, // fallback
@@ -387,16 +424,15 @@ class _ShakeMissionScreenState extends ConsumerState<ShakeMissionScreen> with Wi
                 onFinish: () async {
                   if (mounted) {
                     await _stopAlarm();
-                    
-                    if (mounted) {
-                      Navigator.of(context).pop(true);
-                    }
                   }
+                  if (!context.mounted) return;
+                  Navigator.of(context).pop(true);
                 },
               ),
             ),
         ],
       ),
+    ),
     ),
     );
   }

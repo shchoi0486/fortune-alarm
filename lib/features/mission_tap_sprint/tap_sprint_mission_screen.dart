@@ -99,15 +99,26 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
   }
 
   Future<void> _playSfx(String assetPath, {double volume = 0.5, Duration? maxDuration}) async {
+    final player = AudioPlayer();
     try {
-      final player = AudioPlayer();
       await player.play(AssetSource(assetPath), volume: volume);
       if (maxDuration != null) {
-        Future.delayed(maxDuration, () => player.stop());
+        await Future.delayed(maxDuration);
+        try {
+          await player.stop();
+        } catch (_) {}
+      } else {
+        await player.onPlayerComplete.first.timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {},
+        );
       }
-      player.onPlayerComplete.listen((_) => player.dispose());
     } catch (e) {
       debugPrint('Error playing SFX: $assetPath - $e');
+    } finally {
+      try {
+        await player.dispose();
+      } catch (_) {}
     }
   }
 
@@ -133,7 +144,7 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () {
-      if (mounted) Navigator.of(context).pop('timeout');
+      if (mounted && !_isSuccess) Navigator.of(context).pop('timeout');
     });
   }
 
@@ -244,6 +255,7 @@ class _TapSprintMissionScreenState extends ConsumerState<TapSprintMissionScreen>
     });
 
     if (_meter >= goal) {
+      _inactivityTimer?.cancel();
       await _vibrateSuccess();
       setState(() {
         _isSuccess = true;

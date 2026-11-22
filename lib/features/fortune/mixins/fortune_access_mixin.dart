@@ -441,8 +441,10 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                       // 1. Check if user has active fortune pass (unlimited access)
                       final hasPass = await _cookieService.hasActiveFortunePassSubscription();
                       if (hasPass) {
-                        if (!mounted) return;
-                        Navigator.pop(context, 'pass'); 
+                        // 이 시점의 [context] 는 다이얼로그의 BuildContext 이므로
+                        // State.mounted 가 아니라 context.mounted 로 확인해야 한다.
+                        if (!context.mounted) return;
+                        Navigator.pop(context, 'pass');
                         return;
                       }
 
@@ -453,7 +455,7 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
 
                       if (count < 2) {
                         // Insufficient cookies
-                        if (!mounted) return;
+                        if (!context.mounted) return;
                         showDialog(
                           context: context,
                           useRootNavigator: true,
@@ -487,8 +489,8 @@ mixin FortuneAccessMixin<T extends StatefulWidget> on State<T> {
                       // Deduct cookies and grant access
                       final success = await _cookieService.useCookies(2);
                       if (success) {
-                        if (!mounted) return;
-                        Navigator.pop(context, 'cookie'); 
+                        if (!context.mounted) return;
+                        Navigator.pop(context, 'cookie');
                       }
                     },
                     style: OutlinedButton.styleFrom(

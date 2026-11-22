@@ -11,15 +11,33 @@ import 'water/providers/water_provider.dart';
 import 'supplement/providers/supplement_provider.dart';
 import '../../widgets/ad_banner_widget.dart';
 
-class MissionScreen extends ConsumerWidget {
+class MissionScreen extends ConsumerStatefulWidget {
   const MissionScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MissionScreen> createState() => _MissionScreenState();
+}
+
+class _MissionScreenState extends ConsumerState<MissionScreen> {
+  Future<Map<String, dynamic>>? _statsFuture;
+  String? _lastStatsKey;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshStats();
+  }
+
+  void _refreshStats() {
+    _statsFuture = ref.read(missionProvider).getMissionStatistics();
+  }
+
+  @override
+  Widget build(BuildContext context, ) {
     final missionState = ref.watch(missionProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = ref.watch(themeProvider).primaryColor;
-    
+
     if (missionState.isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -31,7 +49,13 @@ class MissionScreen extends ConsumerWidget {
     final validMissionIds = allMissions.map((m) => m.id).toSet();
     final effectiveCompletedIds = completedIds.where((id) => validMissionIds.contains(id)).toSet();
 
-    debugPrint('MissionScreen: completedCount=${effectiveCompletedIds.length}, isGoalAchieved=${missionState.isGoalAchieved}, cookies=${missionState.fortuneCookieCount}');
+    // 통계 데이터는 완료 수가 바뀔 때만 다시 계산한다.
+    // (이전에는 build 마다 새 Future 를 만들어 매번 스피너로 되돌아갔다)
+    if (_statsFuture == null ||
+        _lastStatsKey != '${effectiveCompletedIds.length}_${missionState.isGoalAchieved}') {
+      _lastStatsKey = '${effectiveCompletedIds.length}_${missionState.isGoalAchieved}';
+      _refreshStats();
+    }
 
     final pendingMissions = allMissions.where((m) => !effectiveCompletedIds.contains(m.id)).toList();
     final completedMissions = allMissions.where((m) => effectiveCompletedIds.contains(m.id)).toList();

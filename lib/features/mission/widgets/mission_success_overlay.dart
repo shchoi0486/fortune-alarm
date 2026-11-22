@@ -23,6 +23,13 @@ class _MissionSuccessOverlayState extends State<MissionSuccessOverlay> with Sing
   late Animation<double> _scaleAnimation;
   late Animation<double> _opacityAnimation;
   String? _randomMessage;
+  bool _finished = false;
+
+  void _finishOnce() {
+    if (_finished) return;
+    _finished = true;
+    widget.onFinish();
+  }
 
   @override
   void initState() {
@@ -43,10 +50,10 @@ class _MissionSuccessOverlayState extends State<MissionSuccessOverlay> with Sing
 
     _controller.forward();
 
-    // 2.5초 후 자동 종료
+    // 2.5초 후 자동 종료 (중복 호출 가드: 타임아웃과 동시 발화 시 하위 라우트까지 pop하는 것 방지)
     Future.delayed(const Duration(milliseconds: 2500), () {
       if (mounted) {
-        widget.onFinish();
+        _finishOnce();
       }
     });
   }

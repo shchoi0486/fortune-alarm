@@ -58,7 +58,21 @@ class RoutineAlarmService {
         allowWhileIdle: true,
       );
     } else if (Platform.isIOS) {
-      final msg = PushMessages.getRandomRoutineMessage();
+      // iOS 예약 시점에도 저장된 언어를 반영 (기존에는 항상 한국어 고정 — 번역 버그 수정)
+      String langCode = 'ko';
+      try {
+        final settingsBox = await Hive.openBox('settings');
+        final savedLang = settingsBox.get('language');
+        // 저장된 값이 String 이 아닐 수 있으므로 캐스팅 전에 확인한다.
+        if (savedLang is String && savedLang.isNotEmpty) {
+          langCode = savedLang;
+        }
+      } catch (_) {}
+      if (!['ko', 'en', 'ja', 'zh', 'th', 'ru', 'hi', 'fr', 'es', 'de'].contains(langCode)) {
+        langCode = 'en';
+      }
+
+      final msg = PushMessages.getRandomEveningMessage(langCode);
 
       await NotificationService().scheduleAlarmNotification(
         id: id,
@@ -66,6 +80,8 @@ class RoutineAlarmService {
         body: msg['body']!,
         scheduledDate: scheduledTime,
         payload: 'routine_daily',
+        // iOS 는 재예약 콜백이 AndroidAlarmManager 전용이라 OS 반복에 의존해야 한다.
+        repeatDaily: true,
       );
     }
   }
@@ -104,12 +120,12 @@ class RoutineAlarmService {
       }
 
       // 지원하지 않는 언어일 경우 영어로 폴백
-      if (!['ko', 'en', 'ja', 'zh', 'ru', 'hi', 'fr', 'es', 'de'].contains(langCode)) {
+      if (!['ko', 'en', 'ja', 'zh', 'th', 'ru', 'hi', 'fr', 'es', 'de'].contains(langCode)) {
         langCode = 'en';
       }
       debugPrint('[RoutineAlarm] Final langCode for push: $langCode');
 
-      final msg = PushMessages.getRandomRoutineMessage(langCode);
+      final msg = PushMessages.getRandomEveningMessage(langCode);
             await notificationService.showRoutineNotification(
         id: id,
         title: msg['title']!,

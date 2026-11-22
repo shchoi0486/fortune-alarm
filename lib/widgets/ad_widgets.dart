@@ -149,13 +149,22 @@ class _ListAdWidgetState extends State<ListAdWidget> {
 
   void _loadNewAd(int token) {
       final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+      // textBanner 레이아웃(text_banner_native_ad.xml)에는 MediaView/ImageView 가
+      // 하나도 없다. 텍스트 전용 배너인데 landscape 미디어를 요구하면, 서버는
+      // "가로형 이미지/영상资产的 광고"만 후보로 거른다. 해당 광고는 한국 재고가
+      // 훨씬 얇아서 매칭률이 크게 떨어진다. (일치율 17.99% 의 한 원인)
+      // 미디어를 렌더링하지 않는 레이아웃은 mediaAspectRatio 를 지정하지 않는다.
+      final usesMediaLayout = widget.factoryId != 'textBanner';
+
       _nativeAd = NativeAd(
         adUnitId: AdService.nativeAdAdvancedUnitId,
         factoryId: widget.factoryId, // [수정] 위젯의 factoryId 사용
         customOptions: {'theme': isDarkMode ? 'dark' : 'light'},
         request: const AdRequest(),
         nativeAdOptions: NativeAdOptions(
-          mediaAspectRatio: MediaAspectRatio.landscape, // 영상/이미지 비율 설정
+          mediaAspectRatio: usesMediaLayout
+              ? MediaAspectRatio.landscape // 영상/이미지 비율 설정
+              : MediaAspectRatio.unknown, // 텍스트 전용 배너는 미디어 미요구
           videoOptions: VideoOptions(
             startMuted: true, // 소리 없이 자동 재생 시작
             customControlsRequested: true, // [수정] 커스텀 컨트롤러 사용 요청 (기본 버튼 숨기기 위함)

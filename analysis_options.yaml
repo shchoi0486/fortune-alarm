@@ -17,8 +17,13 @@ analyzer:
     unused_field: ignore
     unused_local_variable: ignore
     unreachable_switch_default: ignore
-    use_build_context_synchronously: ignore
     dead_null_aware_expression: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
 
 linter:
   # The lint rules applied to this project can be customized in the

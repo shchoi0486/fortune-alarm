@@ -144,7 +144,7 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () {
-      if (mounted) Navigator.of(context).pop('timeout');
+      if (mounted && !_isSuccess) Navigator.of(context).pop('timeout');
     });
   }
 
@@ -230,6 +230,7 @@ class _LeftRightMissionScreenState extends ConsumerState<LeftRightMissionScreen>
         _wrongFlash = false;
       });
       if (_streak >= goal && mounted) {
+        _inactivityTimer?.cancel();
         HapticFeedback.heavyImpact();
         _playSfx('ui_success.ogg');
         if (await Vibration.hasVibrator() == true) {

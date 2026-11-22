@@ -99,7 +99,12 @@ class WaterAlarmScreen extends ConsumerWidget {
         // Parse timeStr "HH:mm"
         final parts = timeStr.split(':');
         final initialTime = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
-        
+
+        // 스크롤 프레임마다 updateSettings + 알람 재스케줄을 실행하면
+        // 디스크 쓰기 + 수십 회 IPC 가 매 프레임 발생해 UI 가 끊긴다.
+        // 선택값은 로컬에 두고, 확인 버튼에서 한 번만 저장한다.
+        var selectedTime = initialTime;
+
         showCupertinoModalPopup(
           context: context,
           builder: (context) => Container(
@@ -120,19 +125,21 @@ class WaterAlarmScreen extends ConsumerWidget {
                       CupertinoButton(
                         child: Text(AppLocalizations.of(context)!.confirm),
                         onPressed: () {
+                          final formatted = '${selectedTime.hour.toString().padLeft(2, '0')}:${selectedTime.minute.toString().padLeft(2, '0')}';
+                          onSave(formatted);
                           Navigator.pop(context);
                         },
                       ),
                     ],
                   ),
+
                   Expanded(
                     child: CupertinoDatePicker(
                       mode: CupertinoDatePickerMode.time,
                       initialDateTime: DateTime(2024, 1, 1, initialTime.hour, initialTime.minute),
                       use24hFormat: false,
                       onDateTimeChanged: (DateTime newDateTime) {
-                        final formatted = '${newDateTime.hour.toString().padLeft(2, '0')}:${newDateTime.minute.toString().padLeft(2, '0')}';
-                        onSave(formatted);
+                        selectedTime = TimeOfDay.fromDateTime(newDateTime);
                       },
                     ),
                   ),

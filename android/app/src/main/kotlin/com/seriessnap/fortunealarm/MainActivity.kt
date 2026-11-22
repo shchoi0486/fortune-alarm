@@ -52,9 +52,30 @@ class MainActivity: FlutterFragmentActivity() {
             } else if (call.method == "setMaxAlarmVolume") {
                 setMaxAlarmVolume()
                 result.success(null)
+            } else if (call.method == "canScheduleExactAlarms") {
+                result.success(canScheduleExactAlarms())
             } else {
                 result.notImplemented()
             }
+        }
+    }
+
+    /**
+     * 정확한 알람(SCHEDULE_EXACT_ALARM / setAlarmClock)을 예약할 수 있는지 조회한다.
+     *
+     * Android 12(S) 에서는 사용자가 설정 > 알람 및 알림에서 권한을 해지할 수 있는데,
+     * 그 상태에서도 [android_alarm_manager_plus] 는 예약 실패를 조용히 무시하고
+     * 정상 반환한다. 따라서 Dart 쪽에서 실제 예약 가능 여부를 먼저 확인해야 한다.
+     * Android 11 이하는 항상 true.
+     */
+    private fun canScheduleExactAlarms(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return true
+        return try {
+            val alarmManager = getSystemService(Context.ALARM_SERVICE) as android.app.AlarmManager
+            alarmManager.canScheduleExactAlarms()
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "canScheduleExactAlarms failed: ${e.message}")
+            false
         }
     }
 

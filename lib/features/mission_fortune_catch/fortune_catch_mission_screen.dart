@@ -143,13 +143,16 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () async {
-      if (mounted) {
+      if (mounted && !_isSuccess && !_isGameOver) {
         HapticFeedback.heavyImpact();
         if (_hasVibrator == true) {
           Vibration.vibrate(pattern: [0, 70, 60, 70]);
         }
-        await _playSfx('sounds/ui_success.ogg', volume: 0.22, maxDuration: const Duration(milliseconds: 420));
-        Navigator.of(context).pop('timeout');
+        // 실패음이 아니라 짧은 알림음으로 (성공음 오용 금지)
+        await _playSfx('sounds/ui_click.ogg', volume: 0.22, maxDuration: const Duration(milliseconds: 420));
+        if (mounted && !_isSuccess && !_isGameOver) {
+          Navigator.of(context).pop('timeout');
+        }
       }
     });
   }
@@ -430,6 +433,8 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
       // Mission completion check
       if (_score >= _targetScore && _catchCount >= _minCatches) {
         _isGameOver = true;
+        // paused 핸들러와의 경쟁 방지: 성공 플래그를 동기 구간에서 함께 세운다.
+        _isSuccess = true;
         shouldFinish = true;
       }
     });
@@ -444,7 +449,7 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
       if (_hasVibrator == true) {
         Vibration.vibrate(pattern: [0, 50, 40, 60]);
       }
-      _playSfx('sounds/alarm_sound.ogg', volume: 0.16, maxDuration: const Duration(milliseconds: 200));
+      _playSfx('sounds/ui_click.ogg', volume: 0.1, maxDuration: const Duration(milliseconds: 200));
       _showFeedback(l10n.fortuneCatchPointMinus(char.points.abs()), Colors.redAccent);
     } else {
       HapticFeedback.mediumImpact(); // light -> medium으로 강화
@@ -493,7 +498,9 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
         ? [const Color(0xFF1A237E), const Color(0xFF311B92)] // Deep Night Purple/Blue
         : [const Color(0xFF81C784), const Color(0xFF4CAF50)]; // Fresh Green
     
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -879,6 +886,7 @@ class _FortuneCatchMissionScreenState extends ConsumerState<FortuneCatchMissionS
           ),
         ),
       ),
+    ),
     );
   }
 }

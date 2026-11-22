@@ -125,13 +125,34 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _frameTimer?.cancel();
-    _animationController.dispose();
-    _waddleController.dispose();
-    _accelerometerSubscription?.cancel();
-    _gyroSubscription?.cancel();
+    try {
+      _animationController.dispose();
+    } catch (_) {}
+    try {
+      _waddleController.dispose();
+    } catch (_) {}
+    try {
+      _accelerometerSubscription?.cancel();
+    } catch (_) {}
+    try {
+      _gyroSubscription?.cancel();
+    } catch (_) {}
     _volumeTimer?.cancel();
     _inactivityTimer?.cancel();
-    _audioPlayer.dispose();
+    try {
+      Vibration.cancel();
+    } catch (_) {}
+    try {
+      FlutterRingtonePlayer().stop();
+    } catch (_) {}
+    try {
+      if (widget.alarmId != null) {
+        NotificationService().cancelNotification(AlarmSchedulerService.getStableId(widget.alarmId!));
+      }
+    } catch (_) {}
+    try {
+      _audioPlayer.dispose();
+    } catch (_) {}
     super.dispose();
   }
 
@@ -147,7 +168,7 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
   void _startInactivityTimer() {
     _inactivityTimer?.cancel();
     _inactivityTimer = Timer(const Duration(minutes: 2), () {
-      if (mounted) {
+      if (mounted && !_isSuccess) {
         debugPrint('[WalkMissionScreen] Inactivity timeout - returning to ringing screen');
         Navigator.of(context).pop('timeout');
       }
@@ -193,6 +214,7 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
     // UserAccelerometerEvent is the acceleration WITHOUT gravity.
     // For walking, we look for periodic vertical or horizontal movement.
     _accelerometerSubscription = userAccelerometerEventStream().listen((UserAccelerometerEvent event) {
+      if (_isSuccess || _isHandlingSuccess) return;
       // Calculate magnitude of acceleration change
       double magnitude = sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
 
@@ -228,7 +250,7 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
   }
 
   bool _isHandlingSuccess = false;
-  void _handleSuccess() {
+  void _handleSuccess() async {
     if (_isHandlingSuccess) return;
     _isHandlingSuccess = true;
 
@@ -244,8 +266,13 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
         _isSuccess = true;
       });
     }
-    
+
     _accelerometerSubscription?.cancel();
+    _accelerometerSubscription = null;
+    try {
+      await _gyroSubscription?.cancel();
+    } catch (_) {}
+    _gyroSubscription = null;
   }
 
   Future<void> _stopAlarm() async {
@@ -314,7 +341,9 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
 
     double progress = (_currentStepCount / _targetStepCount).clamp(0.0, 1.0);
 
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
       backgroundColor: Colors.black, // fallback
       body: Stack(
         children: [
@@ -510,16 +539,15 @@ class _WalkMissionScreenState extends ConsumerState<WalkMissionScreen> with Tick
                 onFinish: () async {
                   if (mounted) {
                     await _stopAlarm();
-                    
-                    if (mounted) {
-                      Navigator.of(context).pop(true);
-                    }
                   }
+                  if (!context.mounted) return;
+                  Navigator.of(context).pop(true);
                 },
               ),
             ),
         ],
       ),
+    ),
     );
   }
 }

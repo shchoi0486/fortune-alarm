@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum CalendarEventType { event, routine, memo, holiday }
 
 class CalendarEvent {
@@ -102,7 +104,7 @@ class CalendarEvent {
       title: json['title'],
       content: json['content'] ?? '',
       date: DateTime.parse(json['date']),
-      type: CalendarEventType.values[json['type']],
+      type: _enumValue(CalendarEventType.values, json['type'], CalendarEventType.event),
       isCompleted: json['isCompleted'] ?? false,
       alarmId: json['alarmId'],
       titleColor: json['titleColor'] ?? 0xFF000000,
@@ -113,7 +115,15 @@ class CalendarEvent {
       fontSize: (json['fontSize'] as num?)?.toDouble() ?? 16.0,
       fontFamily: json['fontFamily'],
       fontColor: json['fontColor'],
-      textAlign: json['textAlign'] ?? 0,
+      // 저장된 값이 범위를 벗어나면(구버전 스키마, 수동 편집 등) 기본값으로 되돌린다.
+      // 그대로 두면 상세 화면에서 TextAlign.values[...] 인덱싱 시 RangeError 가 난다.
+      textAlign: _enumValue(TextAlign.values, json['textAlign'], TextAlign.left).index,
     );
+  }
+
+  /// 저장된 인덱스가 유효하지 않으면 [fallback] 을 돌려준다.
+  static T _enumValue<T>(List<T> values, dynamic raw, T fallback) {
+    if (raw is int && raw >= 0 && raw < values.length) return values[raw];
+    return fallback;
   }
 }

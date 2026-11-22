@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../data/models/alarm_model.dart';
+import '../../core/constants/mission_type.dart';
 import '../../providers/alarm_list_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../l10n/app_localizations.dart';
@@ -65,15 +66,28 @@ class _QuickAlarmSheetState extends ConsumerState<QuickAlarmSheet> {
 
     final l10n = AppLocalizations.of(context)!;
     final id = const Uuid().v4();
+    // _targetTime은 접근 시점마다 now 기준으로 재계산되므로 저장 시점에 한 번만
+    // 스냅샷한다 (표시/저장/스케줄 분기 경계에서 분이 바뀌는 것 방지).
+    final targetTime = _targetTime;
     final alarm = AlarmModel(
       id: id,
-      time: _targetTime,
+      time: targetTime,
       isEnabled: true,
       label: l10n.quickAlarm,
       isVibrationEnabled: _isVibrationEnabled,
       isSoundEnabled: true,
       volume: _volume,
-      ringtonePath: _ringtonePath,
+      ringtonePath: _ringtonePath ?? 'default',
+      // 추가 화면 신규 기본값과 일치 (null/엉뚱한 기본값으로 인한 분기 이탈 방지)
+      missionType: MissionType.none,
+      repeatDays: List.generate(7, (_) => false),
+      snoozeInterval: 5,
+      maxSnoozeCount: 3,
+      remainingSnoozeCount: 3,
+      shakeCount: 20,
+      walkStepCount: 20,
+      mathProblemCount: 3,
+      backgroundPath: 'assets/images/animal/dog1.mp4',
     );
 
     // 1. 알람 추가
@@ -87,16 +101,22 @@ class _QuickAlarmSheetState extends ConsumerState<QuickAlarmSheet> {
     final scheduled = await AlarmSchedulerService.scheduleAlarm(alarm);
 
     if (!scheduled && mounted) {
+      // 기록은 먼저 켜진 상태로 남겨 복구 여부를 판단한다. 마지막에 비활성화 상태로...
+      try {
+        await ref.read(alarmListProvider.notifier).updateAlarm(alarm.copyWith(isEnabled: false));
+      } catch (_) {}
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.alarmSaveError)),
       );
       return;
     }
 
-    // 3. 알림 생성
+    // 3. 알림 생성 (알람 발화용 stableId와 충돌하지 않는 별도 ID 사용)
     final stableId = AlarmSchedulerService.getStableId(alarm.id);
+    final confirmId = stableId + 1000003;
     await NotificationService().showNotification(
-      id: stableId,
+      id: confirmId,
       title: l10n.alarmScheduledTitle,
       body: l10n.alarmScheduledBody(
         DateFormat('HH:mm').format(alarm.time),

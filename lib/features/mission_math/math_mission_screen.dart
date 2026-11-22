@@ -177,38 +177,34 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     final l10n = isInit ? null : AppLocalizations.of(context)!;
     final random = Random();
     
-    // 1자리(1~9) 숫자 생성
-    int getSingleDigit() => random.nextInt(9) + 1;
-    // 2자리(10~99) 숫자 생성
-    int getDoubleDigit() => random.nextInt(90) + 10;
-    
-    // 1자리 또는 2자리 숫자 생성 헬퍼 함수
-    int getRandomNum() => random.nextBool() ? getSingleDigit() : getDoubleDigit();
+    // 한 자리수(1~9) / 1~20 / 두 자리수(10~99) 생성 헬퍼
+    int oneDigit() => random.nextInt(9) + 1;
+    int oneToTwenty() => random.nextInt(20) + 1;
+    int twoDigit() => random.nextInt(90) + 10;
 
     _expression = null; // 초기화
 
     switch (_difficulty) {
       case MathDifficulty.easy:
-        // Easy: 1자리 또는 2자리 숫자, + 기호만
+        // 쉬움: 한 자리수 + 한 자리수 (최대 9 + 9 = 18)
         _operator = '+';
-        _num1 = getRandomNum();
-        _num2 = getRandomNum();
-        // 큰 숫자가 먼저 나오도록 정렬
-        if (_num1 < _num2) {
-          final temp = _num1;
-          _num1 = _num2;
-          _num2 = temp;
-        }
+        _num1 = oneDigit();
+        _num2 = oneDigit();
         _answer = _num1 + _num2;
         break;
 
       case MathDifficulty.normal:
-        // Normal: 1자리 또는 2자리 숫자, +, - 섞어서
-        if (random.nextBool()) {
+        // 보통: 한 자리수 + 한 자리수 / 1~20 + 한 자리수 / 쉬운 뺄셈
+        final pattern = random.nextInt(3);
+        if (pattern == 0) {
           _operator = '+';
-          _num1 = getRandomNum();
-          _num2 = getRandomNum();
-          // 큰 숫자가 먼저 나오도록 정렬
+          _num1 = oneDigit();
+          _num2 = oneDigit();
+          _answer = _num1 + _num2;
+        } else if (pattern == 1) {
+          _operator = '+';
+          _num1 = oneToTwenty();
+          _num2 = oneDigit();
           if (_num1 < _num2) {
             final temp = _num1;
             _num1 = _num2;
@@ -217,9 +213,8 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
           _answer = _num1 + _num2;
         } else {
           _operator = '-';
-          _num1 = getRandomNum();
-          _num2 = getRandomNum();
-          
+          _num1 = random.nextInt(11) + 10; // 10~20
+          _num2 = oneDigit();
           if (_num1 < _num2) {
             final temp = _num1;
             _num1 = _num2;
@@ -230,50 +225,32 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
         break;
 
       case MathDifficulty.hard:
-        // Hard: 1자리 또는 2자리 숫자, +, -, x 섞어서
-        int opType = random.nextInt(3); // 0: +, 1: -, 2: x
+        // 어려움: 두 자리수 덧셈 / 곱셈 (아래 패턴 중 랜덤)
+        int opType = random.nextInt(3); // 0: 2자리+1자리, 1: 2자리+2자리, 2: x
         
-        if (opType == 0) { // +
+        if (opType == 0) { // 두 자리수 + 한 자리수
           _operator = '+';
-          _num1 = getRandomNum();
-          _num2 = getRandomNum();
+          _num1 = twoDigit();
+          _num2 = oneDigit();
+          _answer = _num1 + _num2;
+        } else if (opType == 1) { // 두 자리수 + 두 자리수
+          _operator = '+';
+          _num1 = twoDigit();
+          _num2 = twoDigit();
           if (_num1 < _num2) {
             final temp = _num1;
             _num1 = _num2;
             _num2 = temp;
           }
           _answer = _num1 + _num2;
-        } else if (opType == 1) { // -
-          _operator = '-';
-          _num1 = getRandomNum();
-          _num2 = getRandomNum();
-          if (_num1 < _num2) {
-            final temp = _num1;
-            _num1 = _num2;
-            _num2 = temp;
-          }
-          _answer = _num1 - _num2;
-        } else { // x (사용자 요청: 다양한 곱셈 및 복합 수식 조합)
+        } else { // 두 자리수 x 한 자리수 (10~25 x 2~9)
           _operator = 'x';
-          bool useComplex = random.nextBool(); // 50% 확률로 복합 수식 생성
-          
-          if (useComplex) {
-            // (1~2자리 + 1~2자리) x 1자리
-            int a = getRandomNum();
-            int b = getRandomNum();
-            int c = getSingleDigit();
-            _num1 = a + b; // 내부 계산용
-            _num2 = c;     // 내부 계산용
-            _answer = _num1 * _num2;
-            _expression = '($a + $b) x $c';
-          } else {
-            // 1~2자리 x 1자리
-            _num1 = getRandomNum();
-            _num2 = getSingleDigit();
-            _answer = _num1 * _num2;
-            _expression = '$_num1 x $_num2';
-          }
+          _num1 = random.nextInt(16) + 10; // 10~25
+          _num2 = random.nextInt(8) + 2; // 2~9
+          _answer = _num1 * _num2;
+          _expression = '$_num1 x $_num2';
         }
+          
         break;
     }
     
@@ -443,15 +420,26 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
   }
 
   Future<void> _playSfx(String assetPath, {double volume = 0.5, Duration? maxDuration}) async {
+    final player = AudioPlayer();
     try {
-      final player = AudioPlayer();
       await player.play(AssetSource(assetPath), volume: volume);
       if (maxDuration != null) {
-        Future.delayed(maxDuration, () => player.stop());
+        await Future.delayed(maxDuration);
+        try {
+          await player.stop();
+        } catch (_) {}
+      } else {
+        await player.onPlayerComplete.first.timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {},
+        );
       }
-      player.onPlayerComplete.listen((_) => player.dispose());
     } catch (e) {
       debugPrint('Error playing SFX: $assetPath - $e');
+    } finally {
+      try {
+        await player.dispose();
+      } catch (_) {}
     }
   }
 
@@ -466,16 +454,11 @@ class _MathMissionScreenState extends ConsumerState<MathMissionScreen> with Sing
     
     _stopAlarm();
     
-    // 성공 상태 UI 업데이트
+    // 성공 상태 UI 업데이트 (MissionSuccessOverlay가 pop(true)을 담당한다)
     if (mounted) {
       setState(() {
         _isSuccess = true;
       });
-    }
-    
-    // 다이얼로그 닫힌 후 (또는 구독자라 바로 닫힌 후) 성공 반환
-    if (mounted) {
-      Navigator.of(context).pop(true);
     }
   }
 

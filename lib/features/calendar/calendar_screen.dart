@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +8,7 @@ import 'services/calendar_service.dart';
 import 'services/holiday_service.dart';
 import 'widgets/add_event_sheet.dart';
 import '../../services/alarm_scheduler_service.dart';
+import '../../services/notification_service.dart';
 import '../../data/models/alarm_model.dart';
 import '../../core/constants/mission_type.dart';
 import 'package:fortune_alarm/l10n/app_localizations.dart';
@@ -50,6 +52,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   
   // 날짜별 이벤트 맵 (로컬 캐시용)
   Map<DateTime, List<CalendarEvent>> _events = {};
+
+  // 스와이프 삭제는 즉시 애니메이션이 끝나지만 실제 저장은 비동기다.
+  // 그 사이 프레임에 해당 항목이 트리에 남아 있으면
+  // "A dismissed Dismissible widget is still part of the tree" 로 예외가 발생한다.
+  final Set<String> _pendingRemovalIds = {};
 
   // 페이지 컨트롤러
   PageController? _weekController;
@@ -126,16 +133,30 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   Future<void> _loadEvents() async {
     final events = await _calendarService.loadEvents();
+    if (!mounted) return;
     final locale = AppLocalizations.of(context)?.localeName ?? 'ko';
-    
+
+    // 사용자 일정을 먼저 화면에 반영한다.
+    // 이전 구현은 공휴일 네트워크 응답이 끝난 뒤에야 _events 를 대입해서,
+    // 최초 실행 시 캘린더 탭이 통째로 빈 화면으로 남았다.
+    _applyEvents(events, const []);
+
     // 언어 변경 시 캐시를 지우고 새로 로드하기 위해 clearCache 호출 고려 가능
     // 하지만 매번 지우는 것은 비효율적이므로, locale이 포함된 cacheKey를 이미 사용 중임
-    
+
     final holidays = await _holidayService.getHolidays(_focusedDay.year, appLocale: locale);
-    
+    if (!mounted) return;
+
+    // 네트워크 호출이 실패해도 getHolidays 는 빈 리스트를 돌려주므로
+    // 여기까지 오면 일정은 정상 표시된 상태다.
+    _applyEvents(events, holidays);
+  }
+
+  /// [holidays] + [events] 로 [_events] 를 다시 구성한다.
+  void _applyEvents(List<CalendarEvent> events, List<CalendarEvent> holidays) {
     setState(() {
       _events = {};
-      
+
       // 공휴일 먼저 추가
       for (var holiday in holidays) {
         final date = DateTime(holiday.date.year, holiday.date.month, holiday.date.day);
@@ -149,26 +170,37 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         if (_events[date] == null) _events[date] = [];
         _events[date]!.add(event);
       }
-      
+
+      // 삭제가 끝나기 전(Dismissible 애니메이션 직후 ~ 저장 완료)인 항목을 숨긴다.
+      _pendingRemovalIds.clear();
+
       // 날짜별 이벤트 시간순 정렬
       _events.forEach((key, value) {
         value.sort((a, b) => a.date.compareTo(b.date));
       });
-      
+
       // 현재 선택된 날짜의 이벤트 업데이트
       if (_selectedDay != null) {
-        final date = DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day);
-        _selectedEvents.value = (_events[date] ?? [])
-            .where((e) => e.type != CalendarEventType.holiday)
-            .toList();
+        _selectedEvents.value = _getEditableEventsForDay(_selectedDay!);
       }
     });
   }
 
   List<CalendarEvent> _getEventsForDay(DateTime day) {
     final date = DateTime(day.year, day.month, day.day);
-    return _events[date] ?? [];
+    return (_events[date] ?? []).where(_isVisible).toList();
   }
+
+  /// [_selectedEvents] (사용자가 편집/삭제할 수 있는 날짜 목록) 에 넣을 이벤트.
+  ///
+  /// 공휴일은 API 로 내려오는 읽기 전용 항목이므로 제외한다.
+  /// 이전에는 11개 갱신 경로 중 2개에만 이 필터가 있어서, "오늘" 버튼을 누르거나
+  /// 월을 넘기면 공휴일이 편집·삭제 불가능한 일반 일정처럼 목록에 노출되었다.
+  List<CalendarEvent> _getEditableEventsForDay(DateTime day) =>
+      _getEventsForDay(day).where((e) => e.type != CalendarEventType.holiday).toList();
+
+  /// 스와이프 삭제 애니메이션이 끝났지만 아직 저장 중이라 트리에서 제거해야 하는 항목.
+  bool _isVisible(CalendarEvent event) => !_pendingRemovalIds.contains(event.id);
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
     // 더블 탭 감지 (같은 날짜를 300ms 이내에 다시 탭)
@@ -190,9 +222,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         _selectedDay = selectedDay;
         _focusedDay = focusedDay;
       });
-      _selectedEvents.value = _getEventsForDay(selectedDay)
-          .where((e) => e.type != CalendarEventType.holiday)
-          .toList();
+      _selectedEvents.value = _getEditableEventsForDay(selectedDay);
     }
   }
 
@@ -204,13 +234,34 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     _loadEvents();
   }
 
+  /// 일정에 연결된 알람(OS 스케줄 / 알림 / Hive 행)을 제거한다.
+  ///
+  /// 삭제뿐 아니라 "알림을 끄거나 타입을 event 에서 다른 것으로 바꾼 경우" 에도
+  /// 반드시 호출해야 한다. 남겨두면 [_rescheduleExistingAlarms] 가 앱 실행마다
+  /// 미래 알림을 전부 재등록해 버려 사용자가 영구히 끄지 못하는 유령 알람이 된다.
+  Future<void> _detachEventAlarm(String? alarmId) async {
+    if (alarmId == null) return;
+    try {
+      final box = await Hive.openBox<AlarmModel>('alarms');
+      final alarm = box.get(alarmId);
+      if (alarm != null) {
+        await AlarmSchedulerService.cancelAlarm(alarm, cancelMain: true, cancelSnooze: true);
+        await AlarmSchedulerService.cancelSafetyAlarm(alarmId);
+        await box.delete(alarmId);
+        await box.flush();
+      } else {
+        await NotificationService().cancelNotification(
+          AlarmSchedulerService.getStableId(alarmId),
+        );
+      }
+    } catch (e) {
+      debugPrint('[Calendar] Failed to detach alarm $alarmId: $e');
+    }
+  }
+
   Future<void> _deleteEvent(CalendarEvent event) async {
     await _calendarService.deleteEvent(event.id);
-    if (event.alarmId != null) {
-      // 알람 모델을 직접 찾아서 삭제할 수 없으므로(ID매핑 문제), 
-      // 여기서는 생략하거나 추후 개선.
-      // 실제 앱에서는 AlarmListProvider를 통해 삭제하는 것이 안전함.
-    }
+    await _detachEventAlarm(event.alarmId);
     _loadEvents();
   }
 
@@ -257,7 +308,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           // 시간이 수동으로 설정되지 않았고, 새로운 이벤트인 경우 자동 시간 설정 로직 적용
           if (!isTimeManuallySet && event == null) {
             final dateKey = DateTime(savedEvent.date.year, savedEvent.date.month, savedEvent.date.day);
-            final dayEvents = _events[dateKey] ?? [];
+            // 공휴일은 "하루의 첫 일정"이 아니다. 공휴일만 있는 날에는 새 일정이
+            // 자정(00:00)으로 배치되고 있었다.
+            final dayEvents = (_events[dateKey] ?? [])
+                .where((e) => e.type != CalendarEventType.holiday && _isVisible(e))
+                .toList();
 
             if (dayEvents.isEmpty) {
               // 해당 날짜에 이벤트가 없으면 오전 9시로 설정
@@ -268,24 +323,34 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               // 시간순 정렬
               final sortedEvents = List<CalendarEvent>.from(dayEvents);
               sortedEvents.sort((a, b) => a.date.compareTo(b.date));
-              
+
               final lastEventTime = sortedEvents.last.date;
-              final newDate = lastEventTime.add(const Duration(hours: 1));
-              
-              // 날짜가 넘어가버리면? (예: 23시 + 1시간 = 다음날 0시)
-              // 사용자의 의도는 "다음 순서"이므로 날짜가 넘어가더라도 그대로 유지하거나,
-              // 혹은 23:59 등으로 제한할 수도 있음.
-              // 여기서는 일단 단순히 1시간 뒤로 설정 (날짜가 바뀔 수도 있음, 하지만 UI상으로는 해당 날짜 리스트에 안 보일 수도 있음)
-              // 만약 날짜가 바뀌면 해당 날짜 리스트에서 사라지는게 맞음. 
-              // 하지만 사용자는 "같은 날 겹쳐버림"을 해결하고 싶어하므로, 같은 날 내에서 해결하는게 좋겠지만,
-              // "다음꺼는 1시간 이후"라고 했으므로 1시간 이후가 명확함.
-              
+              // 23:30 + 1시간은 다음날 00:00 이 되어 사용자가 보고 있는 날짜에서
+              // 일정이 사라진다. 같은 날 23:59 로 제한한다.
+              final endOfDay = DateTime(dateKey.year, dateKey.month, dateKey.day, 23, 59);
+              var newDate = lastEventTime.add(const Duration(hours: 1));
+              if (newDate.isAfter(endOfDay)) {
+                newDate = endOfDay;
+              }
+
               eventToSave = savedEvent.copyWith(date: newDate);
             }
           }
 
+          // 기존 일정의 알림을 끄거나(event→memo 등) 타입을 바꾸면
+          // 새 이벤트에는 alarmId 가 없거나 type 이 event 가 아니게 된다.
+          // 이때 기존 알람을 해지하지 않으면 Hive 에 고스트 알람이 남아
+          // 앱 실행마다 _rescheduleExistingAlarms 가 되살린다.
+          final previousAlarmId = event?.alarmId;
+          final keepsAlarm =
+              eventToSave.alarmId != null &&
+                  eventToSave.type == CalendarEventType.event;
+          if (previousAlarmId != null && !keepsAlarm) {
+            await _detachEventAlarm(previousAlarmId);
+          }
+
           await _calendarService.saveEvent(eventToSave);
-          if (eventToSave.alarmId != null && eventToSave.type == CalendarEventType.event) {
+          if (keepsAlarm) {
             final alarm = AlarmModel(
               id: eventToSave.alarmId!,
               time: eventToSave.date,
@@ -296,7 +361,24 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               isVibrationEnabled: true,
               repeatDays: const [false, false, false, false, false, false, false],
             );
-            await AlarmSchedulerService.scheduleAlarm(alarm);
+            bool scheduled = await AlarmSchedulerService.scheduleAlarm(alarm);
+            // 과거 시각이면 다음날로 한 번만 재시도 (무음 실패 방지)
+            if (!scheduled && eventToSave.date.isBefore(DateTime.now())) {
+              final retryTime = eventToSave.date.add(const Duration(days: 1));
+              final retry = alarm.copyWith(time: retryTime);
+              scheduled = await AlarmSchedulerService.scheduleAlarm(retry);
+              if (scheduled) {
+                // Hive/Hive 알람에는 retryTime 이 저장되므로 이벤트 시각도 맞춰야
+                // "캘린더는 10/5, 실제로는 10/6 에 울린다" 는 불일치가 생기지 않는다.
+                eventToSave = eventToSave.copyWith(date: retryTime);
+                await _calendarService.saveEvent(eventToSave);
+              }
+            }
+            if (!scheduled && context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(AppLocalizations.of(context)!.alarmSaveError)),
+              );
+            }
           }
           _loadEvents();
         },
@@ -312,7 +394,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         setState(() {
           _focusedDay = now;
           _selectedDay = now;
-          _selectedEvents.value = _getEventsForDay(now);
+          _selectedEvents.value = _getEditableEventsForDay(now);
           
           if (_viewMode == CalendarViewMode.year) {
             if (_yearPageController.hasClients) {
@@ -497,7 +579,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           setState(() {
                             _focusedDay = prevMonth;
                             _selectedDay = prevMonth;
-                            _selectedEvents.value = _getEventsForDay(prevMonth);
+                            _selectedEvents.value = _getEditableEventsForDay(prevMonth);
                             
                             // 뷰 모드에 따른 페이지 컨트롤러 동기화
                             if (_viewMode == CalendarViewMode.year) {
@@ -533,7 +615,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           setState(() {
                             _focusedDay = nextMonth;
                             _selectedDay = nextMonth;
-                            _selectedEvents.value = _getEventsForDay(nextMonth);
+                            _selectedEvents.value = _getEditableEventsForDay(nextMonth);
                             
                             // 뷰 모드에 따른 페이지 컨트롤러 동기화
                             if (_viewMode == CalendarViewMode.year) {
@@ -648,8 +730,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
              // 주간 뷰는 커스텀 뷰를 사용하므로 TableCalendar 포맷은 상관없으나, 
              // 상태 관리를 위해 업데이트하지 않음 (TableCalendar가 아예 안보일 것이므로)
           } else if (mode == CalendarViewMode.day) {
-            _selectedDay = DateTime.now();
-            _focusedDay = DateTime.now();
+            // 일간 보기로 전환해도 현재 보고 있는 날짜를 유지한다.
+            // 이전에는 항상 오늘로 리셋되어, 미래 날짜를 보고 있을 때
+            // 일간 탭을 누르면 오늘로 튀는 문제가 있었다.
+            _selectedDay = _focusedDay;
           }
         });
       },
@@ -735,7 +819,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                         final targetDay = currentDay > lastDayNextMonth ? lastDayNextMonth : currentDay;
                         final newSelectedDay = DateTime(nextMonth.year, nextMonth.month, targetDay);
                         _selectedDay = newSelectedDay;
-                        _selectedEvents.value = _getEventsForDay(newSelectedDay);
+                        _selectedEvents.value = _getEditableEventsForDay(newSelectedDay);
                         
                         if (oldYear != nextMonth.year) {
                           _loadEvents();
@@ -752,7 +836,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                         final targetDay = currentDay > lastDayPrevMonth ? lastDayPrevMonth : currentDay;
                         final newSelectedDay = DateTime(prevMonth.year, prevMonth.month, targetDay);
                         _selectedDay = newSelectedDay;
-                        _selectedEvents.value = _getEventsForDay(newSelectedDay);
+                        _selectedEvents.value = _getEditableEventsForDay(newSelectedDay);
 
                         if (oldYear != prevMonth.year) {
                           _loadEvents();
@@ -878,7 +962,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               final newSelectedDay = DateTime(newYear, _focusedDay.month, targetDay);
               
               _selectedDay = newSelectedDay;
-              _selectedEvents.value = _getEventsForDay(newSelectedDay);
+              _selectedEvents.value = _getEditableEventsForDay(newSelectedDay);
               _loadEvents();
             });
           }
@@ -1041,7 +1125,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           final newSelectedDay = DateTime(newDate.year, newDate.month, targetDay);
           
           _selectedDay = newSelectedDay;
-          _selectedEvents.value = _getEventsForDay(newSelectedDay);
+          _selectedEvents.value = _getEditableEventsForDay(newSelectedDay);
         });
       },
       itemBuilder: (context, index) {
@@ -1178,7 +1262,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           _focusedDay = newDate;
           // 일간 이동 시 선택된 날짜와 이벤트도 업데이트하여 일관성 유지
           _selectedDay = newDate;
-          _selectedEvents.value = _getEventsForDay(newDate);
+          _selectedEvents.value = _getEditableEventsForDay(newDate);
         });
       },
       itemBuilder: (context, index) {
@@ -1659,7 +1743,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             if (isExpanded) return const SizedBox.shrink();
 
             if (events.isNotEmpty) {
-              final nonHolidayEvents = events.where((e) => e.type != CalendarEventType.holiday).toList();
+      final nonHolidayEvents = events
+          .where((e) => e.type != CalendarEventType.holiday && _isVisible(e))
+          .toList();
               if (nonHolidayEvents.isEmpty) return null;
 
               final moodEvent = nonHolidayEvents.firstWhere(
@@ -1719,7 +1805,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             final newSelectedDay = DateTime(focusedDay.year, focusedDay.month, targetDay);
             
             _selectedDay = newSelectedDay;
-            _selectedEvents.value = _getEventsForDay(newSelectedDay);
+            _selectedEvents.value = _getEditableEventsForDay(newSelectedDay);
             
             // 년도가 바뀌었을 경우에만 공휴일 등을 다시 로드
             if (oldYear != focusedDay.year) {
@@ -1845,7 +1931,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           ),
           if (event.type == CalendarEventType.memo && (event.images?.isNotEmpty ?? false))
             const Icon(Icons.image, size: 15, color: Colors.grey),
-          if (event.type == CalendarEventType.memo && event.drawingData != null)
+          if (event.type == CalendarEventType.memo && event.drawingData?.isNotEmpty == true)
             const Padding(
               padding: EdgeInsets.only(left: 4.0),
               child: Icon(Icons.edit, size: 15, color: Colors.grey),
@@ -1879,7 +1965,11 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       key: Key(event.id),
       direction: DismissDirection.endToStart,
       confirmDismiss: (_) => _confirmDeleteEvent(event),
-      onDismissed: (_) => _deleteEvent(event),
+      onDismissed: (_) {
+        // 트리에서 먼저 제거한 뒤 저장을 시작한다. (순서를 바꾸면 위 예외가 발생한다)
+        setState(() => _pendingRemovalIds.add(event.id));
+        _deleteEvent(event);
+      },
       background: Container(
         color: Colors.red,
         alignment: Alignment.centerRight,

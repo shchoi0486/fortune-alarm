@@ -2,13 +2,11 @@
 <resources>
     <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
-        <!-- [Android 15 대응] windowFullscreen 제거 (Edge-to-Edge 정책 준수) -->
-        <!-- <item name="android:windowFullscreen">true</item> -->
-        <!-- [Android 15 대응] shortEdges 대신 default 사용 권장 (Edge-to-Edge 시 자동 적용) -->
+        <!-- [Android 15+ 대응] Edge-to-Edge 강제 정책 준수:
+             windowFullscreen 제거, cutout 모드는 지원 중단된 shortEdges 대신 always 사용 -->
         <item name="android:forceDarkAllowed">false</item>
-        <item name="android:windowFullscreen">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">always</item>
         <item name="android:windowSplashScreenBackground">#FFFFFF</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/android12splash</item>
         <item name="android:windowSplashScreenIconBackgroundColor">#FFFFFF</item>

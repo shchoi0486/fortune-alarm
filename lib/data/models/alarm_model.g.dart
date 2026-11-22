@@ -16,29 +16,37 @@ class AlarmModelAdapter extends TypeAdapter<AlarmModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
+    // 이전 빌드가 저장한 레코드는 필드가 없을 수 있다.
+    // null 가드 없이 캐스팅하면 예외가 openBox 전체를 실패시켜
+    // 박스의 모든 알람을 읽을 수 없게 만든다.
+    final maxSnooze = (fields[16] as int?) ?? 3;
     return AlarmModel(
       id: fields[0] as String,
       time: fields[1] as DateTime,
-      isEnabled: fields[2] as bool,
-      missionType: fields[3] as MissionType,
-      label: fields[4] as String,
+      isEnabled: (fields[2] as bool?) ?? true,
+      missionType: (fields[3] as MissionType?) ?? MissionType.none,
+      label: (fields[4] as String?) ?? '',
       referenceImagePaths: (fields[14] as List?)?.cast<String>(),
-      repeatDays: (fields[6] as List).cast<bool>(),
-      isVibrationEnabled: fields[7] as bool,
-      isSoundEnabled: fields[8] as bool,
-      volume: fields[9] as double,
+      repeatDays: (fields[6] as List?)?.cast<bool>() ??
+          const [false, false, false, false, false, false, false],
+      isVibrationEnabled: (fields[7] as bool?) ?? true,
+      isSoundEnabled: (fields[8] as bool?) ?? true,
+      volume: (fields[9] as num?)?.toDouble() ?? 1.0,
       ringtonePath: fields[10] as String?,
       vibrationPattern: fields[11] as String?,
-      isGradualVolume: fields[12] as bool,
+      isGradualVolume: (fields[12] as bool?) ?? false,
       backgroundPath: fields[13] as String?,
-      snoozeInterval: fields[15] as int,
-      maxSnoozeCount: fields[16] as int,
-      missionOrder: fields[17] as int,
-      remainingSnoozeCount: fields[18] as int,
-      mathDifficulty: fields[19] as MathDifficulty,
-      mathProblemCount: fields[20] as int,
-      shakeCount: fields[21] == null ? 50 : fields[21] as int,
-      walkStepCount: fields[22] == null ? 20 : fields[22] as int,
+      snoozeInterval: (fields[15] as int?) ?? 5,
+      maxSnoozeCount: maxSnooze,
+      missionOrder: (fields[17] as int?) ?? 0,
+      // 레거시 레코드에 이 필드가 없으면 허용 횟수에서 초기화한다.
+      // (스누즈 알람 레코드일 경우 이 값이 남은 횟수를 결정하므로 0 이면
+      //  스누즈 버튼이 사라져 체인이 끊긴다)
+      remainingSnoozeCount: (fields[18] as int?) ?? maxSnooze,
+      mathDifficulty: (fields[19] as MathDifficulty?) ?? MathDifficulty.normal,
+      mathProblemCount: (fields[20] as int?) ?? 3,
+      shakeCount: (fields[21] as int?) ?? 50,
+      walkStepCount: (fields[22] as int?) ?? 20,
     )..referenceImagePath = fields[5] as String?;
   }
 

@@ -1480,7 +1480,7 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
                       MaterialPageRoute(
                         builder: (_) => const FortunePassScreen(initialTabIndex: 1),
                       ),
-                    );
+);
                   },
                   child: Container(
                     width: double.infinity,

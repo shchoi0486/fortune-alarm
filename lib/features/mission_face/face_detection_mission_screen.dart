@@ -257,11 +257,9 @@ class _FaceDetectionMissionScreenState extends ConsumerState<FaceDetectionMissio
     
     // 알람 소리 및 알림 확실하게 종료 (await 사용)
     await _stopAlarm();
-    
-    // 알람 미션 성공 처리 (알람 영구 정지 및 스케줄링 업데이트)
-    if (widget.alarmId != null) {
-      ref.read(alarmListProvider.notifier).completeAlarm(widget.alarmId!);
-    }
+
+    // 완료/재예약은 AlarmRingingScreen._handleAlarmCompletion에서 단일 처리한다.
+    // 여기서 completeAlarm을 호출하면 이중 완료 + 재울림 경쟁이 발생하므로 호출하지 않는다.
     
     if (!mounted) return;
 
